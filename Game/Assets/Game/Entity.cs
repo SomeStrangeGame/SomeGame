@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Game;
 using Game.Disposable;
-using UnityEngine;
 
 public class Entity: BaseDisposable
 {
@@ -41,7 +40,7 @@ public class Entity: BaseDisposable
 
         await _loading.Hide();
 
-        var result = await someMenu1.WaitResult();
+        var result = await someMenu1.WaitResult(); //wait some process...
 
         await _loading.Show();
 
