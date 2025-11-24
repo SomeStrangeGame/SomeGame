@@ -1,6 +1,17 @@
+using System;
 using Cysharp.Threading.Tasks;
-using Game;
 using Game.Disposable;
+using UnityEngine;
+
+[Serializable]
+public class Data
+{
+    [SerializeField] private Game.Loading.Data _loadingData;
+    [SerializeField] private Game.SomeMenu1.Data _someMenu1Data;
+
+    public Game.Loading.Data LoadingData => _loadingData;
+    public Game.SomeMenu1.Data SomeMenu1Data => _someMenu1Data;
+}
 
 public class Entity: BaseDisposable
 {
@@ -32,19 +43,21 @@ public class Entity: BaseDisposable
 
     private async UniTask SomeMenu1Process()
     {
-        var someMenu1 = new Game.SomeMenu1.Entity(new Game.SomeMenu1.Entity.Ctx
+        var result = 0;
+        var ctx = new Game.SomeMenu1.Entity.Ctx
         {
             Data = _ctx.Data.SomeMenu1Data,
-        });
-        await someMenu1.Init();
+        };
+        using (var someMenu1 = new Game.SomeMenu1.Entity(ctx))
+        {
+            await someMenu1.Init();
 
-        await _loading.Hide();
+            await _loading.Hide();
 
-        var result = await someMenu1.WaitResult(); //wait some process...
+            result = await someMenu1.WaitResult(); //wait some process...
 
-        await _loading.Show();
-
-        someMenu1.Dispose();
+            await _loading.Show();
+        }
 
         switch (result)
         {

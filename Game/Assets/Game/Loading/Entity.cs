@@ -1,12 +1,19 @@
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
-using Game.Loading;
 using Game.Loading.View;
 using System;
 using UnityEngine;
 
 namespace Game.Loading
 {
+    [Serializable]
+    public class Data
+    {
+        [SerializeField] private GameObject _loadingPrefab;
+
+        public GameObject LoadingPrefab => _loadingPrefab;
+    }
+    
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx

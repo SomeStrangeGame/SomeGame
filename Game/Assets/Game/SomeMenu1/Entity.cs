@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using Game.SomeMenu1.View;
@@ -5,6 +6,14 @@ using UnityEngine;
 
 namespace Game.SomeMenu1
 {
+    [Serializable]
+    public class Data
+    {
+        [SerializeField] private GameObject _someMenu1Prefab;
+
+        public GameObject SomeMenu1Prefab => _someMenu1Prefab;
+    }
+    
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx
