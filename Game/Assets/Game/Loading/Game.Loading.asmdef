@@ -1,0 +1,17 @@
+{
+    "name": "Game.Loading",
+    "rootNamespace": "",
+    "references": [
+        "GUID:8508402cf4a8c4ac6b337bc0f3c7b95d",
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
