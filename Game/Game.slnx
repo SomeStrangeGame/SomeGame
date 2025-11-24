@@ -1,6 +1,7 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Game.csproj" />
+  <Project Path="Game.SomeBattleScene1.csproj" />
   <Project Path="Game.Disposable.csproj" />
   <Project Path="Game.SomeMenu1.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
