@@ -19,6 +19,7 @@ namespace Game
             {
                 Data = _data,
             });
+            _entity.Init().Forget();
         }
 
         private void OnDisable()

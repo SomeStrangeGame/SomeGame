@@ -458,6 +458,8 @@ MonoBehaviour:
   _data:
     _loadingData:
       _loadingPrefab: {fileID: 3712146450823894313, guid: b50f38b89037c450eb7842a968acde9a, type: 3}
+    _someMenu1Data:
+      _someMenu1Prefab: {fileID: 3712146450823894313, guid: 26062b08a80614ed4883a30c72fb556c, type: 3}
 --- !u!4 &1138803520
 Transform:
   m_ObjectHideFlags: 0

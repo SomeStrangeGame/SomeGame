@@ -12,7 +12,6 @@ namespace Game.Loading
         public struct Ctx
         {
             public Data Data;
-            public Action InitDone;
         }
 
         private IScreen _screen;
@@ -21,15 +20,12 @@ namespace Game.Loading
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
-            Init();
         }
 
-        private async void Init() 
+        public async UniTask Init() 
         {
             var go = GameObject.Instantiate(_ctx.Data.LoadingPrefab);
             _screen = go.GetComponent<IScreen>();
-
-            _ctx.InitDone.Invoke();
         }
 
         public void ShowImmediate() => _screen.ShowImmediate();
