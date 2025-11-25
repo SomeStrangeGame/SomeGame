@@ -1,6 +1,5 @@
 using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.SomeBattleScene1.View
 {
