@@ -4,24 +4,29 @@ using UnityEngine.UI;
 
 namespace Game.SomeMenu1.View
 {
-    public class Screen : MonoBehaviour
+    internal sealed class Screen : MonoBehaviour
     {
+        internal struct Ctx
+        {
+            internal Action<int> OnComplete;
+        }
+
         [SerializeField] private Button _someButton;
 
-        private Action<int> _onComplete;
+        private Ctx _ctx;
 
         private void OnEnable()
         {
             _someButton.onClick.RemoveAllListeners();
-            _someButton.onClick.AddListener(() => _onComplete.Invoke(1));
+            _someButton.onClick.AddListener(() => _ctx.OnComplete.Invoke(1));
         }
 
-        public void Setup(Action<int> onComplete)
+        internal void Setup(Ctx ctx)
         {
-            _onComplete = onComplete;
+            _ctx = ctx;
         }
 
-        public void Release() 
+        internal void Release() 
         {
             if (this != null) GameObject.Destroy(gameObject);
         }

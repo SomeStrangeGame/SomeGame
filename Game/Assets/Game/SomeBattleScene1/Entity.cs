@@ -6,13 +6,13 @@ using UnityEngine;
 namespace Game.SomeBattleScene1
 {
     [Serializable]
-    public class Data
+    public sealed class Data
     {
         [SerializeField] private GameObject _someBattleScene1Prefab;
         [SerializeField] private GameObject _someBattleScene1ScreenPrefab;
 
-        public GameObject SomeBattleScene1Prefab => _someBattleScene1Prefab;
-        public GameObject SomeBattleScene1ScreenPrefab => _someBattleScene1ScreenPrefab;
+        internal GameObject SomeBattleScene1Prefab => _someBattleScene1Prefab;
+        internal GameObject SomeBattleScene1ScreenPrefab => _someBattleScene1ScreenPrefab;
     }
     
     public sealed class Entity : BaseDisposable
@@ -39,13 +39,19 @@ namespace Game.SomeBattleScene1
         {
             var go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1ScreenPrefab);
             _screen = go.GetComponent<View.Screen>();
-            _screen.Setup(result => _playerInput = result);
+            _screen.Setup(new View.Screen.Ctx
+            {
+                OnSliderValueChanged = result => _playerInput = result
+            });
 
             go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1Prefab);
             _scene = go.GetComponent<View.Scene>();
-            _scene.Setup(() => _playerInput, result => _someToken.TrySetResult(result));
+            _scene.Setup(new View.Scene.Ctx
+            {
+                GetPlayerInput = () => _playerInput,
+                OnComplete = result => _someToken.TrySetResult(result),
+            });
         }
-
 
         public async UniTask<int> WaitResult() => await _someToken.Task;
 

@@ -3,8 +3,14 @@ using UnityEngine;
 
 namespace Game.SomeBattleScene1.View
 {
-    public class Scene : MonoBehaviour
+    internal sealed class Scene : MonoBehaviour
     {
+        internal struct Ctx
+        {
+            internal Func<float> GetPlayerInput;
+            internal Action<int> OnComplete;
+        }
+
         [SerializeField] private Animator _anim;
 
         [SerializeField] private Vector3 _camOffset;
@@ -16,13 +22,11 @@ namespace Game.SomeBattleScene1.View
 
         private bool _sceneDone = false;
 
-        private Func<float> _getPlayerInput;
-        private Action<int> _onComplete;
+        private Ctx _ctx;
 
-        public void Setup(Func<float> getPlayerInput, Action<int> onComplete)
+        internal void Setup(Ctx ctx)
         {
-            _getPlayerInput = getPlayerInput;
-            _onComplete = onComplete;
+            _ctx = ctx;
         }
 
         private void Update()
@@ -38,16 +42,16 @@ namespace Game.SomeBattleScene1.View
             cameraTrans.LookAt(cameraLookAtTarget);
             cameraTrans.rotation = Quaternion.Lerp(camRot, cameraTrans.rotation, Time.deltaTime * _camLookAtSpeed);
 
-            _anim.SetFloat("Move", _getPlayerInput.Invoke());
+            _anim.SetFloat("Move", _ctx.GetPlayerInput.Invoke());
 
             if (Vector3.Distance(_anim.rootPosition, _targetPoint.position) < 1)
             {
                 _sceneDone = true;
-                _onComplete.Invoke(2);
+                _ctx.OnComplete.Invoke(2);
             }
         }
 
-        public void Release() 
+        internal void Release() 
         {
             if (this != null) GameObject.Destroy(gameObject);
         }

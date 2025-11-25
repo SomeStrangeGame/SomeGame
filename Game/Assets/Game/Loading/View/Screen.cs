@@ -3,18 +3,18 @@ using UnityEngine;
 
 namespace Game.Loading.View
 {
-    public class Screen : MonoBehaviour
+    public sealed class Screen : MonoBehaviour
     {
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
 
-        public void ShowImmediate()
+        internal void ShowImmediate()
         {
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
         }
 
-        public async UniTask Show()
+        internal async UniTask Show()
         {
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
@@ -33,13 +33,13 @@ namespace Game.Loading.View
             _canvasGroup.alpha = 1f;
         }
 
-        public void HideImmediate()
+        internal void HideImmediate()
         {
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public async UniTask Hide()
+        internal async UniTask Hide()
         {
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
@@ -59,7 +59,7 @@ namespace Game.Loading.View
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public void Release() 
+        internal void Release() 
         {
             if (this != null) GameObject.Destroy(gameObject);
         }

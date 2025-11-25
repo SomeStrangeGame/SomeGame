@@ -6,11 +6,11 @@ using UnityEngine;
 namespace Game.Loading
 {
     [Serializable]
-    public class Data
+    public sealed class Data
     {
         [SerializeField] private GameObject _loadingPrefab;
 
-        public GameObject LoadingPrefab => _loadingPrefab;
+        internal GameObject LoadingPrefab => _loadingPrefab;
     }
     
     public sealed class Entity : BaseDisposable
