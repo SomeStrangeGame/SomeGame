@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
-using Game.Loading.View;
 using System;
 using UnityEngine;
 
@@ -21,7 +20,7 @@ namespace Game.Loading
             public Data Data;
         }
 
-        private IScreen _screen;
+        private View.Screen _screen;
         private Ctx _ctx;
 
         public Entity(Ctx ctx)
@@ -32,7 +31,7 @@ namespace Game.Loading
         public async UniTask Init() 
         {
             var go = GameObject.Instantiate(_ctx.Data.LoadingPrefab);
-            _screen = go.GetComponent<IScreen>();
+            _screen = go.GetComponent<View.Screen>();
         }
 
         public void ShowImmediate() => _screen.ShowImmediate();
@@ -44,7 +43,7 @@ namespace Game.Loading
         protected override void OnDispose()
         {
             base.OnDispose();
-            _screen?.Release();
+            if (_screen != null) _screen.Release();
         }
     }
 }

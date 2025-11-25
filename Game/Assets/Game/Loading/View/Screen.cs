@@ -3,16 +3,7 @@ using UnityEngine;
 
 namespace Game.Loading.View
 {
-    public interface IScreen 
-    {
-        public void ShowImmediate();
-        public void HideImmediate();
-        public UniTask Show();
-        public UniTask Hide();
-        public void Release();
-    }
-    
-    public class Screen : MonoBehaviour, IScreen
+    public class Screen : MonoBehaviour
     {
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -70,8 +61,7 @@ namespace Game.Loading.View
 
         public void Release() 
         {
-            if (this != null)
-                GameObject.Destroy(gameObject);
+            if (this != null) GameObject.Destroy(gameObject);
         }
     }
 }

@@ -1,16 +1,10 @@
-using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.SomeBattleScene1.View
 {
-    public interface ISomeBattleScene1
-    {
-        public void Release();
-        public UniTask<int> GetProcess();
-        public void InitScreen(ISomeBattleScene1Screen screen);
-    }
-    
-    public class Scene : MonoBehaviour, ISomeBattleScene1
+    public class Scene : MonoBehaviour
     {
         [SerializeField] private Animator _anim;
 
@@ -21,15 +15,15 @@ namespace Game.SomeBattleScene1.View
 
         [SerializeField] private Transform _targetPoint;
 
-        private readonly UniTaskCompletionSource<int> _someToken = new();
-
-        private float _inputValue;
         private bool _sceneDone = false;
 
-        public void InitScreen(ISomeBattleScene1Screen screen)
+        private Func<float> _getPlayerInput;
+        private Action<int> _onComplete;
+
+        public void Setup(Func<float> getPlayerInput, Action<int> onComplete)
         {
-            screen.SliderEvent.RemoveAllListeners();
-            screen.SliderEvent.AddListener(value => _inputValue = value);
+            _getPlayerInput = getPlayerInput;
+            _onComplete = onComplete;
         }
 
         private void Update()
@@ -45,24 +39,18 @@ namespace Game.SomeBattleScene1.View
             cameraTrans.LookAt(cameraLookAtTarget);
             cameraTrans.rotation = Quaternion.Lerp(camRot, cameraTrans.rotation, Time.deltaTime * _camLookAtSpeed);
 
-            _anim.SetFloat("Move", _inputValue);
+            _anim.SetFloat("Move", _getPlayerInput.Invoke());
 
             if (Vector3.Distance(_anim.rootPosition, _targetPoint.position) < 1)
             {
                 _sceneDone = true;
-                _someToken.TrySetResult(2);
+                _onComplete.Invoke(2);
             }
-        }
-
-        public async UniTask<int> GetProcess()
-        {
-            return await _someToken.Task;
         }
 
         public void Release() 
         {
-            if (this != null)
-                GameObject.Destroy(gameObject);
+            if (this != null) GameObject.Destroy(gameObject);
         }
     }
 }

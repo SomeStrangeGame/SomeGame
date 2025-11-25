@@ -1,24 +1,29 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.SomeBattleScene1.View
 {
-    public interface ISomeBattleScene1Screen
-    {
-        public void Release();
-        public Slider.SliderEvent SliderEvent { get; }
-    }
-
-    public class Screen : MonoBehaviour, ISomeBattleScene1Screen
+    public class Screen : MonoBehaviour
     {
         [SerializeField] private Slider _slider;
 
-        public Slider.SliderEvent SliderEvent => _slider.onValueChanged;
+        private Action<float> _onSliderValueChanged;
+
+        private void OnEnable()
+        {
+            _slider.onValueChanged.RemoveAllListeners();
+            _slider.onValueChanged.AddListener(result => _onSliderValueChanged.Invoke(result));
+        }
+
+        public void Setup (Action<float> onSliderValueChanged)
+        {
+            _onSliderValueChanged = onSliderValueChanged;
+        }
 
         public void Release() 
         {
-            if (this != null)
-                GameObject.Destroy(gameObject);
+            if (this != null) GameObject.Destroy(gameObject);
         }
     }
 

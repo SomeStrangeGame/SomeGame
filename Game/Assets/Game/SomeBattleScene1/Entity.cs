@@ -1,7 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
-using Game.SomeBattleScene1.View;
 using UnityEngine;
 
 namespace Game.SomeBattleScene1
@@ -23,10 +22,13 @@ namespace Game.SomeBattleScene1
             public Data Data;
         }
 
-        private ISomeBattleScene1 _scene;
-        private ISomeBattleScene1Screen _screen;
+        private readonly UniTaskCompletionSource<int> _someToken = new();
+        private readonly Ctx _ctx;
 
-        private Ctx _ctx;
+        private View.Scene _scene;
+        private View.Screen _screen;
+
+        private float _playerInput;
 
         public Entity(Ctx ctx)
         {
@@ -36,23 +38,22 @@ namespace Game.SomeBattleScene1
         public async UniTask Init()
         {
             var go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1ScreenPrefab);
-            _screen = go.GetComponent<ISomeBattleScene1Screen>();
+            _screen = go.GetComponent<View.Screen>();
+            _screen.Setup(result => _playerInput = result);
 
             go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1Prefab);
-            _scene = go.GetComponent<ISomeBattleScene1>();
-            _scene.InitScreen(_screen);
+            _scene = go.GetComponent<View.Scene>();
+            _scene.Setup(() => _playerInput, result => _someToken.TrySetResult(result));
         }
 
-        public async UniTask<int> WaitResult() 
-        {
-            return await _scene.GetProcess();
-        }
+
+        public async UniTask<int> WaitResult() => await _someToken.Task;
 
         protected override void OnDispose()
         {
             base.OnDispose();
-            _screen?.Release();
-            _scene?.Release();
+            if (_screen != null) _screen.Release();
+            if (_scene != null) _scene.Release();
         }
     }
 }

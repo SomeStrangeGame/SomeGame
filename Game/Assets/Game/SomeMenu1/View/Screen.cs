@@ -1,36 +1,29 @@
-using Cysharp.Threading.Tasks;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.SomeMenu1.View
 {
-    public interface ISomeScreen1 
-    {
-        public void Release();
-        public UniTask<int> GetProcess();
-    }
-    
-    public class Screen : MonoBehaviour, ISomeScreen1
+    public class Screen : MonoBehaviour
     {
         [SerializeField] private Button _someButton;
 
-        private readonly UniTaskCompletionSource<int> _someToken = new();
+        private Action<int> _onComplete;
 
         private void OnEnable()
         {
             _someButton.onClick.RemoveAllListeners();
-            _someButton.onClick.AddListener(() => _someToken.TrySetResult(1));
+            _someButton.onClick.AddListener(() => _onComplete.Invoke(1));
         }
 
-        public async UniTask<int> GetProcess()
+        public void Setup(Action<int> onComplete)
         {
-            return await _someToken.Task;
+            _onComplete = onComplete;
         }
 
         public void Release() 
         {
-            if (this != null)
-                GameObject.Destroy(gameObject);
+            if (this != null) GameObject.Destroy(gameObject);
         }
     }
 }
