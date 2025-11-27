@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using UnityEngine;
@@ -17,7 +18,7 @@ namespace Game
         internal SomeBattleScene1.Data SomeBattleScene1 => _someBattleScene1;
     }
 
-    internal sealed class Entity : BaseDisposable
+    internal sealed partial class Entity : BaseDisposable
     {
         internal struct Ctx
         {
@@ -67,32 +68,6 @@ namespace Game
             {
                 case 1:
                     SomeBattleScene1Process().Forget();
-                    break;
-            }
-        }
-
-        private async UniTask SomeBattleScene1Process()
-        {
-            var result = 0;
-            var ctx = new SomeBattleScene1.Entity.Ctx
-            {
-                Data = _ctx.Data.SomeBattleScene1,
-            };
-            using (var someBattle1 = new SomeBattleScene1.Entity(ctx))
-            {
-                await someBattle1.Init();
-
-                await _loading.Hide();
-
-                result = await someBattle1.WaitResult(); //wait some process...
-
-                await _loading.Show();
-            }
-
-            switch (result)
-            {
-                case 2:
-                    SomeMenu1Process().Forget();
                     break;
             }
         }
