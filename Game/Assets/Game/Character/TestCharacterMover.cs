@@ -27,7 +27,16 @@ public class TestCharacterMover : MonoBehaviour
         _anim.SetFloat("Vert", vertValue);
         _anim.SetFloat("Hor", horValue);
 
-        _anim.applyRootMotion = Mathf.Abs(vertValue) + Mathf.Abs(horValue) < 0.1f;
+        var isAttack = _anim.GetNextAnimatorStateInfo(1).IsTag("Attack") || _anim.GetCurrentAnimatorStateInfo(1).IsTag("Attack");
+        _anim.applyRootMotion = (Mathf.Abs(vertValue) + Mathf.Abs(horValue) < 0.1f) || isAttack;
+        _navAgent.isStopped = isAttack;
+
+        if (isAttack)
+        {
+            var oldRotation = _anim.transform.rotation;
+            _anim.transform.LookAt(_lookAtTarget.position);
+            _anim.transform.rotation = Quaternion.Lerp(oldRotation, _anim.transform.rotation, Time.deltaTime * 10f);
+        }
 
         var targetDotForward = GetDot(_anim.transform, _lookAtTarget, Vector3.forward);
         var targetDotRight = GetDot(_anim.transform, _lookAtTarget, Vector3.right);
@@ -38,6 +47,17 @@ public class TestCharacterMover : MonoBehaviour
         var isRot = targetDotForward < 0f && _anim.applyRootMotion;
         _anim.SetBool("IsRot", isRot);
         _anim.SetFloat("Rot", _rot);
+
+        var attacksTriggers = new string[3]
+        {
+            "Attack_0",
+            "Attack_1",
+            "Attack_2"
+        };
+
+        if (Input.GetKeyUp(KeyCode.Space)) _anim.SetTrigger(attacksTriggers[Random.Range(0, 3)]);
+
+        _target.position = _anim.transform.position + Vector3.right * Input.GetAxis("Horizontal") + Vector3.forward * Input.GetAxis("Vertical");
     }
 
     private void OnAnimatorIK(int layerIndex)
