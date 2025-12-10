@@ -1294,8 +1294,9 @@ GameObject:
   - component: {fileID: 3647844004547689774}
   - component: {fileID: 5162326385912470334}
   - component: {fileID: 8229612800351243387}
+  - component: {fileID: 2187799540992021078}
   m_Layer: 0
-  m_Name: NonBattleCharacter
+  m_Name: Character
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1329,7 +1330,7 @@ Animator:
   m_GameObject: {fileID: 5440770447029949087}
   m_Enabled: 1
   m_Avatar: {fileID: 9000000, guid: cc4266057d41849e9a37a1255f7dd28c, type: 3}
-  m_Controller: {fileID: 9100000, guid: 7e9b7ccae8e2d4232aa30eb3a47c110a, type: 2}
+  m_Controller: {fileID: 9100000, guid: e9ba2610417364fae9e228437d7e857f, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 1
@@ -1355,7 +1356,7 @@ NavMeshAgent:
   m_Acceleration: 8
   avoidancePriority: 50
   m_AngularSpeed: 120
-  m_StoppingDistance: 3
+  m_StoppingDistance: 0.25
   m_AutoTraverseOffMeshLink: 1
   m_AutoBraking: 1
   m_AutoRepath: 1
@@ -1363,6 +1364,18 @@ NavMeshAgent:
   m_BaseOffset: 0
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
+--- !u!114 &2187799540992021078
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5440770447029949087}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e06fbe82dfef4954a36d52003dde497, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5762451333281424790
 GameObject:
   m_ObjectHideFlags: 0

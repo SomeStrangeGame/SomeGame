@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Project Path="Game.csproj" />
+  <Project Path="Game.Character.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Game.SomeBattleScene1.csproj" />
   <Project Path="Game.Disposable.csproj" />
