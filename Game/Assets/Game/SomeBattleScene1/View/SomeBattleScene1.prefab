@@ -34,6 +34,7 @@ Transform:
   - {fileID: 5020483812442029322}
   - {fileID: 8357020653268754028}
   - {fileID: 2038320024740842747}
+  - {fileID: 4281074853009237952}
   - {fileID: 8575824034156274533}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -50,11 +51,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _playerCharacter: {fileID: 7302393754005922634}
-  _targetObject: {fileID: 6253064915983028037}
-  _camOffset: {x: 0, y: 8, z: -5}
-  _camMoveSpeed: 15
-  _camLookAtOffset: {x: 0, y: 1, z: 0}
-  _camLookAtSpeed: 15
+  _enemyCharacter: {fileID: 4789490015930058865}
 --- !u!114 &3403661782647626145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -492,6 +489,73 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!1001 &717990086756752110
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 2626839424564799246}
+    m_Modifications:
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -2.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 8.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5440770447029949087, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+      propertyPath: m_Name
+      value: CharacterEnemy
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+--- !u!4 &4281074853009237952 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3647844004547689774, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+  m_PrefabInstance: {fileID: 717990086756752110}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &4789490015930058865 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5440770447029949087, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
+  m_PrefabInstance: {fileID: 717990086756752110}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3374937235448410581
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -542,7 +606,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5440770447029949087, guid: 3bf4fdf22608843eaa59d66293a9c738, type: 3}
       propertyPath: m_Name
-      value: Character
+      value: CharacterPlayer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

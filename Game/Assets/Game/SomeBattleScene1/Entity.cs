@@ -78,6 +78,18 @@ namespace Game.SomeBattleScene1
             }).AddTo(this);
             await playerCharacter.Init();
 
+            var enemyCharacter = new Character.Entity(new Character.Entity.Ctx
+            {
+                CharacterView = _scene.EnemyCharacter,
+                Speed = 1.5f,
+
+                GetTargetPosition = () => GetTargetPosition(false),
+                GetLookAtTargetPosition = () => GetLookAtTargetPosition(false),
+                GetAttackInput = () => GetAttackInput(false),
+                GetDodgeInput = () => GetDodgeInput(false),
+            }).AddTo(this);
+            await enemyCharacter.Init();
+
             _scene.Setup(new View.Scene.Ctx
             {
                 OnUpdate = deltaTime =>
@@ -100,13 +112,23 @@ namespace Game.SomeBattleScene1
             }
             else
             {
-                return Vector3.zero;
+                var targetPos = _scene.PlayerCharacter.transform.position;
+                //if (Vector3.Distance(targetPos, _scene.EnemyCharacter.transform.position) < 2f)
+                //    targetPos = _scene.EnemyCharacter.transform.position;
+                return targetPos;
             }
         }
 
         private Vector3 GetLookAtTargetPosition(bool isPlayer)
         {
-            return _scene.TargetObject.transform.position;
+            if (isPlayer)
+            {
+                return _scene.EnemyCharacter.transform.position + Vector3.up;
+            }
+            else
+            {
+                return _scene.PlayerCharacter.transform.position + Vector3.up;
+            }
         }
 
         private bool GetAttackInput(bool isPlayer)

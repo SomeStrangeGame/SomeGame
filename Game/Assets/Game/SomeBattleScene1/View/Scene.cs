@@ -12,14 +12,14 @@ namespace Game.SomeBattleScene1.View
         }
 
         [SerializeField] private GameObject _playerCharacter;
-        [SerializeField] private GameObject _targetObject;
+        [SerializeField] private GameObject _enemyCharacter;
 
         private bool _sceneDone = false;
 
         private Ctx _ctx;
 
         internal GameObject PlayerCharacter => _playerCharacter;
-        internal GameObject TargetObject => _targetObject;
+        internal GameObject EnemyCharacter => _enemyCharacter;
 
         internal void Setup(Ctx ctx)
         {

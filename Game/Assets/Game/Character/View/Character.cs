@@ -19,8 +19,9 @@ namespace Game.Character.View
             internal Func<bool> GetDodgeInput;
         }
 
-        private const float _inputMaxValue = 2f;
-        private const float _inputMinValue = 0.1f;
+        private const float _inputSense = 15f;
+        private const float _inputMaxValue = 1f;
+        private const float _inputMinValue = 0.2f;
         private const float _stoppedRotationSpeed = 10f;
         private const float _animRotationSpeed = 5f;
 
@@ -40,6 +41,8 @@ namespace Game.Character.View
         private NavMeshAgent _navAgent;
 
         private float _rot;
+
+        private Vector2 _input;
 
         private readonly System.Random _random = new(DateTime.UtcNow.Second);
 
@@ -72,10 +75,10 @@ namespace Game.Character.View
             _navAgent.SetDestination(_ctx.GetTargetPosition.Invoke());
             var vel = _navAgent.velocity;
 
-            var vertValue = Mathf.Clamp(transform.InverseTransformDirection(vel).z, -_inputMaxValue, _inputMaxValue);
-            var horValue = Mathf.Clamp(transform.InverseTransformDirection(vel).x, -_inputMaxValue, _inputMaxValue);
-            _anim.SetFloat("Vert", vertValue);
-            _anim.SetFloat("Hor", horValue);
+            _input.y = Mathf.Lerp(_input.y, Mathf.Clamp(transform.InverseTransformDirection(vel).z, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
+            _input.x = Mathf.Lerp(_input.x, Mathf.Clamp(transform.InverseTransformDirection(vel).x, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
+            _anim.SetFloat("Vert", _input.y);
+            _anim.SetFloat("Hor", _input.x);
 
             var isAttackTag = "Attack";
             var isAttack = _anim.GetNextAnimatorStateInfo(1).IsTag(isAttackTag) || _anim.GetCurrentAnimatorStateInfo(1).IsTag(isAttackTag);
@@ -83,7 +86,7 @@ namespace Game.Character.View
             var dodgingTag = "Dodging";
             var isDodging = _anim.GetNextAnimatorStateInfo(2).IsTag(dodgingTag) || _anim.GetCurrentAnimatorStateInfo(2).IsTag(dodgingTag);
 
-            _anim.applyRootMotion = (Mathf.Abs(vertValue) + Mathf.Abs(horValue) < _inputMinValue) || isAttack || isDodging;
+            _anim.applyRootMotion = (Mathf.Abs(_input.y) + Mathf.Abs(_input.x) < _inputMinValue) || isAttack || isDodging;
             _navAgent.isStopped = isAttack || isDodging;
 
             if (_navAgent.isStopped)
