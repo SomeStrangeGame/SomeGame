@@ -7,16 +7,12 @@ namespace Game.SomeBattleScene1.View
     {
         internal struct Ctx
         {
+            internal Action<float> OnUpdate;
             internal Action<int> OnComplete;
         }
 
         [SerializeField] private GameObject _playerCharacter;
         [SerializeField] private GameObject _targetObject;
-
-        [SerializeField] private Vector3 _camOffset;
-        [SerializeField] private float _camMoveSpeed;
-        [SerializeField] private Vector3 _camLookAtOffset;
-        [SerializeField] private float _camLookAtSpeed;
 
         private bool _sceneDone = false;
 
@@ -34,14 +30,7 @@ namespace Game.SomeBattleScene1.View
         {
             if (_sceneDone) return;
 
-            var cameraTrans = Camera.allCameras[0].transform;
-            var cameraTarget = _playerCharacter.transform.position + _camOffset;
-            cameraTrans.position = Vector3.Lerp(cameraTrans.position, cameraTarget, Time.deltaTime * _camMoveSpeed);
-
-            var cameraLookAtTarget = _playerCharacter.transform.position + _camLookAtOffset;
-            var camRot = cameraTrans.rotation;
-            cameraTrans.LookAt(cameraLookAtTarget);
-            cameraTrans.rotation = Quaternion.Lerp(camRot, cameraTrans.rotation, Time.deltaTime * _camLookAtSpeed);
+            _ctx.OnUpdate.Invoke(Time.deltaTime);
 
             if (Input.GetKeyUp(KeyCode.Escape))
             {

@@ -463,6 +463,10 @@ MonoBehaviour:
     _someBattleScene1:
       _someBattleScene1Prefab: {fileID: 495528780594990917, guid: b29ceaeefde554dcf8b8b4d748adef0b, type: 3}
       _someBattleScene1ScreenPrefab: {fileID: 5389417796270955557, guid: 10a6baccfab9d4360876c0a6efb7e2b5, type: 3}
+      _camMoveOffset: {x: 0, y: 8, z: -5}
+      _camMoveSpeed: 15
+      _camLookAtOffset: {x: 0, y: 1, z: 0}
+      _camLookAtSpeed: 15
 --- !u!4 &1138803520
 Transform:
   m_ObjectHideFlags: 0

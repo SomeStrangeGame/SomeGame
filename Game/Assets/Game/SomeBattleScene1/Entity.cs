@@ -11,8 +11,18 @@ namespace Game.SomeBattleScene1
         [SerializeField] private GameObject _someBattleScene1Prefab;
         [SerializeField] private GameObject _someBattleScene1ScreenPrefab;
 
+        [SerializeField] private Vector3 _camMoveOffset;
+        [SerializeField] private float _camMoveSpeed;
+        [SerializeField] private Vector3 _camLookAtOffset;
+        [SerializeField] private float _camLookAtSpeed;
+
         internal GameObject SomeBattleScene1Prefab => _someBattleScene1Prefab;
         internal GameObject SomeBattleScene1ScreenPrefab => _someBattleScene1ScreenPrefab;
+
+        internal Vector3 CamMoveOffset => _camMoveOffset;
+        internal float CamMoveSpeed => _camMoveSpeed;
+        internal Vector3 CamLookAtOffset => _camLookAtOffset;
+        internal float CamLookAtSpeed => _camLookAtSpeed;
     }
     
     public sealed class Entity : BaseDisposable
@@ -45,6 +55,17 @@ namespace Game.SomeBattleScene1
             go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1Prefab);
             _scene = go.GetComponent<View.Scene>();
 
+            var camera = new Camera.Entity(new Camera.Entity.Ctx
+            {
+                MoveOffset = _ctx.Data.CamMoveOffset,
+                MoveSpeed = _ctx.Data.CamMoveSpeed,
+                LookAtOffset = _ctx.Data.CamLookAtOffset,
+                LookAtSpeed = _ctx.Data.CamLookAtSpeed,
+
+                GetCameraTargetPosition = () => _scene.PlayerCharacter.transform.position,
+            }).AddTo(this);
+            await camera.Init();
+
             var playerCharacter = new Character.Entity(new Character.Entity.Ctx
             {
                 CharacterView = _scene.PlayerCharacter,
@@ -54,12 +75,15 @@ namespace Game.SomeBattleScene1
                 GetLookAtTargetPosition = () => GetLookAtTargetPosition(true),
                 GetAttackInput = () => GetAttackInput(true),
                 GetDodgeInput = () => GetDodgeInput(true),
-
             }).AddTo(this);
             await playerCharacter.Init();
 
             _scene.Setup(new View.Scene.Ctx
             {
+                OnUpdate = deltaTime =>
+                {
+                    camera.UpdatePos(deltaTime);
+                },
                 OnComplete = result => _someToken.TrySetResult(result),
             });
         }
