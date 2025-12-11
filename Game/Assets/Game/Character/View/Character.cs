@@ -27,8 +27,8 @@ namespace Game.Character.View
 
         private readonly string[] _attacksTriggers = new string[]
         {
-            "Attack_0",
-            "Attack_1",
+            //"Attack_0",
+            //"Attack_1",
             "Attack_2"
         };
 
@@ -43,10 +43,14 @@ namespace Game.Character.View
         private float _rot;
 
         private Vector2 _input;
+        private Vector3 _lookAtTargetPosition;
 
         private readonly System.Random _random = new(DateTime.UtcNow.Second);
 
         private Ctx _ctx;
+
+        public Animator Anim => _anim;
+        public NavMeshAgent NavAgent => _navAgent;
 
         internal void Setup(Ctx ctx)
         {
@@ -115,7 +119,8 @@ namespace Game.Character.View
         {
             if (!IsSetupDone()) return;
 
-            _anim.SetLookAtPosition(_ctx.GetLookAtTargetPosition.Invoke());
+            _lookAtTargetPosition = Vector3.Lerp(_lookAtTargetPosition, _ctx.GetLookAtTargetPosition.Invoke(), Time.deltaTime * 5f);
+            _anim.SetLookAtPosition(_lookAtTargetPosition);
             _anim.SetLookAtWeight(1f, 0.5f, 0.7f, 0.9f, 0.5f);
         }
 

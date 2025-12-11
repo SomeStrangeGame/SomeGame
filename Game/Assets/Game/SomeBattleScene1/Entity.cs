@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using UnityEngine;
@@ -38,6 +39,9 @@ namespace Game.SomeBattleScene1
         private View.Scene _scene;
         private View.Screen _screen;
 
+        private Character.Entity _playerCharacterEntity;
+        private List<Character.Entity> _enemyCharacterEntites;
+
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
@@ -66,29 +70,34 @@ namespace Game.SomeBattleScene1
             }).AddTo(this);
             await camera.Init();
 
-            var playerCharacter = new Character.Entity(new Character.Entity.Ctx
+            _playerCharacterEntity = new Character.Entity(new Character.Entity.Ctx
             {
                 CharacterView = _scene.PlayerCharacter,
                 Speed = 1.5f,
 
-                GetTargetPosition = () => GetTargetPosition(true),
-                GetLookAtTargetPosition = () => GetLookAtTargetPosition(true),
-                GetAttackInput = () => GetAttackInput(true),
-                GetDodgeInput = () => GetDodgeInput(true),
+                GetTargetPosition = characterEntity => GetTargetPosition(characterEntity, true),
+                GetLookAtTargetPosition = characterEntity => GetLookAtTargetPosition(characterEntity, true),
+                GetAttackInput = characterEntity => GetAttackInput(true),
+                GetDodgeInput = characterEntity => GetDodgeInput(true),
             }).AddTo(this);
-            await playerCharacter.Init();
+            await _playerCharacterEntity.Init();
 
-            var enemyCharacter = new Character.Entity(new Character.Entity.Ctx
+            _enemyCharacterEntites = new();
+            foreach (var enemyCharacterView in _scene.EnemyCharacters)
             {
-                CharacterView = _scene.EnemyCharacter,
-                Speed = 1.5f,
+                var enemyCharacter = new Character.Entity(new Character.Entity.Ctx
+                {
+                    CharacterView = enemyCharacterView,
+                    Speed = 1.5f,
 
-                GetTargetPosition = () => GetTargetPosition(false),
-                GetLookAtTargetPosition = () => GetLookAtTargetPosition(false),
-                GetAttackInput = () => GetAttackInput(false),
-                GetDodgeInput = () => GetDodgeInput(false),
-            }).AddTo(this);
-            await enemyCharacter.Init();
+                    GetTargetPosition = characterEntity => GetTargetPosition(characterEntity, false),
+                    GetLookAtTargetPosition = characterEntity => GetLookAtTargetPosition(characterEntity, false),
+                    GetAttackInput = characterEntity => GetAttackInput(false),
+                    GetDodgeInput = characterEntity => GetDodgeInput(false),
+                }).AddTo(this);
+                await enemyCharacter.Init();
+                _enemyCharacterEntites.Add(enemyCharacter);
+            }
 
             _scene.Setup(new View.Scene.Ctx
             {
@@ -100,34 +109,44 @@ namespace Game.SomeBattleScene1
             });
         }
 
-        private Vector3 GetTargetPosition(bool isPlayer)
+        private Vector3 GetTargetPosition(Character.Entity characterEntity, bool isPlayer)
         {
             if (isPlayer)
             {
-                var targetPosition = _scene.PlayerCharacter.transform.position;
-                targetPosition += Vector3.right * Input.GetAxis("Horizontal");
-                targetPosition += Vector3.forward * Input.GetAxis("Vertical");
+                var targetPos = characterEntity.Anim.rootPosition;
+                targetPos += Vector3.right * Input.GetAxis("Horizontal");
+                targetPos += Vector3.forward * Input.GetAxis("Vertical");
 
-                return targetPosition;
+                return targetPos;
             }
             else
             {
-                var targetPos = _scene.PlayerCharacter.transform.position;
-                //if (Vector3.Distance(targetPos, _scene.EnemyCharacter.transform.position) < 2f)
-                //    targetPos = _scene.EnemyCharacter.transform.position;
+                var heading = _playerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition;
+                var distance = heading.magnitude;
+                var direction = heading / distance;
+                var targetPos = _playerCharacterEntity.Anim.rootPosition - direction * 2f;
                 return targetPos;
             }
         }
 
-        private Vector3 GetLookAtTargetPosition(bool isPlayer)
+        private Vector3 GetLookAtTargetPosition(Character.Entity characterEntity, bool isPlayer)
         {
             if (isPlayer)
             {
-                return _scene.EnemyCharacter.transform.position + Vector3.up;
+                var lookAtPoint = characterEntity.Anim.rootPosition + characterEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).forward * 5f;
+                var minDistance = float.MaxValue;
+                foreach (var enemyEntity in _enemyCharacterEntites)
+                {
+                    var distance = Vector3.Distance(enemyEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
+                    if (distance > minDistance) continue;
+                    minDistance = distance;
+                    lookAtPoint = enemyEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
+                }
+                return lookAtPoint;
             }
             else
             {
-                return _scene.PlayerCharacter.transform.position + Vector3.up;
+                return _playerCharacterEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
             }
         }
 

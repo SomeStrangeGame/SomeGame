@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Game.Character
 {
@@ -12,15 +13,18 @@ namespace Game.Character
             public GameObject CharacterView;
             public float Speed;
 
-            public Func<Vector3> GetTargetPosition;
-            public Func<Vector3> GetLookAtTargetPosition;
-            public Func<bool> GetAttackInput;
-            public Func<bool> GetDodgeInput;
+            public Func<Entity, Vector3> GetTargetPosition;
+            public Func<Entity, Vector3> GetLookAtTargetPosition;
+            public Func<Entity, bool> GetAttackInput;
+            public Func<Entity, bool> GetDodgeInput;
         }
 
         private View.Character _character;
 
         private readonly Ctx _ctx;
+
+        public Animator Anim => _character.Anim;
+        public NavMeshAgent NavAgent => _character.NavAgent;
 
         public Entity(Ctx ctx)
         {
@@ -34,11 +38,11 @@ namespace Game.Character
             {
                 Speed = _ctx.Speed,
 
-                GetTargetPosition = _ctx.GetTargetPosition,
-                GetLookAtTargetPosition = _ctx.GetLookAtTargetPosition,
+                GetTargetPosition = () => _ctx.GetTargetPosition.Invoke(this),
+                GetLookAtTargetPosition = () => _ctx.GetLookAtTargetPosition.Invoke(this),
 
-                GetAttackInput = _ctx.GetAttackInput,
-                GetDodgeInput = _ctx.GetDodgeInput,
+                GetAttackInput = () => _ctx.GetAttackInput.Invoke(this),
+                GetDodgeInput = () => _ctx.GetDodgeInput.Invoke(this),
             });
         }
     }
