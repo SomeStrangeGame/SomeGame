@@ -124,7 +124,7 @@ namespace Game.SomeBattleScene1
                 var heading = _playerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition;
                 var distance = heading.magnitude;
                 var direction = heading / distance;
-                var targetPos = _playerCharacterEntity.Anim.rootPosition - direction * 2f;
+                var targetPos = _playerCharacterEntity.Anim.rootPosition - direction * 1.5f;
                 return targetPos;
             }
         }
@@ -137,8 +137,11 @@ namespace Game.SomeBattleScene1
                 var minDistance = float.MaxValue;
                 foreach (var enemyEntity in _enemyCharacterEntites)
                 {
+                    if (!enemyEntity.Anim.enabled) continue;
+
                     var distance = Vector3.Distance(enemyEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
                     if (distance > minDistance) continue;
+
                     minDistance = distance;
                     lookAtPoint = enemyEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
                 }

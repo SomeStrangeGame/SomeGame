@@ -43,7 +43,26 @@ namespace Game.Character
 
                 GetAttackInput = () => _ctx.GetAttackInput.Invoke(this),
                 GetDodgeInput = () => _ctx.GetDodgeInput.Invoke(this),
+
+                OnDamage = Damage,
+                OnHit = Hit,
             });
+        }
+
+        private void Damage(int damage)
+        {
+            _character.Die();
+        }
+
+        private void Hit()
+        {
+            var headTrans = Anim.GetBoneTransform(HumanBodyBones.Head);
+            if (!Physics.Raycast(new Ray(headTrans.position, headTrans.forward), out var hit, 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
+
+            var character = hit.collider.GetComponentInParent<View.Character>();
+            if (character == null) return;
+
+            character.Damage(0);
         }
     }
 }

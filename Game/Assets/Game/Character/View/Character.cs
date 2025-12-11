@@ -6,6 +6,7 @@ namespace Game.Character.View
 {
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(NavMeshAgent))]
+    [RequireComponent(typeof(Collider))]
     internal sealed class Character : MonoBehaviour
     {
         internal struct Ctx
@@ -17,6 +18,9 @@ namespace Game.Character.View
 
             internal Func<bool> GetAttackInput;
             internal Func<bool> GetDodgeInput;
+
+            internal Action<int> OnDamage;
+            internal Action OnHit;
         }
 
         private const float _inputSense = 15f;
@@ -49,22 +53,46 @@ namespace Game.Character.View
 
         private Ctx _ctx;
 
+        private Collider _mainCollider;
+        private Rigidbody[] _ragdollBones;
+
         public Animator Anim => _anim;
         public NavMeshAgent NavAgent => _navAgent;
+
+        [ContextMenu("Die")]
+        internal void Die()
+        {
+            _mainCollider.enabled = false;
+            _anim.enabled = false;
+            _navAgent.enabled = false;
+            foreach (var ragdollBone in _ragdollBones)
+            {
+                ragdollBone.gameObject.SetActive(true);
+            }
+        }
 
         internal void Setup(Ctx ctx)
         {
             _ctx = ctx;
+
+            _mainCollider = GetComponent<Collider>();
 
             _anim = GetComponent<Animator>();
             _anim.SetFloat("MoveSpeed", _ctx.Speed);
 
             _navAgent = GetComponent<NavMeshAgent>();
             _navAgent.speed = _ctx.Speed;
+
+            _ragdollBones = GetComponentsInChildren<Rigidbody>(true);
+            foreach (var ragdollBone in _ragdollBones)
+            {
+                ragdollBone.gameObject.SetActive(false);
+            }
         }
 
         private bool IsSetupDone()
         {
+            if (_mainCollider == null) return false;
             if (_anim == null) return false;
             if (_navAgent == null) return false;
 
@@ -114,19 +142,30 @@ namespace Game.Character.View
             if (_ctx.GetDodgeInput.Invoke()) _anim.SetTrigger(_dodgingTriggers[_random.Next(0, _dodgingTriggers.Length)]);
         }
 
-        //invoke via engine
+        //invoke via animator
         private void OnAnimatorIK(int layerIndex)
         {
             if (!IsSetupDone()) return;
 
-            _lookAtTargetPosition = Vector3.Lerp(_lookAtTargetPosition, _ctx.GetLookAtTargetPosition.Invoke(), Time.deltaTime * 5f);
+            _lookAtTargetPosition = Vector3.Lerp(_lookAtTargetPosition, _ctx.GetLookAtTargetPosition.Invoke(), Time.deltaTime * 2f);
             _anim.SetLookAtPosition(_lookAtTargetPosition);
-            _anim.SetLookAtWeight(1f, 0.5f, 0.7f, 0.9f, 0.5f);
+            _anim.SetLookAtWeight(1f, 0.25f, 0.7f, 0.9f, 0.5f);
         }
 
         private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
         {
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
+        }
+
+        public void Damage(int damage)
+        {
+            _ctx.OnDamage.Invoke(damage);
+        }
+
+        //invoke via animator
+        private void HitEvent()
+        {
+            _ctx.OnHit.Invoke();
         }
     }
 }
