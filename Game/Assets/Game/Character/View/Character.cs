@@ -26,7 +26,7 @@ namespace Game.Character.View
         private const float _inputSense = 15f;
         private const float _inputMaxValue = 1f;
         private const float _inputMinValue = 0.2f;
-        private const float _stoppedRotationSpeed = 10f;
+        private const float _stoppedRotationSpeed = 5f;
         private const float _animRotationSpeed = 5f;
 
         private readonly string[] _attacksTriggers = new string[]
@@ -103,6 +103,9 @@ namespace Game.Character.View
         private void Update()
         {
             if (!IsSetupDone()) return;
+            if (!_mainCollider.enabled) return;
+            if (!_anim.enabled) return;
+            if (!_navAgent.enabled) return;
 
             _navAgent.SetDestination(_ctx.GetTargetPosition.Invoke());
             var vel = _navAgent.velocity;
