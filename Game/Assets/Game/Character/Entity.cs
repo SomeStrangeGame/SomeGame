@@ -25,6 +25,8 @@ namespace Game.Character
 
         public Animator Anim => _character.Anim;
         public NavMeshAgent NavAgent => _character.NavAgent;
+        public bool IsAttacking => _character.IsAttacking();
+        public bool IsDodging => _character.IsDodging();
 
         public Entity(Ctx ctx)
         {
@@ -51,6 +53,8 @@ namespace Game.Character
 
         private void Damage(int damage)
         {
+            if (_character.IsDodging()) return;
+            
             _character.Die();
         }
 

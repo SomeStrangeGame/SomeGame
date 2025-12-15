@@ -115,11 +115,8 @@ namespace Game.Character.View
             _anim.SetFloat("Vert", _input.y);
             _anim.SetFloat("Hor", _input.x);
 
-            var isAttackTag = "Attack";
-            var isAttack = _anim.GetNextAnimatorStateInfo(1).IsTag(isAttackTag) || _anim.GetCurrentAnimatorStateInfo(1).IsTag(isAttackTag);
-
-            var dodgingTag = "Dodging";
-            var isDodging = _anim.GetNextAnimatorStateInfo(2).IsTag(dodgingTag) || _anim.GetCurrentAnimatorStateInfo(2).IsTag(dodgingTag);
+            var isAttack = IsAttacking();
+            var isDodging = IsDodging();
 
             _anim.applyRootMotion = (Mathf.Abs(_input.y) + Mathf.Abs(_input.x) < _inputMinValue) || isAttack || isDodging;
             _navAgent.isStopped = isAttack || isDodging;
@@ -145,6 +142,18 @@ namespace Game.Character.View
             if (_ctx.GetDodgeInput.Invoke()) _anim.SetTrigger(_dodgingTriggers[_random.Next(0, _dodgingTriggers.Length)]);
         }
 
+        internal bool IsAttacking()
+        {
+            var isAttackTag = "Attack";
+            return _anim.GetNextAnimatorStateInfo(1).IsTag(isAttackTag) || _anim.GetCurrentAnimatorStateInfo(1).IsTag(isAttackTag);
+        }
+
+        internal bool IsDodging()
+        {
+            var dodgingTag = "Dodging";
+            return _anim.GetNextAnimatorStateInfo(2).IsTag(dodgingTag) || _anim.GetCurrentAnimatorStateInfo(2).IsTag(dodgingTag);
+        }
+
         //invoke via animator
         private void OnAnimatorIK(int layerIndex)
         {
@@ -160,7 +169,7 @@ namespace Game.Character.View
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
 
-        public void Damage(int damage)
+        internal void Damage(int damage)
         {
             _ctx.OnDamage.Invoke(damage);
         }
