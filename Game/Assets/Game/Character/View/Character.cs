@@ -21,6 +21,8 @@ namespace Game.Character.View
 
             internal Action<int> OnDamage;
             internal Action OnHit;
+
+            internal Func<Transform, Vector3, Vector3, float> GetDot;
         }
 
         private const float _inputSense = 15f;

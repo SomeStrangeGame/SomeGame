@@ -12,11 +12,14 @@ namespace Game.Character
         {
             public GameObject CharacterView;
             public float Speed;
+            public float AttackDistance;
 
             public Func<Entity, Vector3> GetTargetPosition;
             public Func<Entity, Vector3> GetLookAtTargetPosition;
             public Func<Entity, bool> GetAttackInput;
             public Func<Entity, bool> GetDodgeInput;
+
+            public Func<Transform, Vector3, Vector3, float> GetDot;
         }
 
         private View.Character _character;
@@ -48,6 +51,8 @@ namespace Game.Character
 
                 OnDamage = Damage,
                 OnHit = Hit,
+
+                GetDot = _ctx.GetDot,
             });
         }
 
@@ -61,7 +66,7 @@ namespace Game.Character
         private void Hit()
         {
             var headTrans = Anim.GetBoneTransform(HumanBodyBones.Head);
-            if (!Physics.Raycast(new Ray(headTrans.position, headTrans.forward), out var hit, 2f, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
+            if (!Physics.Raycast(new Ray(headTrans.position, headTrans.forward), out var hit, _ctx.AttackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
 
             var character = hit.collider.GetComponentInParent<View.Character>();
             if (character == null) return;

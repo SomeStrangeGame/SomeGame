@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using UnityEngine;
@@ -27,14 +26,13 @@ namespace Game.SomeBattleScene1
         internal float CamLookAtSpeed => _camLookAtSpeed;
     }
     
-    public sealed class Entity : BaseDisposable
+    public sealed partial class Entity : BaseDisposable
     {
         public struct Ctx
         {
             public Data Data;
         }
 
-        private readonly System.Random _random = new(DateTime.UtcNow.Second);
         private readonly UniTaskCompletionSource<int> _someToken = new();
         private readonly Ctx _ctx;
 
@@ -81,6 +79,8 @@ namespace Game.SomeBattleScene1
                 GetLookAtTargetPosition = characterEntity => GetLookAtTargetPosition(characterEntity, true),
                 GetAttackInput = characterEntity => GetAttackInput(characterEntity, true),
                 GetDodgeInput = characterEntity => GetDodgeInput(characterEntity, true),
+
+                GetDot = GetDot,
             }).AddTo(this);
             await _playerCharacterEntity.Init();
 
@@ -91,11 +91,14 @@ namespace Game.SomeBattleScene1
                 {
                     CharacterView = enemyCharacterView,
                     Speed = 1.5f,
+                    AttackDistance = 2f,
 
                     GetTargetPosition = characterEntity => GetTargetPosition(characterEntity, false),
                     GetLookAtTargetPosition = characterEntity => GetLookAtTargetPosition(characterEntity, false),
                     GetAttackInput = characterEntity => GetAttackInput(characterEntity, false),
                     GetDodgeInput = characterEntity => GetDodgeInput(characterEntity, false),
+
+                    GetDot = GetDot,
                 }).AddTo(this);
                 await enemyCharacter.Init();
                 _enemyCharacterEntites.Add(enemyCharacter);
@@ -111,96 +114,12 @@ namespace Game.SomeBattleScene1
             });
         }
 
-        private Vector3 GetTargetPosition(Character.Entity characterEntity, bool isPlayer)
-        {
-            if (isPlayer)
-            {
-                var targetPos = characterEntity.Anim.rootPosition;
-                targetPos += Vector3.right * Input.GetAxis("Horizontal");
-                targetPos += Vector3.forward * Input.GetAxis("Vertical");
-
-                return targetPos;
-            }
-            else
-            {
-                var heading = _playerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition;
-                var distance = heading.magnitude;
-                var direction = heading / distance;
-                var targetPos = _playerCharacterEntity.Anim.rootPosition - direction * 1.9f;
-                return targetPos;
-            }
-        }
-
-        private Vector3 GetLookAtTargetPosition(Character.Entity characterEntity, bool isPlayer)
-        {
-            if (isPlayer)
-            {
-                var lookAtPoint = characterEntity.Anim.rootPosition + characterEntity.Anim.transform.forward * 5f;
-                var minDistance = float.MaxValue;
-                foreach (var enemyEntity in _enemyCharacterEntites)
-                {
-                    if (!enemyEntity.Anim.enabled) continue;
-
-                    var distance = Vector3.Distance(enemyEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
-                    if (distance > minDistance) continue;
-
-                    minDistance = distance;
-                    lookAtPoint = enemyEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
-                }
-                return lookAtPoint;
-            }
-            else
-            {
-                return _playerCharacterEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
-            }
-        }
-
-        private bool GetAttackInput(Character.Entity characterEntity, bool isPlayer)
-        {
-            if (characterEntity.IsAttacking) return false;
-
-            if (isPlayer)
-            {
-                return Input.GetKeyUp(KeyCode.Space);
-            }
-            else
-            {
-                var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
-                var isRandom = _random.Next(-10, 10) > 0;
-                if (distance < 2.2f && isRandom && !_enemyCharacterEntites.Any(e => e.IsAttacking))
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        private bool GetDodgeInput(Character.Entity characterEntity, bool isPlayer)
-        {
-            if (characterEntity.IsDodging) return false;
-
-            if (isPlayer)
-            {
-                return Input.GetKeyUp(KeyCode.E);
-            }
-            else
-            {
-                var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
-                var targetDotForward = GetDot(_playerCharacterEntity.Anim.transform, characterEntity.Anim.bodyPosition, Vector3.forward);
-                if (targetDotForward > 0.1f && distance < 2.1f && _playerCharacterEntity.IsAttacking)
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
-
-        public async UniTask<int> WaitResult() => await _someToken.Task;
-
         private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
         {
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
+
+        public async UniTask<int> WaitResult() => await _someToken.Task;
 
         protected override void OnDispose()
         {
