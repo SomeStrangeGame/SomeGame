@@ -24,12 +24,15 @@ namespace Game.Character
         }
 
         private View.Character _character;
+        private Transform _chestTransform;
         private int _health;
 
         private readonly Ctx _ctx;
 
         public Animator Anim => _character.Anim;
         public NavMeshAgent NavAgent => _character.NavAgent;
+        public Transform ChestTransform => _chestTransform;
+
         public bool IsAttacking => _character.IsAttacking();
         public bool IsDodging => _character.IsDodging();
         public bool IsHitting => _character.IsHitting();
@@ -57,6 +60,7 @@ namespace Game.Character
 
                 GetDot = _ctx.GetDot,
             });
+            _chestTransform = _character.Anim.GetBoneTransform(HumanBodyBones.Chest);
             _health = _ctx.Health;
         }
 

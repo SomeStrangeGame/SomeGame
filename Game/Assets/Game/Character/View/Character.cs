@@ -60,6 +60,7 @@ namespace Game.Character.View
 
         private Vector2 _input;
         private Vector3 _lookAtTargetPosition;
+        private Vector3 _rawLookAtTargetPosition;
 
         private readonly System.Random _random = new(DateTime.UtcNow.Second);
 
@@ -79,6 +80,7 @@ namespace Game.Character.View
             _navAgent.enabled = false;
             foreach (var ragdollBone in _ragdollBones)
             {
+                ragdollBone.isKinematic = false;
                 ragdollBone.gameObject.SetActive(true);
             }
         }
@@ -98,6 +100,7 @@ namespace Game.Character.View
             _ragdollBones = GetComponentsInChildren<Rigidbody>(true);
             foreach (var ragdollBone in _ragdollBones)
             {
+                ragdollBone.isKinematic = true;
                 ragdollBone.gameObject.SetActive(false);
             }
         }
@@ -121,6 +124,8 @@ namespace Game.Character.View
             if (!_anim.enabled) return;
             if (!_navAgent.enabled) return;
 
+            _rawLookAtTargetPosition = _ctx.GetLookAtTargetPosition.Invoke();
+
             _navAgent.SetDestination(_ctx.GetTargetPosition.Invoke());
             var vel = _navAgent.velocity;
 
@@ -139,12 +144,12 @@ namespace Game.Character.View
             if (_navAgent.isStopped)
             {
                 var oldRotation = _anim.transform.rotation;
-                _anim.transform.LookAt(_ctx.GetLookAtTargetPosition.Invoke());
+                _anim.transform.LookAt(_rawLookAtTargetPosition);
                 _anim.transform.rotation = Quaternion.Lerp(oldRotation, _anim.transform.rotation, Time.deltaTime * _stoppedRotationSpeed);
             }
 
-            var targetDotForward = GetDot(_anim.transform, _ctx.GetLookAtTargetPosition.Invoke(), Vector3.forward);
-            var targetDotRight = GetDot(_anim.transform, _ctx.GetLookAtTargetPosition.Invoke(), Vector3.right);
+            var targetDotForward = GetDot(_anim.transform, _rawLookAtTargetPosition, Vector3.forward);
+            var targetDotRight = GetDot(_anim.transform, _rawLookAtTargetPosition, Vector3.right);
             targetDotRight = targetDotRight > 0f ? 1f : -1f;
 
             _rot = Mathf.Lerp(_rot, targetDotRight, Time.deltaTime * _animRotationSpeed);
@@ -180,7 +185,7 @@ namespace Game.Character.View
         {
             if (!IsSetupDone()) return;
 
-            _lookAtTargetPosition = Vector3.Lerp(_lookAtTargetPosition, _ctx.GetLookAtTargetPosition.Invoke(), Time.deltaTime * 2f);
+            _lookAtTargetPosition = Vector3.Lerp(_lookAtTargetPosition, _rawLookAtTargetPosition, Time.deltaTime * 2f);
             _anim.SetLookAtPosition(_lookAtTargetPosition);
             _anim.SetLookAtWeight(1f, 0.25f, 0.7f, 0.9f, 0.5f);
         }

@@ -53,12 +53,12 @@ namespace Game.SomeBattleScene1
                     if (distance > minDistance) continue;
 
                     minDistance = distance;
-                    lookAtPoint = enemyEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
+                    lookAtPoint = enemyEntity.ChestTransform.position;// enemyEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
                 }
             }
             else
             {
-                lookAtPoint = _playerCharacterEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
+                lookAtPoint = _playerCharacterEntity.ChestTransform.position;//.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
             }
 
             return lookAtPoint;
