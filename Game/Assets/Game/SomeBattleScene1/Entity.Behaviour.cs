@@ -83,7 +83,7 @@ namespace Game.SomeBattleScene1
                 isAttack &= distance < _enemyAttackDistance;
                 isAttack &= RandomBool;
                 isAttack &= !_enemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking);
-                isAttack &= false;
+                //isAttack &= false;
             }
 
             return isAttack;
