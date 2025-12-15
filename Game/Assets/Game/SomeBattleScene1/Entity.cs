@@ -51,10 +51,6 @@ namespace Game.SomeBattleScene1
         {
             var go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1ScreenPrefab);
             _screen = go.GetComponent<View.Screen>();
-            _screen.Setup(new View.Screen.Ctx
-            {
-                
-            });
 
             go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1Prefab);
             _scene = go.GetComponent<View.Scene>();
