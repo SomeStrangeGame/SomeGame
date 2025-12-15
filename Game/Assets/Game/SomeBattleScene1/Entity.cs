@@ -73,7 +73,9 @@ namespace Game.SomeBattleScene1
             _playerCharacterEntity = new Character.Entity(new Character.Entity.Ctx
             {
                 CharacterView = _scene.PlayerCharacter,
+                Health = 10,
                 Speed = 1.5f,
+                AttackDistance = 2f,
 
                 GetTargetPosition = characterEntity => GetTargetPosition(characterEntity, true),
                 GetLookAtTargetPosition = characterEntity => GetLookAtTargetPosition(characterEntity, true),
@@ -90,6 +92,7 @@ namespace Game.SomeBattleScene1
                 var enemyCharacter = new Character.Entity(new Character.Entity.Ctx
                 {
                     CharacterView = enemyCharacterView,
+                    Health = 1,
                     Speed = 1.5f,
                     AttackDistance = 2f,
 

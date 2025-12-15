@@ -11,6 +11,7 @@ namespace Game.Character
         public struct Ctx
         {
             public GameObject CharacterView;
+            public int Health;
             public float Speed;
             public float AttackDistance;
 
@@ -23,6 +24,7 @@ namespace Game.Character
         }
 
         private View.Character _character;
+        private int _health;
 
         private readonly Ctx _ctx;
 
@@ -30,6 +32,7 @@ namespace Game.Character
         public NavMeshAgent NavAgent => _character.NavAgent;
         public bool IsAttacking => _character.IsAttacking();
         public bool IsDodging => _character.IsDodging();
+        public bool IsHitting => _character.IsHitting();
 
         public Entity(Ctx ctx)
         {
@@ -54,11 +57,16 @@ namespace Game.Character
 
                 GetDot = _ctx.GetDot,
             });
+            _health = _ctx.Health;
         }
 
         private void Damage(int damage)
         {
             if (_character.IsDodging()) return;
+
+            _health -= damage;
+
+            if (_health > 0) return;
             
             _character.Die();
         }
@@ -66,12 +74,13 @@ namespace Game.Character
         private void Hit()
         {
             var headTrans = Anim.GetBoneTransform(HumanBodyBones.Head);
-            if (!Physics.Raycast(new Ray(headTrans.position, headTrans.forward), out var hit, _ctx.AttackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
+            var ray = new Ray(headTrans.position, headTrans.forward);
+            if (!Physics.Raycast(ray, out var hit, _ctx.AttackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
 
             var character = hit.collider.GetComponentInParent<View.Character>();
             if (character == null) return;
-
-            character.Damage(0);
+            
+            character.Damage(1);
         }
     }
 }

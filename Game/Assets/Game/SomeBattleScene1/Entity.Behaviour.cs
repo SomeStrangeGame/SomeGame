@@ -79,9 +79,10 @@ namespace Game.SomeBattleScene1
                 var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
 
                 isAttack &= _playerCharacterEntity.Anim.enabled;
+                isAttack &= !_playerCharacterEntity.IsHitting;
                 isAttack &= distance < _enemyAttackDistance;
                 isAttack &= RandomBool;
-                isAttack &= !_enemyCharacterEntites.Any(e => e.IsAttacking);
+                isAttack &= !_enemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking);
             }
 
             return isAttack;
@@ -102,6 +103,7 @@ namespace Game.SomeBattleScene1
                 var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
                 var targetDotForward = GetDot(_playerCharacterEntity.Anim.transform, characterEntity.Anim.rootPosition, Vector3.forward);
                 
+                isDodge &= RandomBool;
                 isDodge &= _playerCharacterEntity.Anim.enabled;
                 isDodge &= targetDotForward > _enemyDodgeDotTrigger;
                 isDodge &= distance < _enemyDodgeDistance;

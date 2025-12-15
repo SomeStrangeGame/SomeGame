@@ -35,12 +35,17 @@ namespace Game.Character.View
         {
             //"Attack_0",
             //"Attack_1",
-            "Attack_2"
+            "Attack_2",
         };
 
         private readonly string[] _dodgingTriggers = new string[]
         {
-            "Dodging_0"
+            "Dodging_0",
+        };
+
+        private readonly string[] _hittingTriggers = new string[]
+        {
+            "Hit",
         };
 
         private Animator _anim;
@@ -119,9 +124,10 @@ namespace Game.Character.View
 
             var isAttack = IsAttacking();
             var isDodging = IsDodging();
+            var isHitting = IsHitting();
 
-            _anim.applyRootMotion = (Mathf.Abs(_input.y) + Mathf.Abs(_input.x) < _inputMinValue) || isAttack || isDodging;
-            _navAgent.isStopped = isAttack || isDodging;
+            _anim.applyRootMotion = (Mathf.Abs(_input.y) + Mathf.Abs(_input.x) < _inputMinValue) || isAttack || isDodging || isHitting;
+            _navAgent.isStopped = isAttack || isDodging || isHitting;
 
             if (_navAgent.isStopped)
             {
@@ -156,6 +162,12 @@ namespace Game.Character.View
             return _anim.GetNextAnimatorStateInfo(2).IsTag(dodgingTag) || _anim.GetCurrentAnimatorStateInfo(2).IsTag(dodgingTag);
         }
 
+        internal bool IsHitting()
+        {
+            var hittingTag = "Hitting";
+            return _anim.GetNextAnimatorStateInfo(3).IsTag(hittingTag) || _anim.GetCurrentAnimatorStateInfo(3).IsTag(hittingTag);
+        }
+
         //invoke via animator
         private void OnAnimatorIK(int layerIndex)
         {
@@ -173,7 +185,15 @@ namespace Game.Character.View
 
         internal void Damage(int damage)
         {
+            Hit();
             _ctx.OnDamage.Invoke(damage);
+        }
+
+        private void Hit()
+        {
+            if (IsHitting()) return;
+
+            _anim.SetTrigger(_hittingTriggers[_random.Next(0, _hittingTriggers.Length)]);
         }
 
         //invoke via animator
