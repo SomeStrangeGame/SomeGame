@@ -69,6 +69,8 @@ namespace Game.SomeBattleScene1
             var isAttack = true;
             isAttack &= characterEntity.Anim.enabled;
             isAttack &= !characterEntity.IsAttacking;
+            isAttack &= !characterEntity.IsHitting;
+            isAttack &= !characterEntity.IsDodging;
 
             if (isPlayer)
             {

@@ -88,7 +88,7 @@ namespace Game.SomeBattleScene1
                 var enemyCharacter = new Character.Entity(new Character.Entity.Ctx
                 {
                     CharacterView = enemyCharacterView,
-                    Health = 1,
+                    Health = 3,
                     Speed = 2.5f,
                     AttackDistance = 2f,
 
