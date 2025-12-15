@@ -66,45 +66,49 @@ namespace Game.SomeBattleScene1
 
         private bool GetAttackInput(Character.Entity characterEntity, bool isPlayer)
         {
-            if (characterEntity.IsAttacking) return false;
+            var isAttack = true;
+            isAttack &= characterEntity.Anim.enabled;
+            isAttack &= !characterEntity.IsAttacking;
 
             if (isPlayer)
             {
-                return Input.GetKeyUp(KeyCode.Space);
+                isAttack &= Input.GetKeyUp(KeyCode.Space);
             }
             else
             {
                 var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
 
-                var isAttack = true;
+                isAttack &= _playerCharacterEntity.Anim.enabled;
                 isAttack &= distance < _enemyAttackDistance;
                 isAttack &= RandomBool;
                 isAttack &= !_enemyCharacterEntites.Any(e => e.IsAttacking);
-
-                return isAttack;
             }
+
+            return isAttack;
         }
 
         private bool GetDodgeInput(Character.Entity characterEntity, bool isPlayer)
         {
-            if (characterEntity.IsDodging) return false;
+            var isDodge = true;
+            isDodge &= characterEntity.Anim.enabled;
+            isDodge &= characterEntity.IsDodging;
 
             if (isPlayer)
             {
-                return Input.GetKeyUp(KeyCode.E);
+                isDodge &= Input.GetKeyUp(KeyCode.E);
             }
             else
             {
                 var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
-                var targetDotForward = GetDot(_playerCharacterEntity.Anim.transform, characterEntity.Anim.bodyPosition, Vector3.forward);
+                var targetDotForward = GetDot(_playerCharacterEntity.Anim.transform, characterEntity.Anim.rootPosition, Vector3.forward);
                 
-                var isDodge = true;
+                isDodge &= _playerCharacterEntity.Anim.enabled;
                 isDodge &= targetDotForward > _enemyDodgeDotTrigger;
                 isDodge &= distance < _enemyDodgeDistance;
                 isDodge &= _playerCharacterEntity.IsAttacking;
-
-                return isDodge;
             }
+
+            return isDodge;
         }
     }
 }
