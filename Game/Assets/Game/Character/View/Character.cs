@@ -25,6 +25,11 @@ namespace Game.Character.View
             internal Func<Transform, Vector3, Vector3, float> GetDot;
         }
 
+        [SerializeField]
+        private HandPositionHandler _handPosition;
+        [SerializeField]
+        private GameObject _weaponView;
+
         private const float _inputSense = 15f;
         private const float _inputMaxValue = 1f;
         private const float _inputMinValue = 0.2f;
@@ -33,8 +38,8 @@ namespace Game.Character.View
 
         private readonly string[] _attacksTriggers = new string[]
         {
-            //"Attack_0",
-            //"Attack_1",
+            "Attack_0",
+            "Attack_1",
             "Attack_2",
         };
 
@@ -109,6 +114,8 @@ namespace Game.Character.View
         //invoke via engine
         private void Update()
         {
+            _weaponView.transform.SetPositionAndRotation(_handPosition.Pos, _handPosition.Rot);
+
             if (!IsSetupDone()) return;
             if (!_mainCollider.enabled) return;
             if (!_anim.enabled) return;
@@ -198,6 +205,12 @@ namespace Game.Character.View
 
         //invoke via animator
         private void HitEvent()
+        {
+            _ctx.OnHit.Invoke();
+        }
+
+        //invoke via animator
+        private void SendEvent()
         {
             _ctx.OnHit.Invoke();
         }

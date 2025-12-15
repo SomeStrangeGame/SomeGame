@@ -73,6 +73,9 @@ namespace Game.Character
 
         private void Hit()
         {
+            if (IsHitting) return;
+            if (IsDodging) return;
+
             var headTrans = Anim.GetBoneTransform(HumanBodyBones.Head);
             var ray = new Ray(headTrans.position, headTrans.forward);
             if (!Physics.Raycast(ray, out var hit, _ctx.AttackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;

@@ -83,6 +83,7 @@ namespace Game.SomeBattleScene1
                 isAttack &= distance < _enemyAttackDistance;
                 isAttack &= RandomBool;
                 isAttack &= !_enemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking);
+                //isAttack &= false;
             }
 
             return isAttack;
@@ -92,7 +93,7 @@ namespace Game.SomeBattleScene1
         {
             var isDodge = true;
             isDodge &= characterEntity.Anim.enabled;
-            isDodge &= characterEntity.IsDodging;
+            isDodge &= !characterEntity.IsDodging;
 
             if (isPlayer)
             {
@@ -103,11 +104,11 @@ namespace Game.SomeBattleScene1
                 var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
                 var targetDotForward = GetDot(_playerCharacterEntity.Anim.transform, characterEntity.Anim.rootPosition, Vector3.forward);
                 
-                isDodge &= RandomBool;
                 isDodge &= _playerCharacterEntity.Anim.enabled;
                 isDodge &= targetDotForward > _enemyDodgeDotTrigger;
                 isDodge &= distance < _enemyDodgeDistance;
                 isDodge &= _playerCharacterEntity.IsAttacking;
+                isDodge &= false;
             }
 
             return isDodge;
