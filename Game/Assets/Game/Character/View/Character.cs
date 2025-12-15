@@ -166,13 +166,13 @@ namespace Game.Character.View
         internal bool IsDodging()
         {
             var dodgingTag = "Dodging";
-            return _anim.GetNextAnimatorStateInfo(2).IsTag(dodgingTag) || _anim.GetCurrentAnimatorStateInfo(2).IsTag(dodgingTag);
+            return _anim.GetNextAnimatorStateInfo(3).IsTag(dodgingTag) || _anim.GetCurrentAnimatorStateInfo(3).IsTag(dodgingTag);
         }
 
         internal bool IsHitting()
         {
             var hittingTag = "Hitting";
-            return _anim.GetNextAnimatorStateInfo(3).IsTag(hittingTag) || _anim.GetCurrentAnimatorStateInfo(3).IsTag(hittingTag);
+            return _anim.GetNextAnimatorStateInfo(2).IsTag(hittingTag) || _anim.GetCurrentAnimatorStateInfo(2).IsTag(hittingTag);
         }
 
         //invoke via animator

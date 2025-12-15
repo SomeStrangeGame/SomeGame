@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace Game.SomeBattleScene1.View
 {
@@ -8,18 +6,10 @@ namespace Game.SomeBattleScene1.View
     {
         internal struct Ctx
         {
-            internal Action<float> OnSliderValueChanged;
+            
         }
-
-        [SerializeField] private Slider _slider;
 
         private Ctx _ctx;
-
-        private void OnEnable()
-        {
-            _slider.onValueChanged.RemoveAllListeners();
-            _slider.onValueChanged.AddListener(result => _ctx.OnSliderValueChanged.Invoke(result));
-        }
 
         internal void Setup (Ctx ctx)
         {

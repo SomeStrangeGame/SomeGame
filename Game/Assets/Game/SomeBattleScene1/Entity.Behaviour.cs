@@ -25,8 +25,8 @@ namespace Game.SomeBattleScene1
 
             if (isPlayer)
             {
-                targetPos += Vector3.right * Input.GetAxis("Horizontal");
-                targetPos += Vector3.forward * Input.GetAxis("Vertical");
+                targetPos += Vector3.right * SimpleInput.GetAxis("Horizontal");
+                targetPos += Vector3.forward * SimpleInput.GetAxis("Vertical");
             }
             else
             {
@@ -72,7 +72,7 @@ namespace Game.SomeBattleScene1
 
             if (isPlayer)
             {
-                isAttack &= Input.GetKeyUp(KeyCode.Space);
+                isAttack &= SimpleInput.GetKeyUp(KeyCode.Space);
             }
             else
             {
@@ -83,7 +83,7 @@ namespace Game.SomeBattleScene1
                 isAttack &= distance < _enemyAttackDistance;
                 isAttack &= RandomBool;
                 isAttack &= !_enemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking);
-                //isAttack &= false;
+                isAttack &= false;
             }
 
             return isAttack;
@@ -97,7 +97,7 @@ namespace Game.SomeBattleScene1
 
             if (isPlayer)
             {
-                isDodge &= Input.GetKeyUp(KeyCode.E);
+                isDodge &= SimpleInput.GetKeyUp(KeyCode.E);
             }
             else
             {

@@ -53,7 +53,7 @@ namespace Game.SomeBattleScene1
             _screen = go.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx
             {
-                OnSliderValueChanged = result => Debug.Log("")
+                
             });
 
             go = GameObject.Instantiate(_ctx.Data.SomeBattleScene1Prefab);
