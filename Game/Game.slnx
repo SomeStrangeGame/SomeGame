@@ -11,4 +11,5 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Game.Loading.csproj" />
   <Project Path="Game.Chapter_0.csproj" />
+  <Project Path="Game.Chapter_1.csproj" />
 </Solution>

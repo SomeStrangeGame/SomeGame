@@ -1,11 +1,18 @@
-using System;
+using System.Collections.Generic;
 using System.Linq;
+using Game.Disposable;
 using UnityEngine;
 
-namespace Game.SomeBattleScene1
+namespace Game.Character
 {
-    public sealed partial class Entity
+    public class Behaviour : BaseDisposable
     {
+        public struct Ctx
+        {
+            public Entity PlayerCharacterEntity;
+            public List<Entity> EnemyCharacterEntites;
+        }
+
         private const float _defaultLookAtOffset = 5f;
 
         private const float _enemyMoveDistance = 1.9f;
@@ -15,7 +22,14 @@ namespace Game.SomeBattleScene1
         private const float _enemyDodgeDotTrigger = 0.1f;
         private const float _enemyDodgeDistance = 2.1f;
 
-        private Vector3 GetTargetPosition(Character.Entity characterEntity, bool isPlayer)
+        private Ctx _ctx;
+
+        public Behaviour(Ctx ctx)
+        {
+            _ctx = ctx;
+        }
+
+        public Vector3 GetTargetPosition(Entity characterEntity, bool isPlayer)
         {
             var targetPos = characterEntity.CharacterTransform.position;
 
@@ -26,22 +40,22 @@ namespace Game.SomeBattleScene1
             }
             else
             {
-                var heading = _playerCharacterEntity.CharacterTransform.position - characterEntity.CharacterTransform.position;
+                var heading = _ctx.PlayerCharacterEntity.CharacterTransform.position - characterEntity.CharacterTransform.position;
                 var distance = heading.magnitude;
                 var direction = heading / distance;
-                targetPos = _playerCharacterEntity.CharacterTransform.position - direction * _enemyMoveDistance;
+                targetPos = _ctx.PlayerCharacterEntity.CharacterTransform.position - direction * _enemyMoveDistance;
             }
             return targetPos;
         }
 
-        private Vector3 GetLookAtTargetPosition(Character.Entity characterEntity, bool isPlayer)
+        public Vector3 GetLookAtTargetPosition(Entity characterEntity, bool isPlayer)
         {
             var lookAtPoint = characterEntity.CharacterTransform.position + characterEntity.CharacterTransform.forward * _defaultLookAtOffset;
 
             if (isPlayer)
             {
                 var minDistance = float.MaxValue;
-                foreach (var enemyEntity in _enemyCharacterEntites)
+                foreach (var enemyEntity in _ctx.EnemyCharacterEntites)
                 {
                     if (!enemyEntity.Anim.enabled) continue;
 
@@ -54,13 +68,13 @@ namespace Game.SomeBattleScene1
             }
             else
             {
-                lookAtPoint = _playerCharacterEntity.ChestTransform.position;
+                lookAtPoint = _ctx.PlayerCharacterEntity.ChestTransform.position;
             }
 
             return lookAtPoint;
         }
 
-        private bool GetAttackInput(Character.Entity characterEntity, bool isPlayer)
+        public bool GetAttackInput(Entity characterEntity, bool isPlayer)
         {
             
             if (!characterEntity.Anim.enabled) return false;
@@ -74,18 +88,18 @@ namespace Game.SomeBattleScene1
             }
             else
             {
-                if (!_playerCharacterEntity.Anim.enabled) return false;
-                if (_playerCharacterEntity.IsHitting) return false;
+                if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
+                if (_ctx.PlayerCharacterEntity.IsHitting) return false;
 
-                var distance = Vector3.SqrMagnitude(_playerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition);
+                var distance = Vector3.SqrMagnitude(_ctx.PlayerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition);
                 if (distance > _enemyAttackDistance * _enemyAttackDistance) return false;
-                if (_enemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking)) return false;
+                if (_ctx.EnemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking)) return false;
 
                 return true;
             }
         }
 
-        private bool GetDodgeInput(Character.Entity characterEntity, bool isPlayer)
+        public bool GetDodgeInput(Entity characterEntity, bool isPlayer)
         {
             var isDodge = true;
             isDodge &= characterEntity.Anim.enabled;
@@ -97,17 +111,22 @@ namespace Game.SomeBattleScene1
             }
             else
             {
-                var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
-                var targetDotForward = GetDot(_playerCharacterEntity.Anim.transform, characterEntity.Anim.rootPosition, Vector3.forward);
+                var distance = Vector3.Distance(_ctx.PlayerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
+                var targetDotForward = GetDot(_ctx.PlayerCharacterEntity.Anim.transform, characterEntity.Anim.rootPosition, Vector3.forward);
                 
-                isDodge &= _playerCharacterEntity.Anim.enabled;
+                isDodge &= _ctx.PlayerCharacterEntity.Anim.enabled;
                 isDodge &= targetDotForward > _enemyDodgeDotTrigger;
                 isDodge &= distance < _enemyDodgeDistance;
-                isDodge &= _playerCharacterEntity.IsAttacking;
+                isDodge &= _ctx.PlayerCharacterEntity.IsAttacking;
                 isDodge &= false;
             }
 
             return isDodge;
+        }
+
+        private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
+        {
+            return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
     }
 }

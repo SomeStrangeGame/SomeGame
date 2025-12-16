@@ -41,6 +41,7 @@ namespace Game.SomeBattleScene1
 
         private Character.Entity _playerCharacterEntity;
         private List<Character.Entity> _enemyCharacterEntites;
+        private Character.Behaviour _behaviour;
 
         public Entity(Ctx ctx)
         {
@@ -73,10 +74,10 @@ namespace Game.SomeBattleScene1
                 Speed = 2.5f,
                 AttackDistance = 2f,
 
-                GetTargetPosition = characterEntity => GetTargetPosition(characterEntity, true),
-                GetLookAtTargetPosition = characterEntity => GetLookAtTargetPosition(characterEntity, true),
-                GetAttackInput = characterEntity => GetAttackInput(characterEntity, true),
-                GetDodgeInput = characterEntity => GetDodgeInput(characterEntity, true),
+                GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, true),
+                GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, true),
+                GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, true),
+                GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, true),
 
                 GetDot = GetDot,
             }).AddTo(this);
@@ -92,16 +93,22 @@ namespace Game.SomeBattleScene1
                     Speed = 2.5f,
                     AttackDistance = 2f,
 
-                    GetTargetPosition = characterEntity => GetTargetPosition(characterEntity, false),
-                    GetLookAtTargetPosition = characterEntity => GetLookAtTargetPosition(characterEntity, false),
-                    GetAttackInput = characterEntity => GetAttackInput(characterEntity, false),
-                    GetDodgeInput = characterEntity => GetDodgeInput(characterEntity, false),
+                    GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, false),
+                    GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, false),
+                    GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, false),
+                    GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, false),
 
                     GetDot = GetDot,
                 }).AddTo(this);
                 await enemyCharacter.Init();
                 _enemyCharacterEntites.Add(enemyCharacter);
             }
+
+            _behaviour = new Character.Behaviour(new Character.Behaviour.Ctx
+            {
+                PlayerCharacterEntity = _playerCharacterEntity,
+                EnemyCharacterEntites = _enemyCharacterEntites,
+            }).AddTo(this);
 
             _scene.Setup(new View.Scene.Ctx
             {
