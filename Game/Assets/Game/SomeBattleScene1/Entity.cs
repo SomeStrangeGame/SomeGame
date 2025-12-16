@@ -78,8 +78,6 @@ namespace Game.SomeBattleScene1
                 GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, true),
                 GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, true),
                 GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, true),
-
-                GetDot = GetDot,
             }).AddTo(this);
             await _playerCharacterEntity.Init();
 
@@ -97,8 +95,6 @@ namespace Game.SomeBattleScene1
                     GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, false),
                     GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, false),
                     GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, false),
-
-                    GetDot = GetDot,
                 }).AddTo(this);
                 await enemyCharacter.Init();
                 _enemyCharacterEntites.Add(enemyCharacter);
@@ -118,11 +114,6 @@ namespace Game.SomeBattleScene1
                 },
                 OnComplete = result => _someToken.TrySetResult(result),
             });
-        }
-
-        private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
-        {
-            return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
 
         public async UniTask<int> WaitResult() => await _someToken.Task;

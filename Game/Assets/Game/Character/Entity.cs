@@ -19,8 +19,6 @@ namespace Game.Character
             public Func<Entity, Vector3> GetLookAtTargetPosition;
             public Func<Entity, bool> GetAttackInput;
             public Func<Entity, bool> GetDodgeInput;
-
-            public Func<Transform, Vector3, Vector3, float> GetDot;
         }
 
         private View.Character _character;
@@ -58,8 +56,6 @@ namespace Game.Character
 
                 OnDamage = Damage,
                 OnHit = Hit,
-
-                GetDot = _ctx.GetDot,
             });
             _chestTransform = _character.Anim.GetBoneTransform(HumanBodyBones.Chest);
             _health = _ctx.Health;

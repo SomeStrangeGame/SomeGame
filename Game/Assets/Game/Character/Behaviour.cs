@@ -124,7 +124,7 @@ namespace Game.Character
             return isDodge;
         }
 
-        private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
+        public float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
         {
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
