@@ -28,7 +28,7 @@ namespace Game
                     Chapter_0Process().Forget();
                     break;
                 case 1:
-                    SomeBattleScene1Process().Forget();
+                    Chapter_1Process().Forget();
                     break;
             }
         }

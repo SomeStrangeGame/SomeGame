@@ -3,6 +3,7 @@
   <Project Path="Game.Character.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Game.csproj" />
+  <Project Path="Game.Chapter_1.csproj" />
   <Project Path="Game.SomeBattleScene1.csproj" />
   <Project Path="SimpleInput.Editor.csproj" />
   <Project Path="Game.Camera.csproj" />
@@ -11,5 +12,4 @@
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Game.Loading.csproj" />
   <Project Path="Game.Chapter_0.csproj" />
-  <Project Path="Game.Chapter_1.csproj" />
 </Solution>
