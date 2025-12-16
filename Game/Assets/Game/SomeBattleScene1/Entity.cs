@@ -7,7 +7,7 @@ using UnityEngine;
 namespace Game.SomeBattleScene1
 {
     [Serializable]
-    public sealed class Data
+    public struct Data
     {
         [SerializeField] private GameObject _someBattleScene1Prefab;
         [SerializeField] private GameObject _someBattleScene1ScreenPrefab;
@@ -17,13 +17,13 @@ namespace Game.SomeBattleScene1
         [SerializeField] private Vector3 _camLookAtOffset;
         [SerializeField] private float _camLookAtSpeed;
 
-        internal GameObject SomeBattleScene1Prefab => _someBattleScene1Prefab;
-        internal GameObject SomeBattleScene1ScreenPrefab => _someBattleScene1ScreenPrefab;
+        internal readonly GameObject SomeBattleScene1Prefab => _someBattleScene1Prefab;
+        internal readonly GameObject SomeBattleScene1ScreenPrefab => _someBattleScene1ScreenPrefab;
 
-        internal Vector3 CamMoveOffset => _camMoveOffset;
-        internal float CamMoveSpeed => _camMoveSpeed;
-        internal Vector3 CamLookAtOffset => _camLookAtOffset;
-        internal float CamLookAtSpeed => _camLookAtSpeed;
+        internal readonly Vector3 CamMoveOffset => _camMoveOffset;
+        internal readonly float CamMoveSpeed => _camMoveSpeed;
+        internal readonly Vector3 CamLookAtOffset => _camLookAtOffset;
+        internal readonly float CamLookAtSpeed => _camLookAtSpeed;
     }
     
     public sealed partial class Entity : BaseDisposable

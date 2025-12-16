@@ -1,13 +1,14 @@
 ﻿<Solution>
   <Project Path="SimpleInput.Runtime.csproj" />
-  <Project Path="Game.csproj" />
   <Project Path="Game.Character.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="Game.csproj" />
   <Project Path="Game.SomeBattleScene1.csproj" />
   <Project Path="SimpleInput.Editor.csproj" />
   <Project Path="Game.Camera.csproj" />
   <Project Path="Game.Disposable.csproj" />
-  <Project Path="Game.SomeMenu1.csproj" />
+  <Project Path="Game.ChapterScreen.csproj" />
   <Project Path="Assembly-CSharp.csproj" />
   <Project Path="Game.Loading.csproj" />
+  <Project Path="Game.Chapter_0.csproj" />
 </Solution>

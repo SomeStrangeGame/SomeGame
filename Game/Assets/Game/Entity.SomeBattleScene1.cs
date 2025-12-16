@@ -25,7 +25,7 @@ namespace Game
             switch (result)
             {
                 case 2:
-                    SomeMenu1Process().Forget();
+                    Chapter_0Process().Forget();
                     break;
             }
         }

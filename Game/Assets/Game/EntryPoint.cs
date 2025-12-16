@@ -15,6 +15,8 @@ namespace Game
             var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
             PlayerLoopHelper.Initialize(ref playerLoop);
 
+            Application.targetFrameRate = 30;
+
             _entity = new Entity(new Entity.Ctx
             {
                 Data = _data,

@@ -6,8 +6,6 @@ namespace Game.SomeBattleScene1
 {
     public sealed partial class Entity
     {
-        private readonly System.Random _behaviourRandom = new(DateTime.UtcNow.Second);
-
         private const float _defaultLookAtOffset = 5f;
 
         private const float _enemyMoveDistance = 1.9f;
@@ -17,11 +15,9 @@ namespace Game.SomeBattleScene1
         private const float _enemyDodgeDotTrigger = 0.1f;
         private const float _enemyDodgeDistance = 2.1f;
 
-        private bool RandomBool => _behaviourRandom.Next(-10, 10) > 0;
-
         private Vector3 GetTargetPosition(Character.Entity characterEntity, bool isPlayer)
         {
-            var targetPos = characterEntity.Anim.rootPosition;
+            var targetPos = characterEntity.CharacterTransform.position;
 
             if (isPlayer)
             {
@@ -30,17 +26,17 @@ namespace Game.SomeBattleScene1
             }
             else
             {
-                var heading = _playerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition;
+                var heading = _playerCharacterEntity.CharacterTransform.position - characterEntity.CharacterTransform.position;
                 var distance = heading.magnitude;
                 var direction = heading / distance;
-                targetPos = _playerCharacterEntity.Anim.rootPosition - direction * _enemyMoveDistance;
+                targetPos = _playerCharacterEntity.CharacterTransform.position - direction * _enemyMoveDistance;
             }
             return targetPos;
         }
 
         private Vector3 GetLookAtTargetPosition(Character.Entity characterEntity, bool isPlayer)
         {
-            var lookAtPoint = characterEntity.Anim.rootPosition + characterEntity.Anim.transform.forward * _defaultLookAtOffset;
+            var lookAtPoint = characterEntity.CharacterTransform.position + characterEntity.CharacterTransform.forward * _defaultLookAtOffset;
 
             if (isPlayer)
             {
@@ -49,16 +45,16 @@ namespace Game.SomeBattleScene1
                 {
                     if (!enemyEntity.Anim.enabled) continue;
 
-                    var distance = Vector3.Distance(enemyEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
+                    var distance = Vector3.SqrMagnitude(enemyEntity.CharacterTransform.position - characterEntity.CharacterTransform.position);
                     if (distance > minDistance) continue;
 
                     minDistance = distance;
-                    lookAtPoint = enemyEntity.ChestTransform.position;// enemyEntity.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
+                    lookAtPoint = enemyEntity.ChestTransform.position;
                 }
             }
             else
             {
-                lookAtPoint = _playerCharacterEntity.ChestTransform.position;//.Anim.GetBoneTransform(HumanBodyBones.Chest).position;
+                lookAtPoint = _playerCharacterEntity.ChestTransform.position;
             }
 
             return lookAtPoint;
@@ -66,29 +62,27 @@ namespace Game.SomeBattleScene1
 
         private bool GetAttackInput(Character.Entity characterEntity, bool isPlayer)
         {
-            var isAttack = true;
-            isAttack &= characterEntity.Anim.enabled;
-            isAttack &= !characterEntity.IsAttacking;
-            isAttack &= !characterEntity.IsHitting;
-            isAttack &= !characterEntity.IsDodging;
+            
+            if (!characterEntity.Anim.enabled) return false;
+            if (characterEntity.IsAttacking) return false;
+            if (characterEntity.IsHitting) return false;
+            if (characterEntity.IsDodging) return false;
 
             if (isPlayer)
             {
-                isAttack &= SimpleInput.GetKeyUp(KeyCode.Space);
+                return SimpleInput.GetKeyUp(KeyCode.Space);
             }
             else
             {
-                var distance = Vector3.Distance(_playerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
+                if (!_playerCharacterEntity.Anim.enabled) return false;
+                if (_playerCharacterEntity.IsHitting) return false;
 
-                isAttack &= _playerCharacterEntity.Anim.enabled;
-                isAttack &= !_playerCharacterEntity.IsHitting;
-                isAttack &= distance < _enemyAttackDistance;
-                isAttack &= RandomBool;
-                isAttack &= !_enemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking);
-                //isAttack &= false;
+                var distance = Vector3.SqrMagnitude(_playerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition);
+                if (distance > _enemyAttackDistance * _enemyAttackDistance) return false;
+                if (_enemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking)) return false;
+
+                return true;
             }
-
-            return isAttack;
         }
 
         private bool GetDodgeInput(Character.Entity characterEntity, bool isPlayer)

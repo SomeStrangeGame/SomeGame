@@ -32,6 +32,7 @@ namespace Game.Character
         public Animator Anim => _character.Anim;
         public NavMeshAgent NavAgent => _character.NavAgent;
         public Transform ChestTransform => _chestTransform;
+        public Transform CharacterTransform => _character.transform;
 
         public bool IsAttacking => _character.IsAttacking();
         public bool IsDodging => _character.IsDodging();
