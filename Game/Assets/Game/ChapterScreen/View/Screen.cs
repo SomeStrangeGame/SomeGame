@@ -11,7 +11,7 @@ namespace Game.ChapterScreen.View
             public Sprite BackgroundSprite;
             public string DescriptionText;
             public string ButtonText;
-            public Action<int> OnComplete;
+            public Action OnComplete;
         }
 
         [SerializeField] private float _startDelay = 3f;
@@ -29,19 +29,13 @@ namespace Game.ChapterScreen.View
         private void OnEnable()
         {
             _someButton.onClick.RemoveAllListeners();
-            _someButton.onClick.AddListener(() => _ctx.OnComplete.Invoke(1));
+            _someButton.onClick.AddListener(() => _ctx.OnComplete.Invoke());
 
             _startTime = 0f;
         }
 
         private void Update()
         {
-            if (SimpleInput.GetKeyUp(KeyCode.Escape))
-            {
-                _ctx.OnComplete.Invoke(0);
-                return;
-            }
-
             if (_startTime < _startDelay)
             {
                 _startTime += Time.deltaTime;

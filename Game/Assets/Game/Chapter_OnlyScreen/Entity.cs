@@ -34,7 +34,7 @@ namespace Game.Chapter_OnlyScreen
             public Data Data;
         }
 
-        private readonly UniTaskCompletionSource<int> _token;
+        private readonly UniTaskCompletionSource _token;
         private readonly Ctx _ctx;
 
         private ChapterScreen.View.Screen _screen;
@@ -54,11 +54,11 @@ namespace Game.Chapter_OnlyScreen
                 BackgroundSprite = _ctx.Data.Menu.BackgroundSprite,
                 DescriptionText = _ctx.Data.Menu.DescriptionText,
                 ButtonText = _ctx.Data.Menu.ButtonText,
-                OnComplete = result => _token.TrySetResult(result),
+                OnComplete = () => _token.TrySetResult(),
             });
         }
 
-        public async UniTask<int> WaitResult() => await _token.Task;
+        public async UniTask WaitResult() => await _token.Task;
 
         protected override void OnDispose()
         {

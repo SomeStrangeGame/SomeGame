@@ -9,12 +9,14 @@ namespace Game
     internal struct Data
     {
         [SerializeField] private Loading.Data _loadingData;
-        [SerializeField] private Chapter_OnlyScreen.Data _chapter_0;
+        [SerializeField] private Chapter_OnlyScreen.Data _chapter_intro;
         [SerializeField] private Chapter_ScreenAndBattle.Data _chapter_1;
+        [SerializeField] private Chapter_ScreenAndBattle.Data[] _chapters;
 
         internal readonly Loading.Data LoadingData => _loadingData;
-        internal readonly Chapter_OnlyScreen.Data Chapter_0 => _chapter_0;
+        internal readonly Chapter_OnlyScreen.Data Chapter_intro => _chapter_intro;
         internal readonly Chapter_ScreenAndBattle.Data Chapter_1 => _chapter_1;
+        internal readonly Chapter_ScreenAndBattle.Data[] Chapters => _chapters;
     }
 
     internal sealed partial class Entity : BaseDisposable
@@ -42,7 +44,7 @@ namespace Game
             await _loading.Init();
             _loading.ShowImmediate();
 
-            Chapter_0Process().Forget();
+            Chapter_introProcess().Forget();
         }
     }
 }

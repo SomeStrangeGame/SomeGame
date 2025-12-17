@@ -22,25 +22,26 @@ namespace Game.Chapter_ScreenAndBattle
         }
 
         [Serializable]
-        public struct CameraData
+        [CreateAssetMenu(fileName = "CameraData", menuName = "ScriptableObjects/CameraData")]
+        public class CameraDataSO : ScriptableObject
         {
             [SerializeField] private Vector3 _camMoveOffset;
             [SerializeField] private float _camMoveSpeed;
             [SerializeField] private Vector3 _camLookAtOffset;
             [SerializeField] private float _camLookAtSpeed;
 
-            internal readonly Vector3 CamMoveOffset => _camMoveOffset;
-            internal readonly float CamMoveSpeed => _camMoveSpeed;
-            internal readonly Vector3 CamLookAtOffset => _camLookAtOffset;
-            internal readonly float CamLookAtSpeed => _camLookAtSpeed;
+            internal Vector3 CamMoveOffset => _camMoveOffset;
+            internal float CamMoveSpeed => _camMoveSpeed;
+            internal Vector3 CamLookAtOffset => _camLookAtOffset;
+            internal float CamLookAtSpeed => _camLookAtSpeed;
         }
 
+        [SerializeField] private string _chapterName;
         [SerializeField] private MenuData _menuStart;
         [SerializeField] private MenuData _menuSuccess;
         [SerializeField] private MenuData _menuFailed;
         [SerializeField] private GameObject _menuPrefab;
-
-        [SerializeField] private CameraData _camera;
+        [SerializeField] private CameraDataSO _cameraSO;
 
         [SerializeField] private GameObject _battleScenePrefab;
         [SerializeField] private GameObject _battleSceneScreenPrefab;
@@ -50,7 +51,7 @@ namespace Game.Chapter_ScreenAndBattle
         internal readonly MenuData MenuFailed => _menuFailed;
         internal readonly GameObject MenuPrefab => _menuPrefab;
 
-        internal readonly CameraData Camera => _camera;
+        internal readonly CameraDataSO Camera => _cameraSO;
 
         internal readonly GameObject BattleScenePrefab => _battleScenePrefab;
         internal readonly GameObject BattleSceneScreenPrefab => _battleSceneScreenPrefab;
@@ -63,7 +64,7 @@ namespace Game.Chapter_ScreenAndBattle
             public Data Data;
         }
 
-        private readonly UniTaskCompletionSource<int> _firstToken;
+        private readonly UniTaskCompletionSource _startScreenToken;
         private readonly UniTaskCompletionSource<int> _battleToken;
         private readonly UniTaskCompletionSource<int> _token;
         private readonly Ctx _ctx;
@@ -91,29 +92,26 @@ namespace Game.Chapter_ScreenAndBattle
 
         public Entity(Ctx ctx)
         {
-            _firstToken = new();
+            _startScreenToken = new();
             _battleToken = new();
             _token = new();
             _ctx = ctx;
         }
 
-        public async UniTask InitStart()
+        public async UniTask InitStartScreen()
         {
             Screen.Setup(new ChapterScreen.View.Screen.Ctx
             {
                 BackgroundSprite = _ctx.Data.MenuStart.BackgroundSprite,
                 DescriptionText = _ctx.Data.MenuStart.DescriptionText,
                 ButtonText = _ctx.Data.MenuStart.ButtonText,
-                OnComplete = result => _firstToken.TrySetResult(result),
+                OnComplete = () => _startScreenToken.TrySetResult(),
             });
         }
 
-        public void ReleaseScreen() 
-        { 
-            if (_screen != null) _screen.Release();
-        }
+        public void ReleaseStartScreen() => ReleaseScreen();
 
-        public async UniTask<int> WaitFirstResult() => await _firstToken.Task;
+        public async UniTask WaitStartScreenResult() => await _startScreenToken.Task;
 
         public async UniTask InitBattle()
         {
@@ -191,29 +189,34 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask<int> WaitBattleResult() => await _battleToken.Task;
 
-        public async UniTask InitSuccess()
+        public async UniTask InitSuccessScreen()
         {
             Screen.Setup(new ChapterScreen.View.Screen.Ctx
             {
                 BackgroundSprite = _ctx.Data.MenuSuccess.BackgroundSprite,
                 DescriptionText = _ctx.Data.MenuSuccess.DescriptionText,
                 ButtonText = _ctx.Data.MenuSuccess.ButtonText,
-                OnComplete = _ => _token.TrySetResult(1),
+                OnComplete = () => _token.TrySetResult(1),
             });
         }
 
-        public async UniTask InitFailed()
+        public async UniTask InitFailedScreen()
         {
             Screen.Setup(new ChapterScreen.View.Screen.Ctx
             {
                 BackgroundSprite = _ctx.Data.MenuFailed.BackgroundSprite,
                 DescriptionText = _ctx.Data.MenuFailed.DescriptionText,
                 ButtonText = _ctx.Data.MenuFailed.ButtonText,
-                OnComplete = _ => _token.TrySetResult(2),
+                OnComplete = () => _token.TrySetResult(0),
             });
         }
 
         public async UniTask<int> WaitResult() => await _token.Task;
+
+        private void ReleaseScreen() 
+        { 
+            if (_screen != null) _screen.Release();
+        }
 
         protected override void OnDispose()
         {
