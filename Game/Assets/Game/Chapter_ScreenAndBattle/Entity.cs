@@ -21,21 +21,6 @@ namespace Game.Chapter_ScreenAndBattle
             internal readonly string ButtonText => _buttonText;
         }
 
-        [Serializable]
-        [CreateAssetMenu(fileName = "CameraData", menuName = "ScriptableObjects/CameraData")]
-        public class CameraDataSO : ScriptableObject
-        {
-            [SerializeField] private Vector3 _camMoveOffset;
-            [SerializeField] private float _camMoveSpeed;
-            [SerializeField] private Vector3 _camLookAtOffset;
-            [SerializeField] private float _camLookAtSpeed;
-
-            internal Vector3 CamMoveOffset => _camMoveOffset;
-            internal float CamMoveSpeed => _camMoveSpeed;
-            internal Vector3 CamLookAtOffset => _camLookAtOffset;
-            internal float CamLookAtSpeed => _camLookAtSpeed;
-        }
-
         [SerializeField] private string _chapterName;
         [SerializeField] private MenuData _menuStart;
         [SerializeField] private MenuData _menuSuccess;
@@ -56,7 +41,7 @@ namespace Game.Chapter_ScreenAndBattle
         internal readonly GameObject BattleScenePrefab => _battleScenePrefab;
         internal readonly GameObject BattleSceneScreenPrefab => _battleSceneScreenPrefab;
     }
-    
+
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx
@@ -181,8 +166,8 @@ namespace Game.Chapter_ScreenAndBattle
             });
         }
 
-        public void ReleaseBattle() 
-        { 
+        public void ReleaseBattle()
+        {
             if (_battleScreen != null) _battleScreen.Release();
             if (_battleScene != null) _battleScene.Release();
         }
@@ -213,8 +198,8 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask<int> WaitResult() => await _token.Task;
 
-        private void ReleaseScreen() 
-        { 
+        private void ReleaseScreen()
+        {
             if (_screen != null) _screen.Release();
         }
 

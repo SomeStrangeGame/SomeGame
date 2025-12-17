@@ -88,6 +88,7 @@ namespace Game.Character
             }
             else
             {
+                return false;
                 if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
                 if (_ctx.PlayerCharacterEntity.IsHitting) return false;
 
@@ -111,12 +112,12 @@ namespace Game.Character
             }
             else
             {
-                var distance = Vector3.Distance(_ctx.PlayerCharacterEntity.Anim.rootPosition, characterEntity.Anim.rootPosition);
+                var distance = Vector3.SqrMagnitude(_ctx.PlayerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition);
                 var targetDotForward = GetDot(_ctx.PlayerCharacterEntity.Anim.transform, characterEntity.Anim.rootPosition, Vector3.forward);
                 
                 isDodge &= _ctx.PlayerCharacterEntity.Anim.enabled;
                 isDodge &= targetDotForward > _enemyDodgeDotTrigger;
-                isDodge &= distance < _enemyDodgeDistance;
+                isDodge &= distance < _enemyDodgeDistance * _enemyDodgeDistance;
                 isDodge &= _ctx.PlayerCharacterEntity.IsAttacking;
                 isDodge &= false;
             }
