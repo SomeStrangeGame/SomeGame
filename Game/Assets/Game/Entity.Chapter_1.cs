@@ -7,11 +7,11 @@ namespace Game
         private async UniTask Chapter_1Process()
         {
             var result = 0;
-            var ctx = new Chapter_1.Entity.Ctx
+            var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
             {
                 Data = _ctx.Data.Chapter_1,
             };
-            using (var chapter_1 = new Chapter_1.Entity(ctx))
+            using (var chapter_1 = new Chapter_ScreenAndBattle.Entity(ctx))
             {
                 await chapter_1.InitStart();
 

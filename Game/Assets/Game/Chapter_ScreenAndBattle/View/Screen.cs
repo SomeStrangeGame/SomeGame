@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.Chapter_1.View
+namespace Game.Chapter_ScreenAndBattle.View
 {
     internal sealed class Screen : MonoBehaviour
     {

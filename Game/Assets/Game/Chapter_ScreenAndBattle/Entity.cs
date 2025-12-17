@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using UnityEngine;
 
-namespace Game.Chapter_1
+namespace Game.Chapter_ScreenAndBattle
 {
     [Serializable]
     public struct Data
