@@ -37,7 +37,7 @@ namespace Game.Chapter_OnlyScreen
         private readonly UniTaskCompletionSource _token;
         private readonly Ctx _ctx;
 
-        private ChapterScreen.View.Screen _screen;
+        private View.Screen _screen;
 
         public Entity(Ctx ctx)
         {
@@ -48,8 +48,8 @@ namespace Game.Chapter_OnlyScreen
         public async UniTask Init()
         {
             var go = GameObject.Instantiate(_ctx.Data.MenuPrefab);
-            _screen = go.GetComponent<ChapterScreen.View.Screen>();
-            _screen.Setup(new ChapterScreen.View.Screen.Ctx
+            _screen = go.GetComponent<View.Screen>();
+            _screen.Setup(new View.Screen.Ctx
             {
                 BackgroundSprite = _ctx.Data.Menu.BackgroundSprite,
                 DescriptionText = _ctx.Data.Menu.DescriptionText,

@@ -2,7 +2,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.ChapterScreen.View
+namespace Game.Chapter_OnlyScreen.View
 {
     public sealed class Screen : MonoBehaviour
     {

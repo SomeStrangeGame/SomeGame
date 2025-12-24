@@ -61,15 +61,15 @@ namespace Game.Chapter_ScreenAndBattle
         private List<Character.Entity> _enemyCharacterEntites;
         private Character.Behaviour _behaviour;
 
-        private ChapterScreen.View.Screen _screen;
-        private ChapterScreen.View.Screen Screen
+        private Chapter_OnlyScreen.View.Screen _screen;
+        private Chapter_OnlyScreen.View.Screen Screen
         {
             get
             {
                 if (_screen == null)
                 {
                     var go = GameObject.Instantiate(_ctx.Data.MenuPrefab);
-                    _screen = go.GetComponent<ChapterScreen.View.Screen>();
+                    _screen = go.GetComponent<Chapter_OnlyScreen.View.Screen>();
                 }
                 return _screen;
             }
@@ -85,7 +85,7 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitStartScreen()
         {
-            Screen.Setup(new ChapterScreen.View.Screen.Ctx
+            Screen.Setup(new Chapter_OnlyScreen.View.Screen.Ctx
             {
                 BackgroundSprite = _ctx.Data.MenuStart.BackgroundSprite,
                 DescriptionText = _ctx.Data.MenuStart.DescriptionText,
@@ -176,7 +176,7 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitSuccessScreen()
         {
-            Screen.Setup(new ChapterScreen.View.Screen.Ctx
+            Screen.Setup(new Chapter_OnlyScreen.View.Screen.Ctx
             {
                 BackgroundSprite = _ctx.Data.MenuSuccess.BackgroundSprite,
                 DescriptionText = _ctx.Data.MenuSuccess.DescriptionText,
@@ -187,7 +187,7 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitFailedScreen()
         {
-            Screen.Setup(new ChapterScreen.View.Screen.Ctx
+            Screen.Setup(new Chapter_OnlyScreen.View.Screen.Ctx
             {
                 BackgroundSprite = _ctx.Data.MenuFailed.BackgroundSprite,
                 DescriptionText = _ctx.Data.MenuFailed.DescriptionText,
