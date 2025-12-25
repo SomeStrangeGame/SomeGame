@@ -51,6 +51,26 @@ namespace Game
             Chapter_introProcess().Forget();
         }
 
+        private async UniTask<Sprite> GetBundledSprite(string bundleName, string spriteName)
+        {
+            var bundlesVersion = await GetBundleVersionAsync();
+            var bundlesPath = $"Remote/{bundlesVersion}/{GetPlatform()}/{bundleName}";
+            if (!_bundles.TryGetValue(bundlesPath, out _))
+            {
+                using (var bundlesRequest = UnityWebRequestAssetBundle.GetAssetBundle(GetPath(bundlesPath)))
+                {
+                    SetHeaders(bundlesRequest);
+                    await bundlesRequest.SendWebRequest();
+                    _bundles[bundlesPath] = DownloadHandlerAssetBundle.GetContent(bundlesRequest);
+                }
+            }
+
+            var loadAsset = _bundles[bundlesPath].LoadAssetAsync<Sprite>(spriteName);
+            await loadAsset;
+            var sprite = loadAsset.asset as Sprite;
+            return sprite;
+        }
+
         private async UniTask<GameObject> GetBundledPrefab(string bundleName, string prefabName)
         {
             var bundlesVersion = await GetBundleVersionAsync();
@@ -89,7 +109,9 @@ namespace Game
 
         private string GetPlatform()
         {
-#if PLATFORM_WEBGL
+#if UNITY_EDITOR_OSX
+            return "Mac";
+#elif PLATFORM_WEBGL
             return "WebGL";
 #else
             return string.Empty;
