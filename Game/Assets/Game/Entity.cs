@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Game
 {
@@ -25,12 +27,15 @@ namespace Game
         }
 
         private Loading.Entity _loading;
+        private string _bundlesVersion = string.Empty;
+        private readonly Dictionary<string, AssetBundle> _bundles;
 
         private readonly Ctx _ctx;
 
         internal Entity(Ctx ctx)
         {
             _ctx = ctx;
+            _bundles = new();
         }
 
         internal async UniTask Init()
@@ -38,11 +43,74 @@ namespace Game
             _loading = new Loading.Entity(new Loading.Entity.Ctx
             {
                 Data = _ctx.Data.LoadingData,
+                GetBundledPrefab = data => GetBundledPrefab(data.bundleName, data.prefabName),
             }).AddTo(this);
             await _loading.Init();
             _loading.ShowImmediate();
 
             Chapter_introProcess().Forget();
+        }
+
+        private async UniTask<GameObject> GetBundledPrefab(string bundleName, string prefabName)
+        {
+            var bundlesVersion = await GetBundleVersionAsync();
+            var bundlesPath = $"Remote/{bundlesVersion}/{GetPlatform()}/{bundleName}";
+            if (!_bundles.TryGetValue(bundlesPath, out _))
+            {
+                using (var bundlesRequest = UnityWebRequestAssetBundle.GetAssetBundle(GetPath(bundlesPath)))
+                {
+                    SetHeaders(bundlesRequest);
+                    await bundlesRequest.SendWebRequest();
+                    _bundles[bundlesPath] = DownloadHandlerAssetBundle.GetContent(bundlesRequest);
+                }
+            }
+
+            var loadAsset = _bundles[bundlesPath].LoadAssetAsync<GameObject>(prefabName);
+            await loadAsset;
+            var prefabGO = loadAsset.asset as GameObject;
+            await _bundles[bundlesPath].UnloadAsync(false);
+            return prefabGO;
+        }
+
+        private async UniTask<string> GetBundleVersionAsync()
+        {
+            if (string.IsNullOrEmpty(_bundlesVersion))
+            {
+                var bundlesVersionPath = GetPath("BundlesVersion.json");
+                using (var bundlesVersionRequest = UnityWebRequest.Get(bundlesVersionPath))
+                {
+                    SetHeaders(bundlesVersionRequest);
+                    await bundlesVersionRequest.SendWebRequest();
+                    _bundlesVersion = bundlesVersionRequest.downloadHandler.text;
+                }
+            }
+            return _bundlesVersion;
+        }
+
+        private string GetPlatform()
+        {
+#if PLATFORM_WEBGL
+            return "WebGL";
+#else
+            return string.Empty;
+#endif
+        }
+
+        private string GetPath(string localPath)
+        {
+            var result = $"{Application.streamingAssetsPath}/{localPath}";
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            result = $"file://{result}";
+#endif
+            return result;
+        }
+
+        private void SetHeaders(UnityWebRequest request)
+        {
+            request.SetRequestHeader("Access-Control-Allow-Credentials", "true");
+            request.SetRequestHeader("Access-Control-Allow-Headers", "Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
+            request.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+            request.SetRequestHeader("Access-Control-Allow-Origin", "*");
         }
     }
 }

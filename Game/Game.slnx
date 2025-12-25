@@ -8,4 +8,5 @@
   <Project Path="Game.Camera.csproj" />
   <Project Path="Game.Disposable.csproj" />
   <Project Path="Game.Loading.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
 </Solution>

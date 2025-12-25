@@ -8,9 +8,11 @@ namespace Game.Loading
     [Serializable]
     public struct Data
     {
-        [SerializeField] private GameObject _loadingPrefab;
+        [SerializeField] private string _bundleName;
+        [SerializeField] private string _loadingPrefabName;
 
-        internal readonly GameObject LoadingPrefab => _loadingPrefab;
+        internal readonly string BundleName => _bundleName;
+        internal readonly string LoadingPrefabName => _loadingPrefabName;
     }
     
     public sealed class Entity : BaseDisposable
@@ -18,6 +20,7 @@ namespace Game.Loading
         public struct Ctx
         {
             public Data Data;
+            public Func<(string bundleName, string prefabName), UniTask<GameObject>> GetBundledPrefab;
         }
 
         private View.Screen _screen;
@@ -30,8 +33,10 @@ namespace Game.Loading
 
         public async UniTask Init() 
         {
-            var go = GameObject.Instantiate(_ctx.Data.LoadingPrefab);
-            _screen = go.GetComponent<View.Screen>();
+            GameObject screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.BundleName, _ctx.Data.LoadingPrefabName));
+            var screenGO = GameObject.Instantiate(screenPrefabGO);
+
+            _screen = screenGO.GetComponent<View.Screen>();
         }
 
         public void ShowImmediate() => _screen.ShowImmediate();
