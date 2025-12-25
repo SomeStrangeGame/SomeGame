@@ -22,19 +22,22 @@ namespace Game.Chapter_ScreenAndBattle
         }
 
         [SerializeField] private string _chapterName;
-        [SerializeField] private MenuData _menuStart;
-        [SerializeField] private MenuData _menuSuccess;
-        [SerializeField] private MenuData _menuFailed;
-        [SerializeField] private GameObject _menuPrefab;
+        [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuStart;
+        [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuSuccess;
+        [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuFailed;
+        [SerializeField] private string _menuBundleName;
+        [SerializeField] private string _menuPrefabName;
+
         [SerializeField] private CameraDataSO _cameraSO;
 
         [SerializeField] private GameObject _battleScenePrefab;
         [SerializeField] private GameObject _battleSceneScreenPrefab;
 
-        internal readonly MenuData MenuStart => _menuStart;
-        internal readonly MenuData MenuSuccess => _menuSuccess;
-        internal readonly MenuData MenuFailed => _menuFailed;
-        internal readonly GameObject MenuPrefab => _menuPrefab;
+        internal readonly Chapter_OnlyScreen.Data.MenuData MenuStart => _menuStart;
+        internal readonly Chapter_OnlyScreen.Data.MenuData MenuSuccess => _menuSuccess;
+        internal readonly Chapter_OnlyScreen.Data.MenuData MenuFailed => _menuFailed;
+        internal readonly string MenuBundleName => _menuBundleName;
+        internal readonly string MenuPrefabName => _menuPrefabName;
 
         internal readonly CameraDataSO Camera => _cameraSO;
 
@@ -47,6 +50,8 @@ namespace Game.Chapter_ScreenAndBattle
         public struct Ctx
         {
             public Data Data;
+            public Func<(string bundleName, string prefabName), UniTask<GameObject>> GetBundledPrefab;
+            public Func<(string bundleName, string spriteName), UniTask<Sprite>> GetBundledSprite;
         }
 
         private readonly UniTaskCompletionSource _startScreenToken;
@@ -62,18 +67,6 @@ namespace Game.Chapter_ScreenAndBattle
         private Character.Behaviour _behaviour;
 
         private Chapter_OnlyScreen.View.Screen _screen;
-        private Chapter_OnlyScreen.View.Screen Screen
-        {
-            get
-            {
-                if (_screen == null)
-                {
-                    var go = GameObject.Instantiate(_ctx.Data.MenuPrefab);
-                    _screen = go.GetComponent<Chapter_OnlyScreen.View.Screen>();
-                }
-                return _screen;
-            }
-        }
 
         public Entity(Ctx ctx)
         {
@@ -85,9 +78,10 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitStartScreen()
         {
-            Screen.Setup(new Chapter_OnlyScreen.View.Screen.Ctx
+            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.MenuBundleName, _ctx.Data.MenuStart.BackgroundSpriteName));
+            (await GetScreen()).Setup(new Chapter_OnlyScreen.View.Screen.Ctx
             {
-                BackgroundSprite = _ctx.Data.MenuStart.BackgroundSprite,
+                BackgroundSprite = screenBackgroundSprite,
                 DescriptionText = _ctx.Data.MenuStart.DescriptionText,
                 ButtonText = _ctx.Data.MenuStart.ButtonText,
                 OnComplete = () => _startScreenToken.TrySetResult(),
@@ -176,9 +170,10 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitSuccessScreen()
         {
-            Screen.Setup(new Chapter_OnlyScreen.View.Screen.Ctx
+            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.MenuBundleName, _ctx.Data.MenuSuccess.BackgroundSpriteName));
+            (await GetScreen()).Setup(new Chapter_OnlyScreen.View.Screen.Ctx
             {
-                BackgroundSprite = _ctx.Data.MenuSuccess.BackgroundSprite,
+                BackgroundSprite = screenBackgroundSprite,
                 DescriptionText = _ctx.Data.MenuSuccess.DescriptionText,
                 ButtonText = _ctx.Data.MenuSuccess.ButtonText,
                 OnComplete = () => _token.TrySetResult(1),
@@ -187,9 +182,10 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitFailedScreen()
         {
-            Screen.Setup(new Chapter_OnlyScreen.View.Screen.Ctx
+            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.MenuBundleName, _ctx.Data.MenuFailed.BackgroundSpriteName));
+            (await GetScreen()).Setup(new Chapter_OnlyScreen.View.Screen.Ctx
             {
-                BackgroundSprite = _ctx.Data.MenuFailed.BackgroundSprite,
+                BackgroundSprite = screenBackgroundSprite,
                 DescriptionText = _ctx.Data.MenuFailed.DescriptionText,
                 ButtonText = _ctx.Data.MenuFailed.ButtonText,
                 OnComplete = () => _token.TrySetResult(0),
@@ -197,6 +193,17 @@ namespace Game.Chapter_ScreenAndBattle
         }
 
         public async UniTask<int> WaitResult() => await _token.Task;
+
+        private async UniTask<Chapter_OnlyScreen.View.Screen> GetScreen()
+        {
+            if (_screen == null)
+            {
+                var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.MenuBundleName, _ctx.Data.MenuPrefabName));
+                var go = GameObject.Instantiate(screenPrefabGO);
+                _screen = go.GetComponent<Chapter_OnlyScreen.View.Screen>();
+            }
+            return _screen;
+        }
 
         private void ReleaseScreen()
         {

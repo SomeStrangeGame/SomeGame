@@ -68,7 +68,6 @@ namespace Game
             var loadAsset = assetBundle.LoadAssetAsync<GameObject>(prefabName);
             await loadAsset;
             var prefabGO = loadAsset.asset as GameObject;
-            await assetBundle.UnloadAsync(false);
             return prefabGO;
         }
 

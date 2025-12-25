@@ -15,9 +15,9 @@ namespace Game.Chapter_OnlyScreen
             [SerializeField] private string _buttonText;
             [SerializeField] private string _backgroundSpriteName;
             
-            internal readonly string DescriptionText => _descriptionText;
-            internal readonly string ButtonText => _buttonText;
-            internal readonly string BackgroundSpriteName => _backgroundSpriteName;
+            public readonly string DescriptionText => _descriptionText;
+            public readonly string ButtonText => _buttonText;
+            public readonly string BackgroundSpriteName => _backgroundSpriteName;
         }
 
         [SerializeField] private MenuData _menu;

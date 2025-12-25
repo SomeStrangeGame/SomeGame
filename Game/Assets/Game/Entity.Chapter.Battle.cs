@@ -10,6 +10,8 @@ namespace Game
             var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
             {
                 Data = _ctx.Data.Chapters[index],
+                GetBundledPrefab = data => GetBundledPrefab(data.bundleName, data.prefabName),
+                GetBundledSprite = data => GetBundledSprite(data.bundleName, data.spriteName),
             };
 
             using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx))

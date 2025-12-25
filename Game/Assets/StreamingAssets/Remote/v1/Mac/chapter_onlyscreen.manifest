@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 1588420578
+CRC: 1800210465
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9f1a693c7b37486486f5e3d46879dd7c
+    Hash: 45bd3502ecfd8ad242ee9116db48a4ba
   TypeTreeHash:
     serializedVersion: 2
     Hash: ff492950630e1d612b32a7ef0d751adb
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: abd62f4b40ec5dae93e661bdc01562ae
+    Hash: f5096de8695043af15ad80d3f71311b8
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -104,5 +104,10 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.UI.SpriteState
 Assets:
 - Assets/Game/Chapter_OnlyScreen/Assets/Chapter_0.jpg
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_3.jpg
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_5.jpg
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_4.jpg
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_2.jpg
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_1.jpg
 - Assets/Game/Chapter_OnlyScreen/View/Menu.prefab
 Dependencies: []
