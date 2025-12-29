@@ -57,8 +57,16 @@ namespace Game
 
             var loadAsset = assetBundle.LoadAssetAsync<Sprite>(spriteName);
             await loadAsset;
-            var sprite = loadAsset.asset as Sprite;
-            return sprite;
+            return loadAsset.asset as Sprite;
+        }
+
+        private async UniTask<T> GetBundledSO<T>(string bundleName, string prefabName) where T : ScriptableObject
+        {
+            var assetBundle = await GetAssetBundle(bundleName);
+
+            var loadAsset = assetBundle.LoadAssetAsync<T>(prefabName);
+            await loadAsset;
+            return loadAsset.asset as T;
         }
 
         private async UniTask<GameObject> GetBundledPrefab(string bundleName, string prefabName)
@@ -67,8 +75,7 @@ namespace Game
 
             var loadAsset = assetBundle.LoadAssetAsync<GameObject>(prefabName);
             await loadAsset;
-            var prefabGO = loadAsset.asset as GameObject;
-            return prefabGO;
+            return loadAsset.asset as GameObject;
         }
 
         private async UniTask<AssetBundle> GetAssetBundle(string bundleName)

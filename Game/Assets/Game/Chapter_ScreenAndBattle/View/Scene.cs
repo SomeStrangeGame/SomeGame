@@ -36,6 +36,7 @@ namespace Game.Chapter_ScreenAndBattle.View
         private void Update()
         {
             if (_sceneDone) return;
+            if (_ctx.OnUpdate == null) return;
 
             _ctx.OnUpdate.Invoke(Time.deltaTime);
 

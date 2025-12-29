@@ -12,6 +12,7 @@ namespace Game
                 Data = _ctx.Data.Chapters[index],
                 GetBundledPrefab = data => GetBundledPrefab(data.bundleName, data.prefabName),
                 GetBundledSprite = data => GetBundledSprite(data.bundleName, data.spriteName),
+                GetBundledCameraData = data => GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>(data.bundleName, data.soName),
             };
 
             using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx))

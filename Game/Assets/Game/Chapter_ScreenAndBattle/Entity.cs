@@ -9,18 +9,6 @@ namespace Game.Chapter_ScreenAndBattle
     [Serializable]
     public struct Data
     {
-        [Serializable]
-        public struct MenuData
-        {
-            [SerializeField] private Sprite _backgroundSprite;
-            [SerializeField][TextArea(15, 250)] private string _descriptionText;
-            [SerializeField] private string _buttonText;
-
-            internal readonly Sprite BackgroundSprite => _backgroundSprite;
-            internal readonly string DescriptionText => _descriptionText;
-            internal readonly string ButtonText => _buttonText;
-        }
-
         [SerializeField] private string _chapterName;
         [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuStart;
         [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuSuccess;
@@ -28,10 +16,10 @@ namespace Game.Chapter_ScreenAndBattle
         [SerializeField] private string _menuBundleName;
         [SerializeField] private string _menuPrefabName;
 
-        [SerializeField] private CameraDataSO _cameraSO;
-
-        [SerializeField] private GameObject _battleScenePrefab;
-        [SerializeField] private GameObject _battleSceneScreenPrefab;
+        [SerializeField] private string _battleBundleName;
+        [SerializeField] private string _battleScenePrefabName;
+        [SerializeField] private string _battleScreenPrefabName;
+        [SerializeField] private string _battleCameraDataName;
 
         internal readonly Chapter_OnlyScreen.Data.MenuData MenuStart => _menuStart;
         internal readonly Chapter_OnlyScreen.Data.MenuData MenuSuccess => _menuSuccess;
@@ -39,10 +27,10 @@ namespace Game.Chapter_ScreenAndBattle
         internal readonly string MenuBundleName => _menuBundleName;
         internal readonly string MenuPrefabName => _menuPrefabName;
 
-        internal readonly CameraDataSO Camera => _cameraSO;
-
-        internal readonly GameObject BattleScenePrefab => _battleScenePrefab;
-        internal readonly GameObject BattleSceneScreenPrefab => _battleSceneScreenPrefab;
+        internal readonly string BattleBundleName => _battleBundleName;
+        internal readonly string BattleScenePrefabName => _battleScenePrefabName;
+        internal readonly string BattleScreenPrefabName => _battleScreenPrefabName;
+        internal readonly string BattleCameraDataName => _battleCameraDataName;
     }
 
     public sealed class Entity : BaseDisposable
@@ -52,6 +40,7 @@ namespace Game.Chapter_ScreenAndBattle
             public Data Data;
             public Func<(string bundleName, string prefabName), UniTask<GameObject>> GetBundledPrefab;
             public Func<(string bundleName, string spriteName), UniTask<Sprite>> GetBundledSprite;
+            public Func<(string bundleName, string soName), UniTask<CameraDataSO>> GetBundledCameraData;
         }
 
         private readonly UniTaskCompletionSource _startScreenToken;
@@ -94,18 +83,21 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitBattle()
         {
-            var go = GameObject.Instantiate(_ctx.Data.BattleSceneScreenPrefab);
-            _battleScreen = go.GetComponent<View.Screen>();
+            var battleScreenPrefab = await _ctx.GetBundledPrefab((_ctx.Data.BattleBundleName, _ctx.Data.BattleScreenPrefabName));
+            var battleScreenGO = GameObject.Instantiate(battleScreenPrefab);
+            _battleScreen = battleScreenGO.GetComponent<View.Screen>();
 
-            go = GameObject.Instantiate(_ctx.Data.BattleScenePrefab);
-            _battleScene = go.GetComponent<View.Scene>();
+            var battleScenePrefab = await _ctx.GetBundledPrefab((_ctx.Data.BattleBundleName, _ctx.Data.BattleScenePrefabName));
+            var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
+            _battleScene = battleSceneGO.GetComponent<View.Scene>();
 
+            var cameraData = await _ctx.GetBundledCameraData((_ctx.Data.BattleBundleName, _ctx.Data.BattleCameraDataName));
             var camera = new Camera.Entity(new Camera.Entity.Ctx
             {
-                MoveOffset = _ctx.Data.Camera.CamMoveOffset,
-                MoveSpeed = _ctx.Data.Camera.CamMoveSpeed,
-                LookAtOffset = _ctx.Data.Camera.CamLookAtOffset,
-                LookAtSpeed = _ctx.Data.Camera.CamLookAtSpeed,
+                MoveOffset = cameraData.CamMoveOffset,
+                MoveSpeed = cameraData.CamMoveSpeed,
+                LookAtOffset = cameraData.CamLookAtOffset,
+                LookAtSpeed = cameraData.CamLookAtSpeed,
 
                 GetCameraTargetPosition = () => _battleScene.PlayerCharacter.transform.position,
             }).AddTo(this);

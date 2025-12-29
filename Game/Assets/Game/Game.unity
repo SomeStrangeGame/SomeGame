@@ -772,9 +772,10 @@ MonoBehaviour:
         _backgroundSpriteName: Chapter_1
       _menuBundleName: chapter_onlyscreen
       _menuPrefabName: Menu.prefab
-      _cameraSO: {fileID: 11400000, guid: e20ca945d8c1140aa97944d71614f63e, type: 2}
-      _battleScenePrefab: {fileID: 495528780594990917, guid: 4d68417a6adac48089e8c7b684c87c7d, type: 3}
-      _battleSceneScreenPrefab: {fileID: 5389417796270955557, guid: c0b5d0845e4af409991a4831b288f5d2, type: 3}
+      _battleBundleName: chapter_screenandbattle
+      _battleScenePrefabName: BattleScene1.prefab
+      _battleScreenPrefabName: BattleSceneScreen.prefab
+      _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 2
       _menuStart:
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 II: \u041C\u0435\u0447
@@ -988,9 +989,10 @@ MonoBehaviour:
         _backgroundSpriteName: Chapter_2
       _menuBundleName: chapter_onlyscreen
       _menuPrefabName: Menu.prefab
-      _cameraSO: {fileID: 11400000, guid: e20ca945d8c1140aa97944d71614f63e, type: 2}
-      _battleScenePrefab: {fileID: 495528780594990917, guid: 4d68417a6adac48089e8c7b684c87c7d, type: 3}
-      _battleSceneScreenPrefab: {fileID: 5389417796270955557, guid: c0b5d0845e4af409991a4831b288f5d2, type: 3}
+      _battleBundleName: chapter_screenandbattle
+      _battleScenePrefabName: BattleScene1.prefab
+      _battleScreenPrefabName: BattleSceneScreen.prefab
+      _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 3
       _menuStart:
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 III: \u0427\u0438\u0441\u043B\u043E
@@ -1208,9 +1210,10 @@ MonoBehaviour:
         _backgroundSpriteName: Chapter_3
       _menuBundleName: chapter_onlyscreen
       _menuPrefabName: Menu.prefab
-      _cameraSO: {fileID: 11400000, guid: e20ca945d8c1140aa97944d71614f63e, type: 2}
-      _battleScenePrefab: {fileID: 495528780594990917, guid: 4d68417a6adac48089e8c7b684c87c7d, type: 3}
-      _battleSceneScreenPrefab: {fileID: 5389417796270955557, guid: c0b5d0845e4af409991a4831b288f5d2, type: 3}
+      _battleBundleName: chapter_screenandbattle
+      _battleScenePrefabName: BattleScene1.prefab
+      _battleScreenPrefabName: BattleSceneScreen.prefab
+      _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 4
       _menuStart:
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 IV: \u0422\u0435\u043D\u044C
@@ -1413,9 +1416,10 @@ MonoBehaviour:
         _backgroundSpriteName: Chapter_4
       _menuBundleName: chapter_onlyscreen
       _menuPrefabName: Menu.prefab
-      _cameraSO: {fileID: 11400000, guid: e20ca945d8c1140aa97944d71614f63e, type: 2}
-      _battleScenePrefab: {fileID: 495528780594990917, guid: 4d68417a6adac48089e8c7b684c87c7d, type: 3}
-      _battleSceneScreenPrefab: {fileID: 5389417796270955557, guid: c0b5d0845e4af409991a4831b288f5d2, type: 3}
+      _battleBundleName: chapter_screenandbattle
+      _battleScenePrefabName: BattleScene1.prefab
+      _battleScreenPrefabName: BattleSceneScreen.prefab
+      _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 5
       _menuStart:
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 V: \u0412\u0440\u0430\u0442\u0430
@@ -1647,9 +1651,10 @@ MonoBehaviour:
         _backgroundSpriteName: Chapter_5
       _menuBundleName: chapter_onlyscreen
       _menuPrefabName: Menu.prefab
-      _cameraSO: {fileID: 11400000, guid: e20ca945d8c1140aa97944d71614f63e, type: 2}
-      _battleScenePrefab: {fileID: 495528780594990917, guid: 4d68417a6adac48089e8c7b684c87c7d, type: 3}
-      _battleSceneScreenPrefab: {fileID: 5389417796270955557, guid: c0b5d0845e4af409991a4831b288f5d2, type: 3}
+      _battleBundleName: chapter_screenandbattle
+      _battleScenePrefabName: BattleScene1.prefab
+      _battleScreenPrefabName: BattleSceneScreen.prefab
+      _battleCameraDataName: CameraData.asset
 --- !u!4 &1138803520
 Transform:
   m_ObjectHideFlags: 0
