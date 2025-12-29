@@ -28,14 +28,21 @@ namespace Game
 
         private Loading.Entity _loading;
         private string _bundlesVersion = string.Empty;
-        private readonly Dictionary<string, AssetBundle> _bundles;
+        private readonly Dictionary<string, AssetBundle> _bundles = new();
 
         private readonly Ctx _ctx;
 
         internal Entity(Ctx ctx)
         {
             _ctx = ctx;
-            _bundles = new();
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            foreach(var pair in _bundles)
+                pair.Value.Unload(false);
+            _bundles.Clear();
         }
 
         internal async UniTask Init()

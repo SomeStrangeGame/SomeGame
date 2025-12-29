@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Game.Disposable;
 
 namespace Game
 {
@@ -12,16 +13,15 @@ namespace Game
                 GetBundledPrefab = data => GetBundledPrefab(data.bundleName, data.prefabName),
                 GetBundledSprite = data => GetBundledSprite(data.bundleName, data.spriteName)
             };
-            using (var chapter_0 = new Chapter_OnlyScreen.Entity(ctx))
-            {
-                await chapter_0.Init();
+            
+            var chapter_0 = new Chapter_OnlyScreen.Entity(ctx).AddTo(this);
+            
+            await chapter_0.Init();
+            await _loading.Hide();
+            await chapter_0.WaitResult();
+            await _loading.Show();
 
-                await _loading.Hide();
-
-                await chapter_0.WaitResult();
-
-                await _loading.Show();
-            }
+            chapter_0.Dispose();
 
             Chapter_Process(0).Forget();
         }

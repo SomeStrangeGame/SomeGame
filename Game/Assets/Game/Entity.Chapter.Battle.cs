@@ -1,4 +1,5 @@
 using Cysharp.Threading.Tasks;
+using Game.Disposable;
 
 namespace Game
 {
@@ -15,51 +16,52 @@ namespace Game
                 GetBundledCameraData = data => GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>(data.bundleName, data.soName),
             };
 
-            using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx))
+            var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this);
+
+            await chapter.InitStartScreen();
+
+            await _loading.Hide();
+
+            await chapter.WaitStartScreenResult();
+
+            await _loading.Show();
+
+            chapter.ReleaseStartScreen();
+
+            await chapter.InitBattle();
+
+            await _loading.Hide();
+
+            var battleResult = await chapter.WaitBattleResult();
+
+            await UniTask.Delay(3000);
+
+            await _loading.Show();
+
+            chapter.ReleaseBattle();
+
+            if (battleResult == 0) //failed
             {
-                await chapter.InitStartScreen();
+                await chapter.InitFailedScreen();
 
                 await _loading.Hide();
 
-                await chapter.WaitStartScreenResult();
+                await chapter.WaitResult();
 
-                await _loading.Show();
-
-                chapter.ReleaseStartScreen();
-
-                await chapter.InitBattle();
-
-                await _loading.Hide();
-
-                var battleResult = await chapter.WaitBattleResult();
-
-                await UniTask.Delay(3000);
-
-                await _loading.Show();
-
-                chapter.ReleaseBattle();
-
-                if (battleResult == 0) //failed
-                {
-                    await chapter.InitFailedScreen();
-
-                    await _loading.Hide();
-
-                    await chapter.WaitResult();
-
-                    result = 0;
-                }
-                else //success
-                {
-                    await chapter.InitSuccessScreen();
-
-                    await _loading.Hide();
-
-                    await chapter.WaitResult();
-
-                    result = 1;
-                }
+                result = 0;
             }
+            else //success
+            {
+                await chapter.InitSuccessScreen();
+
+                await _loading.Hide();
+
+                await chapter.WaitResult();
+
+                result = 1;
+            }
+
+            chapter.Dispose();
 
             switch (result)
             {
