@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.AI;
 
 namespace Game.Chapter_ScreenAndBattle.View
 {
@@ -12,6 +14,7 @@ namespace Game.Chapter_ScreenAndBattle.View
             internal Action<int> OnComplete;
         }
 
+        [SerializeField] private LayerMask _navMeshLayers;
         [SerializeField] private GameObject _playerCharacter;
         [SerializeField] private GameObject[] _enemyCharacters;
 
@@ -25,12 +28,39 @@ namespace Game.Chapter_ScreenAndBattle.View
         private Animator _playerAnim;
         private Animator[] _enemyAnims;
 
+        private NavMeshDataInstance _navMeshDataInstance;
+
         internal void Setup(Ctx ctx)
         {
             _ctx = ctx;
 
             _playerAnim = PlayerCharacter.GetComponent<Animator>();
             _enemyAnims = EnemyCharacters.Select(c => c.GetComponent<Animator>()).ToArray();
+        }
+
+        private void OnEnable()
+        {
+            CreateNavMesh();
+        }
+
+        private void OnDisable()
+        {
+            RemoveNavMesh();
+        }
+
+        private void CreateNavMesh() 
+        {
+            var buildSources = new List<NavMeshBuildSource>();
+            NavMeshBuilder.CollectSources(transform, _navMeshLayers, NavMeshCollectGeometry.PhysicsColliders, 0, new List<NavMeshBuildMarkup>(), buildSources);
+            var boundsSize = new Vector3(50, 50, 50);
+            var bounds = new Bounds(transform.position, boundsSize);
+            var navData = NavMeshBuilder.BuildNavMeshData(NavMesh.GetSettingsByID(0), buildSources, bounds, Vector3.down, Quaternion.Euler(Vector3.up));
+            _navMeshDataInstance = NavMesh.AddNavMeshData(navData);
+        }
+
+        private void RemoveNavMesh() 
+        {
+            _navMeshDataInstance.Remove();
         }
 
         private void Update()

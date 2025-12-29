@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 3554758943
+CRC: 2286288611
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 72ba64df8194b1f730b2967e4570bcc3
+    Hash: 1f6d798c840e74506ae70a80d11d0444
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 6d4b3b0982e6e7744e98eb116dfe8ed2
+    Hash: a2304e1cd11fd67448b876b32e051260
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8c63b15fd9bf76aaaf6b2b8eb9356858
+    Hash: 16f762006d8908a9bc7ce69d5f5645ea
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -50,8 +50,6 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 2646c1766fab34b96a9b14329b21bcf7, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 1e3fdca004f2d45fe8abbed571a8abd5, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 05acf18c356ae46cea7fae9c60386ccd, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: d7eac70c7ad2c43ee9e10f6e7e8f2a92, type: 3}
@@ -67,8 +65,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: f5ba79bd9070648d49b79b8cc736aabf, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fc8d2f3cf1118bf4ab1c5f540a08bbd2, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
 - Class: 114
@@ -94,8 +90,6 @@ ClassTypes:
 - Class: 223
   Script: {instanceID: 0}
 - Class: 224
-  Script: {instanceID: 0}
-- Class: 238
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: SimpleInput.Runtime
@@ -184,7 +178,6 @@ Assets:
 - Assets/Game/Chapter_ScreenAndBattle/Assets/SM_Env_RockPile_01.fbx
 - Assets/Game/Chapter_ScreenAndBattle/Assets/SM_Bld_Church_Tower_01_Lite.fbx
 - Assets/Game/Chapter_ScreenAndBattle/Assets/SM_Bld_Castle_Tower_01.fbx
-- Assets/Game/Chapter_ScreenAndBattle/View/NavMesh-BattleScene1.asset
 - Assets/Game/Chapter_ScreenAndBattle/Assets/SM_Env_MountainSnow_01.fbx
 - Assets/Game/Chapter_ScreenAndBattle/Assets/SM_Bld_Castle_Tower_Round_01.fbx
 - Assets/Game/Chapter_ScreenAndBattle/Assets/SM_Bld_House_RoomTall_02.fbx
