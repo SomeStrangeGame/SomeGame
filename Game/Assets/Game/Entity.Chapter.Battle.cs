@@ -5,7 +5,7 @@ namespace Game
 {
     internal sealed partial class Entity
     {
-        private async UniTask Chapter_Process(int index)
+        private async UniTask ChapterBattleProcess(int index)
         {
             var result = 0;
             var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
@@ -66,14 +66,14 @@ namespace Game
             switch (result)
             {
                 case 0:
-                    Chapter_Process(index).Forget();
+                    ChapterBattleProcess(index).Forget();
                     break;
                 case 1:
                     index++;
                     if (index >= _ctx.Data.Chapters.Length)
-                        Chapter_introProcess().Forget();
+                        ChapterIntroProcess().Forget();
                     else
-                        Chapter_Process(index).Forget();
+                        ChapterBattleProcess(index).Forget();
                     break;
             }
         }

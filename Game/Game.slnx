@@ -1,8 +1,8 @@
 ﻿<Solution>
   <Project Path="SimpleInput.Runtime.csproj" />
+  <Project Path="Game.csproj" />
   <Project Path="Game.Character.csproj" />
   <Project Path="Game.Chapter_ScreenAndBattle.csproj" />
-  <Project Path="Game.csproj" />
   <Project Path="Game.Chapter_OnlyScreen.csproj" />
   <Project Path="SimpleInput.Editor.csproj" />
   <Project Path="Game.Camera.csproj" />

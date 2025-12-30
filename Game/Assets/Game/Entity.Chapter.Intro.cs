@@ -5,7 +5,7 @@ namespace Game
 {
     internal sealed partial class Entity
     {
-        private async UniTask Chapter_introProcess()
+        private async UniTask ChapterIntroProcess()
         {
             var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {
@@ -23,7 +23,7 @@ namespace Game
 
             chapter_0.Dispose();
 
-            Chapter_Process(0).Forget();
+            ChapterBattleProcess(0).Forget();
         }
     }
 }
