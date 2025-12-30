@@ -81,7 +81,7 @@ namespace Game
             }
             else
             {
-                Debug.LogWarning($"Required bundles update {lastBundlesVersion}/{bundlesVersion}");
+                Debug.LogWarning($"Required {bundleName} bundles update {lastBundlesVersion}/{bundlesVersion}");
                 currentBundlesPath = GetRemotePath(bundlesPath);
             }
             Debug.Log($"{bundleName} bundle path - {currentBundlesPath}");
@@ -121,7 +121,7 @@ namespace Game
         {
 #if UNITY_EDITOR_OSX
             return "Mac";
-#elif PLATFORM_WEBGL
+#elif UNITY_WEBGL
             return "WebGL";
 #else
             return string.Empty;
