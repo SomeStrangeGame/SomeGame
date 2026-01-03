@@ -133,10 +133,10 @@ namespace Game
         {
 #if UNITY_EDITOR_OSX
             return "Mac";
-#elif UNITY_WEBGL
-            return "WebGL";
 #elif UNITY_STANDALONE_WIN
             return "Win";
+#elif UNITY_WEBGL
+            return "WebGL";
 #else
             return string.Empty;
 #endif
