@@ -88,15 +88,27 @@ namespace Game
 
             if (!_bundles.TryGetValue(bundlesPath, out _))
             {
-                using (var bundlesRequest = UnityWebRequest.Get(currentBundlesPath))
+                try
                 {
-                    SetHeaders(bundlesRequest);
-                    await bundlesRequest.SendWebRequest();
-                    //_bundles[bundlesPath] = DownloadHandlerAssetBundle.GetContent(bundlesRequest);
-                    _bundles[bundlesPath] = await BundleToCache(bundlesPath, bundlesRequest.downloadHandler.data);
+                    await LoadBundle(bundlesPath, currentBundlesPath);
+                }
+                catch
+                {
+                    Debug.LogWarning($"No local bundle {bundleName} in {currentBundlesPath}\nTry load from {GetRemotePath(bundlesPath)}");
+                    await LoadBundle(bundlesPath, GetRemotePath(bundlesPath));
                 }
             }
             return _bundles[bundlesPath];
+        }
+
+        private async UniTask LoadBundle(string key, string path)
+        {
+            using (var bundlesRequest = UnityWebRequest.Get(path))
+            {
+                SetHeaders(bundlesRequest);
+                await bundlesRequest.SendWebRequest();
+                _bundles[key] = await BundleToCache(key, bundlesRequest.downloadHandler.data);
+            }
         }
 
         private async UniTask<string> GetBundleVersionAsync(string bundleName)
@@ -123,6 +135,8 @@ namespace Game
             return "Mac";
 #elif UNITY_WEBGL
             return "WebGL";
+#elif UNITY_STANDALONE_WIN
+            return "Win";
 #else
             return string.Empty;
 #endif

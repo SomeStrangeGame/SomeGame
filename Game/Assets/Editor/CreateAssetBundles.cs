@@ -49,6 +49,14 @@ namespace Editor
             }
             BuildPipeline.BuildAssetBundles(assetBundleDirectoryMac, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
 
+            var assetBundleDirectoryWin = $"{versionPath}/Win";
+            if (!Directory.Exists(assetBundleDirectoryWin))
+            {
+                Directory.CreateDirectory(assetBundleDirectoryWin);
+                Debug.Log($"Create remote folder {assetBundleDirectoryWin}");
+            }
+            BuildPipeline.BuildAssetBundles(assetBundleDirectoryWin, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
+
             string GetPath(string localPath)
             {
                 var result = $"{Application.streamingAssetsPath}/{localPath}";
