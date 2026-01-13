@@ -34,6 +34,7 @@ namespace Game.Character.View
         private const float _stoppedRotationSpeed = 5f;
         private const float _animRotationSpeed = 5f;
 
+        private int[] _attacksTriggersHashes;
         private readonly string[] _attacksTriggers = new string[]
         {
             "Attack_0",
@@ -41,11 +42,13 @@ namespace Game.Character.View
             "Attack_2",
         };
 
+        private int[] _dodgingTriggersHashes;
         private readonly string[] _dodgingTriggers = new string[]
         {
             "Dodging_0",
         };
 
+        private int[] _hittingTriggersHashes;
         private readonly string[] _hittingTriggers = new string[]
         {
             "Hit",
@@ -58,7 +61,6 @@ namespace Game.Character.View
 
         private Vector2 _input;
         private Vector3 _lookAtTargetPosition;
-        private Vector3 _rawLookAtTargetPosition;
 
         private readonly System.Random _random = new(DateTime.UtcNow.Second);
 
@@ -69,6 +71,17 @@ namespace Game.Character.View
 
         public Animator Anim => _anim;
         public NavMeshAgent NavAgent => _navAgent;
+
+        private int _moveSpeedHash;
+        private const string _moveSpeedParam = "MoveSpeed";
+        private int _vertHash;
+        private const string _vertParam = "Vert";
+        private int _horHash;
+        private const string _horParam = "Hor";
+        private int _isRotHash;
+        private const string _isRotParam = "IsRot";
+        private int _rotHash;
+        private const string _rotParam = "Rot";
 
         [ContextMenu("Die")]
         internal void Die()
@@ -89,8 +102,26 @@ namespace Game.Character.View
 
             _mainCollider = GetComponent<Collider>();
 
+            _attacksTriggersHashes = new int[_attacksTriggers.Length];
+            for (var i = 0 ; i < _attacksTriggers.Length; i++)
+                _attacksTriggersHashes[i] = Animator.StringToHash(_attacksTriggers[i]);
+
+            _dodgingTriggersHashes = new int[_dodgingTriggers.Length];
+            for (var i = 0 ; i < _dodgingTriggers.Length; i++)
+                _dodgingTriggersHashes[i] = Animator.StringToHash(_dodgingTriggers[i]);
+
+            _hittingTriggersHashes = new int[_hittingTriggers.Length];
+            for (var i = 0 ; i < _hittingTriggers.Length; i++)
+                _hittingTriggersHashes[i] = Animator.StringToHash(_hittingTriggers[i]);
+
+            _moveSpeedHash = Animator.StringToHash(_moveSpeedParam);
+            _vertHash = Animator.StringToHash(_vertParam);
+            _horHash = Animator.StringToHash(_horParam);
+            _isRotHash = Animator.StringToHash(_isRotParam);
+            _rotHash = Animator.StringToHash(_rotParam);
+
             _anim = GetComponent<Animator>();
-            _anim.SetFloat("MoveSpeed", _ctx.Speed);
+            _anim.SetFloat(_moveSpeedHash, _ctx.Speed);
 
             _navAgent = GetComponent<NavMeshAgent>();
             _navAgent.speed = _ctx.Speed;
@@ -113,51 +144,9 @@ namespace Game.Character.View
         }
 
         //invoke via engine
-        private void Update()
+        private void LateUpdate()
         {
             _weaponView.transform.SetPositionAndRotation(_handPosition.Pos, _handPosition.Rot);
-
-            if (!IsSetupDone()) return;
-            if (!_mainCollider.enabled) return;
-            if (!_anim.enabled) return;
-            if (!_navAgent.enabled) return;
-
-            _rawLookAtTargetPosition = _ctx.GetLookAtTargetPosition.Invoke();
-
-            _navAgent.SetDestination(_ctx.GetTargetPosition.Invoke());
-            var vel = _navAgent.velocity;
-
-            _input.y = Mathf.Lerp(_input.y, Mathf.Clamp(transform.InverseTransformDirection(vel).z, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
-            _input.x = Mathf.Lerp(_input.x, Mathf.Clamp(transform.InverseTransformDirection(vel).x, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
-            _anim.SetFloat("Vert", _input.y);
-            _anim.SetFloat("Hor", _input.x);
-
-            var isAttack = IsAttacking();
-            var isDodging = IsDodging();
-            var isHitting = IsHitting();
-
-            _anim.applyRootMotion = (Mathf.Abs(_input.y) + Mathf.Abs(_input.x) < _inputMinValue) || isAttack || isDodging || isHitting;
-            _navAgent.isStopped = isAttack || isDodging || isHitting;
-
-            if (_navAgent.isStopped)
-            {
-                var oldRotation = _anim.transform.rotation;
-                _anim.transform.LookAt(_rawLookAtTargetPosition);
-                _anim.transform.rotation = Quaternion.Lerp(oldRotation, _anim.transform.rotation, Time.deltaTime * _stoppedRotationSpeed);
-            }
-
-            var targetDotForward = GetDot(_anim.transform, _rawLookAtTargetPosition, Vector3.forward);
-            var targetDotRight = GetDot(_anim.transform, _rawLookAtTargetPosition, Vector3.right);
-            targetDotRight = targetDotRight > 0f ? 1f : -1f;
-
-            _rot = Mathf.Lerp(_rot, targetDotRight, Time.deltaTime * _animRotationSpeed);
-
-            var isRot = targetDotForward < 0f && _anim.applyRootMotion;
-            _anim.SetBool("IsRot", isRot);
-            _anim.SetFloat("Rot", _rot);
-
-            if (_ctx.GetAttackInput.Invoke()) _anim.SetTrigger(_attacksTriggers[_random.Next(0, _attacksTriggers.Length)]);
-            if (_ctx.GetDodgeInput.Invoke()) _anim.SetTrigger(_dodgingTriggers[_random.Next(0, _dodgingTriggers.Length)]);
         }
 
         internal bool IsAttacking()
@@ -183,9 +172,44 @@ namespace Game.Character.View
         {
             if (!IsSetupDone()) return;
 
-            _lookAtTargetPosition = Vector3.Lerp(_lookAtTargetPosition, _rawLookAtTargetPosition, Time.deltaTime * 2f);
+            _lookAtTargetPosition = _ctx.GetLookAtTargetPosition.Invoke();
             _anim.SetLookAtPosition(_lookAtTargetPosition);
             _anim.SetLookAtWeight(1f, 0.25f, 0.7f, 0.9f, 0.5f);
+
+            _navAgent.SetDestination(_ctx.GetTargetPosition.Invoke());
+            var vel = _navAgent.velocity;
+
+            _input.y = Mathf.Lerp(_input.y, Mathf.Clamp(transform.InverseTransformDirection(vel).z, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
+            _input.x = Mathf.Lerp(_input.x, Mathf.Clamp(transform.InverseTransformDirection(vel).x, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
+            _anim.SetFloat(_vertHash, _input.y);
+            _anim.SetFloat(_horHash, _input.x);
+
+            var isAttack = IsAttacking();
+            var isDodging = IsDodging();
+            var isHitting = IsHitting();
+
+            _anim.applyRootMotion = (Mathf.Abs(_input.y) + Mathf.Abs(_input.x) < _inputMinValue) || isAttack || isDodging || isHitting;
+            _navAgent.isStopped = isAttack || isDodging || isHitting;
+
+            if (_navAgent.isStopped)
+            {
+                var oldRotation = _anim.transform.rotation;
+                _anim.transform.LookAt(_lookAtTargetPosition);
+                _anim.transform.rotation = Quaternion.Lerp(oldRotation, _anim.transform.rotation, Time.deltaTime * _stoppedRotationSpeed);
+            }
+
+            var targetDotForward = GetDot(_anim.transform, _lookAtTargetPosition, Vector3.forward);
+            var targetDotRight = GetDot(_anim.transform, _lookAtTargetPosition, Vector3.right);
+            targetDotRight = targetDotRight > 0f ? 1f : -1f;
+
+            _rot = Mathf.Lerp(_rot, targetDotRight, Time.deltaTime * _animRotationSpeed);
+
+            var isRot = targetDotForward < 0f && _anim.applyRootMotion;
+            _anim.SetBool(_isRotHash, isRot);
+            _anim.SetFloat(_rotHash, _rot);
+
+            if (_ctx.GetAttackInput.Invoke()) _anim.SetTrigger(_attacksTriggersHashes[_random.Next(0, _attacksTriggersHashes.Length)]);
+            if (_ctx.GetDodgeInput.Invoke()) _anim.SetTrigger(_dodgingTriggersHashes[_random.Next(0, _dodgingTriggersHashes.Length)]);
         }
 
         private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
@@ -203,7 +227,7 @@ namespace Game.Character.View
         {
             if (IsHitting()) return;
 
-            _anim.SetTrigger(_hittingTriggers[_random.Next(0, _hittingTriggers.Length)]);
+            _anim.SetTrigger(_hittingTriggersHashes[_random.Next(0, _hittingTriggersHashes.Length)]);
         }
 
         //invoke via animator
