@@ -134,14 +134,10 @@ namespace Game.Character.View
             }
         }
 
-        private bool IsSetupDone()
-        {
-            if (_mainCollider == null) return false;
-            if (_anim == null) return false;
-            if (_navAgent == null) return false;
-
-            return true;
-        }
+        internal bool IsAttacking() => IsTag(1, "Attack");
+        internal bool IsDodging() => IsTag(3, "Dodging");
+        internal bool IsHitting() => IsTag(2, "Hitting");
+        private bool IsTag(int layer, string tag) => _anim.GetNextAnimatorStateInfo(layer).IsTag(tag) || _anim.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
 
         //invoke via engine
         private void LateUpdate()
@@ -149,28 +145,12 @@ namespace Game.Character.View
             _weaponView.transform.SetPositionAndRotation(_handPosition.Pos, _handPosition.Rot);
         }
 
-        internal bool IsAttacking()
-        {
-            var isAttackTag = "Attack";
-            return _anim.GetNextAnimatorStateInfo(1).IsTag(isAttackTag) || _anim.GetCurrentAnimatorStateInfo(1).IsTag(isAttackTag);
-        }
-
-        internal bool IsDodging()
-        {
-            var dodgingTag = "Dodging";
-            return _anim.GetNextAnimatorStateInfo(3).IsTag(dodgingTag) || _anim.GetCurrentAnimatorStateInfo(3).IsTag(dodgingTag);
-        }
-
-        internal bool IsHitting()
-        {
-            var hittingTag = "Hitting";
-            return _anim.GetNextAnimatorStateInfo(2).IsTag(hittingTag) || _anim.GetCurrentAnimatorStateInfo(2).IsTag(hittingTag);
-        }
-
         //invoke via animator
         private void OnAnimatorIK(int layerIndex)
         {
-            if (!IsSetupDone()) return;
+            if (_mainCollider == null) return;
+            if (_anim == null) return;
+            if (_navAgent == null) return;
 
             _lookAtTargetPosition = _ctx.GetLookAtTargetPosition.Invoke();
             _anim.SetLookAtPosition(_lookAtTargetPosition);
