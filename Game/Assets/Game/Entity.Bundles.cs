@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -62,7 +63,6 @@ namespace Game
             var bundlesVersion = string.Empty;
             try
             {
-                //bundlesVersion = await GetBundleVersionAsync(bundleName);
                 bundlesVersion = TextToCache(GetBundleVersionName(bundleName), await GetBundleVersionAsync(bundleName));
                 Debug.Log($"{GetRemotePath(GetBundleVersionName(bundleName))} remote bundle version: {bundlesVersion}");
             }
@@ -72,11 +72,11 @@ namespace Game
                 return null;
             }
             
-            var bundlesPath = $"Remote/{bundlesVersion}/{GetPlatform()}/{bundleName}";
+            var bundlesPath = $"Remote/{GetPlatform()}/{bundleName}/{bundlesVersion}";
             var currentBundlesPath = string.Empty;
             if (lastBundlesVersion == bundlesVersion)
             {
-                Debug.Log($"Bundles version is actual {bundlesVersion}");
+                Debug.Log($"{bundleName} version is actual {bundlesVersion}");
                 currentBundlesPath = ConvertLocalPath(bundlesPath);
             }
             else
@@ -92,9 +92,9 @@ namespace Game
                 {
                     await LoadBundle(bundlesPath, currentBundlesPath);
                 }
-                catch
+                catch (Exception e)
                 {
-                    Debug.LogWarning($"No local bundle {bundleName} in {currentBundlesPath}\nTry load from {GetRemotePath(bundlesPath)}");
+                    Debug.LogWarning($"No local bundle {bundleName} in {currentBundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n{e}");
                     await LoadBundle(bundlesPath, GetRemotePath(bundlesPath));
                 }
             }
@@ -114,7 +114,7 @@ namespace Game
         private async UniTask<string> GetBundleVersionAsync(string bundleName)
         {
             var bundlesVersion = string.Empty;
-            var bundlesVersionPath = GetRemotePath(GetBundleVersionName(bundleName));
+            var bundlesVersionPath = GetRemotePath($"Remote/{GetPlatform()}/{bundleName}/version.txt");
             using (var bundlesVersionRequest = UnityWebRequest.Get(bundlesVersionPath))
             {
                 SetHeaders(bundlesVersionRequest);

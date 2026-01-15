@@ -1,7 +1,7 @@
 using System.IO;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Editor
 {
@@ -10,68 +10,50 @@ namespace Editor
         [MenuItem("Assets/Build AssetBundles")]
         private static async void BuildAllAssetBundles()
         {
-            var bundlesVersion = string.Empty;
-            var bundlesVersionPath = GetPath("BundlesVersion.json");
-            using (var request = UnityWebRequest.Get(bundlesVersionPath))
-            {
-                SetHeaders(request);
-                await request.SendWebRequest();
-                bundlesVersion = request.downloadHandler.text;
-            }
-            
-            var remotePath = "Assets/StreamingAssets/Remote";
+            var remotePath = $"{Application.streamingAssetsPath}/Remote";
+            if (Directory.Exists(remotePath))
+                Directory.Delete(remotePath, true);
+
             if (!Directory.Exists(remotePath))
-            {
                 Directory.CreateDirectory(remotePath);
-                Debug.Log($"Create remote folder {remotePath}");
+
+            BuildBundles(BuildTarget.WebGL, $"{remotePath}/WebGL");
+            BuildBundles(BuildTarget.StandaloneOSX, $"{remotePath}/Mac");
+            BuildBundles(BuildTarget.StandaloneWindows64, $"{remotePath}/Win");
+
+            void BuildBundles(BuildTarget buildTarget, string targetFolderPath)
+            {
+                if (!Directory.Exists(targetFolderPath))
+                    Directory.CreateDirectory(targetFolderPath);
+                var manifest = BuildPipeline.BuildAssetBundles(targetFolderPath, BuildAssetBundleOptions.None, buildTarget);
+                UpdateBundleFolders(manifest, targetFolderPath);
             }
 
-            var versionPath = $"Assets/StreamingAssets/Remote/{bundlesVersion}";
-            if (!Directory.Exists(versionPath))
+            void UpdateBundleFolders(AssetBundleManifest manifest, string targetFolderPath)
             {
-                Directory.CreateDirectory(versionPath);
-                Debug.Log($"Create version folder {versionPath}");
+                foreach (var bundle in manifest.GetAllAssetBundles())
+                {
+                    var hash = manifest.GetAssetBundleHash(bundle);
+                    var newFilePath = $"{targetFolderPath}/{hash}";
+                    File.Move($"{targetFolderPath}/{bundle}", newFilePath);
+
+                    var bundlePath = $"{targetFolderPath}/{bundle}";
+                    if (!Directory.Exists(bundlePath))
+                        Directory.CreateDirectory(bundlePath);
+
+                    File.Move(newFilePath, $"{bundlePath}/{hash}");
+
+                    ByteArrayToCash(Encoding.UTF8.GetBytes($"{hash}"), $"{bundlePath}/version.txt");
+                }
             }
 
-            var assetBundleDirectoryWebGL = $"{versionPath}/WebGL";
-            if (!Directory.Exists(assetBundleDirectoryWebGL)) 
+            void ByteArrayToCash(byte[] data, string filePath)
             {
-                Directory.CreateDirectory(assetBundleDirectoryWebGL);
-                Debug.Log($"Create remote folder {assetBundleDirectoryWebGL}");
-            }
-            BuildPipeline.BuildAssetBundles(assetBundleDirectoryWebGL, BuildAssetBundleOptions.None, BuildTarget.WebGL);
+                if (File.Exists(filePath))
+                    File.Delete(filePath);
 
-            var assetBundleDirectoryMac = $"{versionPath}/Mac";
-            if (!Directory.Exists(assetBundleDirectoryMac)) 
-            {
-                Directory.CreateDirectory(assetBundleDirectoryMac);
-                Debug.Log($"Create remote folder {assetBundleDirectoryMac}");
-            }
-            BuildPipeline.BuildAssetBundles(assetBundleDirectoryMac, BuildAssetBundleOptions.None, BuildTarget.StandaloneOSX);
-
-            var assetBundleDirectoryWin = $"{versionPath}/Win";
-            if (!Directory.Exists(assetBundleDirectoryWin))
-            {
-                Directory.CreateDirectory(assetBundleDirectoryWin);
-                Debug.Log($"Create remote folder {assetBundleDirectoryWin}");
-            }
-            BuildPipeline.BuildAssetBundles(assetBundleDirectoryWin, BuildAssetBundleOptions.None, BuildTarget.StandaloneWindows64);
-
-            string GetPath(string localPath)
-            {
-                var result = $"{Application.streamingAssetsPath}/{localPath}";
-                #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-                result = $"file://{result}";
-                #endif
-                return result;
-            }
-
-            void SetHeaders(UnityWebRequest request)
-            {
-                request.SetRequestHeader("Access-Control-Allow-Credentials", "true");
-                request.SetRequestHeader("Access-Control-Allow-Headers", "Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
-                request.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-                request.SetRequestHeader("Access-Control-Allow-Origin", "*");
+                using (var fs = File.Create(filePath))
+                    fs.Write(data, 0, data.Length);
             }
         }
     }
