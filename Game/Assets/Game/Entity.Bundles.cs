@@ -84,31 +84,26 @@ namespace Game
                 Debug.LogWarning($"Required {bundleName} bundles update {lastBundlesVersion}/{bundlesVersion}");
                 currentBundlesPath = GetRemotePath(bundlesPath);
             }
-            Debug.Log($"{bundleName} bundle path - {currentBundlesPath}");
+            Debug.Log($"{bundleName} bundle key - {bundlesPath}\n{bundleName} bundle path - {currentBundlesPath}");
 
             if (!_bundles.TryGetValue(bundlesPath, out _))
             {
                 try
                 {
-                    await LoadBundle(bundlesPath, currentBundlesPath);
+                    _bundles[bundlesPath] = await BundleFromCache(bundlesPath);
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"No local bundle {bundleName} in {currentBundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n{e}");
-                    await LoadBundle(bundlesPath, GetRemotePath(bundlesPath));
+                    Debug.LogWarning($"No local bundle {bundleName} in {currentBundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
+                    using (var bundlesRequest = UnityWebRequest.Get(GetRemotePath(bundlesPath)))
+                    {
+                        SetHeaders(bundlesRequest);
+                        await bundlesRequest.SendWebRequest();
+                        _bundles[bundlesPath] = await BundleToCache(bundlesPath, bundlesRequest.downloadHandler.data);
+                    }
                 }
             }
             return _bundles[bundlesPath];
-        }
-
-        private async UniTask LoadBundle(string key, string path)
-        {
-            using (var bundlesRequest = UnityWebRequest.Get(path))
-            {
-                SetHeaders(bundlesRequest);
-                await bundlesRequest.SendWebRequest();
-                _bundles[key] = await BundleToCache(key, bundlesRequest.downloadHandler.data);
-            }
         }
 
         private async UniTask<string> GetBundleVersionAsync(string bundleName)
@@ -126,7 +121,7 @@ namespace Game
 
         private string GetBundleVersionName(string bundleName)
         {
-            return $"{bundleName}_BundlesVersion.json";
+            return $"{bundleName}_BundlesVersion";
         }
 
         private string GetPlatform()
