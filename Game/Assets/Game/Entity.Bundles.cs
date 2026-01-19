@@ -49,52 +49,18 @@ namespace Game
 
         private async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
-            var lastBundlesVersion = string.Empty;
-            try
-            {
-                lastBundlesVersion = TextFromCache(GetBundleVersionName(bundleName));
-                Debug.Log($"{GetBundleVersionName(bundleName)} last bundle version: {lastBundlesVersion}");
-            }
-            catch
-            {
-                Debug.LogWarning($"{GetBundleVersionName(bundleName)} no last bundle version file");
-            }
-
-            var bundlesVersion = string.Empty;
-            try
-            {
-                bundlesVersion = TextToCache(GetBundleVersionName(bundleName), await GetBundleVersionAsync(bundleName));
-                Debug.Log($"{GetRemotePath(GetBundleVersionName(bundleName))} remote bundle version: {bundlesVersion}");
-            }
-            catch
-            {
-                Debug.LogError($"{GetRemotePath(GetBundleVersionName(bundleName))} no remote bundle version file");
-                return null;
-            }
-            
+            var bundlesVersion = await GetBundleVersionAsync(bundleName);
             var bundlesPath = $"Remote/{GetPlatform()}/{bundleName}/{bundlesVersion}";
-            var currentBundlesPath = string.Empty;
-            if (lastBundlesVersion == bundlesVersion)
-            {
-                Debug.Log($"{bundleName} version is actual {bundlesVersion}");
-                currentBundlesPath = ConvertLocalPath(bundlesPath);
-            }
-            else
-            {
-                Debug.LogWarning($"Required {bundleName} bundles update {lastBundlesVersion}/{bundlesVersion}");
-                currentBundlesPath = GetRemotePath(bundlesPath);
-            }
-            Debug.Log($"{bundleName} bundle key - {bundlesPath}\n{bundleName} bundle path - {currentBundlesPath}");
-
             if (!_bundles.TryGetValue(bundlesPath, out _))
             {
                 try
                 {
                     _bundles[bundlesPath] = await BundleFromCache(bundlesPath);
+                    Debug.Log($"Get local bundle from {bundlesPath}");
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"No local bundle {bundleName} in {currentBundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
+                    Debug.LogWarning($"No local bundle {bundleName} in {bundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
                     using (var bundlesRequest = UnityWebRequest.Get(GetRemotePath(bundlesPath)))
                     {
                         SetHeaders(bundlesRequest);
@@ -117,11 +83,6 @@ namespace Game
                 bundlesVersion = bundlesVersionRequest.downloadHandler.text;
             }
             return bundlesVersion;
-        }
-
-        private string GetBundleVersionName(string bundleName)
-        {
-            return $"{bundleName}_BundlesVersion";
         }
 
         private string GetPlatform()

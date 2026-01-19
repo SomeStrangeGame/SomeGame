@@ -9,7 +9,7 @@ namespace Game
 
         private async UniTask LoadingProcess()
         {
-             _loading = new Loading.Entity(new Loading.Entity.Ctx
+            _loading = new Loading.Entity(new Loading.Entity.Ctx
             {
                 Data = _ctx.Data.LoadingData,
                 GetBundledPrefab = data => GetBundledPrefab(data.bundleName, data.prefabName),
