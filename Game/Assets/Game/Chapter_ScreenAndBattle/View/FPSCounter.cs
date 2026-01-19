@@ -1,5 +1,5 @@
-using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace Game.Chapter_ScreenAndBattle.View
 {
@@ -11,12 +11,12 @@ namespace Game.Chapter_ScreenAndBattle.View
         private float _timeSinceUpdate = 0f;
         private float _averageFps = 1f;
 
-        private TMP_Text _text;
-        private TMP_Text Text
+        private Text _text;
+        private Text Text
         {
             get
             {
-                if (_text == null) _text = GetComponentInChildren<TMP_Text>(true);
+                if (_text == null) _text = GetComponentInChildren<Text>(true);
                 return _text;
             }
         }

@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 936831199
+CRC: 616485853
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: de393b59acc9583725f1e08cd3486b99
+    Hash: dbebedb5e2af35d9125e8b28cc491653
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 1efa4909f813b39ce4fb03aec1f946ab
+    Hash: 83ce8f9b09d379ae5997f001ead87a74
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 6a3d670b1c736c2b55d6511eb8481723
+    Hash: f3d51d9bc0e4eed8d7507f8c0999bd3e
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -44,8 +44,6 @@ ClassTypes:
 - Class: 95
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: d7eac70c7ad2c43ee9e10f6e7e8f2a92, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
@@ -64,10 +62,14 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: fc8d2f3cf1118bf4ab1c5f540a08bbd2, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 05acf18c356ae46cea7fae9c60386ccd, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 128
   Script: {instanceID: 0}
 - Class: 135
   Script: {instanceID: 0}
@@ -92,10 +94,10 @@ SerializeReferenceClassIdentifiers:
   ClassName: SimpleInput/AxisInput
 - AssemblyName: SimpleInput.Runtime
   ClassName: SimpleInput/KeyInput
-- AssemblyName: Unity.TextMeshPro
-  ClassName: TMPro.VertexGradient
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.FontData
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:

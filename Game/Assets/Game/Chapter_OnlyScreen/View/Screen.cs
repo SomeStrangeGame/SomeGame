@@ -17,8 +17,8 @@ namespace Game.Chapter_OnlyScreen.View
         [SerializeField] private float _startDelay = 3f;
         [SerializeField] private float _autoScrollSpeed = 25f;
         [SerializeField] private Image _backgroundImage;
-        [SerializeField] private TMPro.TMP_Text _descriptionTextArea;
-        [SerializeField] private TMPro.TMP_Text _buttonTextArea;
+        [SerializeField] private Text _descriptionTextArea;
+        [SerializeField] private Text _buttonTextArea;
         [SerializeField] private ScrollRect _scroll;
         [SerializeField] private Button _someButton;
 
