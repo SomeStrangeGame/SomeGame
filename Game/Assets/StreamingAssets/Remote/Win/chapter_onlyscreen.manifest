@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 2148125768
+CRC: 2069735761
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 084b3b8f7c24762d5759e7dc5cf495c2
+    Hash: af3b0a4adb730a65656bc84db2123192
   TypeTreeHash:
     serializedVersion: 2
     Hash: 46339134cec8e8b1f56c6a9d55692482
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 806c300ecffd9ed0967c35cd5f8215ea
+    Hash: aec843ebd73377590b3432c997ea3dba
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -77,12 +77,12 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_0.jpg
 - Assets/Game/Chapter_OnlyScreen/Assets/Chapter_3.jpg
 - Assets/Game/Chapter_OnlyScreen/Assets/Chapter_5.jpg
 - Assets/Game/Chapter_OnlyScreen/Assets/Chapter_4.jpg
 - Assets/Game/Chapter_OnlyScreen/Assets/Chapter_2.jpg
-- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_1.jpg
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_0.png
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_1.png
 - Assets/Game/Chapter_OnlyScreen/View/Menu.prefab
 - Assets/Game/Chapter_OnlyScreen/Assets/LiberationSans-Regular.ttf
 Dependencies: []

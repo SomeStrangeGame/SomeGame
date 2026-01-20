@@ -52,6 +52,9 @@ namespace Game.Chapter_OnlyScreen.View
             _ctx = ctx;
 
             _backgroundImage.sprite = _ctx.BackgroundSprite;
+            var aspectRatio = (float)_ctx.BackgroundSprite.texture.width / _ctx.BackgroundSprite.texture.height;
+            var le = _backgroundImage.GetComponent<LayoutElement>();
+            le.preferredHeight = _scroll.content.rect.width / aspectRatio;
             _descriptionTextArea.text = _ctx.DescriptionText;
             _buttonTextArea.text = _ctx.ButtonText;
         }
