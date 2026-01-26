@@ -35,15 +35,16 @@ namespace Game.Chapter_OnlyScreen
         [SerializeField] private MenuScreenData _menuScreen;
         [SerializeField] private MenuData _menu;
 
-        internal readonly MenuScreenData MenuScreen => _menuScreen;
-        internal readonly MenuData Menu => _menu;
+        public readonly MenuScreenData MenuScreen => _menuScreen;
+        public readonly MenuData Menu => _menu;
     }
     
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx
         {
-            public Data Data;
+            public Data.MenuData MenuData;
+            public Data.MenuScreenData MenuScreenData;
             public Func<Data.MenuScreenData, UniTask<GameObject>> GetBundledPrefab;
             public Func<Data.MenuData, UniTask<Sprite>> GetBundledSprite;
         }
@@ -61,15 +62,15 @@ namespace Game.Chapter_OnlyScreen
 
         public async UniTask Init()
         {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite(_ctx.Data.Menu);
-            var screenPrefabGO = await _ctx.GetBundledPrefab(_ctx.Data.MenuScreen);
+            var screenBackgroundSprite = await _ctx.GetBundledSprite(_ctx.MenuData);
+            var screenPrefabGO = await _ctx.GetBundledPrefab(_ctx.MenuScreenData);
             var screenGO = GameObject.Instantiate(screenPrefabGO);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx
             {
                 BackgroundSprite = screenBackgroundSprite,
-                DescriptionText = _ctx.Data.Menu.DescriptionText,
-                ButtonText = _ctx.Data.Menu.ButtonText,
+                DescriptionText = _ctx.MenuData.DescriptionText,
+                ButtonText = _ctx.MenuData.ButtonText,
                 OnComplete = () => _token.TrySetResult(),
             });
         }

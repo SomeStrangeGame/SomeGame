@@ -48,7 +48,8 @@ namespace Game
 
             var chapterCtx = new Chapter_OnlyScreen.Entity.Ctx
             {
-                Data = _ctx.Data.Chapter_intro,
+                MenuData = _ctx.Data.Chapter_intro.Menu,
+                MenuScreenData = _ctx.Data.Chapter_intro.MenuScreen,
                 GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
                 GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
             };
@@ -115,7 +116,8 @@ namespace Game
                     {
                         var chapterCtx = new Chapter_OnlyScreen.Entity.Ctx
                         {
-                            Data = _ctx.Data.Chapter_intro,
+                            MenuData = _ctx.Data.Chapter_intro.Menu,
+                            MenuScreenData = _ctx.Data.Chapter_intro.MenuScreen,
                             GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
                             GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
                         };
