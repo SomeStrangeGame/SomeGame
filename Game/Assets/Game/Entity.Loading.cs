@@ -12,7 +12,7 @@ namespace Game
             _loading = new Loading.Entity(new Loading.Entity.Ctx
             {
                 Data = _ctx.Data.LoadingData,
-                GetBundledPrefab = data => GetBundledPrefab(data.bundleName, data.prefabName),
+                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
             }).AddTo(this);
             await _loading.Init();
             _loading.ShowImmediate();

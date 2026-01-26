@@ -2,36 +2,37 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Cysharp.Threading.Tasks;
+using Game.Disposable;
 using UnityEngine;
 
-namespace Game
+namespace Game.Cache
 {
-    internal sealed partial class Entity
+    public class Entity : BaseDisposable
     {
-        private async UniTask<AssetBundle> BundleFromCache(string path)
+        public async UniTask<AssetBundle> BundleFromCache(string path)
         {
             var rawData = ByteArrayFromCash(path);
             return await AssetBundle.LoadFromMemoryAsync(rawData);
         }
 
-        private async UniTask<AssetBundle> BundleToCache(string path, byte[] data)
+        public async UniTask<AssetBundle> BundleToCache(string path, byte[] data)
         {
             ByteArrayToCash(data, path);
             return await BundleFromCache(path);
         }
         
-        private string TextFromCache(string path)
+        public string TextFromCache(string path)
         {
             return Encoding.UTF8.GetString(ByteArrayFromCash(path));
         }
 
-        private string TextToCache(string path, string data)
+        public string TextToCache(string path, string data)
         {
             ByteArrayToCash(Encoding.UTF8.GetBytes(data), path);
             return TextFromCache(path);
         }
 
-        private byte[] ByteArrayFromCash(string path)
+        public byte[] ByteArrayFromCash(string path)
         {
             var file = ConvertLocalPath(path);
 
@@ -43,7 +44,7 @@ namespace Game
             }
         }
 
-        private void ByteArrayToCash(byte[] data, string path)
+        public void ByteArrayToCash(byte[] data, string path)
         {
             var file = ConvertLocalPath(path);
             if (File.Exists(file))
@@ -87,3 +88,4 @@ namespace Game
         }
     }
 }
+

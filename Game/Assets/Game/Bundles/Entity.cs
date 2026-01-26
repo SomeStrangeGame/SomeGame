@@ -1,14 +1,27 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Game.Disposable;
 using UnityEngine;
 using UnityEngine.Networking;
 
-namespace Game
+namespace Game.Bundles
 {
-    internal sealed partial class Entity
+    public class Entity : BaseDisposable
     {
+        private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new();
+
+        public Entity()
+        {
+            _cache = new Cache.Entity().AddTo(this);
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            ClearBundles();
+        }
 
         private void ClearBundles()
         {
@@ -17,7 +30,7 @@ namespace Game
             _bundles.Clear();
         }
 
-        private async UniTask<Sprite> GetBundledSprite(string bundleName, string spriteName)
+        public async UniTask<Sprite> GetBundledSprite(string bundleName, string spriteName)
         {
             var assetBundle = await GetAssetBundle(bundleName);
             if (assetBundle == null) return null;
@@ -27,7 +40,7 @@ namespace Game
             return loadAsset.asset as Sprite;
         }
 
-        private async UniTask<T> GetBundledSO<T>(string bundleName, string prefabName) where T : ScriptableObject
+        public async UniTask<T> GetBundledSO<T>(string bundleName, string prefabName) where T : ScriptableObject
         {
             var assetBundle = await GetAssetBundle(bundleName);
             if (assetBundle == null) return null;
@@ -37,7 +50,7 @@ namespace Game
             return loadAsset.asset as T;
         }
 
-        private async UniTask<GameObject> GetBundledPrefab(string bundleName, string prefabName)
+        public async UniTask<GameObject> GetBundledPrefab(string bundleName, string prefabName)
         {
             var assetBundle = await GetAssetBundle(bundleName);
             if (assetBundle == null) return null;
@@ -47,7 +60,7 @@ namespace Game
             return loadAsset.asset as GameObject;
         }
 
-        private async UniTask<AssetBundle> GetAssetBundle(string bundleName)
+        public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
             var bundlesVersion = await GetBundleVersionAsync(bundleName);
             var bundlesPath = $"Remote/{GetPlatform()}/{bundleName}/{bundlesVersion}";
@@ -55,7 +68,7 @@ namespace Game
             {
                 try
                 {
-                    _bundles[bundlesPath] = await BundleFromCache(bundlesPath);
+                    _bundles[bundlesPath] = await _cache.BundleFromCache(bundlesPath);
                     Debug.Log($"Get local bundle from {bundlesPath}");
                 }
                 catch (Exception e)
@@ -65,7 +78,7 @@ namespace Game
                     {
                         SetHeaders(bundlesRequest);
                         await bundlesRequest.SendWebRequest();
-                        _bundles[bundlesPath] = await BundleToCache(bundlesPath, bundlesRequest.downloadHandler.data);
+                        _bundles[bundlesPath] = await _cache.BundleToCache(bundlesPath, bundlesRequest.downloadHandler.data);
                     }
                 }
             }

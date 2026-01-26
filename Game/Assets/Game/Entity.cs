@@ -25,10 +25,12 @@ namespace Game
         }
 
         private readonly Ctx _ctx;
+        private readonly Bundles.Entity _bundles;
 
         internal Entity(Ctx ctx)
         {
             _ctx = ctx;
+            _bundles = new Bundles.Entity().AddTo(this);
         }
 
         internal async UniTask Init()
@@ -36,12 +38,6 @@ namespace Game
             await LoadingProcess();
 
             ChapterIntroProcess().Forget();
-        }
-
-        protected override void OnDispose()
-        {
-            base.OnDispose();
-            ClearBundles();
         }
     }
 }

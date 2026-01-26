@@ -10,8 +10,8 @@ namespace Game
             var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {
                 Data = _ctx.Data.Chapter_intro,
-                GetBundledPrefab = data => GetBundledPrefab(data.bundleName, data.prefabName),
-                GetBundledSprite = data => GetBundledSprite(data.bundleName, data.spriteName)
+                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
+                GetBundledSprite = data => _bundles.GetBundledSprite(data.bundleName, data.spriteName)
             };
             
             var chapter_0 = new Chapter_OnlyScreen.Entity(ctx).AddTo(this);
