@@ -42,7 +42,6 @@ namespace Game.Chapter_ScreenAndBattle
         }
 
         private readonly UniTaskCompletionSource<int> _battleToken;
-        private readonly UniTaskCompletionSource<int> _token;
         private readonly Ctx _ctx;
 
         private View.Scene _battleScene;
@@ -52,12 +51,9 @@ namespace Game.Chapter_ScreenAndBattle
         private List<Character.Entity> _enemyCharacterEntites;
         private Character.Behaviour _behaviour;
 
-        private Chapter_OnlyScreen.View.Screen _screen;
-
         public Entity(Ctx ctx)
         {
             _battleToken = new();
-            _token = new();
             _ctx = ctx;
         }
 
@@ -140,28 +136,9 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask<int> WaitBattleResult() => await _battleToken.Task;
 
-        public async UniTask<int> WaitResult() => await _token.Task;
-
-        private async UniTask<Chapter_OnlyScreen.View.Screen> GetScreen()
-        {
-            if (_screen == null)
-            {
-                var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.MenuScreen.BundleMenuName, _ctx.Data.MenuScreen.PrefabMenuName));
-                var go = GameObject.Instantiate(screenPrefabGO);
-                _screen = go.GetComponent<Chapter_OnlyScreen.View.Screen>();
-            }
-            return _screen;
-        }
-
-        private void ReleaseScreen()
-        {
-            if (_screen != null) _screen.Release();
-        }
-
         protected override void OnDispose()
         {
             base.OnDispose();
-            ReleaseScreen();
             ReleaseBattle();
         }
     }
