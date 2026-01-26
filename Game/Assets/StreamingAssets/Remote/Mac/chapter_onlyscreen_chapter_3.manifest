@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 3624005129
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2b3e763a6323b89cd7614b4399b86880
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9f349c36d7a6532f767333f9299b3e74
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: f62a8fa0133148bfb80d96a3fb924929
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Game/Chapter_OnlyScreen/Assets/Chapter_3.jpg
+Dependencies: []

@@ -9,24 +9,34 @@ namespace Game.Chapter_OnlyScreen
     public struct Data
     {
         [Serializable]
+        public struct MenuScreenData
+        {
+            [SerializeField] private string _bundleMenuName;
+            [SerializeField] private string _prefabMenuName;
+
+            public readonly string BundleMenuName => _bundleMenuName;
+            public readonly string PrefabMenuName => _prefabMenuName;
+        }
+
+        [Serializable]
         public struct MenuData
         {
             [SerializeField][TextArea(15, 250)] private string _descriptionText;
             [SerializeField] private string _buttonText;
+            [SerializeField] private string _backgroundBundleName;
             [SerializeField] private string _backgroundSpriteName;
             
             public readonly string DescriptionText => _descriptionText;
             public readonly string ButtonText => _buttonText;
+            public readonly string BackgroundBundleName => _backgroundBundleName;
             public readonly string BackgroundSpriteName => _backgroundSpriteName;
         }
 
+        [SerializeField] private MenuScreenData _menuScreen;
         [SerializeField] private MenuData _menu;
-        [SerializeField] private string _bundleName;
-        [SerializeField] private string _menuPrefabName;
 
+        internal readonly MenuScreenData MenuScreen => _menuScreen;
         internal readonly MenuData Menu => _menu;
-        internal readonly string BundleName => _bundleName;
-        internal readonly string LoadingPrefabName => _menuPrefabName;
     }
     
     public sealed class Entity : BaseDisposable
@@ -51,8 +61,8 @@ namespace Game.Chapter_OnlyScreen
 
         public async UniTask Init()
         {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.BundleName, _ctx.Data.Menu.BackgroundSpriteName));
-            var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.BundleName, _ctx.Data.LoadingPrefabName));
+            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.Menu.BackgroundBundleName, _ctx.Data.Menu.BackgroundSpriteName));
+            var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.MenuScreen.BundleMenuName, _ctx.Data.MenuScreen.PrefabMenuName));
             var screenGO = GameObject.Instantiate(screenPrefabGO);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx
