@@ -1654,6 +1654,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CodeStrippingFix
       objectReference: {fileID: 0}
+    - target: {fileID: 2715495625021885899, guid: 00585056af3e74bfdb6f9fb3bbbb7c30, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8896413577367635622, guid: 00585056af3e74bfdb6f9fb3bbbb7c30, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

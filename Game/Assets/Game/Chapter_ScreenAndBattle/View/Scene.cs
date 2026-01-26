@@ -41,6 +41,11 @@ namespace Game.Chapter_ScreenAndBattle.View
         private void OnEnable()
         {
             CreateNavMesh();
+            PlayerCharacter.SetActive(true);
+            foreach(var enemyCharacter in EnemyCharacters)
+            {
+                enemyCharacter.SetActive(true);
+            }
         }
 
         private void OnDisable()

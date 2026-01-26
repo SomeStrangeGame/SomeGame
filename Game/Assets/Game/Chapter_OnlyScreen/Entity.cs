@@ -44,8 +44,8 @@ namespace Game.Chapter_OnlyScreen
         public struct Ctx
         {
             public Data Data;
-            public Func<(string bundleName, string prefabName), UniTask<GameObject>> GetBundledPrefab;
-            public Func<(string bundleName, string spriteName), UniTask<Sprite>> GetBundledSprite;
+            public Func<Data.MenuScreenData, UniTask<GameObject>> GetBundledPrefab;
+            public Func<Data.MenuData, UniTask<Sprite>> GetBundledSprite;
         }
 
         private readonly UniTaskCompletionSource _token;
@@ -61,8 +61,8 @@ namespace Game.Chapter_OnlyScreen
 
         public async UniTask Init()
         {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.Menu.BackgroundBundleName, _ctx.Data.Menu.BackgroundSpriteName));
-            var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.MenuScreen.BundleMenuName, _ctx.Data.MenuScreen.PrefabMenuName));
+            var screenBackgroundSprite = await _ctx.GetBundledSprite(_ctx.Data.Menu);
+            var screenPrefabGO = await _ctx.GetBundledPrefab(_ctx.Data.MenuScreen);
             var screenGO = GameObject.Instantiate(screenPrefabGO);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx

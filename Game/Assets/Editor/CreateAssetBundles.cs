@@ -8,7 +8,7 @@ namespace Editor
     public class CreateAssetBundles
     {
         [MenuItem("Assets/Build AssetBundles")]
-        private static async void BuildAllAssetBundles()
+        private static void BuildAllAssetBundles()
         {
             var remotePath = $"{Application.streamingAssetsPath}/Remote";
             if (Directory.Exists(remotePath))
