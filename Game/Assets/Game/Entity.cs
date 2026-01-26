@@ -41,8 +41,8 @@ namespace Game
                 Data = _ctx.Data.LoadingData,
                 GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
             };
+            
             _loading = new Loading.Entity(ctx).AddTo(this);
-
             await _loading.Init();
             _loading.ShowImmediate();
 
@@ -57,21 +57,20 @@ namespace Game
                 GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
                 GetBundledSprite = data => _bundles.GetBundledSprite(data.bundleName, data.spriteName)
             };
-            var chapter_0 = new Chapter_OnlyScreen.Entity(ctx).AddTo(this);
-            
-            await chapter_0.Init();
-            await _loading.Hide();
-            await chapter_0.WaitResult();
-            await _loading.Show();
 
-            chapter_0.Dispose();
+            using (var chapter = new Chapter_OnlyScreen.Entity(ctx).AddTo(this))
+            {
+                await chapter.Init();
+                await _loading.Hide();
+                await chapter.WaitResult();
+                await _loading.Show();
+            }
 
             ChapterBattleProcess(0).Forget();
         }
 
         private async UniTask ChapterBattleProcess(int index)
         {
-            var result = 0;
             var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
             {
                 Data = _ctx.Data.Chapters[index],
@@ -79,53 +78,45 @@ namespace Game
                 GetBundledSprite = data => _bundles.GetBundledSprite(data.bundleName, data.spriteName),
                 GetBundledCameraData = data => _bundles.GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>(data.bundleName, data.soName),
             };
-            var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this);
 
-            await chapter.InitStartScreen();
-            await _loading.Hide();
-            await chapter.WaitStartScreenResult();
-            await _loading.Show();
-
-            chapter.ReleaseStartScreen();
-
-            await chapter.InitBattle();
-            await _loading.Hide();
-
-            var battleResult = await chapter.WaitBattleResult();
-            await UniTask.Delay(3000);
-            await _loading.Show();
-
-            chapter.ReleaseBattle();
-
-            if (battleResult == 0) //failed
+            using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this))
             {
-                await chapter.InitFailedScreen();
+                await chapter.InitStartScreen();
                 await _loading.Hide();
-                await chapter.WaitResult();
-                result = 0;
-            }
-            else //success
-            {
-                await chapter.InitSuccessScreen();
+                await chapter.WaitStartScreenResult();
+                await _loading.Show();
+
+                chapter.ReleaseStartScreen();
+
+                await chapter.InitBattle();
                 await _loading.Hide();
-                await chapter.WaitResult();
-                result = 1;
-            }
 
-            chapter.Dispose();
+                var battleResult = await chapter.WaitBattleResult();
+                await UniTask.Delay(3000);
+                await _loading.Show();
 
-            switch (result)
-            {
-                case 0:
+                chapter.ReleaseBattle();
+
+                if (battleResult == 0) //failed
+                {
+                    await chapter.InitFailedScreen();
+                    await _loading.Hide();
+                    await chapter.WaitResult();
+                    
                     ChapterBattleProcess(index).Forget();
-                    break;
-                case 1:
+                }
+                else //success
+                {
+                    await chapter.InitSuccessScreen();
+                    await _loading.Hide();
+                    await chapter.WaitResult();
+                    
                     index++;
                     if (index >= _ctx.Data.Chapters.Length)
                         ChapterIntroProcess().Forget();
                     else
                         ChapterBattleProcess(index).Forget();
-                    break;
+                }
             }
         }
     }
