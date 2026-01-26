@@ -53,10 +53,11 @@ namespace Game
                 GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
                 GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
             };
-            ChapterIntroProcess(chapterCtx).Forget();
+            await ShowScreenProcess(chapterCtx);
+            ChapterBattleProcess(0).Forget();
         }
 
-        private async UniTask ChapterIntroProcess(Chapter_OnlyScreen.Entity.Ctx ctx)
+        private async UniTask ShowScreenProcess(Chapter_OnlyScreen.Entity.Ctx ctx)
         {
             using (var chapter = new Chapter_OnlyScreen.Entity(ctx).AddTo(this))
             {
@@ -65,8 +66,6 @@ namespace Game
                 await chapter.WaitResult();
                 await _loading.Show();
             }
-
-            ChapterBattleProcess(0).Forget();
         }
 
         private async UniTask ChapterBattleProcess(int index)
@@ -81,12 +80,14 @@ namespace Game
 
             using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this))
             {
-                await chapter.InitStartScreen();
-                await _loading.Hide();
-                await chapter.WaitStartScreenResult();
-                await _loading.Show();
-
-                chapter.ReleaseStartScreen();
+                var startCtx = new Chapter_OnlyScreen.Entity.Ctx
+                {
+                    MenuData = _ctx.Data.Chapters[index].MenuStart,
+                    MenuScreenData = _ctx.Data.Chapters[index].MenuScreen,
+                    GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
+                    GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
+                };
+                await ShowScreenProcess(startCtx);
 
                 await chapter.InitBattle();
                 await _loading.Hide();
@@ -121,7 +122,8 @@ namespace Game
                             GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
                             GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
                         };
-                        ChapterIntroProcess(chapterCtx).Forget();
+                        await ShowScreenProcess(chapterCtx);
+                        ChapterBattleProcess(0).Forget();
                     }
                     else
                     {

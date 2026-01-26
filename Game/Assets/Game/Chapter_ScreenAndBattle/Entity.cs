@@ -41,7 +41,6 @@ namespace Game.Chapter_ScreenAndBattle
             public Func<(string bundleName, string soName), UniTask<CameraDataSO>> GetBundledCameraData;
         }
 
-        private readonly UniTaskCompletionSource _startScreenToken;
         private readonly UniTaskCompletionSource<int> _battleToken;
         private readonly UniTaskCompletionSource<int> _token;
         private readonly Ctx _ctx;
@@ -57,27 +56,10 @@ namespace Game.Chapter_ScreenAndBattle
 
         public Entity(Ctx ctx)
         {
-            _startScreenToken = new();
             _battleToken = new();
             _token = new();
             _ctx = ctx;
         }
-
-        public async UniTask InitStartScreen()
-        {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.MenuStart.BackgroundBundleName, _ctx.Data.MenuStart.BackgroundSpriteName));
-            (await GetScreen()).Setup(new Chapter_OnlyScreen.View.Screen.Ctx
-            {
-                BackgroundSprite = screenBackgroundSprite,
-                DescriptionText = _ctx.Data.MenuStart.DescriptionText,
-                ButtonText = _ctx.Data.MenuStart.ButtonText,
-                OnComplete = () => _startScreenToken.TrySetResult(),
-            });
-        }
-
-        public void ReleaseStartScreen() => ReleaseScreen();
-
-        public async UniTask WaitStartScreenResult() => await _startScreenToken.Task;
 
         public async UniTask InitBattle()
         {
