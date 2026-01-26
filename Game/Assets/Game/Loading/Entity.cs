@@ -31,7 +31,7 @@ namespace Game.Loading
             _ctx = ctx;
         }
 
-        public async UniTask Init() 
+        public async UniTask Init()
         {
             var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.BundleName, _ctx.Data.LoadingPrefabName));
             var screenGO = GameObject.Instantiate(screenPrefabGO);

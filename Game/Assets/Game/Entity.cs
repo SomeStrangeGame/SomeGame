@@ -26,6 +26,7 @@ namespace Game
 
         private readonly Ctx _ctx;
         private readonly Bundles.Entity _bundles;
+        private Loading.Entity _loading;
 
         internal Entity(Ctx ctx)
         {
@@ -35,9 +36,97 @@ namespace Game
 
         internal async UniTask Init()
         {
-            await LoadingProcess();
+            var ctx = new Loading.Entity.Ctx
+            {
+                Data = _ctx.Data.LoadingData,
+                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
+            };
+            _loading = new Loading.Entity(ctx).AddTo(this);
+
+            await _loading.Init();
+            _loading.ShowImmediate();
 
             ChapterIntroProcess().Forget();
+        }
+
+        private async UniTask ChapterIntroProcess()
+        {
+            var ctx = new Chapter_OnlyScreen.Entity.Ctx
+            {
+                Data = _ctx.Data.Chapter_intro,
+                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
+                GetBundledSprite = data => _bundles.GetBundledSprite(data.bundleName, data.spriteName)
+            };
+            var chapter_0 = new Chapter_OnlyScreen.Entity(ctx).AddTo(this);
+            
+            await chapter_0.Init();
+            await _loading.Hide();
+            await chapter_0.WaitResult();
+            await _loading.Show();
+
+            chapter_0.Dispose();
+
+            ChapterBattleProcess(0).Forget();
+        }
+
+        private async UniTask ChapterBattleProcess(int index)
+        {
+            var result = 0;
+            var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
+            {
+                Data = _ctx.Data.Chapters[index],
+                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
+                GetBundledSprite = data => _bundles.GetBundledSprite(data.bundleName, data.spriteName),
+                GetBundledCameraData = data => _bundles.GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>(data.bundleName, data.soName),
+            };
+            var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this);
+
+            await chapter.InitStartScreen();
+            await _loading.Hide();
+            await chapter.WaitStartScreenResult();
+            await _loading.Show();
+
+            chapter.ReleaseStartScreen();
+
+            await chapter.InitBattle();
+            await _loading.Hide();
+
+            var battleResult = await chapter.WaitBattleResult();
+            await UniTask.Delay(3000);
+            await _loading.Show();
+
+            chapter.ReleaseBattle();
+
+            if (battleResult == 0) //failed
+            {
+                await chapter.InitFailedScreen();
+                await _loading.Hide();
+                await chapter.WaitResult();
+                result = 0;
+            }
+            else //success
+            {
+                await chapter.InitSuccessScreen();
+                await _loading.Hide();
+                await chapter.WaitResult();
+                result = 1;
+            }
+
+            chapter.Dispose();
+
+            switch (result)
+            {
+                case 0:
+                    ChapterBattleProcess(index).Forget();
+                    break;
+                case 1:
+                    index++;
+                    if (index >= _ctx.Data.Chapters.Length)
+                        ChapterIntroProcess().Forget();
+                    else
+                        ChapterBattleProcess(index).Forget();
+                    break;
+            }
         }
     }
 }
