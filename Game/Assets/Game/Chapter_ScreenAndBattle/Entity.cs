@@ -140,30 +140,6 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask<int> WaitBattleResult() => await _battleToken.Task;
 
-        public async UniTask InitSuccessScreen()
-        {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.MenuSuccess.BackgroundBundleName, _ctx.Data.MenuSuccess.BackgroundSpriteName));
-            (await GetScreen()).Setup(new Chapter_OnlyScreen.View.Screen.Ctx
-            {
-                BackgroundSprite = screenBackgroundSprite,
-                DescriptionText = _ctx.Data.MenuSuccess.DescriptionText,
-                ButtonText = _ctx.Data.MenuSuccess.ButtonText,
-                OnComplete = () => _token.TrySetResult(1),
-            });
-        }
-
-        public async UniTask InitFailedScreen()
-        {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite((_ctx.Data.MenuFailed.BackgroundBundleName, _ctx.Data.MenuFailed.BackgroundSpriteName));
-            (await GetScreen()).Setup(new Chapter_OnlyScreen.View.Screen.Ctx
-            {
-                BackgroundSprite = screenBackgroundSprite,
-                DescriptionText = _ctx.Data.MenuFailed.DescriptionText,
-                ButtonText = _ctx.Data.MenuFailed.ButtonText,
-                OnComplete = () => _token.TrySetResult(0),
-            });
-        }
-
         public async UniTask<int> WaitResult() => await _token.Task;
 
         private async UniTask<Chapter_OnlyScreen.View.Screen> GetScreen()

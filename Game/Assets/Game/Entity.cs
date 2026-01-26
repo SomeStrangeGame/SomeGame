@@ -91,26 +91,34 @@ namespace Game
 
                 await chapter.InitBattle();
                 await _loading.Hide();
-
                 var battleResult = await chapter.WaitBattleResult();
                 await UniTask.Delay(3000);
                 await _loading.Show();
-
                 chapter.ReleaseBattle();
 
                 if (battleResult == 0) //failed
                 {
-                    await chapter.InitFailedScreen();
-                    await _loading.Hide();
-                    await chapter.WaitResult();
-                    
+                    var failedCtx = new Chapter_OnlyScreen.Entity.Ctx
+                    {
+                        MenuData = _ctx.Data.Chapters[index].MenuFailed,
+                        MenuScreenData = _ctx.Data.Chapters[index].MenuScreen,
+                        GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
+                        GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
+                    };
+                    await ShowScreenProcess(failedCtx);
+
                     ChapterBattleProcess(index).Forget();
                 }
                 else //success
                 {
-                    await chapter.InitSuccessScreen();
-                    await _loading.Hide();
-                    await chapter.WaitResult();
+                    var successCtx = new Chapter_OnlyScreen.Entity.Ctx
+                    {
+                        MenuData = _ctx.Data.Chapters[index].MenuSuccess,
+                        MenuScreenData = _ctx.Data.Chapters[index].MenuScreen,
+                        GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
+                        GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
+                    };
+                    await ShowScreenProcess(successCtx);
                     
                     index++;
                     if (index >= _ctx.Data.Chapters.Length)
