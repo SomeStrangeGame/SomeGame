@@ -8,36 +8,28 @@ namespace Game.Chapter_OnlyScreen
     [Serializable]
     public struct Data
     {
-        [Serializable]
-        public struct MenuData
-        {
-            [SerializeField] private string _menuBundleName;
-            [SerializeField] private string _menuPrefabName;
+        [SerializeField] private string _menuBundleName;
+        [SerializeField] private string _menuPrefabName;
 
-            [SerializeField][TextArea(15, 250)] private string _descriptionText;
-            [SerializeField] private string _buttonText;
-            [SerializeField] private string _backgroundBundleName;
-            [SerializeField] private string _backgroundSpriteName;
+        [SerializeField][TextArea(15, 250)] private string _descriptionText;
+        [SerializeField] private string _buttonText;
+        [SerializeField] private string _backgroundBundleName;
+        [SerializeField] private string _backgroundSpriteName;
 
-            public readonly string MenuBundleName => _menuBundleName;
-            public readonly string MenuPrefabName => _menuPrefabName;
-            
-            public readonly string DescriptionText => _descriptionText;
-            public readonly string ButtonText => _buttonText;
-            public readonly string BackgroundBundleName => _backgroundBundleName;
-            public readonly string BackgroundSpriteName => _backgroundSpriteName;
-        }
+        public readonly string MenuBundleName => _menuBundleName;
+        public readonly string MenuPrefabName => _menuPrefabName;
 
-        [SerializeField] private MenuData _menu;
-
-        public readonly MenuData Menu => _menu;
+        public readonly string DescriptionText => _descriptionText;
+        public readonly string ButtonText => _buttonText;
+        public readonly string BackgroundBundleName => _backgroundBundleName;
+        public readonly string BackgroundSpriteName => _backgroundSpriteName;
     }
     
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx
         {
-            public Data.MenuData MenuData;
+            public Data MenuData;
             public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
             public Func<string, string, UniTask<Sprite>> GetBundledSprite;
         }

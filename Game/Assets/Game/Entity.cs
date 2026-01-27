@@ -46,11 +46,11 @@ namespace Game
             await _loading.Init();
             await _loading.Show();
 
-            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu);
+            await ShowMenuProcess(_ctx.Data.Chapter_intro);
             ChapterProcess(0).Forget();
         }
 
-        private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data.MenuData menuData)
+        private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data menuData)
         {
             var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {
@@ -109,7 +109,7 @@ namespace Game
                 return;
             }
 
-            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu);
+            await ShowMenuProcess(_ctx.Data.Chapter_intro);
             ChapterProcess(0).Forget();
         }
     }

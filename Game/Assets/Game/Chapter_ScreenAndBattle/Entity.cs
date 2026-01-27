@@ -10,18 +10,18 @@ namespace Game.Chapter_ScreenAndBattle
     public struct Data
     {
         [SerializeField] private string _chapterName;
-        [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuStart;
-        [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuSuccess;
-        [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuFailed;
+        [SerializeField] private Chapter_OnlyScreen.Data _menuStart;
+        [SerializeField] private Chapter_OnlyScreen.Data _menuSuccess;
+        [SerializeField] private Chapter_OnlyScreen.Data _menuFailed;
 
         [SerializeField] private string _battleBundleName;
         [SerializeField] private string _battleScenePrefabName;
         [SerializeField] private string _battleScreenPrefabName;
         [SerializeField] private string _battleCameraDataName;
 
-        public readonly Chapter_OnlyScreen.Data.MenuData MenuStart => _menuStart;
-        public readonly Chapter_OnlyScreen.Data.MenuData MenuSuccess => _menuSuccess;
-        public readonly Chapter_OnlyScreen.Data.MenuData MenuFailed => _menuFailed;
+        public readonly Chapter_OnlyScreen.Data MenuStart => _menuStart;
+        public readonly Chapter_OnlyScreen.Data MenuSuccess => _menuSuccess;
+        public readonly Chapter_OnlyScreen.Data MenuFailed => _menuFailed;
 
         internal readonly string BattleBundleName => _battleBundleName;
         internal readonly string BattleScenePrefabName => _battleScenePrefabName;
