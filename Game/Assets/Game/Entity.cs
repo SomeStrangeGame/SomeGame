@@ -42,15 +42,13 @@ namespace Game
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
             await _loading.Init();
-            await _loading.Show();
 
+            await _loading.Show();
             ChapterProcess(0).Forget();
         }
 
         private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data menuData)
         {
-            if (!menuData.Enabled) return;
-
             var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {
                 MenuData = menuData,
@@ -89,7 +87,9 @@ namespace Game
 
         private async UniTask ChapterProcess(int index)
         {
-            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuIntro);
+            foreach(var intro in _ctx.Data.Chapters[index].IntroMenu)
+                await ShowMenuProcess(intro);
+
             await ShowMenuProcess(_ctx.Data.Chapters[index].MenuStart);
 
             var battleResult = await ShowBattleProcess(index);

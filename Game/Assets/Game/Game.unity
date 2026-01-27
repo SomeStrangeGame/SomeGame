@@ -343,8 +343,8 @@ MonoBehaviour:
       _loadingPrefabName: Loading.prefab
     _chapters:
     - _chapterName: Chapter 1
-      _menuIntro:
-        _enabled: 1
+      _introMenu:
+      - _name: intro_0
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 0: \u041A\u0442\u043E
@@ -446,7 +446,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_0
         _backgroundSpriteName: Chapter_0
       _menuStart:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 I: \u041C\u0435\u0447
@@ -526,7 +526,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_1
         _backgroundSpriteName: Chapter_1
       _menuSuccess:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u041F\u043B\u0451\u0441
@@ -599,7 +599,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_1
         _backgroundSpriteName: Chapter_1
       _menuFailed:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u041A\u0430\u043C\u0435\u043D\u044C
@@ -670,16 +670,9 @@ MonoBehaviour:
       _battleScreenPrefabName: BattleSceneScreen.prefab
       _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 2
-      _menuIntro:
-        _enabled: 0
-        _menuBundleName: 
-        _menuPrefabName: 
-        _descriptionText: 
-        _buttonText: 
-        _backgroundBundleName: 
-        _backgroundSpriteName: 
+      _introMenu: []
       _menuStart:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 II: \u041C\u0435\u0447
@@ -760,7 +753,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_2
         _backgroundSpriteName: Chapter_2
       _menuSuccess:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0412\u0435\u0440\u0448\u0438\u043D\u0430
@@ -840,7 +833,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_2
         _backgroundSpriteName: Chapter_2
       _menuFailed:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u041E\u0431\u0440\u044B\u0432
@@ -905,16 +898,9 @@ MonoBehaviour:
       _battleScreenPrefabName: BattleSceneScreen.prefab
       _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 3
-      _menuIntro:
-        _enabled: 0
-        _menuBundleName: 
-        _menuPrefabName: 
-        _descriptionText: 
-        _buttonText: 
-        _backgroundBundleName: 
-        _backgroundSpriteName: 
+      _introMenu: []
       _menuStart:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 III: \u0427\u0438\u0441\u043B\u043E
@@ -990,7 +976,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_3
         _backgroundSpriteName: Chapter_3
       _menuSuccess:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0414\u043D\u043E
@@ -1075,7 +1061,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_3
         _backgroundSpriteName: Chapter_3
       _menuFailed:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0417\u0430\u0432\u0430\u043B
@@ -1144,16 +1130,9 @@ MonoBehaviour:
       _battleScreenPrefabName: BattleSceneScreen.prefab
       _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 4
-      _menuIntro:
-        _enabled: 1
-        _menuBundleName: 
-        _menuPrefabName: 
-        _descriptionText: 
-        _buttonText: 
-        _backgroundBundleName: 
-        _backgroundSpriteName: 
+      _introMenu: []
       _menuStart:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 IV: \u0422\u0435\u043D\u044C
@@ -1234,7 +1213,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_4
         _backgroundSpriteName: Chapter_4
       _menuSuccess:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0413\u0440\u0435\u0431\u0435\u043D\u044C
@@ -1313,7 +1292,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_4
         _backgroundSpriteName: Chapter_4
       _menuFailed:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0422\u0440\u044F\u0441\u0438\u043D\u0430
@@ -1368,16 +1347,9 @@ MonoBehaviour:
       _battleScreenPrefabName: BattleSceneScreen.prefab
       _battleCameraDataName: CameraData.asset
     - _chapterName: Chapter 5
-      _menuIntro:
-        _enabled: 0
-        _menuBundleName: 
-        _menuPrefabName: 
-        _descriptionText: 
-        _buttonText: 
-        _backgroundBundleName: 
-        _backgroundSpriteName: 
+      _introMenu: []
       _menuStart:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u0413\u043B\u0430\u0432\u0430 V: \u0412\u0440\u0430\u0442\u0430
@@ -1463,7 +1435,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_5
         _backgroundSpriteName: Chapter_5
       _menuSuccess:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0423
@@ -1568,7 +1540,7 @@ MonoBehaviour:
         _backgroundBundleName: chapter_onlyscreen_chapter_5
         _backgroundSpriteName: Chapter_5
       _menuFailed:
-        _enabled: 1
+        _name: 
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u041E\u0431\u043E\u0447\u0438\u043D\u0430
