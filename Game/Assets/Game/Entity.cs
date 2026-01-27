@@ -90,7 +90,8 @@ namespace Game
             foreach(var intro in _ctx.Data.Chapters[index].IntroMenu)
                 await ShowMenuProcess(intro);
 
-            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuStart);
+            foreach (var start in _ctx.Data.Chapters[index].StartMenu)
+                await ShowMenuProcess(start);
 
             var battleResult = await ShowBattleProcess(index);
             if (battleResult == 0) //failed

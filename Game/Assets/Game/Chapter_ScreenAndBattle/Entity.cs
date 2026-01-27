@@ -11,7 +11,7 @@ namespace Game.Chapter_ScreenAndBattle
     {
         [SerializeField] private string _chapterName;
         [SerializeField] private Chapter_OnlyScreen.Data[] _introMenu;
-        [SerializeField] private Chapter_OnlyScreen.Data _menuStart;
+        [SerializeField] private Chapter_OnlyScreen.Data[] _startMenu;
         [SerializeField] private Chapter_OnlyScreen.Data _menuSuccess;
         [SerializeField] private Chapter_OnlyScreen.Data _menuFailed;
 
@@ -21,7 +21,7 @@ namespace Game.Chapter_ScreenAndBattle
         [SerializeField] private string _battleCameraDataName;
 
         public readonly Chapter_OnlyScreen.Data[] IntroMenu => _introMenu;
-        public readonly Chapter_OnlyScreen.Data MenuStart => _menuStart;
+        public readonly Chapter_OnlyScreen.Data[] StartMenu => _startMenu;
         public readonly Chapter_OnlyScreen.Data MenuSuccess => _menuSuccess;
         public readonly Chapter_OnlyScreen.Data MenuFailed => _menuFailed;
 
