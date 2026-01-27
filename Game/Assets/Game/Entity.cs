@@ -46,16 +46,15 @@ namespace Game
             await _loading.Init();
             await _loading.Show();
 
-            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu, _ctx.Data.Chapter_intro.MenuScreen);
+            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu);
             ChapterProcess(0).Forget();
         }
 
-        private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data.MenuData menuData, Chapter_OnlyScreen.Data.MenuScreenData menuScreenData)
+        private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data.MenuData menuData)
         {
             var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {
                 MenuData = menuData,
-                MenuScreenData = menuScreenData,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
                 GetBundledSprite = _bundles.GetBundledSprite
             };
@@ -91,17 +90,17 @@ namespace Game
 
         private async UniTask ChapterProcess(int index)
         {
-            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuStart, _ctx.Data.Chapters[index].MenuScreen);
+            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuStart);
 
             var battleResult = await ShowBattleProcess(index);
             if (battleResult == 0) //failed
             {
-                await ShowMenuProcess(_ctx.Data.Chapters[index].MenuFailed, _ctx.Data.Chapters[index].MenuScreen);
+                await ShowMenuProcess(_ctx.Data.Chapters[index].MenuFailed);
                 ChapterProcess(index).Forget();
                 return;
             }
 
-            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuSuccess, _ctx.Data.Chapters[index].MenuScreen);
+            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuSuccess);
 
             index++;
             if (index < _ctx.Data.Chapters.Length)
@@ -110,7 +109,7 @@ namespace Game
                 return;
             }
 
-            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu, _ctx.Data.Chapter_intro.MenuScreen);
+            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu);
             ChapterProcess(0).Forget();
         }
     }

@@ -13,7 +13,6 @@ namespace Game.Chapter_ScreenAndBattle
         [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuStart;
         [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuSuccess;
         [SerializeField] private Chapter_OnlyScreen.Data.MenuData _menuFailed;
-        [SerializeField] private Chapter_OnlyScreen.Data.MenuScreenData _menuScreen;
 
         [SerializeField] private string _battleBundleName;
         [SerializeField] private string _battleScenePrefabName;
@@ -23,7 +22,6 @@ namespace Game.Chapter_ScreenAndBattle
         public readonly Chapter_OnlyScreen.Data.MenuData MenuStart => _menuStart;
         public readonly Chapter_OnlyScreen.Data.MenuData MenuSuccess => _menuSuccess;
         public readonly Chapter_OnlyScreen.Data.MenuData MenuFailed => _menuFailed;
-        public readonly Chapter_OnlyScreen.Data.MenuScreenData MenuScreen => _menuScreen;
 
         internal readonly string BattleBundleName => _battleBundleName;
         internal readonly string BattleScenePrefabName => _battleScenePrefabName;
