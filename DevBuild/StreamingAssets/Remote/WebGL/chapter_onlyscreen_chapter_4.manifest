@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 3145563186
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 985b41adfd8a90006ecef7f170889ed2
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9f349c36d7a6532f767333f9299b3e74
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 3dc9e77adbf207b11ebe5b07f752bd94
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Game/Chapter_OnlyScreen/RemoteAssets/Chapter_4.jpg
+Dependencies: []
