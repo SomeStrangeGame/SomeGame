@@ -87,24 +87,26 @@ namespace Game
 
         private async UniTask ChapterProcess(int index, bool skipIntro = false)
         {
+            var chapterData = _ctx.Data.Chapters[index];
             if (!skipIntro)
             {
-                foreach(var intro in _ctx.Data.Chapters[index].IntroMenu)
+                foreach(var intro in chapterData.IntroMenu)
                     await ShowMenuProcess(intro);
             }
 
-            foreach (var start in _ctx.Data.Chapters[index].StartMenu)
+            foreach (var start in chapterData.StartMenu)
                 await ShowMenuProcess(start);
 
             var battleResult = await ShowBattleProcess(index);
             if (battleResult == 0) //failed
             {
-                await ShowMenuProcess(_ctx.Data.Chapters[index].MenuFailed);
+                foreach (var failed in chapterData.FailedMenu)
+                    await ShowMenuProcess(failed);
                 ChapterProcess(index, true).Forget();
                 return;
             }
 
-            foreach (var success in _ctx.Data.Chapters[index].SuccessMenu)
+            foreach (var success in chapterData.SuccessMenu)
                 await ShowMenuProcess(success);
 
             index++;
