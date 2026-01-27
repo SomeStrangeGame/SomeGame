@@ -131,7 +131,7 @@ GameObject:
   - component: {fileID: 330585545}
   - component: {fileID: 330585544}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: MainCamera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -539,8 +539,8 @@ MonoBehaviour:
         _buttonText: "<b>\u0412 \u0431\u043E\u0439...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_1
         _backgroundSpriteName: Chapter_1
-      _menuSuccess:
-        _name: 
+      _successMenu:
+      - _name: success_0
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u041F\u043B\u0451\u0441
@@ -766,8 +766,8 @@ MonoBehaviour:
         _buttonText: "<b>\u0412 \u0431\u043E\u0439...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_2
         _backgroundSpriteName: Chapter_2
-      _menuSuccess:
-        _name: 
+      _successMenu:
+      - _name: success_0
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0412\u0435\u0440\u0448\u0438\u043D\u0430
@@ -989,8 +989,8 @@ MonoBehaviour:
         _buttonText: "<b>\u0412 \u0431\u043E\u0439...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_3
         _backgroundSpriteName: Chapter_3
-      _menuSuccess:
-        _name: 
+      _successMenu:
+      - _name: success_0
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0414\u043D\u043E
@@ -1226,8 +1226,8 @@ MonoBehaviour:
         _buttonText: "<b>\u0412 \u0431\u043E\u0439...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_4
         _backgroundSpriteName: Chapter_4
-      _menuSuccess:
-        _name: 
+      _successMenu:
+      - _name: success_0
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0413\u0440\u0435\u0431\u0435\u043D\u044C
@@ -1448,8 +1448,8 @@ MonoBehaviour:
         _buttonText: "<b>\u0412 \u0431\u043E\u0439...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_5
         _backgroundSpriteName: Chapter_5
-      _menuSuccess:
-        _name: 
+      _successMenu:
+      - _name: success_0
         _menuBundleName: chapter_onlyscreen_menu
         _menuPrefabName: Menu.prefab
         _descriptionText: "<b>\u041B\u043E\u043A\u0430\u0446\u0438\u044F: \u0423

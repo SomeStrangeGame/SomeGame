@@ -12,7 +12,7 @@ namespace Game.Chapter_ScreenAndBattle
         [SerializeField] private string _chapterName;
         [SerializeField] private Chapter_OnlyScreen.Data[] _introMenu;
         [SerializeField] private Chapter_OnlyScreen.Data[] _startMenu;
-        [SerializeField] private Chapter_OnlyScreen.Data _menuSuccess;
+        [SerializeField] private Chapter_OnlyScreen.Data[] _successMenu;
         [SerializeField] private Chapter_OnlyScreen.Data _menuFailed;
 
         [SerializeField] private string _battleBundleName;
@@ -22,7 +22,7 @@ namespace Game.Chapter_ScreenAndBattle
 
         public readonly Chapter_OnlyScreen.Data[] IntroMenu => _introMenu;
         public readonly Chapter_OnlyScreen.Data[] StartMenu => _startMenu;
-        public readonly Chapter_OnlyScreen.Data MenuSuccess => _menuSuccess;
+        public readonly Chapter_OnlyScreen.Data[] SuccessMenu => _successMenu;
         public readonly Chapter_OnlyScreen.Data MenuFailed => _menuFailed;
 
         internal readonly string BattleBundleName => _battleBundleName;

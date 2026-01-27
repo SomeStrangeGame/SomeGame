@@ -104,7 +104,8 @@ namespace Game
                 return;
             }
 
-            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuSuccess);
+            foreach (var success in _ctx.Data.Chapters[index].SuccessMenu)
+                await ShowMenuProcess(success);
 
             index++;
             if (index < _ctx.Data.Chapters.Length)
