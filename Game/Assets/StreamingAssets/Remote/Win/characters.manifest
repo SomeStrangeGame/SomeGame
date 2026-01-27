@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 3633056778
+CRC: 4116628316
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2b73c8464195449bce8223e409ce3260
+    Hash: 1f77c1e23a6b160844fb2d3c2d247451
   TypeTreeHash:
     serializedVersion: 2
     Hash: 4c67f41b8da85235e73262be7adcb36d
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: fdf567e3554f58f45ec39d0e97932ba9
+    Hash: 0362db3af54b031d0d1fa22867bfd5f1
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -60,5 +60,4 @@ ClassTypes:
 SerializeReferenceClassIdentifiers: []
 Assets:
 - Assets/Game/Character/RemoteAssets/Characters.prefab
-Dependencies:
-- /Users/iantonishin/SomeGame/Game/Assets/StreamingAssets/Remote/Win/chapter_screenandbattle
+Dependencies: []
