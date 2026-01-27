@@ -10,6 +10,7 @@ namespace Game.Chapter_ScreenAndBattle
     public struct Data
     {
         [SerializeField] private string _chapterName;
+        [SerializeField] private Chapter_OnlyScreen.Data _menuIntro;
         [SerializeField] private Chapter_OnlyScreen.Data _menuStart;
         [SerializeField] private Chapter_OnlyScreen.Data _menuSuccess;
         [SerializeField] private Chapter_OnlyScreen.Data _menuFailed;
@@ -19,6 +20,7 @@ namespace Game.Chapter_ScreenAndBattle
         [SerializeField] private string _battleScreenPrefabName;
         [SerializeField] private string _battleCameraDataName;
 
+        public readonly Chapter_OnlyScreen.Data MenuIntro => _menuIntro;
         public readonly Chapter_OnlyScreen.Data MenuStart => _menuStart;
         public readonly Chapter_OnlyScreen.Data MenuSuccess => _menuSuccess;
         public readonly Chapter_OnlyScreen.Data MenuFailed => _menuFailed;

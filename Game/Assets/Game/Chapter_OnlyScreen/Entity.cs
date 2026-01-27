@@ -8,6 +8,8 @@ namespace Game.Chapter_OnlyScreen
     [Serializable]
     public struct Data
     {
+        [SerializeField] private bool _enabled;
+
         [SerializeField] private string _menuBundleName;
         [SerializeField] private string _menuPrefabName;
 
@@ -15,6 +17,8 @@ namespace Game.Chapter_OnlyScreen
         [SerializeField] private string _buttonText;
         [SerializeField] private string _backgroundBundleName;
         [SerializeField] private string _backgroundSpriteName;
+
+        public readonly bool Enabled => _enabled;
 
         public readonly string MenuBundleName => _menuBundleName;
         public readonly string MenuPrefabName => _menuPrefabName;

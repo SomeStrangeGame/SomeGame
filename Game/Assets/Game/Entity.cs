@@ -9,11 +9,9 @@ namespace Game
     internal struct Data
     {
         [SerializeField] private Loading.Data _loadingData;
-        [SerializeField] private Chapter_OnlyScreen.Data _chapter_intro;
         [SerializeField] private Chapter_ScreenAndBattle.Data[] _chapters;
 
         internal readonly Loading.Data LoadingData => _loadingData;
-        internal readonly Chapter_OnlyScreen.Data Chapter_intro => _chapter_intro;
         internal readonly Chapter_ScreenAndBattle.Data[] Chapters => _chapters;
     }
 
@@ -46,12 +44,13 @@ namespace Game
             await _loading.Init();
             await _loading.Show();
 
-            await ShowMenuProcess(_ctx.Data.Chapter_intro);
             ChapterProcess(0).Forget();
         }
 
         private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data menuData)
         {
+            if (!menuData.Enabled) return;
+
             var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {
                 MenuData = menuData,
@@ -90,6 +89,7 @@ namespace Game
 
         private async UniTask ChapterProcess(int index)
         {
+            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuIntro);
             await ShowMenuProcess(_ctx.Data.Chapters[index].MenuStart);
 
             var battleResult = await ShowBattleProcess(index);
@@ -109,7 +109,6 @@ namespace Game
                 return;
             }
 
-            await ShowMenuProcess(_ctx.Data.Chapter_intro);
             ChapterProcess(0).Forget();
         }
     }
