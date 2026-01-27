@@ -85,10 +85,13 @@ namespace Game
             return result;
         }
 
-        private async UniTask ChapterProcess(int index)
+        private async UniTask ChapterProcess(int index, bool skipIntro = false)
         {
-            foreach(var intro in _ctx.Data.Chapters[index].IntroMenu)
-                await ShowMenuProcess(intro);
+            if (!skipIntro)
+            {
+                foreach(var intro in _ctx.Data.Chapters[index].IntroMenu)
+                    await ShowMenuProcess(intro);
+            }
 
             foreach (var start in _ctx.Data.Chapters[index].StartMenu)
                 await ShowMenuProcess(start);
@@ -97,7 +100,7 @@ namespace Game
             if (battleResult == 0) //failed
             {
                 await ShowMenuProcess(_ctx.Data.Chapters[index].MenuFailed);
-                ChapterProcess(index).Forget();
+                ChapterProcess(index, true).Forget();
                 return;
             }
 
