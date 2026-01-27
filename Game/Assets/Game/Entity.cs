@@ -46,24 +46,19 @@ namespace Game
             await _loading.Init();
             await _loading.Show();
 
-            await ShowScreenProcess(GetScreenCtx(_ctx.Data.Chapter_intro.Menu, _ctx.Data.Chapter_intro.MenuScreen));
-            ChapterBattleProcess(0).Forget();
+            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu, _ctx.Data.Chapter_intro.MenuScreen);
+            ChapterProcess(0).Forget();
         }
 
-        private Chapter_OnlyScreen.Entity.Ctx GetScreenCtx(Chapter_OnlyScreen.Data.MenuData menuData, Chapter_OnlyScreen.Data.MenuScreenData menuScreenData)
+        private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data.MenuData menuData, Chapter_OnlyScreen.Data.MenuScreenData menuScreenData)
         {
-            var result = new Chapter_OnlyScreen.Entity.Ctx
+            var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {
                 MenuData = menuData,
                 MenuScreenData = menuScreenData,
-                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.BundleMenuName, data.PrefabMenuName),
-                GetBundledSprite = data => _bundles.GetBundledSprite(data.BackgroundBundleName, data.BackgroundSpriteName)
+                GetBundledPrefab = _bundles.GetBundledPrefab,
+                GetBundledSprite = _bundles.GetBundledSprite
             };
-            return result;
-        }
-
-        private async UniTask ShowScreenProcess(Chapter_OnlyScreen.Entity.Ctx ctx)
-        {
             using (var chapter = new Chapter_OnlyScreen.Entity(ctx).AddTo(this))
             {
                 await chapter.Init();
@@ -73,49 +68,50 @@ namespace Game
             }
         }
 
-        private async UniTask ChapterBattleProcess(int index)
+        private async UniTask<int> ShowBattleProcess(int index)
         {
+            var result = 0;
             var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
             {
                 Data = _ctx.Data.Chapters[index],
-                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
-                GetBundledSprite = data => _bundles.GetBundledSprite(data.bundleName, data.spriteName),
-                GetBundledCameraData = data => _bundles.GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>(data.bundleName, data.soName),
+                GetBundledPrefab = _bundles.GetBundledPrefab,
+                GetBundledCameraData = _bundles.GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>,
             };
-
             using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this))
             {
-                await ShowScreenProcess(GetScreenCtx(_ctx.Data.Chapters[index].MenuStart, _ctx.Data.Chapters[index].MenuScreen));
-
                 await chapter.InitBattle();
                 await _loading.Hide();
-                var battleResult = await chapter.WaitBattleResult();
+                result = await chapter.WaitBattleResult();
                 await UniTask.Delay(3000);
                 await _loading.Show();
                 chapter.ReleaseBattle();
-
-                if (battleResult == 0) //failed
-                {
-                    await ShowScreenProcess(GetScreenCtx(_ctx.Data.Chapters[index].MenuFailed, _ctx.Data.Chapters[index].MenuScreen));
-
-                    ChapterBattleProcess(index).Forget();
-                }
-                else //success
-                {
-                    await ShowScreenProcess(GetScreenCtx(_ctx.Data.Chapters[index].MenuSuccess, _ctx.Data.Chapters[index].MenuScreen));
-                    
-                    index++;
-                    if (index >= _ctx.Data.Chapters.Length)
-                    {
-                        await ShowScreenProcess(GetScreenCtx(_ctx.Data.Chapter_intro.Menu, _ctx.Data.Chapter_intro.MenuScreen));
-                        ChapterBattleProcess(0).Forget();
-                    }
-                    else
-                    {
-                        ChapterBattleProcess(index).Forget();
-                    }
-                }
             }
+            return result;
+        }
+
+        private async UniTask ChapterProcess(int index)
+        {
+            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuStart, _ctx.Data.Chapters[index].MenuScreen);
+
+            var battleResult = await ShowBattleProcess(index);
+            if (battleResult == 0) //failed
+            {
+                await ShowMenuProcess(_ctx.Data.Chapters[index].MenuFailed, _ctx.Data.Chapters[index].MenuScreen);
+                ChapterProcess(index).Forget();
+                return;
+            }
+
+            await ShowMenuProcess(_ctx.Data.Chapters[index].MenuSuccess, _ctx.Data.Chapters[index].MenuScreen);
+
+            index++;
+            if (index < _ctx.Data.Chapters.Length)
+            {
+                ChapterProcess(index).Forget();
+                return;
+            }
+
+            await ShowMenuProcess(_ctx.Data.Chapter_intro.Menu, _ctx.Data.Chapter_intro.MenuScreen);
+            ChapterProcess(0).Forget();
         }
     }
 }

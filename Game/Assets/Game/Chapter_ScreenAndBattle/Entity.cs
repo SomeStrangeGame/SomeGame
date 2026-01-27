@@ -36,9 +36,8 @@ namespace Game.Chapter_ScreenAndBattle
         public struct Ctx
         {
             public Data Data;
-            public Func<(string bundleName, string prefabName), UniTask<GameObject>> GetBundledPrefab;
-            public Func<(string bundleName, string spriteName), UniTask<Sprite>> GetBundledSprite;
-            public Func<(string bundleName, string soName), UniTask<CameraDataSO>> GetBundledCameraData;
+            public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
+            public Func<string, string, UniTask<CameraDataSO>> GetBundledCameraData;
         }
 
         private readonly UniTaskCompletionSource<int> _battleToken;
@@ -59,15 +58,15 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitBattle()
         {
-            var battleScreenPrefab = await _ctx.GetBundledPrefab((_ctx.Data.BattleBundleName, _ctx.Data.BattleScreenPrefabName));
+            var battleScreenPrefab = await _ctx.GetBundledPrefab(_ctx.Data.BattleBundleName, _ctx.Data.BattleScreenPrefabName);
             var battleScreenGO = GameObject.Instantiate(battleScreenPrefab);
             _battleScreen = battleScreenGO.GetComponent<View.Screen>();
 
-            var battleScenePrefab = await _ctx.GetBundledPrefab((_ctx.Data.BattleBundleName, _ctx.Data.BattleScenePrefabName));
+            var battleScenePrefab = await _ctx.GetBundledPrefab(_ctx.Data.BattleBundleName, _ctx.Data.BattleScenePrefabName);
             var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
             _battleScene = battleSceneGO.GetComponent<View.Scene>();
 
-            var cameraData = await _ctx.GetBundledCameraData((_ctx.Data.BattleBundleName, _ctx.Data.BattleCameraDataName));
+            var cameraData = await _ctx.GetBundledCameraData(_ctx.Data.BattleBundleName, _ctx.Data.BattleCameraDataName);
             var camera = new Camera.Entity(new Camera.Entity.Ctx
             {
                 MoveOffset = cameraData.CamMoveOffset,
