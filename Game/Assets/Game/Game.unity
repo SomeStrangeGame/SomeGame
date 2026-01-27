@@ -679,12 +679,16 @@ MonoBehaviour:
         _buttonText: "<b>\u042D\u0442\u043E \u043D\u0435 \u043F\u0440\u0430\u0432\u0434\u0430...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_1
         _backgroundSpriteName: Chapter_1
-      _characterBundleName: characters
-      _characterPrefabName: Characters.prefab
-      _battleBundleName: chapter_screenandbattle
-      _battleScenePrefabName: BattleScene1.prefab
-      _battleScreenPrefabName: BattleSceneScreen.prefab
-      _battleCameraDataName: CameraData.asset
+      _battles:
+      - _name: battle_0
+        _characterBundleName: characters
+        _characterPrefabName: Characters.prefab
+        _battleSceneBundleName: chapter_screenandbattle_scene_1
+        _battleScenePrefabName: BattleScene1.prefab
+        _battleScreenBundleName: chapter_screenandbattle_screen
+        _battleScreenPrefabName: BattleSceneScreen.prefab
+        _battleCameraBundleName: chapter_screenandbattle_camera
+        _battleCameraSOName: CameraData.asset
     - _chapterName: Chapter 2
       _introMenu: []
       _startMenu:
@@ -909,12 +913,16 @@ MonoBehaviour:
         _buttonText: "<b>\u042D\u0442\u043E \u043D\u0435 \u043F\u0440\u0430\u0432\u0434\u0430...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_2
         _backgroundSpriteName: Chapter_2
-      _characterBundleName: characters
-      _characterPrefabName: Characters.prefab
-      _battleBundleName: chapter_screenandbattle
-      _battleScenePrefabName: BattleScene1.prefab
-      _battleScreenPrefabName: BattleSceneScreen.prefab
-      _battleCameraDataName: CameraData.asset
+      _battles:
+      - _name: battle_0
+        _characterBundleName: characters
+        _characterPrefabName: Characters.prefab
+        _battleSceneBundleName: chapter_screenandbattle_scene_1
+        _battleScenePrefabName: BattleScene1.prefab
+        _battleScreenBundleName: chapter_screenandbattle_screen
+        _battleScreenPrefabName: BattleSceneScreen.prefab
+        _battleCameraBundleName: chapter_screenandbattle_camera
+        _battleCameraSOName: CameraData.asset
     - _chapterName: Chapter 3
       _introMenu: []
       _startMenu:
@@ -1143,12 +1151,16 @@ MonoBehaviour:
         _buttonText: "<b>\u042D\u0442\u043E \u043D\u0435 \u043F\u0440\u0430\u0432\u0434\u0430...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_3
         _backgroundSpriteName: Chapter_3
-      _characterBundleName: characters
-      _characterPrefabName: Characters.prefab
-      _battleBundleName: chapter_screenandbattle
-      _battleScenePrefabName: BattleScene1.prefab
-      _battleScreenPrefabName: BattleSceneScreen.prefab
-      _battleCameraDataName: CameraData.asset
+      _battles:
+      - _name: battle_0
+        _characterBundleName: characters
+        _characterPrefabName: Characters.prefab
+        _battleSceneBundleName: chapter_screenandbattle_scene_1
+        _battleScenePrefabName: BattleScene1.prefab
+        _battleScreenBundleName: chapter_screenandbattle_screen
+        _battleScreenPrefabName: BattleSceneScreen.prefab
+        _battleCameraBundleName: chapter_screenandbattle_camera
+        _battleCameraSOName: CameraData.asset
     - _chapterName: Chapter 4
       _introMenu: []
       _startMenu:
@@ -1362,12 +1374,16 @@ MonoBehaviour:
         _buttonText: "<b>\u042D\u0442\u043E \u043D\u0435 \u043F\u0440\u0430\u0432\u0434\u0430...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_4
         _backgroundSpriteName: Chapter_4
-      _characterBundleName: characters
-      _characterPrefabName: Characters.prefab
-      _battleBundleName: chapter_screenandbattle
-      _battleScenePrefabName: BattleScene1.prefab
-      _battleScreenPrefabName: BattleSceneScreen.prefab
-      _battleCameraDataName: CameraData.asset
+      _battles:
+      - _name: battle_0
+        _characterBundleName: characters
+        _characterPrefabName: Characters.prefab
+        _battleSceneBundleName: chapter_screenandbattle_scene_1
+        _battleScenePrefabName: BattleScene1.prefab
+        _battleScreenBundleName: chapter_screenandbattle_screen
+        _battleScreenPrefabName: BattleSceneScreen.prefab
+        _battleCameraBundleName: chapter_screenandbattle_camera
+        _battleCameraSOName: CameraData.asset
     - _chapterName: Chapter 5
       _introMenu: []
       _startMenu:
@@ -1610,12 +1626,16 @@ MonoBehaviour:
         _buttonText: "<b>\u042D\u0442\u043E \u043D\u0435 \u043F\u0440\u0430\u0432\u0434\u0430...</b>"
         _backgroundBundleName: chapter_onlyscreen_chapter_5
         _backgroundSpriteName: Chapter_5
-      _characterBundleName: characters
-      _characterPrefabName: Characters.prefab
-      _battleBundleName: chapter_screenandbattle
-      _battleScenePrefabName: BattleScene1.prefab
-      _battleScreenPrefabName: BattleSceneScreen.prefab
-      _battleCameraDataName: CameraData.asset
+      _battles:
+      - _name: battle_0
+        _characterBundleName: characters
+        _characterPrefabName: Characters.prefab
+        _battleSceneBundleName: chapter_screenandbattle_scene_1
+        _battleScenePrefabName: BattleScene1.prefab
+        _battleScreenBundleName: chapter_screenandbattle_screen
+        _battleScreenPrefabName: BattleSceneScreen.prefab
+        _battleCameraBundleName: chapter_screenandbattle_camera
+        _battleCameraSOName: CameraData.asset
 --- !u!4 &1138803520
 Transform:
   m_ObjectHideFlags: 0

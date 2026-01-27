@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 3877173763
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 254ec76a88b8b315b0f7114b54fb332e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 893730e09950a5906897764b40744599
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 72b70380ac04d81595f789771d4212fc
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: 05acf18c356ae46cea7fae9c60386ccd, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Game/Chapter_ScreenAndBattle/RemoteAssets/CameraData.asset
+Dependencies: []

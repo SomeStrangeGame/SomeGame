@@ -9,39 +9,57 @@ namespace Game.Chapter_ScreenAndBattle
     [Serializable]
     public struct Data
     {
+        [Serializable]
+        public struct Battle
+        {
+            [SerializeField] private string _name;
+
+            [SerializeField] private string _characterBundleName;
+            [SerializeField] private string _characterPrefabName;
+
+            [SerializeField] private string _battleSceneBundleName;
+            [SerializeField] private string _battleScenePrefabName;
+
+            [SerializeField] private string _battleScreenBundleName;
+            [SerializeField] private string _battleScreenPrefabName;
+
+            [SerializeField] private string _battleCameraBundleName;
+            [SerializeField] private string _battleCameraSOName;
+
+            public readonly string CharacterBundleName => _characterBundleName;
+            public readonly string CharacterPrefabName => _characterPrefabName;
+
+            public readonly string BattleSceneBundleName => _battleSceneBundleName;
+            public readonly string BattleScenePrefabName => _battleScenePrefabName;
+
+            public readonly string BattleScreenBundleName => _battleScreenBundleName;
+            public readonly string BattleScreenPrefabName => _battleScreenPrefabName;
+
+            public readonly string BattleCameraBundleName => _battleCameraBundleName;
+            public readonly string BattleCameraSOName => _battleCameraSOName;
+        }
+
         [SerializeField] private string _chapterName;
         [SerializeField] private Chapter_OnlyScreen.Data[] _introMenu;
         [SerializeField] private Chapter_OnlyScreen.Data[] _startMenu;
         [SerializeField] private Chapter_OnlyScreen.Data[] _successMenu;
         [SerializeField] private Chapter_OnlyScreen.Data[] _failedMenu;
 
-        [SerializeField] private string _characterBundleName;
-        [SerializeField] private string _characterPrefabName;
-
-        [SerializeField] private string _battleBundleName;
-        [SerializeField] private string _battleScenePrefabName;
-        [SerializeField] private string _battleScreenPrefabName;
-        [SerializeField] private string _battleCameraDataName;
+        [SerializeField] private Battle[] _battles;
 
         public readonly Chapter_OnlyScreen.Data[] IntroMenu => _introMenu;
         public readonly Chapter_OnlyScreen.Data[] StartMenu => _startMenu;
         public readonly Chapter_OnlyScreen.Data[] SuccessMenu => _successMenu;
         public readonly Chapter_OnlyScreen.Data[] FailedMenu => _failedMenu;
 
-        internal readonly string CharacterBundleName => _characterBundleName;
-        internal readonly string CharacterPrefabName => _characterPrefabName;
-
-        internal readonly string BattleBundleName => _battleBundleName;
-        internal readonly string BattleScenePrefabName => _battleScenePrefabName;
-        internal readonly string BattleScreenPrefabName => _battleScreenPrefabName;
-        internal readonly string BattleCameraDataName => _battleCameraDataName;
+        public readonly Battle[] Battles => _battles;
     }
 
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx
         {
-            public Data Data;
+            public Data.Battle Data;
             public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
             public Func<string, string, UniTask<CameraDataSO>> GetBundledCameraData;
         }
@@ -67,11 +85,11 @@ namespace Game.Chapter_ScreenAndBattle
 
         public async UniTask InitBattle()
         {
-            var battleScreenPrefab = await _ctx.GetBundledPrefab(_ctx.Data.BattleBundleName, _ctx.Data.BattleScreenPrefabName);
+            var battleScreenPrefab = await _ctx.GetBundledPrefab(_ctx.Data.BattleScreenBundleName, _ctx.Data.BattleScreenPrefabName);
             var battleScreenGO = GameObject.Instantiate(battleScreenPrefab);
             _battleScreen = battleScreenGO.GetComponent<View.Screen>();
 
-            var battleScenePrefab = await _ctx.GetBundledPrefab(_ctx.Data.BattleBundleName, _ctx.Data.BattleScenePrefabName);
+            var battleScenePrefab = await _ctx.GetBundledPrefab(_ctx.Data.BattleSceneBundleName, _ctx.Data.BattleScenePrefabName);
             var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
             _battleScene = battleSceneGO.GetComponent<View.Scene>();
 
@@ -80,7 +98,7 @@ namespace Game.Chapter_ScreenAndBattle
             var characterPoint = _battleScene.PlayerCharacterPoint.transform;
             _playerCharacterGO.transform.SetPositionAndRotation(characterPoint.position, characterPoint.rotation);
 
-            var cameraData = await _ctx.GetBundledCameraData(_ctx.Data.BattleBundleName, _ctx.Data.BattleCameraDataName);
+            var cameraData = await _ctx.GetBundledCameraData(_ctx.Data.BattleCameraBundleName, _ctx.Data.BattleCameraSOName);
             var camera = new Camera.Entity(new Camera.Entity.Ctx
             {
                 MoveOffset = cameraData.CamMoveOffset,

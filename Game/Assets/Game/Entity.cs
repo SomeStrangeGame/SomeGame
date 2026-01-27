@@ -64,12 +64,12 @@ namespace Game
             }
         }
 
-        private async UniTask<int> ShowBattleProcess(int index)
+        private async UniTask<int> ShowBattleProcess(Chapter_ScreenAndBattle.Data.Battle data)
         {
             var result = 0;
             var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
             {
-                Data = _ctx.Data.Chapters[index],
+                Data = data,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
                 GetBundledCameraData = _bundles.GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>,
             };
@@ -97,7 +97,14 @@ namespace Game
             foreach (var start in chapterData.StartMenu)
                 await ShowMenuProcess(start);
 
-            var battleResult = await ShowBattleProcess(index);
+            var battleResult = 0;
+            foreach (var battle in chapterData.Battles)
+            {
+                battleResult = await ShowBattleProcess(battle);
+                if (battleResult == 0)
+                    break;
+            }
+
             if (battleResult == 0) //failed
             {
                 foreach (var failed in chapterData.FailedMenu)
