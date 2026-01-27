@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 437079415
+CRC: 2608639570
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -31,3 +31,7 @@ AssetBundleManifest:
     Info_8:
       Name: chapter_onlyscreen_chapter_5
       Dependencies: {}
+    Info_9:
+      Name: characters
+      Dependencies:
+        Dependency_0: chapter_screenandbattle

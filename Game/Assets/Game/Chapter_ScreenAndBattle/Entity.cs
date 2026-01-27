@@ -15,6 +15,9 @@ namespace Game.Chapter_ScreenAndBattle
         [SerializeField] private Chapter_OnlyScreen.Data[] _successMenu;
         [SerializeField] private Chapter_OnlyScreen.Data[] _failedMenu;
 
+        [SerializeField] private string _characterBundleName;
+        [SerializeField] private string _characterPrefabName;
+
         [SerializeField] private string _battleBundleName;
         [SerializeField] private string _battleScenePrefabName;
         [SerializeField] private string _battleScreenPrefabName;
@@ -24,6 +27,9 @@ namespace Game.Chapter_ScreenAndBattle
         public readonly Chapter_OnlyScreen.Data[] StartMenu => _startMenu;
         public readonly Chapter_OnlyScreen.Data[] SuccessMenu => _successMenu;
         public readonly Chapter_OnlyScreen.Data[] FailedMenu => _failedMenu;
+
+        internal readonly string CharacterBundleName => _characterBundleName;
+        internal readonly string CharacterPrefabName => _characterPrefabName;
 
         internal readonly string BattleBundleName => _battleBundleName;
         internal readonly string BattleScenePrefabName => _battleScenePrefabName;
@@ -45,6 +51,8 @@ namespace Game.Chapter_ScreenAndBattle
 
         private View.Scene _battleScene;
         private View.Screen _battleScreen;
+        private GameObject _playerCharacterGO;
+        private readonly List<GameObject> _enemyCharactersGO;
 
         private Character.Entity _playerCharacterEntity;
         private List<Character.Entity> _enemyCharacterEntites;
@@ -53,6 +61,7 @@ namespace Game.Chapter_ScreenAndBattle
         public Entity(Ctx ctx)
         {
             _battleToken = new();
+            _enemyCharactersGO = new();
             _ctx = ctx;
         }
 
@@ -66,6 +75,11 @@ namespace Game.Chapter_ScreenAndBattle
             var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
             _battleScene = battleSceneGO.GetComponent<View.Scene>();
 
+            var characterPrefab = await _ctx.GetBundledPrefab(_ctx.Data.CharacterBundleName, _ctx.Data.CharacterPrefabName);
+            _playerCharacterGO = GameObject.Instantiate(characterPrefab);
+            var characterPoint = _battleScene.PlayerCharacterPoint.transform;
+            _playerCharacterGO.transform.SetPositionAndRotation(characterPoint.position, characterPoint.rotation);
+
             var cameraData = await _ctx.GetBundledCameraData(_ctx.Data.BattleBundleName, _ctx.Data.BattleCameraDataName);
             var camera = new Camera.Entity(new Camera.Entity.Ctx
             {
@@ -74,13 +88,13 @@ namespace Game.Chapter_ScreenAndBattle
                 LookAtOffset = cameraData.CamLookAtOffset,
                 LookAtSpeed = cameraData.CamLookAtSpeed,
 
-                GetCameraTargetPosition = () => _battleScene.PlayerCharacter.transform.position,
+                GetCameraTargetPosition = () => _playerCharacterGO.transform.position,
             }).AddTo(this);
             await camera.Init();
 
             _playerCharacterEntity = new Character.Entity(new Character.Entity.Ctx
             {
-                CharacterView = _battleScene.PlayerCharacter,
+                CharacterView = _playerCharacterGO,
                 Health = 10,
                 Speed = 2.5f,
                 AttackDistance = 2f,
@@ -93,11 +107,15 @@ namespace Game.Chapter_ScreenAndBattle
             await _playerCharacterEntity.Init();
 
             _enemyCharacterEntites = new();
-            foreach (var enemyCharacterView in _battleScene.EnemyCharacters)
+            foreach (var enemyPoint in _battleScene.EnemyCharacterPoints)
             {
+                var enemyCharacterGO = GameObject.Instantiate(characterPrefab);
+                enemyCharacterGO.transform.SetPositionAndRotation(enemyPoint.transform.position, enemyPoint.transform.rotation);
+                _enemyCharactersGO.Add(enemyCharacterGO);
+
                 var enemyCharacter = new Character.Entity(new Character.Entity.Ctx
                 {
-                    CharacterView = enemyCharacterView,
+                    CharacterView = enemyCharacterGO,
                     Health = 3,
                     Speed = 2.5f,
                     AttackDistance = 2f,
@@ -119,6 +137,8 @@ namespace Game.Chapter_ScreenAndBattle
 
             _battleScene.Setup(new View.Scene.Ctx
             {
+                PlayerCharacterGO = _playerCharacterGO,
+                EnemyCharactersGO = _enemyCharactersGO,
                 OnUpdate = deltaTime =>
                 {
                     camera.UpdatePos(deltaTime);
@@ -133,11 +153,20 @@ namespace Game.Chapter_ScreenAndBattle
             if (_battleScene != null) _battleScene.Release();
         }
 
+        public void ReleaseCharacters()
+        {
+            GameObject.Destroy(_playerCharacterGO);
+            foreach(var character in _enemyCharactersGO)
+                GameObject.Destroy(character);
+            _enemyCharactersGO.Clear();
+        }
+
         public async UniTask<int> WaitBattleResult() => await _battleToken.Task;
 
         protected override void OnDispose()
         {
             base.OnDispose();
+            ReleaseCharacters();
             ReleaseBattle();
         }
     }

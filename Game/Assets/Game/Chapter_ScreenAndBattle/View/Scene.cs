@@ -10,20 +10,22 @@ namespace Game.Chapter_ScreenAndBattle.View
     {
         internal struct Ctx
         {
+            internal GameObject PlayerCharacterGO;
+            internal List<GameObject> EnemyCharactersGO;
             internal Action<float> OnUpdate;
             internal Action<int> OnComplete;
         }
 
         [SerializeField] private LayerMask _navMeshLayers;
-        [SerializeField] private GameObject _playerCharacter;
-        [SerializeField] private GameObject[] _enemyCharacters;
+        [SerializeField] private GameObject _playerCharacterPoint;
+        [SerializeField] private GameObject[] _enemyCharacterPoints;
 
         private bool _sceneDone = false;
 
         private Ctx _ctx;
 
-        internal GameObject PlayerCharacter => _playerCharacter;
-        internal GameObject[] EnemyCharacters => _enemyCharacters;
+        internal GameObject PlayerCharacterPoint => _playerCharacterPoint;
+        internal GameObject[] EnemyCharacterPoints => _enemyCharacterPoints;
 
         private Animator _playerAnim;
         private Animator[] _enemyAnims;
@@ -34,18 +36,13 @@ namespace Game.Chapter_ScreenAndBattle.View
         {
             _ctx = ctx;
 
-            _playerAnim = PlayerCharacter.GetComponent<Animator>();
-            _enemyAnims = EnemyCharacters.Select(c => c.GetComponent<Animator>()).ToArray();
+            _playerAnim = _ctx.PlayerCharacterGO.GetComponent<Animator>();
+            _enemyAnims = _ctx.EnemyCharactersGO.Select(c => c.GetComponent<Animator>()).ToArray();
         }
 
         private void OnEnable()
         {
             CreateNavMesh();
-            PlayerCharacter.SetActive(true);
-            foreach(var enemyCharacter in EnemyCharacters)
-            {
-                enemyCharacter.SetActive(true);
-            }
         }
 
         private void OnDisable()

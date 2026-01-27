@@ -1,0 +1,64 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 3633056778
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2b73c8464195449bce8223e409ce3260
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 4c67f41b8da85235e73262be7adcb36d
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: fdf567e3554f58f45ec39d0e97932ba9
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e06fbe82dfef4954a36d52003dde497, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 65ae9652be3394082a73d80f3897eb46, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 144
+  Script: {instanceID: 0}
+- Class: 195
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Game/Character/RemoteAssets/Characters.prefab
+Dependencies:
+- /Users/iantonishin/SomeGame/Game/Assets/StreamingAssets/Remote/Win/chapter_screenandbattle
