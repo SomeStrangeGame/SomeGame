@@ -13,14 +13,14 @@ MonoBehaviour:
   m_Name: Chapter_1_battle_0
   m_EditorClassIdentifier: 
   _characterBundle:
-    _bundleName: 
-    _assetName: 
+    _bundleName: characters
+    _assetName: Characters.prefab
   _sceneBundle:
-    _bundleName: 
-    _assetName: 
+    _bundleName: chapter_screenandbattle_scene_1
+    _assetName: BattleScene1.prefab
   _screenBundle:
-    _bundleName: 
-    _assetName: 
+    _bundleName: chapter_screenandbattle_screen
+    _assetName: BattleSceneScreen.prefab
   _cameraBundle:
-    _bundleName: 
-    _assetName: 
+    _bundleName: chapter_screenandbattle_camera
+    _assetName: CameraData.asset

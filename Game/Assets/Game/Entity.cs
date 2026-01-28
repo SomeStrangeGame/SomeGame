@@ -10,10 +10,10 @@ namespace Game
     internal struct Data
     {
         [SerializeField] private Loading.Data _loadingData;
-        [SerializeField] private Chapter_ScreenAndBattle.Data[] _chapters;
+        [SerializeField] private ChaptersData _chapters;
 
         internal readonly Loading.Data LoadingData => _loadingData;
-        internal readonly Chapter_ScreenAndBattle.Data[] Chapters => _chapters;
+        internal readonly ChaptersData Chapters => _chapters;
     }
 
     internal sealed partial class Entity : BaseDisposable
@@ -65,7 +65,7 @@ namespace Game
             }
         }
 
-        private async UniTask<int> ShowBattleProcess(Chapter_ScreenAndBattle.Data.Battle data)
+        private async UniTask<int> ShowBattleProcess(BattleData data)
         {
             var result = 0;
             var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
@@ -88,7 +88,7 @@ namespace Game
 
         private async UniTask ChapterProcess(int index, bool skipIntro = false)
         {
-            var chapterData = _ctx.Data.Chapters[index];
+            var chapterData = _ctx.Data.Chapters.Chapters[index];
             if (!skipIntro)
             {
                 foreach(var intro in chapterData.IntroMenu)
@@ -118,7 +118,7 @@ namespace Game
                 await ShowMenuProcess(success);
 
             index++;
-            if (index < _ctx.Data.Chapters.Length)
+            if (index < _ctx.Data.Chapters.Chapters.Length)
             {
                 ChapterProcess(index).Forget();
                 return;
