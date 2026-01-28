@@ -41,7 +41,7 @@ namespace Game.Character
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
             _character = _ctx.CharacterView.GetComponent<View.Character>();
             _character.Setup(new View.Character.Ctx

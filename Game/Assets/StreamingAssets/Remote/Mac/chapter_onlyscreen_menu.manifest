@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 148122947
+CRC: 515496507
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: b519a3a0c14178d42de62b47446603a1
+    Hash: 1bff66e28e9eb7f19c0765f32f683a3c
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 38d7e962b2c1c2b8402382727f5b7cfe
+    Hash: 7a43d9c98c85448812d1bb229a5cf969
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 2ccccaabe8a53eb264626021c497c86f
+    Hash: 6639ca18027d9dd74e7bfb2e66eb488a
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -75,6 +75,6 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/Game/Chapter_OnlyScreen/RemoteAssets/Menu/Menu.prefab
-- Assets/Game/Chapter_OnlyScreen/RemoteAssets/Menu/LiberationSans-Regular.ttf
+- Assets/Game/Story/RemoteAssets/Menu/Menu.prefab
+- Assets/Game/Story/RemoteAssets/Menu/LiberationSans-Regular.ttf
 Dependencies: []

@@ -28,8 +28,14 @@ namespace Game.Story
 
         public async UniTask Init()
         {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite(_ctx.MenuData.BackgroundBundle.BundleName, _ctx.MenuData.BackgroundBundle.AssetName);
-            var screenPrefabGO = await _ctx.GetBundledPrefab(_ctx.MenuData.MenuBundle.BundleName, _ctx.MenuData.MenuBundle.AssetName);
+            var screenBackgroundSpriteLoading = _ctx.GetBundledSprite(_ctx.MenuData.BackgroundBundle.BundleName, _ctx.MenuData.BackgroundBundle.AssetName);
+            var screenPrefabGOLoading = _ctx.GetBundledPrefab(_ctx.MenuData.MenuBundle.BundleName, _ctx.MenuData.MenuBundle.AssetName);
+            
+            var (screenBackgroundSprite, screenPrefabGO) = await UniTask.WhenAll(
+                screenBackgroundSpriteLoading,
+                screenPrefabGOLoading
+            );
+
             var screenGO = GameObject.Instantiate(screenPrefabGO);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx

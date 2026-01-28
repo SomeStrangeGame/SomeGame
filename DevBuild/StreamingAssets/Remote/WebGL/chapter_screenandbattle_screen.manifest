@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 2573253312
+CRC: 3002385025
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ce2d6bf7d520f7de5d36eb78357aada4
+    Hash: 0f0cceb523b68ec4478cc3572f9fd22d
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ff4e89e25fa0424be28f1db0564a2dc6
+    Hash: 0ce2b063d8fa583a8eb598b914931dee
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 6eba8fe0c31ca0d89560f8110840050d
+    Hash: b31003687d016a0d59ee4bb579e2499b
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -61,5 +61,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Game/Chapter_ScreenAndBattle/RemoteAssets/BattleSceneScreen.prefab
+- Assets/Game/Battle/RemoteAssets/BattleSceneScreen.prefab
 Dependencies: []

@@ -6,6 +6,22 @@ using UnityEngine;
 
 namespace Game
 {
+    internal class BackgrounLoadingPriority : IDisposable
+    {
+        private ThreadPriority _defaultPriority;
+
+        public BackgrounLoadingPriority(ThreadPriority currentPriority, ThreadPriority defaultPriority)
+        {
+            _defaultPriority = defaultPriority;
+            Application.backgroundLoadingPriority = currentPriority;
+        }
+
+        public void Dispose()
+        {
+            Application.backgroundLoadingPriority = _defaultPriority;
+        }
+    }
+
     [Serializable]
     internal struct Data
     {
@@ -16,12 +32,14 @@ namespace Game
         internal readonly BundleData ChaptersData => _chaptersData;
     }
 
-    internal sealed partial class Entity : BaseDisposable
+    internal sealed class Entity : BaseDisposable
     {
         internal struct Ctx
         {
             internal Data Data;
         }
+
+        private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
 
         private readonly Ctx _ctx;
         private readonly Bundles.Entity _bundles;
@@ -32,6 +50,8 @@ namespace Game
         {
             _ctx = ctx;
             _bundles = new Bundles.Entity().AddTo(this);
+
+            Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
 
         internal async UniTask Init()
@@ -43,7 +63,11 @@ namespace Game
             };
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
-            await _loading.Init();
+            using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+            {
+                await _loading.Init();
+            }
+
             await _loading.Show();
 
             _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
@@ -60,7 +84,10 @@ namespace Game
             };
             using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
-                await chapter.Init();
+                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                {
+                    await chapter.Init();
+                }
                 await _loading.Hide();
                 await chapter.WaitResult();
                 await _loading.Show();
@@ -77,7 +104,10 @@ namespace Game
             };
             using (var chapter = new Battle.Entity(ctx).AddTo(this))
             {
-                await chapter.InitBattle();
+                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                {
+                    await chapter.Init();
+                }
                 await _loading.Hide();
                 result = await chapter.WaitBattleResult();
                 await UniTask.Delay(3000);

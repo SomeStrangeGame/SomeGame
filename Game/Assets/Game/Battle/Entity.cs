@@ -34,17 +34,24 @@ namespace Game.Battle
             _ctx = ctx;
         }
 
-        public async UniTask InitBattle()
+        public async UniTask Init()
         {
-            var battleScreenPrefab = await _ctx.GetBundledPrefab(_ctx.Data.ScreenBundle.BundleName, _ctx.Data.ScreenBundle.AssetName);
+            var battleScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.ScreenBundle.BundleName, _ctx.Data.ScreenBundle.AssetName);
+            var battleScenePrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.SceneBundle.BundleName, _ctx.Data.SceneBundle.AssetName);
+            var characterPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterBundle.BundleName, _ctx.Data.CharacterBundle.BundleName);
+            
+            var (battleScreenPrefab, battleScenePrefab, characterPrefab) = await UniTask.WhenAll(
+                battleScreenPrefabLoading,
+                battleScenePrefabLoading,
+                characterPrefabLoading
+            );
+
             var battleScreenGO = GameObject.Instantiate(battleScreenPrefab);
             _battleScreen = battleScreenGO.GetComponent<View.Screen>();
 
-            var battleScenePrefab = await _ctx.GetBundledPrefab(_ctx.Data.SceneBundle.BundleName, _ctx.Data.SceneBundle.AssetName);
             var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
             _battleScene = battleSceneGO.GetComponent<View.Scene>();
 
-            var characterPrefab = await _ctx.GetBundledPrefab(_ctx.Data.CharacterBundle.BundleName, _ctx.Data.CharacterBundle.BundleName);
             _playerCharacterGO = GameObject.Instantiate(characterPrefab);
             var characterPoint = _battleScene.PlayerCharacterPoint.transform;
             _playerCharacterGO.transform.SetPositionAndRotation(characterPoint.position, characterPoint.rotation);
@@ -68,7 +75,7 @@ namespace Game.Battle
                 GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, true),
                 GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, true),
             }).AddTo(this);
-            await _playerCharacterEntity.Init();
+            _playerCharacterEntity.Init();
 
             _enemyCharacterEntites = new();
             foreach (var enemyPoint in _battleScene.EnemyCharacterPoints)
@@ -89,7 +96,7 @@ namespace Game.Battle
                     GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, false),
                     GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, false),
                 }).AddTo(this);
-                await enemyCharacter.Init();
+                enemyCharacter.Init();
                 _enemyCharacterEntites.Add(enemyCharacter);
             }
 
