@@ -21,6 +21,8 @@ MonoBehaviour:
   _screenBundle:
     _bundleName: chapter_screenandbattle_screen
     _assetName: BattleSceneScreen.prefab
-  _cameraBundle:
-    _bundleName: chapter_screenandbattle_camera
-    _assetName: CameraData.asset
+  _camera:
+    _camMoveOffset: {x: 0, y: 8, z: -5}
+    _camMoveSpeed: 15
+    _camLookAtOffset: {x: 0, y: 1, z: 0}
+    _camLookAtSpeed: 15

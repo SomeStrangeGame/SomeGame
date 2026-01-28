@@ -1,6 +1,6 @@
 ﻿<Solution>
-  <Project Path="Game.Chapter_ScreenAndBattle.csproj" />
   <Project Path="SimpleInput.Runtime.csproj" />
+  <Project Path="Game.Chapter_ScreenAndBattle.csproj" />
   <Project Path="SimpleInput.Editor.csproj" />
   <Project Path="Game.Loading.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />

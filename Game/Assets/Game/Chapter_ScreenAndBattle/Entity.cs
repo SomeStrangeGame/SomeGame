@@ -13,7 +13,6 @@ namespace Game.Chapter_ScreenAndBattle
         {
             public BattleData Data;
             public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
-            public Func<string, string, UniTask<CameraDataSO>> GetBundledCameraData;
         }
 
         private readonly UniTaskCompletionSource<int> _battleToken;
@@ -50,13 +49,12 @@ namespace Game.Chapter_ScreenAndBattle
             var characterPoint = _battleScene.PlayerCharacterPoint.transform;
             _playerCharacterGO.transform.SetPositionAndRotation(characterPoint.position, characterPoint.rotation);
 
-            var cameraData = await _ctx.GetBundledCameraData(_ctx.Data.CameraBundle.BundleName, _ctx.Data.CameraBundle.AssetName);
             var camera = new Camera.Entity(new Camera.Entity.Ctx
             {
-                MoveOffset = cameraData.CamMoveOffset,
-                MoveSpeed = cameraData.CamMoveSpeed,
-                LookAtOffset = cameraData.CamLookAtOffset,
-                LookAtSpeed = cameraData.CamLookAtSpeed,
+                MoveOffset = _ctx.Data.Camera.CamMoveOffset,
+                MoveSpeed = _ctx.Data.Camera.CamMoveSpeed,
+                LookAtOffset = _ctx.Data.Camera.CamLookAtOffset,
+                LookAtSpeed = _ctx.Data.Camera.CamLookAtSpeed,
 
                 GetCameraTargetPosition = () => _playerCharacterGO.transform.position,
             }).AddTo(this);

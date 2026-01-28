@@ -74,7 +74,6 @@ namespace Game
             {
                 Data = data,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
-                GetBundledCameraData = _bundles.GetBundledSO<Chapter_ScreenAndBattle.CameraDataSO>,
             };
             using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this))
             {
