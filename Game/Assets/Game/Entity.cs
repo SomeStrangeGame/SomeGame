@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
+using Game.SOData;
 using UnityEngine;
 
 namespace Game
@@ -47,7 +48,7 @@ namespace Game
             ChapterProcess(0).Forget();
         }
 
-        private async UniTask ShowMenuProcess(Chapter_OnlyScreen.Data menuData)
+        private async UniTask ShowMenuProcess(ScreenData menuData)
         {
             var ctx = new Chapter_OnlyScreen.Entity.Ctx
             {

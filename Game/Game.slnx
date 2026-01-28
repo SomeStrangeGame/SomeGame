@@ -7,6 +7,7 @@
   <Project Path="Game.Cache.csproj" />
   <Project Path="Game.csproj" />
   <Project Path="CodeStrippingFix.csproj" />
+  <Project Path="Game.Data.csproj" />
   <Project Path="Game.Chapter_OnlyScreen.csproj" />
   <Project Path="Game.Camera.csproj" />
   <Project Path="Game.Character.csproj" />

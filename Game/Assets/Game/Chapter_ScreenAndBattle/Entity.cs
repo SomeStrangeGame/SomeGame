@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
+using Game.SOData;
 using Game.Disposable;
 using UnityEngine;
 
@@ -40,17 +41,17 @@ namespace Game.Chapter_ScreenAndBattle
         }
 
         [SerializeField] private string _chapterName;
-        [SerializeField] private Chapter_OnlyScreen.Data[] _introMenu;
-        [SerializeField] private Chapter_OnlyScreen.Data[] _startMenu;
-        [SerializeField] private Chapter_OnlyScreen.Data[] _successMenu;
-        [SerializeField] private Chapter_OnlyScreen.Data[] _failedMenu;
+        [SerializeField] private ScreenData[] _introMenu;
+        [SerializeField] private ScreenData[] _startMenu;
+        [SerializeField] private ScreenData[] _successMenu;
+        [SerializeField] private ScreenData[] _failedMenu;
 
         [SerializeField] private Battle[] _battles;
 
-        public readonly Chapter_OnlyScreen.Data[] IntroMenu => _introMenu;
-        public readonly Chapter_OnlyScreen.Data[] StartMenu => _startMenu;
-        public readonly Chapter_OnlyScreen.Data[] SuccessMenu => _successMenu;
-        public readonly Chapter_OnlyScreen.Data[] FailedMenu => _failedMenu;
+        public readonly ScreenData[] IntroMenu => _introMenu;
+        public readonly ScreenData[] StartMenu => _startMenu;
+        public readonly ScreenData[] SuccessMenu => _successMenu;
+        public readonly ScreenData[] FailedMenu => _failedMenu;
 
         public readonly Battle[] Battles => _battles;
     }

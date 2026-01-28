@@ -1,37 +1,16 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
+using Game.SOData;
 using UnityEngine;
 
 namespace Game.Chapter_OnlyScreen
 {
-    [Serializable]
-    public struct Data
-    {
-        [SerializeField] private string _name;
-        
-        [SerializeField] private string _menuBundleName;
-        [SerializeField] private string _menuPrefabName;
-
-        [SerializeField][TextArea(15, 150)] private string _descriptionText;
-        [SerializeField] private string _buttonText;
-        [SerializeField] private string _backgroundBundleName;
-        [SerializeField] private string _backgroundSpriteName;
-
-        public readonly string MenuBundleName => _menuBundleName;
-        public readonly string MenuPrefabName => _menuPrefabName;
-
-        public readonly string DescriptionText => _descriptionText;
-        public readonly string ButtonText => _buttonText;
-        public readonly string BackgroundBundleName => _backgroundBundleName;
-        public readonly string BackgroundSpriteName => _backgroundSpriteName;
-    }
-    
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx
         {
-            public Data MenuData;
+            public ScreenData MenuData;
             public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
             public Func<string, string, UniTask<Sprite>> GetBundledSprite;
         }
@@ -49,8 +28,8 @@ namespace Game.Chapter_OnlyScreen
 
         public async UniTask Init()
         {
-            var screenBackgroundSprite = await _ctx.GetBundledSprite(_ctx.MenuData.BackgroundBundleName, _ctx.MenuData.BackgroundSpriteName);
-            var screenPrefabGO = await _ctx.GetBundledPrefab(_ctx.MenuData.MenuBundleName, _ctx.MenuData.MenuPrefabName);
+            var screenBackgroundSprite = await _ctx.GetBundledSprite(_ctx.MenuData.BackgroundBundle.BundleName, _ctx.MenuData.BackgroundBundle.AssetName);
+            var screenPrefabGO = await _ctx.GetBundledPrefab(_ctx.MenuData.MenuBundle.BundleName, _ctx.MenuData.MenuBundle.AssetName);
             var screenGO = GameObject.Instantiate(screenPrefabGO);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx
