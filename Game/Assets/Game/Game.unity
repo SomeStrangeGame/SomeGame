@@ -340,8 +340,10 @@ MonoBehaviour:
   _data:
     _loadingData:
       _bundleName: loading
-      _loadingPrefabName: Loading.prefab
-    _chapters: {fileID: 11400000, guid: 8777bed995e5c4d1898105a0b179256f, type: 2}
+      _assetName: Loading.prefab
+    _chaptersData:
+      _bundleName: chapters
+      _assetName: Chapters.asset
 --- !u!4 &1138803520
 Transform:
   m_ObjectHideFlags: 0

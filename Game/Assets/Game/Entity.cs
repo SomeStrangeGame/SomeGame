@@ -9,11 +9,11 @@ namespace Game
     [Serializable]
     internal struct Data
     {
-        [SerializeField] private Loading.Data _loadingData;
-        [SerializeField] private ChaptersData _chapters;
+        [SerializeField] private BundleData _loadingData;
+        [SerializeField] private BundleData _chaptersData;
 
-        internal readonly Loading.Data LoadingData => _loadingData;
-        internal readonly ChaptersData Chapters => _chapters;
+        internal readonly BundleData LoadingData => _loadingData;
+        internal readonly BundleData ChaptersData => _chaptersData;
     }
 
     internal sealed partial class Entity : BaseDisposable
@@ -26,6 +26,7 @@ namespace Game
         private readonly Ctx _ctx;
         private readonly Bundles.Entity _bundles;
         private Loading.Entity _loading;
+        private ChaptersData _chaptersData;
 
         internal Entity(Ctx ctx)
         {
@@ -43,8 +44,9 @@ namespace Game
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
             await _loading.Init();
-
             await _loading.Show();
+
+            _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
             ChapterProcess(0).Forget();
         }
 
@@ -88,7 +90,7 @@ namespace Game
 
         private async UniTask ChapterProcess(int index, bool skipIntro = false)
         {
-            var chapterData = _ctx.Data.Chapters.Chapters[index];
+            var chapterData = _chaptersData.Chapters[index];
             if (!skipIntro)
             {
                 foreach(var intro in chapterData.IntroMenu)
@@ -118,7 +120,7 @@ namespace Game
                 await ShowMenuProcess(success);
 
             index++;
-            if (index < _ctx.Data.Chapters.Chapters.Length)
+            if (index < _chaptersData.Chapters.Length)
             {
                 ChapterProcess(index).Forget();
                 return;

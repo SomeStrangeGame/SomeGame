@@ -1,0 +1,31 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 3291828473
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9dbab33982e270c0feef589a7bafd2ce
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3199211f601681cc03675d94c5cbd7cf
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 7a3bcff99aca73325fb813ed17c27c14
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: b41a443d576f44284bb705812d08844b, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: a87c09dc5e9414e3b8344510b3ed8927, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 702e6969e1f3546f18836e3773f09e55, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 108114d16ce8f4484925ea9b5c4a2c6d, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Game.Data
+  ClassName: Game.SOData.BundleData
+Assets:
+- Assets/Game/SOData/RemoteAssets/Chapters.asset
+Dependencies: []

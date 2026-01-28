@@ -1,25 +1,16 @@
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
+using Game.SOData;
 using System;
 using UnityEngine;
 
 namespace Game.Loading
 {
-    [Serializable]
-    public struct Data
-    {
-        [SerializeField] private string _bundleName;
-        [SerializeField] private string _loadingPrefabName;
-
-        internal readonly string BundleName => _bundleName;
-        internal readonly string LoadingPrefabName => _loadingPrefabName;
-    }
-    
     public sealed class Entity : BaseDisposable
     {
         public struct Ctx
         {
-            public Data Data;
+            public BundleData Data;
             public Func<(string bundleName, string prefabName), UniTask<GameObject>> GetBundledPrefab;
         }
 
@@ -33,7 +24,7 @@ namespace Game.Loading
 
         public async UniTask Init()
         {
-            var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.BundleName, _ctx.Data.LoadingPrefabName));
+            var screenPrefabGO = await _ctx.GetBundledPrefab((_ctx.Data.BundleName, _ctx.Data.AssetName));
             var screenGO = GameObject.Instantiate(screenPrefabGO);
 
             _screen = screenGO.GetComponent<View.Screen>();
