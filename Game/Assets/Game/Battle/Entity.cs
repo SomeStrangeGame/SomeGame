@@ -51,14 +51,10 @@ namespace Game.Battle
 
             var camera = new Camera.Entity(new Camera.Entity.Ctx
             {
-                MoveOffset = _ctx.Data.Camera.CamMoveOffset,
-                MoveSpeed = _ctx.Data.Camera.CamMoveSpeed,
-                LookAtOffset = _ctx.Data.Camera.CamLookAtOffset,
-                LookAtSpeed = _ctx.Data.Camera.CamLookAtSpeed,
-
+                Data = _ctx.Data.Camera,
                 GetCameraTargetPosition = () => _playerCharacterGO.transform.position,
             }).AddTo(this);
-            await camera.Init();
+            camera.Init();
 
             _playerCharacterEntity = new Character.Entity(new Character.Entity.Ctx
             {

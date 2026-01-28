@@ -1,6 +1,6 @@
 using System;
-using Cysharp.Threading.Tasks;
 using Game.Disposable;
+using Game.SOData;
 using UnityEngine;
 
 namespace Game.Camera
@@ -9,10 +9,7 @@ namespace Game.Camera
     {
         public struct Ctx
         {
-            public Vector3 MoveOffset;
-            public float MoveSpeed;
-            public Vector3 LookAtOffset;
-            public float LookAtSpeed;
+            public BattleData.CameraData Data;
 
             public Func<Vector3> GetCameraTargetPosition;
         }
@@ -26,20 +23,20 @@ namespace Game.Camera
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
             _cameraTrans = UnityEngine.Camera.allCameras[0].transform;
         }
 
         public void UpdatePos(float deltaTime)
         {
-            var cameraTarget = _ctx.GetCameraTargetPosition.Invoke() + _ctx.MoveOffset;
-            _cameraTrans.position = Vector3.Lerp(_cameraTrans.position, cameraTarget, deltaTime * _ctx.MoveSpeed);
+            var cameraTarget = _ctx.GetCameraTargetPosition.Invoke() + _ctx.Data.CamMoveOffset;
+            _cameraTrans.position = Vector3.Lerp(_cameraTrans.position, cameraTarget, deltaTime * _ctx.Data.CamMoveSpeed);
 
-            var cameraLookAtTarget = _ctx.GetCameraTargetPosition.Invoke()  + _ctx.LookAtOffset;
+            var cameraLookAtTarget = _ctx.GetCameraTargetPosition.Invoke()  + _ctx.Data.CamLookAtOffset;
             var camRot = _cameraTrans.rotation;
             _cameraTrans.LookAt(cameraLookAtTarget);
-            _cameraTrans.rotation = Quaternion.Lerp(camRot, _cameraTrans.rotation, deltaTime * _ctx.LookAtSpeed);
+            _cameraTrans.rotation = Quaternion.Lerp(camRot, _cameraTrans.rotation, deltaTime * _ctx.Data.CamLookAtSpeed);
         }
     }
 }
