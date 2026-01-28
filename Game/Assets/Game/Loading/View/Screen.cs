@@ -5,8 +5,15 @@ namespace Game.Loading.View
 {
     public sealed class Screen : MonoBehaviour
     {
+        [SerializeField] private float _markerSpeed = 15f;
+        [SerializeField] private Transform _marker;
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
+
+        private void Update()
+        {
+            _marker.rotation *= Quaternion.Euler(Vector3.back * _markerSpeed * Time.deltaTime);
+        }
 
         internal void ShowImmediate()
         {
