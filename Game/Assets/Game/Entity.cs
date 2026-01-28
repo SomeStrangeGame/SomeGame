@@ -52,13 +52,13 @@ namespace Game
 
         private async UniTask ShowMenuProcess(ScreenData menuData)
         {
-            var ctx = new Chapter_OnlyScreen.Entity.Ctx
+            var ctx = new Story.Entity.Ctx
             {
                 MenuData = menuData,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
                 GetBundledSprite = _bundles.GetBundledSprite
             };
-            using (var chapter = new Chapter_OnlyScreen.Entity(ctx).AddTo(this))
+            using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
                 await chapter.Init();
                 await _loading.Hide();
@@ -70,12 +70,12 @@ namespace Game
         private async UniTask<int> ShowBattleProcess(BattleData data)
         {
             var result = 0;
-            var ctx = new Chapter_ScreenAndBattle.Entity.Ctx
+            var ctx = new Battle.Entity.Ctx
             {
                 Data = data,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
             };
-            using (var chapter = new Chapter_ScreenAndBattle.Entity(ctx).AddTo(this))
+            using (var chapter = new Battle.Entity(ctx).AddTo(this))
             {
                 await chapter.InitBattle();
                 await _loading.Hide();

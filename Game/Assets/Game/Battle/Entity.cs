@@ -5,7 +5,7 @@ using Game.SOData;
 using Game.Disposable;
 using UnityEngine;
 
-namespace Game.Chapter_ScreenAndBattle
+namespace Game.Battle
 {
     public sealed class Entity : BaseDisposable
     {

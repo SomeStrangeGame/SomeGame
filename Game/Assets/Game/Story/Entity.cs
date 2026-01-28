@@ -4,7 +4,7 @@ using Game.Disposable;
 using Game.SOData;
 using UnityEngine;
 
-namespace Game.Chapter_OnlyScreen
+namespace Game.Story
 {
     public sealed class Entity : BaseDisposable
     {

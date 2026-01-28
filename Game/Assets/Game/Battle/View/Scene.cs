@@ -4,7 +4,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
-namespace Game.Chapter_ScreenAndBattle.View
+namespace Game.Battle.View
 {
     internal sealed class Scene : MonoBehaviour
     {
