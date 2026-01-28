@@ -15,6 +15,27 @@ namespace Game.Story
             public Func<string, string, UniTask<Sprite>> GetBundledSprite;
         }
 
+        public sealed class Preload : BaseDisposable
+        {
+            private Ctx _ctx;
+
+            public Preload(Ctx ctx)
+            {
+                _ctx = ctx;
+            }
+
+            public async UniTask Process()
+            {
+                var screenBackgroundSpriteLoading = _ctx.GetBundledSprite(_ctx.MenuData.BackgroundBundle.BundleName, _ctx.MenuData.BackgroundBundle.AssetName);
+                var screenPrefabGOLoading = _ctx.GetBundledPrefab(_ctx.MenuData.MenuBundle.BundleName, _ctx.MenuData.MenuBundle.AssetName);
+                
+                await UniTask.WhenAll(
+                    screenBackgroundSpriteLoading,
+                    screenPrefabGOLoading
+                );
+            }
+        }
+
         private readonly UniTaskCompletionSource _token;
         private readonly Ctx _ctx;
 

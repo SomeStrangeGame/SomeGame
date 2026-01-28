@@ -82,6 +82,10 @@ namespace Game.Bundles
                     }
                 }
             }
+            else
+            {
+                Debug.Log($"Get bundle {bundleName} from cache");
+            }
             return _bundles[bundlesPath];
         }
 

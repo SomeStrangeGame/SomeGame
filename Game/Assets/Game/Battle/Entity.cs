@@ -15,6 +15,29 @@ namespace Game.Battle
             public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
         }
 
+        public sealed class Preload : BaseDisposable
+        {
+            private Ctx _ctx;
+
+            public Preload(Ctx ctx)
+            {
+                _ctx = ctx;
+            }
+
+            public async UniTask Process()
+            {
+                var battleScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.ScreenBundle.BundleName, _ctx.Data.ScreenBundle.AssetName);
+                var battleScenePrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.SceneBundle.BundleName, _ctx.Data.SceneBundle.AssetName);
+                var characterPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterBundle.BundleName, _ctx.Data.CharacterBundle.BundleName);
+            
+                await UniTask.WhenAll(
+                    battleScreenPrefabLoading,
+                    battleScenePrefabLoading,
+                    characterPrefabLoading
+                );
+            }
+        }
+
         private readonly UniTaskCompletionSource<int> _battleToken;
         private readonly Ctx _ctx;
 
