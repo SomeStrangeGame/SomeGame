@@ -76,21 +76,21 @@ namespace Game
             ChapterProcess(0).Forget();
         }
 
-        private async UniTask ShowMenuProcess(ScreenData menuData, params ScreenData[] screensPreloadData)
+        private async UniTask ShowMenuProcess(ScreenData data, params ScreenData[] screensPreloadData)
         {
-            await ShowMenuProcess(menuData, screensPreloadData, null);
+            await ShowMenuProcess(data, screensPreloadData, null);
         }
 
-        private async UniTask ShowMenuProcess(ScreenData menuData, params BattleData[] battlesPreloadData)
+        private async UniTask ShowMenuProcess(ScreenData data, params BattleData[] battlesPreloadData)
         {
-            await ShowMenuProcess(menuData, null, battlesPreloadData);
+            await ShowMenuProcess(data, null, battlesPreloadData);
         }
 
-        private async UniTask ShowMenuProcess(ScreenData menuData, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
+        private async UniTask ShowMenuProcess(ScreenData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
         {
             var ctx = new Story.Entity.Ctx
             {
-                Data = menuData,
+                Data = data,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
                 GetBundledSprite = _bundles.GetBundledSprite
             };
@@ -141,7 +141,17 @@ namespace Game
             }
         }
 
-        private async UniTask<int> ShowBattleProcess(BattleData data)
+        private async UniTask<int> ShowBattleProcess(BattleData data, params ScreenData[] screensPreloadData)
+        {
+            return await ShowBattleProcess(data, screensPreloadData, null);
+        }
+
+        private async UniTask<int> ShowBattleProcess(BattleData data, params BattleData[] battlesPreloadData)
+        {
+            return await ShowBattleProcess(data, null, battlesPreloadData);
+        }
+
+        private async UniTask<int> ShowBattleProcess(BattleData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
         {
             var result = 0;
             var ctx = new Battle.Entity.Ctx
@@ -155,10 +165,45 @@ namespace Game
                 {
                     await chapter.Init();
                 }
+                var preloading = new List<UniTask>();
+                if (screensPreloadData != null)
+                {
+                    foreach (var preloadData in screensPreloadData)
+                    {
+                        var preloadCtx = new Story.Entity.Preload.Ctx
+                        {
+                            Data = preloadData,
+                            GetAssets = _bundles.GetAssetBundle,
+                        };
+                        using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
+                        {
+                            preloading.Add(preload.Process());
+                        }
+                    }
+                }
+                if (battlesPreloadData != null)
+                {
+                    foreach (var preloadData in battlesPreloadData)
+                    {
+                        var preloadCtx = new Battle.Entity.Preload.Ctx
+                        {
+                            Data = preloadData,
+                            GetAssets = _bundles.GetAssetBundle,
+                        };
+                        using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
+                        {
+                            preloading.Add(preload.Process());
+                        }
+                    }
+                }
                 await _loading.Hide();
                 result = await chapter.WaitBattleResult();
                 await UniTask.Delay(3000);
                 await _loading.Show();
+                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                {
+                    await UniTask.WhenAll(preloading);
+                }
                 chapter.ReleaseBattle();
             }
             return result;
@@ -196,7 +241,13 @@ namespace Game
             var battleResult = 0;
             foreach (var battle in chapterData.Battles)
             {
-                battleResult = await ShowBattleProcess(battle);
+                var isLast = index + 1 >= chapterData.Battles.Length;
+                if (!isLast)
+                    battleResult = await ShowBattleProcess(battle, chapterData.Battles[index + 1]);
+                else if (chapterData.FailedMenu.Length > 0 && chapterData.SuccessMenu.Length > 0)
+                    battleResult = await ShowBattleProcess(battle, chapterData.FailedMenu[0], chapterData.SuccessMenu[0]);
+                else
+                    battleResult = await ShowBattleProcess(battle);
                 if (battleResult == 0)
                     break;
             }
