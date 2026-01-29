@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using Game.SOData;
+using UnityEditor.Build.Content;
 using UnityEngine;
 
 namespace Game
@@ -74,7 +76,17 @@ namespace Game
             ChapterProcess(0).Forget();
         }
 
-        private async UniTask ShowMenuProcess(ScreenData menuData, ScreenData preloadData = null)
+        private async UniTask ShowMenuProcess(ScreenData menuData, params ScreenData[] screensPreloadData)
+        {
+            await ShowMenuProcess(menuData, screensPreloadData, null);
+        }
+
+        private async UniTask ShowMenuProcess(ScreenData menuData, params BattleData[] battlesPreloadData)
+        {
+            await ShowMenuProcess(menuData, null, battlesPreloadData);
+        }
+
+        private async UniTask ShowMenuProcess(ScreenData menuData, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
         {
             var ctx = new Story.Entity.Ctx
             {
@@ -89,22 +101,25 @@ namespace Game
                     await chapter.Init();
                 }
                 await _loading.Hide();
-                if (preloadData != null)
+                var preloading = new List<UniTask>();
+                if (screensPreloadData != null)
                 {
-                    var preloadCtx = new Story.Entity.Ctx
+                    foreach (var preloadData in screensPreloadData)
                     {
-                        MenuData = preloadData,
-                        GetBundledPrefab = _bundles.GetBundledPrefab,
-                        GetBundledSprite = _bundles.GetBundledSprite
-                    };
-                    using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
-                    {
-                        await preload.Process();
-                        Debug.Log("PreloadDone");
+                        var preloadCtx = new Story.Entity.Preload.Ctx
+                        {
+                            MenuData = preloadData,
+                            GetAssets = _bundles.GetAssetBundle,
+                        };
+                        using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
+                        {
+                            preloading.Add(preload.Process());
+                        }
                     }
                 }
-                await chapter.WaitResult();
+                await chapter.WaitResult(); 
                 await _loading.Show();
+                await UniTask.WhenAll(preloading);
             }
         }
 
@@ -139,13 +154,24 @@ namespace Game
                 for (var i = 0; i < chapterData.IntroMenu.Length; i++)
                 {
                     var isLast = i + 1 >= chapterData.IntroMenu.Length;
-                    var preloadData = (!isLast) ? chapterData.IntroMenu[i + 1] : null;
-                    await ShowMenuProcess(chapterData.IntroMenu[i], preloadData);
+                    if (!isLast)
+                        await ShowMenuProcess(chapterData.IntroMenu[i], chapterData.IntroMenu[i + 1]);
+                    else if (chapterData.StartMenu.Length > 0) 
+                        await ShowMenuProcess(chapterData.IntroMenu[i], chapterData.StartMenu[0]);
+                    else
+                        await ShowMenuProcess(chapterData.IntroMenu[i]);
+                    
                 }
             }
 
-            foreach (var start in chapterData.StartMenu)
-                await ShowMenuProcess(start);
+            for (var i = 0 ; i < chapterData.StartMenu.Length; i++)
+            {
+                var isLast = i + 1 >= chapterData.StartMenu.Length;
+                if (!isLast)
+                    await ShowMenuProcess(chapterData.StartMenu[i], chapterData.StartMenu[i + 1]);
+                else //add elseif for battle preloading
+                    await ShowMenuProcess(chapterData.StartMenu[i]);
+            }
 
             var battleResult = 0;
             foreach (var battle in chapterData.Battles)
@@ -157,14 +183,27 @@ namespace Game
 
             if (battleResult == 0) //failed
             {
-                foreach (var failed in chapterData.FailedMenu)
-                    await ShowMenuProcess(failed);
+                for (var i = 0 ; i < chapterData.FailedMenu.Length; i++)
+                {
+                    var isLast = i + 1 >= chapterData.FailedMenu.Length;
+                    if (!isLast)
+                        await ShowMenuProcess(chapterData.FailedMenu[i], chapterData.FailedMenu[i + 1]);
+                    else
+                        await ShowMenuProcess(chapterData.FailedMenu[i]);
+                }
+
                 ChapterProcess(index, true).Forget();
                 return;
             }
 
-            foreach (var success in chapterData.SuccessMenu)
-                await ShowMenuProcess(success);
+            for (var i = 0; i < chapterData.SuccessMenu.Length; i++)
+            {
+                var isLast = i + 1 >= chapterData.SuccessMenu.Length;
+                if (!isLast)
+                    await ShowMenuProcess(chapterData.SuccessMenu[i], chapterData.SuccessMenu[i + 1]);
+                else
+                    await ShowMenuProcess(chapterData.SuccessMenu[i]);
+            }
 
             index++;
             if (index < _chaptersData.Chapters.Length)
@@ -173,7 +212,7 @@ namespace Game
                 return;
             }
 
-            ChapterProcess(0).Forget();
+            ChapterProcess(0).Forget(); //restart
         }
     }
 }

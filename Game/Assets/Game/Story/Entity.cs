@@ -17,6 +17,12 @@ namespace Game.Story
 
         public sealed class Preload : BaseDisposable
         {
+            public struct Ctx
+            {
+                public ScreenData MenuData;
+                public Func<string, UniTask<AssetBundle>> GetAssets;
+            }
+
             private Ctx _ctx;
 
             public Preload(Ctx ctx)
@@ -26,12 +32,12 @@ namespace Game.Story
 
             public async UniTask Process()
             {
-                var screenBackgroundSpriteLoading = _ctx.GetBundledSprite(_ctx.MenuData.BackgroundBundle.BundleName, _ctx.MenuData.BackgroundBundle.AssetName);
-                var screenPrefabGOLoading = _ctx.GetBundledPrefab(_ctx.MenuData.MenuBundle.BundleName, _ctx.MenuData.MenuBundle.AssetName);
+                var screenBackgroundAssetLoading = _ctx.GetAssets(_ctx.MenuData.BackgroundBundle.BundleName);
+                var screenMenuAssetLoading = _ctx.GetAssets(_ctx.MenuData.MenuBundle.BundleName);
                 
                 await UniTask.WhenAll(
-                    screenBackgroundSpriteLoading,
-                    screenPrefabGOLoading
+                    screenBackgroundAssetLoading,
+                    screenMenuAssetLoading
                 );
             }
         }
