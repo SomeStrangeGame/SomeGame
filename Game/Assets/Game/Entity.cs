@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using Game.SOData;
-using UnityEditor.Build.Content;
 using UnityEngine;
 
 namespace Game
@@ -239,15 +238,15 @@ namespace Game
             }
 
             var battleResult = 0;
-            foreach (var battle in chapterData.Battles)
+            for (var i = 0 ; i < chapterData.Battles.Length; i++)
             {
-                var isLast = index + 1 >= chapterData.Battles.Length;
+                var isLast = i + 1 >= chapterData.Battles.Length;
                 if (!isLast)
-                    battleResult = await ShowBattleProcess(battle, chapterData.Battles[index + 1]);
+                    battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.Battles[i + 1]);
                 else if (chapterData.FailedMenu.Length > 0 && chapterData.SuccessMenu.Length > 0)
-                    battleResult = await ShowBattleProcess(battle, chapterData.FailedMenu[0], chapterData.SuccessMenu[0]);
+                    battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.FailedMenu[0], chapterData.SuccessMenu[0]);
                 else
-                    battleResult = await ShowBattleProcess(battle);
+                    battleResult = await ShowBattleProcess(chapterData.Battles[i]);
                 if (battleResult == 0)
                     break;
             }
