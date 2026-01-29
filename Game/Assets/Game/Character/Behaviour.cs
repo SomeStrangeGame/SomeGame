@@ -22,10 +22,15 @@ namespace Game.Character
         private const float _enemyDodgeDotTrigger = 0.1f;
         private const float _enemyDodgeDistance = 2.1f;
 
+        private System.Random _random;
+
         private Ctx _ctx;
 
         public Behaviour(Ctx ctx)
         {
+            var randomSeed = Mathf.RoundToInt(Time.time);
+            Debug.Log(randomSeed);
+            _random = new System.Random(randomSeed);
             _ctx = ctx;
         }
 
@@ -76,7 +81,6 @@ namespace Game.Character
 
         public bool GetAttackInput(Entity characterEntity, bool isPlayer)
         {
-            
             if (!characterEntity.Anim.enabled) return false;
             if (characterEntity.IsAttacking) return false;
             if (characterEntity.IsHitting) return false;
@@ -88,13 +92,13 @@ namespace Game.Character
             }
             else
             {
-                return false;
                 if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
                 if (_ctx.PlayerCharacterEntity.IsHitting) return false;
 
                 var distance = Vector3.SqrMagnitude(_ctx.PlayerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition);
                 if (distance > _enemyAttackDistance * _enemyAttackDistance) return false;
                 if (_ctx.EnemyCharacterEntites.Any(e => e.Anim.enabled && e.IsAttacking)) return false;
+                if (_random.Next(0, 100) > 10) return false;
 
                 return true;
             }
@@ -102,27 +106,27 @@ namespace Game.Character
 
         public bool GetDodgeInput(Entity characterEntity, bool isPlayer)
         {
-            var isDodge = true;
-            isDodge &= characterEntity.Anim.enabled;
-            isDodge &= !characterEntity.IsDodging;
+            if (!characterEntity.Anim.enabled) return false;
+            if (characterEntity.IsDodging) return false;
+            if (characterEntity.IsHitting) return false;
 
             if (isPlayer)
             {
-                isDodge &= SimpleInput.GetKeyUp(KeyCode.E);
+                return SimpleInput.GetKeyUp(KeyCode.E);
             }
             else
             {
                 var distance = Vector3.SqrMagnitude(_ctx.PlayerCharacterEntity.Anim.rootPosition - characterEntity.Anim.rootPosition);
                 var targetDotForward = GetDot(_ctx.PlayerCharacterEntity.Anim.transform, characterEntity.Anim.rootPosition, Vector3.forward);
                 
-                isDodge &= _ctx.PlayerCharacterEntity.Anim.enabled;
-                isDodge &= targetDotForward > _enemyDodgeDotTrigger;
-                isDodge &= distance < _enemyDodgeDistance * _enemyDodgeDistance;
-                isDodge &= _ctx.PlayerCharacterEntity.IsAttacking;
-                isDodge &= false;
-            }
+                if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
+                if (targetDotForward < _enemyDodgeDotTrigger) return false;
+                if (distance > _enemyDodgeDistance * _enemyDodgeDistance) return false;
+                if (!_ctx.PlayerCharacterEntity.IsAttacking) return false;
+                if (_random.Next(0, 100) > 10) return false;
 
-            return isDodge;
+                return true;
+            }
         }
 
         public float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
