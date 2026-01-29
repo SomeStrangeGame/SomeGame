@@ -90,7 +90,7 @@ namespace Game
         {
             var ctx = new Story.Entity.Ctx
             {
-                MenuData = menuData,
+                Data = menuData,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
                 GetBundledSprite = _bundles.GetBundledSprite
             };
@@ -100,7 +100,6 @@ namespace Game
                 {
                     await chapter.Init();
                 }
-                await _loading.Hide();
                 var preloading = new List<UniTask>();
                 if (screensPreloadData != null)
                 {
@@ -108,7 +107,7 @@ namespace Game
                     {
                         var preloadCtx = new Story.Entity.Preload.Ctx
                         {
-                            MenuData = preloadData,
+                            Data = preloadData,
                             GetAssets = _bundles.GetAssetBundle,
                         };
                         using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
@@ -117,9 +116,28 @@ namespace Game
                         }
                     }
                 }
+                if (battlesPreloadData != null)
+                {
+                    foreach (var preloadData in battlesPreloadData)
+                    {
+                        var preloadCtx = new Battle.Entity.Preload.Ctx
+                        {
+                            Data = preloadData,
+                            GetAssets = _bundles.GetAssetBundle,
+                        };
+                        using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
+                        {
+                            preloading.Add(preload.Process());
+                        }
+                    }
+                }
+                await _loading.Hide();
                 await chapter.WaitResult(); 
                 await _loading.Show();
-                await UniTask.WhenAll(preloading);
+                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                {
+                    await UniTask.WhenAll(preloading);
+                }
             }
         }
 
@@ -169,7 +187,9 @@ namespace Game
                 var isLast = i + 1 >= chapterData.StartMenu.Length;
                 if (!isLast)
                     await ShowMenuProcess(chapterData.StartMenu[i], chapterData.StartMenu[i + 1]);
-                else //add elseif for battle preloading
+                else if (chapterData.Battles.Length > 0)
+                    await ShowMenuProcess(chapterData.StartMenu[i], chapterData.Battles[0]);
+                else
                     await ShowMenuProcess(chapterData.StartMenu[i]);
             }
 

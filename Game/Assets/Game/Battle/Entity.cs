@@ -17,6 +17,12 @@ namespace Game.Battle
 
         public sealed class Preload : BaseDisposable
         {
+            public struct Ctx
+            {
+                public BattleData Data;
+                public Func<string, UniTask<AssetBundle>> GetAssets;
+            }
+
             private Ctx _ctx;
 
             public Preload(Ctx ctx)
@@ -26,9 +32,9 @@ namespace Game.Battle
 
             public async UniTask Process()
             {
-                var battleScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.ScreenBundle.BundleName, _ctx.Data.ScreenBundle.AssetName);
-                var battleScenePrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.SceneBundle.BundleName, _ctx.Data.SceneBundle.AssetName);
-                var characterPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterBundle.BundleName, _ctx.Data.CharacterBundle.BundleName);
+                var battleScreenPrefabLoading = _ctx.GetAssets(_ctx.Data.ScreenBundle.BundleName);
+                var battleScenePrefabLoading = _ctx.GetAssets(_ctx.Data.SceneBundle.BundleName);
+                var characterPrefabLoading = _ctx.GetAssets(_ctx.Data.CharacterBundle.BundleName);
             
                 await UniTask.WhenAll(
                     battleScreenPrefabLoading,

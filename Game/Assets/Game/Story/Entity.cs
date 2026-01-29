@@ -10,7 +10,7 @@ namespace Game.Story
     {
         public struct Ctx
         {
-            public ScreenData MenuData;
+            public ScreenData Data;
             public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
             public Func<string, string, UniTask<Sprite>> GetBundledSprite;
         }
@@ -19,7 +19,7 @@ namespace Game.Story
         {
             public struct Ctx
             {
-                public ScreenData MenuData;
+                public ScreenData Data;
                 public Func<string, UniTask<AssetBundle>> GetAssets;
             }
 
@@ -32,8 +32,8 @@ namespace Game.Story
 
             public async UniTask Process()
             {
-                var screenBackgroundAssetLoading = _ctx.GetAssets(_ctx.MenuData.BackgroundBundle.BundleName);
-                var screenMenuAssetLoading = _ctx.GetAssets(_ctx.MenuData.MenuBundle.BundleName);
+                var screenBackgroundAssetLoading = _ctx.GetAssets(_ctx.Data.BackgroundBundle.BundleName);
+                var screenMenuAssetLoading = _ctx.GetAssets(_ctx.Data.MenuBundle.BundleName);
                 
                 await UniTask.WhenAll(
                     screenBackgroundAssetLoading,
@@ -55,8 +55,8 @@ namespace Game.Story
 
         public async UniTask Init()
         {
-            var screenBackgroundSpriteLoading = _ctx.GetBundledSprite(_ctx.MenuData.BackgroundBundle.BundleName, _ctx.MenuData.BackgroundBundle.AssetName);
-            var screenPrefabGOLoading = _ctx.GetBundledPrefab(_ctx.MenuData.MenuBundle.BundleName, _ctx.MenuData.MenuBundle.AssetName);
+            var screenBackgroundSpriteLoading = _ctx.GetBundledSprite(_ctx.Data.BackgroundBundle.BundleName, _ctx.Data.BackgroundBundle.AssetName);
+            var screenPrefabGOLoading = _ctx.GetBundledPrefab(_ctx.Data.MenuBundle.BundleName, _ctx.Data.MenuBundle.AssetName);
             
             var (screenBackgroundSprite, screenPrefabGO) = await UniTask.WhenAll(
                 screenBackgroundSpriteLoading,
@@ -68,8 +68,8 @@ namespace Game.Story
             _screen.Setup(new View.Screen.Ctx
             {
                 BackgroundSprite = screenBackgroundSprite,
-                DescriptionText = _ctx.MenuData.DescriptionText,
-                ButtonText = _ctx.MenuData.ButtonText,
+                DescriptionText = _ctx.Data.DescriptionText,
+                ButtonText = _ctx.Data.ButtonText,
                 OnComplete = () => _token.TrySetResult(),
             });
         }
