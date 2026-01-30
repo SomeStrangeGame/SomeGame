@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Reflection;
 using System.Text;
 using UnityEditor;
 using UnityEngine;
@@ -7,9 +9,35 @@ namespace Editor
 {
     public class CreateAssetBundles
     {
+        private class BuildBundleLog : IDisposable
+        {
+            private readonly string _bundleName;
+
+            public BuildBundleLog(string bundleName)
+            {
+                _bundleName = bundleName;
+                Debug.Log($"Start {_bundleName} building");
+            }
+
+            public void Dispose()
+            {
+                Debug.Log($"Done {_bundleName} building");
+            }
+        }
+
+        private static void ClearConsole()
+        {
+            var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
+            var type = assembly.GetType("UnityEditor.LogEntries");
+            var method = type.GetMethod("Clear");
+            method.Invoke(new object(), null);
+        }
+
         [MenuItem("Assets/Build AssetBundles")]
         private static void BuildAllAssetBundles()
         {
+            ClearConsole();
+
             var remotePath = $"{Application.streamingAssetsPath}/Remote";
             if (Directory.Exists(remotePath))
                 Directory.Delete(remotePath, true);
@@ -17,9 +45,16 @@ namespace Editor
             if (!Directory.Exists(remotePath))
                 Directory.CreateDirectory(remotePath);
 
-            BuildBundles(BuildTarget.WebGL, $"{remotePath}/WebGL");
-            BuildBundles(BuildTarget.StandaloneOSX, $"{remotePath}/Mac");
-            BuildBundles(BuildTarget.StandaloneWindows64, $"{remotePath}/Win");
+            var bundlePath = $"{remotePath}/WebGL";
+            using (new BuildBundleLog(bundlePath))
+                BuildBundles(BuildTarget.WebGL, bundlePath);
+            bundlePath = $"{remotePath}/Mac";
+            using (new BuildBundleLog(bundlePath))
+                BuildBundles(BuildTarget.StandaloneOSX, bundlePath);
+            bundlePath = $"{remotePath}/Win";
+            using (new BuildBundleLog(bundlePath))
+                BuildBundles(BuildTarget.StandaloneWindows64, bundlePath);
+            Debug.Log("All bundles building done!");
 
             void BuildBundles(BuildTarget buildTarget, string targetFolderPath)
             {
