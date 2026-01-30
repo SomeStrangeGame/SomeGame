@@ -22,7 +22,7 @@ namespace Editor
             BuildPlayerWithProfileOptions options = new BuildPlayerWithProfileOptions()
             {
                 buildProfile = buildProfile,
-                locationPathName = "../BuildGzipCompression",
+                locationPathName = "../GzipBuild",
                 options = BuildOptions.None,
             };
 
@@ -47,7 +47,7 @@ namespace Editor
             BuildPlayerWithProfileOptions options = new BuildPlayerWithProfileOptions()
             {
                 buildProfile = buildProfile,
-                locationPathName = "../BuildBrotliCompression",
+                locationPathName = "../BrotliBuild",
                 options = BuildOptions.None,
             };
 
@@ -65,14 +65,14 @@ namespace Editor
             }
         }
 
-        [MenuItem("Build/Build NoCompression And Run")]
+        [MenuItem("Build/Build DevBuild And Run")]
         public static void BuildNoCompressionAndRun()
         {
             BuildProfile buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>("Assets/Settings/Build Profiles/NoCompression.asset");
             BuildPlayerWithProfileOptions options = new BuildPlayerWithProfileOptions()
             {
                 buildProfile = buildProfile,
-                locationPathName = "../BuildNoCompression",
+                locationPathName = "../DevBuild",
                 options = BuildOptions.AutoRunPlayer,
             };
 
