@@ -65,13 +65,12 @@ namespace Game
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
             using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
-            {
                 await _loading.Init();
-            }
 
             await _loading.Show();
 
-            _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
+            using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
             ChapterProcess(0).Forget();
         }
 
@@ -96,9 +95,7 @@ namespace Game
             using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
                 using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
-                {
                     await chapter.Init();
-                }
                 var preloading = new List<UniTask>();
                 if (screensPreloadData != null)
                 {
@@ -110,9 +107,7 @@ namespace Game
                             GetAssets = _bundles.GetAssetBundle,
                         };
                         using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
-                        {
                             preloading.Add(preload.Process());
-                        }
                     }
                 }
                 if (battlesPreloadData != null)
@@ -125,18 +120,14 @@ namespace Game
                             GetAssets = _bundles.GetAssetBundle,
                         };
                         using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
-                        {
                             preloading.Add(preload.Process());
-                        }
                     }
                 }
                 await _loading.Hide();
                 await chapter.WaitResult(); 
                 await _loading.Show();
                 using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
-                {
                     await UniTask.WhenAll(preloading);
-                }
             }
         }
 
@@ -158,12 +149,10 @@ namespace Game
                 Data = data,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
             };
-            using (var chapter = new Battle.Entity(ctx).AddTo(this))
+            using (var battle = new Battle.Entity(ctx).AddTo(this))
             {
                 using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
-                {
-                    await chapter.Init();
-                }
+                    await battle.Init();
                 var preloading = new List<UniTask>();
                 if (screensPreloadData != null)
                 {
@@ -175,9 +164,7 @@ namespace Game
                             GetAssets = _bundles.GetAssetBundle,
                         };
                         using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
-                        {
                             preloading.Add(preload.Process());
-                        }
                     }
                 }
                 if (battlesPreloadData != null)
@@ -190,20 +177,16 @@ namespace Game
                             GetAssets = _bundles.GetAssetBundle,
                         };
                         using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
-                        {
                             preloading.Add(preload.Process());
-                        }
                     }
                 }
                 await _loading.Hide();
-                result = await chapter.WaitBattleResult();
+                result = await battle.WaitBattleResult();
                 await UniTask.Delay(3000);
                 await _loading.Show();
                 using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
-                {
                     await UniTask.WhenAll(preloading);
-                }
-                chapter.ReleaseBattle();
+                battle.ReleaseBattle();
             }
             return result;
         }

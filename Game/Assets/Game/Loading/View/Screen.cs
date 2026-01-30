@@ -12,7 +12,7 @@ namespace Game.Loading.View
 
         private void Update()
         {
-            _marker.rotation *= Quaternion.Euler(Vector3.back * _markerSpeed * Time.deltaTime);
+            _marker.rotation *= Quaternion.Euler(Vector3.up * _markerSpeed * Time.deltaTime);
         }
 
         internal void ShowImmediate()

@@ -91,7 +91,6 @@ namespace Game.Character
             }
             else
             {
-                return false;
                 if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
                 if (_ctx.PlayerCharacterEntity.IsHitting) return false;
 
