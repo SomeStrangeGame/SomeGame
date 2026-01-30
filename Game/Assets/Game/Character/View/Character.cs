@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -23,10 +25,14 @@ namespace Game.Character.View
             internal Action OnHit;
         }
 
-        [SerializeField]
-        private HandPositionHandler _handPosition;
-        [SerializeField]
-        private GameObject _weaponView;
+        private static readonly HashSet<string> _animationClipEvents = new();
+
+        [SerializeField] private HandPositionHandler _handPosition;
+        [SerializeField] private GameObject _weaponView;
+
+        [SerializeField] private AnimationClip _attack_0;
+        [SerializeField] private AnimationClip _attack_1;
+        [SerializeField] private AnimationClip _attack_2;
 
         private const float _inputSense = 15f;
         private const float _inputMaxValue = 1f;
@@ -119,6 +125,23 @@ namespace Game.Character.View
             _horHash = Animator.StringToHash(_horParam);
             _isRotHash = Animator.StringToHash(_isRotParam);
             _rotHash = Animator.StringToHash(_rotParam);
+
+            SetAnimEvent(_attack_0, 0.3f, "HitEvent");
+            SetAnimEvent(_attack_1, 0.3f, "HitEvent");
+            SetAnimEvent(_attack_2, 0.3f, "HitEvent");
+
+            void SetAnimEvent(AnimationClip clip, float eventTime, string eventFunc)
+            {
+                if (_animationClipEvents.Contains(clip.name)) return;
+
+                Debug.Log(clip.name);
+                _animationClipEvents.Add(clip.name);
+                clip.AddEvent(new AnimationEvent
+                {
+                    time = eventTime,
+                    functionName = eventFunc,
+                });
+            }
 
             _anim = GetComponent<Animator>();
             _anim.SetFloat(_moveSpeedHash, _ctx.Speed);
@@ -219,7 +242,7 @@ namespace Game.Character.View
         //invoke via animator
         private void SendEvent()
         {
-            _ctx.OnHit.Invoke();
+            
         }
     }
 }

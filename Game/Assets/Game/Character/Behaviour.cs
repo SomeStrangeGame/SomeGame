@@ -29,7 +29,6 @@ namespace Game.Character
         public Behaviour(Ctx ctx)
         {
             var randomSeed = Mathf.RoundToInt(Time.time);
-            Debug.Log(randomSeed);
             _random = new System.Random(randomSeed);
             _ctx = ctx;
         }
@@ -92,6 +91,7 @@ namespace Game.Character
             }
             else
             {
+                return false;
                 if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
                 if (_ctx.PlayerCharacterEntity.IsHitting) return false;
 
