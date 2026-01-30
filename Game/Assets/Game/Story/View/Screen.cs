@@ -42,7 +42,7 @@ namespace Game.Story.View
                 return;
             }
 
-            if (SimpleInput.GetMouseButton(0)) return;
+            if (SimpleInput.EntryPoint.GetMouseButton(0)) return;
             
             _scroll.content.position += _autoScrollSpeed * Time.deltaTime * Vector3.up;
         }

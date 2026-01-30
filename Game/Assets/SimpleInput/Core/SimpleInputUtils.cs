@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	public static class SimpleInputUtils
 	{

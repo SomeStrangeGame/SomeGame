@@ -39,8 +39,8 @@ namespace Game.Character
 
             if (isPlayer)
             {
-                targetPos += Vector3.right * SimpleInput.GetAxis("Horizontal");
-                targetPos += Vector3.forward * SimpleInput.GetAxis("Vertical");
+                targetPos += Vector3.right * SimpleInput.EntryPoint.GetAxis("Horizontal");
+                targetPos += Vector3.forward * SimpleInput.EntryPoint.GetAxis("Vertical");
             }
             else
             {
@@ -87,7 +87,7 @@ namespace Game.Character
 
             if (isPlayer)
             {
-                return SimpleInput.GetKeyUp(KeyCode.Space);
+                return SimpleInput.EntryPoint.GetKeyUp(KeyCode.Space);
             }
             else
             {
@@ -111,7 +111,7 @@ namespace Game.Character
 
             if (isPlayer)
             {
-                return SimpleInput.GetKeyUp(KeyCode.E);
+                return SimpleInput.EntryPoint.GetKeyUp(KeyCode.E);
             }
             else
             {

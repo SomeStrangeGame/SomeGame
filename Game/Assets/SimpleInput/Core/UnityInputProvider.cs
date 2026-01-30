@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	public class UnityInputProvider : MonoBehaviour
 	{
@@ -19,23 +19,23 @@ namespace SimpleInputNamespace
 		private KeyCode[] keys;
 #pragma warning restore 0649
 
-		private SimpleInput.AxisInput[] axisInputs;
-		private SimpleInput.ButtonInput[] buttonInputs;
-		private SimpleInput.MouseButtonInput[] mouseButtonInputs;
-		private SimpleInput.KeyInput[] keyInputs;
+		private SimpleInput.EntryPoint.AxisInput[] axisInputs;
+		private SimpleInput.EntryPoint.ButtonInput[] buttonInputs;
+		private SimpleInput.EntryPoint.MouseButtonInput[] mouseButtonInputs;
+		private SimpleInput.EntryPoint.KeyInput[] keyInputs;
 
 		private void Awake()
 		{
 			if( axes.Length > 0 )
 			{
-				axisInputs = new SimpleInput.AxisInput[axes.Length];
+				axisInputs = new SimpleInput.EntryPoint.AxisInput[axes.Length];
 
 				int index = 0;
 				for( int i = 0; i < axisInputs.Length; i++ )
 				{
 					try
 					{
-						SimpleInput.AxisInput unityAxis = new SimpleInput.AxisInput( axes[i] ) { value = Input.GetAxisRaw( axes[i] ) };
+						SimpleInput.EntryPoint.AxisInput unityAxis = new SimpleInput.EntryPoint.AxisInput( axes[i] ) { value = Input.GetAxisRaw( axes[i] ) };
 						axisInputs[index++] = unityAxis;
 					}
 					catch { }
@@ -47,14 +47,14 @@ namespace SimpleInputNamespace
 
 			if( buttons.Length > 0 )
 			{
-				buttonInputs = new SimpleInput.ButtonInput[buttons.Length];
+				buttonInputs = new SimpleInput.EntryPoint.ButtonInput[buttons.Length];
 
 				int index = 0;
 				for( int i = 0; i < buttonInputs.Length; i++ )
 				{
 					try
 					{
-						SimpleInput.ButtonInput unityButton = new SimpleInput.ButtonInput( buttons[i] ) { value = Input.GetButton( buttons[i] ) };
+						SimpleInput.EntryPoint.ButtonInput unityButton = new SimpleInput.EntryPoint.ButtonInput( buttons[i] ) { value = Input.GetButton( buttons[i] ) };
 						buttonInputs[index++] = unityButton;
 					}
 					catch { }
@@ -66,14 +66,14 @@ namespace SimpleInputNamespace
 
 			if( mouseButtons.Length > 0 )
 			{
-				mouseButtonInputs = new SimpleInput.MouseButtonInput[mouseButtons.Length];
+				mouseButtonInputs = new SimpleInput.EntryPoint.MouseButtonInput[mouseButtons.Length];
 
 				int index = 0;
 				for( int i = 0; i < mouseButtonInputs.Length; i++ )
 				{
 					try
 					{
-						SimpleInput.MouseButtonInput unityMouseButton = new SimpleInput.MouseButtonInput( mouseButtons[i] ) { value = Input.GetMouseButton( mouseButtons[i] ) };
+						SimpleInput.EntryPoint.MouseButtonInput unityMouseButton = new SimpleInput.EntryPoint.MouseButtonInput( mouseButtons[i] ) { value = Input.GetMouseButton( mouseButtons[i] ) };
 						mouseButtonInputs[index++] = unityMouseButton;
 					}
 					catch { }
@@ -85,10 +85,10 @@ namespace SimpleInputNamespace
 
 			if( keys.Length > 0 )
 			{
-				keyInputs = new SimpleInput.KeyInput[keys.Length];
+				keyInputs = new SimpleInput.EntryPoint.KeyInput[keys.Length];
 				for( int i = 0; i < keyInputs.Length; i++ )
 				{
-					SimpleInput.KeyInput unityKey = new SimpleInput.KeyInput( keys[i] ) { value = Input.GetKey( keys[i] ) };
+					SimpleInput.EntryPoint.KeyInput unityKey = new SimpleInput.EntryPoint.KeyInput( keys[i] ) { value = Input.GetKey( keys[i] ) };
 					keyInputs[i] = unityKey;
 				}
 			}
@@ -120,7 +120,7 @@ namespace SimpleInputNamespace
 					keyInputs[i].StartTracking();
 			}
 
-			SimpleInput.OnUpdate += OnUpdate;
+			SimpleInput.EntryPoint.OnUpdate += OnUpdate;
 		}
 
 		private void OnDisable()
@@ -149,7 +149,7 @@ namespace SimpleInputNamespace
 					keyInputs[i].StopTracking();
 			}
 
-			SimpleInput.OnUpdate -= OnUpdate;
+			SimpleInput.EntryPoint.OnUpdate -= OnUpdate;
 		}
 
 		private void OnUpdate()

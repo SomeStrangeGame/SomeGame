@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	public abstract class SelectivePointerInput : MonoBehaviour
 	{

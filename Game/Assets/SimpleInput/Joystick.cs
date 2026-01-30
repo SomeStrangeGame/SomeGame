@@ -2,14 +2,14 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	public class Joystick : MonoBehaviour, ISimpleInputDraggable
 	{
 		public enum MovementAxes { XandY, X, Y };
 
-		public SimpleInput.AxisInput xAxis = new SimpleInput.AxisInput( "Horizontal" );
-		public SimpleInput.AxisInput yAxis = new SimpleInput.AxisInput( "Vertical" );
+		public EntryPoint.AxisInput xAxis = new EntryPoint.AxisInput( "Horizontal" );
+		public EntryPoint.AxisInput yAxis = new EntryPoint.AxisInput( "Vertical" );
 
 		private RectTransform joystickTR;
 		private Graphic background;
@@ -117,7 +117,7 @@ namespace SimpleInputNamespace
 			xAxis.StartTracking();
 			yAxis.StartTracking();
 
-			SimpleInput.OnUpdate += OnUpdate;
+			EntryPoint.OnUpdate += OnUpdate;
 		}
 
 		private void OnDisable()
@@ -127,7 +127,7 @@ namespace SimpleInputNamespace
 			xAxis.StopTracking();
 			yAxis.StopTracking();
 
-			SimpleInput.OnUpdate -= OnUpdate;
+			EntryPoint.OnUpdate -= OnUpdate;
 		}
 
 #if UNITY_EDITOR

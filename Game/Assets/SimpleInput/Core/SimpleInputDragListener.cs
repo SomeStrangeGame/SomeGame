@@ -2,7 +2,7 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	public class SimpleInputDragListener : MonoBehaviour, IPointerDownHandler, IDragHandler, IPointerUpHandler
 	{

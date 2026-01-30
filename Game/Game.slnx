@@ -1,5 +1,5 @@
 ﻿<Solution>
-  <Project Path="SimpleInput.Runtime.csproj" />
+  <Project Path="SimpleInput.csproj" />
   <Project Path="Game.Loading.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Game.Cache.csproj" />

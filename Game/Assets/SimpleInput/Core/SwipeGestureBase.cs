@@ -2,7 +2,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	[RequireComponent( typeof( SimpleInputMultiDragListener ) )]
 	public abstract class SwipeGestureBase<K, V> : SelectivePointerInput, ISimpleInputDraggableMultiTouch

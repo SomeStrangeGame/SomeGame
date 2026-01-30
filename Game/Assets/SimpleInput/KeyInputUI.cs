@@ -2,11 +2,11 @@
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	public class KeyInputUI : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 	{
-		public SimpleInput.KeyInput key = new SimpleInput.KeyInput();
+		public EntryPoint.KeyInput key = new EntryPoint.KeyInput();
 
 		private void Awake()
 		{

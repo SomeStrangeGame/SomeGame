@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	public interface IBaseInput
 	{

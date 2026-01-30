@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-namespace SimpleInputNamespace
+namespace SimpleInput
 {
 	[DisallowMultipleComponent]
 	[RequireComponent( typeof( RectTransform ) )]
@@ -31,12 +31,12 @@ namespace SimpleInputNamespace
 
 		private void OnEnable()
 		{
-			SimpleInput.OnUpdate += OnUpdate;
+			SimpleInput.EntryPoint.OnUpdate += OnUpdate;
 		}
 
 		private void OnDisable()
 		{
-			SimpleInput.OnUpdate -= OnUpdate;
+			SimpleInput.EntryPoint.OnUpdate -= OnUpdate;
 		}
 
 		public void AddListener( ISimpleInputDraggableMultiTouch listener )
