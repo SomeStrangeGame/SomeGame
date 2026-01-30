@@ -8,7 +8,9 @@ namespace SimpleInput
 	{
 		public ISimpleInputDraggable Listener { get; set; }
 
-		private int pointerId = SimpleInputUtils.NON_EXISTING_TOUCH;
+		public const int NON_EXISTING_TOUCH = -98765;
+
+		private int pointerId = NON_EXISTING_TOUCH;
 
 		private void Awake()
 		{
@@ -39,12 +41,12 @@ namespace SimpleInput
 				return;
 
 			Listener.OnPointerUp( eventData );
-			pointerId = SimpleInputUtils.NON_EXISTING_TOUCH;
+			pointerId = NON_EXISTING_TOUCH;
 		}
 
 		public void Stop()
 		{
-			pointerId = SimpleInputUtils.NON_EXISTING_TOUCH;
+			pointerId = NON_EXISTING_TOUCH;
 		}
 	}
 }
