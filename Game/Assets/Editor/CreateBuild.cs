@@ -1,21 +1,82 @@
 using UnityEditor;
 using UnityEngine;
 using UnityEditor.Build.Reporting;
+using UnityEditor.Build.Profile;
 
 namespace Editor
 {
     public class CreateBuild
     {
-        [MenuItem("Build/Build All")]
-        public static void Build()
+        [MenuItem("Build/Build All And Run")]
+        public static void BuildAll()
         {
-            BuildPlayerOptions buildPlayerOptions = new BuildPlayerOptions();
-            //buildPlayerOptions.scenes = new[] { "Assets/Scene1.unity", "Assets/Scene2.unity" };
-            buildPlayerOptions.locationPathName = "TestBuild";
-            buildPlayerOptions.target = BuildTarget.WebGL;
-            buildPlayerOptions.options = BuildOptions.AutoRunPlayer;
+            BuildGzipCompression();
+            BuildBrotliCompression();
+            BuildNoCompressionAndRun();
+        }
 
-            BuildReport report = BuildPipeline.BuildPlayer(buildPlayerOptions);
+        [MenuItem("Build/Build GzipCompression")]
+        public static void BuildGzipCompression()
+        {
+            BuildProfile buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>("Assets/Settings/Build Profiles/GzipCompression.asset");
+            BuildPlayerWithProfileOptions options = new BuildPlayerWithProfileOptions()
+            {
+                buildProfile = buildProfile,
+                locationPathName = "../BuildGzipCompression",
+                options = BuildOptions.None,
+            };
+
+            BuildReport report = BuildPipeline.BuildPlayer(options);
+            BuildSummary summary = report.summary;
+
+            if (summary.result == BuildResult.Succeeded)
+            {
+                Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
+            }
+
+            if (summary.result == BuildResult.Failed)
+            {
+                Debug.Log("Build failed");
+            }
+        }
+
+        [MenuItem("Build/Build BrotliCompression")]
+        public static void BuildBrotliCompression()
+        {
+            BuildProfile buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>("Assets/Settings/Build Profiles/BrotliCompression.asset");
+            BuildPlayerWithProfileOptions options = new BuildPlayerWithProfileOptions()
+            {
+                buildProfile = buildProfile,
+                locationPathName = "../BuildBrotliCompression",
+                options = BuildOptions.None,
+            };
+
+            BuildReport report = BuildPipeline.BuildPlayer(options);
+            BuildSummary summary = report.summary;
+
+            if (summary.result == BuildResult.Succeeded)
+            {
+                Debug.Log("Build succeeded: " + summary.totalSize + " bytes");
+            }
+
+            if (summary.result == BuildResult.Failed)
+            {
+                Debug.Log("Build failed");
+            }
+        }
+
+        [MenuItem("Build/Build NoCompression And Run")]
+        public static void BuildNoCompressionAndRun()
+        {
+            BuildProfile buildProfile = AssetDatabase.LoadAssetAtPath<BuildProfile>("Assets/Settings/Build Profiles/NoCompression.asset");
+            BuildPlayerWithProfileOptions options = new BuildPlayerWithProfileOptions()
+            {
+                buildProfile = buildProfile,
+                locationPathName = "../BuildNoCompression",
+                options = BuildOptions.AutoRunPlayer,
+            };
+
+            BuildReport report = BuildPipeline.BuildPlayer(options);
             BuildSummary summary = report.summary;
 
             if (summary.result == BuildResult.Succeeded)
