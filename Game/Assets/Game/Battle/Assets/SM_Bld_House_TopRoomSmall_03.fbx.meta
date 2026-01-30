@@ -63,7 +63,7 @@ ModelImporter:
     importLights: 0
     nodeNameCollisionStrategy: 0
     fileIdsGeneration: 1
-    swapUVChannels: 0
+    swapUVChannels: 1
     generateSecondaryUV: 0
     useFileUnits: 1
     keepQuads: 0
@@ -88,8 +88,8 @@ ModelImporter:
   tangentSpace:
     normalSmoothAngle: 5
     normalImportMode: 1
-    tangentImportMode: 1
-    normalCalculationMode: 0
+    tangentImportMode: 2
+    normalCalculationMode: 1
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 1
     blendShapeNormalImportMode: 1
     normalSmoothingSource: 0
