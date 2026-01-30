@@ -1,0 +1,41 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 3453065390
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 289bb15f7cbf03e2c4811fa62fa5252b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 04c57d1ea0581f51b94138588c039abb
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 56ce5e669bc9beb0e8fb1c2d27e83a41
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2646c1766fab34b96a9b14329b21bcf7, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/Game/Battle/RemoteAssets/BattleScene1.prefab
+Dependencies: []
