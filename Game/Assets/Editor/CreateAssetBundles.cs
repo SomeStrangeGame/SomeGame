@@ -33,7 +33,7 @@ namespace Editor
             method.Invoke(new object(), null);
         }
 
-        [MenuItem("Assets/Build AssetBundles")]
+        [MenuItem("Build/All Bundles")]
         private static void BuildAllAssetBundles()
         {
             ClearConsole();
