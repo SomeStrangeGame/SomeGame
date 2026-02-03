@@ -60,7 +60,7 @@ namespace Game
             var loadingCtx = new Loading.Entity.Ctx
             {
                 Data = _ctx.Data.LoadingData,
-                GetBundledPrefab = data => _bundles.GetBundledPrefab(data.bundleName, data.prefabName),
+                GetBundledPrefab = _bundles.GetBundledPrefab,
             };
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
@@ -70,7 +70,7 @@ namespace Game
             await _loading.Show();
 
             using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
-                _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
+                _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData);
             ChapterProcess(0).Forget();
         }
 

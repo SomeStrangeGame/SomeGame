@@ -9,7 +9,7 @@ namespace Game.Camera
     {
         public struct Ctx
         {
-            public BattleData.CameraData Data;
+            public CameraData Data;
 
             public Func<Vector3> GetCameraTargetPosition;
         }

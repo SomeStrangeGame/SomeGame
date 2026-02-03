@@ -13,11 +13,11 @@ MonoBehaviour:
   m_Name: Chapter_1_intro_2
   m_EditorClassIdentifier: 
   _menuBundle:
-    _bundleName: chapter_onlyscreen_menu
-    _assetName: Menu.prefab
+    _bundleName: chapter_story_screen
+    _assetName: Screen.prefab
   _backgroundBundle:
     _bundleName: chapter_onlyscreen_chapter_0
-    _assetName: Chapter_0
+    _assetName: Chapter_1_Intro
   _buttonText: "<b>\u0412 \u043F\u0443\u0442\u044C...</b>"
   _descriptionText: "\u041D\u043E \u044F \u0438\u0434\u0443.\n\n\u041F\u043E\u0442\u043E\u043C\u0443
     \u0447\u0442\u043E \u0435\u0441\u043B\u0438 \u044F \u043E\u0441\u0442\u0430\u043D\u043E\u0432\u043B\u044E\u0441\u044C

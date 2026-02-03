@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
+using Game.SOData;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -30,32 +31,32 @@ namespace Game.Bundles
             _bundles.Clear();
         }
 
-        public async UniTask<Sprite> GetBundledSprite(string bundleName, string spriteName)
+        public async UniTask<Sprite> GetBundledSprite(BundleData bundleData)
         {
-            var assetBundle = await GetAssetBundle(bundleName);
+            var assetBundle = await GetAssetBundle(bundleData.BundleName);
             if (assetBundle == null) return null;
 
-            var loadAsset = assetBundle.LoadAssetAsync<Sprite>(spriteName);
+            var loadAsset = assetBundle.LoadAssetAsync<Sprite>(bundleData.AssetName);
             await loadAsset;
             return loadAsset.asset as Sprite;
         }
 
-        public async UniTask<T> GetBundledSO<T>(string bundleName, string prefabName) where T : ScriptableObject
+        public async UniTask<T> GetBundledSO<T>(BundleData bundleData) where T : ScriptableObject
         {
-            var assetBundle = await GetAssetBundle(bundleName);
+            var assetBundle = await GetAssetBundle(bundleData.BundleName);
             if (assetBundle == null) return null;
 
-            var loadAsset = assetBundle.LoadAssetAsync<T>(prefabName);
+            var loadAsset = assetBundle.LoadAssetAsync<T>(bundleData.AssetName);
             await loadAsset;
             return loadAsset.asset as T;
         }
 
-        public async UniTask<GameObject> GetBundledPrefab(string bundleName, string prefabName)
+        public async UniTask<GameObject> GetBundledPrefab(BundleData bundleData)
         {
-            var assetBundle = await GetAssetBundle(bundleName);
+            var assetBundle = await GetAssetBundle(bundleData.BundleName);
             if (assetBundle == null) return null;
 
-            var loadAsset = assetBundle.LoadAssetAsync<GameObject>(prefabName);
+            var loadAsset = assetBundle.LoadAssetAsync<GameObject>(bundleData.AssetName);
             await loadAsset;
             return loadAsset.asset as GameObject;
         }

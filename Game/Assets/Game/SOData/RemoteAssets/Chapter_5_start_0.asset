@@ -13,8 +13,8 @@ MonoBehaviour:
   m_Name: Chapter_5_start_0
   m_EditorClassIdentifier: 
   _menuBundle:
-    _bundleName: chapter_onlyscreen_menu
-    _assetName: Menu.prefab
+    _bundleName: chapter_story_screen
+    _assetName: Screen.prefab
   _backgroundBundle:
     _bundleName: chapter_onlyscreen_chapter_5
     _assetName: Chapter_5

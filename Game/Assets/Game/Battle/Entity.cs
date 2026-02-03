@@ -12,7 +12,7 @@ namespace Game.Battle
         public struct Ctx
         {
             public BattleData Data;
-            public Func<string, string, UniTask<GameObject>> GetBundledPrefab;
+            public Func<BundleData, UniTask<GameObject>> GetBundledPrefab;
         }
 
         public sealed class Preload : BaseDisposable
@@ -34,11 +34,13 @@ namespace Game.Battle
             {
                 var battleScreenPrefabLoading = _ctx.GetAssets(_ctx.Data.ScreenBundle.BundleName);
                 var battleScenePrefabLoading = _ctx.GetAssets(_ctx.Data.SceneBundle.BundleName);
+                var characterScreenPrefabLoading = _ctx.GetAssets(_ctx.Data.CharacterScreenBundle.BundleName);
                 var characterPrefabLoading = _ctx.GetAssets(_ctx.Data.CharacterBundle.BundleName);
             
                 await UniTask.WhenAll(
                     battleScreenPrefabLoading,
                     battleScenePrefabLoading,
+                    characterScreenPrefabLoading,
                     characterPrefabLoading
                 );
             }
@@ -48,6 +50,7 @@ namespace Game.Battle
         private readonly Ctx _ctx;
 
         private View.Scene _battleScene;
+        private GameObject _battleScreenGO;
         private Character.View.Screen _characterInputScreen;
         private GameObject _playerCharacterGO;
         private readonly List<GameObject> _enemyCharactersGO;
@@ -65,21 +68,25 @@ namespace Game.Battle
 
         public async UniTask Init()
         {
-            var battleScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.ScreenBundle.BundleName, _ctx.Data.ScreenBundle.AssetName);
-            var battleScenePrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.SceneBundle.BundleName, _ctx.Data.SceneBundle.AssetName);
-            var characterPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterBundle.BundleName, _ctx.Data.CharacterBundle.BundleName);
-            
-            var (battleScreenPrefab, battleScenePrefab, characterPrefab) = await UniTask.WhenAll(
-                battleScreenPrefabLoading,
+            var characterInputScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterScreenBundle);
+            var battleScenePrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.SceneBundle);
+            var characterPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterBundle);
+            var battleSceneScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.ScreenBundle);
+
+            var (characterInputScreenPrefab, battleScenePrefab, characterPrefab, battleSceneScreenPrefab) = await UniTask.WhenAll(
+                characterInputScreenPrefabLoading,
                 battleScenePrefabLoading,
-                characterPrefabLoading
+                characterPrefabLoading,
+                battleSceneScreenPrefabLoading
             );
 
-            var characterInputScreenGO = GameObject.Instantiate(battleScreenPrefab);
+            var characterInputScreenGO = GameObject.Instantiate(characterInputScreenPrefab);
             _characterInputScreen = characterInputScreenGO.GetComponent<Character.View.Screen>();
 
             var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
             _battleScene = battleSceneGO.GetComponent<View.Scene>();
+
+            _battleScreenGO = GameObject.Instantiate(battleSceneScreenPrefab);
 
             _playerCharacterGO = GameObject.Instantiate(characterPrefab);
             var characterPoint = _battleScene.PlayerCharacterPoint.transform;
@@ -149,12 +156,13 @@ namespace Game.Battle
 
         public void ReleaseBattle()
         {
-            if (_characterInputScreen != null) _characterInputScreen.Release();
+            if (_battleScreenGO != null) GameObject.Destroy(_battleScreenGO);
             if (_battleScene != null) _battleScene.Release();
         }
 
         public void ReleaseCharacters()
         {
+            if (_characterInputScreen != null) _characterInputScreen.Release();
             GameObject.Destroy(_playerCharacterGO);
             foreach(var character in _enemyCharactersGO)
                 GameObject.Destroy(character);

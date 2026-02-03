@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 3451727782
+CRC: 2927558781
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6e8fb41edb324fd744859cfe4c74b8d6
+    Hash: 48dd26a86ac9653db50be3224233392f
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 67992dc1f450826f2c8a0fe899a64895
+    Hash: 8ca46e7954651bf2e57b3d6e357c9cc9
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8f3ba72956ad43cdd4d2ac4c866749b7
+    Hash: 35368bdd98ed0d16b12c2c91f4d4c2a8
 HashAppended: 0
 ClassTypes:
 - Class: 114
@@ -21,11 +21,11 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 702e6969e1f3546f18836e3773f09e55, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: a87c09dc5e9414e3b8344510b3ed8927, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c370cc7c6c1be4ea2a4588a7db8bbad2, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
-- AssemblyName: Game.Data
-  ClassName: Game.SOData.BattleData/CameraData
 - AssemblyName: Game.Data
   ClassName: Game.SOData.BundleData
 Assets:
