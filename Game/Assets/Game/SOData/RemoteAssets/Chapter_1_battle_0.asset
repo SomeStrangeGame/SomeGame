@@ -19,8 +19,8 @@ MonoBehaviour:
     _bundleName: chapter_screenandbattle_scene_1
     _assetName: BattleScene1.prefab
   _screenBundle:
-    _bundleName: chapter_screenandbattle_screen
-    _assetName: BattleSceneScreen.prefab
+    _bundleName: meleecharacter_screen
+    _assetName: MeleeCharacterScreen.prefab
   _camera:
     _camMoveOffset: {x: 0, y: 8, z: -5}
     _camMoveSpeed: 15
