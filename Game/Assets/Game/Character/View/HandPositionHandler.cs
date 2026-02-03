@@ -5,7 +5,7 @@ namespace Game.Character.View
 {
     internal sealed class HandPositionHandler : MonoBehaviour
     {
-        public Vector3 Pos => transform.position;
-        public Quaternion Rot => transform.rotation;
+        internal Vector3 Pos => transform.position;
+        internal Quaternion Rot => transform.rotation;
     }
 }

@@ -3,7 +3,7 @@ using UnityEngine.UI;
 
 namespace Game.Battle.View
 {
-    public class FPSCounter : MonoBehaviour
+    internal class FPSCounter : MonoBehaviour
     {
         [SerializeField] [Range(0f, 1f)] private float _expSmoothingFactor = 0.9f;
         [SerializeField] private float _refreshFrequency = 0.4f;
