@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 961164781
+CRC: 1402459223
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d342c4ce9aef84c4ba118808115ab585
+    Hash: 0d8871d9bf7127c043f0139114d30429
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 67992dc1f450826f2c8a0fe899a64895
+    Hash: 2fda0780b2aad50561f54ae7582a233c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 2f7462bcea40f7f63a4489e5c9a382d8
+    Hash: 4dcdaf2c2074a916ad11e576e9efa476
 HashAppended: 0
 ClassTypes:
 - Class: 114
@@ -21,13 +21,17 @@ ClassTypes:
   Script: {fileID: 11500000, guid: 702e6969e1f3546f18836e3773f09e55, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: a87c09dc5e9414e3b8344510b3ed8927, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c370cc7c6c1be4ea2a4588a7db8bbad2, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5bbc583d2e721460ebd7767920e2e68a, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Game.Data
-  ClassName: Game.SOData.BattleData/CameraData
-- AssemblyName: Game.Data
   ClassName: Game.SOData.BundleData
+- AssemblyName: Game.Data
+  ClassName: Game.SOData.ScreenData/ContentData
 Assets:
 - Assets/Game/SOData/RemoteAssets/Chapters.asset
 Dependencies: []
