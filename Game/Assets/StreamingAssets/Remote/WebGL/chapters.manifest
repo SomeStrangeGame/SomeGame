@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 2927558781
+CRC: 93577316
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 48dd26a86ac9653db50be3224233392f
+    Hash: 55ae5acc4a08269baf46ea7356acc7f0
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 8ca46e7954651bf2e57b3d6e357c9cc9
+    Hash: b7d31d1f40e192f80507835d072f6e71
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 35368bdd98ed0d16b12c2c91f4d4c2a8
+    Hash: eda12b86a586b3cfe9dfa07b25d44174
 HashAppended: 0
 ClassTypes:
 - Class: 114
@@ -28,6 +28,8 @@ ClassTypes:
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Game.Data
   ClassName: Game.SOData.BundleData
+- AssemblyName: Game.Data
+  ClassName: Game.SOData.ScreenData/ContentData
 Assets:
 - Assets/Game/SOData/RemoteAssets/Chapters.asset
 Dependencies: []

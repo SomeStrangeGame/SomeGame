@@ -16,11 +16,11 @@ namespace Game.SOData
             public string DescriptionText => _descriptionText;
         }
 
-        [SerializeField] private BundleData _menuBundle;
+        [SerializeField] private StoryScreenData _screenBundle;
         [SerializeField] private BundleData _backgroundBundle;
         [SerializeField] private ContentData _content;
 
-        public BundleData MenuBundle => _menuBundle;
+        public StoryScreenData ScreenBundle => _screenBundle;
         public BundleData BackgroundBundle => _backgroundBundle;
         public ContentData Content => _content;
     }

@@ -88,7 +88,7 @@ namespace Game
             var ctx = new Story.Entity.Ctx
             {
                 Content = data.Content,
-                GetMenuPrefab = () => _bundles.GetBundledPrefab(data.MenuBundle),
+                GetMenuPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.ScreenBundle),
                 GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle)
             };
             using (var chapter = new Story.Entity(ctx).AddTo(this))
@@ -107,7 +107,7 @@ namespace Game
                                 return new List<UniTask>
                                 {
                                     _bundles.GetAssetBundle(preloadData.BackgroundBundle.BundleName),
-                                    _bundles.GetAssetBundle(preloadData.MenuBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.ScreenBundle.ScreenBundle.BundleName),
                                 };
                             },
                         };
@@ -181,7 +181,7 @@ namespace Game
                                 return new List<UniTask>
                                 {
                                     _bundles.GetAssetBundle(preloadData.BackgroundBundle.BundleName),
-                                    _bundles.GetAssetBundle(preloadData.MenuBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.ScreenBundle.ScreenBundle.BundleName),
                                 };
                             },
                         };
