@@ -11,7 +11,7 @@ namespace Game.Story
     {
         public struct Ctx
         {
-            public ScreenData Data;
+            public ScreenData.ContentData Content;
             public Func<UniTask<GameObject>> GetMenuPrefab;
             public Func<UniTask<Sprite>> GetBackgroundSprite;
         }
@@ -59,8 +59,8 @@ namespace Game.Story
             _screen.Setup(new View.Screen.Ctx
             {
                 BackgroundSprite = screenBackgroundSprite,
-                DescriptionText = _ctx.Data.DescriptionText,
-                ButtonText = _ctx.Data.ButtonText,
+                DescriptionText = _ctx.Content.DescriptionText,
+                ButtonText = _ctx.Content.ButtonText,
                 OnComplete = () => _token.TrySetResult(),
             });
         }

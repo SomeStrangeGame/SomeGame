@@ -87,7 +87,7 @@ namespace Game
         {
             var ctx = new Story.Entity.Ctx
             {
-                Data = data,
+                Content = data.Content,
                 GetMenuPrefab = () => _bundles.GetBundledPrefab(data.MenuBundle),
                 GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle)
             };
