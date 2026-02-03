@@ -65,11 +65,6 @@ namespace Game.Loading.View
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(false);
         }
-
-        internal void Release() 
-        {
-            if (this != null) GameObject.Destroy(gameObject);
-        }
     }
 }
 

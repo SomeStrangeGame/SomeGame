@@ -90,11 +90,6 @@ namespace Game.Battle.View
                 _ctx.OnComplete.Invoke(1);
             }
         }
-
-        internal void Release() 
-        {
-            if (this != null) GameObject.Destroy(gameObject);
-        }
     }
 }
 

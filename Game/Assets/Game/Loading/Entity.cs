@@ -37,7 +37,7 @@ namespace Game.Loading
         protected override void OnDispose()
         {
             base.OnDispose();
-            if (_screen != null) _screen.Release();
+            if (_screen != null) GameObject.Destroy(_screen.gameObject);
         }
     }
 }

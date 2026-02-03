@@ -43,7 +43,7 @@ namespace Game.Battle
 
         private View.Scene _battleScene;
         private GameObject _battleScreenGO;
-        private Character.View.Screen _characterInputScreen;
+        private GameObject _characterInputScreenGO;
         private GameObject _playerCharacterGO;
         private readonly List<GameObject> _enemyCharactersGO;
 
@@ -67,8 +67,7 @@ namespace Game.Battle
                 _ctx.GetBattleScreenPrefab()
             );
 
-            var characterInputScreenGO = GameObject.Instantiate(characterInputScreenPrefab);
-            _characterInputScreen = characterInputScreenGO.GetComponent<Character.View.Screen>();
+            _characterInputScreenGO = GameObject.Instantiate(characterInputScreenPrefab);
 
             var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
             _battleScene = battleSceneGO.GetComponent<View.Scene>();
@@ -144,12 +143,12 @@ namespace Game.Battle
         public void ReleaseBattle()
         {
             if (_battleScreenGO != null) GameObject.Destroy(_battleScreenGO);
-            if (_battleScene != null) _battleScene.Release();
+            if (_battleScene != null) GameObject.Destroy(_battleScene.gameObject);
         }
 
         public void ReleaseCharacters()
         {
-            if (_characterInputScreen != null) _characterInputScreen.Release();
+            if (_characterInputScreenGO != null) GameObject.Destroy(_characterInputScreenGO);
             GameObject.Destroy(_playerCharacterGO);
             foreach(var character in _enemyCharactersGO)
                 GameObject.Destroy(character);

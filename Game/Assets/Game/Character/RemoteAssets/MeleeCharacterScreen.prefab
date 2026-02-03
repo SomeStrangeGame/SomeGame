@@ -316,7 +316,6 @@ GameObject:
   - component: {fileID: 7373237048121503708}
   - component: {fileID: 1446724407787802425}
   - component: {fileID: 8086536132008121040}
-  - component: {fileID: 9117290913806632901}
   m_Layer: 5
   m_Name: MeleeCharacterScreen
   m_TagString: Untagged
@@ -410,18 +409,6 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &9117290913806632901
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5389417796270955557}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f5ba79bd9070648d49b79b8cc736aabf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &7365773083573265206
 GameObject:
   m_ObjectHideFlags: 0
