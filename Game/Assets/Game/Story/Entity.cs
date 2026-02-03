@@ -49,12 +49,9 @@ namespace Game.Story
 
         public async UniTask Init()
         {
-            var screenBackgroundSpriteLoading = _ctx.GetBackgroundSprite();
-            var screenPrefabGOLoading = _ctx.GetMenuPrefab();
-            
             var (screenBackgroundSprite, screenPrefabGO) = await UniTask.WhenAll(
-                screenBackgroundSpriteLoading,
-                screenPrefabGOLoading
+                _ctx.GetBackgroundSprite(),
+                _ctx.GetMenuPrefab()
             );
 
             var screenGO = GameObject.Instantiate(screenPrefabGO);

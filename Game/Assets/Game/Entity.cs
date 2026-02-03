@@ -59,7 +59,7 @@ namespace Game
         {
             var loadingCtx = new Loading.Entity.Ctx
             {
-                GetBundledPrefab = async () => await _bundles.GetBundledPrefab(_ctx.Data.LoadingData),
+                GetBundledPrefab = () => _bundles.GetBundledPrefab(_ctx.Data.LoadingData),
             };
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
@@ -88,8 +88,8 @@ namespace Game
             var ctx = new Story.Entity.Ctx
             {
                 Data = data,
-                GetMenuPrefab = async () => await _bundles.GetBundledPrefab(data.MenuBundle),
-                GetBackgroundSprite = async () => await _bundles.GetBundledSprite(data.BackgroundBundle)
+                GetMenuPrefab = () => _bundles.GetBundledPrefab(data.MenuBundle),
+                GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle)
             };
             using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
@@ -121,8 +121,16 @@ namespace Game
                     {
                         var preloadCtx = new Battle.Entity.Preload.Ctx
                         {
-                            Data = preloadData,
-                            GetAssets = _bundles.GetAssetBundle,
+                            GetAssets = () =>
+                            {
+                                return new List<UniTask>
+                                {
+                                    _bundles.GetAssetBundle(preloadData.ScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.SceneBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.CharacterBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.CharacterScreenBundle.BundleName),
+                                };
+                            },
                         };
                         using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());
@@ -151,8 +159,11 @@ namespace Game
             var result = 0;
             var ctx = new Battle.Entity.Ctx
             {
-                Data = data,
-                GetBundledPrefab = _bundles.GetBundledPrefab,
+                CameraData = data.Camera,
+                GetBattleScenePrefab = () => _bundles.GetBundledPrefab(data.SceneBundle),
+                GetBattleScreenPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle),
+                GetCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.CharacterScreenBundle),
+                GetCharacterPrefab = () => _bundles.GetBundledPrefab(data.CharacterBundle),
             };
             using (var battle = new Battle.Entity(ctx).AddTo(this))
             {
@@ -184,8 +195,16 @@ namespace Game
                     {
                         var preloadCtx = new Battle.Entity.Preload.Ctx
                         {
-                            Data = preloadData,
-                            GetAssets = _bundles.GetAssetBundle,
+                            GetAssets = () =>
+                            {
+                                return new List<UniTask>
+                                {
+                                    _bundles.GetAssetBundle(preloadData.ScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.SceneBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.CharacterBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.CharacterScreenBundle.BundleName),
+                                };
+                            },
                         };
                         using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());

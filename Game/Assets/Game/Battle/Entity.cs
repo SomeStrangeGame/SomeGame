@@ -11,16 +11,18 @@ namespace Game.Battle
     {
         public struct Ctx
         {
-            public BattleData Data;
-            public Func<BundleData, UniTask<GameObject>> GetBundledPrefab;
+            public CameraData CameraData;
+            public Func<UniTask<GameObject>> GetCharacterInputScreenPrefab;
+            public Func<UniTask<GameObject>> GetCharacterPrefab;
+            public Func<UniTask<GameObject>> GetBattleScenePrefab;
+            public Func<UniTask<GameObject>> GetBattleScreenPrefab;
         }
 
         public sealed class Preload : BaseDisposable
         {
             public struct Ctx
             {
-                public BattleData Data;
-                public Func<string, UniTask<AssetBundle>> GetAssets;
+                public Func<List<UniTask>> GetAssets;
             }
 
             private Ctx _ctx;
@@ -32,17 +34,7 @@ namespace Game.Battle
 
             public async UniTask Process()
             {
-                var battleScreenPrefabLoading = _ctx.GetAssets(_ctx.Data.ScreenBundle.BundleName);
-                var battleScenePrefabLoading = _ctx.GetAssets(_ctx.Data.SceneBundle.BundleName);
-                var characterScreenPrefabLoading = _ctx.GetAssets(_ctx.Data.CharacterScreenBundle.BundleName);
-                var characterPrefabLoading = _ctx.GetAssets(_ctx.Data.CharacterBundle.BundleName);
-            
-                await UniTask.WhenAll(
-                    battleScreenPrefabLoading,
-                    battleScenePrefabLoading,
-                    characterScreenPrefabLoading,
-                    characterPrefabLoading
-                );
+                await UniTask.WhenAll(_ctx.GetAssets());
             }
         }
 
@@ -68,16 +60,11 @@ namespace Game.Battle
 
         public async UniTask Init()
         {
-            var characterInputScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterScreenBundle);
-            var battleScenePrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.SceneBundle);
-            var characterPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.CharacterBundle);
-            var battleSceneScreenPrefabLoading = _ctx.GetBundledPrefab(_ctx.Data.ScreenBundle);
-
             var (characterInputScreenPrefab, battleScenePrefab, characterPrefab, battleSceneScreenPrefab) = await UniTask.WhenAll(
-                characterInputScreenPrefabLoading,
-                battleScenePrefabLoading,
-                characterPrefabLoading,
-                battleSceneScreenPrefabLoading
+                _ctx.GetCharacterInputScreenPrefab(),
+                _ctx.GetBattleScenePrefab(),
+                _ctx.GetCharacterPrefab(),
+                _ctx.GetBattleScreenPrefab()
             );
 
             var characterInputScreenGO = GameObject.Instantiate(characterInputScreenPrefab);
@@ -94,7 +81,7 @@ namespace Game.Battle
 
             var camera = new Camera.Entity(new Camera.Entity.Ctx
             {
-                Data = _ctx.Data.Camera,
+                Data = _ctx.CameraData,
                 GetCameraTargetPosition = () => _playerCharacterGO.transform.position,
             }).AddTo(this);
             camera.Init();
