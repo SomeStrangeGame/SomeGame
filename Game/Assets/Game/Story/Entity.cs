@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
 using Game.SOData;
@@ -19,8 +20,7 @@ namespace Game.Story
         {
             public struct Ctx
             {
-                public ScreenData Data;
-                public Func<string, UniTask<AssetBundle>> GetAssets;
+                public Func<List<UniTask>> GetAssets;
             }
 
             private Ctx _ctx;
@@ -32,13 +32,7 @@ namespace Game.Story
 
             public async UniTask Process()
             {
-                var screenBackgroundAssetLoading = _ctx.GetAssets(_ctx.Data.BackgroundBundle.BundleName);
-                var screenMenuAssetLoading = _ctx.GetAssets(_ctx.Data.MenuBundle.BundleName);
-                
-                await UniTask.WhenAll(
-                    screenBackgroundAssetLoading,
-                    screenMenuAssetLoading
-                );
+                await UniTask.WhenAll(_ctx.GetAssets());
             }
         }
 

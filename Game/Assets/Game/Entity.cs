@@ -59,8 +59,7 @@ namespace Game
         {
             var loadingCtx = new Loading.Entity.Ctx
             {
-                Data = _ctx.Data.LoadingData,
-                GetBundledPrefab = _bundles.GetBundledPrefab,
+                GetBundledPrefab = async () => await _bundles.GetBundledPrefab(_ctx.Data.LoadingData),
             };
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
@@ -103,8 +102,14 @@ namespace Game
                     {
                         var preloadCtx = new Story.Entity.Preload.Ctx
                         {
-                            Data = preloadData,
-                            GetAssets = _bundles.GetAssetBundle,
+                            GetAssets = () =>
+                            {
+                                return new List<UniTask>
+                                {
+                                    _bundles.GetAssetBundle(preloadData.BackgroundBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.MenuBundle.BundleName),
+                                };
+                            },
                         };
                         using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());
@@ -160,8 +165,14 @@ namespace Game
                     {
                         var preloadCtx = new Story.Entity.Preload.Ctx
                         {
-                            Data = preloadData,
-                            GetAssets = _bundles.GetAssetBundle,
+                            GetAssets = () =>
+                            {
+                                return new List<UniTask>
+                                {
+                                    _bundles.GetAssetBundle(preloadData.BackgroundBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.MenuBundle.BundleName),
+                                };
+                            },
                         };
                         using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());

@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
-using Game.SOData;
 using System;
 using UnityEngine;
 
@@ -10,8 +9,7 @@ namespace Game.Loading
     {
         public struct Ctx
         {
-            public BundleData Data;
-            public Func<BundleData, UniTask<GameObject>> GetBundledPrefab;
+            public Func<UniTask<GameObject>> GetBundledPrefab;
         }
 
         private View.Screen _screen;
@@ -24,7 +22,7 @@ namespace Game.Loading
 
         public async UniTask Init()
         {
-            var screenPrefabGO = await _ctx.GetBundledPrefab(_ctx.Data);
+            var screenPrefabGO = await _ctx.GetBundledPrefab();
             var screenGO = GameObject.Instantiate(screenPrefabGO);
 
             _screen = screenGO.GetComponent<View.Screen>();
