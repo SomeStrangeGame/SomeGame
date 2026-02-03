@@ -8,20 +8,20 @@ namespace Game.Character.View
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Collider))]
-    internal sealed class Character : MonoBehaviour
+    public sealed class Character : MonoBehaviour
     {
-        internal struct Ctx
+        public struct Ctx
         {
-            internal float Speed;
+            public float Speed;
 
-            internal Func<Vector3> GetTargetPosition;
-            internal Func<Vector3> GetLookAtTargetPosition;
+            public Func<Vector3> GetTargetPosition;
+            public Func<Vector3> GetLookAtTargetPosition;
 
-            internal Func<bool> GetAttackInput;
-            internal Func<bool> GetDodgeInput;
+            public Func<bool> GetAttackInput;
+            public Func<bool> GetDodgeInput;
 
-            internal Action<int> OnDamage;
-            internal Action OnHit;
+            public Action<int> OnDamage;
+            public Action OnHit;
         }
 
         private static readonly HashSet<string> _animationClipEvents = new();
@@ -89,7 +89,7 @@ namespace Game.Character.View
         private const string _rotParam = "Rot";
 
         [ContextMenu("Die")]
-        internal void Die()
+        public void Die()
         {
             _mainCollider.enabled = false;
             _anim.enabled = false;
@@ -101,7 +101,7 @@ namespace Game.Character.View
             }
         }
 
-        internal void Setup(Ctx ctx)
+        public void Setup(Ctx ctx)
         {
             _ctx = ctx;
 
@@ -156,9 +156,9 @@ namespace Game.Character.View
             }
         }
 
-        internal bool IsAttacking() => IsTag(1, "Attack");
-        internal bool IsDodging() => IsTag(3, "Dodging");
-        internal bool IsHitting() => IsTag(2, "Hitting");
+        public bool IsAttacking() => IsTag(1, "Attack");
+        public bool IsDodging() => IsTag(3, "Dodging");
+        public bool IsHitting() => IsTag(2, "Hitting");
         private bool IsTag(int layer, string tag) => _anim.GetNextAnimatorStateInfo(layer).IsTag(tag) || _anim.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
 
         //invoke via engine
@@ -219,7 +219,7 @@ namespace Game.Character.View
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
 
-        internal void Damage(int damage)
+        public void Damage(int damage)
         {
             Hit();
             _ctx.OnDamage.Invoke(damage);

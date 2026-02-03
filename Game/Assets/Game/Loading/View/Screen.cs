@@ -15,13 +15,13 @@ namespace Game.Loading.View
             _marker.rotation *= Quaternion.Euler(Vector3.up * _markerSpeed * Time.deltaTime);
         }
 
-        internal void ShowImmediate()
+        public void ShowImmediate()
         {
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
         }
 
-        internal async UniTask Show()
+        public async UniTask Show()
         {
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
@@ -40,13 +40,13 @@ namespace Game.Loading.View
             _canvasGroup.alpha = 1f;
         }
 
-        internal void HideImmediate()
+        public void HideImmediate()
         {
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        internal async UniTask Hide()
+        public async UniTask Hide()
         {
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);

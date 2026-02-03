@@ -6,14 +6,14 @@ using UnityEngine.AI;
 
 namespace Game.Battle.View
 {
-    internal sealed class Scene : MonoBehaviour
+    public sealed class Scene : MonoBehaviour
     {
-        internal struct Ctx
+        public struct Ctx
         {
-            internal GameObject PlayerCharacterGO;
-            internal List<GameObject> EnemyCharactersGO;
-            internal Action<float> OnUpdate;
-            internal Action<int> OnComplete;
+            public GameObject PlayerCharacterGO;
+            public List<GameObject> EnemyCharactersGO;
+            public Action<float> OnUpdate;
+            public Action<int> OnComplete;
         }
 
         [SerializeField] private LayerMask _navMeshLayers;
@@ -24,15 +24,15 @@ namespace Game.Battle.View
 
         private Ctx _ctx;
 
-        internal GameObject PlayerCharacterPoint => _playerCharacterPoint;
-        internal GameObject[] EnemyCharacterPoints => _enemyCharacterPoints;
+        public GameObject PlayerCharacterPoint => _playerCharacterPoint;
+        public GameObject[] EnemyCharacterPoints => _enemyCharacterPoints;
 
         private Animator _playerAnim;
         private Animator[] _enemyAnims;
 
         private NavMeshDataInstance _navMeshDataInstance;
 
-        internal void Setup(Ctx ctx)
+        public void Setup(Ctx ctx)
         {
             _ctx = ctx;
 

@@ -2,8 +2,9 @@
     "name": "Game.Loading",
     "rootNamespace": "",
     "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:8508402cf4a8c4ac6b337bc0f3c7b95d",
-        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+        "GUID:0b6cda4d9b4ee41bd8fd21462fabfa26"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
