@@ -12,8 +12,8 @@ namespace Game.Story
         public struct Ctx
         {
             public ScreenData Data;
-            public Func<BundleData, UniTask<GameObject>> GetBundledPrefab;
-            public Func<BundleData, UniTask<Sprite>> GetBundledSprite;
+            public Func<UniTask<GameObject>> GetMenuPrefab;
+            public Func<UniTask<Sprite>> GetBackgroundSprite;
         }
 
         public sealed class Preload : BaseDisposable
@@ -49,8 +49,8 @@ namespace Game.Story
 
         public async UniTask Init()
         {
-            var screenBackgroundSpriteLoading = _ctx.GetBundledSprite(_ctx.Data.BackgroundBundle);
-            var screenPrefabGOLoading = _ctx.GetBundledPrefab(_ctx.Data.MenuBundle);
+            var screenBackgroundSpriteLoading = _ctx.GetBackgroundSprite();
+            var screenPrefabGOLoading = _ctx.GetMenuPrefab();
             
             var (screenBackgroundSprite, screenPrefabGO) = await UniTask.WhenAll(
                 screenBackgroundSpriteLoading,

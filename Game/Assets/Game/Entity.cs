@@ -88,8 +88,8 @@ namespace Game
             var ctx = new Story.Entity.Ctx
             {
                 Data = data,
-                GetBundledPrefab = _bundles.GetBundledPrefab,
-                GetBundledSprite = _bundles.GetBundledSprite
+                GetMenuPrefab = async () => await _bundles.GetBundledPrefab(data.MenuBundle),
+                GetBackgroundSprite = async () => await _bundles.GetBundledSprite(data.BackgroundBundle)
             };
             using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
