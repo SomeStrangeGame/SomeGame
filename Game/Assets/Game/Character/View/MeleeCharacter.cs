@@ -13,6 +13,8 @@ namespace Game.Character.View
         [SerializeField] private HandPositionHandler _handPosition;
         [SerializeField] private GameObject _weaponView;
 
+        [SerializeField] private float _attackDistance = 2f;
+
         private readonly string[] _attacksParams = new string[] {"Attack_0", "Attack_1", "Attack_2"};
         private readonly string[] _dodgingParams = new string[] {"Dodging_0"};
         private readonly string[] _hittingParams = new string[] {"Hit"};
@@ -57,10 +59,26 @@ namespace Game.Character.View
             _weaponView.transform.SetPositionAndRotation(_handPosition.Pos, _handPosition.Rot);
         }
 
-        protected override void Damage(int damage)
+        public override void Damage(int damage)
         {
             Anim.SetTrigger(AnimHash(_hittingParams[_random.Next(0, _hittingParams.Length)]));
             base.Damage(damage);
+        }
+
+        protected override void OnHitEvent()
+        {
+            if (IsHitting()) return;
+            if (IsDodging()) return;
+
+            var headTrans = Anim.GetBoneTransform(HumanBodyBones.Head);
+            var ray = new Ray(headTrans.position, headTrans.forward);
+            if (!Physics.Raycast(ray, out var hit, _attackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
+
+            var character = hit.collider.GetComponentInParent<Character>();
+            if (character == null) return;
+            if (character.IsHitting()) return;
+            if (character.IsDodging()) return;
+            character.Damage(1);
         }
     }
 }

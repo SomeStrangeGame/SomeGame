@@ -33,8 +33,6 @@ namespace Game.Character.View
         private const string _isRotParam = "IsRot";
         private const string _rotParam = "Rot";
 
-        [SerializeField] private float _attackDistance = 2f;
-
         private Animator _anim;
         public Animator Anim
         {
@@ -163,7 +161,7 @@ namespace Game.Character.View
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
 
-        protected virtual void Damage(int damage)
+        public virtual void Damage(int damage)
         {
             _ctx.OnDamage.Invoke(damage);
         }
@@ -171,19 +169,14 @@ namespace Game.Character.View
         //attack invoke via animator
         private void HitEvent() 
         {
-            if (IsHitting()) return;
-            if (IsDodging()) return;
-
-            var headTrans = Anim.GetBoneTransform(HumanBodyBones.Head);
-            var ray = new Ray(headTrans.position, headTrans.forward);
-            if (!Physics.Raycast(ray, out var hit, _attackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
-
-            var character = hit.collider.GetComponentInParent<Character>();
-            if (character == null) return;
-            if (character.IsHitting()) return;
-            if (character.IsDodging()) return;
-            character.Damage(1);
+            OnHitEvent();
+        }
+        private void RecoilEvent()
+        {
+            OnHitEvent();
         }
         private void SendEvent() { }
+
+        protected abstract void OnHitEvent();
     }
 }

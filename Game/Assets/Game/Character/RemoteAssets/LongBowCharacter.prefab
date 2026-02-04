@@ -148,7 +148,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c4eb09a9d2e02439b91937ddfba29f1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _attackDistance: 0.25
+  _recoilAnim: {fileID: 7400000, guid: fce371e64f0624d54bad1119c594c026, type: 2}
 --- !u!1 &235477466154035413
 GameObject:
   m_ObjectHideFlags: 0
