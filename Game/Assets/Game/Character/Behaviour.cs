@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Game.Disposable;
 using UnityEngine;
@@ -22,7 +23,11 @@ namespace Game.Character
         private const float _enemyDodgeDotTrigger = 0.1f;
         private const float _enemyDodgeDistance = 2.1f;
 
-        private System.Random _random;
+        private const float _lookAtSpeed = 5f;
+
+        private readonly Dictionary<int, Vector3> _lookAtPoint = new();
+
+        private readonly System.Random _random;
 
         private Ctx _ctx;
 
@@ -52,22 +57,38 @@ namespace Game.Character
             return targetPos;
         }
 
-        public Vector3 GetLookAtTargetPosition(Entity characterEntity, bool isPlayer)
+        public Vector3 GetLookAtTargetPosition(Entity characterEntity, bool isDistance, bool isPlayer)
         {
-            var lookAtPoint = characterEntity.Anim.transform.position + characterEntity.Anim.transform.forward * _defaultLookAtOffset;
+            var lookAtPoint = characterEntity.Anim.transform.position;
 
             if (isPlayer)
             {
-                var minDistance = float.MaxValue;
-                foreach (var enemyEntity in _ctx.EnemyCharacterEntites)
+                if (!isDistance)
                 {
-                    if (!enemyEntity.Anim.enabled) continue;
+                    var minDistance = float.MaxValue;
+                    lookAtPoint += characterEntity.Anim.transform.forward * _defaultLookAtOffset;
 
-                    var distance = Vector3.SqrMagnitude(enemyEntity.Anim.transform.position - characterEntity.Anim.transform.position);
-                    if (distance > minDistance) continue;
+                    foreach (var enemyEntity in _ctx.EnemyCharacterEntites)
+                    {
+                        if (!enemyEntity.Anim.enabled) continue;
 
-                    minDistance = distance;
-                    lookAtPoint = enemyEntity.ChestTransform.position;
+                        var distance = Vector3.SqrMagnitude(enemyEntity.Anim.transform.position - characterEntity.Anim.transform.position);
+                        if (distance > minDistance) continue;
+
+                        minDistance = distance;
+                        lookAtPoint = enemyEntity.ChestTransform.position;
+                    }
+                }
+                else
+                {
+                    lookAtPoint = characterEntity.Anim.transform.position;
+                    var attackX = SimpleInput.EntryPoint.GetAxis("AttackX");
+                    var attackY = SimpleInput.EntryPoint.GetAxis("AttackY");
+                    var axisAttack = Mathf.Abs(attackX) + Mathf.Abs(attackY);
+                    if (axisAttack > 0.2f)
+                        lookAtPoint += (Vector3.back * attackY + Vector3.left * attackX) * _defaultLookAtOffset;
+                    else
+                        lookAtPoint += characterEntity.Anim.transform.forward * _defaultLookAtOffset;
                 }
             }
             else
@@ -75,7 +96,10 @@ namespace Game.Character
                 lookAtPoint = _ctx.PlayerCharacterEntity.ChestTransform.position;
             }
 
-            return lookAtPoint;
+            var hashCode = characterEntity.GetHashCode();
+            if (!_lookAtPoint.ContainsKey(hashCode)) _lookAtPoint.Add(hashCode, lookAtPoint);
+            _lookAtPoint[hashCode] = Vector3.Lerp(_lookAtPoint[hashCode], lookAtPoint, Time.deltaTime * _lookAtSpeed);
+            return _lookAtPoint[hashCode];
         }
 
         public bool GetAttackInput(Entity characterEntity, bool isPlayer)
@@ -87,7 +111,11 @@ namespace Game.Character
 
             if (isPlayer)
             {
-                return SimpleInput.EntryPoint.GetKeyUp(KeyCode.Space);
+                var isButtonAttack = SimpleInput.EntryPoint.GetKeyUp(KeyCode.Space);
+                var attackX = SimpleInput.EntryPoint.GetAxis("AttackX");
+                var attackY = SimpleInput.EntryPoint.GetAxis("AttackY");
+                var axisAttack = Mathf.Abs(attackX) + Mathf.Abs(attackY);
+                return isButtonAttack || axisAttack > 0.2f;
             }
             else
             {

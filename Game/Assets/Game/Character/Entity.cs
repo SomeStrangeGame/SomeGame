@@ -12,7 +12,7 @@ namespace Game.Character
             public int Health;
 
             public Func<Entity, Vector3> GetTargetPosition;
-            public Func<Entity, Vector3> GetLookAtTargetPosition;
+            public Func<Entity, bool, Vector3> GetLookAtTargetPosition;
             public Func<Entity, bool> GetAttackInput;
             public Func<Entity, bool> GetDodgeInput;
         }
@@ -42,7 +42,7 @@ namespace Game.Character
             _character.Setup(new View.Character.Ctx
             {
                 GetTargetPosition = () => _ctx.GetTargetPosition.Invoke(this),
-                GetLookAtTargetPosition = () => _ctx.GetLookAtTargetPosition.Invoke(this),
+                GetLookAtTargetPosition = isDistance => _ctx.GetLookAtTargetPosition.Invoke(this, isDistance),
 
                 GetAttackInput = () => _ctx.GetAttackInput.Invoke(this),
                 GetDodgeInput = () => _ctx.GetDodgeInput.Invoke(this),
@@ -50,7 +50,7 @@ namespace Game.Character
                 OnDamage = damage =>
                 {
                     _health -= damage;
-                    
+
                     if (_health > 0) return;
                     _character.Die();
                 }

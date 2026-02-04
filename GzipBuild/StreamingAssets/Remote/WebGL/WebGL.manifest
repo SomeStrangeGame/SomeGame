@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 501082713
+CRC: 330215962
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -42,4 +42,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_12:
       Name: chapter_story_screen
+      Dependencies: {}
+    Info_13:
+      Name: longbowcharacter
       Dependencies: {}

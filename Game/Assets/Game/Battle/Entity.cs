@@ -91,7 +91,7 @@ namespace Game.Battle
                 Health = _battleScene.PlayerCharacterPoint.Health,
 
                 GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, true),
-                GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, true),
+                GetLookAtTargetPosition = (characterEntity, isDistance) => _behaviour.GetLookAtTargetPosition(characterEntity, isDistance, true),
                 GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, true),
                 GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, true),
             }).AddTo(this);
@@ -110,7 +110,7 @@ namespace Game.Battle
                     Health = enemyPoint.Health,
 
                     GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, false),
-                    GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, false),
+                    GetLookAtTargetPosition = (characterEntity, isDistance) => _behaviour.GetLookAtTargetPosition(characterEntity, isDistance, false),
                     GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, false),
                     GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, false),
                 }).AddTo(this);

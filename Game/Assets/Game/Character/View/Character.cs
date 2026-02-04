@@ -13,7 +13,7 @@ namespace Game.Character.View
         public struct Ctx
         {
             public Func<Vector3> GetTargetPosition;
-            public Func<Vector3> GetLookAtTargetPosition;
+            public Func<bool, Vector3> GetLookAtTargetPosition;
 
             public Func<bool> GetAttackInput;
             public Func<bool> GetDodgeInput;
@@ -27,9 +27,6 @@ namespace Game.Character.View
         private const float _stoppedRotationSpeed = 5f;
 
         private readonly Dictionary<string, int> _animHashes = new();
-        private readonly string[] _attacksParams = new string[] {"Attack_0", "Attack_1", "Attack_2"};
-        private readonly string[] _dodgingParams = new string[] {"Dodging_0"};
-        private readonly string[] _hittingParams = new string[] {"Hit"};
         private const string _moveSpeedParam = "MoveSpeed";
         private const string _vertParam = "Vert";
         private const string _horParam = "Hor";
@@ -78,11 +75,11 @@ namespace Game.Character.View
             }
         }
 
-        private readonly System.Random _random = new(DateTime.UtcNow.Second);
+        protected readonly System.Random _random = new(DateTime.UtcNow.Second);
 
-        private Ctx _ctx;
+        protected Ctx _ctx;
 
-        private int AnimHash(string paramName)
+        protected int AnimHash(string paramName)
         {
             if (!_animHashes.TryGetValue(paramName, out _))
                 _animHashes.Add(paramName, Animator.StringToHash(paramName));
@@ -120,14 +117,16 @@ namespace Game.Character.View
         public bool IsHitting() => IsTag(2, "Hitting");
         private bool IsTag(int layer, string tag) => Anim.GetNextAnimatorStateInfo(layer).IsTag(tag) || Anim.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
 
+        protected abstract Vector3 GetLookAtTargetPosition();
+
         //invoke via animator
-        private void OnAnimatorIK(int layerIndex)
+        protected virtual void OnAnimatorIK(int layerIndex)
         {
             if (MainCollider == null) return;
             if (Anim == null) return;
             if (NavAgent == null) return;
 
-            var lookAtTargetPosition = _ctx.GetLookAtTargetPosition.Invoke();
+            var lookAtTargetPosition = GetLookAtTargetPosition();
             Anim.SetLookAtPosition(lookAtTargetPosition);
             Anim.SetLookAtWeight(1f, 0.25f, 0.7f, 0.9f, 0.5f);
 
@@ -154,12 +153,9 @@ namespace Game.Character.View
             var rot = GetDot(Anim.transform, lookAtTargetPosition, Vector3.right);
             rot = rot > 0f ? 1f : -1f;
 
-            var isRot = targetDotForward < 0f && Anim.applyRootMotion;
+            var isRot = targetDotForward < 0.5f && Anim.applyRootMotion;
             Anim.SetBool(AnimHash(_isRotParam), isRot);
             Anim.SetFloat(AnimHash(_rotParam), rot);
-
-            if (_ctx.GetAttackInput.Invoke()) Anim.SetTrigger(AnimHash(_attacksParams[_random.Next(0, _attacksParams.Length)]));
-            if (_ctx.GetDodgeInput.Invoke()) Anim.SetTrigger(AnimHash(_dodgingParams[_random.Next(0, _dodgingParams.Length)]));
         }
 
         private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
@@ -167,9 +163,8 @@ namespace Game.Character.View
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
 
-        private void Damage(int damage)
+        protected virtual void Damage(int damage)
         {
-            Anim.SetTrigger(AnimHash(_hittingParams[_random.Next(0, _hittingParams.Length)]));
             _ctx.OnDamage.Invoke(damage);
         }
 
