@@ -8,6 +8,16 @@ namespace Game.Battle.View
 {
     public sealed class Scene : MonoBehaviour
     {
+        [Serializable]
+        public struct CharacterPoint
+        {
+            [SerializeField] private Transform _characterPoint;
+            [SerializeField] private int _health;
+
+            public readonly Transform Point => _characterPoint;
+            public readonly int Health => _health;
+        }
+
         public struct Ctx
         {
             public GameObject PlayerCharacterGO;
@@ -17,15 +27,15 @@ namespace Game.Battle.View
         }
 
         [SerializeField] private LayerMask _navMeshLayers;
-        [SerializeField] private GameObject _playerCharacterPoint;
-        [SerializeField] private GameObject[] _enemyCharacterPoints;
+        [SerializeField] private CharacterPoint _playerCharacterPoint;
+        [SerializeField] private CharacterPoint[] _enemyCharacterPoints;
 
         private bool _sceneDone = false;
 
         private Ctx _ctx;
 
-        public GameObject PlayerCharacterPoint => _playerCharacterPoint;
-        public GameObject[] EnemyCharacterPoints => _enemyCharacterPoints;
+        public CharacterPoint PlayerCharacterPoint => _playerCharacterPoint;
+        public CharacterPoint[] EnemyCharacterPoints => _enemyCharacterPoints;
 
         private Animator _playerAnim;
         private Animator[] _enemyAnims;

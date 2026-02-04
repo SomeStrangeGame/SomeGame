@@ -75,7 +75,7 @@ namespace Game.Battle
             _battleScreenGO = GameObject.Instantiate(battleSceneScreenPrefab);
 
             _playerCharacterGO = GameObject.Instantiate(characterPrefab);
-            var characterPoint = _battleScene.PlayerCharacterPoint.transform;
+            var characterPoint = _battleScene.PlayerCharacterPoint.Point;
             _playerCharacterGO.transform.SetPositionAndRotation(characterPoint.position, characterPoint.rotation);
 
             var camera = new Camera.Entity(new Camera.Entity.Ctx
@@ -88,9 +88,7 @@ namespace Game.Battle
             _playerCharacterEntity = new Character.Entity(new Character.Entity.Ctx
             {
                 CharacterView = _playerCharacterGO,
-                Health = 10,
-                Speed = 2.5f,
-                AttackDistance = 2f,
+                Health = _battleScene.PlayerCharacterPoint.Health,
 
                 GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, true),
                 GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, true),
@@ -103,15 +101,13 @@ namespace Game.Battle
             foreach (var enemyPoint in _battleScene.EnemyCharacterPoints)
             {
                 var enemyCharacterGO = GameObject.Instantiate(characterPrefab);
-                enemyCharacterGO.transform.SetPositionAndRotation(enemyPoint.transform.position, enemyPoint.transform.rotation);
+                enemyCharacterGO.transform.SetPositionAndRotation(enemyPoint.Point.position, enemyPoint.Point.rotation);
                 _enemyCharactersGO.Add(enemyCharacterGO);
 
                 var enemyCharacter = new Character.Entity(new Character.Entity.Ctx
                 {
                     CharacterView = enemyCharacterGO,
-                    Health = 3,
-                    Speed = 2.5f,
-                    AttackDistance = 2f,
+                    Health = enemyPoint.Health,
 
                     GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, false),
                     GetLookAtTargetPosition = characterEntity => _behaviour.GetLookAtTargetPosition(characterEntity, false),

@@ -360,9 +360,12 @@ MonoBehaviour:
   _navMeshLayers:
     serializedVersion: 2
     m_Bits: 55
-  _playerCharacterPoint: {fileID: 6708449023086278640}
+  _playerCharacterPoint:
+    _characterPoint: {fileID: 216187084188281814}
+    _health: 10
   _enemyCharacterPoints:
-  - {fileID: 7064723163575331791}
+  - _characterPoint: {fileID: 7641143911108104747}
+    _health: 3
 --- !u!1 &607677735311376000
 GameObject:
   m_ObjectHideFlags: 0

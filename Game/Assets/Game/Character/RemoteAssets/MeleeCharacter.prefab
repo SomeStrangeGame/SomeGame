@@ -1183,7 +1183,7 @@ GameObject:
   - component: {fileID: 4418698901437983080}
   - component: {fileID: 7491046992948049708}
   - component: {fileID: 1423681213068453520}
-  - component: {fileID: 8770173908491593465}
+  - component: {fileID: 2001609204639276997}
   m_Layer: 6
   m_Name: MeleeCharacter
   m_TagString: Untagged
@@ -1280,7 +1280,7 @@ CapsuleCollider:
   m_Height: 2
   m_Direction: 1
   m_Center: {x: 0, y: 1, z: 0}
---- !u!114 &8770173908491593465
+--- !u!114 &2001609204639276997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1289,9 +1289,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 4418698901428624058}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4e06fbe82dfef4954a36d52003dde497, type: 3}
+  m_Script: {fileID: 11500000, guid: e518418874d0d4bf3aef7894618bc84f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _speed: 2.5
   _handPosition: {fileID: 7383584299842671523}
   _weaponView: {fileID: 361137415943785690}
   _attack_0: {fileID: 7400000, guid: fc2855575e30b408ca41f930de410602, type: 2}

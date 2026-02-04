@@ -8,12 +8,10 @@ namespace Game.Character.View
     [RequireComponent(typeof(Animator))]
     [RequireComponent(typeof(NavMeshAgent))]
     [RequireComponent(typeof(Collider))]
-    public sealed class Character : MonoBehaviour
+    public abstract class Character : MonoBehaviour
     {
         public struct Ctx
         {
-            public float Speed;
-
             public Func<Vector3> GetTargetPosition;
             public Func<Vector3> GetLookAtTargetPosition;
 
@@ -21,197 +19,147 @@ namespace Game.Character.View
             public Func<bool> GetDodgeInput;
 
             public Action<int> OnDamage;
-            public Action OnHit;
         }
 
-        private static readonly HashSet<string> _animationClipEvents = new();
-
-        [SerializeField] private HandPositionHandler _handPosition;
-        [SerializeField] private GameObject _weaponView;
-
-        [SerializeField] private AnimationClip _attack_0;
-        [SerializeField] private AnimationClip _attack_1;
-        [SerializeField] private AnimationClip _attack_2;
-
-        private const float _inputSense = 15f;
+        private const float _speed = 2.5f;
         private const float _inputMaxValue = 1f;
         private const float _inputMinValue = 0.2f;
         private const float _stoppedRotationSpeed = 5f;
-        private const float _animRotationSpeed = 5f;
 
-        private int[] _attacksTriggersHashes;
-        private readonly string[] _attacksTriggers = new string[]
-        {
-            "Attack_0",
-            "Attack_1",
-            "Attack_2",
-        };
+        private readonly Dictionary<string, int> _animHashes = new();
+        private readonly string[] _attacksParams = new string[] {"Attack_0", "Attack_1", "Attack_2"};
+        private readonly string[] _dodgingParams = new string[] {"Dodging_0"};
+        private readonly string[] _hittingParams = new string[] {"Hit"};
+        private const string _moveSpeedParam = "MoveSpeed";
+        private const string _vertParam = "Vert";
+        private const string _horParam = "Hor";
+        private const string _isRotParam = "IsRot";
+        private const string _rotParam = "Rot";
 
-        private int[] _dodgingTriggersHashes;
-        private readonly string[] _dodgingTriggers = new string[]
-        {
-            "Dodging_0",
-        };
-
-        private int[] _hittingTriggersHashes;
-        private readonly string[] _hittingTriggers = new string[]
-        {
-            "Hit",
-        };
+        [SerializeField] private float _attackDistance = 2f;
 
         private Animator _anim;
+        public Animator Anim
+        {
+            get
+            {
+                if (_anim == null) _anim = GetComponent<Animator>();
+                return _anim;
+            }
+        }
+
+        private Transform _chestTransform;
+        public Transform ChestTransform
+        {
+            get
+            {
+                if (_chestTransform == null) _chestTransform = Anim.GetBoneTransform(HumanBodyBones.Chest);
+                return _chestTransform;
+            }
+        }
+
         private NavMeshAgent _navAgent;
+        public NavMeshAgent NavAgent
+        {
+            get
+            {
+                if (_navAgent == null) _navAgent = GetComponent<NavMeshAgent>();
+                return _navAgent;
+            }
+        }
 
-        private float _rot;
-
-        private Vector2 _input;
-        private Vector3 _lookAtTargetPosition;
+        private Collider _mainCollider;
+        public Collider MainCollider
+        {
+            get
+            {
+                if (_mainCollider == null) _mainCollider = GetComponent<Collider>();
+                return _mainCollider;
+            }
+        }
 
         private readonly System.Random _random = new(DateTime.UtcNow.Second);
 
         private Ctx _ctx;
 
-        private Collider _mainCollider;
-        private Rigidbody[] _ragdollBones;
-
-        public Animator Anim => _anim;
-        public NavMeshAgent NavAgent => _navAgent;
-
-        private int _moveSpeedHash;
-        private const string _moveSpeedParam = "MoveSpeed";
-        private int _vertHash;
-        private const string _vertParam = "Vert";
-        private int _horHash;
-        private const string _horParam = "Hor";
-        private int _isRotHash;
-        private const string _isRotParam = "IsRot";
-        private int _rotHash;
-        private const string _rotParam = "Rot";
-
-        [ContextMenu("Die")]
-        public void Die()
+        private int AnimHash(string paramName)
         {
-            _mainCollider.enabled = false;
-            _anim.enabled = false;
-            _navAgent.enabled = false;
-            foreach (var ragdollBone in _ragdollBones)
+            if (!_animHashes.TryGetValue(paramName, out _))
+                _animHashes.Add(paramName, Animator.StringToHash(paramName));
+            return _animHashes[paramName];
+        }
+
+        private void SetRagDoll(bool state)
+        {
+            var ragdollBones = GetComponentsInChildren<Rigidbody>(true);
+            foreach (var ragdollBone in ragdollBones)
             {
-                ragdollBone.isKinematic = false;
-                ragdollBone.gameObject.SetActive(true);
+                ragdollBone.isKinematic = !state;
+                ragdollBone.gameObject.SetActive(state);
             }
         }
 
-        public void Setup(Ctx ctx)
+        public void Die()
+        {
+            MainCollider.enabled = false;
+            Anim.enabled = false;
+            NavAgent.enabled = false;
+            SetRagDoll(true);
+        }
+
+        public virtual void Setup(Ctx ctx)
         {
             _ctx = ctx;
-
-            _mainCollider = GetComponent<Collider>();
-
-            _attacksTriggersHashes = new int[_attacksTriggers.Length];
-            for (var i = 0 ; i < _attacksTriggers.Length; i++)
-                _attacksTriggersHashes[i] = Animator.StringToHash(_attacksTriggers[i]);
-
-            _dodgingTriggersHashes = new int[_dodgingTriggers.Length];
-            for (var i = 0 ; i < _dodgingTriggers.Length; i++)
-                _dodgingTriggersHashes[i] = Animator.StringToHash(_dodgingTriggers[i]);
-
-            _hittingTriggersHashes = new int[_hittingTriggers.Length];
-            for (var i = 0 ; i < _hittingTriggers.Length; i++)
-                _hittingTriggersHashes[i] = Animator.StringToHash(_hittingTriggers[i]);
-
-            _moveSpeedHash = Animator.StringToHash(_moveSpeedParam);
-            _vertHash = Animator.StringToHash(_vertParam);
-            _horHash = Animator.StringToHash(_horParam);
-            _isRotHash = Animator.StringToHash(_isRotParam);
-            _rotHash = Animator.StringToHash(_rotParam);
-
-            SetAnimEvent(_attack_0, 0.3f, "HitEvent");
-            SetAnimEvent(_attack_1, 0.3f, "HitEvent");
-            SetAnimEvent(_attack_2, 0.3f, "HitEvent");
-
-            void SetAnimEvent(AnimationClip clip, float eventTime, string eventFunc)
-            {
-                if (_animationClipEvents.Contains(clip.name)) return;
-
-                Debug.Log(clip.name);
-                _animationClipEvents.Add(clip.name);
-                clip.AddEvent(new AnimationEvent
-                {
-                    time = eventTime,
-                    functionName = eventFunc,
-                });
-            }
-
-            _anim = GetComponent<Animator>();
-            _anim.SetFloat(_moveSpeedHash, _ctx.Speed);
-
-            _navAgent = GetComponent<NavMeshAgent>();
-            _navAgent.speed = _ctx.Speed;
-
-            _ragdollBones = GetComponentsInChildren<Rigidbody>(true);
-            foreach (var ragdollBone in _ragdollBones)
-            {
-                ragdollBone.isKinematic = true;
-                ragdollBone.gameObject.SetActive(false);
-            }
+            Anim.SetFloat(AnimHash(_moveSpeedParam), _speed);
+            NavAgent.speed = _speed;
+            SetRagDoll(false);
         }
 
         public bool IsAttacking() => IsTag(1, "Attack");
         public bool IsDodging() => IsTag(3, "Dodging");
         public bool IsHitting() => IsTag(2, "Hitting");
-        private bool IsTag(int layer, string tag) => _anim.GetNextAnimatorStateInfo(layer).IsTag(tag) || _anim.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
-
-        //invoke via engine
-        private void LateUpdate()
-        {
-            _weaponView.transform.SetPositionAndRotation(_handPosition.Pos, _handPosition.Rot);
-        }
+        private bool IsTag(int layer, string tag) => Anim.GetNextAnimatorStateInfo(layer).IsTag(tag) || Anim.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
 
         //invoke via animator
         private void OnAnimatorIK(int layerIndex)
         {
-            if (_mainCollider == null) return;
-            if (_anim == null) return;
-            if (_navAgent == null) return;
+            if (MainCollider == null) return;
+            if (Anim == null) return;
+            if (NavAgent == null) return;
 
-            _lookAtTargetPosition = _ctx.GetLookAtTargetPosition.Invoke();
-            _anim.SetLookAtPosition(_lookAtTargetPosition);
-            _anim.SetLookAtWeight(1f, 0.25f, 0.7f, 0.9f, 0.5f);
+            var lookAtTargetPosition = _ctx.GetLookAtTargetPosition.Invoke();
+            Anim.SetLookAtPosition(lookAtTargetPosition);
+            Anim.SetLookAtWeight(1f, 0.25f, 0.7f, 0.9f, 0.5f);
 
-            _navAgent.SetDestination(_ctx.GetTargetPosition.Invoke());
-            var vel = _navAgent.velocity;
+            NavAgent.SetDestination(_ctx.GetTargetPosition.Invoke());
+            var vel = NavAgent.velocity;
 
-            _input.y = Mathf.Lerp(_input.y, Mathf.Clamp(transform.InverseTransformDirection(vel).z, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
-            _input.x = Mathf.Lerp(_input.x, Mathf.Clamp(transform.InverseTransformDirection(vel).x, -_inputMaxValue, _inputMaxValue), Time.deltaTime * _inputSense);
-            _anim.SetFloat(_vertHash, _input.y);
-            _anim.SetFloat(_horHash, _input.x);
+            var inputY = Mathf.Clamp(transform.InverseTransformDirection(vel).z, -_inputMaxValue, _inputMaxValue);
+            var inputX = Mathf.Clamp(transform.InverseTransformDirection(vel).x, -_inputMaxValue, _inputMaxValue);
 
-            var isAttack = IsAttacking();
-            var isDodging = IsDodging();
-            var isHitting = IsHitting();
+            Anim.SetFloat(AnimHash(_vertParam), inputY);
+            Anim.SetFloat(AnimHash(_horParam), inputX);
 
-            _anim.applyRootMotion = (Mathf.Abs(_input.y) + Mathf.Abs(_input.x) < _inputMinValue) || isAttack || isDodging || isHitting;
-            _navAgent.isStopped = isAttack || isDodging || isHitting;
+            Anim.applyRootMotion = (Mathf.Abs(inputY) + Mathf.Abs(inputX) < _inputMinValue) || IsAttacking() || IsDodging() || IsHitting();
+            NavAgent.isStopped = IsAttacking() || IsDodging() || IsHitting();
 
-            if (_navAgent.isStopped)
+            if (NavAgent.isStopped)
             {
-                var oldRotation = _anim.transform.rotation;
-                _anim.transform.LookAt(_lookAtTargetPosition);
-                _anim.transform.rotation = Quaternion.Lerp(oldRotation, _anim.transform.rotation, Time.deltaTime * _stoppedRotationSpeed);
+                var oldRotation = Anim.transform.rotation;
+                Anim.transform.LookAt(lookAtTargetPosition);
+                Anim.transform.rotation = Quaternion.Lerp(oldRotation, Anim.transform.rotation, Time.deltaTime * _stoppedRotationSpeed);
             }
 
-            var targetDotForward = GetDot(_anim.transform, _lookAtTargetPosition, Vector3.forward);
-            var targetDotRight = GetDot(_anim.transform, _lookAtTargetPosition, Vector3.right);
-            targetDotRight = targetDotRight > 0f ? 1f : -1f;
+            var targetDotForward = GetDot(Anim.transform, lookAtTargetPosition, Vector3.forward);
+            var rot = GetDot(Anim.transform, lookAtTargetPosition, Vector3.right);
+            rot = rot > 0f ? 1f : -1f;
 
-            _rot = Mathf.Lerp(_rot, targetDotRight, Time.deltaTime * _animRotationSpeed);
+            var isRot = targetDotForward < 0f && Anim.applyRootMotion;
+            Anim.SetBool(AnimHash(_isRotParam), isRot);
+            Anim.SetFloat(AnimHash(_rotParam), rot);
 
-            var isRot = targetDotForward < 0f && _anim.applyRootMotion;
-            _anim.SetBool(_isRotHash, isRot);
-            _anim.SetFloat(_rotHash, _rot);
-
-            if (_ctx.GetAttackInput.Invoke()) _anim.SetTrigger(_attacksTriggersHashes[_random.Next(0, _attacksTriggersHashes.Length)]);
-            if (_ctx.GetDodgeInput.Invoke()) _anim.SetTrigger(_dodgingTriggersHashes[_random.Next(0, _dodgingTriggersHashes.Length)]);
+            if (_ctx.GetAttackInput.Invoke()) Anim.SetTrigger(AnimHash(_attacksParams[_random.Next(0, _attacksParams.Length)]));
+            if (_ctx.GetDodgeInput.Invoke()) Anim.SetTrigger(AnimHash(_dodgingParams[_random.Next(0, _dodgingParams.Length)]));
         }
 
         private float GetDot(Transform origin, Vector3 targetPosition, Vector3 axis)
@@ -219,29 +167,28 @@ namespace Game.Character.View
             return Vector3.Dot(origin.TransformDirection(axis).normalized, (targetPosition - origin.position).normalized);
         }
 
-        public void Damage(int damage)
+        private void Damage(int damage)
         {
-            Hit();
+            Anim.SetTrigger(AnimHash(_hittingParams[_random.Next(0, _hittingParams.Length)]));
             _ctx.OnDamage.Invoke(damage);
         }
 
-        private void Hit()
+        //attack invoke via animator
+        private void HitEvent() 
         {
             if (IsHitting()) return;
+            if (IsDodging()) return;
 
-            _anim.SetTrigger(_hittingTriggersHashes[_random.Next(0, _hittingTriggersHashes.Length)]);
-        }
+            var headTrans = Anim.GetBoneTransform(HumanBodyBones.Head);
+            var ray = new Ray(headTrans.position, headTrans.forward);
+            if (!Physics.Raycast(ray, out var hit, _attackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
 
-        //invoke via animator
-        private void HitEvent()
-        {
-            _ctx.OnHit.Invoke();
+            var character = hit.collider.GetComponentInParent<Character>();
+            if (character == null) return;
+            if (character.IsHitting()) return;
+            if (character.IsDodging()) return;
+            character.Damage(1);
         }
-
-        //invoke via animator
-        private void SendEvent()
-        {
-            
-        }
+        private void SendEvent() { }
     }
 }

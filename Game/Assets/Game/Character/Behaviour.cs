@@ -35,7 +35,7 @@ namespace Game.Character
 
         public Vector3 GetTargetPosition(Entity characterEntity, bool isPlayer)
         {
-            var targetPos = characterEntity.CharacterTransform.position;
+            var targetPos = characterEntity.Anim.transform.position;
 
             if (isPlayer)
             {
@@ -44,17 +44,17 @@ namespace Game.Character
             }
             else
             {
-                var heading = _ctx.PlayerCharacterEntity.CharacterTransform.position - characterEntity.CharacterTransform.position;
+                var heading = _ctx.PlayerCharacterEntity.Anim.transform.position - characterEntity.Anim.transform.position;
                 var distance = heading.magnitude;
                 var direction = heading / distance;
-                targetPos = _ctx.PlayerCharacterEntity.CharacterTransform.position - direction * _enemyMoveDistance;
+                targetPos = _ctx.PlayerCharacterEntity.Anim.transform.position - direction * _enemyMoveDistance;
             }
             return targetPos;
         }
 
         public Vector3 GetLookAtTargetPosition(Entity characterEntity, bool isPlayer)
         {
-            var lookAtPoint = characterEntity.CharacterTransform.position + characterEntity.CharacterTransform.forward * _defaultLookAtOffset;
+            var lookAtPoint = characterEntity.Anim.transform.position + characterEntity.Anim.transform.forward * _defaultLookAtOffset;
 
             if (isPlayer)
             {
@@ -63,7 +63,7 @@ namespace Game.Character
                 {
                     if (!enemyEntity.Anim.enabled) continue;
 
-                    var distance = Vector3.SqrMagnitude(enemyEntity.CharacterTransform.position - characterEntity.CharacterTransform.position);
+                    var distance = Vector3.SqrMagnitude(enemyEntity.Anim.transform.position - characterEntity.Anim.transform.position);
                     if (distance > minDistance) continue;
 
                     minDistance = distance;
@@ -91,6 +91,7 @@ namespace Game.Character
             }
             else
             {
+                return false;
                 if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
                 if (_ctx.PlayerCharacterEntity.IsHitting) return false;
 
