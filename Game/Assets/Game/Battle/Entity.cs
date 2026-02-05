@@ -12,8 +12,10 @@ namespace Game.Battle
         public struct Ctx
         {
             public CameraData CameraData;
-            public Func<UniTask<GameObject>> GetCharacterInputScreenPrefab;
-            public Func<UniTask<GameObject>> GetCharacterPrefab;
+            public Func<UniTask<GameObject>> GetMeleeCharacterInputScreenPrefab;
+            public Func<UniTask<GameObject>> GetMeleeCharacterPrefab;
+            public Func<UniTask<GameObject>> GetDistanceCharacterInputScreenPrefab;
+            public Func<UniTask<GameObject>> GetDistanceCharacterPrefab;
             public Func<UniTask<GameObject>> GetBattleScenePrefab;
             public Func<UniTask<GameObject>> GetBattleScreenPrefab;
         }
@@ -60,21 +62,23 @@ namespace Game.Battle
 
         public async UniTask Init()
         {
-            var (characterInputScreenPrefab, battleScenePrefab, characterPrefab, battleSceneScreenPrefab) = await UniTask.WhenAll(
-                _ctx.GetCharacterInputScreenPrefab(),
+            var (meleeCharacterInputScreenPrefab, distanceCharacterInputScreenPrefab, battleScenePrefab, meleeCharacterPrefab, distanceCharacterPrefab, battleSceneScreenPrefab) = await UniTask.WhenAll(
+                _ctx.GetMeleeCharacterInputScreenPrefab(),
+                _ctx.GetDistanceCharacterInputScreenPrefab(),
                 _ctx.GetBattleScenePrefab(),
-                _ctx.GetCharacterPrefab(),
+                _ctx.GetMeleeCharacterPrefab(),
+                _ctx.GetDistanceCharacterPrefab(),
                 _ctx.GetBattleScreenPrefab()
             );
-
-            _characterInputScreenGO = GameObject.Instantiate(characterInputScreenPrefab);
 
             var battleSceneGO = GameObject.Instantiate(battleScenePrefab);
             _battleScene = battleSceneGO.GetComponent<View.Scene>();
 
+            _characterInputScreenGO = GameObject.Instantiate(_battleScene.PlayerCharacterPoint.IsDistance ? distanceCharacterInputScreenPrefab : meleeCharacterInputScreenPrefab);
+
             _battleScreenGO = GameObject.Instantiate(battleSceneScreenPrefab);
 
-            _playerCharacterGO = GameObject.Instantiate(characterPrefab);
+            _playerCharacterGO = GameObject.Instantiate(_battleScene.PlayerCharacterPoint.IsDistance ? distanceCharacterPrefab : meleeCharacterPrefab);
             var characterPoint = _battleScene.PlayerCharacterPoint.Point;
             _playerCharacterGO.transform.SetPositionAndRotation(characterPoint.position, characterPoint.rotation);
 
@@ -92,7 +96,7 @@ namespace Game.Battle
 
                 GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, true),
                 GetLookAtTargetPosition = (characterEntity, isDistance) => _behaviour.GetLookAtTargetPosition(characterEntity, isDistance, true),
-                GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, true),
+                GetAttackInput = (characterEntity, isDistance) => _behaviour.GetAttackInput(characterEntity, isDistance, true),
                 GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, true),
             }).AddTo(this);
             _playerCharacterEntity.Init();
@@ -100,7 +104,7 @@ namespace Game.Battle
             _enemyCharacterEntites = new();
             foreach (var enemyPoint in _battleScene.EnemyCharacterPoints)
             {
-                var enemyCharacterGO = GameObject.Instantiate(characterPrefab);
+                var enemyCharacterGO = GameObject.Instantiate(enemyPoint.IsDistance ? distanceCharacterPrefab : meleeCharacterPrefab);
                 enemyCharacterGO.transform.SetPositionAndRotation(enemyPoint.Point.position, enemyPoint.Point.rotation);
                 _enemyCharactersGO.Add(enemyCharacterGO);
 
@@ -111,7 +115,7 @@ namespace Game.Battle
 
                     GetTargetPosition = characterEntity => _behaviour.GetTargetPosition(characterEntity, false),
                     GetLookAtTargetPosition = (characterEntity, isDistance) => _behaviour.GetLookAtTargetPosition(characterEntity, isDistance, false),
-                    GetAttackInput = characterEntity => _behaviour.GetAttackInput(characterEntity, false),
+                    GetAttackInput = (characterEntity, isDistance) => _behaviour.GetAttackInput(characterEntity, isDistance, false),
                     GetDodgeInput = characterEntity => _behaviour.GetDodgeInput(characterEntity, false),
                 }).AddTo(this);
                 enemyCharacter.Init();

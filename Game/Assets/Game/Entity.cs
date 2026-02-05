@@ -127,8 +127,10 @@ namespace Game
                                 {
                                     _bundles.GetAssetBundle(preloadData.ScreenBundle.BundleName),
                                     _bundles.GetAssetBundle(preloadData.SceneBundle.BundleName),
-                                    _bundles.GetAssetBundle(preloadData.CharacterBundle.BundleName),
-                                    _bundles.GetAssetBundle(preloadData.CharacterScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.MeleeCharacterBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.MeleeCharacterScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.DistanceCharacterBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.DistanceCharacterScreenBundle.BundleName),
                                 };
                             },
                         };
@@ -162,8 +164,10 @@ namespace Game
                 CameraData = data.Camera,
                 GetBattleScenePrefab = () => _bundles.GetBundledPrefab(data.SceneBundle),
                 GetBattleScreenPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle),
-                GetCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.CharacterScreenBundle),
-                GetCharacterPrefab = () => _bundles.GetBundledPrefab(data.CharacterBundle),
+                GetMeleeCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterScreenBundle),
+                GetMeleeCharacterPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterBundle),
+                GetDistanceCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterScreenBundle),
+                GetDistanceCharacterPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterBundle),
             };
             using (var battle = new Battle.Entity(ctx).AddTo(this))
             {
@@ -201,8 +205,10 @@ namespace Game
                                 {
                                     _bundles.GetAssetBundle(preloadData.ScreenBundle.BundleName),
                                     _bundles.GetAssetBundle(preloadData.SceneBundle.BundleName),
-                                    _bundles.GetAssetBundle(preloadData.CharacterBundle.BundleName),
-                                    _bundles.GetAssetBundle(preloadData.CharacterScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.MeleeCharacterBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.MeleeCharacterScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.DistanceCharacterBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.DistanceCharacterScreenBundle.BundleName),
                                 };
                             },
                         };

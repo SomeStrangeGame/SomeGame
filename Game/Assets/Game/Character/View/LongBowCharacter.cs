@@ -14,6 +14,7 @@ namespace Game.Character.View
         [SerializeField] private float _arrowSpeed;
         [SerializeField] private float _arrowGravity;
         [SerializeField] private Transform _arrowPoint;
+        [SerializeField] private GameObject _aimPoint;
 
         private List<GameObject> _arrows = new();
 
@@ -61,7 +62,8 @@ namespace Game.Character.View
         protected override void OnAnimatorIK(int layerIndex)
         {
             base.OnAnimatorIK(layerIndex);
-            Anim.SetBool(AnimHash(_attackParam), _ctx.GetAttackInput.Invoke());
+            Anim.SetBool(AnimHash(_attackParam), _ctx.GetAttackInput.Invoke(true));
+            _aimPoint.SetActive(IsTag(1, "Aiming"));
         }
 
         protected override void OnHitEvent()
@@ -70,13 +72,8 @@ namespace Game.Character.View
             if (disabledArrow == null)
             {
                 disabledArrow = Instantiate(_arrowPrefab, _arrowPoint.position, _arrowPoint.rotation);
-                //disabledArrow.transform.LookAt(disabledArrow.transform.position + Anim.GetBoneTransform(HumanBodyBones.Head).forward);
-                //var arrowAngle = disabledArrow.transform.eulerAngles;
-                //arrowAngle.x = 0;
-                //disabledArrow.transform.eulerAngles = arrowAngle;
                 _arrows.Add(disabledArrow);
             }
-            //disabledArrow.transform.LookAt(GetLookAtTargetPosition());
             disabledArrow.SetActive(true);
         }
 

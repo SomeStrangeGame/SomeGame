@@ -12,15 +12,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a87c09dc5e9414e3b8344510b3ed8927, type: 3}
   m_Name: Chapter_1_battle_0 (longbow)
   m_EditorClassIdentifier: 
-  _characterBundle:
+  _meleeCharacterBundle:
+    _bundleName: meleecharacter
+    _assetName: MeleeCharacter.prefab
+  _meleeCharacterScreenBundle:
+    _bundleName: meleecharacter_screen
+    _assetName: MeleeCharacterScreen.prefab
+  _distanceCharacterBundle:
     _bundleName: longbowcharacter
     _assetName: LongBowCharacter.prefab
-  _characterScreenBundle:
+  _distanceChracterScreenBundle:
     _bundleName: longbowcharacter_screen
     _assetName: LongBowCharacterScreen.prefab
   _sceneBundle:
-    _bundleName: chapter_battle_scene_1
-    _assetName: BattleScene1.prefab
+    _bundleName: chapter_battle_scene_2
+    _assetName: BattleScene2.prefab
   _screenBundle:
     _bundleName: chapter_battle_screen
     _assetName: BattleSceneScreen.prefab

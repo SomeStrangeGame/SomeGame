@@ -11,9 +11,11 @@ namespace Game.Battle.View
         [Serializable]
         public struct CharacterPoint
         {
+            [SerializeField] private bool _isDistance;
             [SerializeField] private Transform _characterPoint;
             [SerializeField] private int _health;
 
+            public readonly bool IsDistance => _isDistance;
             public readonly Transform Point => _characterPoint;
             public readonly int Health => _health;
         }

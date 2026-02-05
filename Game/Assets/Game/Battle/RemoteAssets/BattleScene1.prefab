@@ -361,10 +361,12 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 55
   _playerCharacterPoint:
+    _isDistance: 0
     _characterPoint: {fileID: 216187084188281814}
     _health: 10
   _enemyCharacterPoints:
-  - _characterPoint: {fileID: 7641143911108104747}
+  - _isDistance: 0
+    _characterPoint: {fileID: 7641143911108104747}
     _health: 3
 --- !u!1 &607677735311376000
 GameObject:

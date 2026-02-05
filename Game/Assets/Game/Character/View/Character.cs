@@ -15,7 +15,7 @@ namespace Game.Character.View
             public Func<Vector3> GetTargetPosition;
             public Func<bool, Vector3> GetLookAtTargetPosition;
 
-            public Func<bool> GetAttackInput;
+            public Func<bool, bool> GetAttackInput;
             public Func<bool> GetDodgeInput;
 
             public Action<int> OnDamage;
@@ -113,7 +113,7 @@ namespace Game.Character.View
         public bool IsAttacking() => IsTag(1, "Attack");
         public bool IsDodging() => IsTag(3, "Dodging");
         public bool IsHitting() => IsTag(2, "Hitting");
-        private bool IsTag(int layer, string tag) => Anim.GetNextAnimatorStateInfo(layer).IsTag(tag) || Anim.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
+        protected bool IsTag(int layer, string tag) => Anim.GetNextAnimatorStateInfo(layer).IsTag(tag) || Anim.GetCurrentAnimatorStateInfo(layer).IsTag(tag);
 
         protected abstract Vector3 GetLookAtTargetPosition();
 

@@ -49,7 +49,7 @@ namespace Game.Character.View
         {
             base.OnAnimatorIK(layerIndex);
 
-            if (_ctx.GetAttackInput.Invoke()) Anim.SetTrigger(AnimHash(_attacksParams[_random.Next(0, _attacksParams.Length)]));
+            if (_ctx.GetAttackInput.Invoke(false)) Anim.SetTrigger(AnimHash(_attacksParams[_random.Next(0, _attacksParams.Length)]));
             if (_ctx.GetDodgeInput.Invoke()) Anim.SetTrigger(AnimHash(_dodgingParams[_random.Next(0, _dodgingParams.Length)]));
         }
 

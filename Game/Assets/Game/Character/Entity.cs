@@ -13,7 +13,7 @@ namespace Game.Character
 
             public Func<Entity, Vector3> GetTargetPosition;
             public Func<Entity, bool, Vector3> GetLookAtTargetPosition;
-            public Func<Entity, bool> GetAttackInput;
+            public Func<Entity, bool, bool> GetAttackInput;
             public Func<Entity, bool> GetDodgeInput;
         }
 
@@ -44,7 +44,7 @@ namespace Game.Character
                 GetTargetPosition = () => _ctx.GetTargetPosition.Invoke(this),
                 GetLookAtTargetPosition = isDistance => _ctx.GetLookAtTargetPosition.Invoke(this, isDistance),
 
-                GetAttackInput = () => _ctx.GetAttackInput.Invoke(this),
+                GetAttackInput = isDistance => _ctx.GetAttackInput.Invoke(this, isDistance),
                 GetDodgeInput = () => _ctx.GetDodgeInput.Invoke(this),
 
                 OnDamage = damage =>

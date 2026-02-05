@@ -25,6 +25,8 @@ namespace Game.Character
 
         private const float _lookAtSpeed = 5f;
 
+        private const float _axisAttackDeadZone = 0.2f;
+
         private readonly Dictionary<int, Vector3> _lookAtPoint = new();
 
         private readonly System.Random _random;
@@ -85,7 +87,7 @@ namespace Game.Character
                     var attackX = SimpleInput.EntryPoint.GetAxis("AttackX");
                     var attackY = SimpleInput.EntryPoint.GetAxis("AttackY");
                     var axisAttack = Mathf.Abs(attackX) + Mathf.Abs(attackY);
-                    if (axisAttack > 0.2f)
+                    if (axisAttack > _axisAttackDeadZone)
                         lookAtPoint += (Vector3.back * attackY + Vector3.left * attackX) * _defaultLookAtOffset;
                     else
                         lookAtPoint += characterEntity.Anim.transform.forward * _defaultLookAtOffset;
@@ -102,24 +104,31 @@ namespace Game.Character
             return _lookAtPoint[hashCode];
         }
 
-        public bool GetAttackInput(Entity characterEntity, bool isPlayer)
+        public bool GetAttackInput(Entity characterEntity, bool isDistance, bool isPlayer)
         {
-            if (!characterEntity.Anim.enabled) return false;
             if (characterEntity.IsAttacking) return false;
+            if (!characterEntity.Anim.enabled) return false;
             if (characterEntity.IsHitting) return false;
             if (characterEntity.IsDodging) return false;
 
             if (isPlayer)
             {
-                var isButtonAttack = SimpleInput.EntryPoint.GetKeyUp(KeyCode.Space);
-                var attackX = SimpleInput.EntryPoint.GetAxis("AttackX");
-                var attackY = SimpleInput.EntryPoint.GetAxis("AttackY");
-                var axisAttack = Mathf.Abs(attackX) + Mathf.Abs(attackY);
-                return isButtonAttack || axisAttack > 0.2f;
+                if (!isDistance)
+                {
+                    var isButtonAttack = SimpleInput.EntryPoint.GetKeyUp(KeyCode.Space);
+                    return isButtonAttack;
+                }
+                else
+                {
+                    var attackX = SimpleInput.EntryPoint.GetAxis("AttackX");
+                    var attackY = SimpleInput.EntryPoint.GetAxis("AttackY");
+                    var axisAttack = Mathf.Abs(attackX) + Mathf.Abs(attackY);
+                    return axisAttack > _axisAttackDeadZone;
+                }
             }
             else
             {
-                return false;
+                //return false;
                 if (!_ctx.PlayerCharacterEntity.Anim.enabled) return false;
                 if (_ctx.PlayerCharacterEntity.IsHitting) return false;
 
