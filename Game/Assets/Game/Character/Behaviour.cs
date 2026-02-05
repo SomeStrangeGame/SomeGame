@@ -16,9 +16,9 @@ namespace Game.Character
 
         private const float _defaultLookAtOffset = 5f;
 
-        private const float _enemyMoveDistance = 1.9f;
+        private const float _enemyMoveDistance = 2.2f;
 
-        private const float _enemyAttackDistance = 2.2f;
+        private const float _enemyAttackDistance = 2.3f;
 
         private const float _enemyDodgeDotTrigger = 0.1f;
         private const float _enemyDodgeDistance = 2.1f;

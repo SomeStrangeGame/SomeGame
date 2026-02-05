@@ -55,7 +55,21 @@ namespace Game.Character.View
                 var newPosition = arrow.transform.position + (arrow.transform.forward * _arrowSpeed + Vector3.down * _arrowGravity) * Time.deltaTime;
                 arrow.transform.LookAt(newPosition);
                 //physics here...
-                arrow.transform.position = newPosition;
+                var ray = new Ray(arrow.transform.position, arrow.transform.forward);
+                if (Physics.Raycast(ray, out var hit, Vector3.Distance(arrow.transform.position, newPosition)))
+                {
+                    arrow.gameObject.SetActive(false);
+
+                    var character = hit.collider.GetComponentInParent<Character>();
+                    if (character == null) return;
+                    if (character.IsHitting()) return;
+                    if (character.IsDodging()) return;
+                    character.Damage(1);
+                }
+                else
+                {
+                    arrow.transform.position = newPosition;
+                }
             }
         }
 
@@ -71,9 +85,10 @@ namespace Game.Character.View
             var disabledArrow = _arrows.FirstOrDefault(a => !a.activeSelf);
             if (disabledArrow == null)
             {
-                disabledArrow = Instantiate(_arrowPrefab, _arrowPoint.position, _arrowPoint.rotation);
+                disabledArrow = Instantiate(_arrowPrefab);
                 _arrows.Add(disabledArrow);
             }
+            disabledArrow.transform.SetPositionAndRotation(_arrowPoint.position, _arrowPoint.rotation);
             disabledArrow.SetActive(true);
         }
 
