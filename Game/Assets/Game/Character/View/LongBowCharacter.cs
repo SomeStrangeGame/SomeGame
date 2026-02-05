@@ -54,11 +54,10 @@ namespace Game.Character.View
 
                 var newPosition = arrow.transform.position + (arrow.transform.forward * _arrowSpeed + Vector3.down * _arrowGravity) * Time.deltaTime;
                 arrow.transform.LookAt(newPosition);
-                //physics here...
                 var ray = new Ray(arrow.transform.position, arrow.transform.forward);
                 if (Physics.Raycast(ray, out var hit, Vector3.Distance(arrow.transform.position, newPosition)))
                 {
-                    arrow.gameObject.SetActive(false);
+                    arrow.SetActive(false);
 
                     var character = hit.collider.GetComponentInParent<Character>();
                     if (character == null) return;

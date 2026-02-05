@@ -7,6 +7,13 @@
       "dependencies": {},
       "hash": "73a63b7f672b88f7e9992f6917eb458a8cbb6fa9"
     },
+    "com.inkle.ink-unity-integration": {
+      "version": "https://github.com/inkle/ink-unity-integration.git#upm",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "770b372042728fc9df9d26ae19287cf6145d47a5"
+    },
     "com.neuecc.unirx": {
       "version": "https://github.com/neuecc/UniRx.git?path=Assets/Plugins/UniRx/Scripts",
       "depth": 0,

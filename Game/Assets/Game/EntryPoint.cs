@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.LowLevel;
+using UnityEngine.Networking;
 
 namespace Game
 {
@@ -22,6 +23,22 @@ namespace Game
                 Data = _data,
             });
             _entity.Init().Forget();
+
+            Story().Forget();
+        }
+
+        private async UniTask Story()
+        {
+            var path = $"file://{Application.streamingAssetsPath}/Intro.json";
+            Debug.Log(path);
+            var request = UnityWebRequest.Get(path);
+            await request.SendWebRequest();
+            var story = new Ink.Runtime.Story(request.downloadHandler.text);
+            while (story.canContinue)
+            {
+                await UniTask.Delay(1000);
+                Debug.Log(story.Continue());
+            }
         }
 
         private void OnDisable()
