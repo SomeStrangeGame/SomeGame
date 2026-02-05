@@ -13,6 +13,7 @@ namespace Game.Character.View
         [SerializeField] private GameObject _arrowView;
         [SerializeField] private float _arrowSpeed;
         [SerializeField] private float _arrowGravity;
+        [SerializeField] private Transform _arrowPoint;
 
         private List<GameObject> _arrows = new();
 
@@ -68,13 +69,14 @@ namespace Game.Character.View
             var disabledArrow = _arrows.FirstOrDefault(a => !a.activeSelf);
             if (disabledArrow == null)
             {
-                disabledArrow = Instantiate(_arrowPrefab, _handPosition.Pos, _handPosition.Rot);
-                disabledArrow.transform.LookAt(disabledArrow.transform.position + Anim.GetBoneTransform(HumanBodyBones.Head).forward);
-                var arrowAngle = disabledArrow.transform.eulerAngles;
-                arrowAngle.x = 0;
-                disabledArrow.transform.eulerAngles = arrowAngle;
+                disabledArrow = Instantiate(_arrowPrefab, _arrowPoint.position, _arrowPoint.rotation);
+                //disabledArrow.transform.LookAt(disabledArrow.transform.position + Anim.GetBoneTransform(HumanBodyBones.Head).forward);
+                //var arrowAngle = disabledArrow.transform.eulerAngles;
+                //arrowAngle.x = 0;
+                //disabledArrow.transform.eulerAngles = arrowAngle;
                 _arrows.Add(disabledArrow);
             }
+            //disabledArrow.transform.LookAt(GetLookAtTargetPosition());
             disabledArrow.SetActive(true);
         }
 

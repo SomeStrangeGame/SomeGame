@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 190623193
+CRC: 1411098908
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -45,4 +45,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_13:
       Name: longbowcharacter
+      Dependencies: {}
+    Info_14:
+      Name: longbowcharacter_screen
       Dependencies: {}
