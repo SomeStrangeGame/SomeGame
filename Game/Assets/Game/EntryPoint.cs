@@ -1,7 +1,6 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.LowLevel;
-using UnityEngine.Networking;
 
 namespace Game
 {
@@ -29,9 +28,9 @@ namespace Game
 
         private async UniTask Story()
         {
-            var path = $"file://{Application.streamingAssetsPath}/Intro.json";
+            var path = $"file://{Application.streamingAssetsPath}/Texts/Intro.json";
             Debug.Log(path);
-            var request = UnityWebRequest.Get(path);
+            var request = UnityEngine.Networking.UnityWebRequest.Get(path);
             await request.SendWebRequest();
             var story = new Ink.Runtime.Story(request.downloadHandler.text);
             while (story.canContinue)

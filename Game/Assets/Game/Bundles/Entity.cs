@@ -103,6 +103,19 @@ namespace Game.Bundles
             return bundlesVersion;
         }
 
+        public async UniTask<string> GetStoryText(string textName)
+        {
+            var result = string.Empty;
+            var textPath = GetRemotePath($"Texts/{textName}.txt");
+            using (var request = UnityWebRequest.Get(textPath))
+            {
+                SetHeaders(request);
+                await request.SendWebRequest();
+                result = request.downloadHandler.text;
+            }
+            return result;
+        }
+
         private string GetPlatform()
         {
 #if UNITY_EDITOR_OSX
