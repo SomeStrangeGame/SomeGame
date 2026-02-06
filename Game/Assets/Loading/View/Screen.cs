@@ -1,7 +1,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Game.Loading.View
+namespace Loading.View
 {
     public sealed class Screen : MonoBehaviour
     {

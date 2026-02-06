@@ -3,7 +3,7 @@ using Disposable;
 using System;
 using UnityEngine;
 
-namespace Game.Loading
+namespace Loading
 {
     public sealed class Entity : BaseDisposable
     {

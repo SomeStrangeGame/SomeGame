@@ -59,7 +59,7 @@ namespace Game
         {
             var loadingCtx = new Loading.Entity.Ctx
             {
-                GetBundledPrefab = () => _bundles.GetBundledPrefab(_ctx.Data.LoadingData),
+                GetBundledPrefab = () => _bundles.GetBundledPrefab(_ctx.Data.LoadingData.BundleName, _ctx.Data.LoadingData.AssetName),
             };
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
@@ -69,7 +69,7 @@ namespace Game
             await _loading.Show();
 
             using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
-                _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData);
+                _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
             ChapterProcess(0).Forget();
         }
 
@@ -87,9 +87,9 @@ namespace Game
         {
             var ctx = new Story.Entity.Ctx
             {
-                GetTextAsset = () => _bundles.GetStoryText($"Texts/{data.TextAssetName}.ink.json"),
-                GetMenuPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.ScreenBundle),
-                GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle)
+                GetTextAsset = () => _bundles.GetText($"Texts/{data.TextAssetName}.ink.json"),
+                GetMenuPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.ScreenBundle.BundleName, data.ScreenBundle.ScreenBundle.AssetName),
+                GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle.BundleName, data.BackgroundBundle.AssetName)
             };
             using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
@@ -162,12 +162,12 @@ namespace Game
             var ctx = new Battle.Entity.Ctx
             {
                 CameraData = data.Camera,
-                GetBattleScenePrefab = () => _bundles.GetBundledPrefab(data.SceneBundle),
-                GetBattleScreenPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle),
-                GetMeleeCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterScreenBundle),
-                GetMeleeCharacterPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterBundle),
-                GetDistanceCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterScreenBundle),
-                GetDistanceCharacterPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterBundle),
+                GetBattleScenePrefab = () => _bundles.GetBundledPrefab(data.SceneBundle.BundleName, data.SceneBundle.AssetName),
+                GetBattleScreenPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.BundleName, data.ScreenBundle.AssetName),
+                GetMeleeCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterScreenBundle.BundleName, data.MeleeCharacterScreenBundle.AssetName),
+                GetMeleeCharacterPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterBundle.BundleName, data.MeleeCharacterBundle.AssetName),
+                GetDistanceCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterScreenBundle.BundleName, data.DistanceCharacterScreenBundle.AssetName),
+                GetDistanceCharacterPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterBundle.BundleName, data.DistanceCharacterBundle.AssetName),
             };
             using (var battle = new Battle.Entity(ctx).AddTo(this))
             {

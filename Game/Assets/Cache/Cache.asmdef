@@ -1,11 +1,9 @@
 {
-    "name": "Game.Bundles",
+    "name": "Cache",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:8508402cf4a8c4ac6b337bc0f3c7b95d",
-        "GUID:b82721cec7dc545ad98f87d87e0fda57",
-        "GUID:b9c730a3e17384dc3845f1472dd85a30"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

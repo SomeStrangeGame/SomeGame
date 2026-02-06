@@ -5,7 +5,7 @@ using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
 
-namespace Game.Cache
+namespace Cache
 {
     public class Entity : BaseDisposable
     {
