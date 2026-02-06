@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.LowLevel;
 
-namespace Game
+namespace BattleStory
 {
     internal sealed class EntryPoint : MonoBehaviour
     {
