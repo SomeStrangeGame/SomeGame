@@ -13,10 +13,51 @@ namespace Game.Story.View
 
         [SerializeField] private Image _backgroundImage;
         [SerializeField] private Text _descriptionTextArea;
-        [SerializeField] private ScrollRect _scroll;
+        [SerializeField] private RectTransform _viewportRect;
         [SerializeField] private Button _nextButton;
+        [SerializeField] private float _showHideDuration;
+        [SerializeField] private CanvasGroup _canvasGroup;
 
         private Ctx _ctx;
+
+        public async UniTask ShowingText()
+        {
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.gameObject.SetActive(true);
+
+            var delayMs = 50;
+            var deltaTime = delayMs / 1000f;
+
+            var timer = _showHideDuration;
+            while (timer >= 0f)
+            {
+                _canvasGroup.alpha = 1f - (timer / _showHideDuration);
+                timer -= deltaTime;
+                await UniTask.Delay(delayMs, true);
+            }
+
+            _canvasGroup.alpha = 1f;
+        }
+
+        public async UniTask HidingText()
+        {
+            _canvasGroup.alpha = 1f;
+            _canvasGroup.gameObject.SetActive(true);
+
+            var delayMs = 50;
+            var deltaTime = delayMs / 1000f;
+
+            var timer = _showHideDuration;
+            while (timer >= 0f)
+            {
+                _canvasGroup.alpha = timer / _showHideDuration;
+                timer -= deltaTime;
+                await UniTask.Delay(delayMs, true);
+            }
+
+            _canvasGroup.alpha = 0f;
+            _canvasGroup.gameObject.SetActive(false);
+        }
 
         public async UniTask ShowText(string text)
         {
@@ -24,11 +65,14 @@ namespace Game.Story.View
             _nextButton.onClick.RemoveAllListeners();
             _nextButton.onClick.AddListener(() => token.TrySetResult());
 
-            var le = _backgroundImage.GetComponent<LayoutElement>();
-            le.preferredWidth = _scroll.content.rect.width;
+            var le = _descriptionTextArea.GetComponent<LayoutElement>();
+            le.preferredWidth = _viewportRect.rect.width;
 
             _descriptionTextArea.text = text.Replace("<br/>", System.Environment.NewLine);
+
+            await ShowingText();
             await token.Task;
+            await HidingText();
         }
 
         public void Setup(Ctx ctx)
@@ -38,7 +82,7 @@ namespace Game.Story.View
             _backgroundImage.sprite = _ctx.BackgroundSprite;
             var aspectRatio = (float)_ctx.BackgroundSprite.texture.width / _ctx.BackgroundSprite.texture.height;
             var le = _backgroundImage.GetComponent<LayoutElement>();
-            le.preferredHeight = _scroll.content.rect.width / aspectRatio;
+            le.preferredHeight = _viewportRect.rect.width / aspectRatio;
             _descriptionTextArea.text = string.Empty;
         }
 
