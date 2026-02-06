@@ -227,7 +227,7 @@ namespace Game
             return result;
         }
 
-        private async UniTask ChapterProcess(int index, bool skipIntro = false)
+        private async UniTask ChapterProcess(int index, bool skipIntro = false, bool skipStart = false, bool skipBattle = false, bool skipFailed = true, bool skipSuccess = false)
         {
             var chapterData = _chaptersData.Chapters[index];
             if (!skipIntro)
@@ -245,53 +245,65 @@ namespace Game
                 }
             }
 
-            for (var i = 0 ; i < chapterData.StartMenu.Length; i++)
+            if (!skipStart)
             {
-                var isLast = i + 1 >= chapterData.StartMenu.Length;
-                if (!isLast)
-                    await ShowMenuProcess(chapterData.StartMenu[i], chapterData.StartMenu[i + 1]);
-                else if (chapterData.Battles.Length > 0)
-                    await ShowMenuProcess(chapterData.StartMenu[i], chapterData.Battles[0]);
-                else
-                    await ShowMenuProcess(chapterData.StartMenu[i]);
+                for (var i = 0 ; i < chapterData.StartMenu.Length; i++)
+                {
+                    var isLast = i + 1 >= chapterData.StartMenu.Length;
+                    if (!isLast)
+                        await ShowMenuProcess(chapterData.StartMenu[i], chapterData.StartMenu[i + 1]);
+                    else if (chapterData.Battles.Length > 0)
+                        await ShowMenuProcess(chapterData.StartMenu[i], chapterData.Battles[0]);
+                    else
+                        await ShowMenuProcess(chapterData.StartMenu[i]);
+                }
             }
 
-            var battleResult = 0;
-            for (var i = 0 ; i < chapterData.Battles.Length; i++)
+            var battleResult = 1;
+            if (!skipBattle)
             {
-                var isLast = i + 1 >= chapterData.Battles.Length;
-                if (!isLast)
-                    battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.Battles[i + 1]);
-                else if (chapterData.FailedMenu.Length > 0 && chapterData.SuccessMenu.Length > 0)
-                    battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.FailedMenu[0], chapterData.SuccessMenu[0]);
-                else
-                    battleResult = await ShowBattleProcess(chapterData.Battles[i]);
-                if (battleResult == 0)
-                    break;
+                for (var i = 0 ; i < chapterData.Battles.Length; i++)
+                {
+                    var isLast = i + 1 >= chapterData.Battles.Length;
+                    if (!isLast)
+                        battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.Battles[i + 1]);
+                    else if (chapterData.FailedMenu.Length > 0 && chapterData.SuccessMenu.Length > 0)
+                        battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.FailedMenu[0], chapterData.SuccessMenu[0]);
+                    else
+                        battleResult = await ShowBattleProcess(chapterData.Battles[i]);
+                    if (battleResult == 0)
+                        break;
+                }
             }
 
             if (battleResult == 0) //failed
             {
-                for (var i = 0 ; i < chapterData.FailedMenu.Length; i++)
+                if (!skipFailed)
                 {
-                    var isLast = i + 1 >= chapterData.FailedMenu.Length;
-                    if (!isLast)
-                        await ShowMenuProcess(chapterData.FailedMenu[i], chapterData.FailedMenu[i + 1]);
-                    else
-                        await ShowMenuProcess(chapterData.FailedMenu[i]);
+                    for (var i = 0 ; i < chapterData.FailedMenu.Length; i++)
+                    {
+                        var isLast = i + 1 >= chapterData.FailedMenu.Length;
+                        if (!isLast)
+                            await ShowMenuProcess(chapterData.FailedMenu[i], chapterData.FailedMenu[i + 1]);
+                        else
+                            await ShowMenuProcess(chapterData.FailedMenu[i]);
+                    }
                 }
 
                 ChapterProcess(index, true).Forget();
                 return;
             }
 
-            for (var i = 0; i < chapterData.SuccessMenu.Length; i++)
+            if (!skipSuccess)
             {
-                var isLast = i + 1 >= chapterData.SuccessMenu.Length;
-                if (!isLast)
-                    await ShowMenuProcess(chapterData.SuccessMenu[i], chapterData.SuccessMenu[i + 1]);
-                else
-                    await ShowMenuProcess(chapterData.SuccessMenu[i]);
+                for (var i = 0; i < chapterData.SuccessMenu.Length; i++)
+                {
+                    var isLast = i + 1 >= chapterData.SuccessMenu.Length;
+                    if (!isLast)
+                        await ShowMenuProcess(chapterData.SuccessMenu[i], chapterData.SuccessMenu[i + 1]);
+                    else
+                        await ShowMenuProcess(chapterData.SuccessMenu[i]);
+                }
             }
 
             index++;
