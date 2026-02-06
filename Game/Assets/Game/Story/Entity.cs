@@ -47,12 +47,13 @@ namespace Game.Story
 
         public async UniTask Init()
         {
-            var (screenBackgroundSprite, screenPrefabGO) = await UniTask.WhenAll(
+            var (screenBackgroundSprite, screenPrefabGO, story) = await UniTask.WhenAll(
                 _ctx.GetBackgroundSprite(),
-                _ctx.GetMenuPrefab()
+                _ctx.GetMenuPrefab(),
+                _ctx.GetTextAsset()
             );
 
-            _story = new Ink.Runtime.Story(await _ctx.GetTextAsset());
+            _story = new Ink.Runtime.Story(story);
 
             var screenGO = GameObject.Instantiate(screenPrefabGO);
             _screen = screenGO.GetComponent<View.Screen>();
