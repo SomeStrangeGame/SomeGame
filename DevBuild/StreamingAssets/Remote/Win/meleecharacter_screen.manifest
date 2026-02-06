@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 3881620377
+CRC: 1450858792
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8eaae98cf33c754123970a62e990b4d7
+    Hash: 9eb5fc7e5c4a13e3c37d75bdcc1f93e6
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 4449a20ee01ff398d9ffa0e62709d065
+    Hash: a39c371c3605def2297bdbfe43f78e2a
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: caad5e4cd63ebc3d69e58822196c0574
+    Hash: 6710fe905d0c56257df52efa021ed67b
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -18,15 +18,15 @@ ClassTypes:
 - Class: 28
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: fc8d2f3cf1118bf4ab1c5f540a08bbd2, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 1d42b387efc83be49900b546e4052e28, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1d42b387efc83be49900b546e4052e28, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 213
@@ -47,5 +47,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Game/Character/RemoteAssets/MeleeCharacterScreen.prefab
+- Assets/BattleStory/Character/RemoteAssets/MeleeCharacterScreen.prefab
 Dependencies: []

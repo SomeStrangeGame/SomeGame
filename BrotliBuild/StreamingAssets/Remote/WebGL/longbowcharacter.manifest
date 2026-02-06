@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 433080039
+CRC: 546385956
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e1c51366fa4b66c3b5401e15e0fffc9d
+    Hash: 27682e423800868dae81d0d2975db129
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 02618ea1c4ef21282bec9a2641736772
+    Hash: 66162317ecfb7168d00958fa2ee02ca2
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: fea45d09187ef1a9af96df3caeedea01
+    Hash: d3089f1f29e0d4ad585270669716f47d
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -61,5 +61,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Game/Character/RemoteAssets/LongBowCharacter.prefab
+- Assets/BattleStory/Character/RemoteAssets/LongBowCharacter.prefab
 Dependencies: []

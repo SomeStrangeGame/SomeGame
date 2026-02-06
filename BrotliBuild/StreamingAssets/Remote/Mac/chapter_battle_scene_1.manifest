@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 4251588172
+CRC: 1526962430
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8b1b7ff6e8a6232a91df91ae1244c4de
+    Hash: 9683e0346cdbb76790e3118ebbf55229
   TypeTreeHash:
     serializedVersion: 2
-    Hash: a2492360fd7f49bd919231f832c911c2
+    Hash: a19282da58e406d0fb24e77552ea2aa6
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 99deba1453d16321b8dc6c0fb978ab5e
+    Hash: cd2df66f593709e7f36ff55f36605170
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -36,8 +36,8 @@ ClassTypes:
 - Class: 115
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
-- AssemblyName: Game.Battle.View
-  ClassName: Game.Battle.View.Scene/CharacterPoint
+- AssemblyName: BattleStory.Battle.View
+  ClassName: BattleStory.Battle.View.Scene/CharacterPoint
 Assets:
-- Assets/Game/Battle/RemoteAssets/BattleScene1.prefab
+- Assets/BattleStory/Battle/RemoteAssets/BattleScene1.prefab
 Dependencies: []

@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 1389163489
+CRC: 692419654
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8c3142ce055fb3ccc39a06d83ca1d4c1
+    Hash: 37ab1d25bfed652e4f7a522bae5427e8
   TypeTreeHash:
     serializedVersion: 2
-    Hash: d4576584927389df36092627295fd7c1
+    Hash: ca1d7eea46769188e5ecd2c312550fca
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 4c6b21da2452f41c93fc5e403fe47340
+    Hash: 417b3716da000b48a9e132795a7ccb18
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -59,5 +59,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Game/Character/RemoteAssets/MeleeCharacter.prefab
+- Assets/BattleStory/Character/RemoteAssets/MeleeCharacter.prefab
 Dependencies: []

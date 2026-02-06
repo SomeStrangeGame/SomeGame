@@ -1,28 +1,28 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 518142300
+CRC: 3348230891
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e0941bc119cf3f1f2168fde1878834f6
+    Hash: 3159f2c4fa30258a9e8c92cbcd773253
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 1fda854509640b7b6e41e8b4188823a6
+    Hash: 16192c59bafa389c56c5cc8630490a69
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: e4e1ce7a557daad7330de8697802bf41
+    Hash: 2cedcd7e184acede333c57876e412ddc
 HashAppended: 0
 ClassTypes:
 - Class: 1
   Script: {instanceID: 0}
-- Class: 114
-  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 4360fdf963b1b491d808de2a1c534838, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 222
@@ -39,5 +39,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Game/Loading/RemoteAssets/Loading.prefab
+- Assets/Loading/RemoteAssets/Loading.prefab
 Dependencies: []

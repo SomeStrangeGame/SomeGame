@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 3772932513
+CRC: 1599073139
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a36dd4f1c9b814b397aebfe294815656
+    Hash: 3f433de74575f0e9c584e6e48bac0129
   TypeTreeHash:
     serializedVersion: 2
-    Hash: e1092d182e968b31a5853b0dcad9f216
+    Hash: 057819f39fd69f4e857ee6b9b0feee57
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: dfbf8e56a1b582a0f596c47a06837984
+    Hash: 46afda402281c3466d85927a43496f89
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -18,13 +18,13 @@ ClassTypes:
 - Class: 28
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 1d42b387efc83be49900b546e4052e28, type: 3}
-- Class: 114
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1d42b387efc83be49900b546e4052e28, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 213
@@ -43,5 +43,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Game/Character/RemoteAssets/LongBowCharacterScreen.prefab
+- Assets/BattleStory/Character/RemoteAssets/LongBowCharacterScreen.prefab
 Dependencies: []
