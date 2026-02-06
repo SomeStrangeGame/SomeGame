@@ -2,7 +2,7 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Story.View
+namespace BattleStory.Story.View
 {
     public sealed class Screen : MonoBehaviour
     {

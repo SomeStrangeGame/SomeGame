@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 538173239
+CRC: 3942758016
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9d30c5b799628103e044d8b6fccb68f3
+    Hash: d6391044da3eaa37c565419b76df9623
   TypeTreeHash:
     serializedVersion: 2
     Hash: a39c371c3605def2297bdbfe43f78e2a
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: d52c805db793b8e877bbdeb4ece4f6e9
+    Hash: 9e2b787f8ec1e2acd5eff5f97b9dcbec
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -47,5 +47,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Game/Character/RemoteAssets/MeleeCharacterScreen.prefab
+- Assets/BattleStory/Character/RemoteAssets/MeleeCharacterScreen.prefab
 Dependencies: []

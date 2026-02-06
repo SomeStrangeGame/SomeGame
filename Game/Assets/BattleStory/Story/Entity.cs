@@ -4,7 +4,7 @@ using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
 
-namespace Game.Story
+namespace BattleStory.Story
 {
     public sealed class Entity : BaseDisposable
     {

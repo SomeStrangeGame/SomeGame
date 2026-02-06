@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Disposable;
-using Game.SOData;
+using BattleStory.SOData;
 using UnityEngine;
 
 namespace BattleStory
@@ -85,13 +85,13 @@ namespace BattleStory
 
         private async UniTask ShowMenuProcess(ScreenData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
         {
-            var ctx = new Game.Story.Entity.Ctx
+            var ctx = new Story.Entity.Ctx
             {
                 GetTextAsset = () => _bundles.GetText($"Texts/{data.TextAssetName}.ink.json"),
                 GetMenuPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.ScreenBundle.BundleName, data.ScreenBundle.ScreenBundle.AssetName),
                 GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle.BundleName, data.BackgroundBundle.AssetName)
             };
-            using (var chapter = new Game.Story.Entity(ctx).AddTo(this))
+            using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
                 using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
                     await chapter.Init();
@@ -100,7 +100,7 @@ namespace BattleStory
                 {
                     foreach (var preloadData in screensPreloadData)
                     {
-                        var preloadCtx = new Game.Story.Entity.Preload.Ctx
+                        var preloadCtx = new Story.Entity.Preload.Ctx
                         {
                             GetAssets = () =>
                             {
@@ -111,7 +111,7 @@ namespace BattleStory
                                 };
                             },
                         };
-                        using (var preload = new Game.Story.Entity.Preload(preloadCtx).AddTo(this))
+                        using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());
                     }
                 }
@@ -119,7 +119,7 @@ namespace BattleStory
                 {
                     foreach (var preloadData in battlesPreloadData)
                     {
-                        var preloadCtx = new Game.Battle.Entity.Preload.Ctx
+                        var preloadCtx = new Battle.Entity.Preload.Ctx
                         {
                             GetAssets = () =>
                             {
@@ -134,7 +134,7 @@ namespace BattleStory
                                 };
                             },
                         };
-                        using (var preload = new Game.Battle.Entity.Preload(preloadCtx).AddTo(this))
+                        using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());
                     }
                 }
@@ -159,7 +159,7 @@ namespace BattleStory
         private async UniTask<int> ShowBattleProcess(BattleData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
         {
             var result = 0;
-            var ctx = new Game.Battle.Entity.Ctx
+            var ctx = new Battle.Entity.Ctx
             {
                 CameraData = data.Camera,
                 GetBattleScenePrefab = () => _bundles.GetBundledPrefab(data.SceneBundle.BundleName, data.SceneBundle.AssetName),
@@ -169,7 +169,7 @@ namespace BattleStory
                 GetDistanceCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterScreenBundle.BundleName, data.DistanceCharacterScreenBundle.AssetName),
                 GetDistanceCharacterPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterBundle.BundleName, data.DistanceCharacterBundle.AssetName),
             };
-            using (var battle = new Game.Battle.Entity(ctx).AddTo(this))
+            using (var battle = new Battle.Entity(ctx).AddTo(this))
             {
                 using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
                     await battle.Init();
@@ -178,7 +178,7 @@ namespace BattleStory
                 {
                     foreach (var preloadData in screensPreloadData)
                     {
-                        var preloadCtx = new Game.Story.Entity.Preload.Ctx
+                        var preloadCtx = new Story.Entity.Preload.Ctx
                         {
                             GetAssets = () =>
                             {
@@ -189,7 +189,7 @@ namespace BattleStory
                                 };
                             },
                         };
-                        using (var preload = new Game.Story.Entity.Preload(preloadCtx).AddTo(this))
+                        using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());
                     }
                 }
@@ -197,7 +197,7 @@ namespace BattleStory
                 {
                     foreach (var preloadData in battlesPreloadData)
                     {
-                        var preloadCtx = new Game.Battle.Entity.Preload.Ctx
+                        var preloadCtx = new Battle.Entity.Preload.Ctx
                         {
                             GetAssets = () =>
                             {
@@ -212,7 +212,7 @@ namespace BattleStory
                                 };
                             },
                         };
-                        using (var preload = new Game.Battle.Entity.Preload(preloadCtx).AddTo(this))
+                        using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
                             preloading.Add(preload.Process());
                     }
                 }

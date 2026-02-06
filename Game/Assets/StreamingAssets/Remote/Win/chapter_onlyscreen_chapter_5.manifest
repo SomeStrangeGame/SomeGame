@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 159591700
+CRC: 3306994254
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 22f8072f0cb0d96c5876bdbc311ca0c7
+    Hash: 7f0f304406e5c3cbe50d75d0b8c6809c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 9f349c36d7a6532f767333f9299b3e74
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 7d355a6b4a18650e071518985af29858
+    Hash: 867bccde55cb73a994bf700ed80c2839
 HashAppended: 0
 ClassTypes:
 - Class: 28
@@ -19,5 +19,5 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers: []
 Assets:
-- Assets/Game/Story/RemoteAssets/Chapter_5.png
+- Assets/BattleStory/Story/RemoteAssets/Chapter_5.png
 Dependencies: []

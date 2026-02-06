@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.SOData
+namespace BattleStory.SOData
 {
     [CreateAssetMenu(fileName = "CameraData", menuName = "ScriptableObjects/CameraData")]
     public class CameraData : ScriptableObject

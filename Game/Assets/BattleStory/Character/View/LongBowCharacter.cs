@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace Game.Character.View
+namespace BattleStory.Character.View
 {
     public class LongBowCharacter : Character
     {
@@ -59,7 +59,7 @@ namespace Game.Character.View
                 {
                     arrow.SetActive(false);
 
-                    var character = hit.collider.GetComponentInParent<Character>();
+                    var character = hit.collider.GetComponentInParent<BattleStory.Character.View.Character>();
                     if (character == null) return;
                     if (character.IsHitting()) return;
                     if (character.IsDodging()) return;

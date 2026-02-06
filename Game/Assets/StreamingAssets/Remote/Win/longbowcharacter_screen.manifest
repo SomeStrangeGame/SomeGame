@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 948143179
+CRC: 2267942553
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d9d8dd121eb30ff5d340b1d74bc96c01
+    Hash: 2668539381a014cde799676a6c095863
   TypeTreeHash:
     serializedVersion: 2
     Hash: 057819f39fd69f4e857ee6b9b0feee57
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: ea59641bfcbf6cc0e0ced63de0dddd14
+    Hash: f892ad4a483ebdc8789e471e65116238
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -43,5 +43,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Game/Character/RemoteAssets/LongBowCharacterScreen.prefab
+- Assets/BattleStory/Character/RemoteAssets/LongBowCharacterScreen.prefab
 Dependencies: []

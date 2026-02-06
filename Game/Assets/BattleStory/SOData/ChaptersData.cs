@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.SOData
+namespace BattleStory.SOData
 {
     [CreateAssetMenu(fileName = "ChaptersData", menuName = "ScriptableObjects/ChaptersData")]
     public class ChaptersData : ScriptableObject

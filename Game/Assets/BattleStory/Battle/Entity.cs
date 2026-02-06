@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Game.SOData;
+using BattleStory.SOData;
 using Disposable;
 using UnityEngine;
 
-namespace Game.Battle
+namespace BattleStory.Battle
 {
     public sealed class Entity : BaseDisposable
     {

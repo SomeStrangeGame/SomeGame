@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Game.Character.View
+namespace BattleStory.Character.View
 {
     public sealed class MeleeCharacter : Character
     {
@@ -74,7 +74,7 @@ namespace Game.Character.View
             var ray = new Ray(headTrans.position, headTrans.forward);
             if (!Physics.Raycast(ray, out var hit, _attackDistance, Physics.AllLayers, QueryTriggerInteraction.Ignore)) return;
 
-            var character = hit.collider.GetComponentInParent<Character>();
+            var character = hit.collider.GetComponentInParent<BattleStory.Character.View.Character>();
             if (character == null) return;
             if (character.IsHitting()) return;
             if (character.IsDodging()) return;

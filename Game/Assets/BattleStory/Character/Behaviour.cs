@@ -3,7 +3,7 @@ using System.Linq;
 using Disposable;
 using UnityEngine;
 
-namespace Game.Character
+namespace BattleStory.Character
 {
     public class Behaviour : BaseDisposable
     {

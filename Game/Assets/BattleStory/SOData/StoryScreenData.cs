@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace Game.SOData
+namespace BattleStory.SOData
 {
     [CreateAssetMenu(fileName = "StoryScreenData", menuName = "ScriptableObjects/StoryScreenData")]
     public class StoryScreenData : ScriptableObject

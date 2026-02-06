@@ -1,7 +1,7 @@
 using System;
 using UnityEngine;
 
-namespace Game.SOData
+namespace BattleStory.SOData
 {
     [Serializable]
     public struct BundleData

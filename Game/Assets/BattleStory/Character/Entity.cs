@@ -2,7 +2,7 @@ using System;
 using Disposable;
 using UnityEngine;
 
-namespace Game.Character
+namespace BattleStory.Character
 {
     public sealed class Entity : BaseDisposable
     {

@@ -1,7 +1,6 @@
-using System;
 using UnityEngine;
 
-namespace Game.Character.View
+namespace BattleStory.Character.View
 {
     internal sealed class HandPositionHandler : MonoBehaviour
     {

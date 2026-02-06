@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Game.Battle.View
+namespace BattleStory.Battle.View
 {
     internal class FPSCounter : MonoBehaviour
     {

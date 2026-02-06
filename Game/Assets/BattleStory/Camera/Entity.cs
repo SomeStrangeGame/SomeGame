@@ -1,9 +1,9 @@
 using System;
 using Disposable;
-using Game.SOData;
+using BattleStory.SOData;
 using UnityEngine;
 
-namespace Game.Camera
+namespace BattleStory.Camera
 {
     public sealed class Entity : BaseDisposable
     {
