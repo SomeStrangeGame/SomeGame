@@ -227,7 +227,7 @@ namespace Game
             return result;
         }
 
-        private async UniTask ChapterProcess(int index, bool skipIntro = false, bool skipStart = false, bool skipBattle = false, bool skipFailed = true, bool skipSuccess = false)
+        private async UniTask ChapterProcess(int index, bool skipIntro = false, bool skipStart = false, bool skipBattle = false, bool skipFailed = false, bool skipSuccess = false)
         {
             var chapterData = _chaptersData.Chapters[index];
             if (!skipIntro)
