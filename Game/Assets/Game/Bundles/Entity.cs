@@ -106,7 +106,7 @@ namespace Game.Bundles
         public async UniTask<string> GetStoryText(string textName)
         {
             var result = string.Empty;
-            var textPath = GetRemotePath($"Texts/{textName}.txt");
+            var textPath = GetRemotePath($"Texts/{textName}.ink.json");
             using (var request = UnityWebRequest.Get(textPath))
             {
                 SetHeaders(request);

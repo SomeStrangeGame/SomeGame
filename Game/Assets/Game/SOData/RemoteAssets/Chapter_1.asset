@@ -14,8 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _introMenu:
   - {fileID: 11400000, guid: 303433e6d4bca4858aa8a9a4d7eb792d, type: 2}
-  - {fileID: 11400000, guid: c725a3d0a0a2b4194a59cd1ff5b2b4a9, type: 2}
-  - {fileID: 11400000, guid: 3e2f2fb77088d4593bae513e5a9a2f9d, type: 2}
   _startMenu:
   - {fileID: 11400000, guid: 137bdcf32b6914d7b8e0688e6c542686, type: 2}
   _successMenu:

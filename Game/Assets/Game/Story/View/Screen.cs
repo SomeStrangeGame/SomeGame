@@ -1,4 +1,4 @@
-using System;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,42 +9,26 @@ namespace Game.Story.View
         public struct Ctx
         {
             public Sprite BackgroundSprite;
-            public string DescriptionText;
-            public string ButtonText;
-            public Action OnComplete;
         }
 
-        [SerializeField] private float _startDelay = 3f;
-        [SerializeField] private float _autoScrollSpeed = 25f;
         [SerializeField] private Image _backgroundImage;
         [SerializeField] private Text _descriptionTextArea;
-        [SerializeField] private Text _buttonTextArea;
         [SerializeField] private ScrollRect _scroll;
-        [SerializeField] private Button _someButton;
+        [SerializeField] private Button _nextButton;
 
         private Ctx _ctx;
 
-        private float _startTime;
-
-        private void OnEnable()
+        public async UniTask ShowText(string text)
         {
-            _someButton.onClick.RemoveAllListeners();
-            _someButton.onClick.AddListener(() => _ctx.OnComplete.Invoke());
+            var token = new UniTaskCompletionSource();
+            _nextButton.onClick.RemoveAllListeners();
+            _nextButton.onClick.AddListener(() => token.TrySetResult());
 
-            _startTime = 0f;
-        }
+            var le = _backgroundImage.GetComponent<LayoutElement>();
+            le.preferredWidth = _scroll.content.rect.width;
 
-        private void Update()
-        {
-            if (_startTime < _startDelay)
-            {
-                _startTime += Time.deltaTime;
-                return;
-            }
-
-            if (SimpleInput.EntryPoint.GetMouseButton(0)) return;
-            
-            _scroll.content.position += _autoScrollSpeed * Time.deltaTime * Vector3.up;
+            _descriptionTextArea.text = text.Replace("<br/>", System.Environment.NewLine);
+            await token.Task;
         }
 
         public void Setup(Ctx ctx)
@@ -55,8 +39,7 @@ namespace Game.Story.View
             var aspectRatio = (float)_ctx.BackgroundSprite.texture.width / _ctx.BackgroundSprite.texture.height;
             var le = _backgroundImage.GetComponent<LayoutElement>();
             le.preferredHeight = _scroll.content.rect.width / aspectRatio;
-            _descriptionTextArea.text = _ctx.DescriptionText;
-            _buttonTextArea.text = _ctx.ButtonText;
+            _descriptionTextArea.text = string.Empty;
         }
 
         public void Release() 

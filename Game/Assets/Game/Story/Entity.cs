@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.Disposable;
-using Game.SOData;
 using UnityEngine;
 
 namespace Game.Story
@@ -11,7 +10,7 @@ namespace Game.Story
     {
         public struct Ctx
         {
-            public ScreenData.ContentData Content;
+            public Func<UniTask<string>> GetTextAsset;
             public Func<UniTask<GameObject>> GetMenuPrefab;
             public Func<UniTask<Sprite>> GetBackgroundSprite;
         }
@@ -36,14 +35,13 @@ namespace Game.Story
             }
         }
 
-        private readonly UniTaskCompletionSource _token;
         private readonly Ctx _ctx;
 
         private View.Screen _screen;
+        private Ink.Runtime.Story _story;
 
         public Entity(Ctx ctx)
         {
-            _token = new();
             _ctx = ctx;
         }
 
@@ -54,18 +52,23 @@ namespace Game.Story
                 _ctx.GetMenuPrefab()
             );
 
+            _story = new Ink.Runtime.Story(await _ctx.GetTextAsset());
+
             var screenGO = GameObject.Instantiate(screenPrefabGO);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx
             {
                 BackgroundSprite = screenBackgroundSprite,
-                DescriptionText = _ctx.Content.DescriptionText,
-                ButtonText = _ctx.Content.ButtonText,
-                OnComplete = () => _token.TrySetResult(),
             });
         }
 
-        public async UniTask WaitResult() => await _token.Task;
+        public async UniTask WaitResult() 
+        {
+            while (_story.canContinue)
+            {
+                await _screen.ShowText(_story.Continue());
+            }
+        }
 
         protected override void OnDispose()
         {
