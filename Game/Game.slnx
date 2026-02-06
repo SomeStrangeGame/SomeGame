@@ -9,8 +9,8 @@
   <Project Path="Game.Bundles.csproj" />
   <Project Path="SimpleInput.csproj" />
   <Project Path="Game.Story.csproj" />
-  <Project Path="Game.Disposable.csproj" />
   <Project Path="Game.Loading.View.csproj" />
+  <Project Path="Disposable.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Game.csproj" />
   <Project Path="Game.Story.View.csproj" />

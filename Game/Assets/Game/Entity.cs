@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Game.Disposable;
+using Disposable;
 using Game.SOData;
 using UnityEngine;
 
@@ -87,7 +87,7 @@ namespace Game
         {
             var ctx = new Story.Entity.Ctx
             {
-                GetTextAsset = () => _bundles.GetStoryText(data.TextAssetName),
+                GetTextAsset = () => _bundles.GetStoryText($"Texts/{data.TextAssetName}.ink.json"),
                 GetMenuPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.ScreenBundle),
                 GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle)
             };

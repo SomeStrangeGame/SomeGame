@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Game.Disposable 
+namespace Disposable 
 {
     public static class BaseDisposableEx 
     {

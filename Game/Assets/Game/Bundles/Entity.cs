@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
-using Game.Disposable;
+using Disposable;
 using Game.SOData;
 using UnityEngine;
 using UnityEngine.Networking;
@@ -103,10 +103,10 @@ namespace Game.Bundles
             return bundlesVersion;
         }
 
-        public async UniTask<string> GetStoryText(string textName)
+        public async UniTask<string> GetStoryText(string path)
         {
             var result = string.Empty;
-            var textPath = GetRemotePath($"Texts/{textName}.ink.json");
+            var textPath = GetRemotePath(path);
             using (var request = UnityWebRequest.Get(textPath))
             {
                 SetHeaders(request);

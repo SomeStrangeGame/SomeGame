@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Game.SOData;
-using Game.Disposable;
+using Disposable;
 using UnityEngine;
 
 namespace Game.Battle

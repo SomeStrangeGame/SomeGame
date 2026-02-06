@@ -1,5 +1,5 @@
 using Cysharp.Threading.Tasks;
-using Game.Disposable;
+using Disposable;
 using System;
 using UnityEngine;
 

@@ -1,5 +1,5 @@
 using System;
-using Game.Disposable;
+using Disposable;
 using Game.SOData;
 using UnityEngine;
 

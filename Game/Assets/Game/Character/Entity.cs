@@ -1,5 +1,5 @@
 using System;
-using Game.Disposable;
+using Disposable;
 using UnityEngine;
 
 namespace Game.Character
