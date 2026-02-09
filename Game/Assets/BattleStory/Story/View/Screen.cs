@@ -131,6 +131,7 @@ namespace BattleStory.Story.View
             await ShowingText();
             await token.Task;
             await HidingText();
+            SetVoice();
         }
 
         public void Setup(Ctx ctx)
