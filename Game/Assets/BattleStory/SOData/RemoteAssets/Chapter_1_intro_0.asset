@@ -17,3 +17,4 @@ MonoBehaviour:
   _backgroundBundle:
     _bundleName: chapter_onlyscreen_chapter_0
     _assetName: Chapter_1_Intro
+  _voiceAssetsName: introvoice
