@@ -62,6 +62,8 @@ namespace Bundles
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
+            if (string.IsNullOrEmpty(bundleName)) return null;
+
             var bundlesVersion = await GetBundleVersionAsync(bundleName);
             var bundlesPath = $"Remote/{GetPlatform()}/{bundleName}/{bundlesVersion}";
             if (!_bundles.TryGetValue(bundlesPath, out _))

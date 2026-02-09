@@ -13,6 +13,7 @@ namespace BattleStory.Story
             public Func<UniTask<string>> GetTextAsset;
             public Func<UniTask<GameObject>> GetMenuPrefab;
             public Func<UniTask<Sprite>> GetBackgroundSprite;
+            public Func<UniTask<AssetBundle>> GetAudioBundle;
         }
 
         public sealed class Preload : BaseDisposable
@@ -47,10 +48,11 @@ namespace BattleStory.Story
 
         public async UniTask Init()
         {
-            var (screenBackgroundSprite, screenPrefabGO, story) = await UniTask.WhenAll(
+            var (screenBackgroundSprite, screenPrefabGO, story, audioBundle) = await UniTask.WhenAll(
                 _ctx.GetBackgroundSprite(),
                 _ctx.GetMenuPrefab(),
-                _ctx.GetTextAsset()
+                _ctx.GetTextAsset(),
+                _ctx.GetAudioBundle()
             );
 
             _story = new Ink.Runtime.Story(story);
@@ -60,6 +62,7 @@ namespace BattleStory.Story
             _screen.Setup(new View.Screen.Ctx
             {
                 BackgroundSprite = screenBackgroundSprite,
+                GetAudioClip = async assetName => (await audioBundle.LoadAssetAsync<AudioClip>(assetName)) as AudioClip, 
             });
         }
 
@@ -67,7 +70,7 @@ namespace BattleStory.Story
         {
             while (_story.canContinue)
             {
-                await _screen.ShowText(_story.Continue());
+                await _screen.TryProcessText(_story.Continue());
             }
         }
 

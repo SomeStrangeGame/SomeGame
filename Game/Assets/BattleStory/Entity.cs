@@ -89,7 +89,8 @@ namespace BattleStory
             {
                 GetTextAsset = () => _bundles.GetText($"Texts/{data.TextAssetName}.ink.json"),
                 GetMenuPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.ScreenBundle.BundleName, data.ScreenBundle.ScreenBundle.AssetName),
-                GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle.BundleName, data.BackgroundBundle.AssetName)
+                GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle.BundleName, data.BackgroundBundle.AssetName),
+                GetAudioBundle = () => _bundles.GetAssetBundle(data.VoiceAssetsName)
             };
             using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
@@ -108,6 +109,7 @@ namespace BattleStory
                                 {
                                     _bundles.GetAssetBundle(preloadData.BackgroundBundle.BundleName),
                                     _bundles.GetAssetBundle(preloadData.ScreenBundle.ScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.VoiceAssetsName),
                                 };
                             },
                         };
@@ -186,6 +188,7 @@ namespace BattleStory
                                 {
                                     _bundles.GetAssetBundle(preloadData.BackgroundBundle.BundleName),
                                     _bundles.GetAssetBundle(preloadData.ScreenBundle.ScreenBundle.BundleName),
+                                    _bundles.GetAssetBundle(preloadData.VoiceAssetsName)
                                 };
                             },
                         };
