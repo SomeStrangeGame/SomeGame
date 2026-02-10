@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace BattleStory
 {
-    public class BattleProcess : BaseDisposable
+    internal class BattleProcess : BaseDisposable
     {
         internal struct Ctx
         {
