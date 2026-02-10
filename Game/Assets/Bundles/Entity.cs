@@ -9,11 +9,19 @@ namespace Bundles
 {
     public class Entity : BaseDisposable
     {
+        public struct Ctx
+        {
+            public Action<(LogType type, string message)> OnLog;
+        }
+
         private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new();
 
-        public Entity()
+        private Ctx _ctx;
+
+        public Entity(Ctx ctx)
         {
+            _ctx = ctx;
             _cache = new Cache.Entity().AddTo(this);
         }
 
@@ -62,6 +70,8 @@ namespace Bundles
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
+            var log = (LogType.Warning, "bundle name is empty");
+            _ctx.OnLog.Invoke(log);
             if (string.IsNullOrEmpty(bundleName)) return null;
 
             var bundlesVersion = await GetBundleVersionAsync(bundleName);
@@ -71,11 +81,11 @@ namespace Bundles
                 try
                 {
                     _bundles[bundlesPath] = await _cache.BundleFromCache(bundlesPath);
-                    Debug.Log($"Get local bundle from {bundlesPath}");
+                    log = (LogType.Log, $"Get local bundle from {bundlesPath}");
                 }
                 catch (Exception e)
                 {
-                    Debug.LogWarning($"No local bundle {bundleName} in {bundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
+                    log = (LogType.Warning, $"No local bundle {bundleName} in {bundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
                     using (var bundlesRequest = UnityWebRequest.Get(GetRemotePath(bundlesPath)))
                     {
                         SetHeaders(bundlesRequest);
@@ -86,8 +96,9 @@ namespace Bundles
             }
             else
             {
-                Debug.Log($"Get bundle {bundleName} from cache");
+                log = (LogType.Log, $"Get bundle {bundleName} from cache");
             }
+            _ctx.OnLog.Invoke(log);
             return _bundles[bundlesPath];
         }
 

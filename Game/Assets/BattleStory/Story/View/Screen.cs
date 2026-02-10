@@ -28,6 +28,8 @@ namespace BattleStory.Story.View
         {
             get
             {
+                if (this == null) return null;
+
                 if (_voicesSource == null) 
                 {
                     _voicesSource = gameObject.AddComponent<AudioSource>();
@@ -67,6 +69,8 @@ namespace BattleStory.Story.View
 
         private void StopVoice()
         {
+            if (VoicesSource == null) return;
+
             _voices.Clear();
 
             VoicesSource.Stop();
@@ -75,6 +79,8 @@ namespace BattleStory.Story.View
 
         private async UniTask TryPlayVoice(params AudioClip[] voices)
         {
+            if (VoicesSource == null) return;
+            
             foreach(var voice in voices)
                 _voices.Enqueue(voice);
 
@@ -84,7 +90,7 @@ namespace BattleStory.Story.View
             VoicesSource.clip = currentVoice;
             VoicesSource.Play();
 
-            while(VoicesSource.isPlaying)
+            while(VoicesSource != null && VoicesSource.isPlaying)
                 await UniTask.NextFrame();
 
             TryPlayVoice().Forget();

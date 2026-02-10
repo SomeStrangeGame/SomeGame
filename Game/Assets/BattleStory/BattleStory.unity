@@ -344,6 +344,7 @@ MonoBehaviour:
     _chaptersData:
       _bundleName: chapters
       _assetName: Chapters.asset
+  _logs: 0
 --- !u!4 &1138803520
 Transform:
   m_ObjectHideFlags: 0

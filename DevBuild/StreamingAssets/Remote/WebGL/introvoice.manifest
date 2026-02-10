@@ -1,0 +1,24 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 1516927133
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: b1168e7575a87015126c94f8cbbfb0ad
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9a2ca7bdbd1871f7131daf57de908e0c
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: d946810c5b37b7ecb8a36d0ed23f73ec
+HashAppended: 0
+ClassTypes:
+- Class: 83
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/BattleStory/Story/RemoteAssets/IntroVoice/3.mp3
+- Assets/BattleStory/Story/RemoteAssets/IntroVoice/0.mp3
+- Assets/BattleStory/Story/RemoteAssets/IntroVoice/2.mp3
+- Assets/BattleStory/Story/RemoteAssets/IntroVoice/1.mp3
+Dependencies: []
