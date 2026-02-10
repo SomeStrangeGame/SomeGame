@@ -21,4 +21,4 @@ MonoBehaviour:
   _failedMenu:
   - {fileID: 11400000, guid: e65833eb7b45647d8beae571d0d21382, type: 2}
   _battles:
-  - {fileID: 11400000, guid: 905e02b3762fe4eb7b887218ca2d3383, type: 2}
+  - {fileID: 11400000, guid: 60eea0f4bd0fd48debfb237311687d2d, type: 2}

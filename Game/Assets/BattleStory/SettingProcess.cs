@@ -51,7 +51,7 @@ namespace BattleStory
             SetVoices();
             void SetVoices()
             {
-                setting.AddOrUpdateButton("voices", $"<b>Озвучка: {(skipVoice ?  "выключено" : "включено")}</b>", () => 
+                setting.AddOrUpdateButton("voices", $"<b>Озвучка: [{(skipVoice ?  "выключено" : "включено")}]</b>", () => 
                 {
                     skipVoice = !skipVoice;
                     _ctx.OnSkipVoice.Invoke(skipVoice);
