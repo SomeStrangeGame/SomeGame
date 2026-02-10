@@ -53,41 +53,18 @@ namespace BattleStory
 
             await loading.Show();
 
-            var setting = new Setting.Entity(new Setting.Entity.Ctx
-            {
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.SettingData.BundleName, _ctx.Data.SettingData.AssetName),
-            }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await setting.Init();
-            
             var skipVoice = false;
-            SetVoices();
-            void SetVoices()
+            var settingProcessCtx = new SettingProcess.Ctx
             {
-                setting.AddOrUpdateButton("voices", $"<b>Озвучка: {(skipVoice ?  "выключено" : "включено")}</b>", () => 
-                {
-                    skipVoice = !skipVoice;
-                    SetVoices();
-                });
-            }
-
-            var settingsDone = new UniTaskCompletionSource();
-            SetDone();
-            void SetDone()
-            {
-                setting.AddOrUpdateButton("done", "<b>Начать</b>", () =>
-                {
-                    settingsDone.TrySetResult();
-                });
-            }
-
-            await loading.Hide();
-
-            setting.Show();
-            await settingsDone.Task;
-            setting.Hide();
-
-            await loading.Show();
+                OnSkipVoice = isSkipVoice => skipVoice = isSkipVoice,
+                DefaultThreadPriority = _defaultThreadPriority,
+                SettingData = _ctx.Data.SettingData,
+                GetBundledPrefab = bundles.GetBundledPrefab,
+                ShowLoading = loading.Show,
+                HideLoading = loading.Hide,
+            };
+            var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
+            await settingProcess.ShowSettingProcess();
 
             ChaptersData chaptersData = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
