@@ -44,14 +44,15 @@ namespace BattleStory
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
 
-            var loading = new Loading.Entity(new Loading.Entity.Ctx
+            var loadingCtx = new Loading.Entity.Ctx
             {
                 GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LoadingData.BundleName, _ctx.Data.LoadingData.AssetName),
-            }).AddTo(this);
+            };
+            var loading = new Loading.Entity(loadingCtx).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await loading.Init();
 
-            //preloading
+            //preloading init
             var chaptersDataLoading = bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
 
             await loading.Show();
@@ -69,6 +70,7 @@ namespace BattleStory
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
 
+            //preloading loading
             ChaptersData chaptersData = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 chaptersData = await chaptersDataLoading;

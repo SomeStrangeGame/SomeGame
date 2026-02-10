@@ -33,7 +33,19 @@ namespace BattleStory
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _ctx.DefaultThreadPriority))
                 await setting.Init();
-            
+            SetVoiceButton(setting);
+            var settingDone = new UniTaskCompletionSource();
+            SetDoneButton(setting, settingDone);
+
+            setting.Show();
+            await _ctx.HideLoading();
+            await settingDone.Task;
+            setting.Hide();
+            await _ctx.ShowLoading();
+        }
+
+        private void SetVoiceButton(Setting.Entity setting)
+        {
             var skipVoice = false;
             _ctx.OnSkipVoice.Invoke(skipVoice);
             SetVoices();
@@ -46,22 +58,18 @@ namespace BattleStory
                     SetVoices();
                 });
             }
+        }
 
-            var settingsDone = new UniTaskCompletionSource();
+        private void SetDoneButton(Setting.Entity setting, UniTaskCompletionSource settingDone)
+        {
             SetDone();
             void SetDone()
             {
                 setting.AddOrUpdateButton("done", "<b>Начать</b>", () =>
                 {
-                    settingsDone.TrySetResult();
+                    settingDone.TrySetResult();
                 });
             }
-
-            setting.Show();
-            await _ctx.HideLoading();
-            await settingsDone.Task;
-            setting.Hide();
-            await _ctx.ShowLoading();
         }
     }
 }
