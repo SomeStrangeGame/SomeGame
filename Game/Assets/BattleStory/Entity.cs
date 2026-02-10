@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using BattleStory.SOData;
@@ -61,55 +60,6 @@ namespace BattleStory
             ChapterProcess().Forget();
         }
 
-        private async UniTask<int> ShowBattleProcess(BattleData data, params ScreenData[] screensPreloadData)
-        {
-            return await ShowBattleProcess(data, screensPreloadData, null);
-        }
-
-        private async UniTask<int> ShowBattleProcess(BattleData data, params BattleData[] battlesPreloadData)
-        {
-            return await ShowBattleProcess(data, null, battlesPreloadData);
-        }
-
-        private async UniTask<int> ShowBattleProcess(BattleData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
-        {
-            var result = 0;
-            var ctx = new Battle.Entity.Ctx
-            {
-                CameraData = data.Camera,
-                GetBattleScenePrefab = () => _bundles.GetBundledPrefab(data.SceneBundle.BundleName, data.SceneBundle.AssetName),
-                GetBattleScreenPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.BundleName, data.ScreenBundle.AssetName),
-                GetMeleeCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterScreenBundle.BundleName, data.MeleeCharacterScreenBundle.AssetName),
-                GetMeleeCharacterPrefab = () => _bundles.GetBundledPrefab(data.MeleeCharacterBundle.BundleName, data.MeleeCharacterBundle.AssetName),
-                GetDistanceCharacterInputScreenPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterScreenBundle.BundleName, data.DistanceCharacterScreenBundle.AssetName),
-                GetDistanceCharacterPrefab = () => _bundles.GetBundledPrefab(data.DistanceCharacterBundle.BundleName, data.DistanceCharacterBundle.AssetName),
-            };
-            using (var battle = new Battle.Entity(ctx).AddTo(this))
-            {
-                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                    await battle.Init();
-                
-                var preloading = new List<UniTask>();
-                var preloadingCtx = new Preloading.Entity.Ctx
-                {
-                    GetAssetBundle = path => _bundles.GetAssetBundle(path),
-                };
-                using(var preloadingEntity = new Preloading.Entity(preloadingCtx).AddTo(this))
-                {
-                    preloading.AddRange(preloadingEntity.GetPreloading(screensPreloadData, battlesPreloadData));
-                }
-
-                await _loading.Hide();
-                result = await battle.WaitBattleResult();
-                await UniTask.Delay(3000);
-                await _loading.Show();
-                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                    await UniTask.WhenAll(preloading);
-                battle.ReleaseBattle();
-            }
-            return result;
-        }
-
         private async UniTask ChapterProcess(int index = 0, bool skipIntro = false, bool skipStart = false, bool skipBattle = false, bool skipFailed = false, bool skipSuccess = false)
         {
             var storyProcessCtx = new StoryProcess.Ctx
@@ -118,6 +68,15 @@ namespace BattleStory
                 GetText = _bundles.GetText,
                 GetBundledPrefab = _bundles.GetBundledPrefab,
                 GetBundledSprite = _bundles.GetBundledSprite,
+                GetAssetBundle = _bundles.GetAssetBundle,
+                ShowLoading = _loading.Show,
+                HideLoading = _loading.Hide,
+            };
+
+            var battleProcessCtx = new BattleProcess.Ctx
+            {
+                DefaultThreadPriority = _defaultThreadPriority,
+                GetBundledPrefab = _bundles.GetBundledPrefab,
                 GetAssetBundle = _bundles.GetAssetBundle,
                 ShowLoading = _loading.Show,
                 HideLoading = _loading.Hide,
@@ -139,7 +98,6 @@ namespace BattleStory
                     else
                         using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
                             await storyProcess.ShowMenuProcess(chapterData.IntroMenu[i]);
-                    
                 }
             }
 
@@ -167,11 +125,14 @@ namespace BattleStory
                 {
                     var isLast = i + 1 >= chapterData.Battles.Length;
                     if (!isLast)
-                        battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.Battles[i + 1]);
+                        using(var battleProcess = new BattleProcess(battleProcessCtx).AddTo(this))
+                            battleResult = await battleProcess.ShowBattleProcess(chapterData.Battles[i], chapterData.Battles[i + 1]);
                     else if (chapterData.FailedMenu.Length > 0 && chapterData.SuccessMenu.Length > 0)
-                        battleResult = await ShowBattleProcess(chapterData.Battles[i], chapterData.FailedMenu[0], chapterData.SuccessMenu[0]);
+                        using(var battleProcess = new BattleProcess(battleProcessCtx).AddTo(this))
+                            battleResult = await battleProcess.ShowBattleProcess(chapterData.Battles[i], chapterData.FailedMenu[0], chapterData.SuccessMenu[0]);
                     else
-                        battleResult = await ShowBattleProcess(chapterData.Battles[i]);
+                        using(var battleProcess = new BattleProcess(battleProcessCtx).AddTo(this))
+                            battleResult = await battleProcess.ShowBattleProcess(chapterData.Battles[i]);
                     if (battleResult == 0)
                         break;
                 }

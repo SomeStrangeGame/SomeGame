@@ -7,9 +7,9 @@
   <Project Path="BattleStory.Character.View.csproj" />
   <Project Path="Loading.csproj" />
   <Project Path="CodeStrippingFix.csproj" />
+  <Project Path="Game.csproj" />
   <Project Path="Loading.View.csproj" />
   <Project Path="BattleStory.Story.View.csproj" />
-  <Project Path="Game.csproj" />
   <Project Path="SimpleInput.csproj" />
   <Project Path="BattleStory.Character.csproj" />
   <Project Path="Disposable.csproj" />
