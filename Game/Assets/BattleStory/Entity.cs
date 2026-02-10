@@ -10,9 +10,11 @@ namespace BattleStory
     internal struct Data
     {
         [SerializeField] private BundleData _loadingData;
+        [SerializeField] private BundleData _settingData;
         [SerializeField] private BundleData _chaptersData;
 
         internal readonly BundleData LoadingData => _loadingData;
+        internal readonly BundleData SettingData => _settingData;
         internal readonly BundleData ChaptersData => _chaptersData;
     }
 
@@ -42,14 +44,48 @@ namespace BattleStory
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
 
-            var loadingCtx = new Loading.Entity.Ctx
+            var loading = new Loading.Entity(new Loading.Entity.Ctx
             {
                 GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LoadingData.BundleName, _ctx.Data.LoadingData.AssetName),
-            };
-            
-            var loading = new Loading.Entity(loadingCtx).AddTo(this);
+            }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await loading.Init();
+
+            await loading.Show();
+
+            var setting = new Setting.Entity(new Setting.Entity.Ctx
+            {
+                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.SettingData.BundleName, _ctx.Data.SettingData.AssetName),
+            }).AddTo(this);
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await setting.Init();
+            
+            var skipVoice = false;
+            SetVoices();
+            void SetVoices()
+            {
+                setting.AddOrUpdateButton("voices", $"<b>Озвучка: {(skipVoice ?  "выключено" : "включено")}</b>", () => 
+                {
+                    skipVoice = !skipVoice;
+                    SetVoices();
+                });
+            }
+
+            var settingsDone = new UniTaskCompletionSource();
+            SetDone();
+            void SetDone()
+            {
+                setting.AddOrUpdateButton("done", "<b>Начать</b>", () =>
+                {
+                    settingsDone.TrySetResult();
+                });
+            }
+
+            await loading.Hide();
+
+            setting.Show();
+            await settingsDone.Task;
+            setting.Hide();
 
             await loading.Show();
 
@@ -59,6 +95,7 @@ namespace BattleStory
 
             var chapterProcessCtx = new ChapterProcess.Ctx
             {
+                SkipVoice = skipVoice,
                 ChaptersData = chaptersData,
                 DefaultThreadPriority = _defaultThreadPriority,
                 GetText = bundles.GetText,

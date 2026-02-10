@@ -11,9 +11,12 @@ namespace BattleStory.Story.View
     {
         public struct Ctx
         {
+            public bool SkipVoices;
             public Sprite BackgroundSprite;
             public Func<string, UniTask<AudioClip>> GetAudioClip;
         }
+
+        private const string _voicesTag = "voices:";
 
         [SerializeField] private Image _backgroundImage;
         [SerializeField] private Text _descriptionTextArea;
@@ -41,6 +44,17 @@ namespace BattleStory.Story.View
         }
 
         private Ctx _ctx;
+
+        public void Setup(Ctx ctx)
+        {
+            _ctx = ctx;
+
+            _backgroundImage.sprite = _ctx.BackgroundSprite;
+            var aspectRatio = (float)_ctx.BackgroundSprite.texture.width / _ctx.BackgroundSprite.texture.height;
+            var le = _backgroundImage.GetComponent<LayoutElement>();
+            le.preferredHeight = _viewportRect.rect.width / aspectRatio;
+            _descriptionTextArea.text = string.Empty;
+        }
 
         public async UniTask ShowingText()
         {
@@ -125,11 +139,14 @@ namespace BattleStory.Story.View
             var le = _descriptionTextArea.GetComponent<LayoutElement>();
             le.preferredWidth = _viewportRect.rect.width;
 
-            if (text.Contains("voices:"))
+            if (text.Contains(_voicesTag))
             {
-                var voicesNames = text.Replace("voices:", string.Empty).Split(",");
-                var voices = await voicesNames.Select(async v => await _ctx.GetAudioClip(v.Trim())).ToArray();
-                SetVoice(voices);
+                if (!_ctx.SkipVoices)
+                {
+                    var voicesNames = text.Replace(_voicesTag, string.Empty).Split(",");
+                    var voices = await voicesNames.Select(async v => await _ctx.GetAudioClip(v.Trim())).ToArray();
+                    SetVoice(voices);
+                }
                 return;
             }
             
@@ -137,18 +154,7 @@ namespace BattleStory.Story.View
             await ShowingText();
             await token.Task;
             await HidingText();
-            SetVoice();
-        }
-
-        public void Setup(Ctx ctx)
-        {
-            _ctx = ctx;
-
-            _backgroundImage.sprite = _ctx.BackgroundSprite;
-            var aspectRatio = (float)_ctx.BackgroundSprite.texture.width / _ctx.BackgroundSprite.texture.height;
-            var le = _backgroundImage.GetComponent<LayoutElement>();
-            le.preferredHeight = _viewportRect.rect.width / aspectRatio;
-            _descriptionTextArea.text = string.Empty;
+            StopVoice();
         }
 
         public void Release() 

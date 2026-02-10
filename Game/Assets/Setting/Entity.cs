@@ -1,11 +1,11 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Disposable;
-using System;
 using UnityEngine;
 
-namespace Loading
+namespace Setting
 {
-    public sealed class Entity : BaseDisposable
+    public class Entity : BaseDisposable
     {
         public struct Ctx
         {
@@ -28,8 +28,20 @@ namespace Loading
             _screen = screenGO.GetComponent<View.Screen>();
         }
 
-        public async UniTask Show() => await _screen.Show();
-        public async UniTask Hide() => await _screen.Hide();
+        public void Show()
+        {
+            _screen.gameObject.SetActive(true);
+        }
+
+        public void Hide()
+        {
+            _screen.gameObject.SetActive(false);
+        }
+
+        public void AddOrUpdateButton(string id, string text, Action onClick)
+        {
+            _screen.AddOrUpdateButton(id, text, onClick);
+        }
 
         protected override void OnDispose()
         {

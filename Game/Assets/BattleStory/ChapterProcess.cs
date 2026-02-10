@@ -10,6 +10,7 @@ namespace BattleStory
     {
         internal struct Ctx
         {
+            internal bool SkipVoice;
             internal ChaptersData ChaptersData;
 
             internal ThreadPriority DefaultThreadPriority;
@@ -34,6 +35,7 @@ namespace BattleStory
         {
             var storyProcessCtx = new StoryProcess.Ctx
             {
+                SkipVoice = _ctx.SkipVoice,
                 DefaultThreadPriority = _ctx.DefaultThreadPriority,
                 GetText = _ctx.GetText,
                 GetBundledPrefab = _ctx.GetBundledPrefab,

@@ -341,6 +341,9 @@ MonoBehaviour:
     _loadingData:
       _bundleName: loading
       _assetName: Loading.prefab
+    _settingData:
+      _bundleName: setting_battlestory
+      _assetName: Screen.prefab
     _chaptersData:
       _bundleName: chapters
       _assetName: Chapters.asset

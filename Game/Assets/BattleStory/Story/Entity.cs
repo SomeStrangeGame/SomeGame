@@ -9,6 +9,7 @@ namespace BattleStory.Story
     {
         public struct Ctx
         {
+            public bool SkipVoice;
             public Func<UniTask<string>> GetTextAsset;
             public Func<UniTask<GameObject>> GetMenuPrefab;
             public Func<UniTask<Sprite>> GetBackgroundSprite;
@@ -40,6 +41,7 @@ namespace BattleStory.Story
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.Setup(new View.Screen.Ctx
             {
+                SkipVoices = _ctx.SkipVoice,
                 BackgroundSprite = screenBackgroundSprite,
                 GetAudioClip = async assetName => (await audioBundle.LoadAssetAsync<AudioClip>(assetName)) as AudioClip, 
             });

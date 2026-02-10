@@ -12,13 +12,7 @@ namespace Loading.View
 
         private void Update()
         {
-            _marker.rotation *= Quaternion.Euler(Vector3.up * _markerSpeed * Time.deltaTime);
-        }
-
-        public void ShowImmediate()
-        {
-            _canvasGroup.alpha = 1f;
-            _canvasGroup.gameObject.SetActive(true);
+            _marker.rotation *= Quaternion.Euler(_markerSpeed * Time.deltaTime * Vector3.up);
         }
 
         public async UniTask Show()
@@ -38,12 +32,6 @@ namespace Loading.View
             }
 
             _canvasGroup.alpha = 1f;
-        }
-
-        public void HideImmediate()
-        {
-            _canvasGroup.alpha = 0f;
-            _canvasGroup.gameObject.SetActive(false);
         }
 
         public async UniTask Hide()
