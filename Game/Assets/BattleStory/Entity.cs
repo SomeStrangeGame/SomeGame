@@ -61,48 +61,6 @@ namespace BattleStory
             ChapterProcess().Forget();
         }
 
-        private async UniTask ShowMenuProcess(ScreenData data, params ScreenData[] screensPreloadData)
-        {
-            await ShowMenuProcess(data, screensPreloadData, null);
-        }
-
-        private async UniTask ShowMenuProcess(ScreenData data, params BattleData[] battlesPreloadData)
-        {
-            await ShowMenuProcess(data, null, battlesPreloadData);
-        }
-
-        private async UniTask ShowMenuProcess(ScreenData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
-        {
-            var ctx = new Story.Entity.Ctx
-            {
-                GetTextAsset = () => _bundles.GetText($"Texts/{data.TextAssetName}.ink.json"),
-                GetMenuPrefab = () => _bundles.GetBundledPrefab(data.ScreenBundle.ScreenBundle.BundleName, data.ScreenBundle.ScreenBundle.AssetName),
-                GetBackgroundSprite = () => _bundles.GetBundledSprite(data.BackgroundBundle.BundleName, data.BackgroundBundle.AssetName),
-                GetAudioBundle = () => _bundles.GetAssetBundle(data.VoiceAssetsName)
-            };
-            using (var chapter = new Story.Entity(ctx).AddTo(this))
-            {
-                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                    await chapter.Init();
-
-                var preloading = new List<UniTask>();
-                var preloadingCtx = new Preloading.Entity.Ctx
-                {
-                    GetAssetBundle = path => _bundles.GetAssetBundle(path),
-                };
-                using(var preloadingEntity = new Preloading.Entity(preloadingCtx).AddTo(this))
-                {
-                    preloading.AddRange(preloadingEntity.GetPreloading(screensPreloadData, battlesPreloadData));
-                }
-
-                await _loading.Hide();
-                await chapter.WaitResult(); 
-                await _loading.Show();
-                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                    await UniTask.WhenAll(preloading);
-            }
-        }
-
         private async UniTask<int> ShowBattleProcess(BattleData data, params ScreenData[] screensPreloadData)
         {
             return await ShowBattleProcess(data, screensPreloadData, null);
@@ -154,18 +112,33 @@ namespace BattleStory
 
         private async UniTask ChapterProcess(int index = 0, bool skipIntro = false, bool skipStart = false, bool skipBattle = false, bool skipFailed = false, bool skipSuccess = false)
         {
+            var storyProcessCtx = new StoryProcess.Ctx
+            {
+                DefaultThreadPriority = _defaultThreadPriority,
+                GetText = _bundles.GetText,
+                GetBundledPrefab = _bundles.GetBundledPrefab,
+                GetBundledSprite = _bundles.GetBundledSprite,
+                GetAssetBundle = _bundles.GetAssetBundle,
+                ShowLoading = _loading.Show,
+                HideLoading = _loading.Hide,
+            };
+
             var chapterData = _chaptersData.Chapters[index];
+            
             if (!skipIntro)
             {
                 for (var i = 0; i < chapterData.IntroMenu.Length; i++)
                 {
                     var isLast = i + 1 >= chapterData.IntroMenu.Length;
                     if (!isLast)
-                        await ShowMenuProcess(chapterData.IntroMenu[i], chapterData.IntroMenu[i + 1]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.IntroMenu[i], chapterData.IntroMenu[i + 1]);
                     else if (chapterData.StartMenu.Length > 0) 
-                        await ShowMenuProcess(chapterData.IntroMenu[i], chapterData.StartMenu[0]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.IntroMenu[i], chapterData.StartMenu[0]);
                     else
-                        await ShowMenuProcess(chapterData.IntroMenu[i]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.IntroMenu[i]);
                     
                 }
             }
@@ -176,11 +149,14 @@ namespace BattleStory
                 {
                     var isLast = i + 1 >= chapterData.StartMenu.Length;
                     if (!isLast)
-                        await ShowMenuProcess(chapterData.StartMenu[i], chapterData.StartMenu[i + 1]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.StartMenu[i], chapterData.StartMenu[i + 1]);
                     else if (chapterData.Battles.Length > 0)
-                        await ShowMenuProcess(chapterData.StartMenu[i], chapterData.Battles[0]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.StartMenu[i], chapterData.Battles[0]);
                     else
-                        await ShowMenuProcess(chapterData.StartMenu[i]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.StartMenu[i]);
                 }
             }
 
@@ -209,9 +185,11 @@ namespace BattleStory
                     {
                         var isLast = i + 1 >= chapterData.FailedMenu.Length;
                         if (!isLast)
-                            await ShowMenuProcess(chapterData.FailedMenu[i], chapterData.FailedMenu[i + 1]);
+                            using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                                await storyProcess.ShowMenuProcess(chapterData.FailedMenu[i], chapterData.FailedMenu[i + 1]);
                         else
-                            await ShowMenuProcess(chapterData.FailedMenu[i]);
+                            using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                                await storyProcess.ShowMenuProcess(chapterData.FailedMenu[i]);
                     }
                 }
 
@@ -225,9 +203,11 @@ namespace BattleStory
                 {
                     var isLast = i + 1 >= chapterData.SuccessMenu.Length;
                     if (!isLast)
-                        await ShowMenuProcess(chapterData.SuccessMenu[i], chapterData.SuccessMenu[i + 1]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.SuccessMenu[i], chapterData.SuccessMenu[i + 1]);
                     else
-                        await ShowMenuProcess(chapterData.SuccessMenu[i]);
+                        using(var storyProcess = new StoryProcess(storyProcessCtx).AddTo(this))
+                            await storyProcess.ShowMenuProcess(chapterData.SuccessMenu[i]);
                 }
             }
 
