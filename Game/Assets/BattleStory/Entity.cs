@@ -51,6 +51,9 @@ namespace BattleStory
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await loading.Init();
 
+            //preloading
+            var chaptersDataLoading = bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
+
             await loading.Show();
 
             var skipVoice = false;
@@ -68,7 +71,7 @@ namespace BattleStory
 
             ChaptersData chaptersData = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                chaptersData = await bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
+                chaptersData = await chaptersDataLoading;
 
             var chapterProcessCtx = new ChapterProcess.Ctx
             {
