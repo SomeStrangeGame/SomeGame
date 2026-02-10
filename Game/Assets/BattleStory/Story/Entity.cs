@@ -16,26 +16,6 @@ namespace BattleStory.Story
             public Func<UniTask<AssetBundle>> GetAudioBundle;
         }
 
-        public sealed class Preload : BaseDisposable
-        {
-            public struct Ctx
-            {
-                public Func<List<UniTask>> GetAssets;
-            }
-
-            private Ctx _ctx;
-
-            public Preload(Ctx ctx)
-            {
-                _ctx = ctx;
-            }
-
-            public async UniTask Process()
-            {
-                await UniTask.WhenAll(_ctx.GetAssets());
-            }
-        }
-
         private readonly Ctx _ctx;
 
         private View.Screen _screen;

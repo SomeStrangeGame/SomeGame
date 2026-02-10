@@ -1,6 +1,7 @@
 ﻿<Solution>
   <Project Path="BattleStory.Battle.View.csproj" />
   <Project Path="BattleStory.Camera.csproj" />
+  <Project Path="LoadingPriority.csproj" />
   <Project Path="BattleStory.Story.csproj" />
   <Project Path="BattleStory.Data.csproj" />
   <Project Path="BattleStory.Character.View.csproj" />
@@ -13,6 +14,7 @@
   <Project Path="BattleStory.Character.csproj" />
   <Project Path="Disposable.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
+  <Project Path="BattleStory.Preloading.csproj" />
   <Project Path="BattleStory.Battle.csproj" />
   <Project Path="Bundles.csproj" />
   <Project Path="Cache.csproj" />

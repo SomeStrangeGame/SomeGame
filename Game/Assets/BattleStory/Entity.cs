@@ -7,22 +7,6 @@ using UnityEngine;
 
 namespace BattleStory
 {
-    internal class BackgrounLoadingPriority : IDisposable
-    {
-        private ThreadPriority _defaultPriority;
-
-        public BackgrounLoadingPriority(ThreadPriority currentPriority, ThreadPriority defaultPriority)
-        {
-            _defaultPriority = defaultPriority;
-            Application.backgroundLoadingPriority = currentPriority;
-        }
-
-        public void Dispose()
-        {
-            Application.backgroundLoadingPriority = _defaultPriority;
-        }
-    }
-
     [Serializable]
     internal struct Data
     {
@@ -67,12 +51,12 @@ namespace BattleStory
             };
             
             _loading = new Loading.Entity(loadingCtx).AddTo(this);
-            using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await _loading.Init();
 
             await _loading.Show();
 
-            using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 _chaptersData = await _bundles.GetBundledSO<ChaptersData>(_ctx.Data.ChaptersData.BundleName, _ctx.Data.ChaptersData.AssetName);
             ChapterProcess().Forget();
         }
@@ -87,55 +71,6 @@ namespace BattleStory
             await ShowMenuProcess(data, null, battlesPreloadData);
         }
 
-        private List<UniTask> GetPreloading(ScreenData[] screensPreloadData, BattleData[] battlesPreloadData)
-        {
-            var preloading = new List<UniTask>();
-            if (screensPreloadData != null)
-            {
-                foreach (var preloadData in screensPreloadData)
-                {
-                    var preloadCtx = new Story.Entity.Preload.Ctx
-                    {
-                        GetAssets = () =>
-                        {
-                            return new List<UniTask>
-                            {
-                                _bundles.GetAssetBundle(preloadData.BackgroundBundle.BundleName),
-                                _bundles.GetAssetBundle(preloadData.ScreenBundle.ScreenBundle.BundleName),
-                                _bundles.GetAssetBundle(preloadData.VoiceAssetsName),
-                            };
-                        },
-                    };
-                    using (var preload = new Story.Entity.Preload(preloadCtx).AddTo(this))
-                        preloading.Add(preload.Process());
-                }
-            }
-            if (battlesPreloadData != null)
-            {
-                foreach (var preloadData in battlesPreloadData)
-                {
-                    var preloadCtx = new Battle.Entity.Preload.Ctx
-                    {
-                        GetAssets = () =>
-                        {
-                            return new List<UniTask>
-                            {
-                                _bundles.GetAssetBundle(preloadData.ScreenBundle.BundleName),
-                                _bundles.GetAssetBundle(preloadData.SceneBundle.BundleName),
-                                _bundles.GetAssetBundle(preloadData.MeleeCharacterBundle.BundleName),
-                                _bundles.GetAssetBundle(preloadData.MeleeCharacterScreenBundle.BundleName),
-                                _bundles.GetAssetBundle(preloadData.DistanceCharacterBundle.BundleName),
-                                _bundles.GetAssetBundle(preloadData.DistanceCharacterScreenBundle.BundleName),
-                            };
-                        },
-                    };
-                    using (var preload = new Battle.Entity.Preload(preloadCtx).AddTo(this))
-                        preloading.Add(preload.Process());
-                }
-            }
-            return preloading;
-        }
-
         private async UniTask ShowMenuProcess(ScreenData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
         {
             var ctx = new Story.Entity.Ctx
@@ -147,15 +82,23 @@ namespace BattleStory
             };
             using (var chapter = new Story.Entity(ctx).AddTo(this))
             {
-                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                     await chapter.Init();
 
-                var preloading = GetPreloading(screensPreloadData, battlesPreloadData);
+                var preloading = new List<UniTask>();
+                var preloadingCtx = new Preloading.Entity.Ctx
+                {
+                    GetAssetBundle = path => _bundles.GetAssetBundle(path),
+                };
+                using(var preloadingEntity = new Preloading.Entity(preloadingCtx).AddTo(this))
+                {
+                    preloading.AddRange(preloadingEntity.GetPreloading(screensPreloadData, battlesPreloadData));
+                }
 
                 await _loading.Hide();
                 await chapter.WaitResult(); 
                 await _loading.Show();
-                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                     await UniTask.WhenAll(preloading);
             }
         }
@@ -185,16 +128,24 @@ namespace BattleStory
             };
             using (var battle = new Battle.Entity(ctx).AddTo(this))
             {
-                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                     await battle.Init();
                 
-                var preloading = GetPreloading(screensPreloadData, battlesPreloadData);
+                var preloading = new List<UniTask>();
+                var preloadingCtx = new Preloading.Entity.Ctx
+                {
+                    GetAssetBundle = path => _bundles.GetAssetBundle(path),
+                };
+                using(var preloadingEntity = new Preloading.Entity(preloadingCtx).AddTo(this))
+                {
+                    preloading.AddRange(preloadingEntity.GetPreloading(screensPreloadData, battlesPreloadData));
+                }
 
                 await _loading.Hide();
                 result = await battle.WaitBattleResult();
                 await UniTask.Delay(3000);
                 await _loading.Show();
-                using (new BackgrounLoadingPriority(ThreadPriority.High, _defaultThreadPriority))
+                using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                     await UniTask.WhenAll(preloading);
                 battle.ReleaseBattle();
             }
@@ -287,7 +238,7 @@ namespace BattleStory
                 return;
             }
 
-            ChapterProcess(0).Forget(); //restart
+            ChapterProcess().Forget(); //restart
         }
     }
 }

@@ -20,26 +20,6 @@ namespace BattleStory.Battle
             public Func<UniTask<GameObject>> GetBattleScreenPrefab;
         }
 
-        public sealed class Preload : BaseDisposable
-        {
-            public struct Ctx
-            {
-                public Func<List<UniTask>> GetAssets;
-            }
-
-            private Ctx _ctx;
-
-            public Preload(Ctx ctx)
-            {
-                _ctx = ctx;
-            }
-
-            public async UniTask Process()
-            {
-                await UniTask.WhenAll(_ctx.GetAssets());
-            }
-        }
-
         private readonly UniTaskCompletionSource<int> _battleToken;
         private readonly Ctx _ctx;
 
