@@ -1,7 +1,7 @@
 using System;
-using BattleStory.SOData;
 using Cysharp.Threading.Tasks;
 using Disposable;
+using SOData;
 using UnityEngine;
 
 namespace BattleStory

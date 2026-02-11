@@ -51,7 +51,7 @@ namespace BattleStory
             var ctx = new Story.Entity.Ctx
             {
                 SkipVoice = _ctx.SkipVoice,
-                GetTextAsset = () => _ctx.GetText($"Texts/{data.TextAssetName}.ink.json"),
+                GetTextAsset = () => _ctx.GetText($"BattleStoryTexts/{data.TextAssetName}.ink.json"),
                 GetMenuPrefab = () => _ctx.GetBundledPrefab(data.ScreenBundle.ScreenBundle.BundleName, data.ScreenBundle.ScreenBundle.AssetName),
                 GetBackgroundSprite = () => _ctx.GetBundledSprite(data.BackgroundBundle.BundleName, data.BackgroundBundle.AssetName),
                 GetAudioBundle = () => _ctx.GetAssetBundle(data.VoiceAssetsName)

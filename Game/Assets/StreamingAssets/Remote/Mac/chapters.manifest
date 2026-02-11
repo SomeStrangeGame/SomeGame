@@ -1,13 +1,13 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 4214586196
+CRC: 1973396877
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 3c3036dd4bb9dc824fbcd2cf58f7875a
+    Hash: 2c5dc987e21500382acaa75d047780ab
   TypeTreeHash:
     serializedVersion: 2
-    Hash: ea5c06284a080ccf67434ba9b5c42ffe
+    Hash: 4dde47854dde0aa5aada9688f60152eb
   IncrementalBuildHash:
     serializedVersion: 2
     Hash: f8c4e2d0bdbc1a7099a8bf38c0fc0eb6
@@ -28,8 +28,8 @@ ClassTypes:
 - Class: 115
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
-- AssemblyName: BattleStory.Data
-  ClassName: BattleStory.SOData.BundleData
+- AssemblyName: SOData
+  ClassName: SOData.BundleData
 Assets:
 - Assets/BattleStory/SOData/RemoteAssets/Chapters.asset
 Dependencies: []

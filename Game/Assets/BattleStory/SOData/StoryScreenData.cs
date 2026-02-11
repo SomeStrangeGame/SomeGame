@@ -1,3 +1,4 @@
+using SOData;
 using UnityEngine;
 
 namespace BattleStory.SOData

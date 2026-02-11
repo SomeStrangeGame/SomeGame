@@ -3,6 +3,7 @@ using Cysharp.Threading.Tasks;
 using Disposable;
 using BattleStory.SOData;
 using UnityEngine;
+using SOData;
 
 namespace BattleStory
 {
