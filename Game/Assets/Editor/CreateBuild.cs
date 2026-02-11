@@ -7,7 +7,7 @@ namespace Editor
 {
     public class CreateBuild
     {
-        [MenuItem("Build/Build All")]
+        [MenuItem("Build/BattleStory/Build All")]
         public static void BuildAll()
         {
             BuildGzipCompression();
@@ -15,7 +15,7 @@ namespace Editor
             BuildNoCompression();
         }
 
-        [MenuItem("Build/Build All And Run")]
+        [MenuItem("Build/BattleStory/Build All And Run")]
         public static void BuildAllAndRun()
         {
             BuildGzipCompression();
@@ -23,28 +23,28 @@ namespace Editor
             BuildNoCompressionAndRun();
         }
 
-        [MenuItem("Build/Build GzipCompression")]
+        [MenuItem("Build/BattleStory/Build GzipCompression")]
         public static void BuildGzipCompression()
         {
-            Build("Assets/Settings/Build Profiles/GzipCompression.asset", "../GzipBuild", BuildOptions.None);
+            Build("Assets/Settings/Build Profiles/BattleStoryGzipCompression.asset", "../GzipBuild", BuildOptions.None);
         }
 
-        [MenuItem("Build/Build BrotliCompression")]
+        [MenuItem("Build/BattleStory/Build BrotliCompression")]
         public static void BuildBrotliCompression()
         {
-            Build("Assets/Settings/Build Profiles/BrotliCompression.asset", "../BrotliBuild", BuildOptions.None);
+            Build("Assets/Settings/Build Profiles/BattleStoryBrotliCompression.asset", "../BrotliBuild", BuildOptions.None);
         }
 
-        [MenuItem("Build/Build DevBuild")]
+        [MenuItem("Build/BattleStory/Build DevBuild")]
         public static void BuildNoCompression()
         {
-            Build("Assets/Settings/Build Profiles/NoCompression.asset", "../DevBuild", BuildOptions.None);
+            Build("Assets/Settings/Build Profiles/BattleStoryNoCompression.asset", "../DevBuild", BuildOptions.None);
         }
 
-        [MenuItem("Build/Build DevBuild And Run")]
+        [MenuItem("Build/BattleStory/Build DevBuild And Run")]
         public static void BuildNoCompressionAndRun()
         {
-            Build("Assets/Settings/Build Profiles/NoCompression.asset", "../DevBuild", BuildOptions.AutoRunPlayer);
+            Build("Assets/Settings/Build Profiles/BattleStoryNoCompression.asset", "../DevBuild", BuildOptions.AutoRunPlayer);
         }
 
         private static void Build(string profilePath, string locationPath, BuildOptions buildOptions)
