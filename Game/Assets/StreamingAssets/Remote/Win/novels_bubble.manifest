@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 3430184263
+CRC: 4220446818
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9c137f2e79e83911594fc5732d79b9f5
+    Hash: 037f95092d16eb020aa519397307360c
   TypeTreeHash:
     serializedVersion: 2
-    Hash: c00d500321ee5f52239e2b7a4e0afbfe
+    Hash: a2eaec95b1fbc621b61e228e213bed57
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: b38e014252423cd691a9d7b77205693d
+    Hash: f635384e80321bc0afdf4fd06af86555
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -26,6 +26,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
 - Class: 114
+  Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
+- Class: 114
   Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
@@ -36,7 +38,7 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
 - Class: 114
-  Script: {fileID: 11500000, guid: 3575e6537231f455ea78b413ba2604a9, type: 3}
+  Script: {fileID: 11500000, guid: a0611a97e4be34d19a8bd82d495899f5, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 128
@@ -67,5 +69,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/Setting/RemoteAsset/Novels/Screen.prefab
+- Assets/Novels/Bubble/RemoteAssets/Screen.prefab
 Dependencies: []

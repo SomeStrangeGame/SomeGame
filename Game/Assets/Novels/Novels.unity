@@ -359,6 +359,9 @@ MonoBehaviour:
     _settingData:
       _bundleName: setting_novels
       _assetName: Screen.prefab
+    _bubbleData:
+      _bundleName: novels_bubble
+      _assetName: Screen.prefab
   _logs: 255
 --- !u!1 &1371491167
 GameObject:
@@ -439,6 +442,14 @@ PrefabInstance:
     - target: {fileID: 1456734893500253938, guid: 59d47de15f843493cb1128e925a05879, type: 3}
       propertyPath: m_Name
       value: CodeStrippingFix
+      objectReference: {fileID: 0}
+    - target: {fileID: 1456734893500253938, guid: 59d47de15f843493cb1128e925a05879, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2715495625021885899, guid: 59d47de15f843493cb1128e925a05879, type: 3}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8896413577367635622, guid: 59d47de15f843493cb1128e925a05879, type: 3}
       propertyPath: m_LocalPosition.x

@@ -1,0 +1,17 @@
+{
+    "name": "Novels.StoryProcessor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:58bed0e7c5306824586d7eda03609289",
+        "GUID:8508402cf4a8c4ac6b337bc0f3c7b95d"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
