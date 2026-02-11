@@ -29,20 +29,20 @@ namespace BattleStory
 
         internal async UniTask<int> ShowBattleProcess(BattleData data)
         {
-            return await ShowBattleProcess(data);
+            return await ShowBattleProcessInternal(data, null, null);
         }
 
         internal async UniTask<int> ShowBattleProcess(BattleData data, params ScreenData[] screensPreloadData)
         {
-            return await ShowBattleProcess(data, screensPreloadData, null);
+            return await ShowBattleProcessInternal(data, screensPreloadData, null);
         }
 
         internal async UniTask<int> ShowBattleProcess(BattleData data, params BattleData[] battlesPreloadData)
         {
-            return await ShowBattleProcess(data, null, battlesPreloadData);
+            return await ShowBattleProcessInternal(data, null, battlesPreloadData);
         }
 
-        private async UniTask<int> ShowBattleProcess(BattleData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
+        private async UniTask<int> ShowBattleProcessInternal(BattleData data, ScreenData[] screensPreloadData, BattleData[] battlesPreloadData)
         {
             var result = 0;
             var ctx = new Battle.Entity.Ctx

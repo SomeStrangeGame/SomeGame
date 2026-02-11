@@ -33,20 +33,20 @@ namespace BattleStory
 
         internal async UniTask ShowMenuProcess(ScreenData data)
         {
-            await ShowMenuProcess(data);
+            await ShowMenuProcessInternal(data, null, null);
         }
 
         internal async UniTask ShowMenuProcess(ScreenData data, params ScreenData[] screensPreloadData)
         {
-            await ShowMenuProcess(data, screensPreloadData, null);
+            await ShowMenuProcessInternal(data, screensPreloadData, null);
         }
 
         internal async UniTask ShowMenuProcess(ScreenData data, params BattleData[] battlesPreloadData)
         {
-            await ShowMenuProcess(data, null, battlesPreloadData);
+            await ShowMenuProcessInternal(data, null, battlesPreloadData);
         }
 
-        private async UniTask ShowMenuProcess(ScreenData data, ScreenData[] screensPreloadData = null, BattleData[] battlesPreloadData = null)
+        private async UniTask ShowMenuProcessInternal(ScreenData data, ScreenData[] screensPreloadData, BattleData[] battlesPreloadData)
         {
             var ctx = new Story.Entity.Ctx
             {
