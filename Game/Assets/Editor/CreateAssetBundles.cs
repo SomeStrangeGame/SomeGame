@@ -33,6 +33,24 @@ namespace Editor
             method.Invoke(new object(), null);
         }
 
+        [MenuItem("Build/Clear Cache")]
+        private static void ClearCache()
+        {
+            var cachPath = $"{Application.persistentDataPath}/CachedFiles/Remote";
+            #if UNITY_EDITOR_OSX
+            cachPath = $"file://{cachPath}";
+            #endif
+            if (Directory.Exists(cachPath))
+            {
+                Directory.Delete(cachPath, true);
+                Debug.Log("Clear cache files done!");
+            }
+            else
+            {
+                Debug.Log($"No cache files in {cachPath}");
+            }
+        }
+
         [MenuItem("Build/All Bundles")]
         private static void BuildAllAssetBundles()
         {
