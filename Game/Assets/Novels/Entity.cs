@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using SOData;
@@ -12,10 +13,12 @@ namespace Novels
         [SerializeField] private BundleData _loadingData;
         [SerializeField] private BundleData _settingData;
         [SerializeField] private BundleData _bubbleData;
+        [SerializeField] private BundleData _locationScreenData;
 
         internal readonly BundleData LoadingData => _loadingData;
         internal readonly BundleData SettingData => _settingData;
         internal readonly BundleData BubbleData => _bubbleData;
+        internal readonly BundleData LocationScreenData => _locationScreenData;
     }
 
     internal class Entity : BaseDisposable
@@ -68,8 +71,6 @@ namespace Novels
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
 
-            await loading.Show();
-
             //preloading loading
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
@@ -86,30 +87,57 @@ namespace Novels
             }).AddTo(this);
             await bubble.Init();
 
+            var location = new Location.Entity(new Location.Entity.Ctx
+            {
+                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LocationScreenData.BundleName, _ctx.Data.LocationScreenData.AssetName),
+                GetSprite = (bundleName, assetName) => bundles.GetBundledSprite(bundleName, assetName),
+            }).AddTo(this);
+            await location.Init();
+
             await loading.Hide();
 
             while (!IsDisposed)
             {
-                if (storyProcessor.TryGetNextText(out var text))
+                var bubbleDone = new UniTaskCompletionSource();
+
+                storyProcessor.TryGetNextText(out var text);
+
+                var data = text.Split(":");
+                var prefix = data.FirstOrDefault().Trim();
+                var value = data.LastOrDefault().Trim();
+
+                if (prefix.ToLower() == "название") continue;
+                if (prefix.ToLower() == "серия") continue;
+                if (prefix.ToLower() == "жанры") continue;
+                if (prefix.ToLower() == "аннотация") continue;
+                if (prefix.ToLower() == "статы") continue;
+                if (prefix.ToLower() == "локация")
                 {
-                    bubble.SetText(text);
-                    bubble.RemoveAllButtons();
-                    await UniTask.Delay(100);
+                    Debug.Log(value);
+                    location.SetImage(value, $"{value}.png").Forget();
+                    continue;
                 }
+
+                bubble.SetText(text);
+
+                bubble.RemoveAllButtons();
+                var choices = storyProcessor.GetChoices();
+                if (choices.Count > 0)
+                    bubble.ResetBackgroundButton();
                 else
+                    bubble.SetBackgroundButton(() => bubbleDone.TrySetResult());
+                foreach (var choice in choices)
                 {
-                    var bubbleDone = new UniTaskCompletionSource();
-                    var choices = storyProcessor.GetChoices();
-                    foreach(var choice in choices)
+                    bubble.AddOrUpdateButton(choice.index, choice.text, id =>
                     {
-                        bubble.AddOrUpdateButton(choice.index, choice.text, id =>
-                        {
-                            storyProcessor.SetChoice(id);
-                            bubbleDone.TrySetResult();
-                        });
-                    }
-                    await bubbleDone.Task;
+                        storyProcessor.SetChoice(id);
+                        bubbleDone.TrySetResult();
+                    });
                 }
+
+                await bubble.Show();
+                await bubbleDone.Task;
+                await bubble.Hide();
             }
         }
     }

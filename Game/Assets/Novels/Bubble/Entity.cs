@@ -26,15 +26,6 @@ namespace Novels.Bubble
             var prefab = await _ctx.GetBubblePrefab();
             var screenGO = GameObject.Instantiate(prefab);
             _screen = screenGO.GetComponent<View.Screen>();
-        }
-
-        public void ShowImmediate()
-        {
-            _screen.ShowImmediate();
-        }
-
-        public void HideImmediate()
-        {
             _screen.HideImmediate();
         }
 
@@ -66,6 +57,16 @@ namespace Novels.Bubble
         public void RemoveButton(int id)
         {
             _screen.RemoveButton(id);
+        }
+
+        public void SetBackgroundButton(Action onClick)
+        {
+            _screen.SetBackgroundButton(onClick);
+        }
+
+        public void ResetBackgroundButton()
+        {
+            _screen.ResetBackgroundButton();
         }
     }
 }

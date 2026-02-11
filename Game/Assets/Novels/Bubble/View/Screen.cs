@@ -10,6 +10,7 @@ namespace Novels.Bubble.View
     {
         [SerializeField] private Text _text;
         [SerializeField] private Button _buttonPrefab;
+        [SerializeField] private Button _backgroundButton;
 
         private readonly Dictionary<int, Button> _buttons = new();
 
@@ -65,6 +66,17 @@ namespace Novels.Bubble.View
 
             Destroy(button.gameObject);
             _buttons.Remove(id);
+        }
+
+        public void SetBackgroundButton(Action onClick)
+        {
+            ResetBackgroundButton();
+            _backgroundButton.onClick.AddListener(() => onClick.Invoke());
+        }
+
+        public void ResetBackgroundButton()
+        {
+            _backgroundButton.onClick.RemoveAllListeners();
         }
     }
 }
