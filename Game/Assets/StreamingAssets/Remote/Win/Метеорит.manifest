@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 2035456031
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: d1b4e0c033cfffc8d4b8e8d595b04ef7
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 9f349c36d7a6532f767333f9299b3e74
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 11b11177cc671df05b381338f8aa7948
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- "Assets/Novels/Location/RemoteAssets/\u041C\u0435\u0442\u0435\u043E\u0440\u0438\u0442.png"
+Dependencies: []
