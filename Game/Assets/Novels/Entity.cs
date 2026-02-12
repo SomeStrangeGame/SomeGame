@@ -16,6 +16,7 @@ namespace Novels
         [SerializeField] private BundleData _settingData;
         [SerializeField] private BundleData _bubbleData;
         [SerializeField] private BundleData _locationScreenData;
+        [SerializeField] private BundleData _notificationScreenData;
 
         internal readonly string StoryTextPath => _storyTextPath;
         internal readonly string NovelsLocationsBundleName => _novelsLocationsBundleName;
@@ -23,6 +24,7 @@ namespace Novels
         internal readonly BundleData SettingData => _settingData;
         internal readonly BundleData BubbleData => _bubbleData;
         internal readonly BundleData LocationScreenData => _locationScreenData;
+        internal readonly BundleData NotificationScreenData => _notificationScreenData;
     }
 
     internal class Entity : BaseDisposable
@@ -67,7 +69,8 @@ namespace Novels
                 bundles.GetText(_ctx.Data.StoryTextPath),
                 bundles.GetAssetBundle(_ctx.Data.BubbleData.BundleName),
                 bundles.GetAssetBundle(_ctx.Data.LocationScreenData.BundleName),
-                bundles.GetAssetBundle(_ctx.Data.NovelsLocationsBundleName)
+                bundles.GetAssetBundle(_ctx.Data.NovelsLocationsBundleName),
+                bundles.GetAssetBundle(_ctx.Data.NotificationScreenData.BundleName)
             );
 
             await loading.Show();
@@ -91,7 +94,7 @@ namespace Novels
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
             {
-                var (storyTextTemp, bubbleTemp, locationScreenTemp, locationsBundlesTemp) = await secondPreloading;
+                var (storyTextTemp, bubbleTemp, locationScreenTemp, locationsBundlesTemp, notificationScreenTemp) = await secondPreloading;
                 storyText = storyTextTemp;
             }
 
@@ -114,6 +117,13 @@ namespace Novels
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await location.Init();
+
+            var notification = new Notification.Entity(new Notification.Entity.Ctx
+            {
+                GetNotificationPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NotificationScreenData.BundleName, _ctx.Data.NotificationScreenData.AssetName),
+            }).AddTo(this);
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await notification.Init();
 
             await loading.Hide();
 
@@ -140,6 +150,11 @@ namespace Novels
                 if (prefix.ToLower() == "локация")
                 {
                     location.SetImage($"{value}.png").Forget();
+                    continue;
+                }
+                if (prefix.ToLower() == "уведомление")
+                {
+                    notification.SetText(value).Forget();
                     continue;
                 }
 

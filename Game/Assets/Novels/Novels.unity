@@ -367,6 +367,9 @@ MonoBehaviour:
     _locationScreenData:
       _bundleName: novels_location
       _assetName: Screen.prefab
+    _notificationScreenData:
+      _bundleName: novels_notification
+      _assetName: Screen.prefab
   _logs: 255
 --- !u!1 &1371491167
 GameObject:
