@@ -111,9 +111,13 @@ namespace Novels
                 if (prefix.ToLower() == "жанры") continue;
                 if (prefix.ToLower() == "аннотация") continue;
                 if (prefix.ToLower() == "статы") continue;
+
+                if (prefix.ToLower().Contains("клавиатура")) continue;
+
+                if (prefix.ToLower() == "музыка") continue;
+                if (prefix.ToLower() == "звук") continue;
                 if (prefix.ToLower() == "локация")
                 {
-                    Debug.Log(value);
                     location.SetImage(value, $"{value}.png").Forget();
                     continue;
                 }
