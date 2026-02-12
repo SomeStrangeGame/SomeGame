@@ -26,6 +26,7 @@
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="BattleStory.Story.View.csproj" />
   <Project Path="Novels.StoryProcessor.csproj" />
+  <Project Path="Novels.Waiting.csproj" />
   <Project Path="BattleStory.Battle.csproj" />
   <Project Path="Novels.Notication.View.csproj" />
   <Project Path="Bundles.csproj" />

@@ -125,6 +125,8 @@ namespace Novels
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await notification.Init();
 
+            var waiting = new Waiting.Entity().AddTo(this);
+
             await loading.Hide();
 
             while (!IsDisposed)
@@ -156,6 +158,12 @@ namespace Novels
                 if (prefix.ToLower() == "уведомление")
                 {
                     notification.SetText(value).Forget();
+                    continue;
+                }
+                if (prefix.ToLower() == "ожидание")
+                {
+                    if (int.TryParse(value, out var seconds))
+                        await waiting.Await(seconds);
                     continue;
                 }
 
