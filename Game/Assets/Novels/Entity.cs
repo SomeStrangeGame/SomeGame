@@ -60,10 +60,21 @@ namespace Novels
                 await loading.Init();
 
             //preloading init
-            var storyTextLoading = bundles.GetText(_ctx.Data.StoryTextPath);
-            var storyLocationsLoading = bundles.GetAssetBundle(_ctx.Data.NovelsLocationsBundleName);
+            var firstPreloding = UniTask.WhenAll(
+                bundles.GetAssetBundle(_ctx.Data.SettingData.BundleName)
+            );
+            var secondPreloading = UniTask.WhenAll(
+                bundles.GetText(_ctx.Data.StoryTextPath),
+                bundles.GetAssetBundle(_ctx.Data.BubbleData.BundleName),
+                bundles.GetAssetBundle(_ctx.Data.LocationScreenData.BundleName),
+                bundles.GetAssetBundle(_ctx.Data.NovelsLocationsBundleName)
+            );
 
             await loading.Show();
+
+            //preloading loading first
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await firstPreloding;
 
             var settingProcessCtx = new SettingProcess.Ctx
             {
@@ -76,14 +87,11 @@ namespace Novels
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
 
-            //preloading loading
+            //preloading loading second
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
             {
-                var (storyTextTemp, locationsBundlesTemp) = await UniTask.WhenAll(
-                    storyTextLoading,
-                    storyLocationsLoading
-                );
+                var (storyTextTemp, bubbleTemp, locationScreenTemp, locationsBundlesTemp) = await secondPreloading;
                 storyText = storyTextTemp;
             }
 
