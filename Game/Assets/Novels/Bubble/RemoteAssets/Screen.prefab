@@ -524,6 +524,7 @@ GameObject:
   - component: {fileID: 3582442241544309854}
   - component: {fileID: 8339110741389722425}
   - component: {fileID: 2630654022111875827}
+  - component: {fileID: 6503039597023592230}
   m_Layer: 5
   m_Name: Screen
   m_TagString: Untagged
@@ -629,6 +630,20 @@ MonoBehaviour:
   _text: {fileID: 7582084287330492310}
   _buttonPrefab: {fileID: 6652776214653311384}
   _backgroundButton: {fileID: 920034428511903397}
+  _showHideDuration: 0.2
+  _canvasGroup: {fileID: 6503039597023592230}
+--- !u!225 &6503039597023592230
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3712146450823894313}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &4904857947640543354
 GameObject:
   m_ObjectHideFlags: 0

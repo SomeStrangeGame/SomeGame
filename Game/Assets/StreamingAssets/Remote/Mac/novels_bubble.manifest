@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 2094959589
+CRC: 3246794176
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 9c98e4a53d9cd959a04133c468a0ea16
+    Hash: 9826a418937835d79487cb935fa0f7d9
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 701ae06f3e18895495c641d6a3376ceb
+    Hash: 5cc0969e77c98172f988932e708a7bde
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8ffba3f49ccc7b065fe88c1b5bdba1fd
+    Hash: 63f19f7d8351f365fa5202dae1367768
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -48,6 +48,8 @@ ClassTypes:
 - Class: 223
   Script: {instanceID: 0}
 - Class: 224
+  Script: {instanceID: 0}
+- Class: 225
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.CoreModule
