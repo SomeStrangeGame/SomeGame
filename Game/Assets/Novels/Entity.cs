@@ -10,11 +10,15 @@ namespace Novels
     [Serializable]
     internal struct Data
     {
+        [SerializeField] private string _storyTextPath;
+        [SerializeField] private string _novelsLocationsBundleName;
         [SerializeField] private BundleData _loadingData;
         [SerializeField] private BundleData _settingData;
         [SerializeField] private BundleData _bubbleData;
         [SerializeField] private BundleData _locationScreenData;
 
+        internal readonly string StoryTextPath => _storyTextPath;
+        internal readonly string NovelsLocationsBundleName => _novelsLocationsBundleName;
         internal readonly BundleData LoadingData => _loadingData;
         internal readonly BundleData SettingData => _settingData;
         internal readonly BundleData BubbleData => _bubbleData;
@@ -56,7 +60,8 @@ namespace Novels
                 await loading.Init();
 
             //preloading init
-            var storyTextLoading = bundles.GetText($"NovelTexts/s01e01.ink.json");
+            var storyTextLoading = bundles.GetText(_ctx.Data.StoryTextPath);
+            var storyLocationsLoading = bundles.GetAssetBundle(_ctx.Data.NovelsLocationsBundleName);
 
             await loading.Show();
 
@@ -74,7 +79,13 @@ namespace Novels
             //preloading loading
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                storyText = await storyTextLoading;
+            {
+                var (storyTextTemp, locationsBundlesTemp) = await UniTask.WhenAll(
+                    storyTextLoading,
+                    storyLocationsLoading
+                );
+                storyText = storyTextTemp;
+            }
 
             var storyProcessor = new StoryProcessor.Entity(new StoryProcessor.Entity.Ctx
             {
@@ -85,14 +96,16 @@ namespace Novels
             {
                 GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.BubbleData.BundleName, _ctx.Data.BubbleData.AssetName),
             }).AddTo(this);
-            await bubble.Init();
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await bubble.Init();
 
             var location = new Location.Entity(new Location.Entity.Ctx
             {
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LocationScreenData.BundleName, _ctx.Data.LocationScreenData.AssetName),
-                GetSprite = (bundleName, assetName) => bundles.GetBundledSprite(bundleName, assetName),
+                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationsBundleName, assetName),
             }).AddTo(this);
-            await location.Init();
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await location.Init();
 
             await loading.Hide();
 
@@ -118,7 +131,7 @@ namespace Novels
                 if (prefix.ToLower() == "звук") continue;
                 if (prefix.ToLower() == "локация")
                 {
-                    location.SetImage(value, $"{value}.png").Forget();
+                    location.SetImage($"{value}.png").Forget();
                     continue;
                 }
 

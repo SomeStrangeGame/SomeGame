@@ -10,7 +10,7 @@ namespace Novels.Location
         public struct Ctx
         {
             public Func<UniTask<GameObject>> GetScreenPrefab;
-            public Func<string, string, UniTask<Sprite>> GetSprite;
+            public Func<string, UniTask<Sprite>> GetSprite;
         }
 
         private readonly Ctx _ctx;
@@ -30,10 +30,10 @@ namespace Novels.Location
             _screen.HideImmediate();
         }
 
-        public async UniTask SetImage(string bundleName, string assetName)
+        public async UniTask SetImage(string assetName)
         {
             await Hide();
-            var sprite = await _ctx.GetSprite(bundleName, assetName);
+            var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
             await Show();
         }

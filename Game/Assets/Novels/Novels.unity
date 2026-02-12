@@ -353,6 +353,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
+    _storyTextPath: NovelTexts/s01e01.ink.json
+    _novelsLocationsBundleName: novels_locations
     _loadingData:
       _bundleName: loading
       _assetName: Loading.prefab
