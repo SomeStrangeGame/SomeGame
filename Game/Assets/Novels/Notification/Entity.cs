@@ -33,7 +33,7 @@ namespace Novels.Notification
         {
             _screen.SetText(text);
             await _screen.Show();
-            await UniTask.Delay(3000);
+            await UniTask.Delay(2000);
             await _screen.Hide();
         }
     }

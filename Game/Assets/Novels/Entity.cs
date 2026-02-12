@@ -147,6 +147,7 @@ namespace Novels
 
                 if (prefix.ToLower() == "музыка") continue;
                 if (prefix.ToLower() == "звук") continue;
+                if (prefix.ToLower() == "звуки окружения") continue;
                 if (prefix.ToLower() == "локация")
                 {
                     location.SetImage($"{value}.png").Forget();
@@ -159,7 +160,6 @@ namespace Novels
                 }
 
                 bubble.SetText(text);
-
                 bubble.RemoveAllButtons();
                 var choices = storyProcessor.GetChoices();
                 if (choices.Count > 0)
@@ -174,7 +174,6 @@ namespace Novels
                         bubbleDone.TrySetResult();
                     });
                 }
-
                 await bubble.Show();
                 await bubbleDone.Task;
                 await bubble.Hide();
