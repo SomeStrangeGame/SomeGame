@@ -17,6 +17,7 @@ namespace Novels.Location.View
         {
             LeftRight,
             RightLeft,
+            ToCenter,
         }
 
         [Serializable]
@@ -122,6 +123,9 @@ namespace Novels.Location.View
                 case CameraEffect.RightLeft:
                     await Move(_image.transform, cameraCurrentPosition, cameraRightPosition, 1f);
                     await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration);
+                    break;
+                case CameraEffect.ToCenter:
+                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration);
                     break;
             }
 

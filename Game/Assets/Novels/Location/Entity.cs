@@ -57,6 +57,11 @@ namespace Novels.Location
                 await _screen.SetCamera(View.Screen.CameraEffect.RightLeft);
                 return;
             }
+            if (value.ToLower() == "сместить в центр")
+            {
+                await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
+                return;
+            }
             Debug.Log($"Camera: {value}");
         }
 
