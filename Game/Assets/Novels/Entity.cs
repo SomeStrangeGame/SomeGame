@@ -150,14 +150,21 @@ namespace Novels
                 if (prefix.ToLower() == "музыка") continue;
                 if (prefix.ToLower() == "звук") continue;
                 if (prefix.ToLower() == "звуки окружения") continue;
-                if (prefix.ToLower() == "локация")
-                {
-                    location.SetImage($"{value}.png").Forget();
-                    continue;
-                }
+
                 if (prefix.ToLower() == "уведомление")
                 {
                     notification.SetText(value).Forget();
+                    continue;
+                }
+
+                if (prefix.ToLower() == "локация")
+                {
+                    await location.SetImage($"{value}.png");
+                    continue;
+                }
+                if (prefix.ToLower() == "камера")
+                {
+                    await location.SetCamera(value);
                     continue;
                 }
                 if (prefix.ToLower() == "ожидание")

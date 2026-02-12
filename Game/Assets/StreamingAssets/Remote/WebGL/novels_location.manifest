@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 4106786953
+CRC: 1822267897
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 73b56ccb38632a381ba5537428561750
+    Hash: 0abc41973cd002969c23ed8e2e3c7f61
   TypeTreeHash:
     serializedVersion: 2
-    Hash: f5971659e7e9e18b28a591868c7741be
+    Hash: e40bd1bd7d85d4e4e4de4ea890c747e7
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: ee234eeb24dc49bba0e060d56d86a090
+    Hash: 3366323673ed1397fe883cb8777c3c76
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -34,6 +34,8 @@ ClassTypes:
 - Class: 225
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
+- AssemblyName: Novels.Location.View
+  ClassName: Novels.Location.View.Screen/EffectImage
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
 - AssemblyName: UnityEngine.UI
