@@ -236,14 +236,14 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 410087039}
   m_Enabled: 1
-  serializedVersion: 11
+  serializedVersion: 12
   m_Type: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 2
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
-  m_CookieSize: 10
+  m_CookieSize2D: {x: 10, y: 10}
   m_Shadows:
     m_Type: 2
     m_Resolution: -1
@@ -355,6 +355,7 @@ MonoBehaviour:
   _data:
     _storyTextPath: NovelTexts/s01e01.ink.json
     _novelsLocationsBundleName: novels_locations
+    _novelsCharactersBundleName: novels_characters
     _loadingData:
       _bundleName: loading
       _assetName: Loading.prefab
@@ -366,6 +367,9 @@ MonoBehaviour:
       _assetName: Screen.prefab
     _locationScreenData:
       _bundleName: novels_location
+      _assetName: Screen.prefab
+    _characterScreenData:
+      _bundleName: novels_character
       _assetName: Screen.prefab
     _notificationScreenData:
       _bundleName: novels_notification

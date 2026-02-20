@@ -12,18 +12,22 @@ namespace Novels
     {
         [SerializeField] private string _storyTextPath;
         [SerializeField] private string _novelsLocationsBundleName;
+        [SerializeField] private string _novelsCharactersBundleName;
         [SerializeField] private BundleData _loadingData;
         [SerializeField] private BundleData _settingData;
         [SerializeField] private BundleData _bubbleData;
         [SerializeField] private BundleData _locationScreenData;
+        [SerializeField] private BundleData _characterScreenData;
         [SerializeField] private BundleData _notificationScreenData;
 
         internal readonly string StoryTextPath => _storyTextPath;
         internal readonly string NovelsLocationsBundleName => _novelsLocationsBundleName;
+        internal readonly string NovelsCharactersBundleName => _novelsCharactersBundleName;
         internal readonly BundleData LoadingData => _loadingData;
         internal readonly BundleData SettingData => _settingData;
         internal readonly BundleData BubbleData => _bubbleData;
         internal readonly BundleData LocationScreenData => _locationScreenData;
+        internal readonly BundleData CharacterScreenData => _characterScreenData;
         internal readonly BundleData NotificationScreenData => _notificationScreenData;
     }
 
@@ -117,6 +121,14 @@ namespace Novels
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await location.Init();
+
+            var character = new Character.Entity(new Character.Entity.Ctx
+            {
+                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.CharacterScreenData.BundleName, _ctx.Data.CharacterScreenData.AssetName),
+                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharactersBundleName, assetName),
+            }).AddTo(this);
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await character.Init();
 
             var notification = new Notification.Entity(new Notification.Entity.Ctx
             {
