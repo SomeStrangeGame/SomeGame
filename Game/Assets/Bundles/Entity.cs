@@ -43,6 +43,7 @@ namespace Bundles
             var assetBundle = await GetAssetBundle(bundleName);
             if (assetBundle == null) return null;
 
+            if (string.IsNullOrEmpty(assetName)) return null;
             var loadAsset = assetBundle.LoadAssetAsync<Sprite>(assetName);
             await loadAsset;
             return loadAsset.asset as Sprite;
@@ -53,6 +54,7 @@ namespace Bundles
             var assetBundle = await GetAssetBundle(bundleName);
             if (assetBundle == null) return null;
 
+            if (string.IsNullOrEmpty(assetName)) return null;
             var loadAsset = assetBundle.LoadAssetAsync<T>(assetName);
             await loadAsset;
             return loadAsset.asset as T;
@@ -63,6 +65,7 @@ namespace Bundles
             var assetBundle = await GetAssetBundle(bundleName);
             if (assetBundle == null) return null;
 
+            if (string.IsNullOrEmpty(assetName)) return null;
             var loadAsset = assetBundle.LoadAssetAsync<GameObject>(assetName);
             await loadAsset;
             return loadAsset.asset as GameObject;

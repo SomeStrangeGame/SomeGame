@@ -187,12 +187,12 @@ namespace Novels
                 }
 
                 var rawPrefixData = prefix.Split("(");
-                var name = rawPrefixData.FirstOrDefault();
+                var name = rawPrefixData.FirstOrDefault().Trim();
                 var args = rawPrefixData.Length <= 1
-                    ? null
-                    : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim());
+                    ? new string[0]
+                    : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
 
-                //characters here...
+                character.SetImage(name, args).Forget();
 
                 bubble.SetText(text);
                 bubble.RemoveAllButtons();
