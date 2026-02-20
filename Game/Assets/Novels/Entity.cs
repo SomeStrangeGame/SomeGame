@@ -179,6 +179,8 @@ namespace Novels
                 var choices = storyProcessor.GetChoices();
                 if (choices.Count > 0)
                     bubble.ResetBackgroundButton();
+                else if (string.IsNullOrEmpty(text))
+                    bubbleDone.TrySetResult();
                 else
                     bubble.SetBackgroundButton(() => bubbleDone.TrySetResult());
                 foreach (var choice in choices)

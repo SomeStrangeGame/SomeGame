@@ -70,6 +70,7 @@ namespace Novels.Bubble.View
         public void SetText(string text)
         {
             _text.text = text;
+            _text.gameObject.SetActive(!string.IsNullOrEmpty(text));
         }
 
         public void AddOrUpdateButton(int id, string text, Action<int> onClick)
