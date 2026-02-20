@@ -174,6 +174,14 @@ namespace Novels
                     continue;
                 }
 
+                var rawPrefixData = prefix.Split("(");
+                var name = rawPrefixData.FirstOrDefault();
+                var args = rawPrefixData.Length <= 1
+                    ? null
+                    : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim());
+
+                //characters here...
+
                 bubble.SetText(text);
                 bubble.RemoveAllButtons();
                 var choices = storyProcessor.GetChoices();

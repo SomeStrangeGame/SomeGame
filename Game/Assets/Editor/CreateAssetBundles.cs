@@ -69,9 +69,9 @@ namespace Editor
             bundlePath = $"{remotePath}/Mac";
             using (new BuildBundleLog(bundlePath))
                 BuildBundles(BuildTarget.StandaloneOSX, bundlePath);
-            bundlePath = $"{remotePath}/Win";
-            using (new BuildBundleLog(bundlePath))
-                BuildBundles(BuildTarget.StandaloneWindows64, bundlePath);
+            //bundlePath = $"{remotePath}/Win";
+            //using (new BuildBundleLog(bundlePath))
+            //    BuildBundles(BuildTarget.StandaloneWindows64, bundlePath);
             Debug.Log("All bundles building done!");
 
             void BuildBundles(BuildTarget buildTarget, string targetFolderPath)
