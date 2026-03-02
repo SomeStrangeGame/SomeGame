@@ -11,6 +11,7 @@ namespace Novels.Location
         {
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
+            public Func<string, string> GetVideoURL;
         }
 
         private readonly Ctx _ctx;
@@ -34,12 +35,14 @@ namespace Novels.Location
 
         public async UniTask SetImage(string assetName)
         {
-            await Hide();
+            await _screen.HideImage();
             _screen.ResetCamera();
             _screen.ResetEffect();
             var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
-            await Show();
+            _screen.SetEnabledVideo(false);
+            //_screen.SetVideo(_ctx.GetVideoURL(assetName));
+            await _screen.ShowImage();
         }
 
         public async UniTask SetCamera(string value)
@@ -64,17 +67,7 @@ namespace Novels.Location
                 await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
                 return;
             }
-            Debug.Log($"Camera: {value}");
-        }
-
-        public async UniTask Show()
-        {
-            await _screen.ShowImage();
-        }
-
-        public async UniTask Hide()
-        {
-            await _screen.HideImage();
+            //Debug.Log($"Camera: {value}");
         }
     }
 }

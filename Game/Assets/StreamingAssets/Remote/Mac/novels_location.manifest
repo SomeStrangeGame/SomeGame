@@ -1,19 +1,21 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 2769824055
+CRC: 4276250256
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 21448e452862f0580e1c8ba9ecd2c3a9
+    Hash: 48774d9b79eca6a420f95807dd8a6470
   TypeTreeHash:
     serializedVersion: 2
-    Hash: bd545e3a658c716e572ded1898e2916d
+    Hash: 7bc83c697a9f4f470f8858016b4af491
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 602fcacedf79d6d504757c34161e4845
+    Hash: ed1905f206999922524c2d65eae84422
 HashAppended: 0
 ClassTypes:
 - Class: 1
+  Script: {instanceID: 0}
+- Class: 84
   Script: {instanceID: 0}
 - Class: 114
   Script: {fileID: 11500000, guid: 0e3e4e88708574291816732bbfcc9e7f, type: 3}
@@ -23,6 +25,8 @@ ClassTypes:
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
 - Class: 115
   Script: {instanceID: 0}
 - Class: 222
@@ -32,6 +36,8 @@ ClassTypes:
 - Class: 224
   Script: {instanceID: 0}
 - Class: 225
+  Script: {instanceID: 0}
+- Class: 328
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Novels.Location.View

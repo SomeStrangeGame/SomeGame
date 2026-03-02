@@ -33,7 +33,7 @@ namespace Novels.Character
         public async UniTask SetImage(string name, string[] args)
         {
             await Hide();
-            Debug.Log(ConvertToMainBody(name));
+            //Debug.Log(ConvertToMainBody(name));
             var sprite = await _ctx.GetSprite(ConvertToMainBody(name));
             _screen.SetMainBody(sprite);
 

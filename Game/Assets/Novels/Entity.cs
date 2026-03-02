@@ -118,6 +118,7 @@ namespace Novels
             {
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LocationScreenData.BundleName, _ctx.Data.LocationScreenData.AssetName),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationsBundleName, assetName),
+                GetVideoURL = assetName => assetName,
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await location.Init();
@@ -171,6 +172,7 @@ namespace Novels
 
                 if (prefix.ToLower() == "локация")
                 {
+                    Debug.Log(value);
                     await location.SetImage($"{value}.png");
                     continue;
                 }

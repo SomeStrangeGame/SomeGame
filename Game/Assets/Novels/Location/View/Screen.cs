@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 namespace Novels.Location.View
 {
@@ -34,10 +35,16 @@ namespace Novels.Location.View
         [SerializeField] private CanvasGroup _imageCanvasGroup;
         [SerializeField] private Image _image;
 
+        [Space]
+        [SerializeField] private VideoPlayer _video;
+        [SerializeField] private RawImage _videoImage;
+
+        [Space]
         [SerializeField] private EffectImage[] _effects;
         [SerializeField] private CanvasGroup _effectCanvasGroup;
         [SerializeField] private float _effectDuration;
 
+        [Space]
         [SerializeField] private float _cameraDuration;
 
         public void SetImage(Sprite sprite)
@@ -96,6 +103,17 @@ namespace Novels.Location.View
 
             _imageCanvasGroup.alpha = 0f;
             _imageCanvasGroup.gameObject.SetActive(false);
+        }
+
+        public void SetVideo(string url)
+        {
+            _video.url = url;
+            _video.Play();
+        }
+
+        public void SetEnabledVideo(bool state)
+        {
+            _videoImage.enabled = state;
         }
 
         public void ResetCamera()
