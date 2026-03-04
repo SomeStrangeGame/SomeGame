@@ -1,0 +1,12 @@
+{
+  "name": "somegame.disposable",
+  "displayName": "Disposable",
+  "version": "0.0.1",
+  "unity": "2023.1",
+  "description": "Disposable",
+  "keywords": [
+    "disposable"
+  ],
+  "category": "SomeGame package",
+  "type": "sample"
+}
