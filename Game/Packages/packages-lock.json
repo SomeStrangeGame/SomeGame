@@ -63,6 +63,14 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "somegame.cache": {
+      "version": "file:../../Packages/Cache",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1"
+      }
+    },
     "somegame.disposable": {
       "version": "file:../../Packages/Disposable",
       "depth": 0,

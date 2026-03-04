@@ -1,4 +1,5 @@
 ﻿<Solution>
+  <Project Path="Cache.csproj" />
   <Project Path="Novels.Notification.csproj" />
   <Project Path="BattleStory.Battle.View.csproj" />
   <Project Path="Disposable.csproj" />
@@ -32,5 +33,4 @@
   <Project Path="Novels.Notication.View.csproj" />
   <Project Path="Novels.Character.csproj" />
   <Project Path="Bundles.csproj" />
-  <Project Path="Cache.csproj" />
 </Solution>

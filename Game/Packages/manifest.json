@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "somegame.disposable": "file:../../Packages/Disposable",
+    "somegame.cache": "file:../../Packages/Cache",
     "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
     "com.inkle.ink-unity-integration": "https://github.com/inkle/ink-unity-integration.git#upm",
     "com.unity.2d.sprite": "1.0.0",
