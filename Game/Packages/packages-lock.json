@@ -82,6 +82,12 @@
         "com.cysharp.unitask": "2.5.10"
       }
     },
+    "somegame.code-stripping-fix": {
+      "version": "file:../../Packages/CodeStrippingFix",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "somegame.disposable": {
       "version": "file:../../Packages/Disposable",
       "depth": 0,

@@ -16,7 +16,6 @@
   <Project Path="BattleStory.Story.csproj" />
   <Project Path="BattleStory.SOData.csproj" />
   <Project Path="BattleStory.Character.View.csproj" />
-  <Project Path="CodeStrippingFix.csproj" />
   <Project Path="Novels.Bubble.csproj" />
   <Project Path="SOData.csproj" />
   <Project Path="Novels.Location.View.csproj" />
@@ -29,6 +28,7 @@
   <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Waiting.csproj" />
   <Project Path="Novels.Character.View.csproj" />
+  <Project Path="CodeStrippingFix.csproj" />
   <Project Path="BattleStory.Battle.csproj" />
   <Project Path="Novels.Notication.View.csproj" />
   <Project Path="Novels.Character.csproj" />

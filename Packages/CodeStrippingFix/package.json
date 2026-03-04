@@ -1,0 +1,12 @@
+{
+  "name": "somegame.code-stripping-fix",
+  "displayName": "CodeStrippingFix",
+  "version": "0.0.1",
+  "unity": "2023.1",
+  "description": "CodeStrippingFix",
+  "keywords": [
+    "code-stripping-fix"
+  ],
+  "category": "SomeGame package",
+  "type": "sample"
+}
