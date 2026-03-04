@@ -88,6 +88,20 @@
       "source": "local",
       "dependencies": {}
     },
+    "somegame.loading-priority": {
+      "version": "file:../../Packages/LoadingPriority",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "somegame.logs": {
+      "version": "file:../../Packages/Logs",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1"
+      }
+    },
     "com.unity.modules.ai": {
       "version": "1.0.0",
       "depth": 1,

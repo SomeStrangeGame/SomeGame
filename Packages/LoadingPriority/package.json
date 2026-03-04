@@ -1,0 +1,12 @@
+{
+  "name": "somegame.loading-priority",
+  "displayName": "Lodaing Priority",
+  "version": "0.0.1",
+  "unity": "2023.1",
+  "description": "Lodaing Priority",
+  "keywords": [
+    "loading-priority"
+  ],
+  "category": "SomeGame package",
+  "type": "sample"
+}

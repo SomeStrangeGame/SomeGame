@@ -10,10 +10,9 @@
   <Project Path="Setting.csproj" />
   <Project Path="SOData.csproj" />
   <Project Path="BattleStory.Character.csproj" />
-  <Project Path="Setting.View.csproj" />
-  <Project Path="LoadingPriority.csproj" />
-  <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="Logs.csproj" />
+  <Project Path="Setting.View.csproj" />
+  <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="BattleStory.Story.csproj" />
   <Project Path="BattleStory.SOData.csproj" />
   <Project Path="BattleStory.Character.View.csproj" />
@@ -26,6 +25,7 @@
   <Project Path="Novels.csproj" />
   <Project Path="Bundles.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
+  <Project Path="LoadingPriority.csproj" />
   <Project Path="BattleStory.Story.View.csproj" />
   <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Waiting.csproj" />
