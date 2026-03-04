@@ -88,6 +88,15 @@
       "source": "local",
       "dependencies": {}
     },
+    "somegame.loading": {
+      "version": "file:../../Packages/Loading",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10"
+      }
+    },
     "somegame.loading-priority": {
       "version": "file:../../Packages/LoadingPriority",
       "depth": 0,

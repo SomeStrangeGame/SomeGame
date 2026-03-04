@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 596766488
+CRC: 416119837
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: aa9bee9772caebc7c5ca4a815201a974
+    Hash: af2323c2c3e6ef9d423105572c5a6f98
   TypeTreeHash:
     serializedVersion: 2
     Hash: deff0cc385c559db2bb5c39700af8161
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 103f870272fc418b89d1ad4cca155d87
+    Hash: 0429cd6afedab1ade6a227feb5a77026
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -67,5 +67,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/Setting/RemoteAsset/BattleStory/Screen.prefab
+- Assets/RemoteAssets/Setting/BattleStory/Screen.prefab
 Dependencies: []

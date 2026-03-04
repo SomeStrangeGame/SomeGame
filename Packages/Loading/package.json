@@ -1,0 +1,16 @@
+{
+  "name": "somegame.loading",
+  "displayName": "Loading",
+  "version": "0.0.1",
+  "unity": "2023.1",
+  "description": "Loading",
+  "keywords": [
+    "loading"
+  ],
+  "category": "SomeGame package",
+  "type": "sample",
+  "dependencies": {
+    "somegame.disposable": "0.0.1",
+    "com.cysharp.unitask": "2.5.10"
+  }
+}

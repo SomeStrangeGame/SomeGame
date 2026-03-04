@@ -3,6 +3,7 @@
   <Project Path="Novels.Notification.csproj" />
   <Project Path="BattleStory.Battle.View.csproj" />
   <Project Path="Disposable.csproj" />
+  <Project Path="Loading.View.csproj" />
   <Project Path="BattleStory.Camera.csproj" />
   <Project Path="Novels.Location.csproj" />
   <Project Path="BattleStory.csproj" />
@@ -15,13 +16,11 @@
   <Project Path="BattleStory.Story.csproj" />
   <Project Path="BattleStory.SOData.csproj" />
   <Project Path="BattleStory.Character.View.csproj" />
-  <Project Path="Loading.csproj" />
   <Project Path="CodeStrippingFix.csproj" />
   <Project Path="Novels.Bubble.csproj" />
   <Project Path="SOData.csproj" />
   <Project Path="Novels.Location.View.csproj" />
   <Project Path="BattleStory.Preloading.csproj" />
-  <Project Path="Loading.View.csproj" />
   <Project Path="Novels.csproj" />
   <Project Path="Bundles.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
@@ -33,4 +32,5 @@
   <Project Path="BattleStory.Battle.csproj" />
   <Project Path="Novels.Notication.View.csproj" />
   <Project Path="Novels.Character.csproj" />
+  <Project Path="Loading.csproj" />
 </Solution>
