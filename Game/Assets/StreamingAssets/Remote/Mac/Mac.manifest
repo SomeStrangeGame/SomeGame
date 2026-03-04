@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 4219419486
+CRC: 4144400633
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -78,4 +78,7 @@ AssetBundleManifest:
       Dependencies: {}
     Info_24:
       Name: novels_characters
+      Dependencies: {}
+    Info_25:
+      Name: novels_videos
       Dependencies: {}

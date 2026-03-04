@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
+using Novels.Location;
 using SOData;
 using UnityEngine;
 
@@ -17,6 +18,7 @@ namespace Novels
         [SerializeField] private BundleData _settingData;
         [SerializeField] private BundleData _bubbleData;
         [SerializeField] private BundleData _locationScreenData;
+        [SerializeField] private BundleData _videosScreenData;
         [SerializeField] private BundleData _characterScreenData;
         [SerializeField] private BundleData _notificationScreenData;
 
@@ -27,6 +29,7 @@ namespace Novels
         internal readonly BundleData SettingData => _settingData;
         internal readonly BundleData BubbleData => _bubbleData;
         internal readonly BundleData LocationScreenData => _locationScreenData;
+        internal readonly BundleData VideosScreenData => _videosScreenData;
         internal readonly BundleData CharacterScreenData => _characterScreenData;
         internal readonly BundleData NotificationScreenData => _notificationScreenData;
     }
@@ -48,6 +51,15 @@ namespace Novels
             _ctx = ctx;
 
             Application.backgroundLoadingPriority = _defaultThreadPriority;
+        }
+
+        private string GetVideoPath(string assetName)
+        {
+            var result = $"{Application.streamingAssetsPath}/NovelsVideos/{assetName}.mp4";
+#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            result = $"file://{result}";
+#endif
+            return result;
         }
 
         internal async UniTask Init()
@@ -118,7 +130,9 @@ namespace Novels
             {
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LocationScreenData.BundleName, _ctx.Data.LocationScreenData.AssetName),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationsBundleName, assetName),
-                GetVideoURL = assetName => assetName,
+                GetVideosList = () => bundles.GetBundledSO<VideosSO>(_ctx.Data.VideosScreenData.BundleName, _ctx.Data.VideosScreenData.AssetName),
+                GetSpritePath = assetName => $"{assetName}.png",
+                GetVideoURL = assetName => GetVideoPath(assetName),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await location.Init();
@@ -173,7 +187,7 @@ namespace Novels
                 if (prefix.ToLower() == "локация")
                 {
                     Debug.Log(value);
-                    await location.SetImage($"{value}.png");
+                    await location.SetImage(value);
                     continue;
                 }
                 if (prefix.ToLower() == "камера")

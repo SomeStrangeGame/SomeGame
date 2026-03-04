@@ -368,6 +368,9 @@ MonoBehaviour:
     _locationScreenData:
       _bundleName: novels_location
       _assetName: Screen.prefab
+    _videosScreenData:
+      _bundleName: novels_videos
+      _assetName: VideosSO.asset
     _characterScreenData:
       _bundleName: novels_character
       _assetName: Screen.prefab
