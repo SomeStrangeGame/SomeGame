@@ -8,10 +8,8 @@
   <Project Path="Novels.Location.csproj" />
   <Project Path="BattleStory.csproj" />
   <Project Path="SimpleInput.csproj" />
-  <Project Path="Setting.csproj" />
   <Project Path="BattleStory.Character.csproj" />
   <Project Path="Logs.csproj" />
-  <Project Path="Setting.View.csproj" />
   <Project Path="Assembly-CSharp-Editor.csproj" />
   <Project Path="BattleStory.Story.csproj" />
   <Project Path="BattleStory.SOData.csproj" />
@@ -25,11 +23,13 @@
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="LoadingPriority.csproj" />
   <Project Path="BattleStory.Story.View.csproj" />
+  <Project Path="Setting.View.csproj" />
   <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Waiting.csproj" />
   <Project Path="Novels.Character.View.csproj" />
   <Project Path="CodeStrippingFix.csproj" />
   <Project Path="BattleStory.Battle.csproj" />
+  <Project Path="Setting.csproj" />
   <Project Path="Novels.Notication.View.csproj" />
   <Project Path="Novels.Character.csproj" />
   <Project Path="Loading.csproj" />

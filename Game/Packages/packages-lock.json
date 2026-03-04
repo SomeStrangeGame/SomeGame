@@ -117,6 +117,15 @@
         "somegame.disposable": "0.0.1"
       }
     },
+    "somegame.setting": {
+      "version": "file:../../Packages/Setting",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10"
+      }
+    },
     "somegame.sodata": {
       "version": "file:../../Packages/SOData",
       "depth": 0,
