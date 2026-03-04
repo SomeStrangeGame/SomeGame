@@ -1,16 +1,17 @@
 {
-  "name": "somegame.cache",
-  "displayName": "Cache",
+  "name": "somegame.bundles",
+  "displayName": "Bundles",
   "version": "0.0.1",
   "unity": "2023.1",
-  "description": "Cache",
+  "description": "Bundles",
   "keywords": [
-    "cache"
+    "bundles"
   ],
   "category": "SomeGame package",
   "type": "sample",
   "dependencies": {
     "somegame.disposable": "0.0.1",
-    "com.cysharp.unitask": "2.5.10"
+    "com.cysharp.unitask": "2.5.10",
+    "somegame.cache": "0.0.1"
   }
 }

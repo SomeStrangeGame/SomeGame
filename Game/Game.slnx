@@ -24,6 +24,7 @@
   <Project Path="BattleStory.Preloading.csproj" />
   <Project Path="Loading.View.csproj" />
   <Project Path="Novels.csproj" />
+  <Project Path="Bundles.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="BattleStory.Story.View.csproj" />
   <Project Path="Novels.StoryProcessor.csproj" />
@@ -32,5 +33,4 @@
   <Project Path="BattleStory.Battle.csproj" />
   <Project Path="Novels.Notication.View.csproj" />
   <Project Path="Novels.Character.csproj" />
-  <Project Path="Bundles.csproj" />
 </Solution>

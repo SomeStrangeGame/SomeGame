@@ -63,12 +63,23 @@
         "com.unity.modules.imgui": "1.0.0"
       }
     },
+    "somegame.bundles": {
+      "version": "file:../../Packages/Bundles",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10",
+        "somegame.cache": "0.0.1"
+      }
+    },
     "somegame.cache": {
       "version": "file:../../Packages/Cache",
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "somegame.disposable": "0.0.1"
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10"
       }
     },
     "somegame.disposable": {
