@@ -22,7 +22,7 @@ namespace Novels
         [SerializeField] private string _novelsBubbleBundleName;
         [SerializeField] private string _novelsLocationBundleName;
         [SerializeField] private string _novelsCharacterBundleName;
-        [SerializeField] private BundleData _notificationScreenData;
+        [SerializeField] private string _novelsNotificationBundleName;
 
         internal readonly string Prefix => _prefix;
 
@@ -33,7 +33,7 @@ namespace Novels
         internal readonly string NovelsBubbleBundleName => _novelsBubbleBundleName;
         internal readonly string NovelsLocationBundleName => _novelsLocationBundleName;
         internal readonly string NovelsCharacterBundleName => _novelsCharacterBundleName;
-        internal readonly BundleData NotificationScreenData => _notificationScreenData;
+        internal readonly string NovelsNotificationBundleName => _novelsNotificationBundleName;
     }
 
     internal class Entity : BaseDisposable
@@ -53,6 +53,13 @@ namespace Novels
             _ctx = ctx;
 
             Application.backgroundLoadingPriority = _defaultThreadPriority;
+        }
+
+        private string GetNovelTextPath(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return string.Empty;
+
+            return $"NovelTexts/{_ctx.Data.Prefix}/{path}";
         }
 
         private string GetSettingPrefabAssetName(string assetName)
@@ -127,6 +134,13 @@ namespace Novels
             return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/Эмоции/{firstChar}{otherText}.png";
         }
 
+        private string GetNotificationPrefabAssetName(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/Novels/Notification/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
+        }
+
         internal async UniTask Init()
         {
             var bundles = new Bundles.Entity(new Bundles.Entity.Ctx
@@ -147,11 +161,11 @@ namespace Novels
                 bundles.GetAssetBundle(_ctx.Data.NovelsSettingBundleName)
             );
             var secondPreloading = UniTask.WhenAll(
-                bundles.GetText(_ctx.Data.StoryTextPath),
+                bundles.GetText(GetNovelTextPath(_ctx.Data.StoryTextPath)),
                 bundles.GetAssetBundle(_ctx.Data.NovelsBubbleBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NovelsLocationBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NovelsCharacterBundleName),
-                bundles.GetAssetBundle(_ctx.Data.NotificationScreenData.BundleName)
+                bundles.GetAssetBundle(_ctx.Data.NovelsNotificationBundleName)
             );
 
             await loading.Show();
@@ -212,7 +226,7 @@ namespace Novels
 
             var notification = new Notification.Entity(new Notification.Entity.Ctx
             {
-                GetNotificationPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NotificationScreenData.BundleName, _ctx.Data.NotificationScreenData.AssetName),
+                GetNotificationPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsNotificationBundleName, GetNotificationPrefabAssetName("Screen")),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await notification.Init();

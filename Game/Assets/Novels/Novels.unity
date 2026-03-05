@@ -354,7 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _data:
     _prefix: TZM
-    _storyTextPath: NovelTexts/s01e01.ink.json
+    _storyTextPath: s01e01.ink.json
     _loadingData:
       _bundleName: loading
       _assetName: Loading.prefab
@@ -362,12 +362,7 @@ MonoBehaviour:
     _novelsBubbleBundleName: novels_bubble
     _novelsLocationBundleName: novels_location
     _novelsCharacterBundleName: novels_character
-    _characterScreenData:
-      _bundleName: novels_character
-      _assetName: Screen.prefab
-    _notificationScreenData:
-      _bundleName: novels_notification
-      _assetName: Screen.prefab
+    _novelsNotificationBundleName: novels_notification
   _logs: 255
 --- !u!1 &1371491167
 GameObject:
