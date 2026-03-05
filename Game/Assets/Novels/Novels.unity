@@ -355,20 +355,13 @@ MonoBehaviour:
   _data:
     _prefix: TZM
     _storyTextPath: NovelTexts/s01e01.ink.json
-    _novelsLocationBundleName: novels_location
-    _novelsCharactersBundleName: novels_characters
     _loadingData:
       _bundleName: loading
       _assetName: Loading.prefab
-    _settingData:
-      _bundleName: setting_novels
-      _assetName: Screen.prefab
-    _bubbleData:
-      _bundleName: novels_bubble
-      _assetName: Screen.prefab
-    _videosScreenData:
-      _bundleName: novels_videos
-      _assetName: VideosSO.asset
+    _novelsSettingBundleName: novels_setting
+    _novelsBubbleBundleName: novels_bubble
+    _novelsLocationBundleName: novels_location
+    _novelsCharacterBundleName: novels_character
     _characterScreenData:
       _bundleName: novels_character
       _assetName: Screen.prefab

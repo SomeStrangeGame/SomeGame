@@ -15,25 +15,24 @@ namespace Novels
 
         [Space]
         [SerializeField] private string _storyTextPath;
-        [SerializeField] private string _novelsLocationBundleName;
-        [SerializeField] private string _novelsCharactersBundleName;
+
+        [Space]
         [SerializeField] private BundleData _loadingData;
-        [SerializeField] private BundleData _settingData;
-        [SerializeField] private BundleData _bubbleData;
-        [SerializeField] private BundleData _videosScreenData;
-        [SerializeField] private BundleData _characterScreenData;
+        [SerializeField] private string _novelsSettingBundleName;
+        [SerializeField] private string _novelsBubbleBundleName;
+        [SerializeField] private string _novelsLocationBundleName;
+        [SerializeField] private string _novelsCharacterBundleName;
         [SerializeField] private BundleData _notificationScreenData;
 
         internal readonly string Prefix => _prefix;
 
         internal readonly string StoryTextPath => _storyTextPath;
-        internal readonly string NovelsLocationBundleName => _novelsLocationBundleName;
-        internal readonly string NovelsCharactersBundleName => _novelsCharactersBundleName;
+
         internal readonly BundleData LoadingData => _loadingData;
-        internal readonly BundleData SettingData => _settingData;
-        internal readonly BundleData BubbleData => _bubbleData;
-        internal readonly BundleData VideosScreenData => _videosScreenData;
-        internal readonly BundleData CharacterScreenData => _characterScreenData;
+        internal readonly string NovelsSettingBundleName => _novelsSettingBundleName;
+        internal readonly string NovelsBubbleBundleName => _novelsBubbleBundleName;
+        internal readonly string NovelsLocationBundleName => _novelsLocationBundleName;
+        internal readonly string NovelsCharacterBundleName => _novelsCharacterBundleName;
         internal readonly BundleData NotificationScreenData => _notificationScreenData;
     }
 
@@ -60,14 +59,14 @@ namespace Novels
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Setting/Novels/{_ctx.Data.Prefix}/{assetName}";
+            return $"Assets/RemoteAssets/Setting/Novels/{_ctx.Data.Prefix}/{assetName}.prefab";
         }
 
         private string GetBubblePrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/Novels/Bubble/RemoteAssets/{_ctx.Data.Prefix}/{assetName}";
+            return $"Assets/Novels/Bubble/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
         }
 
         private string GetLocationPrefabAssetName(string assetName)
@@ -102,13 +101,20 @@ namespace Novels
             return result;
         }
 
+        private string GetCharacterPrefabAssetName(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
+        }
+
         private string GetCharacterMainBodyPath(string name)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
 
             var firstChar = char.ToUpper(name[0]);
             var otherText = name.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/Characters/{_ctx.Data.Prefix}/{name}/{firstChar}{otherText}.png";
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{firstChar}{otherText}.png";
         }
 
         private string GetCharacterEmotionPath(string name, string arg)
@@ -118,7 +124,7 @@ namespace Novels
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/Characters/{_ctx.Data.Prefix}/{name}/Эмоции/{firstChar}{otherText}.png";
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/Эмоции/{firstChar}{otherText}.png";
         }
 
         internal async UniTask Init()
@@ -138,12 +144,13 @@ namespace Novels
 
             //preloading init
             var firstPreloding = UniTask.WhenAll(
-                bundles.GetAssetBundle(_ctx.Data.SettingData.BundleName)
+                bundles.GetAssetBundle(_ctx.Data.NovelsSettingBundleName)
             );
             var secondPreloading = UniTask.WhenAll(
                 bundles.GetText(_ctx.Data.StoryTextPath),
-                bundles.GetAssetBundle(_ctx.Data.BubbleData.BundleName),
+                bundles.GetAssetBundle(_ctx.Data.NovelsBubbleBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NovelsLocationBundleName),
+                bundles.GetAssetBundle(_ctx.Data.NovelsCharacterBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NotificationScreenData.BundleName)
             );
 
@@ -156,7 +163,7 @@ namespace Novels
             var settingProcessCtx = new SettingProcess.Ctx
             {
                 DefaultThreadPriority = _defaultThreadPriority,
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.SettingData.BundleName, GetSettingPrefabAssetName(_ctx.Data.SettingData.AssetName)),
+                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, GetSettingPrefabAssetName("Screen")),
                 ShowLoading = loading.Show,
                 HideLoading = loading.Hide,
             };
@@ -167,7 +174,7 @@ namespace Novels
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
             {
-                var (storyTextTemp, bubbleTemp, locationsBundlesTemp, notificationScreenTemp) = await secondPreloading;
+                var (storyTextTemp, bubbleTemp, locationBundlesTemp, characterBundlesTemp, notificationScreenTemp) = await secondPreloading;
                 storyText = storyTextTemp;
             }
 
@@ -178,7 +185,7 @@ namespace Novels
 
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
-                GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.BubbleData.BundleName, GetBubblePrefabAssetName(_ctx.Data.BubbleData.AssetName)),
+                GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, GetBubblePrefabAssetName("Screen")),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bubble.Init();
@@ -195,8 +202,8 @@ namespace Novels
 
             var character = new Character.Entity(new Character.Entity.Ctx
             {
-                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.CharacterScreenData.BundleName, _ctx.Data.CharacterScreenData.AssetName),
-                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharactersBundleName, assetName),
+                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, GetCharacterPrefabAssetName("Screen")),
+                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, assetName),
                 GetMainBodyPath = GetCharacterMainBodyPath,
                 GetEmotionPath = GetCharacterEmotionPath,
             }).AddTo(this);

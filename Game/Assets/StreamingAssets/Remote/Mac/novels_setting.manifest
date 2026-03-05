@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 2002866705
+CRC: 109107914
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: e188f839918deb177528d1c39cc44374
+    Hash: ee9964e70f3587630a5cb8ea8a5fc2a6
   TypeTreeHash:
     serializedVersion: 2
-    Hash: caa5d187284209d9d2daad95675286e5
+    Hash: deff0cc385c559db2bb5c39700af8161
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 8fa7755452d805d7cec219d936146a6f
+    Hash: dd9230d7793f16b077e68ee16706c43f
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -22,7 +22,7 @@ ClassTypes:
 - Class: 48
   Script: {instanceID: 0}
 - Class: 114
-  Script: {fileID: 11500000, guid: a0611a97e4be34d19a8bd82d495899f5, type: 3}
+  Script: {fileID: 11500000, guid: dde5f9ec03c4a46b193d854dafc5c7ac, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
 - Class: 114
@@ -33,8 +33,6 @@ ClassTypes:
   Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-- Class: 114
-  Script: {fileID: 11500000, guid: 306cc8c2b49d7114eaa3623786fc2126, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
 - Class: 114
@@ -48,8 +46,6 @@ ClassTypes:
 - Class: 223
   Script: {instanceID: 0}
 - Class: 224
-  Script: {instanceID: 0}
-- Class: 225
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.CoreModule
@@ -71,6 +67,6 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/Novels/Bubble/RemoteAssets/TZM/LiberationSans-Regular.ttf
-- Assets/Novels/Bubble/RemoteAssets/TZM/Screen.prefab
+- Assets/RemoteAssets/Setting/Novels/TZM/Screen.prefab
+- Assets/RemoteAssets/Setting/Novels/TZM/LiberationSans-Regular.ttf
 Dependencies: []

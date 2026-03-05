@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 3237472277
+CRC: 3116586881
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -23,56 +23,53 @@ AssetBundleManifest:
       Name: meleecharacter_screen
       Dependencies: {}
     Info_6:
-      Name: setting_novels
-      Dependencies: {}
-    Info_7:
       Name: chapter_battle_scene_1
       Dependencies: {}
-    Info_8:
+    Info_7:
       Name: longbowcharacter
       Dependencies: {}
-    Info_9:
+    Info_8:
       Name: chapter_story_screen
       Dependencies: {}
-    Info_10:
+    Info_9:
       Name: chapter_onlyscreen_chapter_3
       Dependencies: {}
-    Info_11:
+    Info_10:
       Name: novels_notification
       Dependencies: {}
-    Info_12:
+    Info_11:
       Name: longbowcharacter_screen
       Dependencies: {}
-    Info_13:
+    Info_12:
       Name: loading
       Dependencies: {}
-    Info_14:
+    Info_13:
       Name: introvoice
       Dependencies: {}
-    Info_15:
+    Info_14:
       Name: chapter_onlyscreen_chapter_1
       Dependencies: {}
-    Info_16:
+    Info_15:
       Name: chapters
       Dependencies: {}
-    Info_17:
+    Info_16:
       Name: chapter_battle_screen
       Dependencies: {}
-    Info_18:
+    Info_17:
       Name: novels_bubble
       Dependencies: {}
-    Info_19:
+    Info_18:
       Name: chapter_onlyscreen_chapter_5
       Dependencies: {}
-    Info_20:
+    Info_19:
       Name: chapter_onlyscreen_chapter_2
       Dependencies: {}
-    Info_21:
+    Info_20:
       Name: novels_location
       Dependencies: {}
-    Info_22:
+    Info_21:
       Name: novels_character
       Dependencies: {}
-    Info_23:
-      Name: novels_characters
+    Info_22:
+      Name: novels_setting
       Dependencies: {}
