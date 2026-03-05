@@ -35,7 +35,7 @@ namespace Novels.Location
             _screen.ResetEffect();
         }
 
-        public async UniTask SetImage(string assetName, bool waitVideo)
+        public async UniTask SetImage(string assetName, bool cutScene)
         {
             Debug.Log(assetName);
             await _screen.HideImage();
@@ -48,19 +48,20 @@ namespace Novels.Location
 
             var videos = await _ctx.GetVideosList();
             var hasVideo = videos.Videos.Contains(assetName);
+            var hasCutScene = videos.CutScenes.Contains(assetName);
 
-            _screen.SetEnabledImage(!hasVideo);
-            _screen.SetEnabledVideo(hasVideo);
+            _screen.SetEnabledImage(!hasVideo && !hasCutScene);
+            _screen.SetEnabledVideo(hasVideo || hasCutScene);
 
             var videoReady = false;
             var videoDone = false;
-            if (hasVideo)
-                _screen.SetVideo(_ctx.GetVideoURL(assetName), !waitVideo, () => videoReady = true, () => videoDone = true);
+            if ((hasVideo && !cutScene) || (hasCutScene && cutScene))
+                _screen.SetVideo(_ctx.GetVideoURL(assetName), !cutScene, () => videoReady = true, () => videoDone = true);
             
-            if (hasVideo) while (!videoReady) await UniTask.NextFrame();
+            if ((hasVideo && !cutScene) || (hasCutScene && cutScene)) while (!videoReady) await UniTask.NextFrame();
 
             await _screen.ShowImage();
-            if (hasVideo && waitVideo) while (!videoDone) await UniTask.NextFrame();
+            if ((hasVideo || hasCutScene) && cutScene) while (!videoDone) await UniTask.NextFrame();
         }
 
         public async UniTask SetCamera(string value)

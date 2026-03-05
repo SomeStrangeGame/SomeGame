@@ -103,7 +103,9 @@ namespace Novels
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            var result = $"{Application.streamingAssetsPath}/NovelsVideos/{_ctx.Data.Prefix}/{assetName}.mp4";
+            var firstChar = char.ToUpper(assetName[0]);
+            var otherText = assetName.Substring(1).ToLower();
+            var result = $"{Application.streamingAssetsPath}/NovelsVideos/{_ctx.Data.Prefix}/{firstChar}{otherText}.mp4";
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             result = $"file://{result}";
 #endif
