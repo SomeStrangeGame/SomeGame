@@ -35,19 +35,32 @@ namespace Novels.Location
             _screen.ResetEffect();
         }
 
-        public async UniTask SetImage(string assetName)
+        public async UniTask SetImage(string assetName, bool waitVideo)
         {
+            Debug.Log(assetName);
             await _screen.HideImage();
+
             _screen.ResetCamera();
             _screen.ResetEffect();
+
             var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
+
             var videos = await _ctx.GetVideosList();
             var hasVideo = videos.Videos.Contains(assetName);
+
+            _screen.SetEnabledImage(!hasVideo);
             _screen.SetEnabledVideo(hasVideo);
+
+            var videoReady = false;
+            var videoDone = false;
             if (hasVideo)
-                _screen.SetVideo(_ctx.GetVideoURL(assetName));
+                _screen.SetVideo(_ctx.GetVideoURL(assetName), !waitVideo, () => videoReady = true, () => videoDone = true);
+            
+            if (hasVideo) while (!videoReady) await UniTask.NextFrame();
+
             await _screen.ShowImage();
+            if (hasVideo && waitVideo) while (!videoDone) await UniTask.NextFrame();
         }
 
         public async UniTask SetCamera(string value)

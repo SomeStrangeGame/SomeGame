@@ -47,9 +47,17 @@ namespace Novels.Location.View
         [Space]
         [SerializeField] private float _cameraDuration;
 
+        private Action _onVideoReady;
+        private Action _onVideoDone;
+
         public void SetImage(Sprite sprite)
         {
             _image.sprite = sprite;
+
+            var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
+            var imageWidth = _image.sprite.texture.width * scaleFactor;
+            _image.rectTransform.offsetMin = new Vector2((UnityEngine.Screen.width - imageWidth) / 2f, 0f);
+            _image.rectTransform.offsetMax = new Vector2(-(UnityEngine.Screen.width - imageWidth) / 2f, 0f);
         }
 
         public void ShowImageImmediate()
@@ -105,10 +113,33 @@ namespace Novels.Location.View
             _imageCanvasGroup.gameObject.SetActive(false);
         }
 
-        public void SetVideo(string url)
+        public void SetEnabledImage(bool state)
+        {
+            _image.enabled = state;
+        }
+
+        public void SetVideo(string url, bool loop, Action onVideoReady, Action onVideoDone)
         {
             _video.url = url;
+            _video.isLooping = loop;
             _video.Play();
+
+            _onVideoReady = onVideoReady;
+            _onVideoDone = onVideoDone;
+            _video.prepareCompleted += OnVideoReady;
+            _video.loopPointReached += OnVideoDone;
+        }
+
+        private void OnVideoReady(VideoPlayer source)
+        {
+            _onVideoReady?.Invoke();
+            _video.loopPointReached -= OnVideoReady;
+        }
+
+        private void OnVideoDone(VideoPlayer source)
+        {
+            _onVideoDone?.Invoke();
+            _video.loopPointReached -= OnVideoDone;
         }
 
         public void SetEnabledVideo(bool state)
