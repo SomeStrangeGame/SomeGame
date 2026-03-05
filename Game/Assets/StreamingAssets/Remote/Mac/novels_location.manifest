@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 1273784487
+CRC: 375577546
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6ededa864d55acfaeb19bc7e6a656b36
+    Hash: 242ae117c1ae7ded9466ce803551fa5f
   TypeTreeHash:
     serializedVersion: 2
     Hash: c60b1d824889b4027012a3335b218fb9
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 1abe9904a8eff83061662b1ac9237be1
+    Hash: 8ac772f3607910591a3c0bc7f2c0e6c1
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -118,7 +118,7 @@ Assets:
   \u0443 \u043C\u043E\u0440\u044F.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041D\u043E\u043C\u0435\u0440
   \u0413\u0413.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0438\u0438\u0306\u0441\u044F
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0438\u0439\u0441\u044F
   \u043E\u0441\u0442\u0440\u043E\u0432.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0442\u0430\u0442\u0443\u044F
   \u0410\u0442\u043B\u0430\u043D\u0442\u0430.png"
@@ -137,13 +137,13 @@ Assets:
 - Assets/Novels/Location/RemoteAssets/TZM/VideoTexture.renderTexture
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0441\u0442 \u0432
   \u0433\u043E\u0440\u043E\u0434.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0435\u0441\u0447\u0430\u043D\u044B\u0438\u0306
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0435\u0441\u0447\u0430\u043D\u044B\u0439
   \u043F\u043B\u044F\u0436.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041E\u0441\u0442\u0440\u043E\u0432
   \u043F\u043E\u0434 \u0432\u043E\u0434\u043E\u0438\u0306.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0414\u0432\u043E\u0440\u0435\u0446.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
   \u0432 \u043C\u043E\u0440\u0435 \u043D\u043E\u0447\u044C.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u043E\u0434 \u0432\u043E\u0434\u043E\u0438\u0306.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u043E\u0434 \u0432\u043E\u0434\u043E\u0439.png"
 - Assets/Novels/Location/RemoteAssets/TZM/Screen.prefab
 Dependencies: []

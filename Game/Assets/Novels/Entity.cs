@@ -87,7 +87,9 @@ namespace Novels
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/Locations/{assetName}.png";
+            var firstChar = char.ToUpper(assetName[0]);
+            var otherText = assetName.Substring(1).ToLower();
+            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/Locations/{firstChar}{otherText}.png";
         }
 
         private string GetLocationVideosPath(string assetName)
