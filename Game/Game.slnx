@@ -1,5 +1,4 @@
 ﻿<Solution>
-  <Project Path="Cache.csproj" />
   <Project Path="Novels.Notification.csproj" />
   <Project Path="BattleStory.Battle.View.csproj" />
   <Project Path="Disposable.csproj" />
@@ -18,8 +17,8 @@
   <Project Path="SOData.csproj" />
   <Project Path="Novels.Location.View.csproj" />
   <Project Path="BattleStory.Preloading.csproj" />
-  <Project Path="Novels.csproj" />
   <Project Path="Bundles.csproj" />
+  <Project Path="Novels.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="LoadingPriority.csproj" />
   <Project Path="BattleStory.Story.View.csproj" />
@@ -32,5 +31,6 @@
   <Project Path="Setting.csproj" />
   <Project Path="Novels.Notication.View.csproj" />
   <Project Path="Novels.Character.csproj" />
+  <Project Path="Cache.csproj" />
   <Project Path="Loading.csproj" />
 </Solution>

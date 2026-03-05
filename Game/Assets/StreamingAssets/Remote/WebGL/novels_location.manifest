@@ -1,22 +1,26 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 4117510874
+CRC: 3436858364
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 35805d292801c8c5caacbcdce1abef48
+    Hash: 51657a9d1cf83034b7f4ee682c5535f8
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 7bc83c697a9f4f470f8858016b4af491
+    Hash: c60b1d824889b4027012a3335b218fb9
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 458fad87455a76daa279634ed6bd4b88
+    Hash: 7b34fed2cd5043f39e21bdd6d7dac6b3
 HashAppended: 0
 ClassTypes:
 - Class: 1
   Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
 - Class: 84
   Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 00b60bb971e7f4dd594ac323a2833af3, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 0e3e4e88708574291816732bbfcc9e7f, type: 3}
 - Class: 114
@@ -28,6 +32,8 @@ ClassTypes:
 - Class: 114
   Script: {fileID: 11500000, guid: 1344c3c82d62a2a41a3576d8abb8e3ea, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 213
   Script: {instanceID: 0}
 - Class: 222
   Script: {instanceID: 0}
@@ -47,5 +53,97 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Novels/Location/RemoteAssets/Screen.prefab
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0444\u0435.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431
+  \u0432\u043E\u0434\u0430 \u043D\u043E\u0447\u044C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u043E\u043C\u043D\u0430\u0442\u0430
+  \u0414\u044D\u0438\u0306\u043C\u043E\u043D\u0430.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0441\u0442 \u0432
+  \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0443.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u043B\u0430\u0432\u043D\u044B\u0438\u0306
+  \u0437\u0430\u043B \u0434\u0432\u043E\u0440\u0446\u0430.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u043B\u0430\u0432\u043D\u044B\u0438\u0306
+  \u0437\u0430\u043B.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0420\u0430\u0437\u0440\u0443\u0448\u0435\u043D\u0438\u0435
+  \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u044B.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u042F\u0445\u0442\u0430 \u0437\u0430\u043A\u0430\u0442.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u043B\u0430\u0432\u043D\u044B\u0438\u0306
+  \u0437\u0430\u043B \u0434\u0432\u043E\u0440\u0446\u0430 \u043F\u0443\u0441\u0442\u043E\u0438\u0306.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0442\u0430\u0440\u044B\u0438\u0306
+  \u0433\u043E\u0440\u043E\u0434.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
+  \u0432 \u043C\u043E\u0440\u0435.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0430
+  \u043D\u0430 \u0441\u0443\u0448\u0435.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0425\u0430\u0440\u043E\u043D
+  \u043D\u0430 \u0442\u0440\u043E\u043D\u0435.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0443\u0445\u043D\u044F
+  \u0432 \u0434\u043E\u043C\u0438\u043A\u0435 \u0443 \u043C\u043E\u0440\u044F.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0412\u0430\u043D\u043D\u0430\u044F.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0440\u0438\u0447\u0430\u043B.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0412\u0438\u0434 \u0438\u0437
+  \u043E\u043A\u043D\u0430.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u0435\u0442\u0435\u043E\u0440\u0438\u0442.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431
+  \u0441\u0443\u0448\u0430 \u043D\u043E\u0447\u044C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
+  \u0432 \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0438.png"
+- Assets/Novels/Location/RemoteAssets/TZM/VideosSO.asset
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0442\u043E\u0446\u0438\u043A\u043B
+  \u0432 \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0438.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0430\u044F\u0441\u044F
+  \u043F\u0435\u0449\u0435\u0440\u0430 \u0432\u043E\u0434\u043E\u0432\u043E\u0440\u043E\u0442.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u043E\u043C\u043D\u0430\u0442\u0430
+  \u0410\u043B\u0435\u043A\u0441\u044B.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0440\u043E\u0445\u043E\u0434.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431
+  \u0432\u043E\u0434\u0430 \u0434\u0435\u043D\u044C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0423 \u0442\u043E\u043D\u043D\u0435\u043B\u044F
+  \u0441 \u043F\u0440\u043E\u0445\u043E\u0434\u043E\u043C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0410\u043B\u0435\u043A\u0441\u0430
+  \u043D\u0430 \u043C\u043E\u0442\u043E\u0446\u0438\u043A\u043B\u0435.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0430.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0430\u044F\u0441\u044F
+  \u043F\u0435\u0449\u0435\u0440\u0430 \u0441 \u0431\u0430\u0441\u0441\u0435\u0438\u0306\u043D\u043E\u043C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0442\u043E\u0446\u0438\u043A\u043B.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u043E\u0433\u0440\u0443\u0436\u0435\u043D\u0438\u0435
+  \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u044B.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431
+  \u0441\u0443\u0448\u0430 \u0434\u0435\u043D\u044C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0438\u0438\u0306\u0441\u044F
+  \u043C\u0435\u0442\u0435\u043E\u0440\u0438\u0442.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
+  \u0432 \u043C\u043E\u0440\u0435 \u0437\u0430\u043A\u0430\u0442.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0414\u043E\u043C\u0438\u043A
+  \u0443 \u043C\u043E\u0440\u044F.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041D\u043E\u043C\u0435\u0440
+  \u0413\u0413.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0438\u0438\u0306\u0441\u044F
+  \u043E\u0441\u0442\u0440\u043E\u0432.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0442\u0430\u0442\u0443\u044F
+  \u0410\u0442\u043B\u0430\u043D\u0442\u0430.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Charlie2.png
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0422\u043E\u043D\u043D\u0435\u043B\u044C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0425\u0430\u0440\u043E\u043D
+  \u043D\u0430 \u0442\u0440\u043E\u043D\u0435 \u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0410\u043A\u0443\u043B\u0430.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041D\u043E\u043C\u0435\u0440
+  \u0432 \u043E\u0442\u0435\u043B\u0435.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Charlie1.png
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0420\u0430\u0437\u0440\u0443\u0448\u0435\u043D\u043D\u0430\u044F
+  \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0430 \u043F\u043E\u0434 \u0432\u043E\u0434\u043E\u0438\u0306.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041D\u0430\u0447\u0430\u043B\u043E
+  \u0440\u0430\u0437\u0440\u0443\u0448\u0435\u043D\u0438\u044F \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u044B.png"
+- Assets/Novels/Location/RemoteAssets/TZM/VideoTexture.renderTexture
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0441\u0442 \u0432
+  \u0433\u043E\u0440\u043E\u0434.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0435\u0441\u0447\u0430\u043D\u044B\u0438\u0306
+  \u043F\u043B\u044F\u0436.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041E\u0441\u0442\u0440\u043E\u0432
+  \u043F\u043E\u0434 \u0432\u043E\u0434\u043E\u0438\u0306.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0414\u0432\u043E\u0440\u0435\u0446.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
+  \u0432 \u043C\u043E\u0440\u0435 \u043D\u043E\u0447\u044C.png"
+- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u043E\u0434 \u0432\u043E\u0434\u043E\u0438\u0306.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Screen.prefab
 Dependencies: []

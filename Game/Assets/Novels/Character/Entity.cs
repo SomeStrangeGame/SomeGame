@@ -11,6 +11,8 @@ namespace Novels.Character
         {
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
+            public Func<string, string> GetMainBodyPath;
+            public Func<string, string, string> GetEmotionPath;
         }
 
         private readonly Ctx _ctx;
@@ -34,36 +36,17 @@ namespace Novels.Character
         {
             await Hide();
             //Debug.Log(ConvertToMainBody(name));
-            var sprite = await _ctx.GetSprite(ConvertToMainBody(name));
+            var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name));
             _screen.SetMainBody(sprite);
 
             _screen.SetEmotion(null);
             foreach (var arg in args)
             {
-                var emotionSprite = await _ctx.GetSprite(ConvertToEmotion(name, arg));
+                var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, arg));
                 _screen.SetEmotion(emotionSprite);
                 if (emotionSprite != null) break;
             }
             await Show();
-        }
-
-        private string ConvertToMainBody(string name)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-
-            var firstChar = char.ToUpper(name[0]);
-            var otherText = name.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/Characters/{name}/{firstChar}{otherText}.png";
-        }
-
-        private string ConvertToEmotion(string name, string arg)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-            if (string.IsNullOrEmpty(arg)) return string.Empty;
-
-            var firstChar = char.ToUpper(arg[0]);
-            var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/Characters/{name}/Эмоции/{firstChar}{otherText}.png";
         }
 
         public async UniTask Show()

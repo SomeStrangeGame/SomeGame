@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 889584025
+CRC: 886112570
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -68,17 +68,11 @@ AssetBundleManifest:
       Name: chapter_onlyscreen_chapter_2
       Dependencies: {}
     Info_21:
-      Name: novels_locations
-      Dependencies: {}
-    Info_22:
       Name: novels_location
       Dependencies: {}
-    Info_23:
+    Info_22:
       Name: novels_character
       Dependencies: {}
-    Info_24:
+    Info_23:
       Name: novels_characters
-      Dependencies: {}
-    Info_25:
-      Name: novels_videos
       Dependencies: {}

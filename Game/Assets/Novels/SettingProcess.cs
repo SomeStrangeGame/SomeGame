@@ -11,8 +11,7 @@ namespace Novels
         internal struct Ctx
         {
             internal ThreadPriority DefaultThreadPriority;
-            internal BundleData SettingData;
-            internal Func<string, string, UniTask<GameObject>> GetBundledPrefab;
+            internal Func<UniTask<GameObject>> GetBundledPrefab;
             internal Func<UniTask> ShowLoading;
             internal Func<UniTask> HideLoading;
         }
@@ -28,7 +27,7 @@ namespace Novels
         {
             var setting = new Setting.Entity(new Setting.Entity.Ctx
             {
-                GetBundledPrefab = () => _ctx.GetBundledPrefab(_ctx.SettingData.BundleName, _ctx.SettingData.AssetName),
+                GetBundledPrefab = _ctx.GetBundledPrefab,
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _ctx.DefaultThreadPriority))
                 await setting.Init();

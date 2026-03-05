@@ -11,24 +11,27 @@ namespace Novels
     [Serializable]
     internal struct Data
     {
+        [SerializeField] private string _prefix;
+
+        [Space]
         [SerializeField] private string _storyTextPath;
-        [SerializeField] private string _novelsLocationsBundleName;
+        [SerializeField] private string _novelsLocationBundleName;
         [SerializeField] private string _novelsCharactersBundleName;
         [SerializeField] private BundleData _loadingData;
         [SerializeField] private BundleData _settingData;
         [SerializeField] private BundleData _bubbleData;
-        [SerializeField] private BundleData _locationScreenData;
         [SerializeField] private BundleData _videosScreenData;
         [SerializeField] private BundleData _characterScreenData;
         [SerializeField] private BundleData _notificationScreenData;
 
+        internal readonly string Prefix => _prefix;
+
         internal readonly string StoryTextPath => _storyTextPath;
-        internal readonly string NovelsLocationsBundleName => _novelsLocationsBundleName;
+        internal readonly string NovelsLocationBundleName => _novelsLocationBundleName;
         internal readonly string NovelsCharactersBundleName => _novelsCharactersBundleName;
         internal readonly BundleData LoadingData => _loadingData;
         internal readonly BundleData SettingData => _settingData;
         internal readonly BundleData BubbleData => _bubbleData;
-        internal readonly BundleData LocationScreenData => _locationScreenData;
         internal readonly BundleData VideosScreenData => _videosScreenData;
         internal readonly BundleData CharacterScreenData => _characterScreenData;
         internal readonly BundleData NotificationScreenData => _notificationScreenData;
@@ -53,13 +56,69 @@ namespace Novels
             Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
 
+        private string GetSettingPrefabAssetName(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/RemoteAssets/Setting/Novels/{_ctx.Data.Prefix}/{assetName}";
+        }
+
+        private string GetBubblePrefabAssetName(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/Novels/Bubble/RemoteAssets/{_ctx.Data.Prefix}/{assetName}";
+        }
+
+        private string GetLocationPrefabAssetName(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
+        }
+
+        private string GetLocationImagePath(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/Locations/{assetName}.png";
+        }
+
+        private string GetLocationVideosPath(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.asset";
+        }
+
         private string GetVideoPath(string assetName)
         {
-            var result = $"{Application.streamingAssetsPath}/NovelsVideos/{assetName}.mp4";
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            var result = $"{Application.streamingAssetsPath}/NovelsVideos/{_ctx.Data.Prefix}/{assetName}.mp4";
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             result = $"file://{result}";
 #endif
             return result;
+        }
+
+        private string GetCharacterMainBodyPath(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+
+            var firstChar = char.ToUpper(name[0]);
+            var otherText = name.Substring(1).ToLower();
+            return $"Assets/Novels/Character/RemoteAssets/Characters/{_ctx.Data.Prefix}/{name}/{firstChar}{otherText}.png";
+        }
+
+        private string GetCharacterEmotionPath(string name, string arg)
+        {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+            if (string.IsNullOrEmpty(arg)) return string.Empty;
+
+            var firstChar = char.ToUpper(arg[0]);
+            var otherText = arg.Substring(1).ToLower();
+            return $"Assets/Novels/Character/RemoteAssets/Characters/{_ctx.Data.Prefix}/{name}/Эмоции/{firstChar}{otherText}.png";
         }
 
         internal async UniTask Init()
@@ -84,8 +143,7 @@ namespace Novels
             var secondPreloading = UniTask.WhenAll(
                 bundles.GetText(_ctx.Data.StoryTextPath),
                 bundles.GetAssetBundle(_ctx.Data.BubbleData.BundleName),
-                bundles.GetAssetBundle(_ctx.Data.LocationScreenData.BundleName),
-                bundles.GetAssetBundle(_ctx.Data.NovelsLocationsBundleName),
+                bundles.GetAssetBundle(_ctx.Data.NovelsLocationBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NotificationScreenData.BundleName)
             );
 
@@ -98,8 +156,7 @@ namespace Novels
             var settingProcessCtx = new SettingProcess.Ctx
             {
                 DefaultThreadPriority = _defaultThreadPriority,
-                SettingData = _ctx.Data.SettingData,
-                GetBundledPrefab = bundles.GetBundledPrefab,
+                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.SettingData.BundleName, GetSettingPrefabAssetName(_ctx.Data.SettingData.AssetName)),
                 ShowLoading = loading.Show,
                 HideLoading = loading.Hide,
             };
@@ -110,7 +167,7 @@ namespace Novels
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
             {
-                var (storyTextTemp, bubbleTemp, locationScreenTemp, locationsBundlesTemp, notificationScreenTemp) = await secondPreloading;
+                var (storyTextTemp, bubbleTemp, locationsBundlesTemp, notificationScreenTemp) = await secondPreloading;
                 storyText = storyTextTemp;
             }
 
@@ -121,18 +178,17 @@ namespace Novels
 
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
-                GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.BubbleData.BundleName, _ctx.Data.BubbleData.AssetName),
+                GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.BubbleData.BundleName, GetBubblePrefabAssetName(_ctx.Data.BubbleData.AssetName)),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bubble.Init();
 
             var location = new Location.Entity(new Location.Entity.Ctx
             {
-                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LocationScreenData.BundleName, _ctx.Data.LocationScreenData.AssetName),
-                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationsBundleName, assetName),
-                GetVideosList = () => bundles.GetBundledSO<VideosSO>(_ctx.Data.VideosScreenData.BundleName, _ctx.Data.VideosScreenData.AssetName),
-                GetSpritePath = assetName => $"{assetName}.png",
-                GetVideoURL = assetName => GetVideoPath(assetName),
+                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, GetLocationPrefabAssetName("Screen")),
+                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, GetLocationImagePath(assetName)),
+                GetVideosList = () => bundles.GetBundledSO<VideosSO>(_ctx.Data.NovelsLocationBundleName, GetLocationVideosPath("VideosSO")),
+                GetVideoURL = GetVideoPath,
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await location.Init();
@@ -141,6 +197,8 @@ namespace Novels
             {
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.CharacterScreenData.BundleName, _ctx.Data.CharacterScreenData.AssetName),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharactersBundleName, assetName),
+                GetMainBodyPath = GetCharacterMainBodyPath,
+                GetEmotionPath = GetCharacterEmotionPath,
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await character.Init();

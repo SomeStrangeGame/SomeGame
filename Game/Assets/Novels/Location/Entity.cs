@@ -13,7 +13,6 @@ namespace Novels.Location
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<UniTask<VideosSO>> GetVideosList;
-            public Func<string, string> GetSpritePath;
             public Func<string, string> GetVideoURL;
         }
 
@@ -41,7 +40,7 @@ namespace Novels.Location
             await _screen.HideImage();
             _screen.ResetCamera();
             _screen.ResetEffect();
-            var sprite = await _ctx.GetSprite(_ctx.GetSpritePath(assetName));
+            var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
             var videos = await _ctx.GetVideosList();
             var hasVideo = videos.Videos.Contains(assetName);
