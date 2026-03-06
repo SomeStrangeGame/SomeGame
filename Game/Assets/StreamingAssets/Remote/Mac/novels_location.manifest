@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 2748032850
+CRC: 2569165649
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 96d5f829eb913ccf8030be5e77a16db0
+    Hash: 94ee08218913fe11c5337f0d058f51ee
   TypeTreeHash:
     serializedVersion: 2
     Hash: 041d39577d31847e4b042b80d36b5a61
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 43d5eb71fb40afaac2ff9e1014cfd58b
+    Hash: 8ae32dddcc3986fd55205607b3556421
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -77,6 +77,7 @@ Assets:
   \u043D\u0430 \u0441\u0443\u0448\u0435.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0425\u0430\u0440\u043E\u043D
   \u043D\u0430 \u0442\u0440\u043E\u043D\u0435.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/With Alexa on bike.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0443\u0445\u043D\u044F
   \u0432 \u0434\u043E\u043C\u0438\u043A\u0435 \u0443 \u043C\u043E\u0440\u044F.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0412\u0430\u043D\u043D\u0430\u044F.png"
@@ -87,6 +88,7 @@ Assets:
   \u0441\u0443\u0448\u0430 \u043D\u043E\u0447\u044C.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
   \u0432 \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0438.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/City in deep.png
 - Assets/Novels/Location/RemoteAssets/TZM/VideosSO.asset
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0442\u043E\u0446\u0438\u043A\u043B
   \u0432 \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0438.png"
@@ -99,8 +101,7 @@ Assets:
   \u0432\u043E\u0434\u0430 \u0434\u0435\u043D\u044C.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0423 \u0442\u043E\u043D\u043D\u0435\u043B\u044F
   \u0441 \u043F\u0440\u043E\u0445\u043E\u0434\u043E\u043C.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0410\u043B\u0435\u043A\u0441\u0430
-  \u043D\u0430 \u043C\u043E\u0442\u043E\u0446\u0438\u043A\u043B\u0435.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Alexa on bike.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0430.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0430\u044F\u0441\u044F
   \u043F\u0435\u0449\u0435\u0440\u0430 \u0441 \u0431\u0430\u0441\u0441\u0435\u0439\u043D\u043E\u043C.png"
@@ -129,11 +130,12 @@ Assets:
   \u0432 \u043E\u0442\u0435\u043B\u0435.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0420\u0430\u0437\u0440\u0443\u0448\u0435\u043D\u043D\u0430\u044F
   \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0430 \u043F\u043E\u0434 \u0432\u043E\u0434\u043E\u0438\u0306.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Meteor light.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041D\u0430\u0447\u0430\u043B\u043E
   \u0440\u0430\u0437\u0440\u0443\u0448\u0435\u043D\u0438\u044F \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u044B.png"
-- Assets/Novels/Location/RemoteAssets/TZM/VideoTexture.renderTexture
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0441\u0442 \u0432
   \u0433\u043E\u0440\u043E\u0434.png"
+- Assets/Novels/Location/RemoteAssets/TZM/VideoTexture.renderTexture
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0435\u0441\u0447\u0430\u043D\u044B\u0439
   \u043F\u043B\u044F\u0436.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041E\u0441\u0442\u0440\u043E\u0432
