@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.4f1
-CRC: 1522350712
+CRC: 3177764547
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a592f1934cf679e015538812bbb55595
+    Hash: 8a7c25afb93e92f3c99cffcaede5c75c
   TypeTreeHash:
     serializedVersion: 2
     Hash: 041d39577d31847e4b042b80d36b5a61
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: dbba916bb3686266b3d3f03133059051
+    Hash: 3b247e4f9dce6a8603937edaabb853a5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -53,7 +53,7 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0444\u0435.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Cafe.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431
   \u0432\u043E\u0434\u0430 \u043D\u043E\u0447\u044C.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u043E\u043C\u043D\u0430\u0442\u0430
@@ -71,8 +71,7 @@ Assets:
   \u0437\u0430\u043B \u0434\u0432\u043E\u0440\u0446\u0430 \u043F\u0443\u0441\u0442\u043E\u0438\u0306.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0442\u0430\u0440\u044B\u0438\u0306
   \u0433\u043E\u0440\u043E\u0434.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
-  \u0432 \u043C\u043E\u0440\u0435.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Boat in see.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0430
   \u043D\u0430 \u0441\u0443\u0448\u0435.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0425\u0430\u0440\u043E\u043D
@@ -80,14 +79,13 @@ Assets:
 - Assets/Novels/Location/RemoteAssets/TZM/Locations/With Alexa on bike.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0443\u0445\u043D\u044F
   \u0432 \u0434\u043E\u043C\u0438\u043A\u0435 \u0443 \u043C\u043E\u0440\u044F.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Pier.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0412\u0430\u043D\u043D\u0430\u044F.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0440\u0438\u0447\u0430\u043B.png"
 - Assets/Novels/Location/RemoteAssets/TZM/Locations/Window.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u0435\u0442\u0435\u043E\u0440\u0438\u0442.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431
   \u0441\u0443\u0448\u0430 \u043D\u043E\u0447\u044C.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
-  \u0432 \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0438.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Boat in move.png
 - Assets/Novels/Location/RemoteAssets/TZM/Locations/City in deep.png
 - Assets/Novels/Location/RemoteAssets/TZM/VideosSO.asset
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0442\u043E\u0446\u0438\u043A\u043B
@@ -108,8 +106,7 @@ Assets:
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0442\u043E\u0446\u0438\u043A\u043B.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u043E\u0433\u0440\u0443\u0436\u0435\u043D\u0438\u0435
   \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u044B.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431
-  \u0441\u0443\u0448\u0430 \u0434\u0435\u043D\u044C.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Wardrobe dry day.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0421\u0432\u0435\u0442\u044F\u0449\u0438\u0438\u0306\u0441\u044F
   \u043C\u0435\u0442\u0435\u043E\u0440\u0438\u0442.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
@@ -126,8 +123,7 @@ Assets:
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0425\u0430\u0440\u043E\u043D
   \u043D\u0430 \u0442\u0440\u043E\u043D\u0435 \u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
 - Assets/Novels/Location/RemoteAssets/TZM/Locations/Shark.png
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041D\u043E\u043C\u0435\u0440
-  \u0432 \u043E\u0442\u0435\u043B\u0435.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Hotel room.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0420\u0430\u0437\u0440\u0443\u0448\u0435\u043D\u043D\u0430\u044F
   \u0410\u0442\u043B\u0430\u043D\u0442\u0438\u0434\u0430 \u043F\u043E\u0434 \u0432\u043E\u0434\u043E\u0438\u0306.png"
 - Assets/Novels/Location/RemoteAssets/TZM/Locations/Meteor light.png
@@ -136,13 +132,12 @@ Assets:
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041C\u043E\u0441\u0442 \u0432
   \u0433\u043E\u0440\u043E\u0434.png"
 - Assets/Novels/Location/RemoteAssets/TZM/VideoTexture.renderTexture
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u0435\u0441\u0447\u0430\u043D\u044B\u0439
-  \u043F\u043B\u044F\u0436.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Sandy beach.png
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041E\u0441\u0442\u0440\u043E\u0432
   \u043F\u043E\u0434 \u0432\u043E\u0434\u043E\u0439.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u0414\u0432\u043E\u0440\u0435\u0446.png"
 - "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041A\u0430\u0442\u0435\u0440
   \u0432 \u043C\u043E\u0440\u0435 \u043D\u043E\u0447\u044C.png"
-- "Assets/Novels/Location/RemoteAssets/TZM/Locations/\u041F\u043E\u0434 \u0432\u043E\u0434\u043E\u0439.png"
+- Assets/Novels/Location/RemoteAssets/TZM/Locations/Under water.png
 - Assets/Novels/Location/RemoteAssets/TZM/Screen.prefab
 Dependencies: []
