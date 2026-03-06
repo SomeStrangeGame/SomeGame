@@ -263,7 +263,7 @@ namespace Novels
 
                 if (prefix.ToLower() == "уведомление")
                 {
-                    notification.SetText(value).Forget();
+                    notification.Show(value).Forget();
                     continue;
                 }
 

@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.4f1
+CRC: 1238550513
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 68d86c0d836c484ccdbf46f47b8aad1e
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: bc9f87c7e64ff656997db0f2b2a91703
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 0001992cf98e2d3822a19a055eca232c
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/BattleStory/Story/RemoteAssets/Chapter_5.png
+Dependencies: []

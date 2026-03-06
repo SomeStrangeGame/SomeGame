@@ -1,0 +1,65 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.4f1
+CRC: 3894784556
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 9baba2587be693343e5b88db44f1d35b
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: f48dac91ec8c88b91f259cd23a3e3361
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 4fb9ee778bc9cf44a0047ce00d37a5ce
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 96
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 65ae9652be3394082a73d80f3897eb46, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: c4eb09a9d2e02439b91937ddfba29f1e, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 135
+  Script: {instanceID: 0}
+- Class: 136
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+- Class: 144
+  Script: {instanceID: 0}
+- Class: 195
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- Assets/BattleStory/Character/RemoteAssets/LongBowCharacter.prefab
+Dependencies: []

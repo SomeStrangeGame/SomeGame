@@ -1,0 +1,43 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.4f1
+CRC: 3535484915
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 0ec773dfdcf3e83ceb7d70bf92288384
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: da9b99748503e11efd7964a977480b84
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 49d4822af50c7e83711709d97c74d622
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 23
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 33
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 64
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: 2646c1766fab34b96a9b14329b21bcf7, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: BattleStory.Battle.View
+  ClassName: BattleStory.Battle.View.Scene/CharacterPoint
+Assets:
+- Assets/BattleStory/Battle/RemoteAssets/BattleScene2.prefab
+Dependencies: []

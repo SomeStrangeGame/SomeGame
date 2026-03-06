@@ -61,7 +61,12 @@ namespace Novels.Location
             if ((hasVideo && !cutScene) || (hasCutScene && cutScene)) while (!videoReady) await UniTask.NextFrame();
 
             await _screen.ShowImage();
-            if ((hasVideo || hasCutScene) && cutScene) while (!videoDone) await UniTask.NextFrame();
+            if (cutScene)
+            {
+                if (hasVideo || hasCutScene) while (!videoDone) await UniTask.NextFrame();
+                else await UniTask.Delay(3000);
+            }
+            
         }
 
         public async UniTask SetCamera(string value)
