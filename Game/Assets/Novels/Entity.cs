@@ -92,13 +92,6 @@ namespace Novels
             return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/Locations/{firstChar}{otherText}.png";
         }
 
-        private string GetLocationVideosPath(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.asset";
-        }
-
         private string GetVideoPath(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
