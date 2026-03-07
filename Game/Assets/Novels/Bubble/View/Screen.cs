@@ -27,15 +27,12 @@ namespace Novels.Bubble.View
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideDuration;
             while (timer >= 0f)
             {
                 _canvasGroup.alpha = 1f - (timer / _showHideDuration);
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
 
             _canvasGroup.alpha = 1f;
@@ -52,15 +49,12 @@ namespace Novels.Bubble.View
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideDuration;
             while (timer >= 0f)
             {
                 _canvasGroup.alpha = timer / _showHideDuration;
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
 
             _canvasGroup.alpha = 0f;

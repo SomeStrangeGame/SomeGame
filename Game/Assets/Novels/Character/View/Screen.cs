@@ -34,15 +34,12 @@ namespace Novels.Character.View
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideImageDuration;
             while (timer >= 0f)
             {
                 _canvasGroup.alpha = 1f - (timer / _showHideImageDuration);
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
 
             _canvasGroup.alpha = 1f;
@@ -61,15 +58,12 @@ namespace Novels.Character.View
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideImageDuration;
             while (timer >= 0f)
             {
                 _canvasGroup.alpha = timer / _showHideImageDuration;
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
 
             _canvasGroup.alpha = 0f;
