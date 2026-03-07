@@ -50,20 +50,22 @@ namespace Novels.Location
             var hasVideo = videos.Videos.Contains(assetName);
             var hasCutScene = videos.CutScenes.Contains(assetName);
 
-            _screen.SetEnabledImage(!hasVideo && !hasCutScene);
-            _screen.SetEnabledVideo(hasVideo || hasCutScene);
-
             var videoReady = false;
             var videoDone = false;
+            var videoError = false;
             if ((hasVideo && !cutScene) || (hasCutScene && cutScene))
-                _screen.SetVideo(_ctx.GetVideoURL(assetName), !cutScene, () => videoReady = true, () => videoDone = true);
-            
-            if ((hasVideo && !cutScene) || (hasCutScene && cutScene)) while (!videoReady) await UniTask.NextFrame();
+            {
+                _screen.SetVideo(_ctx.GetVideoURL(assetName), !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
+                while (!videoError && !videoReady) await UniTask.NextFrame();
+            }
+
+            _screen.SetEnabledImage(videoError || (!hasVideo && !hasCutScene));
+            _screen.SetEnabledVideo(!videoError && (hasVideo || hasCutScene));
 
             await _screen.ShowImage();
             if (cutScene)
             {
-                if (hasVideo || hasCutScene) while (!videoDone) await UniTask.NextFrame();
+                if (!videoError && (hasVideo || hasCutScene)) while (!videoDone) await UniTask.NextFrame();
                 else await UniTask.Delay(3000);
             }
             

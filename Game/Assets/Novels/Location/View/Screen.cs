@@ -49,6 +49,7 @@ namespace Novels.Location.View
 
         private Action _onVideoReady;
         private Action _onVideoDone;
+        private Action _onVideoFailed;
 
         public void SetImage(Sprite sprite)
         {
@@ -118,7 +119,7 @@ namespace Novels.Location.View
             _image.enabled = state;
         }
 
-        public void SetVideo(string url, bool loop, Action onVideoReady, Action onVideoDone)
+        public void SetVideo(string url, bool loop, Action onVideoReady, Action onVideoDone, Action onVideoFailed)
         {
             _video.url = url;
             _video.isLooping = loop;
@@ -126,8 +127,10 @@ namespace Novels.Location.View
 
             _onVideoReady = onVideoReady;
             _onVideoDone = onVideoDone;
+            _onVideoFailed = onVideoFailed;
             _video.prepareCompleted += OnVideoReady;
             _video.loopPointReached += OnVideoDone;
+            _video.errorReceived += OnVideoFailed;
         }
 
         private void OnVideoReady(VideoPlayer source)
@@ -140,6 +143,12 @@ namespace Novels.Location.View
         {
             _onVideoDone?.Invoke();
             _video.loopPointReached -= OnVideoDone;
+        }
+
+        private void OnVideoFailed(VideoPlayer source, string message)
+        {
+            _onVideoFailed?.Invoke();
+            _video.errorReceived -= OnVideoFailed;
         }
 
         public void SetEnabledVideo(bool state)
