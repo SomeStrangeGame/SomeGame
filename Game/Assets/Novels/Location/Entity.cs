@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -12,7 +11,6 @@ namespace Novels.Location
         {
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
-            public Func<UniTask<VideosSO>> GetVideosList;
             public Func<string, string> GetVideoURL;
         }
 
@@ -37,35 +35,28 @@ namespace Novels.Location
 
         public async UniTask SetImage(string assetName, bool cutScene)
         {
-            Debug.Log(assetName);
             await _screen.HideImage();
 
             _screen.ResetCamera();
             _screen.ResetEffect();
 
+            Debug.Log(assetName);
             var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
-
-            var videos = await _ctx.GetVideosList();
-            var hasVideo = videos.Videos.Contains(assetName);
-            var hasCutScene = videos.CutScenes.Contains(assetName);
 
             var videoReady = false;
             var videoDone = false;
             var videoError = false;
-            if ((hasVideo && !cutScene) || (hasCutScene && cutScene))
-            {
-                _screen.SetVideo(_ctx.GetVideoURL(assetName), !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
-                while (!videoError && !videoReady) await UniTask.NextFrame();
-            }
+            _screen.SetVideo(_ctx.GetVideoURL(assetName), !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
+            while (!videoError && !videoReady) await UniTask.NextFrame();
 
-            _screen.SetEnabledImage(videoError || (!hasVideo && !hasCutScene));
-            _screen.SetEnabledVideo(!videoError && (hasVideo || hasCutScene));
+            _screen.SetEnabledImage(videoError);
+            _screen.SetEnabledVideo(!videoError);
 
             await _screen.ShowImage();
             if (cutScene)
             {
-                if (!videoError && (hasVideo || hasCutScene)) while (!videoDone) await UniTask.NextFrame();
+                if (!videoError) while (!videoDone) await UniTask.NextFrame();
                 else await UniTask.Delay(3000);
             }
             
@@ -93,7 +84,6 @@ namespace Novels.Location
                 await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
                 return;
             }
-            //Debug.Log($"Camera: {value}");
         }
     }
 }

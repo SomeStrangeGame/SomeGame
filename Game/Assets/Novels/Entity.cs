@@ -212,7 +212,6 @@ namespace Novels
             {
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, GetLocationPrefabAssetName("Screen")),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, GetLocationImagePath(assetName)),
-                GetVideosList = () => bundles.GetBundledSO<VideosSO>(_ctx.Data.NovelsLocationBundleName, GetLocationVideosPath("VideosSO")),
                 GetVideoURL = GetVideoPath,
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
