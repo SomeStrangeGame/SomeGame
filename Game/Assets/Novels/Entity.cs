@@ -185,7 +185,7 @@ namespace Novels
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
             {
-                var (storyTextTemp, bubbleTemp, locationBundlesTemp, characterBundlesTemp, notificationScreenTemp) = await secondPreloading;
+                var (storyTextTemp, _, _, _, _) = await secondPreloading;
                 storyText = storyTextTemp;
             }
 
