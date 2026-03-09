@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -33,8 +34,12 @@ namespace Novels.Location
             _screen.ResetEffect();
         }
 
-        public async UniTask SetImage(string assetName, bool cutScene)
+        public async UniTask SetImage(string assetName, bool cutScene, string[] args)
         {
+            Camera.allCameras[0].backgroundColor = Color.black;
+            if (args != null && args.Any(a => a == "белый"))
+                Camera.allCameras[0].backgroundColor = Color.white;
+
             await _screen.HideImage();
 
             _screen.ResetCamera();

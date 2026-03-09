@@ -261,13 +261,17 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("локация"))
                 {
-                    //get args here...
-                    await location.SetImage(value, false);
+                    var locationRawArgsData = prefix.Split("(");
+                    var locationArgs = locationRawArgsData.Length <= 1
+                    ? new string[0]
+                    : locationRawArgsData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
+
+                    await location.SetImage(value, false, locationArgs);
                     continue;
                 }
                 if (prefix.ToLower() == "кат-сцена")
                 {
-                    await location.SetImage(value, true);
+                    await location.SetImage(value, true, null);
                     continue;
                 }
                 if (prefix.ToLower() == "камера")
