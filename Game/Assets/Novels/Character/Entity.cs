@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -11,13 +12,16 @@ namespace Novels.Character
         {
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
-            public Func<string, string> GetMainBodyPath;
-            public Func<string, string, string> GetEmotionPath;
+            public Func<string, string, string> GetMainBodyPath;
+            public Func<string, string, string, string> GetEmotionPath;
         }
 
         private readonly Ctx _ctx;
 
         private View.Screen _screen;
+
+        private string _mainCharacterView;
+
 
         public Entity(Ctx ctx)
         {
@@ -32,16 +36,29 @@ namespace Novels.Character
             _screen.HideImageImmediate();
         }
 
-        public async UniTask SetImage(string name, string[] args)
+        public void SetMainCharacterView(string view)
         {
+            _mainCharacterView = $"Внешность/{view}";
+        }
+
+        public async UniTask SetImage(string name, params string[] args)
+        {
+            var view = "Внешность";
+            if (name == "Салли")
+            {
+                view = _mainCharacterView;
+            }
+
             await Hide();
-            var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name));
+            Debug.Log(_ctx.GetMainBodyPath(name, view));
+            var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view));
             _screen.SetMainBody(sprite);
 
             _screen.SetEmotion(null);
             foreach (var arg in args)
             {
-                var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, arg));
+                Debug.Log(_ctx.GetEmotionPath(name, view, arg));
+                var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, view, arg));
                 _screen.SetEmotion(emotionSprite);
                 if (emotionSprite != null) break;
             }

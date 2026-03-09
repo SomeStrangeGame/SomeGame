@@ -73,15 +73,12 @@ namespace Novels.Location.View
             _imageCanvasGroup.alpha = 0f;
             _imageCanvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideImageDuration;
             while (timer >= 0f)
             {
                 _imageCanvasGroup.alpha = 1f - (timer / _showHideImageDuration);
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
 
             _imageCanvasGroup.alpha = 1f;
@@ -99,15 +96,12 @@ namespace Novels.Location.View
             _imageCanvasGroup.alpha = 1f;
             _imageCanvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideImageDuration;
             while (timer >= 0f)
             {
                 _imageCanvasGroup.alpha = timer / _showHideImageDuration;
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
 
             _imageCanvasGroup.alpha = 0f;
@@ -189,16 +183,13 @@ namespace Novels.Location.View
 
             async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration)
             {
-                var delayMs = 50;
-                var deltaTime = delayMs / 1000f;
-
                 target.localPosition = from;
                 var timer = duration;
                 while (timer >= 0f)
                 {
                     target.localPosition = Vector3.Lerp(from, to, 1f - (timer / duration));
-                    timer -= deltaTime;
-                    await UniTask.Delay(delayMs, true);
+                    timer -= Time.deltaTime;
+                    await UniTask.Yield();
                 }
                 target.localPosition = to;
             }
@@ -216,16 +207,13 @@ namespace Novels.Location.View
             foreach(var effectData in _effects)
                 effectData.EffectRoot.SetActive(effectData.Effect == effect);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             _effectCanvasGroup.alpha = 0f;
             var timer = _effectDuration;
             while (timer >= 0f)
             {
                 _effectCanvasGroup.alpha = 1f - (timer / _effectDuration);
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
             _effectCanvasGroup.alpha = 1f;
         }

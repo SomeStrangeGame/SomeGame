@@ -64,7 +64,6 @@ namespace Novels.Location
                 if (!videoError) while (!videoDone) await UniTask.NextFrame();
                 else await UniTask.Delay(3000);
             }
-            
         }
 
         public async UniTask SetCamera(string value)
@@ -89,6 +88,7 @@ namespace Novels.Location
                 await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
                 return;
             }
+            Debug.LogWarning($"Camera value [{value}] not implemented");
         }
     }
 }

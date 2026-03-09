@@ -112,23 +112,21 @@ namespace Novels
             return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
         }
 
-        private string GetCharacterMainBodyPath(string name)
+        private string GetCharacterMainBodyPath(string name, string view)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
 
-            var firstChar = char.ToUpper(name[0]);
-            var otherText = name.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{firstChar}{otherText}.png";
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/Main.png";
         }
 
-        private string GetCharacterEmotionPath(string name, string arg)
+        private string GetCharacterEmotionPath(string name, string view, string arg)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
             if (string.IsNullOrEmpty(arg)) return string.Empty;
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/Эмоции/{firstChar}{otherText}.png";
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/Эмоции/{firstChar}{otherText}.png";
         }
 
         private string GetNotificationPrefabAssetName(string assetName)
@@ -307,6 +305,9 @@ namespace Novels
                 {
                     bubble.AddOrUpdateButton(choice.index, choice.text, id =>
                     {
+                        if (args.Any(a => a == "Выбери внешность"))
+                            character.SetMainCharacterView(choice.text);
+
                         storyProcessor.SetChoice(id);
                         bubbleDone.TrySetResult();
                     });
