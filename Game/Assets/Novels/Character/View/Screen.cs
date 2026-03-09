@@ -9,6 +9,7 @@ namespace Novels.Character.View
         [SerializeField] private float _showHideImageDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private Image _mainBody;
+        [SerializeField] private Image _weather;
         [SerializeField] private Image _emotion;
 
         public void SetMainBody(Sprite sprite)
@@ -21,8 +22,15 @@ namespace Novels.Character.View
             _emotion.sprite = sprite;
         }
 
+        public void SetWeather(Sprite sprite)
+        {
+            _weather.sprite = sprite;
+        }
+
         public void ShowImageImmediate()
         {
+            ClearImagesIfNeed();
+
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
         }
@@ -47,6 +55,8 @@ namespace Novels.Character.View
 
         public void HideImageImmediate()
         {
+            ClearImagesIfNeed();
+            
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(false);
         }
@@ -74,6 +84,7 @@ namespace Novels.Character.View
         {
             _mainBody.color = _mainBody.sprite == null ? Color.clear : Color.white;
             _emotion.color = _emotion.sprite == null ? Color.clear : Color.white;
+            _weather.color = _weather.sprite == null ? Color.clear : Color.white;
         }
     }
 }

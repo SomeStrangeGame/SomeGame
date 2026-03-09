@@ -14,6 +14,7 @@ namespace Novels.Character
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
+            public Func<string, string, int, string> GetWeatherPath;
         }
 
         private readonly Ctx _ctx;
@@ -21,6 +22,7 @@ namespace Novels.Character
         private View.Screen _screen;
 
         private string _mainCharacterView;
+        private string _mainCharacterWeather;
 
 
         public Entity(Ctx ctx)
@@ -49,14 +51,24 @@ namespace Novels.Character
             _mainCharacterView = $"View/{view}";
         }
 
+        public void SetMainCharacterWeather(string weather)
+        {
+            Debug.Log($"DebugMarker: {weather}");
+            _mainCharacterWeather = weather;
+        }
+
         public async UniTask SetImage(string name, params string[] args)
         {
             var view = "View";
+            var weather = string.Empty;
             if (name == "Салли" || name == "Гардероб")
             {
                 name = "MainCharacter";
                 view = _mainCharacterView;
+                weather = _mainCharacterWeather;
             }
+            else if (name == "Бен")
+                name = "Ben";
 
             await Hide();
             var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view).ToLower());
@@ -67,11 +79,24 @@ namespace Novels.Character
             foreach (var arg in args)
             {
                 var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, view, arg));
-                _screen.SetEmotion(emotionSprite);
-                if (emotionSprite != null) break;
+                if (emotionSprite != null)
+                {
+                    _screen.SetEmotion(emotionSprite);
+                    break;
+                }
             }
 
-
+            var defaultWeatherSprite = await _ctx.GetSprite(_ctx.GetWeatherPath(name, weather, 1));
+            _screen.SetWeather(defaultWeatherSprite);
+            foreach (var arg in args)
+            {
+                var weatherSprite = await _ctx.GetSprite(_ctx.GetWeatherPath(name, arg, 1));
+                if (weatherSprite != null) 
+                {
+                    _screen.SetWeather(weatherSprite);
+                    break;
+                }
+            }
 
             await Show();
         }

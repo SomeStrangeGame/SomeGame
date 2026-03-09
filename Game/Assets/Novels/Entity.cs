@@ -129,6 +129,16 @@ namespace Novels
             return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/Эмоции/{firstChar}{otherText}.png";
         }
 
+        private string GetCharacterWeatherPath(string name, string arg, int index)
+        {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+            if (string.IsNullOrEmpty(arg)) return string.Empty;
+
+            var firstChar = char.ToUpper(arg[0]);
+            var otherText = arg.Substring(1).ToLower();
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/Weather/{firstChar}{otherText}/{index}.png";
+        }
+
         private string GetNotificationPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
@@ -214,6 +224,7 @@ namespace Novels
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, assetName),
                 GetMainBodyPath = GetCharacterMainBodyPath,
                 GetEmotionPath = GetCharacterEmotionPath,
+                GetWeatherPath = GetCharacterWeatherPath
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await character.Init();
@@ -307,6 +318,8 @@ namespace Novels
                     {
                         if (args.Any(a => a == "Выбери внешность"))
                             character.SetMainCharacterView(choice.text);
+                        if (args.Any(a => a == "Выбери одежду"))
+                            character.SetMainCharacterWeather(choice.text);
 
                         storyProcessor.SetChoice(id);
                         bubbleDone.TrySetResult();
