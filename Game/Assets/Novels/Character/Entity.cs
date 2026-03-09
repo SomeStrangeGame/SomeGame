@@ -42,22 +42,24 @@ namespace Novels.Character
                 view = "Asia";
             else if (view == "Европейская")
                 view = "Euro";
+            else if (view == "Афроамериканская")
+                view = "Afro";
+            else if (view == "Латиноамериканская")
+                view = "Latin";
             _mainCharacterView = $"View/{view}";
         }
 
         public async UniTask SetImage(string name, params string[] args)
         {
             var view = "View";
-            if (name == "Салли")
+            if (name == "Салли" || name == "Гардероб")
             {
                 name = "MainCharacter";
                 view = _mainCharacterView;
             }
-            else if (name == "Бен")
-                name = "Ben";
 
             await Hide();
-            var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view));
+            var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view).ToLower());
             Debug.Log($"{_ctx.GetMainBodyPath(name, view)} - {sprite != null}");
             _screen.SetMainBody(sprite);
 
