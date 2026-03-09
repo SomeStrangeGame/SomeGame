@@ -38,30 +38,39 @@ namespace Novels.Character
 
         public void SetMainCharacterView(string view)
         {
-            _mainCharacterView = $"Внешность/{view}";
+            if (view == "Азиатская")
+                view = "Asia";
+            else if (view == "Европейская")
+                view = "Euro";
+            _mainCharacterView = $"View/{view}";
         }
 
         public async UniTask SetImage(string name, params string[] args)
         {
-            var view = "Внешность";
+            var view = "View";
             if (name == "Салли")
             {
+                name = "MainCharacter";
                 view = _mainCharacterView;
             }
+            else if (name == "Бен")
+                name = "Ben";
 
             await Hide();
-            Debug.Log(_ctx.GetMainBodyPath(name, view));
             var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view));
+            Debug.Log($"{_ctx.GetMainBodyPath(name, view)} - {sprite != null}");
             _screen.SetMainBody(sprite);
 
             _screen.SetEmotion(null);
             foreach (var arg in args)
             {
-                Debug.Log(_ctx.GetEmotionPath(name, view, arg));
                 var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, view, arg));
                 _screen.SetEmotion(emotionSprite);
                 if (emotionSprite != null) break;
             }
+
+
+
             await Show();
         }
 
