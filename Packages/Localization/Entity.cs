@@ -30,6 +30,8 @@ namespace Localization
         {
             if (_localizationData.TryGetValue(_ctx.Language, key, out value))
                 return true;
+
+            value = key;
             return false;
         }
     }

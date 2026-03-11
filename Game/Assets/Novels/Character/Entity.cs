@@ -53,7 +53,6 @@ namespace Novels.Character
 
         public void SetMainCharacterWeather(string weather)
         {
-            Debug.Log($"DebugMarker: {weather}");
             if (weather == "Повседневная одежда")
                 weather = "Casual wear";
             else if (weather == "Летний сарафан")
@@ -68,18 +67,15 @@ namespace Novels.Character
         {
             var view = "View";
             var weather = string.Empty;
-            if (name == "Салли" || name == "Гардероб")
+            if (name == "Салли" || name == "Wardrobe")
             {
                 name = "MainCharacter";
                 view = _mainCharacterView;
                 weather = _mainCharacterWeather;
             }
-            else if (name == "Бен")
-                name = "Ben";
 
-            await Hide();
+            await _screen.HideImage();
             var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view).ToLower());
-            Debug.Log($"{_ctx.GetMainBodyPath(name, view)} - {sprite != null}");
             _screen.SetMainBody(sprite);
 
             _screen.SetEmotion(null);
@@ -105,17 +101,7 @@ namespace Novels.Character
                 }
             }
 
-            await Show();
-        }
-
-        public async UniTask Show()
-        {
             await _screen.ShowImage();
-        }
-
-        public async UniTask Hide()
-        {
-            await _screen.HideImage();
         }
     }
 }

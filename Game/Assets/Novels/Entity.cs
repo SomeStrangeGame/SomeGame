@@ -216,9 +216,6 @@ namespace Novels
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await localization.Init();
 
-            if (localization.TryGetValue("Ben", out var test))
-                Debug.Log(test);
-
             var storyProcessor = new StoryProcessor.Entity(new StoryProcessor.Entity.Ctx
             {
                 StoryText = storyText,
@@ -323,7 +320,17 @@ namespace Novels
                     ? new string[0]
                     : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
 
-                character.SetImage(name, args).Forget();
+                var characterName = string.Empty;
+                if (!localization.TryGetValue(name, out characterName))
+                    _ctx.OnLog.Invoke((LogType.Warning, $"No localized charcter name [{name}]"));
+                var characterArgs = new string[args.Length];
+                for (var i = 0; i < args.Length; i++)
+                {
+                    var characterArg = string.Empty;
+                    if (!localization.TryGetValue(args[i], out characterArg))
+                        _ctx.OnLog.Invoke((LogType.Warning, $"No localized charcter arg [{args[i]}]"));
+                    characterArgs[i] = args[i];
+                }
 
                 bubble.SetText(text);
                 bubble.RemoveAllButtons();
@@ -347,9 +354,22 @@ namespace Novels
                         bubbleDone.TrySetResult();
                     });
                 }
-                await bubble.Show();
+
+                //show content
+                var showProcess = UniTask.WhenAll(
+                    character.SetImage(name, characterArgs),
+                    bubble.Show()
+                );
+                await showProcess;
+
                 await bubbleDone.Task;
-                await bubble.Hide();
+
+                //reset content
+                var resetProcess = UniTask.WhenAll(
+                    character.SetImage(null),
+                    bubble.Hide()
+                );
+                await resetProcess;
             }
         }
     }

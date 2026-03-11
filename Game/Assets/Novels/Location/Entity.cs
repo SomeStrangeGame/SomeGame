@@ -45,7 +45,6 @@ namespace Novels.Location
             _screen.ResetCamera();
             _screen.ResetEffect();
 
-            Debug.Log(assetName);
             var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
 

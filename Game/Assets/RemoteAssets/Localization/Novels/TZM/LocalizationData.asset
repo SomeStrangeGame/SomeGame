@@ -13,6 +13,18 @@ MonoBehaviour:
   m_Name: LocalizationData
   m_EditorClassIdentifier: 
   _pairs:
+  - _key: 
+    _languages:
+    - _value: 
+      _language: 0
+  - _key: ...
+    _languages:
+    - _value: ...
+      _language: 0
+  - _key: Wardrobe
+    _languages:
+    - _value: "\u0413\u0430\u0440\u0434\u0435\u0440\u043E\u0431"
+      _language: 0
   - _key: Ben
     _languages:
     - _value: "\u0411\u0435\u043D"
