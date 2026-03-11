@@ -54,6 +54,13 @@ namespace Novels.Character
         public void SetMainCharacterWeather(string weather)
         {
             Debug.Log($"DebugMarker: {weather}");
+            if (weather == "Повседневная одежда")
+                weather = "Casual wear";
+            else if (weather == "Летний сарафан")
+                weather = "Summer sundress";
+            else if (weather == "Модный топ")
+                weather = "Fashionable top";
+                
             _mainCharacterWeather = weather;
         }
 

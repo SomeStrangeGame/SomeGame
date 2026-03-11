@@ -1,75 +1,75 @@
 ManifestFileVersion: 0
-UnityVersion: 6000.3.4f1
-CRC: 2710726515
+UnityVersion: 6000.0.62f1
+CRC: 3442801170
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: meleecharacter
+      Name: longbowcharacter_screen
       Dependencies: {}
     Info_1:
-      Name: setting_battlestory
+      Name: chapter_onlyscreen_chapter_5
       Dependencies: {}
     Info_2:
-      Name: chapter_battle_scene_2
+      Name: introvoice
       Dependencies: {}
     Info_3:
       Name: chapter_onlyscreen_chapter_0
       Dependencies: {}
     Info_4:
-      Name: chapter_onlyscreen_chapter_4
-      Dependencies: {}
-    Info_5:
-      Name: meleecharacter_screen
-      Dependencies: {}
-    Info_6:
-      Name: chapter_battle_scene_1
-      Dependencies: {}
-    Info_7:
-      Name: longbowcharacter
-      Dependencies: {}
-    Info_8:
-      Name: chapter_story_screen
-      Dependencies: {}
-    Info_9:
-      Name: chapter_onlyscreen_chapter_3
-      Dependencies: {}
-    Info_10:
-      Name: novels_notification
-      Dependencies: {}
-    Info_11:
-      Name: longbowcharacter_screen
-      Dependencies: {}
-    Info_12:
-      Name: loading
-      Dependencies: {}
-    Info_13:
-      Name: introvoice
-      Dependencies: {}
-    Info_14:
-      Name: chapter_onlyscreen_chapter_1
-      Dependencies: {}
-    Info_15:
-      Name: chapters
-      Dependencies: {}
-    Info_16:
       Name: chapter_battle_screen
       Dependencies: {}
-    Info_17:
-      Name: novels_bubble
+    Info_5:
+      Name: setting_battlestory
       Dependencies: {}
-    Info_18:
-      Name: chapter_onlyscreen_chapter_5
+    Info_6:
+      Name: novels_setting
       Dependencies: {}
-    Info_19:
-      Name: chapter_onlyscreen_chapter_2
+    Info_7:
+      Name: chapters
       Dependencies: {}
-    Info_20:
-      Name: novels_location
-      Dependencies: {}
-    Info_21:
+    Info_8:
       Name: novels_character
       Dependencies: {}
+    Info_9:
+      Name: loading
+      Dependencies: {}
+    Info_10:
+      Name: longbowcharacter
+      Dependencies: {}
+    Info_11:
+      Name: meleecharacter
+      Dependencies: {}
+    Info_12:
+      Name: chapter_onlyscreen_chapter_4
+      Dependencies: {}
+    Info_13:
+      Name: novels_bubble
+      Dependencies: {}
+    Info_14:
+      Name: chapter_onlyscreen_chapter_2
+      Dependencies: {}
+    Info_15:
+      Name: novels_location
+      Dependencies: {}
+    Info_16:
+      Name: chapter_story_screen
+      Dependencies: {}
+    Info_17:
+      Name: meleecharacter_screen
+      Dependencies: {}
+    Info_18:
+      Name: chapter_battle_scene_2
+      Dependencies: {}
+    Info_19:
+      Name: novels_notification
+      Dependencies: {}
+    Info_20:
+      Name: chapter_onlyscreen_chapter_3
+      Dependencies: {}
+    Info_21:
+      Name: chapter_battle_scene_1
+      Dependencies: {}
     Info_22:
-      Name: novels_setting
+      Name: chapter_onlyscreen_chapter_1
       Dependencies: {}
