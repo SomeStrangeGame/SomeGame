@@ -16,6 +16,7 @@
     "somegame.logs": "file:../../Packages/Logs",
     "somegame.setting": "file:../../Packages/Setting",
     "somegame.sodata": "file:../../Packages/SOData",
+    "somegame.localization": "file:../../Packages/Localization",
     "com.unity.modules.animation": "1.0.0",
     "com.unity.modules.assetbundle": "1.0.0",
     "com.unity.modules.audio": "1.0.0",

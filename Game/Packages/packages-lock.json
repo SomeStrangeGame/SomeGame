@@ -116,6 +116,15 @@
       "source": "local",
       "dependencies": {}
     },
+    "somegame.localization": {
+      "version": "file:../../Packages/Localization",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10"
+      }
+    },
     "somegame.logs": {
       "version": "file:../../Packages/Logs",
       "depth": 0,

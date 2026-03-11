@@ -23,6 +23,7 @@ namespace Novels
         [SerializeField] private string _novelsLocationBundleName;
         [SerializeField] private string _novelsCharacterBundleName;
         [SerializeField] private string _novelsNotificationBundleName;
+        [SerializeField] private string _novelsLocalizationBundleName;
 
         internal readonly string Prefix => _prefix;
 
@@ -34,6 +35,7 @@ namespace Novels
         internal readonly string NovelsLocationBundleName => _novelsLocationBundleName;
         internal readonly string NovelsCharacterBundleName => _novelsCharacterBundleName;
         internal readonly string NovelsNotificationBundleName => _novelsNotificationBundleName;
+        internal readonly string NovelsLocalizationBundleName => _novelsLocalizationBundleName;
     }
 
     internal class Entity : BaseDisposable

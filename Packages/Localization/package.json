@@ -1,0 +1,16 @@
+{
+  "name": "somegame.localization",
+  "displayName": "Localization",
+  "version": "0.0.1",
+  "unity": "2023.1",
+  "description": "Localization",
+  "keywords": [
+    "localization"
+  ],
+  "category": "SomeGame package",
+  "type": "sample",
+  "dependencies": {
+    "somegame.disposable": "0.0.1",
+    "com.cysharp.unitask": "2.5.10"
+  }
+}
