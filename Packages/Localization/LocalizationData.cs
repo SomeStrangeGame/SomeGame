@@ -3,38 +3,63 @@ using UnityEngine;
 
 namespace Localization
 {
-    [CreateAssetMenu(fileName = "LocalizationData", menuName = "ScriptableObjects/LocalizationSO")]
+    [CreateAssetMenu(fileName = "LocalizationData", menuName = "ScriptableObjects/LocalizationData")]
     public class LocalizationData : ScriptableObject
     {
+        public enum Language
+        {
+            Rus,
+        }
+
         [Serializable]
         private struct Pair
         {
+            [Serializable]
+            private struct Languages
+            {
+                [SerializeField]
+                private string _value;
+                [SerializeField]
+                private Language _language;
+
+                internal readonly string Value => _value;
+                internal readonly Language Language => _language;
+            }
+
             [SerializeField]
             private string _key;
             [SerializeField]
-            private string _value;
+            private Languages[] _languages;
 
-            internal readonly string Key => _key;
-            internal readonly string Value => _value;
+            internal string Key => _key;
 
-            public Pair(string key, string value)
+            internal bool TryGetValue(Language language, out string value)
             {
-                _key = key;
-                _value = value;
-            } 
+                value = string.Empty;
+                foreach (var pair in _languages)
+                {
+                    if (pair.Language != language) continue;
+                    value = pair.Value;
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         [SerializeField]
         private Pair[] _pairs;
 
-        public bool TryGetValue(string key, out string value)
+        public bool TryGetValue(Language language, string key, out string value)
         {
-            value = key;
+            value = string.Empty;
             foreach(var pair in _pairs)
             {
                 if (pair.Key != key) continue;
 
-                value = pair.Value;
+                if (!pair.TryGetValue(language, out value))
+                    return false;
+                    
                 return true;
             }
 

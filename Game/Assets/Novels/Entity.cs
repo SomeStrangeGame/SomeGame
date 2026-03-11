@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
+using Localization;
 using Novels.Location;
 using SOData;
 using UnityEngine;
@@ -148,6 +149,13 @@ namespace Novels
             return $"Assets/Novels/Notification/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
         }
 
+        private string GetLocalizationDataAssetName(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/RemoteAssets/Localization/Novels/{_ctx.Data.Prefix}/{assetName}.asset";
+        }
+
         internal async UniTask Init()
         {
             var bundles = new Bundles.Entity(new Bundles.Entity.Ctx
@@ -172,7 +180,8 @@ namespace Novels
                 bundles.GetAssetBundle(_ctx.Data.NovelsBubbleBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NovelsLocationBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NovelsCharacterBundleName),
-                bundles.GetAssetBundle(_ctx.Data.NovelsNotificationBundleName)
+                bundles.GetAssetBundle(_ctx.Data.NovelsNotificationBundleName),
+                bundles.GetAssetBundle(_ctx.Data.NovelsLocalizationBundleName)
             );
 
             await loading.Show();
@@ -195,9 +204,20 @@ namespace Novels
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
             {
-                var (storyTextTemp, _, _, _, _) = await secondPreloading;
+                var (storyTextTemp, _, _, _, _, _) = await secondPreloading;
                 storyText = storyTextTemp;
             }
+
+            var localization = new Localization.Entity(new Localization.Entity.Ctx
+            {
+                Language = LocalizationData.Language.Rus,
+                GetLocalizationSO = () => bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, "LocalizationData"),
+            }).AddTo(this);
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await localization.Init();
+
+            if (localization.TryGetValue("Ben", out var test))
+                Debug.Log(test);
 
             var storyProcessor = new StoryProcessor.Entity(new StoryProcessor.Entity.Ctx
             {

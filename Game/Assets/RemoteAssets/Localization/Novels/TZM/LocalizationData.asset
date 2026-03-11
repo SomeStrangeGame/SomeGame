@@ -14,4 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _pairs:
   - _key: Ben
-    _value: "\u0411\u0435\u043D"
+    _languages:
+    - _value: "\u0411\u0435\u043D"
+      _language: 0

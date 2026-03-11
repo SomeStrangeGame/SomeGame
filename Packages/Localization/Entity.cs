@@ -8,6 +8,7 @@ namespace Localization
     {
         public struct Ctx
         {
+            public LocalizationData.Language Language;
             public Func<UniTask<LocalizationData>> GetLocalizationSO;
         }
 
@@ -27,7 +28,7 @@ namespace Localization
 
         public bool TryGetValue(string key, out string value)
         {
-            if (_localizationData.TryGetValue(key, out value))
+            if (_localizationData.TryGetValue(_ctx.Language, key, out value))
                 return true;
             return false;
         }
