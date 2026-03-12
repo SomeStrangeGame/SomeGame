@@ -178,25 +178,25 @@ namespace Novels
                 var prefix = data.FirstOrDefault().Trim();
                 var value = data.LastOrDefault().Trim();
 
-                if (prefix.ToLower() == "название") continue;
-                if (prefix.ToLower() == "серия") continue;
-                if (prefix.ToLower() == "жанры") continue;
-                if (prefix.ToLower() == "аннотация") continue;
-                if (prefix.ToLower() == "статы") continue;
+                if (prefix.ToLower() == "title") continue;
+                if (prefix.ToLower() == "series") continue;
+                if (prefix.ToLower() == "genres") continue;
+                if (prefix.ToLower() == "annotation") continue;
+                if (prefix.ToLower() == "stats") continue;
 
-                if (prefix.ToLower().Contains("клавиатура")) continue;
+                if (prefix.ToLower().Contains("keyboard")) continue;
 
-                if (prefix.ToLower() == "музыка") continue;
-                if (prefix.ToLower() == "звук") continue;
-                if (prefix.ToLower() == "звуки окружения") continue;
+                if (prefix.ToLower() == "music") continue;
+                if (prefix.ToLower() == "sound") continue;
+                if (prefix.ToLower() == "ambient") continue;
 
-                if (prefix.ToLower() == "уведомление")
+                if (prefix.ToLower() == "notification")
                 {
                     notification.Show(value).Forget();
                     continue;
                 }
 
-                if (prefix.ToLower().Contains("локация"))
+                if (prefix.ToLower().Contains("location"))
                 {
                     var locationRawArgsData = prefix.Split("(");
                     var locationArgs = locationRawArgsData.Length <= 1
@@ -206,17 +206,17 @@ namespace Novels
                     await location.SetImage(value, false, locationArgs);
                     continue;
                 }
-                if (prefix.ToLower() == "кат-сцена")
+                if (prefix.ToLower() == "cut-scene")
                 {
                     await location.SetImage(value, true, null);
                     continue;
                 }
-                if (prefix.ToLower() == "камера")
+                if (prefix.ToLower() == "camera")
                 {
                     await location.SetCamera(value);
                     continue;
                 }
-                if (prefix.ToLower() == "ожидание")
+                if (prefix.ToLower() == "await")
                 {
                     if (int.TryParse(value, out var seconds))
                         await waiting.Await(seconds);
