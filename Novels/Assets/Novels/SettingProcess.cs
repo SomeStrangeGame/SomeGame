@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace Novels
 {
-    public class SettingProcess : BaseDisposable
+    internal class SettingProcess : BaseDisposable
     {
         internal struct Ctx
         {

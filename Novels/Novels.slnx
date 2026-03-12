@@ -1,5 +1,6 @@
 ﻿<Solution>
   <Project Path="Novels.Notification.csproj" />
+  <Project Path="Novels.csproj" />
   <Project Path="Disposable.csproj" />
   <Project Path="Loading.View.csproj" />
   <Project Path="Novels.Location.csproj" />
@@ -10,7 +11,6 @@
   <Project Path="SOData.csproj" />
   <Project Path="Novels.Location.View.csproj" />
   <Project Path="Bundles.csproj" />
-  <Project Path="Novels.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="LoadingPriority.csproj" />
   <Project Path="Setting.View.csproj" />

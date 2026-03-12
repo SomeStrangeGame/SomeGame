@@ -77,9 +77,10 @@ namespace Novels.Character
                 clothes = _mainCharacterClothes;
             }
 
-            await SetMainBody(name, view, args);
-            await SetEmotion(name, view, args);
-            await SetClothes(name, clothes, args);
+            await UniTask.WhenAll(
+                SetMainBody(name, view, args),
+                SetEmotion(name, view, args),
+                SetClothes(name, clothes, args));
 
             await _screen.ShowImage();
         }

@@ -59,106 +59,13 @@ namespace Novels
             Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
 
-        private string GetNovelTextPath(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return string.Empty;
-
-            return $"NovelTexts/{_ctx.Data.Prefix}/{path}";
-        }
-
-        private string GetSettingPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"Assets/RemoteAssets/Setting/{_ctx.Data.Prefix}/{assetName}.prefab";
-        }
-
-        private string GetBubblePrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"Assets/Novels/Bubble/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
-        }
-
-        private string GetLocationPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
-        }
-
-        private string GetLocationImagePath(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            var firstChar = char.ToUpper(assetName[0]);
-            var otherText = assetName.Substring(1).ToLower();
-            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Data.Prefix}/Locations/{firstChar}{otherText}.png";
-        }
-
-        private string GetVideoPath(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            var firstChar = char.ToUpper(assetName[0]);
-            var otherText = assetName.Substring(1).ToLower();
-            var result = $"{Application.streamingAssetsPath}/NovelsVideos/{_ctx.Data.Prefix}/{firstChar}{otherText}.mp4";
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            result = $"file://{result}";
-#endif
-            return result;
-        }
-
-        private string GetCharacterPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
-        }
-
-        private string GetCharacterMainBodyPath(string name, string view, string arg)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/{arg ?? "Main"}.png";
-        }
-
-        private string GetCharacterEmotionPath(string name, string view, string arg)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-            if (string.IsNullOrEmpty(arg)) return string.Empty;
-
-            var firstChar = char.ToUpper(arg[0]);
-            var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/Эмоции/{firstChar}{otherText}.png";
-        }
-
-        private string GetCharacterClothesPath(string name, string arg, int index)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-            if (string.IsNullOrEmpty(arg)) return string.Empty;
-
-            var firstChar = char.ToUpper(arg[0]);
-            var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}.png";
-        }
-
-        private string GetNotificationPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"Assets/Novels/Notification/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
-        }
-
-        private string GetLocalizationDataAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"Assets/RemoteAssets/Localization/{_ctx.Data.Prefix}/{assetName}.asset";
-        }
-
         internal async UniTask Init()
         {
+            var pathGetter = new PathGetter(new PathGetter.Ctx
+            {
+                Prefix = _ctx.Data.Prefix,
+            }).AddTo(this);
+
             var bundles = new Bundles.Entity(new Bundles.Entity.Ctx
             {
                 OnLog = _ctx.OnLog,
@@ -177,7 +84,7 @@ namespace Novels
                 bundles.GetAssetBundle(_ctx.Data.NovelsSettingBundleName)
             );
             var secondPreloading = UniTask.WhenAll(
-                bundles.GetText(GetNovelTextPath(_ctx.Data.StoryTextPath)),
+                bundles.GetText(pathGetter.GetNovelTextPath(_ctx.Data.StoryTextPath)),
                 bundles.GetAssetBundle(_ctx.Data.NovelsBubbleBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NovelsLocationBundleName),
                 bundles.GetAssetBundle(_ctx.Data.NovelsCharacterBundleName),
@@ -194,7 +101,7 @@ namespace Novels
             var settingProcessCtx = new SettingProcess.Ctx
             {
                 DefaultThreadPriority = _defaultThreadPriority,
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, GetSettingPrefabAssetName("Screen")),
+                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, pathGetter.GetSettingPrefabAssetName("Screen")),
                 ShowLoading = loading.Show,
                 HideLoading = loading.Hide,
             };
@@ -212,7 +119,7 @@ namespace Novels
             var localization = new Localization.Entity(new Localization.Entity.Ctx
             {
                 Language = LocalizationData.Language.Rus,
-                GetLocalizationSO = () => bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, GetLocalizationDataAssetName("LocalizationData")),
+                GetLocalizationSO = () => bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, pathGetter.GetLocalizationDataAssetName("LocalizationData")),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await localization.Init();
@@ -224,16 +131,16 @@ namespace Novels
 
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
-                GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, GetBubblePrefabAssetName("Screen")),
+                GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, pathGetter.GetBubblePrefabAssetName("Screen")),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bubble.Init();
 
             var location = new Location.Entity(new Location.Entity.Ctx
             {
-                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, GetLocationPrefabAssetName("Screen")),
-                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, GetLocationImagePath(assetName)),
-                GetVideoURL = GetVideoPath,
+                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationPrefabAssetName("Screen")),
+                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationImagePath(assetName)),
+                GetVideoURL = pathGetter.GetVideoPath,
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await location.Init();
@@ -241,18 +148,18 @@ namespace Novels
             var character = new Character.Entity(new Character.Entity.Ctx
             {
                 MainCharacterName = _ctx.Data.MainCharacter,
-                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, GetCharacterPrefabAssetName("Screen")),
+                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, pathGetter.GetCharacterPrefabAssetName("Screen")),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, assetName),
-                GetMainBodyPath = GetCharacterMainBodyPath,
-                GetEmotionPath = GetCharacterEmotionPath,
-                GetClothesPath = GetCharacterClothesPath
+                GetMainBodyPath = pathGetter.GetCharacterMainBodyPath,
+                GetEmotionPath = pathGetter.GetCharacterEmotionPath,
+                GetClothesPath = pathGetter.GetCharacterClothesPath
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await character.Init();
 
             var notification = new Notification.Entity(new Notification.Entity.Ctx
             {
-                GetNotificationPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsNotificationBundleName, GetNotificationPrefabAssetName("Screen")),
+                GetNotificationPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsNotificationBundleName, pathGetter.GetNotificationPrefabAssetName("Screen")),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await notification.Init();
