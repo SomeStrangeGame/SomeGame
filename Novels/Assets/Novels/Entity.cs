@@ -231,7 +231,7 @@ namespace Novels
 
                 var characterName = string.Empty;
                 if (!localization.TryGetValue(name, out characterName))
-                    _ctx.OnLog.Invoke((LogType.Warning, $"No localized charcter name [{name}]"));
+                    _ctx.OnLog.Invoke((LogType.Warning, $"No localized character name [{name}]"));
 
                 bubble.SetText(text);
                 bubble.RemoveAllButtons();
@@ -244,7 +244,10 @@ namespace Novels
                     bubble.SetBackgroundButton(() => bubbleDone.TrySetResult());
                 foreach (var choice in choices)
                 {
-                    bubble.AddOrUpdateButton(choice.index, choice.text, id =>
+                    var choiceText = choice.text;
+                    if (!localization.TryGetValue(choice.text, out choiceText))
+                        _ctx.OnLog.Invoke((LogType.Warning, $"No localized choice [{choice.text}]"));
+                    bubble.AddOrUpdateButton(choice.index, choiceText, id =>
                     {
                         if (args.Any(a => a == "Выбери внешность"))
                             character.SetMainCharacterView(choice.text);

@@ -43,26 +43,11 @@ namespace Novels.Character
 
         public void SetMainCharacterView(string view)
         {
-            if (view == "Азиатская")
-                view = "Asia";
-            else if (view == "Европейская")
-                view = "Euro";
-            else if (view == "Афроамериканская")
-                view = "Afro";
-            else if (view == "Латиноамериканская")
-                view = "Latin";
             _mainCharacterView = $"View/{view}";
         }
 
         public void SetMainCharacterWeather(string weather)
         {
-            if (weather == "Повседневная одежда")
-                weather = "Casual wear";
-            else if (weather == "Летний сарафан")
-                weather = "Summer sundress";
-            else if (weather == "Модный топ")
-                weather = "Fashionable top";
-                
             _mainCharacterClothes = weather;
         }
 
