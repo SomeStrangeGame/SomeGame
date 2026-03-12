@@ -3,7 +3,6 @@ using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using Localization;
-using Novels.Location;
 using SOData;
 using UnityEngine;
 
@@ -134,14 +133,14 @@ namespace Novels
             return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/Эмоции/{firstChar}{otherText}.png";
         }
 
-        private string GetCharacterWeatherPath(string name, string arg, int index)
+        private string GetCharacterClothesPath(string name, string arg, int index)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
             if (string.IsNullOrEmpty(arg)) return string.Empty;
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/Weather/{firstChar}{otherText}/{index}.png";
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}.png";
         }
 
         private string GetNotificationPrefabAssetName(string assetName)
@@ -246,7 +245,7 @@ namespace Novels
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, assetName),
                 GetMainBodyPath = GetCharacterMainBodyPath,
                 GetEmotionPath = GetCharacterEmotionPath,
-                GetWeatherPath = GetCharacterWeatherPath
+                GetClothesPath = GetCharacterClothesPath
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await character.Init();

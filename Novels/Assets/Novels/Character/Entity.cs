@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -15,7 +14,7 @@ namespace Novels.Character
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
-            public Func<string, string, int, string> GetWeatherPath;
+            public Func<string, string, int, string> GetClothesPath;
         }
 
         private const string _mainCharacter = "MainCharacter";
@@ -26,7 +25,7 @@ namespace Novels.Character
         private View.Screen _screen;
 
         private string _mainCharacterView;
-        private string _mainCharacterWeather;
+        private string _mainCharacterClothes;
 
 
         public Entity(Ctx ctx)
@@ -64,21 +63,29 @@ namespace Novels.Character
             else if (weather == "Модный топ")
                 weather = "Fashionable top";
                 
-            _mainCharacterWeather = weather;
+            _mainCharacterClothes = weather;
         }
 
         public async UniTask SetImageAndShow(string name, params string[] args)
         {
             var view = "View";
-            var weather = string.Empty;
+            var clothes = string.Empty;
             if (name == _ctx.MainCharacterName || name == _wardrobe)
             {
                 name = _mainCharacter;
                 view = _mainCharacterView;
-                weather = _mainCharacterWeather;
+                clothes = _mainCharacterClothes;
             }
 
-            Debug.Log(_ctx.GetMainBodyPath(name, view, null));
+            await SetMainBody(name, view, args);
+            await SetEmotion(name, view, args);
+            await SetClothes(name, clothes, args);
+
+            await _screen.ShowImage();
+        }
+
+        private async UniTask SetMainBody(string name, string view, string[] args)
+        {
             var defaultMainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, null));
             _screen.SetMainBody(defaultMainBodySprite);
             foreach (var arg in args)
@@ -90,7 +97,10 @@ namespace Novels.Character
                     break;
                 }
             }
+        }
 
+        private async UniTask SetEmotion(string name, string view, string[] args)
+        {
             _screen.SetEmotion(null);
             foreach (var arg in args)
             {
@@ -101,20 +111,21 @@ namespace Novels.Character
                     break;
                 }
             }
+        }
 
-            var defaultWeatherSprite = await _ctx.GetSprite(_ctx.GetWeatherPath(name, weather, 1));
-            _screen.SetWeather(defaultWeatherSprite);
+        private async UniTask SetClothes(string name, string clothes, string[] args, int clothesIndex = 1)
+        {
+            var defaultClothesSprite = await _ctx.GetSprite(_ctx.GetClothesPath(name, clothes, clothesIndex));
+            _screen.SetClothes(defaultClothesSprite);
             foreach (var arg in args)
             {
-                var weatherSprite = await _ctx.GetSprite(_ctx.GetWeatherPath(name, arg, 1));
-                if (weatherSprite != null) 
+                var clothesSprite = await _ctx.GetSprite(_ctx.GetClothesPath(name, arg, clothesIndex));
+                if (clothesSprite != null) 
                 {
-                    _screen.SetWeather(weatherSprite);
+                    _screen.SetClothes(clothesSprite);
                     break;
                 }
             }
-
-            await _screen.ShowImage();
         }
 
         public async UniTask Hide()

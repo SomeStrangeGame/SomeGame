@@ -22,7 +22,7 @@ namespace Novels.Character.View
             _emotion.sprite = sprite;
         }
 
-        public void SetWeather(Sprite sprite)
+        public void SetClothes(Sprite sprite)
         {
             _weather.sprite = sprite;
         }
