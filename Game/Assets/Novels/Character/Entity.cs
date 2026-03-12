@@ -78,6 +78,7 @@ namespace Novels.Character
                 weather = _mainCharacterWeather;
             }
 
+            Debug.Log(_ctx.GetMainBodyPath(name, view, null));
             var defaultMainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, null));
             _screen.SetMainBody(defaultMainBodySprite);
             foreach (var arg in args)

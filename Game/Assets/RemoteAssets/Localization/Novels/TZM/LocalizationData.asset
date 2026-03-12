@@ -41,3 +41,7 @@ MonoBehaviour:
     _languages:
     - _value: "\u0411\u0430\u0440\u0431\u0430\u0440\u0430"
       _language: 0
+  - _key: Alexa
+    _languages:
+    - _value: "\u0410\u043B\u0435\u043A\u0441\u0430"
+      _language: 0
