@@ -13,6 +13,7 @@ namespace Novels
     internal struct Data
     {
         [SerializeField] private string _prefix;
+        [SerializeField] private string _mainCharacter;
 
         [Space]
         [SerializeField] private string _storyTextPath;
@@ -27,6 +28,7 @@ namespace Novels
         [SerializeField] private string _novelsLocalizationBundleName;
 
         internal readonly string Prefix => _prefix;
+        internal readonly string MainCharacter => _mainCharacter;
 
         internal readonly string StoryTextPath => _storyTextPath;
 
@@ -211,7 +213,7 @@ namespace Novels
             var localization = new Localization.Entity(new Localization.Entity.Ctx
             {
                 Language = LocalizationData.Language.Rus,
-                GetLocalizationSO = () => bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, "LocalizationData"),
+                GetLocalizationSO = () => bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, GetLocalizationDataAssetName("LocalizationData")),
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await localization.Init();
@@ -239,6 +241,7 @@ namespace Novels
 
             var character = new Character.Entity(new Character.Entity.Ctx
             {
+                MainCharacterName = _ctx.Data.MainCharacter,
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, GetCharacterPrefabAssetName("Screen")),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, assetName),
                 GetMainBodyPath = GetCharacterMainBodyPath,
@@ -323,14 +326,6 @@ namespace Novels
                 var characterName = string.Empty;
                 if (!localization.TryGetValue(name, out characterName))
                     _ctx.OnLog.Invoke((LogType.Warning, $"No localized charcter name [{name}]"));
-                var characterArgs = new string[args.Length];
-                for (var i = 0; i < args.Length; i++)
-                {
-                    var characterArg = string.Empty;
-                    if (!localization.TryGetValue(args[i], out characterArg))
-                        _ctx.OnLog.Invoke((LogType.Warning, $"No localized charcter arg [{args[i]}]"));
-                    characterArgs[i] = args[i];
-                }
 
                 bubble.SetText(text);
                 bubble.RemoveAllButtons();
@@ -357,7 +352,7 @@ namespace Novels
 
                 //show content
                 var showProcess = UniTask.WhenAll(
-                    character.SetImage(name, characterArgs),
+                    character.SetImageAndShow(name, args),
                     bubble.Show()
                 );
                 await showProcess;
@@ -366,7 +361,7 @@ namespace Novels
 
                 //reset content
                 var resetProcess = UniTask.WhenAll(
-                    character.SetImage(null),
+                    character.Hide(),
                     bubble.Hide()
                 );
                 await resetProcess;

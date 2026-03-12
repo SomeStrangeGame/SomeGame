@@ -10,12 +10,16 @@ namespace Novels.Character
     {
         public struct Ctx
         {
+            public string MainCharacterName;
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
             public Func<string, string, int, string> GetWeatherPath;
         }
+
+        private const string _mainCharacter = "MainCharacter";
+        private const string _wardrobe = "Wardrobe";
 
         private readonly Ctx _ctx;
 
@@ -63,18 +67,17 @@ namespace Novels.Character
             _mainCharacterWeather = weather;
         }
 
-        public async UniTask SetImage(string name, params string[] args)
+        public async UniTask SetImageAndShow(string name, params string[] args)
         {
             var view = "View";
             var weather = string.Empty;
-            if (name == "Салли" || name == "Wardrobe")
+            if (name == _ctx.MainCharacterName || name == _wardrobe)
             {
-                name = "MainCharacter";
+                name = _mainCharacter;
                 view = _mainCharacterView;
                 weather = _mainCharacterWeather;
             }
 
-            await _screen.HideImage();
             var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view).ToLower());
             _screen.SetMainBody(sprite);
 
@@ -102,6 +105,11 @@ namespace Novels.Character
             }
 
             await _screen.ShowImage();
+        }
+
+        public async UniTask Hide()
+        {
+            await _screen.HideImage();
         }
     }
 }
