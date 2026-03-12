@@ -88,7 +88,7 @@ namespace Novels
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/{view}/Эмоции/{firstChar}{otherText}.png";
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/{view}/Emotions/{firstChar}{otherText}.png";
         }
 
         internal string GetCharacterClothesPath(string name, string arg, int index)
