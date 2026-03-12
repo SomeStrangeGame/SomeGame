@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 439647462
+CRC: 2697640069
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1c9d4bce6c8943091057c243a5a25d27
+    Hash: d0e610b4ee47740a7713c3f2bea3bc03
   TypeTreeHash:
     serializedVersion: 2
     Hash: bec899608b834bf7de565f7934af43a9
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 1e2cf92ff25fe90f475689a529058a6f
+    Hash: 0f3f2c87a9139526fc98d7c1aa605ab5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -49,7 +49,6 @@ Assets:
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u0430\u0440\u0431\u0438/5.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041A\u0440\u0430\u0441\u0438\u0432\u043E\u0435
   \u0441\u0435\u043A\u0441\u0443\u0430\u043B\u044C\u043D\u043E\u0435 \u0431\u0435\u043B\u044C\u0435\u0308/4.png"
-- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/\u041E\u0434\u0435\u0436\u0434\u0430/\u041A\u043B\u0443\u0431\u043D\u044B\u0438\u0306.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041E\u0444\u0438\u0441\u043D\u0430\u044F
   \u0448\u0442\u0443\u0447\u043A\u0430/6.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/View/\u042D\u043C\u043E\u0446\u0438\u0438/\u0417\u0430\u0436\u043C\u0443\u0440\u0438\u043B\u0441\u044F.png"
@@ -74,7 +73,6 @@ Assets:
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u0430\u0440/5.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u042E\u0431\u043A\u0430
   \u043D\u0430 \u0437\u0430\u043F\u0430\u0445/3.png"
-- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/\u0410\u043A\u0441\u0435\u0441\u0441\u0443\u0430\u0440\u044B/\u041E\u0447\u043A\u0438.png"
 - Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/Fashionable
   top/5.png
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u043E\u0434\u0438/2.png"
@@ -141,6 +139,7 @@ Assets:
 - Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/Summer
   sundress/1.png
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0412\u043E\u043B\u043D\u0430/1.png"
+- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Phil/View/\u042D\u043C\u043E\u0446\u0438\u0438/\u0423\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/View/\u042D\u043C\u043E\u0446\u0438\u0438/\u0417\u0430\u043A\u0430\u0442\u0438\u043B
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Asia/\u042D\u043C\u043E\u0446\u0438\u0438/\u0421\u0447\u0430\u0441\u0442\u044C\u0435.png"
@@ -207,6 +206,7 @@ Assets:
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0421
   \u0431\u0430\u043D\u0442\u0438\u043A\u043E\u043C/4.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041C\u0438\u043D\u0438-\u0431\u0438\u043A\u0438\u043D\u0438/4.png"
+- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Phil/View/\u042D\u043C\u043E\u0446\u0438\u0438/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/4.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Afro/\u042D\u043C\u043E\u0446\u0438\u0438/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Afro/\u042D\u043C\u043E\u0446\u0438\u0438/\u0423\u043B\u044B\u0431\u043A\u0430.png"
@@ -226,8 +226,6 @@ Assets:
   \u0437\u0430\u0432\u044F\u0437\u043E\u0447\u043A\u0430\u0445/6.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041D\u0430
   \u0437\u0430\u0432\u044F\u0437\u043E\u0447\u043A\u0430\u0445/1.png"
-- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/\u041E\u0434\u0435\u0436\u0434\u0430/\u041B\u0435\u0442\u043D\u0438\u0438\u0306
-  1.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041A\u0440\u0443\u0436\u0435\u0432\u043D\u043E\u0435
   \u0431\u0435\u043B\u044C\u0435\u0308/2.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Afro/\u042D\u043C\u043E\u0446\u0438\u0438/\u042F\u0437\u044B\u043A.png"
@@ -403,6 +401,7 @@ Assets:
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041C\u0438\u043D\u0438-\u0431\u0438\u043A\u0438\u043D\u0438/2.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041C\u043E\u0440\u0441\u043A\u0430\u044F
   \u0437\u0432\u0435\u0437\u0434\u0430/4.png"
+- Assets/Novels/Character/RemoteAssets/TZM/Characters/Phil/View/Anger.png
 - Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/Fashionable
   top/4.png
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u043B\u0435\u0441\u043A/3.png"
@@ -435,8 +434,6 @@ Assets:
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0414\u0435\u043B\u043E\u0432\u0430\u044F/3.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0420\u0430\u0437\u0434\u0435\u043B\u044C\u043D\u044B\u0438\u0306/5.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Afro/\u042D\u043C\u043E\u0446\u0438\u0438/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
-- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/\u041E\u0434\u0435\u0436\u0434\u0430/\u041B\u0435\u0442\u043D\u0438\u0438\u0306
-  2.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0421\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u044B\u0438\u0306/4.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/5.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Asia/\u042D\u043C\u043E\u0446\u0438\u0438/\u0421\u043A\u0435\u043F\u0441\u0438\u0441.png"
@@ -458,17 +455,18 @@ Assets:
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Afro/\u042D\u043C\u043E\u0446\u0438\u0438/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0421
   \u043A\u043E\u0444\u0442\u043E\u0438\u0306/2.png"
+- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Phil/View/\u042D\u043C\u043E\u0446\u0438\u0438/\u0424\u043B\u0438\u0440\u0442.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Asia/\u042D\u043C\u043E\u0446\u0438\u0438/\u0424\u043B\u0438\u0440\u0442.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/View/\u042D\u043C\u043E\u0446\u0438\u0438/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u0430\u0440\u0431\u0438/3.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041D\u043E\u0447\u043D\u0443\u0448\u043A\u0430/1.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0428\u043B\u0435\u0438\u0306\u0444/3.png"
-- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Ben/\u041E\u0434\u0435\u0436\u0434\u0430/\u041E\u0444\u0438\u0441\u043D\u044B\u0438\u0306.png"
+- "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u043E\u0434\u0438/5.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u043B\u0435\u0441\u043A/1.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041D\u0430
   \u0432\u0435\u0447\u0435\u0440/1.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Euro/\u042D\u043C\u043E\u0446\u0438\u0438/\u041F\u0435\u0447\u0430\u043B\u044C.png"
-- "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0411\u043E\u0434\u0438/5.png"
+- "Assets/Novels/Character/RemoteAssets/TZM/Characters/Phil/View/\u042D\u043C\u043E\u0446\u0438\u0438/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/Casual
   wear/1.png
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041C\u0438\u043D\u0438-\u0431\u0438\u043A\u0438\u043D\u0438/3.png"
@@ -501,6 +499,7 @@ Assets:
   sundress/3.png
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Asia/\u0420\u0435\u0431\u0435\u043D\u043E\u043A/\u042D\u043C\u043E\u0446\u0438\u0438/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u0420\u0430\u0437\u0434\u0435\u043B\u044C\u043D\u044B\u0438\u0306/6.png"
+- Assets/Novels/Character/RemoteAssets/TZM/Characters/Phil/View/Main.png
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/Weather/\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/1.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Latin/\u042D\u043C\u043E\u0446\u0438\u0438/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - "Assets/Novels/Character/RemoteAssets/TZM/Characters/MainCharacter/View/Asia/\u042D\u043C\u043E\u0446\u0438\u0438/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"

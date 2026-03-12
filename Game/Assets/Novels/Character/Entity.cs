@@ -13,7 +13,7 @@ namespace Novels.Character
             public string MainCharacterName;
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
-            public Func<string, string, string> GetMainBodyPath;
+            public Func<string, string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
             public Func<string, string, int, string> GetWeatherPath;
         }
@@ -78,8 +78,17 @@ namespace Novels.Character
                 weather = _mainCharacterWeather;
             }
 
-            var sprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view).ToLower());
-            _screen.SetMainBody(sprite);
+            var defaultMainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, null));
+            _screen.SetMainBody(defaultMainBodySprite);
+            foreach (var arg in args)
+            {
+                var mainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, arg));
+                if (mainBodySprite != null)
+                {
+                    _screen.SetMainBody(mainBodySprite);
+                    break;
+                }
+            }
 
             _screen.SetEmotion(null);
             foreach (var arg in args)

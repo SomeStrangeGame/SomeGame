@@ -117,11 +117,11 @@ namespace Novels
             return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/{assetName}.prefab";
         }
 
-        private string GetCharacterMainBodyPath(string name, string view)
+        private string GetCharacterMainBodyPath(string name, string view, string arg)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
 
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/Main.png";
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Data.Prefix}/Characters/{name}/{view}/{arg ?? "Main"}.png";
         }
 
         private string GetCharacterEmotionPath(string name, string view, string arg)
