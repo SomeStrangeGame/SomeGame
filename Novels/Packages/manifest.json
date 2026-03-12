@@ -1,0 +1,30 @@
+{
+  "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
+    "com.inkle.ink-unity-integration": "https://github.com/inkle/ink-unity-integration.git#upm",
+    "com.unity.2d.sprite": "1.0.0",
+    "com.unity.ai.navigation": "2.0.11",
+    "com.unity.ide.visualstudio": "2.0.27",
+    "com.unity.nuget.newtonsoft-json": "3.2.1",
+    "com.unity.ugui": "2.0.0",
+    "somegame.bundles": "file:../../Packages/Bundles",
+    "somegame.cache": "file:../../Packages/Cache",
+    "somegame.code-stripping-fix": "file:../../Packages/CodeStrippingFix",
+    "somegame.disposable": "file:../../Packages/Disposable",
+    "somegame.loading": "file:../../Packages/Loading",
+    "somegame.loading-priority": "file:../../Packages/LoadingPriority",
+    "somegame.logs": "file:../../Packages/Logs",
+    "somegame.setting": "file:../../Packages/Setting",
+    "somegame.sodata": "file:../../Packages/SOData",
+    "somegame.localization": "file:../../Packages/Localization",
+    "com.unity.modules.animation": "1.0.0",
+    "com.unity.modules.assetbundle": "1.0.0",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.particlesystem": "1.0.0",
+    "com.unity.modules.physics": "1.0.0",
+    "com.unity.modules.ui": "1.0.0",
+    "com.unity.modules.uielements": "1.0.0",
+    "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.modules.video": "1.0.0"
+  }
+}

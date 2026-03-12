@@ -1,0 +1,27 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.0.62f1
+CRC: 1144889774
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: a14a8df08abdc6675e73f6fe860bafa0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: a45073e3e817594c2f78cbe02948253b
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: d991d3c228bf9a4d79f44b64a0254d0b
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: c71d6072db3e242f99534b39481bfd4c, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Localization
+  ClassName: Localization.LocalizationData/Pair
+- AssemblyName: Localization
+  ClassName: Localization.LocalizationData/Pair/Languages
+Assets:
+- Assets/RemoteAssets/Localization/TZM/LocalizationData.asset
+Dependencies: []
