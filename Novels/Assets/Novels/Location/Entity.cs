@@ -13,6 +13,8 @@ namespace Novels.Location
             public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string> GetVideoURL;
+
+            public Action<(LogType type, string message)> OnLog;
         }
 
         private readonly Ctx _ctx;
@@ -37,7 +39,7 @@ namespace Novels.Location
         public async UniTask SetImage(string assetName, bool cutScene, string[] args)
         {
             Camera.allCameras[0].backgroundColor = Color.black;
-            if (args != null && args.Any(a => a == "белый"))
+            if (args != null && args.Any(a => a == "white"))
                 Camera.allCameras[0].backgroundColor = Color.white;
 
             await _screen.HideImage();
@@ -67,27 +69,32 @@ namespace Novels.Location
 
         public async UniTask SetCamera(string value)
         {
-            if (value.ToLower() == "затемнение")
+            if (value.ToLower() == "fadein")
             {
                 _screen.SetEffect(View.Screen.Effect.Dark).Forget();
                 return;
             }
-            if (value.ToLower() == "слева направо")
+            if (value.ToLower() == "leftright")
             {
                 await _screen.SetCamera(View.Screen.CameraEffect.LeftRight);
                 return;
             }
-            if (value.ToLower() == "справа налево")
+            if (value.ToLower() == "rightleft")
             {
                 await _screen.SetCamera(View.Screen.CameraEffect.RightLeft);
                 return;
             }
-            if (value.ToLower() == "сместить в центр")
+            if (value.ToLower() == "tocenter")
             {
                 await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
                 return;
             }
-            Debug.LogWarning($"Camera value [{value}] not implemented");
+            if (value.ToLower() == "ToLeft")
+            {
+                await _screen.SetCamera(View.Screen.CameraEffect.ToLeft);
+                return;
+            }
+            _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
         }
     }
 }

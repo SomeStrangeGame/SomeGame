@@ -54,6 +54,13 @@ VAR LocLightingCaveWater = "Lighting cave water"
 VAR LocTonel = "Tonel"
 VAR LocTonelWithPath = "Tonel with path"
 
+//Кат-сцены
+VAR CSWindowIn = "Window in"
+VAR CSShark = "Shark"
+VAR CSAlexaOnBike = "Alexa on bike"
+VAR CSMeteorLight = "Meteor light"
+VAR CSWithAlexaOnBike = "With Alexa on bike"
+
 //Персонажи
 VAR CharWardrobe = "Wardrobe"
 VAR CharMainCharacter = "Salli"
@@ -76,6 +83,7 @@ VAR ViewMCAfro = "Afro"
 VAR ClothesMCCasualWear = "Casual wear"
 VAR ClothesMCSummerSundress = "Summer sundress"
 VAR ClothesMCFashionableTop = "Fashionable top"
+VAR CSCityInDeep = "City in deep"
     
 
 Title: Тайна Затерянного Мира
@@ -199,11 +207,11 @@ Sound: хлопок двери
 
 ...: Но почему-то никто из нас не решался сделать первый шаг к расставанию.
 
-Camera: затемнение
+Camera: fadein
 
 ...: Я выглянула в окно.
 
-Cut-scene: Window in
+Cut-scene: {CSWindowIn}
 Location: {LocWindow}
 
 ...: Со всех сторон на меня смотрели аккуратные белые здания, украшающие остров.
@@ -259,7 +267,7 @@ Music: тишина
 Location: {LocPier}
 Ambient: волны
 Music: позитивная
-Camera: слева направо
+Camera: leftright
 
 ...: В дальнем конце побережья среди изобилия роскошных яхт я заметила небольшой катер, привязанный к причалу обыкновенной верёвкой.
 
@@ -267,8 +275,8 @@ Camera: слева направо
 
 ...: Я осмотрелась. 
 
-Camera: справа налево
-Camera: слева направо
+Camera: rightleft
+Camera: leftright
 
 ...: Поблизости никого не было кроме дедушки, возящегося с сетью для рыбы у берега.
 
@@ -295,7 +303,7 @@ Notification: +1 Решительность
 
 ...: Но меня заметили.
 
-Camera: сместить в центр
+Camera: tocenter
 
 {CharPhil} (Рыбак, слева, Anger): Эй! Ты что делаешь, хулиганка?!
 
@@ -421,7 +429,7 @@ Notification: Ты хочешь спасти отношения с Беном.
 {CharMainCharacter} (мысли, улыбка): «Я приложу все усилия, чтобы мы снова были счастливы вместе!»
 }
 
-Camera: затемнение
+Camera: fadein
 
 ...: Я достала оборудование для дайвинга, которое арендовала на острове.
 
@@ -443,7 +451,7 @@ Notification: Выбор повлияет на историю в будущем!
 
 {CharMainCharacter} (мысли, улыбка): «Ох, бабушка, спасибо тебе, что с самого детства учила меня не бояться воды».
 
-Location (белый): {LocSandyBeach}
+Location (white): {LocSandyBeach}
 Music: позитив
 Ambient: тишина
 
@@ -521,7 +529,7 @@ Ambient: тишина
 
 ...: Внезапно я заметила большую белую акулу, плывущую в мою сторону.
 
-Cut-scene: Shark
+Cut-scene: {CSShark}
 
 ... (Подсказка): Некоторые выборы имеют ограничение во времени. Выбирай быстрее!
 
@@ -539,7 +547,7 @@ Cut-scene: Shark
 
 ...: Она была в разы быстрее меня...
 
-Camera: ранение
+Camera: injury
 
 Notification: Тебя съела акула. Вернись немного назад и попробуй избежать смерти.
 
@@ -595,7 +603,7 @@ Ambient: под водой
 
 ...: Шансы были неравные...
 
-Camera: ранение
+Camera: injury
 
 Notification: Ты разозлила акулу. Вернись немного назад и попробуй избежать смерти.
 
@@ -689,7 +697,7 @@ Music: тишина
 Location: {LocLightingIsland}
 Music: загадочная
 Ambient: тишина
-Camera: слева направо
+Camera: leftright
 
 ...: Остров оказался ещё меньше, чем я предполагала.
 
@@ -705,7 +713,7 @@ Camera: слева направо
 
 ...: Из-за скалистой формы острова мне не удалось сойти на берег, и я пришвартовала катер к небольшому выпирающему каменному выступу.
 
-Camera: брызги
+Camera: splashes
 Sound: нырнула
 
 ...: Прыжок!
@@ -1320,7 +1328,7 @@ Notification: +1 Слава
 
 ...: Я сделала, что велено, и моментально пожалела об этом.
 
-Camera: тряска
+Camera: shaking
 
 ...: До этого момента сидевшая на кровати, я перевернулась назад, сделав кувырок через голову.
 
@@ -1340,7 +1348,7 @@ Camera: тряска
 
 Location: {LocOldTown}
 Music: загадочная
-Camera: слева
+Camera: toleft
 
 ...: Мы выплыли во двор. 
 
@@ -1354,8 +1362,8 @@ Camera: слева
 
 ...: Я увлечённо начала осматривать окрестности.
 
-Camera: слева направо
-Camera: справа налево
+Camera: leftright
+Camera: rightleft
 
 ...: Вокруг было множество аналогичных древних зданий, украшенных светящимися узорами.
 
@@ -1377,7 +1385,7 @@ Camera: справа налево
 
 {CharMainCharacter} (удивление): …
 
-Cut-scene: Alexa on bike
+Cut-scene: {CSAlexaOnBike}
 
 {CharAlexa} (невидимка): Что смотришь? Запрыгивай!
 
@@ -1398,7 +1406,7 @@ Cut-scene: Alexa on bike
 
 {1_1_12_1:
 
-Cut-scene: With Alexa on bike
+Cut-scene: {CSWithAlexaOnBike}
 
 Notification: Алексе приятны твои прикосновения.
 ~ Alexa++
@@ -1417,7 +1425,7 @@ Music: позитивная
 
 ...: Я совершенно не представляла, как эта штуковина работает, но она развивала неимоверно высокую скорость.
 
-Camera: затемнение
+Camera: fadein
 
 ...: За всю дорогу я не проронила ни слова.
 
@@ -1595,7 +1603,7 @@ Notification: За 100 лет до трагедии.
 
 ... (Алекса): Но стоило Царю прикоснуться к этому камню, как метеорит засветился и будто бы ожил.
 
-Cut-scene: Meteor light
+Cut-scene: {CSMeteorLight}
 Location: {LocLightingMeteor}
 
 {CharAtlanII} (удивление): Потрясающе…
@@ -1649,7 +1657,7 @@ Notification: День трагедии.
 
 ... (Алекса): Весь наш остров ушёл под воду в разлом между тектоническими плитами.
 
-Cut-scene: City in deep
+Cut-scene: {CSCityInDeep}
 
 Location: {LocAtlanticaDestroyUnderwater}
 Music: загадочная
@@ -1898,7 +1906,7 @@ Notification: Мужчина оценил твой наряд.
 ...: Я равнодушно перевела взгляд и стала рассматривать росписи на стенах.
 -
 
-Camera: затемнение
+Camera: fadein
 
 ...: Царь говорил что-то про благополучие народа, что грядут тяжёлые времена…
 

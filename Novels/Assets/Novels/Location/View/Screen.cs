@@ -19,6 +19,8 @@ namespace Novels.Location.View
             LeftRight,
             RightLeft,
             ToCenter,
+            ToLeft,
+            Shaking
         }
 
         [Serializable]
@@ -169,15 +171,26 @@ namespace Novels.Location.View
             switch (effect)
             {
                 case CameraEffect.LeftRight:
-                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, 1f);
+                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
                     await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration);
                     break;
                 case CameraEffect.RightLeft:
-                    await Move(_image.transform, cameraCurrentPosition, cameraRightPosition, 1f);
+                    await Move(_image.transform, cameraCurrentPosition, cameraRightPosition, _cameraDuration);
                     await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration);
                     break;
                 case CameraEffect.ToCenter:
                     await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration);
+                    break;
+                case CameraEffect.ToLeft:
+                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
+                    break;
+                case CameraEffect.Shaking:
+                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f);
                     break;
             }
 
