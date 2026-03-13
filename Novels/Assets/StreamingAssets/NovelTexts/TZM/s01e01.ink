@@ -60,6 +60,7 @@ VAR CSShark = "Shark"
 VAR CSAlexaOnBike = "Alexa on bike"
 VAR CSMeteorLight = "Meteor light"
 VAR CSWithAlexaOnBike = "With Alexa on bike"
+VAR CSCityInDeep = "City in deep"
 
 //Персонажи
 VAR CharWardrobe = "Wardrobe"
@@ -83,7 +84,6 @@ VAR ViewMCAfro = "Afro"
 VAR ClothesMCCasualWear = "Casual wear"
 VAR ClothesMCSummerSundress = "Summer sundress"
 VAR ClothesMCFashionableTop = "Fashionable top"
-VAR CSCityInDeep = "City in deep"
     
 
 Title: Тайна Затерянного Мира
