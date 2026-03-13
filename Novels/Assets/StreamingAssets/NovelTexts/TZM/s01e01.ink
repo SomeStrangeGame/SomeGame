@@ -80,6 +80,9 @@ VAR ViewMCAsia = "Asia"
 VAR ViewMCLatin = "Latin"
 VAR ViewMCAfro = "Afro"
 
+//Внешность рыбака Фила
+VAR ViewPhilAnger = "Anger"
+
 //Одежда главного героя
 VAR ClothesMCCasualWear = "Casual wear"
 VAR ClothesMCSummerSundress = "Summer sundress"
@@ -305,7 +308,7 @@ Notification: +1 Решительность
 
 Camera: tocenter
 
-{CharPhil} (Рыбак, слева, Anger): Эй! Ты что делаешь, хулиганка?!
+{CharPhil} (Рыбак, слева, {ViewPhilAnger}): Эй! Ты что делаешь, хулиганка?!
 
 ...: Но я уже плыла навстречу своим приключениям.
 
