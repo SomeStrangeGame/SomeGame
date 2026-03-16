@@ -129,6 +129,20 @@ namespace Novels
                 StoryText = storyText,
             }).AddTo(this);
 
+            var save = new byte[0];
+            var savePath = pathGetter.GetSavePath();
+            using (var cache = new Cache.Entity())
+            {
+                try
+                {
+                    save = cache.ByteArrayFromCash("Save");
+                }
+                catch
+                {
+                    _ctx.OnLog((LogType.Log, "No save file"));
+                }
+            }
+
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
                 GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, pathGetter.GetBubblePrefabAssetName("Screen")),
@@ -141,6 +155,8 @@ namespace Novels
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationPrefabAssetName("Screen")),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationImagePath(assetName)),
                 GetVideoURL = pathGetter.GetVideoPath,
+
+                OnLog = _ctx.OnLog,
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await location.Init();
@@ -274,6 +290,11 @@ namespace Novels
                     bubble.Hide()
                 );
                 await resetProcess;
+
+                using( var cache = new Cache.Entity())
+                {
+                    cache.ByteArrayToCash(new byte[3] {5, 4, 6}, "Save");
+                }
             }
         }
     }
