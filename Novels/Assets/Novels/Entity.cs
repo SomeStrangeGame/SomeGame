@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -129,19 +130,19 @@ namespace Novels
                 StoryText = storyText,
             }).AddTo(this);
 
-            var save = new byte[0];
-            var savePath = pathGetter.GetSavePath();
+            var save = new List<byte>();
             using (var cache = new Cache.Entity())
             {
                 try
                 {
-                    save = cache.ByteArrayFromCash("Save");
+                    save = cache.ByteArrayFromCash("Save").ToList();
                 }
                 catch
                 {
                     _ctx.OnLog((LogType.Log, "No save file"));
                 }
             }
+            var initSave = save.ToList();
 
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
@@ -257,7 +258,12 @@ namespace Novels
                 else if (string.IsNullOrEmpty(text))
                     bubbleDone.TrySetResult();
                 else
-                    bubble.SetBackgroundButton(() => bubbleDone.TrySetResult());
+                    bubble.SetBackgroundButton(() => 
+                    {
+                        if (initSave.Count == 0)
+                            save.Add(255);
+                        bubbleDone.TrySetResult();
+                    });
                 foreach (var choice in choices)
                 {
                     var choiceText = choice.text;
@@ -265,11 +271,10 @@ namespace Novels
                         _ctx.OnLog.Invoke((LogType.Warning, $"No localized choice [{choice.text}]"));
                     bubble.AddOrUpdateButton(choice.index, choiceText, id =>
                     {
-                        if (args.Any(a => a == "Выбери внешность"))
-                            character.SetMainCharacterView(choice.text);
-                        if (args.Any(a => a == "Выбери одежду"))
-                            character.SetMainCharacterWeather(choice.text);
+                        SetCharacterView(character, args, choice);
 
+                        if (initSave.Count == 0)
+                            save.Add((byte)id);
                         storyProcessor.SetChoice(id);
                         bubbleDone.TrySetResult();
                     });
@@ -282,7 +287,22 @@ namespace Novels
                 );
                 await showProcess;
 
-                await bubbleDone.Task;
+                if (initSave.Count == 0)
+                {
+                    await bubbleDone.Task;
+                }
+                else
+                {
+                    await UniTask.Delay(1000);
+                    var saveResult = initSave.First();
+                    if (saveResult != 255)
+                    {
+                        SetCharacterView(character, args, storyProcessor.GetChoices()[saveResult]);
+                        storyProcessor.SetChoice(saveResult);
+                    }
+                        
+                    initSave.RemoveAt(0);
+                }
 
                 //reset content
                 var resetProcess = UniTask.WhenAll(
@@ -291,11 +311,22 @@ namespace Novels
                 );
                 await resetProcess;
 
-                using( var cache = new Cache.Entity())
+                if (initSave.Count == 0)
                 {
-                    cache.ByteArrayToCash(new byte[3] {5, 4, 6}, "Save");
+                    using( var cache = new Cache.Entity())
+                    {
+                        cache.ByteArrayToCash(save.ToArray(), "Save");
+                    }
                 }
             }
+        }
+
+        private void SetCharacterView(Character.Entity character, string[] args, Ink.Runtime.Choice choice)
+        {
+            if (args.Any(a => a == "Выбери внешность"))
+                character.SetMainCharacterView(choice.text);
+            if (args.Any(a => a == "Выбери одежду"))
+                character.SetMainCharacterWeather(choice.text);
         }
     }
 }
