@@ -8,7 +8,12 @@ namespace Novels.Waiting
     {
         public async UniTask Await(float seconds)
         {
-            await UniTask.Delay(Mathf.RoundToInt(seconds * 1000));
+            var timer = seconds;
+            while(timer > 0)
+            {
+                await UniTask.Yield();
+                timer -= Time.deltaTime;
+            }
         }
     }
 }

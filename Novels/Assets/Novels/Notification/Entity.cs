@@ -40,7 +40,12 @@ namespace Novels.Notification
             _lastNotifInProcess = true;
             _screen.SetText(text);
             await _screen.Show();
-            await UniTask.Delay(3000);
+            var timer = 3f;
+            while(timer > 0)
+            {
+                await UniTask.Yield();
+                timer -= Time.deltaTime;
+            }
             await _screen.Hide();
             _lastNotifInProcess = false;
         }

@@ -60,6 +60,14 @@ namespace Novels
             Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
 
+        private async void SpeedUpForSaving(List<byte> initSave)
+        {
+            Time.timeScale = 15f;
+            while(initSave.Count != 0)
+                await UniTask.Yield();
+            Time.timeScale = 1f;
+        }
+
         internal async UniTask Init()
         {
             var pathGetter = new PathGetter(new PathGetter.Ctx
@@ -143,6 +151,7 @@ namespace Novels
                 }
             }
             var initSave = save.ToList();
+            SpeedUpForSaving(initSave);
 
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
@@ -293,7 +302,7 @@ namespace Novels
                 }
                 else
                 {
-                    await UniTask.Delay(1000);
+                    await UniTask.Yield();
                     var saveResult = initSave.First();
                     if (saveResult != 255)
                     {
