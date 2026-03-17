@@ -162,6 +162,7 @@ namespace Novels.Location.View
             var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
             var spriteWidth = _image.sprite.texture.width * scaleFactor;
             var delta = (spriteWidth - UnityEngine.Screen.width) * 0.5f;
+            delta -= 340f;
             
             var cameraCurrentPosition = _image.transform.localPosition;
             var cameraCenterPosition = new Vector3(UnityEngine.Screen.width / 2f, 0f, 0f);
@@ -193,6 +194,38 @@ namespace Novels.Location.View
                     await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f);
                     break;
             }
+
+            async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration)
+            {
+                target.localPosition = from;
+                var timer = duration;
+                while (timer >= 0f)
+                {
+                    target.localPosition = Vector3.Lerp(from, to, 1f - (timer / duration));
+                    timer -= Time.deltaTime;
+                    await UniTask.Yield();
+                }
+                target.localPosition = to;
+            }
+        }
+
+        public async UniTask SetDialog(TextAlignment aligment)
+        {
+            if (_image.sprite == null) return;
+
+            var delta = 340f;
+            var cameraCurrentPosition = _image.transform.localPosition;
+            var cameraCenterPosition = new Vector3(UnityEngine.Screen.width / 2f, 0f, 0f);
+            var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
+            var cameraRightPosition = cameraCenterPosition + Vector3.left * delta;
+
+            var targetPosition = aligment switch
+            {
+                TextAlignment.Left => cameraLeftPosition,
+                TextAlignment.Right => cameraRightPosition,
+                _ => cameraCenterPosition,
+            };
+            await Move(_image.transform, cameraCurrentPosition, targetPosition, _cameraDuration);
 
             async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration)
             {

@@ -103,12 +103,25 @@ namespace Novels
                 if (!_ctx.Localization.TryGetValue(name, out characterName))
                     _ctx.OnLog.Invoke((LogType.Warning, $"No localized character name [{name}]"));
 
-                Debug.Log(name);
-                var headerAlign = TextAnchor.MiddleRight;
+                TextAlignment dialogAlign;
+                TextAnchor headerAlign;
                 if (name == _ctx.MainCharacter)
+                {
+                    dialogAlign = TextAlignment.Left;
                     headerAlign = TextAnchor.MiddleLeft;
+                }
                 else if (name == "...")
+                {
+                    dialogAlign = TextAlignment.Center;
                     headerAlign = TextAnchor.MiddleCenter;
+                }
+                else
+                {
+                    dialogAlign = TextAlignment.Right;
+                    headerAlign = TextAnchor.MiddleRight;
+                }
+
+                await _ctx.Location.SetDialog(dialogAlign);
 
                 _ctx.Bubble.SetText(headerAlign, characterName, value);
                 _ctx.Bubble.RemoveAllButtons();
