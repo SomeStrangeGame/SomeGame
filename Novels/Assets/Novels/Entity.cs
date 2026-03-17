@@ -110,137 +110,24 @@ namespace Novels
             var notification = await CreateNotification(bundles, pathGetter);
             var waiting = CreateWaiting();
 
-            await loading.Hide();
-
-            while (!IsDisposed)
+            var novelProcessCtx = new NovelProcess.Ctx
             {
-                var bubbleDone = new UniTaskCompletionSource();
+                StoryProcessor = storyProcessor,
+                Notification = notification,
+                Location = location,
+                Waiting = waiting,
+                Localization = localization,
+                Bubble = bubble,
+                SaveSystem = saveSystem,
+                Character = character,
 
-                storyProcessor.TryGetNextText(out var text);
+                ShowLoading = loading.Show,
+                HideLoading = loading.Hide,
 
-                var data = text.Split(":");
-                var prefix = data.FirstOrDefault().Trim();
-                var value = data.LastOrDefault().Trim();
-
-                if (prefix.ToLower() == "title") continue;
-                if (prefix.ToLower() == "series") continue;
-                if (prefix.ToLower() == "genres") continue;
-                if (prefix.ToLower() == "annotation") continue;
-                if (prefix.ToLower() == "stats") continue;
-
-                if (prefix.ToLower().Contains("keyboard")) continue;
-
-                if (prefix.ToLower() == "music") continue;
-                if (prefix.ToLower() == "sound") continue;
-                if (prefix.ToLower() == "ambient") continue;
-
-                if (prefix.ToLower() == "notification")
-                {
-                    notification.Show(value).Forget();
-                    continue;
-                }
-
-                if (prefix.ToLower().Contains("location"))
-                {
-                    var locationRawArgsData = prefix.Split("(");
-                    var locationArgs = locationRawArgsData.Length <= 1
-                    ? new string[0]
-                    : locationRawArgsData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
-
-                    await location.SetImage(value, false, locationArgs);
-                    continue;
-                }
-                if (prefix.ToLower() == "cut-scene")
-                {
-                    await location.SetImage(value, true, null);
-                    continue;
-                }
-                if (prefix.ToLower() == "camera")
-                {
-                    await location.SetCamera(value);
-                    continue;
-                }
-                if (prefix.ToLower() == "await")
-                {
-                    if (int.TryParse(value, out var seconds))
-                        await waiting.Await(seconds);
-                    continue;
-                }
-
-                var rawPrefixData = prefix.Split("(");
-                var name = rawPrefixData.FirstOrDefault().Trim();
-                var args = rawPrefixData.Length <= 1
-                    ? new string[0]
-                    : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
-
-                var characterName = string.Empty;
-                if (!localization.TryGetValue(name, out characterName))
-                    _ctx.OnLog.Invoke((LogType.Warning, $"No localized character name [{name}]"));
-
-                bubble.SetText(text);
-                bubble.RemoveAllButtons();
-                var choices = storyProcessor.GetChoices();
-                if (choices.Count > 0)
-                    bubble.ResetBackgroundButton();
-                else if (string.IsNullOrEmpty(text))
-                    bubbleDone.TrySetResult();
-                else
-                    bubble.SetBackgroundButton(() => 
-                    {
-                        saveSystem.TrySave();
-                        bubbleDone.TrySetResult();
-                    });
-                foreach (var choice in choices)
-                {
-                    var choiceText = choice.text;
-                    if (!localization.TryGetValue(choice.text, out choiceText))
-                        _ctx.OnLog.Invoke((LogType.Warning, $"No localized choice [{choice.text}]"));
-                    bubble.AddOrUpdateButton(choice.index, choiceText, id =>
-                    {
-                        SetCharacterView(character, args, choice);
-
-                        saveSystem.TrySave((byte)id);
-                        storyProcessor.SetChoice(id);
-                        bubbleDone.TrySetResult();
-                    });
-                }
-
-                //show content
-                var showProcess = UniTask.WhenAll(
-                    character.SetImageAndShow(name, args),
-                    bubble.Show()
-                );
-                await showProcess;
-
-                if (!saveSystem.TryLoad(out var result))
-                {
-                    await bubbleDone.Task;
-                }
-                else
-                {
-                    await UniTask.Yield();
-                    if (result != 255)
-                    {
-                        SetCharacterView(character, args, storyProcessor.GetChoices()[result]);
-                        storyProcessor.SetChoice(result);
-                    }
-                }
-
-                //reset content
-                var resetProcess = UniTask.WhenAll(
-                    character.Hide(),
-                    bubble.Hide()
-                );
-                await resetProcess;
-            }
-        }
-
-        private void SetCharacterView(Character.Entity character, string[] args, Ink.Runtime.Choice choice)
-        {
-            if (args.Any(a => a == "Выбери внешность"))
-                character.SetMainCharacterView(choice.text);
-            if (args.Any(a => a == "Выбери одежду"))
-                character.SetMainCharacterWeather(choice.text);
+                OnLog = _ctx.OnLog,
+            };
+            var novelProcess = new NovelProcess(novelProcessCtx).AddTo(this);
+            await novelProcess.ShowNovelProcess();
         }
     }
 }

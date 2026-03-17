@@ -1,0 +1,171 @@
+using System;
+using System.Linq;
+using Cysharp.Threading.Tasks;
+using Disposable;
+using UnityEngine;
+
+namespace Novels
+{
+    internal class NovelProcess : BaseDisposable
+    {
+        internal struct Ctx
+        {
+            internal StoryProcessor.Entity StoryProcessor;
+            internal Notification.Entity Notification;
+            internal Location.Entity Location;
+            internal Waiting.Entity Waiting;
+            internal Localization.Entity Localization;
+            internal Bubble.Entity Bubble;
+            internal Save.Entity SaveSystem;
+            internal Character.Entity Character;
+
+            internal Func<UniTask> ShowLoading;
+            internal Func<UniTask> HideLoading;
+
+            public Action<(LogType type, string message)> OnLog;
+        }
+
+        private Ctx _ctx;
+
+        internal NovelProcess(Ctx ctx)
+        {
+            _ctx = ctx;
+        }
+
+        internal async UniTask ShowNovelProcess()
+        {
+            await _ctx.HideLoading();
+
+            while (!IsDisposed)
+            {
+                var bubbleDone = new UniTaskCompletionSource();
+
+                _ctx.StoryProcessor.TryGetNextText(out var text);
+
+                var data = text.Split(":");
+                var prefix = data.FirstOrDefault().Trim();
+                var value = data.LastOrDefault().Trim();
+
+                if (prefix.ToLower() == "title") continue;
+                if (prefix.ToLower() == "series") continue;
+                if (prefix.ToLower() == "genres") continue;
+                if (prefix.ToLower() == "annotation") continue;
+                if (prefix.ToLower() == "stats") continue;
+
+                if (prefix.ToLower().Contains("keyboard")) continue;
+
+                if (prefix.ToLower() == "music") continue;
+                if (prefix.ToLower() == "sound") continue;
+                if (prefix.ToLower() == "ambient") continue;
+
+                if (prefix.ToLower() == "notification")
+                {
+                    _ctx.Notification.Show(value).Forget();
+                    continue;
+                }
+
+                if (prefix.ToLower().Contains("location"))
+                {
+                    var locationRawArgsData = prefix.Split("(");
+                    var locationArgs = locationRawArgsData.Length <= 1
+                    ? new string[0]
+                    : locationRawArgsData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
+
+                    await _ctx.Location.SetImage(value, false, locationArgs);
+                    continue;
+                }
+                if (prefix.ToLower() == "cut-scene")
+                {
+                    await _ctx.Location.SetImage(value, true, null);
+                    continue;
+                }
+                if (prefix.ToLower() == "camera")
+                {
+                    await _ctx.Location.SetCamera(value);
+                    continue;
+                }
+                if (prefix.ToLower() == "await")
+                {
+                    if (int.TryParse(value, out var seconds))
+                        await _ctx.Waiting.Await(seconds);
+                    continue;
+                }
+
+                var rawPrefixData = prefix.Split("(");
+                var name = rawPrefixData.FirstOrDefault().Trim();
+                var args = rawPrefixData.Length <= 1
+                    ? new string[0]
+                    : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
+
+                var characterName = string.Empty;
+                if (!_ctx.Localization.TryGetValue(name, out characterName))
+                    _ctx.OnLog.Invoke((LogType.Warning, $"No localized character name [{name}]"));
+
+                _ctx.Bubble.SetText(text);
+                _ctx.Bubble.RemoveAllButtons();
+                var choices = _ctx.StoryProcessor.GetChoices();
+                if (choices.Count > 0)
+                    _ctx.Bubble.ResetBackgroundButton();
+                else if (string.IsNullOrEmpty(text))
+                    bubbleDone.TrySetResult();
+                else
+                    _ctx.Bubble.SetBackgroundButton(() => 
+                    {
+                        _ctx.SaveSystem.TrySave();
+                        bubbleDone.TrySetResult();
+                    });
+                foreach (var choice in choices)
+                {
+                    var choiceText = choice.text;
+                    if (!_ctx.Localization.TryGetValue(choice.text, out choiceText))
+                        _ctx.OnLog.Invoke((LogType.Warning, $"No localized choice [{choice.text}]"));
+                    _ctx.Bubble.AddOrUpdateButton(choice.index, choiceText, id =>
+                    {
+                        SetCharacterView(_ctx.Character, args, choice);
+
+                        _ctx.SaveSystem.TrySave((byte)id);
+                        _ctx.StoryProcessor.SetChoice(id);
+                        bubbleDone.TrySetResult();
+                    });
+                }
+
+                //show content
+                var showProcess = UniTask.WhenAll(
+                    _ctx.Character.SetImageAndShow(name, args),
+                    _ctx.Bubble.Show()
+                );
+                await showProcess;
+
+                if (!_ctx.SaveSystem.TryLoad(out var result))
+                {
+                    await bubbleDone.Task;
+                }
+                else
+                {
+                    await UniTask.Yield();
+                    if (result != 255)
+                    {
+                        SetCharacterView(_ctx.Character, args, _ctx.StoryProcessor.GetChoices()[result]);
+                        _ctx.StoryProcessor.SetChoice(result);
+                    }
+                }
+
+                //reset content
+                var resetProcess = UniTask.WhenAll(
+                    _ctx.Character.Hide(),
+                    _ctx.Bubble.Hide()
+                );
+                await resetProcess;
+            }
+        }
+
+        private void SetCharacterView(Character.Entity character, string[] args, Ink.Runtime.Choice choice)
+        {
+            if (args.Any(a => a == "Выбери внешность"))
+                character.SetMainCharacterView(choice.text);
+            if (args.Any(a => a == "Выбери одежду"))
+                character.SetMainCharacterWeather(choice.text);
+        }
+    }
+}
+

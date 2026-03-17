@@ -1,7 +1,6 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Disposable;
-using SOData;
 using UnityEngine;
 
 namespace Novels
