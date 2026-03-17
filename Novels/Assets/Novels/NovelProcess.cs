@@ -10,6 +10,8 @@ namespace Novels
     {
         internal struct Ctx
         {
+            internal string MainCharacter;
+
             internal StoryProcessor.Entity StoryProcessor;
             internal Notification.Entity Notification;
             internal Location.Entity Location;
@@ -101,7 +103,14 @@ namespace Novels
                 if (!_ctx.Localization.TryGetValue(name, out characterName))
                     _ctx.OnLog.Invoke((LogType.Warning, $"No localized character name [{name}]"));
 
-                _ctx.Bubble.SetText(text);
+                Debug.Log(name);
+                var headerAlign = TextAnchor.MiddleRight;
+                if (name == _ctx.MainCharacter)
+                    headerAlign = TextAnchor.MiddleLeft;
+                else if (name == "...")
+                    headerAlign = TextAnchor.MiddleCenter;
+
+                _ctx.Bubble.SetText(headerAlign, characterName, value);
                 _ctx.Bubble.RemoveAllButtons();
                 var choices = _ctx.StoryProcessor.GetChoices();
                 if (choices.Count > 0)

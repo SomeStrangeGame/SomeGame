@@ -8,6 +8,14 @@ namespace Novels.Bubble.View
 {
     public class Screen : MonoBehaviour
     {
+        public enum TextAlign
+        {
+            Left,
+            Center,
+            Right
+        }
+
+        [SerializeField] private Text _header;
         [SerializeField] private Text _text;
         [SerializeField] private Button _buttonPrefab;
         [SerializeField] private Button _backgroundButton;
@@ -61,8 +69,10 @@ namespace Novels.Bubble.View
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public void SetText(string text)
+        public void SetText(TextAnchor headerAlign, string header, string text)
         {
+            _header.text = header;
+            _header.alignment = headerAlign;
             _text.text = text;
             _text.gameObject.SetActive(!string.IsNullOrEmpty(text));
         }

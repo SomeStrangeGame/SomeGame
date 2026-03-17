@@ -39,9 +39,9 @@ namespace Novels.Bubble
             await _screen.Hide();
         }
 
-        public void SetText(string text)
+        public void SetText(TextAnchor headerAlign, string header, string text)
         {
-            _screen.SetText(text);
+            _screen.SetText(headerAlign, header, text);
         }
 
         public void AddOrUpdateButton(int id, string text, Action<int> onClick)

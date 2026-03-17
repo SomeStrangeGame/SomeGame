@@ -112,6 +112,8 @@ namespace Novels
 
             var novelProcessCtx = new NovelProcess.Ctx
             {
+                MainCharacter = _ctx.Data.MainCharacter,
+
                 StoryProcessor = storyProcessor,
                 Notification = notification,
                 Location = location,
