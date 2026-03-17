@@ -12,7 +12,7 @@ namespace Loading.View
 
         private void Update()
         {
-            _marker.rotation *= Quaternion.Euler(_markerSpeed * Time.deltaTime * Vector3.up);
+            _marker.rotation *= Quaternion.Euler(_markerSpeed * Time.unscaledDeltaTime * Vector3.up);
         }
 
         public async UniTask Show()
@@ -20,15 +20,12 @@ namespace Loading.View
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideDuration;
             while (timer >= 0f)
             {
                 _canvasGroup.alpha = 1f - (timer / _showHideDuration);
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.unscaledDeltaTime;
+                await UniTask.Yield();
             }
 
             _canvasGroup.alpha = 1f;
@@ -39,15 +36,12 @@ namespace Loading.View
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var delayMs = 50;
-            var deltaTime = delayMs / 1000f;
-
             var timer = _showHideDuration;
             while (timer >= 0f)
             {
                 _canvasGroup.alpha = timer / _showHideDuration;
-                timer -= deltaTime;
-                await UniTask.Delay(delayMs, true);
+                timer -= Time.unscaledDeltaTime;
+                await UniTask.Yield();
             }
 
             _canvasGroup.alpha = 0f;

@@ -60,14 +60,6 @@ namespace Novels
             Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
 
-        private async void SpeedUpForSaving(List<byte> initSave)
-        {
-            Time.timeScale = 15f;
-            while(initSave.Count != 0)
-                await UniTask.Yield();
-            Time.timeScale = 1f;
-        }
-
         internal async UniTask Init()
         {
             var pathGetter = new PathGetter(new PathGetter.Ctx
@@ -138,20 +130,13 @@ namespace Novels
                 StoryText = storyText,
             }).AddTo(this);
 
-            var save = new List<byte>();
-            using (var cache = new Cache.Entity())
+            var saveSystem = new Save.Entity(new Save.Entity.Ctx
             {
-                try
-                {
-                    save = cache.ByteArrayFromCash("Save").ToList();
-                }
-                catch
-                {
-                    _ctx.OnLog((LogType.Log, "No save file"));
-                }
-            }
-            var initSave = save.ToList();
-            SpeedUpForSaving(initSave);
+                SaveFileName = "Save",
+                OnLog = _ctx.OnLog,
+            }).AddTo(this);
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await saveSystem.Init();
 
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
@@ -269,8 +254,7 @@ namespace Novels
                 else
                     bubble.SetBackgroundButton(() => 
                     {
-                        if (initSave.Count == 0)
-                            save.Add(255);
+                        saveSystem.TrySave();
                         bubbleDone.TrySetResult();
                     });
                 foreach (var choice in choices)
@@ -282,8 +266,7 @@ namespace Novels
                     {
                         SetCharacterView(character, args, choice);
 
-                        if (initSave.Count == 0)
-                            save.Add((byte)id);
+                        saveSystem.TrySave((byte)id);
                         storyProcessor.SetChoice(id);
                         bubbleDone.TrySetResult();
                     });
@@ -296,21 +279,18 @@ namespace Novels
                 );
                 await showProcess;
 
-                if (initSave.Count == 0)
+                if (!saveSystem.TryLoad(out var result))
                 {
                     await bubbleDone.Task;
                 }
                 else
                 {
                     await UniTask.Yield();
-                    var saveResult = initSave.First();
-                    if (saveResult != 255)
+                    if (result != 255)
                     {
-                        SetCharacterView(character, args, storyProcessor.GetChoices()[saveResult]);
-                        storyProcessor.SetChoice(saveResult);
+                        SetCharacterView(character, args, storyProcessor.GetChoices()[result]);
+                        storyProcessor.SetChoice(result);
                     }
-                        
-                    initSave.RemoveAt(0);
                 }
 
                 //reset content
@@ -319,14 +299,6 @@ namespace Novels
                     bubble.Hide()
                 );
                 await resetProcess;
-
-                if (initSave.Count == 0)
-                {
-                    using( var cache = new Cache.Entity())
-                    {
-                        cache.ByteArrayToCash(save.ToArray(), "Save");
-                    }
-                }
             }
         }
 
