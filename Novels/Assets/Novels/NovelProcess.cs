@@ -43,7 +43,7 @@ namespace Novels
                 var bubbleDone = new UniTaskCompletionSource();
 
                 _ctx.StoryProcessor.TryGetNextText(out var text);
-                if (string.IsNullOrEmpty(text)) continue;
+                if (string.IsNullOrEmpty(text) && _ctx.StoryProcessor.GetChoices().Count == 0) continue;
 
                 var data = text.Split(":");
                 var prefix = data.FirstOrDefault().Trim();
