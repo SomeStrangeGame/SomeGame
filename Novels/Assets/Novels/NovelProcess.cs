@@ -43,6 +43,7 @@ namespace Novels
                 var bubbleDone = new UniTaskCompletionSource();
 
                 _ctx.StoryProcessor.TryGetNextText(out var text);
+                if (string.IsNullOrEmpty(text)) continue;
 
                 var data = text.Split(":");
                 var prefix = data.FirstOrDefault().Trim();
@@ -110,7 +111,7 @@ namespace Novels
                     dialogAlign = TextAlignment.Left;
                     headerAlign = TextAnchor.MiddleLeft;
                 }
-                else if (name == "...")
+                else if (name == "..." || name == "Wardrobe")
                 {
                     dialogAlign = TextAlignment.Center;
                     headerAlign = TextAnchor.MiddleCenter;
@@ -128,8 +129,8 @@ namespace Novels
                 var choices = _ctx.StoryProcessor.GetChoices();
                 if (choices.Count > 0)
                     _ctx.Bubble.ResetBackgroundButton();
-                else if (string.IsNullOrEmpty(text))
-                    bubbleDone.TrySetResult();
+                //else if (string.IsNullOrEmpty(text))
+                //    bubbleDone.TrySetResult();
                 else
                     _ctx.Bubble.SetBackgroundButton(() => 
                     {

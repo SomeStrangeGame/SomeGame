@@ -74,7 +74,6 @@ namespace Novels.Bubble.View
             _header.text = header;
             _header.alignment = headerAlign;
             _text.text = text;
-            _text.gameObject.SetActive(!string.IsNullOrEmpty(text));
         }
 
         public void AddOrUpdateButton(int id, string text, Action<int> onClick)

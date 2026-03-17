@@ -376,7 +376,8 @@ MonoBehaviour:
     _effectRoot: {fileID: 8052422263897752241}
   _effectCanvasGroup: {fileID: 6235987066355799839}
   _effectDuration: 0.33
-  _cameraDuration: 3
+  _cameraDuration: 2
+  _dialogDuration: 1
 --- !u!328 &8261144996416418242
 VideoPlayer:
   m_ObjectHideFlags: 0

@@ -33,6 +33,8 @@ namespace Novels.Location.View
             public readonly GameObject EffectRoot => _effectRoot;
         }
 
+        private const float _dialogOffset = 120f;
+
         [SerializeField] private float _showHideImageDuration;
         [SerializeField] private CanvasGroup _imageCanvasGroup;
         [SerializeField] private Image _image;
@@ -48,6 +50,7 @@ namespace Novels.Location.View
 
         [Space]
         [SerializeField] private float _cameraDuration;
+        [SerializeField] private float _dialogDuration;
 
         private Action _onVideoReady;
         private Action _onVideoDone;
@@ -120,6 +123,7 @@ namespace Novels.Location.View
             _video.url = url;
             _video.isLooping = loop;
             _video.Play();
+            _video.playbackSpeed = Time.timeScale;
 
             _onVideoReady = onVideoReady;
             _onVideoDone = onVideoDone;
@@ -162,7 +166,7 @@ namespace Novels.Location.View
             var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
             var spriteWidth = _image.sprite.texture.width * scaleFactor;
             var delta = (spriteWidth - UnityEngine.Screen.width) * 0.5f;
-            delta -= 340f;
+            delta -= _dialogOffset;
             
             var cameraCurrentPosition = _image.transform.localPosition;
             var cameraCenterPosition = new Vector3(UnityEngine.Screen.width / 2f, 0f, 0f);
@@ -194,26 +198,13 @@ namespace Novels.Location.View
                     await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f);
                     break;
             }
-
-            async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration)
-            {
-                target.localPosition = from;
-                var timer = duration;
-                while (timer >= 0f)
-                {
-                    target.localPosition = Vector3.Lerp(from, to, 1f - (timer / duration));
-                    timer -= Time.deltaTime;
-                    await UniTask.Yield();
-                }
-                target.localPosition = to;
-            }
         }
 
         public async UniTask SetDialog(TextAlignment aligment)
         {
             if (_image.sprite == null) return;
 
-            var delta = 340f;
+            var delta = _dialogOffset;
             var cameraCurrentPosition = _image.transform.localPosition;
             var cameraCenterPosition = new Vector3(UnityEngine.Screen.width / 2f, 0f, 0f);
             var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
@@ -225,20 +216,21 @@ namespace Novels.Location.View
                 TextAlignment.Right => cameraRightPosition,
                 _ => cameraCenterPosition,
             };
-            await Move(_image.transform, cameraCurrentPosition, targetPosition, _cameraDuration);
+            await Move(_image.transform, cameraCurrentPosition, targetPosition, _dialogDuration);
+        }
 
-            async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration)
+        private async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration)
+        {
+            if (from == to) return;
+            target.localPosition = from;
+            var timer = duration;
+            while (timer >= 0f)
             {
-                target.localPosition = from;
-                var timer = duration;
-                while (timer >= 0f)
-                {
-                    target.localPosition = Vector3.Lerp(from, to, 1f - (timer / duration));
-                    timer -= Time.deltaTime;
-                    await UniTask.Yield();
-                }
-                target.localPosition = to;
+                target.localPosition = Vector3.Lerp(from, to, 1f - (timer / duration));
+                timer -= Time.deltaTime;
+                await UniTask.Yield();
             }
+            target.localPosition = to;
         }
 
         public void ResetEffect()

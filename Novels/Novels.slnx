@@ -1,7 +1,7 @@
 ﻿<Solution>
   <Project Path="Novels.Notification.csproj" />
-  <Project Path="Novels.csproj" />
   <Project Path="Disposable.csproj" />
+  <Project Path="Novels.csproj" />
   <Project Path="Loading.View.csproj" />
   <Project Path="Novels.Location.csproj" />
   <Project Path="Logs.csproj" />
@@ -10,6 +10,7 @@
   <Project Path="Novels.Bubble.csproj" />
   <Project Path="SOData.csproj" />
   <Project Path="Novels.Location.View.csproj" />
+  <Project Path="Novels.PathGetter.csproj" />
   <Project Path="Bundles.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="LoadingPriority.csproj" />
@@ -17,6 +18,7 @@
   <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Waiting.csproj" />
   <Project Path="Novels.Character.View.csproj" />
+  <Project Path="Novels.Save.csproj" />
   <Project Path="CodeStrippingFix.csproj" />
   <Project Path="Setting.csproj" />
   <Project Path="Novels.Notication.View.csproj" />
