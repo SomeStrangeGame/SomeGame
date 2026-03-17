@@ -1,12 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.WebSockets;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
 
-namespace Save
+namespace Novels.Save
 {
     public class Entity : BaseDisposable
     {

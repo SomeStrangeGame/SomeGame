@@ -38,8 +38,8 @@ namespace Novels
             setting.Show();
             await _ctx.HideLoading();
             await settingDone.Task;
-            setting.Hide();
             await _ctx.ShowLoading();
+            setting.Hide();
         }
 
         private void SetDoneButton(Setting.Entity setting, UniTaskCompletionSource settingDone)

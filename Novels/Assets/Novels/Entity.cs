@@ -2,7 +2,6 @@ using System;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
-using Localization;
 using SOData;
 using UnityEngine;
 
@@ -40,7 +39,7 @@ namespace Novels
         internal readonly string NovelsLocalizationBundleName => _novelsLocalizationBundleName;
     }
 
-    internal class Entity : BaseDisposable
+    internal partial class Entity : BaseDisposable
     {
         internal struct Ctx
         {
@@ -61,23 +60,9 @@ namespace Novels
 
         internal async UniTask Init()
         {
-            var pathGetter = new PathGetter(new PathGetter.Ctx
-            {
-                Prefix = _ctx.Data.Prefix,
-            }).AddTo(this);
-
-            var bundles = new Bundles.Entity(new Bundles.Entity.Ctx
-            {
-                OnLog = _ctx.OnLog,
-            }).AddTo(this);
-
-            var loadingCtx = new Loading.Entity.Ctx
-            {
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LoadingData.BundleName, _ctx.Data.LoadingData.AssetName),
-            };
-            var loading = new Loading.Entity(loadingCtx).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await loading.Init();
+            var pathGetter = CreatePathGetter();
+            var bundles = CreateBundles();
+            var loading = await CreateLoading(bundles);
 
             //preloading init
             var firstPreloding = UniTask.WhenAll(
@@ -116,65 +101,14 @@ namespace Novels
                 storyText = storyTextTemp;
             }
 
-            var localization = new Localization.Entity(new Localization.Entity.Ctx
-            {
-                Language = LocalizationData.Language.Rus,
-                GetLocalizationSO = () => bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, pathGetter.GetLocalizationDataAssetName("LocalizationData")),
-            }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await localization.Init();
-
-            var storyProcessor = new StoryProcessor.Entity(new StoryProcessor.Entity.Ctx
-            {
-                StoryText = storyText,
-            }).AddTo(this);
-
-            var saveSystem = new Save.Entity(new Save.Entity.Ctx
-            {
-                SaveFileName = "Save",
-                OnLog = _ctx.OnLog,
-            }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await saveSystem.Init();
-
-            var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
-            {
-                GetBubblePrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, pathGetter.GetBubblePrefabAssetName("Screen")),
-            }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await bubble.Init();
-
-            var location = new Location.Entity(new Location.Entity.Ctx
-            {
-                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationPrefabAssetName("Screen")),
-                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationImagePath(assetName)),
-                GetVideoURL = pathGetter.GetVideoPath,
-
-                OnLog = _ctx.OnLog,
-            }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await location.Init();
-
-            var character = new Character.Entity(new Character.Entity.Ctx
-            {
-                MainCharacterName = _ctx.Data.MainCharacter,
-                GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, pathGetter.GetCharacterPrefabAssetName("Screen")),
-                GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, assetName),
-                GetMainBodyPath = pathGetter.GetCharacterMainBodyPath,
-                GetEmotionPath = pathGetter.GetCharacterEmotionPath,
-                GetClothesPath = pathGetter.GetCharacterClothesPath
-            }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await character.Init();
-
-            var notification = new Notification.Entity(new Notification.Entity.Ctx
-            {
-                GetNotificationPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsNotificationBundleName, pathGetter.GetNotificationPrefabAssetName("Screen")),
-            }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await notification.Init();
-
-            var waiting = new Waiting.Entity().AddTo(this);
+            var localization = await CreateLocalization(bundles, pathGetter);
+            var storyProcessor = CreateStoryProcessor(storyText);
+            var saveSystem = await CreateSaveSystem();
+            var bubble = await CreateBubble(bundles, pathGetter);
+            var location = await CreateLocation(bundles, pathGetter);
+            var character = await CreateCharacter(bundles, pathGetter);
+            var notification = await CreateNotification(bundles, pathGetter);
+            var waiting = CreateWaiting();
 
             await loading.Hide();
 
