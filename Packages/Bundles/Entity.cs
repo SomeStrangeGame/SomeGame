@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -137,12 +136,14 @@ namespace Bundles
 
         private string GetPlatform()
         {
-#if UNITY_EDITOR_OSX
+#if UNITY_STANDALONE_OSX
             return "Mac";
 #elif UNITY_STANDALONE_WIN
             return "Win";
 #elif UNITY_WEBGL
             return "WebGL";
+#elif UNITY_ANDROID
+            return "Android";
 #else
             return string.Empty;
 #endif
@@ -150,11 +151,11 @@ namespace Bundles
 
         private string GetRemotePath(string localPath)
         {
-            var result = $"{Application.streamingAssetsPath}/{localPath}";
+            var localResult = $"{Application.streamingAssetsPath}/{localPath}";
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            result = $"file://{result}";
+            localResult = $"file://{localResult}";
 #endif
-            return result;
+            return localResult;
         }
 
         private void SetHeaders(UnityWebRequest request)
