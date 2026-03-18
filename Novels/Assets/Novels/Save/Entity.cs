@@ -64,7 +64,7 @@ namespace Novels.Save
 
         private async void SpeedUpForLoading()
         {
-            Time.timeScale = 15f;
+            Time.timeScale = 50f;
             while(_initSave.Count != 0)
                 await UniTask.Yield();
             Time.timeScale = 1f;

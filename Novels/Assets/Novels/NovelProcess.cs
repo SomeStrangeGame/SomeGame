@@ -36,7 +36,8 @@ namespace Novels
 
         internal async UniTask ShowNovelProcess()
         {
-            await _ctx.HideLoading();
+            //await _ctx.HideLoading();
+            var loadingDone = false;
 
             while (!IsDisposed)
             {
@@ -129,8 +130,6 @@ namespace Novels
                 var choices = _ctx.StoryProcessor.GetChoices();
                 if (choices.Count > 0)
                     _ctx.Bubble.ResetBackgroundButton();
-                //else if (string.IsNullOrEmpty(text))
-                //    bubbleDone.TrySetResult();
                 else
                     _ctx.Bubble.SetBackgroundButton(() => 
                     {
@@ -161,6 +160,11 @@ namespace Novels
 
                 if (!_ctx.SaveSystem.TryLoad(out var result))
                 {
+                    if (!loadingDone)
+                    {
+                        loadingDone = true;
+                        await _ctx.HideLoading();
+                    }
                     await bubbleDone.Task;
                 }
                 else
