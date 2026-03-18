@@ -35,14 +35,14 @@ namespace Novels.PathGetter
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/Novels/Bubble/RemoteAssets/{_ctx.Prefix}/{assetName}.prefab";
+            return $"Assets/RemoteAssets/Bubble/{_ctx.Prefix}/{assetName}.prefab";
         }
 
         public string GetLocationPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Prefix}/{assetName}.prefab";
+            return $"Assets/RemoteAssets/Location/{_ctx.Prefix}/{assetName}.prefab";
         }
 
         public string GetLocationImagePath(string assetName)
@@ -51,7 +51,7 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(assetName[0]);
             var otherText = assetName.Substring(1).ToLower();
-            return $"Assets/Novels/Location/RemoteAssets/{_ctx.Prefix}/Locations/{firstChar}{otherText}.png";
+            return $"Assets/RemoteAssets/Location/{_ctx.Prefix}/Locations/{firstChar}{otherText}.png";
         }
 
         public string GetVideoPath(string assetName)
@@ -71,14 +71,14 @@ namespace Novels.PathGetter
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/{assetName}.prefab";
+            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/{assetName}.prefab";
         }
 
         public string GetCharacterMainBodyPath(string name, string view, string arg)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
 
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/{view}/{arg ?? "Main"}.png";
+            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/{view}/{arg ?? "Main"}.png";
         }
 
         public string GetCharacterEmotionPath(string name, string view, string arg)
@@ -115,7 +115,7 @@ namespace Novels.PathGetter
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/Novels/Notification/RemoteAssets/{_ctx.Prefix}/{assetName}.prefab";
+            return $"Assets/RemoteAssets/Notification/{_ctx.Prefix}/{assetName}.prefab";
         }
 
         public string GetLocalizationDataAssetName(string assetName)

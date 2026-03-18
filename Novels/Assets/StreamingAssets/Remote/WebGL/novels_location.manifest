@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 420051584
+CRC: 2310096574
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: fc7a39137b52d9de955f60a242376c20
+    Hash: bf64257e2788035c8b44b7399a708d97
   TypeTreeHash:
     serializedVersion: 2
     Hash: 82a754c4c3ad4b9a3d77b9a14f95eadb
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: ae83a821f072156d6c3611456cab8cc1
+    Hash: 3dac72e9c117b90608bd1cf132378470
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -51,45 +51,45 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Cafe.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Alexa on bike.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Atlantica destroy.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Atlantica.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Bridge in Atlantica.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Bike.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Lighting cave with pool.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Temple main room.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Lighting meteor.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Boat in see evening.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Bike stop.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Old town.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Wardrobe dry day.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Main room.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Lighting island.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Window in.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Boat in see.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Atlantica in ground.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Tonel.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Shark.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/With Alexa on bike.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Pier.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Hotel room.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Atlantica destroy underwater.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Meteor.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Meteor light.png
-- Assets/Novels/Location/RemoteAssets/TZM/VideoTexture.renderTexture
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Bridge in city.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Boat in move.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Window.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/City in deep.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Sandy beach.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Island underwater.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Bike in move.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Boat in see night.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Under water.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Lighting cave water.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Alexas room.png
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Temple.png
-- Assets/Novels/Location/RemoteAssets/TZM/Screen.prefab
-- Assets/Novels/Location/RemoteAssets/TZM/Locations/Tonel with path.png
+- Assets/RemoteAssets/Location/TZM/Locations/Cafe.png
+- Assets/RemoteAssets/Location/TZM/Locations/Alexa on bike.png
+- Assets/RemoteAssets/Location/TZM/Locations/Atlantica destroy.png
+- Assets/RemoteAssets/Location/TZM/Locations/Atlantica.png
+- Assets/RemoteAssets/Location/TZM/Locations/Bridge in Atlantica.png
+- Assets/RemoteAssets/Location/TZM/Locations/Bike.png
+- Assets/RemoteAssets/Location/TZM/Locations/Lighting cave with pool.png
+- Assets/RemoteAssets/Location/TZM/Locations/Temple main room.png
+- Assets/RemoteAssets/Location/TZM/Locations/Lighting meteor.png
+- Assets/RemoteAssets/Location/TZM/Locations/Boat in see evening.png
+- Assets/RemoteAssets/Location/TZM/Locations/Bike stop.png
+- Assets/RemoteAssets/Location/TZM/Locations/Old town.png
+- Assets/RemoteAssets/Location/TZM/Locations/Wardrobe dry day.png
+- Assets/RemoteAssets/Location/TZM/Locations/Main room.png
+- Assets/RemoteAssets/Location/TZM/Locations/Lighting island.png
+- Assets/RemoteAssets/Location/TZM/Locations/Window in.png
+- Assets/RemoteAssets/Location/TZM/Locations/Boat in see.png
+- Assets/RemoteAssets/Location/TZM/Locations/Atlantica in ground.png
+- Assets/RemoteAssets/Location/TZM/Locations/Tonel.png
+- Assets/RemoteAssets/Location/TZM/Locations/Shark.png
+- Assets/RemoteAssets/Location/TZM/Locations/With Alexa on bike.png
+- Assets/RemoteAssets/Location/TZM/Locations/Pier.png
+- Assets/RemoteAssets/Location/TZM/Locations/Hotel room.png
+- Assets/RemoteAssets/Location/TZM/Locations/Atlantica destroy underwater.png
+- Assets/RemoteAssets/Location/TZM/Locations/Meteor.png
+- Assets/RemoteAssets/Location/TZM/Locations/Meteor light.png
+- Assets/RemoteAssets/Location/TZM/VideoTexture.renderTexture
+- Assets/RemoteAssets/Location/TZM/Locations/Bridge in city.png
+- Assets/RemoteAssets/Location/TZM/Locations/Boat in move.png
+- Assets/RemoteAssets/Location/TZM/Locations/Window.png
+- Assets/RemoteAssets/Location/TZM/Locations/City in deep.png
+- Assets/RemoteAssets/Location/TZM/Locations/Sandy beach.png
+- Assets/RemoteAssets/Location/TZM/Locations/Island underwater.png
+- Assets/RemoteAssets/Location/TZM/Locations/Bike in move.png
+- Assets/RemoteAssets/Location/TZM/Locations/Boat in see night.png
+- Assets/RemoteAssets/Location/TZM/Locations/Under water.png
+- Assets/RemoteAssets/Location/TZM/Locations/Lighting cave water.png
+- Assets/RemoteAssets/Location/TZM/Locations/Alexas room.png
+- Assets/RemoteAssets/Location/TZM/Locations/Temple.png
+- Assets/RemoteAssets/Location/TZM/Screen.prefab
+- Assets/RemoteAssets/Location/TZM/Locations/Tonel with path.png
 Dependencies: []
