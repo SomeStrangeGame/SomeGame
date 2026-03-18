@@ -69,6 +69,9 @@ namespace Editor
             bundlePath = $"{remotePath}/Mac";
             using (new BuildBundleLog(bundlePath))
                 BuildBundles(BuildTarget.StandaloneOSX, bundlePath);
+            bundlePath = $"{remotePath}/Android";
+            using (new BuildBundleLog(bundlePath))
+                BuildBundles(BuildTarget.Android, bundlePath);
             //bundlePath = $"{remotePath}/Win";
             //using (new BuildBundleLog(bundlePath))
             //    BuildBundles(BuildTarget.StandaloneWindows64, bundlePath);
