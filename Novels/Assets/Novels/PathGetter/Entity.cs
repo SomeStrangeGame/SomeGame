@@ -88,7 +88,7 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/{view}/Emotions/{firstChar}{otherText}.png";
+            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/{view}/Emotions/{firstChar}{otherText}.png";
         }
 
         public string GetCharacterClothesPath(string name, string arg, int index)
@@ -98,7 +98,7 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}.png";
+            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}.png";
         }
 
         public string GetCharacterHairPath(string name, string arg, string direction, string color)
@@ -108,7 +108,7 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}.png";
+            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}.png";
         }
 
         public string GetNotificationPrefabAssetName(string assetName)

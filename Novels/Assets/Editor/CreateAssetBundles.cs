@@ -66,9 +66,9 @@ namespace Editor
             var bundlePath = $"{remotePath}/WebGL";
             using (new BuildBundleLog(bundlePath))
                 BuildBundles(BuildTarget.WebGL, bundlePath);
-            //bundlePath = $"{remotePath}/Mac";
-            //using (new BuildBundleLog(bundlePath))
-            //    BuildBundles(BuildTarget.StandaloneOSX, bundlePath);
+            bundlePath = $"{remotePath}/Mac";
+            using (new BuildBundleLog(bundlePath))
+                BuildBundles(BuildTarget.StandaloneOSX, bundlePath);
             //bundlePath = $"{remotePath}/Win";
             //using (new BuildBundleLog(bundlePath))
             //    BuildBundles(BuildTarget.StandaloneWindows64, bundlePath);
