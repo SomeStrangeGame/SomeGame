@@ -62,7 +62,8 @@ namespace Novels
         {
             var pathGetter = CreatePathGetter();
             var bundles = CreateBundles();
-            var loading = await CreateLoading(bundles, pathGetter);
+
+            var mainLoading = await CreateMainLoading(bundles, pathGetter);
 
             //preloading init
             var firstPreloding = UniTask.WhenAll(
@@ -77,7 +78,7 @@ namespace Novels
                 bundles.GetAssetBundle(_ctx.Data.NovelsLocalizationBundleName)
             );
 
-            await loading.Show();
+            await mainLoading.Show();
 
             //preloading loading first
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
@@ -87,8 +88,8 @@ namespace Novels
             {
                 DefaultThreadPriority = _defaultThreadPriority,
                 GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, pathGetter.GetSettingPrefabAssetName("Screen")),
-                ShowLoading = loading.Show,
-                HideLoading = loading.Hide,
+                ShowLoading = mainLoading.Show,
+                HideLoading = mainLoading.Hide,
             };
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
@@ -109,6 +110,10 @@ namespace Novels
             var character = await CreateCharacter(bundles, pathGetter);
             var notification = await CreateNotification(bundles, pathGetter);
             var waiting = CreateWaiting();
+
+            var loading = await CreateLoading(bundles, pathGetter);
+            await loading.Show();
+            await mainLoading.Hide();
 
             var novelProcessCtx = new NovelProcess.Ctx
             {
