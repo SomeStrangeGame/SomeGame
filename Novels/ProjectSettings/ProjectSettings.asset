@@ -835,6 +835,7 @@ PlayerSettings:
   webGLCloseOnQuit: 0
   webWasm2023: 1
   scriptingDefineSymbols:
+    Android: INK_RUNTIME;INK_EDITOR
     WebGL: INK_RUNTIME;INK_EDITOR
   additionalCompilerArguments: {}
   platformArchitecture: {}
