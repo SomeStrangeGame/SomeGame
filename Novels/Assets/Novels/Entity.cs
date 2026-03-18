@@ -17,7 +17,7 @@ namespace Novels
         [SerializeField] private string _storyTextPath;
 
         [Space]
-        [SerializeField] private BundleData _loadingData;
+        [SerializeField] private string _novelsLoadingBundleName;
         [SerializeField] private string _novelsSettingBundleName;
         [SerializeField] private string _novelsBubbleBundleName;
         [SerializeField] private string _novelsLocationBundleName;
@@ -30,7 +30,7 @@ namespace Novels
 
         internal readonly string StoryTextPath => _storyTextPath;
 
-        internal readonly BundleData LoadingData => _loadingData;
+        internal readonly string NovelsLoadingBundleName => _novelsLoadingBundleName;
         internal readonly string NovelsSettingBundleName => _novelsSettingBundleName;
         internal readonly string NovelsBubbleBundleName => _novelsBubbleBundleName;
         internal readonly string NovelsLocationBundleName => _novelsLocationBundleName;
@@ -62,7 +62,7 @@ namespace Novels
         {
             var pathGetter = CreatePathGetter();
             var bundles = CreateBundles();
-            var loading = await CreateLoading(bundles);
+            var loading = await CreateLoading(bundles, pathGetter);
 
             //preloading init
             var firstPreloding = UniTask.WhenAll(

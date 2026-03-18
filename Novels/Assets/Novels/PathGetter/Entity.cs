@@ -24,6 +24,13 @@ namespace Novels.PathGetter
             return $"NovelTexts/{_ctx.Prefix}/{path}";
         }
 
+        public string GetLoadingPrefabAssetName(string assetName)
+        {
+            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+
+            return $"Assets/RemoteAssets/Loading/{_ctx.Prefix}/{assetName}.prefab";
+        }
+
         public string GetSettingPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;

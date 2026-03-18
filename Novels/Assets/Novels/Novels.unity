@@ -356,9 +356,7 @@ MonoBehaviour:
     _prefix: TZM
     _mainCharacter: Salli
     _storyTextPath: s01e01.ink.json
-    _loadingData:
-      _bundleName: loading
-      _assetName: Loading.prefab
+    _novelsLoadingBundleName: novels_loading
     _novelsSettingBundleName: novels_setting
     _novelsBubbleBundleName: novels_bubble
     _novelsLocationBundleName: novels_location

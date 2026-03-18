@@ -6,11 +6,11 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private async UniTask<Loading.Entity> CreateLoading(Bundles.Entity bundles)
+        private async UniTask<Loading.Entity> CreateLoading(Bundles.Entity bundles, PathGetter.Entity pathGetter)
         {
             var loadingCtx = new Loading.Entity.Ctx
             {
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.LoadingData.BundleName, _ctx.Data.LoadingData.AssetName),
+                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetLoadingPrefabAssetName("Screen")),
             };
             var loading = new Loading.Entity(loadingCtx).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))

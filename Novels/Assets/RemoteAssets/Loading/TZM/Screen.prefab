@@ -126,7 +126,7 @@ GameObject:
   - component: {fileID: 7003621770584949792}
   - component: {fileID: 6970128589728250912}
   m_Layer: 5
-  m_Name: Loading
+  m_Name: Screen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
