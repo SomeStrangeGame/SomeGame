@@ -33,7 +33,7 @@ namespace Novels.Location.View
             public readonly GameObject EffectRoot => _effectRoot;
         }
 
-        private const float _dialogOffset = 120f;
+        private const float _dialogOffset = 100f;
 
         [SerializeField] private float _showHideImageDuration;
         [SerializeField] private CanvasGroup _imageCanvasGroup;
@@ -62,8 +62,8 @@ namespace Novels.Location.View
 
             var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
             var imageWidth = _image.sprite.texture.width * scaleFactor;
-            _image.rectTransform.offsetMin = new Vector2((UnityEngine.Screen.width - imageWidth) / 2f, 0f);
-            _image.rectTransform.offsetMax = new Vector2(-(UnityEngine.Screen.width - imageWidth) / 2f, 0f);
+            _image.rectTransform.offsetMin = new Vector2(((UnityEngine.Screen.width / _image.canvas.scaleFactor) - imageWidth) / 2f, 0f);
+            _image.rectTransform.offsetMax = new Vector2(-((UnityEngine.Screen.width / _image.canvas.scaleFactor) - imageWidth) / 2f, 0f);
         }
 
         public void ShowImageImmediate()
@@ -158,18 +158,18 @@ namespace Novels.Location.View
 
         public void ResetCamera()
         {
-            _image.transform.localPosition = new Vector3(UnityEngine.Screen.width / 2f, 0f, 0f);
+            _image.transform.localPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
         }
 
         public async UniTask SetCamera(CameraEffect effect)
         {
             var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
             var spriteWidth = _image.sprite.texture.width * scaleFactor;
-            var delta = (spriteWidth - UnityEngine.Screen.width) * 0.5f;
+            var delta = (spriteWidth - (UnityEngine.Screen.width / _image.canvas.scaleFactor)) * 0.5f;
             delta -= _dialogOffset;
             
             var cameraCurrentPosition = _image.transform.localPosition;
-            var cameraCenterPosition = new Vector3(UnityEngine.Screen.width / 2f, 0f, 0f);
+            var cameraCenterPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
             var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
             var cameraRightPosition = cameraCenterPosition + Vector3.left * delta;
 
@@ -206,7 +206,7 @@ namespace Novels.Location.View
 
             var delta = _dialogOffset;
             var cameraCurrentPosition = _image.transform.localPosition;
-            var cameraCenterPosition = new Vector3(UnityEngine.Screen.width / 2f, 0f, 0f);
+            var cameraCenterPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
             var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
             var cameraRightPosition = cameraCenterPosition + Vector3.left * delta;
 
