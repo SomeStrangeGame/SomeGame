@@ -94,6 +94,10 @@ namespace Novels
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
 
+            var loading = await CreateLoading(bundles, pathGetter);
+            await loading.Show();
+            await mainLoading.Hide();
+
             //preloading loading second
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
@@ -110,10 +114,6 @@ namespace Novels
             var character = await CreateCharacter(bundles, pathGetter);
             var notification = await CreateNotification(bundles, pathGetter);
             var waiting = CreateWaiting();
-
-            var loading = await CreateLoading(bundles, pathGetter);
-            await loading.Show();
-            await mainLoading.Hide();
 
             var novelProcessCtx = new NovelProcess.Ctx
             {
