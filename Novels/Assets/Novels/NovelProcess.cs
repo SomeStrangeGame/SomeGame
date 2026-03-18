@@ -187,7 +187,9 @@ namespace Novels
             if (args.Any(a => a == "Выбери внешность"))
                 character.SetMainCharacterView(choice.text);
             if (args.Any(a => a == "Выбери одежду"))
-                character.SetMainCharacterWeather(choice.text);
+                character.SetMainCharacterClothes(choice.text);
+            if (args.Any(a => a == "Выбери прическу" || a == "Выбери причёску"))
+                character.SetMainCharacterHair(choice.text);
         }
     }
 }

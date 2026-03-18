@@ -15,7 +15,8 @@ namespace Novels
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, assetName),
                 GetMainBodyPath = pathGetter.GetCharacterMainBodyPath,
                 GetEmotionPath = pathGetter.GetCharacterEmotionPath,
-                GetClothesPath = pathGetter.GetCharacterClothesPath
+                GetClothesPath = pathGetter.GetCharacterClothesPath,
+                GetHairSprite = pathGetter.GetCharacterHairPath
             }).AddTo(this);
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await character.Init();

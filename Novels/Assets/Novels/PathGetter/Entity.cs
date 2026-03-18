@@ -101,6 +101,16 @@ namespace Novels.PathGetter
             return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}.png";
         }
 
+        public string GetCharacterHairPath(string name, string arg, string direction, string color)
+        {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+            if (string.IsNullOrEmpty(arg)) return string.Empty;
+
+            var firstChar = char.ToUpper(arg[0]);
+            var otherText = arg.Substring(1).ToLower();
+            return $"Assets/Novels/Character/RemoteAssets/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}.png";
+        }
+
         public string GetNotificationPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;

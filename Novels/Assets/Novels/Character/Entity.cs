@@ -15,6 +15,7 @@ namespace Novels.Character
             public Func<string, string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
             public Func<string, string, int, string> GetClothesPath;
+            public Func<string, string, string, string, string> GetHairSprite;
         }
 
         private const string _mainCharacter = "MainCharacter";
@@ -26,6 +27,7 @@ namespace Novels.Character
 
         private string _mainCharacterView;
         private string _mainCharacterClothes;
+        private string _mainCharacterHair;
 
 
         public Entity(Ctx ctx)
@@ -46,26 +48,34 @@ namespace Novels.Character
             _mainCharacterView = $"View/{view}";
         }
 
-        public void SetMainCharacterWeather(string weather)
+        public void SetMainCharacterClothes(string clothes)
         {
-            _mainCharacterClothes = weather;
+            _mainCharacterClothes = clothes;
+        }
+
+        public void SetMainCharacterHair(string hair)
+        {
+            _mainCharacterHair = hair;
         }
 
         public async UniTask SetImageAndShow(string name, params string[] args)
         {
             var view = "View";
             var clothes = string.Empty;
+            var hair = string.Empty;
             if (name == _ctx.MainCharacterName || name == _wardrobe)
             {
                 name = _mainCharacter;
                 view = _mainCharacterView;
                 clothes = _mainCharacterClothes;
+                hair = _mainCharacterHair;
             }
 
             await UniTask.WhenAll(
                 SetMainBody(name, view, args),
                 SetEmotion(name, view, args),
-                SetClothes(name, clothes, args));
+                SetClothes(name, clothes, args),
+                SetHairs(name, hair, args));
 
             await _screen.ShowImage();
         }
@@ -109,6 +119,32 @@ namespace Novels.Character
                 if (clothesSprite != null) 
                 {
                     _screen.SetClothes(clothesSprite);
+                    break;
+                }
+            }
+        }
+
+        private async UniTask SetHairs(string name, string hair, string[] args, string color = "Блонд")
+        {
+            var defaultBackHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, hair, "Back", color));
+            _screen.SetBackHairs(defaultBackHairSprite);
+            foreach (var arg in args)
+            {
+                var backHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Back", color));
+                if (backHairSprite != null) 
+                {
+                    _screen.SetBackHairs(backHairSprite);
+                    break;
+                }
+            }
+            var defaultFrontHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, hair, "Front", color));
+            _screen.SetFrontHairs(defaultFrontHairSprite);
+            foreach (var arg in args)
+            {
+                var frontHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Front", color));
+                if (frontHairSprite != null) 
+                {
+                    _screen.SetBackHairs(frontHairSprite);
                     break;
                 }
             }

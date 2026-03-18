@@ -9,8 +9,10 @@ namespace Novels.Character.View
         [SerializeField] private float _showHideImageDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private Image _mainBody;
-        [SerializeField] private Image _weather;
+        [SerializeField] private Image _clothes;
         [SerializeField] private Image _emotion;
+        [SerializeField] private Image _backHairs;
+        [SerializeField] private Image _frontHairs;
 
         public void SetMainBody(Sprite sprite)
         {
@@ -24,7 +26,17 @@ namespace Novels.Character.View
 
         public void SetClothes(Sprite sprite)
         {
-            _weather.sprite = sprite;
+            _clothes.sprite = sprite;
+        }
+
+        public void SetBackHairs(Sprite sprite)
+        {
+            _backHairs.sprite = sprite;
+        }
+
+        public void SetFrontHairs(Sprite sprite)
+        {
+            _frontHairs.sprite = sprite;
         }
 
         public void ShowImageImmediate()
@@ -84,7 +96,9 @@ namespace Novels.Character.View
         {
             _mainBody.color = _mainBody.sprite == null ? Color.clear : Color.white;
             _emotion.color = _emotion.sprite == null ? Color.clear : Color.white;
-            _weather.color = _weather.sprite == null ? Color.clear : Color.white;
+            _clothes.color = _clothes.sprite == null ? Color.clear : Color.white;
+            _frontHairs.color = _frontHairs.sprite == null ? Color.clear : Color.white;
+            _backHairs.color = _backHairs.sprite == null ? Color.clear : Color.white;
         }
     }
 }
