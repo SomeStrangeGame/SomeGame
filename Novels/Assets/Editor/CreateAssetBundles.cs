@@ -37,7 +37,7 @@ namespace Editor
         private static void ClearCache()
         {
             var cachPath = $"{Application.persistentDataPath}/CachedFiles/Remote";
-            #if UNITY_EDITOR_OSX
+            #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             cachPath = $"file://{cachPath}";
             #endif
             if (Directory.Exists(cachPath))
@@ -63,12 +63,13 @@ namespace Editor
             if (!Directory.Exists(remotePath))
                 Directory.CreateDirectory(remotePath);
 
-            var bundlePath = $"{remotePath}/WebGL";
-            using (new BuildBundleLog(bundlePath))
-                BuildBundles(BuildTarget.WebGL, bundlePath);
-            bundlePath = $"{remotePath}/Mac";
-            using (new BuildBundleLog(bundlePath))
-                BuildBundles(BuildTarget.StandaloneOSX, bundlePath);
+            var bundlePath = string.Empty;
+            //var bundlePath = $"{remotePath}/WebGL";
+            //using (new BuildBundleLog(bundlePath))
+            //    BuildBundles(BuildTarget.WebGL, bundlePath);
+            //bundlePath = $"{remotePath}/Mac";
+            //using (new BuildBundleLog(bundlePath))
+            //    BuildBundles(BuildTarget.StandaloneOSX, bundlePath);
             bundlePath = $"{remotePath}/Android";
             using (new BuildBundleLog(bundlePath))
                 BuildBundles(BuildTarget.Android, bundlePath);
