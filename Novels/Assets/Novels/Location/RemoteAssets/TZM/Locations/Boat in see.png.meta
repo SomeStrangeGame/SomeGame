@@ -1,5 +1,7 @@
 fileFormatVersion: 2
 guid: 0a3b24ed810f74089aa3fe3a14c3e7be
+labels:
+- Images
 TextureImporter:
   internalIDToNameTable: []
   externalObjects: {}
@@ -39,7 +41,7 @@ TextureImporter:
     mipBias: 0
     wrapU: 1
     wrapV: 1
-    wrapW: 0
+    wrapW: 1
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
@@ -50,7 +52,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 100
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -110,9 +112,9 @@ TextureImporter:
     buildTarget: WebGL
     maxTextureSize: 2048
     resizeAlgorithm: 0
-    textureFormat: 28
+    textureFormat: 65
     textureCompression: 1
-    compressionQuality: 25
+    compressionQuality: 15
     crunchedCompression: 0
     allowsAlphaSplitting: 0
     overridden: 1
