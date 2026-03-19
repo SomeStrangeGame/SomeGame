@@ -86,7 +86,13 @@ namespace Novels.Character
             _screen.SetMainBody(defaultMainBodySprite);
             foreach (var arg in args)
             {
-                var mainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, arg));
+                var customBody = arg;
+                if (arg.ToLower() == "маленькая")
+                {
+                    view = $"{view}/Child";
+                    customBody = null;
+                }
+                var mainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, customBody));
                 if (mainBodySprite != null)
                 {
                     _screen.SetMainBody(mainBodySprite);
@@ -100,7 +106,13 @@ namespace Novels.Character
             _screen.SetEmotion(null);
             foreach (var arg in args)
             {
-                var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, view, arg));
+                var emotion = arg;
+                if (arg.ToLower() == "маленькая")
+                {
+                    view = $"{view}/Child";
+                    emotion = null;
+                }
+                var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, view, emotion));
                 if (emotionSprite != null)
                 {
                     _screen.SetEmotion(emotionSprite);
@@ -115,6 +127,10 @@ namespace Novels.Character
             _screen.SetClothes(defaultClothesSprite);
             foreach (var arg in args)
             {
+                if (arg.ToLower() == "маленькая")
+                {
+                    _screen.SetClothes(null);
+                }
                 var clothesSprite = await _ctx.GetSprite(_ctx.GetClothesPath(name, arg, clothesIndex));
                 if (clothesSprite != null) 
                 {
@@ -130,6 +146,10 @@ namespace Novels.Character
             _screen.SetBackHairs(defaultBackHairSprite);
             foreach (var arg in args)
             {
+                if (arg.ToLower() == "маленькая")
+                {
+                    _screen.SetBackHairs(null);
+                }
                 var backHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Back", color));
                 if (backHairSprite != null) 
                 {
@@ -141,10 +161,14 @@ namespace Novels.Character
             _screen.SetFrontHairs(defaultFrontHairSprite);
             foreach (var arg in args)
             {
+                if (arg.ToLower() == "маленькая")
+                {
+                    _screen.SetFrontHairs(null);
+                }
                 var frontHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Front", color));
                 if (frontHairSprite != null) 
                 {
-                    _screen.SetBackHairs(frontHairSprite);
+                    _screen.SetFrontHairs(frontHairSprite);
                     break;
                 }
             }
