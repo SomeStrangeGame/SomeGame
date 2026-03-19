@@ -52,6 +52,8 @@ namespace Novels.Location.View
         [SerializeField] private float _cameraDuration;
         [SerializeField] private float _dialogDuration;
 
+        [SerializeField] private AnimationCurve _moveCurve;
+
         private Action _onVideoReady;
         private Action _onVideoDone;
         private Action _onVideoFailed;
@@ -226,7 +228,7 @@ namespace Novels.Location.View
             var timer = duration;
             while (timer >= 0f)
             {
-                target.localPosition = Vector3.Lerp(from, to, 1f - (timer / duration));
+                target.localPosition = Vector3.Lerp(from, to, _moveCurve.Evaluate(1f - (timer / duration)));
                 timer -= Time.deltaTime;
                 await UniTask.Yield();
             }
