@@ -20,6 +20,7 @@ namespace Novels.Character
 
         private const string _mainCharacter = "MainCharacter";
         private const string _wardrobe = "Wardrobe";
+        private const string _child = "маленькая";
 
         private readonly Ctx _ctx;
 
@@ -87,7 +88,7 @@ namespace Novels.Character
             foreach (var arg in args)
             {
                 var customBody = arg;
-                if (arg.ToLower() == "маленькая")
+                if (arg.ToLower() == _child)
                 {
                     view = $"{view}/Child";
                     customBody = null;
@@ -107,7 +108,7 @@ namespace Novels.Character
             foreach (var arg in args)
             {
                 var emotion = arg;
-                if (arg.ToLower() == "маленькая")
+                if (arg.ToLower() == _child)
                 {
                     view = $"{view}/Child";
                     emotion = null;
@@ -127,7 +128,7 @@ namespace Novels.Character
             _screen.SetClothes(defaultClothesSprite);
             foreach (var arg in args)
             {
-                if (arg.ToLower() == "маленькая")
+                if (arg.ToLower() == _child)
                 {
                     _screen.SetClothes(null);
                 }
@@ -146,7 +147,7 @@ namespace Novels.Character
             _screen.SetBackHairs(defaultBackHairSprite);
             foreach (var arg in args)
             {
-                if (arg.ToLower() == "маленькая")
+                if (arg.ToLower() == _child)
                 {
                     _screen.SetBackHairs(null);
                 }
@@ -161,7 +162,7 @@ namespace Novels.Character
             _screen.SetFrontHairs(defaultFrontHairSprite);
             foreach (var arg in args)
             {
-                if (arg.ToLower() == "маленькая")
+                if (arg.ToLower() == _child)
                 {
                     _screen.SetFrontHairs(null);
                 }
