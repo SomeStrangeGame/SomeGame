@@ -9,6 +9,7 @@ namespace Novels.Bubble
     {
         public struct Ctx
         {
+            public string MainCharacter;
             public Func<UniTask<GameObject>> GetBubblePrefab;
         }
 
@@ -39,14 +40,24 @@ namespace Novels.Bubble
             await _screen.Hide();
         }
 
-        public void SetText(TextAnchor headerAlign, string header, string text)
+        public void SetText(string name, string header, string text)
         {
-            _screen.SetText(headerAlign, header, text);
+            View.Screen.BubbleType bubbleType;
+            if (name == "...") bubbleType = View.Screen.BubbleType.NoCharacter;
+            else if (name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleType.LeftCharacter;
+            else bubbleType = View.Screen.BubbleType.RightCharacter;
+
+            _screen.SetText(bubbleType, header, text);
         }
 
-        public void AddOrUpdateButton(int id, string text, Action<int> onClick)
+        public void AddOrUpdateButton(int id, string name, string text, Action<int> onClick)
         {
-            _screen.AddOrUpdateButton(id, text, onClick);
+            View.Screen.BubbleType bubbleType;
+            if (name == "...") bubbleType = View.Screen.BubbleType.NoCharacter;
+            else if (name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleType.LeftCharacter;
+            else bubbleType = View.Screen.BubbleType.RightCharacter;
+
+            _screen.AddOrUpdateButton(id, bubbleType, text, onClick);
         }
 
         public void RemoveAllButtons()

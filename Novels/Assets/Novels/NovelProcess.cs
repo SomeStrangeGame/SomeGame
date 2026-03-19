@@ -106,26 +106,16 @@ namespace Novels
                     _ctx.OnLog.Invoke((LogType.Warning, $"No localized character name [{name}]"));
 
                 TextAlignment dialogAlign;
-                TextAnchor headerAlign;
                 if (name == _ctx.MainCharacter)
-                {
                     dialogAlign = TextAlignment.Left;
-                    headerAlign = TextAnchor.MiddleLeft;
-                }
                 else if (name == "..." || name == "Wardrobe")
-                {
                     dialogAlign = TextAlignment.Center;
-                    headerAlign = TextAnchor.MiddleCenter;
-                }
                 else
-                {
                     dialogAlign = TextAlignment.Right;
-                    headerAlign = TextAnchor.MiddleRight;
-                }
 
                 await _ctx.Location.SetDialog(dialogAlign);
 
-                _ctx.Bubble.SetText(headerAlign, characterName, value);
+                _ctx.Bubble.SetText(name, characterName, value);
                 _ctx.Bubble.RemoveAllButtons();
                 var choices = _ctx.StoryProcessor.GetChoices();
                 if (choices.Count > 0)
@@ -141,7 +131,7 @@ namespace Novels
                     var choiceText = choice.text;
                     if (!_ctx.Localization.TryGetValue(choice.text, out choiceText))
                         _ctx.OnLog.Invoke((LogType.Warning, $"No localized choice [{choice.text}]"));
-                    _ctx.Bubble.AddOrUpdateButton(choice.index, choiceText, id =>
+                    _ctx.Bubble.AddOrUpdateButton(choice.index, name, choiceText, id =>
                     {
                         SetCharacterView(_ctx.Character, args, choice);
 

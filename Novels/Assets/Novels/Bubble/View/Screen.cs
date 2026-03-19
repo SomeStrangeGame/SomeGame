@@ -15,8 +15,47 @@ namespace Novels.Bubble.View
             Right
         }
 
-        [SerializeField] private Text _header;
-        [SerializeField] private Text _text;
+        public enum BubbleType
+        {
+            NoCharacter,
+            LeftCharacter,
+            RightCharacter,
+        }
+
+        [Serializable]
+        private struct BubblePopUp
+        {
+            [SerializeField] BubbleType _type;
+            [SerializeField] private GameObject _root;
+            [SerializeField] private Text _header;
+            [SerializeField] private Text _text;
+
+            internal readonly void SetText(string header, string description)
+            {
+                _header.text = header;
+                _text.text = description;
+
+                _header.gameObject.SetActive(!string.IsNullOrEmpty(header));
+                _text.gameObject.SetActive(!string.IsNullOrEmpty(description));
+            }
+
+            internal readonly bool IsCorrectType(BubbleType type) 
+            {
+                var result = _type == type;
+                _root.SetActive(result);
+                return result;
+            }
+
+            internal bool TryGetRoot(BubbleType type, out GameObject root)
+            {
+                root = null;
+                var result = type == _type;
+                if (result) root = _root;
+                return result;
+            }
+        }
+
+        [SerializeField] private BubblePopUp[] _bubbles;
         [SerializeField] private Button _buttonPrefab;
         [SerializeField] private Button _backgroundButton;
         [SerializeField] private float _showHideDuration;
@@ -69,20 +108,24 @@ namespace Novels.Bubble.View
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public void SetText(TextAnchor headerAlign, string header, string text)
+        public void SetText(BubbleType bubbleType, string header, string text)
         {
-            _header.text = header;
-            _header.alignment = headerAlign;
-            _text.text = text;
-            _header.gameObject.SetActive(!string.IsNullOrEmpty(header));
-            _text.gameObject.SetActive(!string.IsNullOrEmpty(text));
+            foreach (var bubble in _bubbles)
+            {
+                bubble.IsCorrectType(bubbleType);
+                bubble.SetText(header, text);
+            }
         }
 
-        public void AddOrUpdateButton(int id, string text, Action<int> onClick)
+        public void AddOrUpdateButton(int id, BubbleType bubbleType, string text, Action<int> onClick)
         {
+            GameObject root = null;
+            foreach (var bubble in _bubbles)
+                if (bubble.TryGetRoot(bubbleType, out root)) break;
+                
             _buttonPrefab.gameObject.SetActive(false);
             if (!_buttons.TryGetValue(id, out var button))
-                button = Instantiate(_buttonPrefab, _buttonPrefab.transform.parent);
+                button = Instantiate(_buttonPrefab, root.transform);
 
             _buttons[id] = button;
             button.GetComponentInChildren<Text>(true).text = text;
