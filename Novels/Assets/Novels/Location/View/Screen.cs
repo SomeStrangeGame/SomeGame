@@ -163,7 +163,7 @@ namespace Novels.Location.View
             _image.transform.localPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
         }
 
-        public async UniTask SetCamera(CameraEffect effect)
+        public async UniTask SetCamera(bool isLoading, CameraEffect effect)
         {
             var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
             var spriteWidth = _image.sprite.texture.width * scaleFactor;
@@ -178,31 +178,31 @@ namespace Novels.Location.View
             switch (effect)
             {
                 case CameraEffect.LeftRight:
-                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
-                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration);
+                    await Move(isLoading, _image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
+                    await Move(isLoading, _image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration);
                     break;
                 case CameraEffect.RightLeft:
-                    await Move(_image.transform, cameraCurrentPosition, cameraRightPosition, _cameraDuration);
-                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration);
+                    await Move(isLoading, _image.transform, cameraCurrentPosition, cameraRightPosition, _cameraDuration);
+                    await Move(isLoading, _image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration);
                     break;
                 case CameraEffect.ToCenter:
-                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration);
+                    await Move(isLoading, _image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration);
                     break;
                 case CameraEffect.ToLeft:
-                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
+                    await Move(isLoading, _image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
                     break;
                 case CameraEffect.Shaking:
-                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration / 10f);
-                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
-                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
-                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
-                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
-                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f);
+                    await Move(isLoading, _image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(isLoading, _image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
+                    await Move(isLoading, _image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(isLoading, _image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
+                    await Move(isLoading, _image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(isLoading, _image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f);
                     break;
             }
         }
 
-        public async UniTask SetDialog(TextAlignment aligment)
+        public async UniTask SetDialog(bool isLoading, TextAlignment aligment)
         {
             if (_image.sprite == null) return;
 
@@ -218,14 +218,14 @@ namespace Novels.Location.View
                 TextAlignment.Right => cameraRightPosition,
                 _ => cameraCenterPosition,
             };
-            await Move(_image.transform, cameraCurrentPosition, targetPosition, _dialogDuration);
+            await Move(isLoading, _image.transform, cameraCurrentPosition, targetPosition, _dialogDuration);
         }
 
-        private async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration)
+        private async UniTask Move(bool isLoading, Transform target, Vector3 from, Vector3 to, float duration)
         {
             if (from == to) return;
             target.localPosition = from;
-            var timer = duration;
+            var timer = isLoading ? 0 : duration;
             while (timer >= 0f)
             {
                 target.localPosition = Vector3.Lerp(from, to, _moveCurve.Evaluate(1f - (timer / duration)));

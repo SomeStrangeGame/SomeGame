@@ -145,7 +145,7 @@ RectTransform:
   m_GameObject: {fileID: 413069496136381808}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 2043134035263182697}
@@ -877,14 +877,14 @@ RectTransform:
   m_GameObject: {fileID: 1591274111306655134}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: -1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 4291775287375605381}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -85, y: 15.6}
+  m_AnchoredPosition: {x: 84, y: 18}
   m_SizeDelta: {x: 83.4539, y: 63.7838}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5966314212818853240
@@ -1694,13 +1694,13 @@ MonoBehaviour:
     _header: {fileID: 2079147756323848316}
     _text: {fileID: 582945343224599575}
     _extraObjects: []
-  - _type: 1
+  - _type: 2
     _root: {fileID: 4226539364931089966}
     _header: {fileID: 939081843759839311}
     _text: {fileID: 2080254210932930884}
     _extraObjects:
     - {fileID: 7793783692806772683}
-  - _type: 2
+  - _type: 1
     _root: {fileID: 4191151694607311737}
     _header: {fileID: 2972215923185371228}
     _text: {fileID: 4739581548258826096}
@@ -1744,7 +1744,7 @@ GameObject:
   - component: {fileID: 5261210171850832744}
   - component: {fileID: 4852677686850009092}
   m_Layer: 5
-  m_Name: RightCharacter
+  m_Name: LeftCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1809,7 +1809,7 @@ GameObject:
   - component: {fileID: 4176557829553505523}
   - component: {fileID: 5533646170882070011}
   m_Layer: 5
-  m_Name: LeftCharacter
+  m_Name: RightCharacter
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2330,7 +2330,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 75, y: 0}
+  m_AnchoredPosition: {x: -75, y: 0}
   m_SizeDelta: {x: 0, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &8480381812223512228

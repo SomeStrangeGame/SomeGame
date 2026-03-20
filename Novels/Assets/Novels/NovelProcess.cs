@@ -36,7 +36,6 @@ namespace Novels
 
         internal async UniTask ShowNovelProcess()
         {
-            //await _ctx.HideLoading();
             var loadingDone = false;
 
             while (!IsDisposed)
@@ -75,23 +74,23 @@ namespace Novels
                     ? new string[0]
                     : locationRawArgsData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
 
-                    await _ctx.Location.SetImage(value, false, locationArgs);
+                    await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, value, false, locationArgs);
                     continue;
                 }
                 if (prefix.ToLower() == "cut-scene")
                 {
-                    await _ctx.Location.SetImage(value, true, null);
+                    await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, value, true, null);
                     continue;
                 }
                 if (prefix.ToLower() == "camera")
                 {
-                    await _ctx.Location.SetCamera(value);
+                    await _ctx.Location.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, value);
                     continue;
                 }
                 if (prefix.ToLower() == "await")
                 {
                     if (int.TryParse(value, out var seconds))
-                        await _ctx.Waiting.Await(seconds);
+                        await _ctx.Waiting.Await(_ctx.SaveSystem.IsLoadingInProcess, seconds);
                     continue;
                 }
 
@@ -113,7 +112,7 @@ namespace Novels
                 else
                     dialogAlign = TextAlignment.Right;
 
-                await _ctx.Location.SetDialog(dialogAlign);
+                await _ctx.Location.SetDialog(_ctx.SaveSystem.IsLoadingInProcess, dialogAlign);
 
                 _ctx.Bubble.SetText(name, characterName, value, args);
                 _ctx.Bubble.RemoveAllButtons();
@@ -143,8 +142,8 @@ namespace Novels
 
                 //show content
                 var showProcess = UniTask.WhenAll(
-                    _ctx.Character.SetImageAndShow(name, args),
-                    _ctx.Bubble.Show()
+                    _ctx.Character.SetImageAndShow(_ctx.SaveSystem.IsLoadingInProcess, name, args),
+                    _ctx.Bubble.Show(_ctx.SaveSystem.IsLoadingInProcess)
                 );
                 await showProcess;
 
@@ -169,8 +168,8 @@ namespace Novels
 
                 //reset content
                 var resetProcess = UniTask.WhenAll(
-                    _ctx.Character.Hide(),
-                    _ctx.Bubble.Hide()
+                    _ctx.Character.Hide(_ctx.SaveSystem.IsLoadingInProcess),
+                    _ctx.Bubble.Hide(_ctx.SaveSystem.IsLoadingInProcess)
                 );
                 await resetProcess;
             }

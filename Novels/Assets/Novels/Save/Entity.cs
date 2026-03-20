@@ -19,6 +19,8 @@ namespace Novels.Save
         private List<byte> _save = new();
         private List<byte> _initSave = new();
 
+        public bool IsLoadingInProcess => _initSave.Count > 0;
+
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
@@ -38,12 +40,11 @@ namespace Novels.Save
                 }
             }
             _initSave = _save.ToList();
-            SpeedUpForLoading();
         }
 
         public bool TrySave(byte unit = 255)
         {
-            if (_initSave.Count > 0) return false;
+            if (IsLoadingInProcess) return false;
 
             _save.Add(unit);
             using( var cache = new Cache.Entity())
@@ -56,18 +57,10 @@ namespace Novels.Save
         public bool TryLoad(out byte result)
         {
             result = 255;
-            if (_initSave.Count == 0) return false;
+            if (!IsLoadingInProcess) return false;
             result = _initSave.First();
             _initSave.RemoveAt(0);
             return true;
-        }
-
-        private async void SpeedUpForLoading()
-        {
-            Time.timeScale = 15f;
-            while(_initSave.Count != 0)
-                await UniTask.Yield();
-            Time.timeScale = 1f;
         }
     }
 }
