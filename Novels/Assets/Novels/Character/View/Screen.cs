@@ -47,21 +47,33 @@ namespace Novels.Character.View
             _canvasGroup.gameObject.SetActive(true);
         }
 
-        public async UniTask ShowImage()
+        public async UniTask ShowImage(bool isLeft)
         {
             ClearImagesIfNeed();
 
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
 
+            var bodyOffset = 120f;
+            _mainBody.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _clothes.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+
+            var startPosition = _canvasGroup.transform.localPosition + Vector3.right * (isLeft ? -100f : 100f);
+            var endPosition  = _canvasGroup.transform.localPosition;
+
+            _canvasGroup.transform.localPosition = startPosition;
             var timer = _showHideImageDuration;
             while (timer >= 0f)
             {
+                _canvasGroup.transform.localPosition = Vector3.Lerp(startPosition, endPosition, 1f - (timer / _showHideImageDuration));
                 _canvasGroup.alpha = 1f - (timer / _showHideImageDuration);
                 timer -= Time.deltaTime;
                 await UniTask.Yield();
             }
-
+            _canvasGroup.transform.localPosition = endPosition;
             _canvasGroup.alpha = 1f;
         }
 

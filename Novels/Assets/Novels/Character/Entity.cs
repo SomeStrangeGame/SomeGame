@@ -64,7 +64,8 @@ namespace Novels.Character
             var view = "View";
             var clothes = string.Empty;
             var hair = string.Empty;
-            if (name == _ctx.MainCharacterName || name == _wardrobe)
+            var isLeft = name == _ctx.MainCharacterName;
+            if (isLeft || name == _wardrobe)
             {
                 name = _mainCharacter;
                 view = _mainCharacterView;
@@ -81,7 +82,7 @@ namespace Novels.Character
             if (isLoading)
                 _screen.ShowImageImmediate();
             else
-                await _screen.ShowImage();
+                await _screen.ShowImage(isLeft);
         }
 
         private async UniTask SetMainBody(string name, string view, string[] args)

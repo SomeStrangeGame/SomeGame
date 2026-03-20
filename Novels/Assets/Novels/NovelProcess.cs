@@ -146,9 +146,10 @@ namespace Novels
                     await _ctx.HideLoading();
                 }
 
+                await _ctx.Character.SetImageAndShow(_ctx.SaveSystem.IsLoadingInProcess, name, args);
                 //show content
                 var showProcess = UniTask.WhenAll(
-                    _ctx.Character.SetImageAndShow(_ctx.SaveSystem.IsLoadingInProcess, name, args),
+                    //_ctx.Character.SetImageAndShow(_ctx.SaveSystem.IsLoadingInProcess, name, args),
                     _ctx.Bubble.Show(_ctx.SaveSystem.IsLoadingInProcess)
                 );
                 await showProcess;
