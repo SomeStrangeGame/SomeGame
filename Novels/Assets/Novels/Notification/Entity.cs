@@ -33,20 +33,26 @@ namespace Novels.Notification
             _screen.HideImmediate();
         }
 
-        public async UniTask Show(string text)
+        public async UniTask Show(bool isLoading, string text)
         {
             while(_lastNotifInProcess) await UniTask.NextFrame();
             
             _lastNotifInProcess = true;
             _screen.SetText(text);
-            await _screen.Show();
-            var timer = 3f;
+            if (isLoading)
+                _screen.ShowImmediate();
+            else
+                await _screen.Show();
+            var timer = isLoading ? 0f : 3f;
             while(timer > 0)
             {
                 await UniTask.Yield();
                 timer -= Time.deltaTime;
             }
-            await _screen.Hide();
+            if (isLoading)
+                _screen.HideImmediate();
+            else
+                await _screen.Hide();
             _lastNotifInProcess = false;
         }
     }

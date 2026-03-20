@@ -63,7 +63,7 @@ namespace Novels
 
                 if (prefix.ToLower() == "notification")
                 {
-                    _ctx.Notification.Show(value).Forget();
+                    _ctx.Notification.Show(_ctx.SaveSystem.IsLoadingInProcess, value).Forget();
                     continue;
                 }
 
@@ -140,6 +140,12 @@ namespace Novels
                     });
                 }
 
+                if (!_ctx.SaveSystem.IsLoadingInProcess && !loadingDone)
+                {
+                    loadingDone = true;
+                    await _ctx.HideLoading();
+                }
+
                 //show content
                 var showProcess = UniTask.WhenAll(
                     _ctx.Character.SetImageAndShow(_ctx.SaveSystem.IsLoadingInProcess, name, args),
@@ -149,11 +155,6 @@ namespace Novels
 
                 if (!_ctx.SaveSystem.TryLoad(out var result))
                 {
-                    if (!loadingDone)
-                    {
-                        loadingDone = true;
-                        await _ctx.HideLoading();
-                    }
                     await bubbleDone.Task;
                 }
                 else

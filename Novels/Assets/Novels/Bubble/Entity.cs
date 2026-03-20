@@ -49,7 +49,6 @@ namespace Novels.Bubble
 
         public void SetText(string name, string header, string text, string[] args)
         {
-            Debug.Log(string.Join(", ", args));
             var bubbleType = GetBubbleType(name, args);
             if (bubbleType == View.Screen.BubbleType.Hint)
             {
