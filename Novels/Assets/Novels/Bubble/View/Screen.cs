@@ -20,6 +20,8 @@ namespace Novels.Bubble.View
             NoCharacter,
             LeftCharacter,
             RightCharacter,
+            Hint,
+            LeftMinds,
         }
 
         [Serializable]
@@ -29,14 +31,23 @@ namespace Novels.Bubble.View
             [SerializeField] private GameObject _root;
             [SerializeField] private Text _header;
             [SerializeField] private Text _text;
+            [SerializeField] private GameObject[] _extraObjects;
 
             internal readonly void SetText(string header, string description)
             {
+                if (string.IsNullOrEmpty(description))
+                {
+                    description = header;
+                    header = string.Empty;
+                }
+
                 _header.text = header;
                 _text.text = description;
 
                 _header.gameObject.SetActive(!string.IsNullOrEmpty(header));
                 _text.gameObject.SetActive(!string.IsNullOrEmpty(description));
+                foreach(var extraObject in _extraObjects)
+                    extraObject.SetActive(!string.IsNullOrEmpty(description));
             }
 
             internal readonly bool IsCorrectType(BubbleType type) 

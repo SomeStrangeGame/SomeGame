@@ -115,7 +115,7 @@ namespace Novels
 
                 await _ctx.Location.SetDialog(dialogAlign);
 
-                _ctx.Bubble.SetText(name, characterName, value);
+                _ctx.Bubble.SetText(name, characterName, value, args);
                 _ctx.Bubble.RemoveAllButtons();
                 var choices = _ctx.StoryProcessor.GetChoices();
                 if (choices.Count > 0)
@@ -131,7 +131,7 @@ namespace Novels
                     var choiceText = choice.text;
                     if (!_ctx.Localization.TryGetValue(choice.text, out choiceText))
                         _ctx.OnLog.Invoke((LogType.Warning, $"No localized choice [{choice.text}]"));
-                    _ctx.Bubble.AddOrUpdateButton(choice.index, name, choiceText, id =>
+                    _ctx.Bubble.AddOrUpdateButton(choice.index, name, choiceText, args, id =>
                     {
                         SetCharacterView(_ctx.Character, args, choice);
 

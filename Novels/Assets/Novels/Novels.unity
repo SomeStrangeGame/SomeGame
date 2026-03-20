@@ -363,7 +363,7 @@ MonoBehaviour:
     _novelsCharacterBundleName: novels_character
     _novelsNotificationBundleName: novels_notification
     _novelsLocalizationBundleName: novels_localization
-  _logs: 255
+  _logs: 0
 --- !u!1 &1371491167
 GameObject:
   m_ObjectHideFlags: 0

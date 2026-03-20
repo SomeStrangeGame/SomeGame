@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 748717254
+CRC: 1701075443
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: d667dc49a9b048bb0a0fdd0b1e8fab64
+    Hash: de5997de0315a79948193a8dd3625d61
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 60219cfe3b19e9b7796f84723c35d6a1
+    Hash: d3c3b88297607772a0c7462dac83cc5c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 4c388601f06997aae5512735dadded1f
+    Hash: f310f332c75d7ef86065426acda56eb3
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -82,4 +82,5 @@ Assets:
 - Assets/RemoteAssets/Bubble/TZM/Sprites/Button.png
 - Assets/RemoteAssets/Bubble/TZM/Sprites/Character/Point.png
 - Assets/RemoteAssets/Bubble/TZM/Screen.prefab
+- Assets/RemoteAssets/Bubble/TZM/Sprites/Character/PointMind.png
 Dependencies: []

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -40,24 +41,33 @@ namespace Novels.Bubble
             await _screen.Hide();
         }
 
-        public void SetText(string name, string header, string text)
+        public void SetText(string name, string header, string text, string[] args)
         {
-            View.Screen.BubbleType bubbleType;
-            if (name == "...") bubbleType = View.Screen.BubbleType.NoCharacter;
-            else if (name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleType.LeftCharacter;
-            else bubbleType = View.Screen.BubbleType.RightCharacter;
-
+            Debug.Log(string.Join(", ", args));
+            var bubbleType = GetBubbleType(name, args);
+            if (bubbleType == View.Screen.BubbleType.Hint)
+            {
+                if (args != null && args.Any(arg => arg.ToLower() == "дисклеймер")) header = "Дисклеймер";
+                if (args != null && args.Any(arg => arg.ToLower() == "подсказка")) header = "Подсказка";
+            }
             _screen.SetText(bubbleType, header, text);
         }
 
-        public void AddOrUpdateButton(int id, string name, string text, Action<int> onClick)
+        public void AddOrUpdateButton(int id, string name, string text, string[] args, Action<int> onClick)
+        {
+            _screen.AddOrUpdateButton(id, GetBubbleType(name, args), text, onClick);
+        }
+
+        private View.Screen.BubbleType GetBubbleType(string name, string[] args)
         {
             View.Screen.BubbleType bubbleType;
-            if (name == "...") bubbleType = View.Screen.BubbleType.NoCharacter;
+            if (args != null && args.Any(arg => arg.ToLower() == "дисклеймер")) bubbleType = View.Screen.BubbleType.Hint;
+            else if (args != null && args.Any(arg => arg.ToLower() == "подсказка")) bubbleType = View.Screen.BubbleType.Hint;
+            else if (args != null && args.Any(arg => arg.ToLower() == "мысли")) bubbleType = View.Screen.BubbleType.LeftMinds;
+            else if (name == "..." || name == "Wardrobe") bubbleType = View.Screen.BubbleType.NoCharacter;
             else if (name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleType.LeftCharacter;
             else bubbleType = View.Screen.BubbleType.RightCharacter;
-
-            _screen.AddOrUpdateButton(id, bubbleType, text, onClick);
+            return bubbleType;
         }
 
         public void RemoveAllButtons()
