@@ -17,6 +17,10 @@ namespace Bundles
         private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new();
 
+        private readonly Dictionary<string, GameObject> _bundledPrefabs = new();
+        private readonly Dictionary<string, ScriptableObject> _bundledSOs = new();
+        private readonly Dictionary<string, Sprite> _bundledSprites = new();
+
         private Ctx _ctx;
 
         public Entity(Ctx ctx)
@@ -38,37 +42,28 @@ namespace Bundles
             _bundles.Clear();
         }
 
-        public async UniTask<Sprite> GetBundledSprite(string bundleName, string assetName)
+        public Sprite GetBundledSprite(string bundleName, string assetName)
         {
-            var assetBundle = await GetAssetBundle(bundleName);
+            var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
-
-            if (string.IsNullOrEmpty(assetName)) return null;
-            var loadAsset = assetBundle.LoadAssetAsync<Sprite>(assetName);
-            await loadAsset;
-            return loadAsset.asset as Sprite;
+            if (!_bundledSprites.ContainsKey(assetName.ToLower())) return null;
+            return _bundledSprites[assetName.ToLower()];
         }
 
-        public async UniTask<T> GetBundledSO<T>(string bundleName, string assetName) where T : ScriptableObject
+        public T GetBundledSO<T>(string bundleName, string assetName) where T : ScriptableObject
         {
-            var assetBundle = await GetAssetBundle(bundleName);
+            var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
-
-            if (string.IsNullOrEmpty(assetName)) return null;
-            var loadAsset = assetBundle.LoadAssetAsync<T>(assetName);
-            await loadAsset;
-            return loadAsset.asset as T;
+            if (!_bundledSOs.ContainsKey(assetName.ToLower())) return null;
+            return _bundledSOs[assetName.ToLower()] as T;
         }
 
-        public async UniTask<GameObject> GetBundledPrefab(string bundleName, string assetName)
+        public GameObject GetBundledPrefab(string bundleName, string assetName)
         {
-            var assetBundle = await GetAssetBundle(bundleName);
+            var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
-
-            if (string.IsNullOrEmpty(assetName)) return null;
-            var loadAsset = assetBundle.LoadAssetAsync<GameObject>(assetName);
-            await loadAsset;
-            return loadAsset.asset as GameObject;
+            if (!_bundledPrefabs.ContainsKey(assetName.ToLower())) return null;
+            return _bundledPrefabs[assetName.ToLower()];
         }
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
@@ -81,22 +76,43 @@ namespace Bundles
             }
 
             var bundlesVersion = await GetBundleVersionAsync(bundleName);
-            var bundlesPath = $"Remote/{GetPlatform()}/{bundleName}/{bundlesVersion}";
-            if (!_bundles.TryGetValue(bundlesPath, out _))
+            var bundlesPath = $"{GetBundleKey(bundleName)}/{bundlesVersion}";
+            var bundlesKey = GetBundleKey(bundleName);
+            if (!_bundles.TryGetValue(bundlesKey, out _))
             {
                 try
                 {
-                    _bundles[bundlesPath] = await _cache.BundleFromCache(bundlesPath);
-                    log = (LogType.Log, $"Get local bundle from {bundlesPath}");
+                    _bundles[bundlesKey] = await _cache.BundleFromCache(bundlesKey);
+                    log = (LogType.Log, $"Get local bundle from {bundlesKey}");
                 }
                 catch (Exception e)
                 {
-                    log = (LogType.Warning, $"No local bundle {bundleName} in {bundlesPath}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
+                    log = (LogType.Warning, $"No local bundle {bundleName} in {bundlesKey}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
                     using (var bundlesRequest = UnityWebRequest.Get(GetRemotePath(bundlesPath)))
                     {
                         SetHeaders(bundlesRequest);
                         await bundlesRequest.SendWebRequest();
-                        _bundles[bundlesPath] = await _cache.BundleToCache(bundlesPath, bundlesRequest.downloadHandler.data);
+                        _bundles[bundlesKey] = await _cache.BundleToCache(bundlesKey, bundlesRequest.downloadHandler.data);
+                    }
+                }
+
+                var assets = _bundles[bundlesKey].GetAllAssetNames();
+                foreach(var asset in assets)
+                {
+                    if (asset.Contains(".prefab"))
+                    {
+                        if (!_bundledPrefabs.ContainsKey(asset.ToLower()))
+                            _bundledPrefabs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<GameObject>(asset) as GameObject;
+                    }
+                    if (asset.Contains(".asset"))
+                    {
+                        if (!_bundledSOs.ContainsKey(asset.ToLower()))
+                            _bundledSOs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<ScriptableObject>(asset) as ScriptableObject;
+                    }
+                    if (asset.Contains(".png"))
+                    {
+                        if (!_bundledSprites.ContainsKey(asset.ToLower()))
+                            _bundledSprites[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<Sprite>(asset) as Sprite;
                     }
                 }
             }
@@ -105,7 +121,12 @@ namespace Bundles
                 log = (LogType.Log, $"Get bundle {bundleName} from cache");
             }
             _ctx.OnLog.Invoke(log);
-            return _bundles[bundlesPath];
+            return _bundles[bundlesKey];
+        }
+
+        private string GetBundleKey(string bundleName)
+        {
+            return $"Remote/{GetPlatform()}/{bundleName}";
         }
 
         private async UniTask<string> GetBundleVersionAsync(string bundleName)

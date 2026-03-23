@@ -9,7 +9,7 @@ namespace Loading
     {
         public struct Ctx
         {
-            public Func<UniTask<GameObject>> GetBundledPrefab;
+            public Func<GameObject> GetBundledPrefab;
         }
 
         private View.Screen _screen;
@@ -20,9 +20,9 @@ namespace Loading
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
-            var screenPrefabGO = await _ctx.GetBundledPrefab();
+            var screenPrefabGO = _ctx.GetBundledPrefab();
             var screenGO = GameObject.Instantiate(screenPrefabGO);
 
             _screen = screenGO.GetComponent<View.Screen>();

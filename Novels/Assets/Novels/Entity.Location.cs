@@ -1,12 +1,11 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
-using UnityEngine;
 
 namespace Novels
 {
     internal partial class Entity
     {
-        private async UniTask<Location.Entity> CreateLocation(Bundles.Entity bundles, PathGetter.Entity pathGetter)
+        private Location.Entity CreateLocation(Bundles.Entity bundles, PathGetter.Entity pathGetter)
         {
             var location = new Location.Entity(new Location.Entity.Ctx
             {
@@ -16,8 +15,7 @@ namespace Novels
 
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await location.Init();
+            location.Init();
 
             return location;
         }

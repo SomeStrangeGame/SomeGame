@@ -9,7 +9,7 @@ namespace Localization
         public struct Ctx
         {
             public LocalizationData.Language Language;
-            public Func<UniTask<LocalizationData>> GetLocalizationSO;
+            public Func<LocalizationData> GetLocalizationSO;
         }
 
         private Ctx _ctx;
@@ -21,9 +21,9 @@ namespace Localization
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
-            _localizationData = await _ctx.GetLocalizationSO();
+            _localizationData = _ctx.GetLocalizationSO();
         }
 
         public bool TryGetValue(string key, out string value)

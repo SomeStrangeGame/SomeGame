@@ -10,8 +10,8 @@ namespace Novels.Location
     {
         public struct Ctx
         {
-            public Func<UniTask<GameObject>> GetScreenPrefab;
-            public Func<string, UniTask<Sprite>> GetSprite;
+            public Func<GameObject> GetScreenPrefab;
+            public Func<string, Sprite> GetSprite;
             public Func<string, string> GetVideoURL;
 
             public Action<(LogType type, string message)> OnLog;
@@ -26,9 +26,9 @@ namespace Novels.Location
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
-            var prefab = await _ctx.GetScreenPrefab();
+            var prefab = _ctx.GetScreenPrefab();
             var screenGO = GameObject.Instantiate(prefab);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.HideImageImmediate();
@@ -50,7 +50,7 @@ namespace Novels.Location
             _screen.ResetCamera();
             _screen.ResetEffect();
 
-            var sprite = await _ctx.GetSprite(assetName);
+            var sprite = _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
 
             var videoReady = false;

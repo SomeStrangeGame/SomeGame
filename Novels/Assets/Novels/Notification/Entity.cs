@@ -10,7 +10,7 @@ namespace Novels.Notification
     {
         public struct Ctx
         {
-            public Func<UniTask<GameObject>> GetNotificationPrefab;
+            public Func<GameObject> GetNotificationPrefab;
         }
 
         private bool _lastNotifInProcess;
@@ -25,9 +25,9 @@ namespace Novels.Notification
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
-            var prefab = await _ctx.GetNotificationPrefab();
+            var prefab = _ctx.GetNotificationPrefab();
             var screenGO = GameObject.Instantiate(prefab);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.HideImmediate();

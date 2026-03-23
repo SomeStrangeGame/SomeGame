@@ -1,12 +1,11 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
-using UnityEngine;
 
 namespace Novels
 {
     internal partial class Entity
     {
-        private async UniTask<Character.Entity> CreateCharacter(Bundles.Entity bundles, PathGetter.Entity pathGetter)
+        private Character.Entity CreateCharacter(Bundles.Entity bundles, PathGetter.Entity pathGetter)
         {
             var character = new Character.Entity(new Character.Entity.Ctx
             {
@@ -18,8 +17,7 @@ namespace Novels
                 GetClothesPath = pathGetter.GetCharacterClothesPath,
                 GetHairSprite = pathGetter.GetCharacterHairPath
             }).AddTo(this);
-            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await character.Init();
+            character.Init();
 
             return character;
         }

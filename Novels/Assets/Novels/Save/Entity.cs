@@ -26,7 +26,7 @@ namespace Novels.Save
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
             using (var cache = new Cache.Entity())
             {
