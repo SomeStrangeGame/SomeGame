@@ -97,24 +97,10 @@ namespace Bundles
                 }
 
                 var assets = _bundles[bundlesKey].GetAllAssetNames();
+                List<UniTask> addToDict = new ();
                 foreach(var asset in assets)
-                {
-                    if (asset.Contains(".prefab"))
-                    {
-                        if (!_bundledPrefabs.ContainsKey(asset.ToLower()))
-                            _bundledPrefabs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<GameObject>(asset) as GameObject;
-                    }
-                    if (asset.Contains(".asset"))
-                    {
-                        if (!_bundledSOs.ContainsKey(asset.ToLower()))
-                            _bundledSOs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<ScriptableObject>(asset) as ScriptableObject;
-                    }
-                    if (asset.Contains(".png"))
-                    {
-                        if (!_bundledSprites.ContainsKey(asset.ToLower()))
-                            _bundledSprites[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<Sprite>(asset) as Sprite;
-                    }
-                }
+                    addToDict.Add(AddAssetToDict(asset, bundlesKey));
+                await UniTask.WhenAll(addToDict);
             }
             else
             {
@@ -122,6 +108,25 @@ namespace Bundles
             }
             _ctx.OnLog.Invoke(log);
             return _bundles[bundlesKey];
+        }
+
+        private async UniTask AddAssetToDict(string asset, string bundlesKey)
+        {
+            if (asset.Contains(".prefab"))
+            {
+                if (!_bundledPrefabs.ContainsKey(asset.ToLower()))
+                    _bundledPrefabs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<GameObject>(asset) as GameObject;
+            }
+            if (asset.Contains(".asset"))
+            {
+                if (!_bundledSOs.ContainsKey(asset.ToLower()))
+                    _bundledSOs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<ScriptableObject>(asset) as ScriptableObject;
+            }
+            if (asset.Contains(".png"))
+            {
+                if (!_bundledSprites.ContainsKey(asset.ToLower()))
+                    _bundledSprites[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<Sprite>(asset) as Sprite;
+            }
         }
 
         private string GetBundleKey(string bundleName)

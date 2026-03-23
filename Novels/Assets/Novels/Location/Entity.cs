@@ -70,7 +70,10 @@ namespace Novels.Location
             _screen.SetEnabledImage(videoError);
             _screen.SetEnabledVideo(!videoError);
 
-            await _screen.ShowImage();
+            if (isLoading)
+                _screen.ShowImageImmediate();
+            else
+                await _screen.ShowImage();
             if (cutScene)
             {
                 if (!videoError)
@@ -80,13 +83,9 @@ namespace Novels.Location
                 else 
                 {
                     if (isLoading)
-                    {
                         await UniTask.Yield();
-                    }
                     else
-                    {
                         await UniTask.Delay(3000);
-                    }
                 }
             }
         }
