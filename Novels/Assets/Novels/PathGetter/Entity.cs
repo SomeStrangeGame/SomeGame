@@ -77,8 +77,6 @@ namespace Novels.PathGetter
             var result = $"{Application.streamingAssetsPath}/NovelsVideos/{_ctx.Prefix}/{firstChar}{otherText}.mp4";
 #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
             result = $"file://{result}";
-#elif UNITY_ANDROID
-            result = $"file://{result}";
 #endif
             return result;
         }

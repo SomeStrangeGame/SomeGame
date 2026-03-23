@@ -1,8 +1,10 @@
 using System;
+using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Novels.Location
 {
@@ -63,6 +65,20 @@ namespace Novels.Location
             else
             {
                 var url = _ctx.GetVideoURL(assetName);
+                try
+                {
+                    using (var req = UnityWebRequest.Get(url))
+                    {
+                        await req.SendWebRequest();
+                        var videoData = req.downloadHandler.data;
+                        ByteArrayToCash(videoData, $"Videos/{assetName}.mp4");
+                        url = ConvertLocalPath($"Videos/{assetName}.mp4");
+                    }
+                }
+                catch
+                {
+                    
+                }
                 _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
                 while (!videoError && !videoReady) await UniTask.NextFrame();
             }
@@ -88,6 +104,42 @@ namespace Novels.Location
                         await UniTask.Delay(3000);
                 }
             }
+        }
+
+        private void ByteArrayToCash(byte[] data, string path)
+        {
+            var file = ConvertLocalPath(path);
+            if (File.Exists(file))
+                File.Delete(file);
+            using (var fs = File.Create(file))
+            {
+                fs.Write(data, 0, data.Length);
+            }
+        }
+
+        private string ConvertLocalPath(string path)
+        {
+            var localFilesPath = GetLocalPath();
+
+            if (!Directory.Exists(localFilesPath))
+                Directory.CreateDirectory(localFilesPath);
+
+            var localExtraPath = path.Split('/');
+            for (var i = 0; i < localExtraPath.Length - 1; i++)
+            {
+                localFilesPath += "/" + localExtraPath[i];
+                if (!Directory.Exists(localFilesPath))
+                    Directory.CreateDirectory(localFilesPath);
+            }
+
+            var result = $"{localFilesPath}/{localExtraPath.Last()}";
+
+            return result;
+        }
+        
+        private string GetLocalPath() 
+        {
+            return $"{Application.persistentDataPath}/CachedFiles";
         }
 
         public async UniTask SetCamera(bool isLoading, string value)
