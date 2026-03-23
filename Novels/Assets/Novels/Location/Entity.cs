@@ -132,9 +132,7 @@ namespace Novels.Location
                     Directory.CreateDirectory(localFilesPath);
             }
 
-            var result = $"{localFilesPath}/{localExtraPath.Last()}";
-
-            return result;
+            return $"{localFilesPath}/{localExtraPath.Last()}";
         }
         
         private string GetLocalPath() 
