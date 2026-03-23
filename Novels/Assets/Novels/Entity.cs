@@ -63,6 +63,10 @@ namespace Novels
 
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bundles.GetAssetBundle(_ctx.Data.NovelsLoadingBundleName);
+
+            using (new LoadingPriority.Entity(ThreadPriority.Low, _defaultThreadPriority))
+                await bundles.LoadAssetsToDict(_ctx.Data.NovelsLoadingBundleName);
+
             var mainLoading = CreateMainLoading(bundles, pathGetter);
 
             //preloading init
@@ -83,6 +87,9 @@ namespace Novels
             //preloading loading first
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await firstPreloding;
+
+            using (new LoadingPriority.Entity(ThreadPriority.Low, _defaultThreadPriority))
+                await bundles.LoadAssetsToDict(_ctx.Data.NovelsSettingBundleName);
 
             var settingProcessCtx = new SettingProcess.Ctx
             {
@@ -105,6 +112,9 @@ namespace Novels
                 var (storyTextTemp, _, _, _, _, _) = await secondPreloading;
                 storyText = storyTextTemp;
             }
+
+            using (new LoadingPriority.Entity(ThreadPriority.Low, _defaultThreadPriority))
+                await bundles.LoadAssetsToDict();
 
             var localization = CreateLocalization(bundles, pathGetter);
             var storyProcessor = CreateStoryProcessor(storyText);
