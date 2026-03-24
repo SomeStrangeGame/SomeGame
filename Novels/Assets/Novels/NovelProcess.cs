@@ -48,6 +48,8 @@ namespace Novels
             float? awaitData = null;
             TextAlignment? dialogData = null;
 
+            var lastCharacterName = string.Empty;
+
             while (!IsDisposed)
             {
                 var bubbleDone = new UniTaskCompletionSource();
@@ -156,6 +158,18 @@ namespace Novels
 
                 //ShowContent
 
+                var isNewCharacter = false;
+                if (lastCharacterName != name)
+                {
+                    isNewCharacter = true;
+                    lastCharacterName = name;
+                    if (_ctx.SaveSystem.IsLoadingInProcess)
+                        _ctx.Character.HideImmediate();
+                    else
+                        await _ctx.Character.Hide();
+                }
+                
+
                 if (notificationData != null && !_ctx.SaveSystem.IsLoadingInProcess)
                 {
                     _ctx.Notification.Show(notificationData).Forget();
@@ -198,11 +212,15 @@ namespace Novels
                         await _ctx.Location.SetDialog(dialogData.Value);
                     dialogData = null;
                 }
+
                 _ctx.Character.SetImage(name, args);
-                if (_ctx.SaveSystem.IsLoadingInProcess)
-                    await _ctx.Character.Show(name == _ctx.MainCharacter);
-                else
-                    _ctx.Character.ShowImmediate();
+                if (isNewCharacter)
+                {
+                    if (_ctx.SaveSystem.IsLoadingInProcess)
+                        _ctx.Character.ShowImmediate();
+                    else
+                        await _ctx.Character.Show(name == _ctx.MainCharacter);
+                }
 
                 if (_ctx.SaveSystem.IsLoadingInProcess)
                     _ctx.Bubble.ShowImmediate();
@@ -228,11 +246,6 @@ namespace Novels
                     _ctx.Bubble.HideImmediate();
                 else
                     await _ctx.Bubble.Hide();
-
-                if (_ctx.SaveSystem.IsLoadingInProcess)
-                    _ctx.Character.HideImmediate();
-                else
-                    await _ctx.Character.Hide();
             }
         }
 
