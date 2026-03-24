@@ -17,26 +17,31 @@ namespace Novels.Character.View
         public void SetMainBody(Sprite sprite)
         {
             _mainBody.sprite = sprite;
+            ClearImagesIfNeed();
         }
 
         public void SetEmotion(Sprite sprite)
         {
             _emotion.sprite = sprite;
+            ClearImagesIfNeed();
         }
 
         public void SetClothes(Sprite sprite)
         {
             _clothes.sprite = sprite;
+            ClearImagesIfNeed();
         }
 
         public void SetBackHairs(Sprite sprite)
         {
             _backHairs.sprite = sprite;
+            ClearImagesIfNeed();
         }
 
         public void SetFrontHairs(Sprite sprite)
         {
             _frontHairs.sprite = sprite;
+            ClearImagesIfNeed();
         }
 
         public void ShowImageImmediate()

@@ -158,11 +158,14 @@ namespace Novels
 
                 //ShowContent
 
+                var characterNameTemp = $"{name}";
+                if (args.Any(a => a.ToLower() == "маленькая"))
+                    characterNameTemp += "_child";
                 var isNewCharacter = false;
-                if (lastCharacterName != name)
+                if (lastCharacterName != characterNameTemp)
                 {
                     isNewCharacter = true;
-                    lastCharacterName = name;
+                    lastCharacterName = characterNameTemp;
                     if (_ctx.SaveSystem.IsLoadingInProcess)
                         _ctx.Character.HideImmediate();
                     else
