@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Bundles
     {
         public struct Ctx
         {
+            public string Prefix;
             public Action<(LogType type, string message)> OnLog;
         }
 
@@ -20,6 +22,7 @@ namespace Bundles
         private readonly Dictionary<string, GameObject> _bundledPrefabs = new();
         private readonly Dictionary<string, ScriptableObject> _bundledSOs = new();
         private readonly Dictionary<string, Sprite> _bundledSprites = new();
+        private readonly Dictionary<string, string> _videos = new();
 
         private Ctx _ctx;
 
@@ -64,6 +67,13 @@ namespace Bundles
             if (assetBundle == null) return null;
             if (!_bundledPrefabs.ContainsKey(assetName.ToLower())) return null;
             return _bundledPrefabs[assetName.ToLower()];
+        }
+
+        public string GetVideoURL(string assetName)
+        {
+            Debug.Log($"Try get: {assetName}\n{string.Join("\n", _videos.Keys)}");
+            if (!_videos.ContainsKey(assetName.ToLower())) return "None";
+            return _videos[assetName.ToLower()];
         }
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
@@ -123,6 +133,46 @@ namespace Bundles
             }
             
             await UniTask.WhenAll(addToDict);
+        }
+
+        public async UniTask LoadVideosToDict()
+        {
+            var allVideos = _bundles["Remote/Android/novels_location"].GetAllAssetNames().Where(a => a.Contains(".png")).Select(a => a.Replace(".png", "")).ToArray();
+            foreach (var video in allVideos)
+            {
+                var videoName = video.Split("/").Last();
+                var firstChar = char.ToUpper(videoName[0]);
+                var otherText = videoName.Substring(1).ToLower();
+                videoName = $"{firstChar}{otherText}";
+
+                var log = (LogType.Warning, $"No video for {video}");
+                try
+                {
+                    var videoFile = _cache.ByteArrayFromCash($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                    _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                    log = (LogType.Log, $"Get video local from: {videoName.ToLower()} - {_videos[videoName.ToLower()]}");
+                }
+                catch
+                {
+                    try
+                    {
+                        var url = GetRemotePath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                        using (var videoRequest = UnityWebRequest.Get(url))
+                        {
+                            SetHeaders(videoRequest);
+                            await videoRequest.SendWebRequest();
+                            _cache.ByteArrayToCash(videoRequest.downloadHandler.data, $"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                            _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                            log = (LogType.Warning, $"Load video remote: {videoName.ToLower()} - {_videos[videoName.ToLower()]}");
+                        }
+                    }
+                    catch
+                    {
+                        //ignore
+                    }
+                }
+                _ctx.OnLog.Invoke(log);
+            }
         }
 
         private async UniTask AddAssetToDict(string asset, string bundlesKey)
@@ -193,7 +243,7 @@ namespace Bundles
         private string GetRemotePath(string localPath)
         {
             var localResult = $"{Application.streamingAssetsPath}/{localPath}";
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+#if UNITY_EDITOR_OSX
             localResult = $"file://{localResult}";
 #endif
             return localResult;

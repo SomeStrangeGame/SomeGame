@@ -55,7 +55,7 @@ namespace Cache
             }
         }
 
-        private string ConvertLocalPath(string path)
+        public string ConvertLocalPath(string path)
         {
             var localFilesPath = GetLocalPath();
 
@@ -78,10 +78,8 @@ namespace Cache
         private string GetLocalPath() 
         {
             var localFilesPath = $"{Application.persistentDataPath}/CachedFiles";
-#if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+#if UNITY_EDITOR_OSX
             localFilesPath = $"file://{localFilesPath}";
-#elif !UNITY_EDITOR && UNITY_WEBGL
-            localFilesPath = "idbfs/CachedFiles";
 #endif
 
             return localFilesPath;

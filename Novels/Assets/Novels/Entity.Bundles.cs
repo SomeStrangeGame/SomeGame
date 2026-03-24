@@ -8,6 +8,7 @@ namespace Novels
         {
             return new Bundles.Entity(new Bundles.Entity.Ctx
             {
+                Prefix = _ctx.Data.Prefix,
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
         }

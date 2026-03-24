@@ -116,6 +116,9 @@ namespace Novels
             using (new LoadingPriority.Entity(ThreadPriority.Low, _defaultThreadPriority))
                 await bundles.LoadAssetsToDict();
 
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                await bundles.LoadVideosToDict();
+
             var localization = CreateLocalization(bundles, pathGetter);
             var storyProcessor = CreateStoryProcessor(storyText);
             var saveSystem = CreateSaveSystem();

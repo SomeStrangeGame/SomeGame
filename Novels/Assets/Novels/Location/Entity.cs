@@ -57,20 +57,6 @@ namespace Novels.Location
             var videoError = false;
 
             var url = _ctx.GetVideoURL(assetName);
-            try
-            {
-                using (var req = UnityWebRequest.Get(url))
-                {
-                    await req.SendWebRequest();
-                    var videoData = req.downloadHandler.data;
-                    ByteArrayToCash(videoData, $"Videos/{assetName}.mp4");
-                    url = ConvertLocalPath($"Videos/{assetName}.mp4");
-                }
-            }
-            catch
-            {
-
-            }
             _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
             while (!videoError && !videoReady) await UniTask.Yield();
 
@@ -107,20 +93,6 @@ namespace Novels.Location
             var videoError = false;
 
             var url = _ctx.GetVideoURL(assetName);
-            try
-            {
-                using (var req = UnityWebRequest.Get(url))
-                {
-                    await req.SendWebRequest();
-                    var videoData = req.downloadHandler.data;
-                    ByteArrayToCash(videoData, $"Videos/{assetName}.mp4");
-                    url = ConvertLocalPath($"Videos/{assetName}.mp4");
-                }
-            }
-            catch
-            {
-
-            }
             _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
             while (!videoError && !videoReady) await UniTask.Yield();
 

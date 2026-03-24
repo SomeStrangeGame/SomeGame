@@ -11,7 +11,7 @@ namespace Novels
             {
                 GetScreenPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationPrefabAssetName("Screen")),
                 GetSprite = assetName => bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationImagePath(assetName)),
-                GetVideoURL = pathGetter.GetVideoPath,
+                GetVideoURL = assetName => bundles.GetVideoURL(assetName),
 
                 OnLog = _ctx.OnLog,
             }).AddTo(this);

@@ -68,16 +68,6 @@ namespace Novels.PathGetter
             return $"Assets/RemoteAssets/Location/{_ctx.Prefix}/Locations/{firstChar}{otherText}.png";
         }
 
-        public string GetVideoPath(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            var firstChar = char.ToUpper(assetName[0]);
-            var otherText = assetName.Substring(1).ToLower();
-            var result = $"{Application.streamingAssetsPath}/NovelsVideos/{_ctx.Prefix}/{firstChar}{otherText}.mp4";
-            return result;
-        }
-
         public string GetCharacterPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
