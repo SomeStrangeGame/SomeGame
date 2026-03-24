@@ -6,9 +6,9 @@ namespace Novels.Waiting
 {
     public class Entity : BaseDisposable
     {
-        public async UniTask Await(bool isLoading, float seconds)
+        public async UniTask Await(float seconds)
         {
-            var timer = isLoading ? 0f : seconds;
+            var timer = seconds;
             while(timer > 0f)
             {
                 await UniTask.Yield();

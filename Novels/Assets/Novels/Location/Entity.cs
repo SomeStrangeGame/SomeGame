@@ -38,16 +38,13 @@ namespace Novels.Location
             _screen.ResetEffect();
         }
 
-        public async UniTask SetImage(bool isLoading, string assetName, bool cutScene, string[] args)
+        public async UniTask SetImage(string assetName, bool cutScene, string[] args)
         {
             Camera.allCameras[0].backgroundColor = Color.black;
             if (args != null && args.Any(a => a == "white"))
                 Camera.allCameras[0].backgroundColor = Color.white;
 
-            if (isLoading)
-                _screen.HideImageImmediate();
-            else
-                await _screen.HideImage();
+            await _screen.HideImage();
 
             _screen.ResetCamera();
             _screen.ResetEffect();
@@ -58,52 +55,81 @@ namespace Novels.Location
             var videoReady = false;
             var videoDone = false;
             var videoError = false;
-            if (isLoading)
+
+            var url = _ctx.GetVideoURL(assetName);
+            try
             {
-                videoError = true;
+                using (var req = UnityWebRequest.Get(url))
+                {
+                    await req.SendWebRequest();
+                    var videoData = req.downloadHandler.data;
+                    ByteArrayToCash(videoData, $"Videos/{assetName}.mp4");
+                    url = ConvertLocalPath($"Videos/{assetName}.mp4");
+                }
             }
-            else
+            catch
             {
-                var url = _ctx.GetVideoURL(assetName);
-                try
-                {
-                    using (var req = UnityWebRequest.Get(url))
-                    {
-                        await req.SendWebRequest();
-                        var videoData = req.downloadHandler.data;
-                        ByteArrayToCash(videoData, $"Videos/{assetName}.mp4");
-                        url = ConvertLocalPath($"Videos/{assetName}.mp4");
-                    }
-                }
-                catch
-                {
-                    
-                }
-                _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
-                while (!videoError && !videoReady) await UniTask.NextFrame();
+
             }
+            _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
+            while (!videoError && !videoReady) await UniTask.Yield();
 
             _screen.SetEnabledImage(videoError);
             _screen.SetEnabledVideo(!videoError);
 
-            if (isLoading)
-                _screen.ShowImageImmediate();
-            else
-                await _screen.ShowImage();
+            await _screen.ShowImage();
             if (cutScene)
             {
                 if (!videoError)
-                {
-                    while (!videoDone) await UniTask.NextFrame();
-                }
+                    while (!videoDone) await UniTask.Yield();
                 else 
+                    await UniTask.Delay(3000);
+            }
+        }
+
+        public async UniTask SetImageImmediate(string assetName, bool cutScene, string[] args)
+        {
+            Camera.allCameras[0].backgroundColor = Color.black;
+            if (args != null && args.Any(a => a == "white"))
+                Camera.allCameras[0].backgroundColor = Color.white;
+
+            _screen.HideImageImmediate();
+
+            _screen.ResetCamera();
+            _screen.ResetEffect();
+
+            Debug.Log(assetName);
+            var sprite = _ctx.GetSprite(assetName);
+            _screen.SetImage(sprite);
+
+            var videoReady = false;
+            var videoDone = false;
+            var videoError = false;
+
+            var url = _ctx.GetVideoURL(assetName);
+            try
+            {
+                using (var req = UnityWebRequest.Get(url))
                 {
-                    if (isLoading)
-                        await UniTask.Yield();
-                    else
-                        await UniTask.Delay(3000);
+                    await req.SendWebRequest();
+                    var videoData = req.downloadHandler.data;
+                    ByteArrayToCash(videoData, $"Videos/{assetName}.mp4");
+                    url = ConvertLocalPath($"Videos/{assetName}.mp4");
                 }
             }
+            catch
+            {
+
+            }
+            _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
+            while (!videoError && !videoReady) await UniTask.Yield();
+
+            _screen.SetEnabledImage(videoError);
+            _screen.SetEnabledVideo(!videoError);
+
+            _screen.ShowImageImmediate();
+
+            await UniTask.Yield();
         }
 
         private void ByteArrayToCash(byte[] data, string path)
@@ -140,7 +166,7 @@ namespace Novels.Location
             return $"{Application.persistentDataPath}/CachedFiles";
         }
 
-        public async UniTask SetCamera(bool isLoading, string value)
+        public async UniTask SetCamera(string value)
         {
             if (value.ToLower() == "fadein")
             {
@@ -149,30 +175,65 @@ namespace Novels.Location
             }
             if (value.ToLower() == "leftright")
             {
-                await _screen.SetCamera(isLoading, View.Screen.CameraEffect.LeftRight);
+                await _screen.SetCamera(View.Screen.CameraEffect.LeftRight);
                 return;
             }
             if (value.ToLower() == "rightleft")
             {
-                await _screen.SetCamera(isLoading, View.Screen.CameraEffect.RightLeft);
+                await _screen.SetCamera(View.Screen.CameraEffect.RightLeft);
                 return;
             }
             if (value.ToLower() == "tocenter")
             {
-                await _screen.SetCamera(isLoading, View.Screen.CameraEffect.ToCenter);
+                await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
                 return;
             }
             if (value.ToLower() == "ToLeft")
             {
-                await _screen.SetCamera(isLoading, View.Screen.CameraEffect.ToLeft);
+                await _screen.SetCamera(View.Screen.CameraEffect.ToLeft);
                 return;
             }
             _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
         }
 
-        public async UniTask SetDialog(bool isLoading, TextAlignment aligment)
+        public void SetCameraImmediate(string value)
         {
-            await _screen.SetDialog(isLoading, aligment);
+            if (value.ToLower() == "fadein")
+            {
+                _screen.SetEffect(View.Screen.Effect.Dark).Forget();
+                return;
+            }
+            if (value.ToLower() == "leftright")
+            {
+                _screen.SetCameraImmediate(View.Screen.CameraEffect.LeftRight);
+                return;
+            }
+            if (value.ToLower() == "rightleft")
+            {
+                _screen.SetCameraImmediate(View.Screen.CameraEffect.RightLeft);
+                return;
+            }
+            if (value.ToLower() == "tocenter")
+            {
+                _screen.SetCameraImmediate(View.Screen.CameraEffect.ToCenter);
+                return;
+            }
+            if (value.ToLower() == "ToLeft")
+            {
+                _screen.SetCameraImmediate(View.Screen.CameraEffect.ToLeft);
+                return;
+            }
+            _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
+        }
+
+        public async UniTask SetDialog(TextAlignment aligment)
+        {
+            await _screen.SetDialog(aligment);
+        }
+
+        public void SetDialogImmediate(TextAlignment aligment)
+        {
+            _screen.SetDialogImmediate(aligment);
         }
     }
 }

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -33,26 +32,21 @@ namespace Novels.Notification
             _screen.HideImmediate();
         }
 
-        public async UniTask Show(bool isLoading, string text)
+        public async UniTask Show(string text)
         {
             while(_lastNotifInProcess) await UniTask.NextFrame();
             
             _lastNotifInProcess = true;
             _screen.SetText(text);
-            if (isLoading)
-                _screen.ShowImmediate();
-            else
-                await _screen.Show();
-            var timer = isLoading ? 0f : 3f;
+            
+            await _screen.Show();
+            var timer = 3f;
             while(timer > 0)
             {
                 await UniTask.Yield();
                 timer -= Time.deltaTime;
             }
-            if (isLoading)
-                _screen.HideImmediate();
-            else
-                await _screen.Hide();
+            await _screen.Hide();
             _lastNotifInProcess = false;
         }
     }

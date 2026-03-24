@@ -31,20 +31,24 @@ namespace Novels.Bubble
             _screen.HideImmediate();
         }
 
-        public async UniTask Show(bool isLoading)
+        public async UniTask Show()
         {
-            if (isLoading)
-                _screen.ShowImmediate();
-            else
-                await _screen.Show();
+            await _screen.Show();
         }
 
-        public async UniTask Hide(bool isLoading)
+        public void ShowImmediate()
         {
-            if (isLoading)
-                _screen.HideImmediate();
-            else
-                await _screen.Hide();
+            _screen.ShowImmediate();
+        }
+
+        public async UniTask Hide()
+        {
+            await _screen.Hide();
+        }
+
+        public void HideImmediate()
+        {
+            _screen.HideImmediate();
         }
 
         public void SetText(string name, string header, string text, string[] args)

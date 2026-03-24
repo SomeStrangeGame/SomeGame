@@ -59,7 +59,7 @@ namespace Novels.Character
             _mainCharacterHair = hair;
         }
 
-        public async UniTask SetImageAndShow(bool isLoading, string name, params string[] args)
+        public void SetImage(string name, params string[] args)
         {
             var view = "View";
             var clothes = string.Empty;
@@ -77,11 +77,16 @@ namespace Novels.Character
             SetEmotion(name, view, args);
             SetClothes(name, clothes, args);
             SetHairs(name, hair, args);
+        }
 
-            if (isLoading)
-                _screen.ShowImageImmediate();
-            else
-                await _screen.ShowImage(isLeft);
+        public async UniTask Show(bool isLeft)
+        {
+            await _screen.ShowImage(isLeft);
+        }
+
+        public void ShowImmediate()
+        {
+            _screen.ShowImageImmediate();
         }
 
         private void SetMainBody(string name, string view, string[] args)
@@ -178,12 +183,14 @@ namespace Novels.Character
             }
         }
 
-        public async UniTask Hide(bool isLoading)
+        public async UniTask Hide()
         {
-            if (isLoading)
-                _screen.HideImageImmediate();
-            else
-                await _screen.HideImage();
+            await _screen.HideImage();
+        }
+
+        public void HideImmediate()
+        {
+            _screen.HideImageImmediate();
         }
     }
 }

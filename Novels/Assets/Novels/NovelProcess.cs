@@ -27,6 +27,9 @@ namespace Novels
             public Action<(LogType type, string message)> OnLog;
         }
 
+        private const string _mainCharacter = "MainCharacter";
+        private const string _wardrobe = "Wardrobe";
+
         private Ctx _ctx;
 
         internal NovelProcess(Ctx ctx)
@@ -37,6 +40,13 @@ namespace Novels
         internal async UniTask ShowNovelProcess()
         {
             var loadingDone = false;
+
+            string notificationData = null;
+            (string assetName, bool cutScene, string[] args)? locationData = null;
+            (string assetName, bool cutScene, string[] args)? cutSceneData = null;
+            string cameraData = null;
+            float? awaitData = null;
+            TextAlignment? dialogData = null;
 
             while (!IsDisposed)
             {
@@ -63,7 +73,7 @@ namespace Novels
 
                 if (prefix.ToLower() == "notification")
                 {
-                    _ctx.Notification.Show(_ctx.SaveSystem.IsLoadingInProcess, value).Forget();
+                    notificationData = value;
                     continue;
                 }
 
@@ -73,24 +83,23 @@ namespace Novels
                     var locationArgs = locationRawArgsData.Length <= 1
                     ? new string[0]
                     : locationRawArgsData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
-
-                    await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, value, false, locationArgs);
+                    locationData = (value, false, locationArgs);
                     continue;
                 }
                 if (prefix.ToLower() == "cut-scene")
                 {
-                    await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, value, true, null);
+                    cutSceneData = (value, true, null);
                     continue;
                 }
                 if (prefix.ToLower() == "camera")
                 {
-                    await _ctx.Location.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, value);
+                    cameraData = value;
                     continue;
                 }
                 if (prefix.ToLower() == "await")
                 {
                     if (int.TryParse(value, out var seconds))
-                        await _ctx.Waiting.Await(_ctx.SaveSystem.IsLoadingInProcess, seconds);
+                        awaitData = seconds;
                     continue;
                 }
 
@@ -111,8 +120,7 @@ namespace Novels
                     dialogAlign = TextAlignment.Center;
                 else
                     dialogAlign = TextAlignment.Right;
-
-                await _ctx.Location.SetDialog(_ctx.SaveSystem.IsLoadingInProcess, dialogAlign);
+                dialogData = dialogAlign;
 
                 _ctx.Bubble.SetText(name, characterName, value, args);
                 _ctx.Bubble.RemoveAllButtons();
@@ -146,13 +154,60 @@ namespace Novels
                     await _ctx.HideLoading();
                 }
 
-                await _ctx.Character.SetImageAndShow(_ctx.SaveSystem.IsLoadingInProcess, name, args);
-                //show content
-                var showProcess = UniTask.WhenAll(
-                    //_ctx.Character.SetImageAndShow(_ctx.SaveSystem.IsLoadingInProcess, name, args),
-                    _ctx.Bubble.Show(_ctx.SaveSystem.IsLoadingInProcess)
-                );
-                await showProcess;
+                //ShowContent
+
+                if (notificationData != null && !_ctx.SaveSystem.IsLoadingInProcess)
+                {
+                    _ctx.Notification.Show(notificationData).Forget();
+                    notificationData = null;
+                }
+                if (locationData.HasValue)
+                {
+                    if (_ctx.SaveSystem.IsLoadingInProcess)
+                        await _ctx.Location.SetImageImmediate(locationData.Value.assetName, locationData.Value.cutScene, locationData.Value.args);
+                    else
+                        await _ctx.Location.SetImage(locationData.Value.assetName, locationData.Value.cutScene, locationData.Value.args);
+                    locationData = null;
+                }
+                if (cutSceneData.HasValue)
+                {
+                    if (_ctx.SaveSystem.IsLoadingInProcess)
+                        await _ctx.Location.SetImageImmediate(cutSceneData.Value.assetName, cutSceneData.Value.cutScene, cutSceneData.Value.args);
+                    else
+                        await _ctx.Location.SetImage(cutSceneData.Value.assetName, cutSceneData.Value.cutScene, cutSceneData.Value.args);
+                    cutSceneData = null;
+                }
+                if (cameraData != null)
+                {
+                    if (_ctx.SaveSystem.IsLoadingInProcess)
+                        _ctx.Location.SetCameraImmediate(cameraData);
+                    else
+                        await _ctx.Location.SetCamera(cameraData);
+                    cameraData = null;
+                }
+                if (awaitData.HasValue && !_ctx.SaveSystem.IsLoadingInProcess)
+                {
+                    await _ctx.Waiting.Await(awaitData.Value);
+                    awaitData = null;
+                }
+                if (dialogData.HasValue)
+                {
+                    if (_ctx.SaveSystem.IsLoadingInProcess)
+                        _ctx.Location.SetDialogImmediate(dialogData.Value);
+                    else
+                        await _ctx.Location.SetDialog(dialogData.Value);
+                    dialogData = null;
+                }
+                _ctx.Character.SetImage(name, args);
+                if (_ctx.SaveSystem.IsLoadingInProcess)
+                    await _ctx.Character.Show(name == _ctx.MainCharacter);
+                else
+                    _ctx.Character.ShowImmediate();
+
+                if (_ctx.SaveSystem.IsLoadingInProcess)
+                    _ctx.Bubble.ShowImmediate();
+                else
+                    await _ctx.Bubble.Show();
 
                 if (!_ctx.SaveSystem.TryLoad(out var result))
                 {
@@ -168,12 +223,16 @@ namespace Novels
                     }
                 }
 
-                //reset content
-                var resetProcess = UniTask.WhenAll(
-                    _ctx.Character.Hide(_ctx.SaveSystem.IsLoadingInProcess),
-                    _ctx.Bubble.Hide(_ctx.SaveSystem.IsLoadingInProcess)
-                );
-                await resetProcess;
+                //ResetContent
+                if (_ctx.SaveSystem.IsLoadingInProcess)
+                    _ctx.Bubble.HideImmediate();
+                else
+                    await _ctx.Bubble.Hide();
+
+                if (_ctx.SaveSystem.IsLoadingInProcess)
+                    _ctx.Character.HideImmediate();
+                else
+                    await _ctx.Character.Hide();
             }
         }
 
