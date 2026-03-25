@@ -19,7 +19,6 @@ namespace Bundles
         private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new();
 
-        private readonly Dictionary<string, ScriptableObject> _bundledSOs = new();
         private readonly Dictionary<string, string> _videos = new();
 
         private Ctx _ctx;
@@ -51,12 +50,12 @@ namespace Bundles
             return await assetBundle.LoadAssetAsync<Sprite>(assetName) as Sprite;
         }
 
-        public T GetBundledSO<T>(string bundleName, string assetName) where T : ScriptableObject
+        public async UniTask<T> GetBundledSO<T>(string bundleName, string assetName) where T : ScriptableObject
         {
             var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
-            if (!_bundledSOs.ContainsKey(assetName.ToLower())) return null;
-            return _bundledSOs[assetName.ToLower()] as T;
+            if (string.IsNullOrEmpty(assetName)) return null;
+            return await assetBundle.LoadAssetAsync<T>(assetName) as T;
         }
 
         public async UniTask<GameObject> GetBundledPrefab(string bundleName, string assetName)
@@ -112,27 +111,6 @@ namespace Bundles
             return _bundles[bundlesKey];
         }
 
-        public async UniTask LoadAssetsToDict(string bundleName = null)
-        {
-            List<UniTask> addToDict = new ();
-            if (!string.IsNullOrEmpty(bundleName))
-            {
-                var bundleKey = GetBundleKey(bundleName);
-                foreach(var asset in _bundles[bundleKey].GetAllAssetNames())
-                        addToDict.Add(AddAssetToDict(asset, bundleKey));
-            }
-            else
-            {
-                foreach(var assetBundle in _bundles)
-                {
-                    foreach(var asset in assetBundle.Value.GetAllAssetNames())
-                        addToDict.Add(AddAssetToDict(asset, assetBundle.Key));
-                }
-            }
-            
-            await UniTask.WhenAll(addToDict);
-        }
-
         public async UniTask LoadVideosToDict()
         {
             var allVideos = _bundles["Remote/Android/novels_location"].GetAllAssetNames().Where(a => a.Contains(".png")).Select(a => a.Replace(".png", "")).ToArray();
@@ -170,15 +148,6 @@ namespace Bundles
                     }
                 }
                 _ctx.OnLog.Invoke(log);
-            }
-        }
-
-        private async UniTask AddAssetToDict(string asset, string bundlesKey)
-        {
-            if (asset.Contains(".asset"))
-            {
-                if (!_bundledSOs.ContainsKey(asset.ToLower()))
-                    _bundledSOs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<ScriptableObject>(asset) as ScriptableObject;
             }
         }
 

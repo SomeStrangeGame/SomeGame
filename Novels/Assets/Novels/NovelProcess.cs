@@ -157,7 +157,10 @@ namespace Novels
                 if (_ctx.SaveSystem.TryLoad(out var savedChoice))
                 {
                     if (savedChoice != 255)
+                    {
+                        SetCharacterView(_ctx.Character, args, _ctx.StoryProcessor.GetChoices()[savedChoice]);
                         _ctx.StoryProcessor.SetChoice(savedChoice);
+                    }
                     continue;
                 }
 
@@ -179,7 +182,6 @@ namespace Novels
                     lastCharacterName = characterNameTemp;
                     await _ctx.Character.Hide();
                 }
-                
 
                 if (notificationData != null)
                 {
