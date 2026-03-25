@@ -21,7 +21,6 @@ namespace Bundles
 
         private readonly Dictionary<string, GameObject> _bundledPrefabs = new();
         private readonly Dictionary<string, ScriptableObject> _bundledSOs = new();
-        private readonly Dictionary<string, Sprite> _bundledSprites = new();
         private readonly Dictionary<string, string> _videos = new();
 
         private Ctx _ctx;
@@ -45,12 +44,12 @@ namespace Bundles
             _bundles.Clear();
         }
 
-        public Sprite GetBundledSprite(string bundleName, string assetName)
+        public async UniTask<Sprite> GetBundledSprite(string bundleName, string assetName)
         {
             var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
-            if (!_bundledSprites.ContainsKey(assetName.ToLower())) return null;
-            return _bundledSprites[assetName.ToLower()];
+            if (string.IsNullOrEmpty(assetName)) return null;
+            return await assetBundle.LoadAssetAsync<Sprite>(assetName) as Sprite;
         }
 
         public T GetBundledSO<T>(string bundleName, string assetName) where T : ScriptableObject
@@ -186,11 +185,6 @@ namespace Bundles
             {
                 if (!_bundledSOs.ContainsKey(asset.ToLower()))
                     _bundledSOs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<ScriptableObject>(asset) as ScriptableObject;
-            }
-            else if (asset.Contains(".png"))
-            {
-                if (!_bundledSprites.ContainsKey(asset.ToLower()))
-                    _bundledSprites[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<Sprite>(asset) as Sprite;
             }
         }
 

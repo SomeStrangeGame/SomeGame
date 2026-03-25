@@ -11,7 +11,7 @@ namespace Novels.Location
         public struct Ctx
         {
             public Func<GameObject> GetScreenPrefab;
-            public Func<string, Sprite> GetSprite;
+            public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string> GetVideoURL;
 
             public Action<(LogType type, string message)> OnLog;
@@ -47,7 +47,7 @@ namespace Novels.Location
             _screen.ResetCamera();
             _screen.ResetEffect();
 
-            var sprite = _ctx.GetSprite(assetName);
+            var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
 
             var videoReady = false;

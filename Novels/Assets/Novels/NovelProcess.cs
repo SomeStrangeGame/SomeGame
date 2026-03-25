@@ -212,7 +212,7 @@ namespace Novels
                     dialogData = null;
                 }
 
-                _ctx.Character.SetImage(name, args);
+                await _ctx.Character.SetImage(name, args);
                 if (isNewCharacter)
                 {
                     await _ctx.Character.Show(name == _ctx.MainCharacter);
