@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
+using System.ComponentModel;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -72,6 +74,8 @@ namespace Novels
             var queue = new Queue<IQueue>();
             var lastCharacterName = string.Empty;
 
+            LocationQueue? lastLocation = null;
+
             while (!IsDisposed)
             {
                 var bubbleDone = new UniTaskCompletionSource();
@@ -117,6 +121,11 @@ namespace Novels
                         AssetName = value,
                         Args = args
                     });
+                    lastLocation = new LocationQueue
+                    {
+                        AssetName = value,
+                        Args = args
+                    };
                     continue;
                 }
                 if (prefix.ToLower() == "cut-scene")
@@ -125,6 +134,11 @@ namespace Novels
                         AssetName = value,
                         Args = args
                     });
+                    lastLocation = new LocationQueue
+                    {
+                        AssetName = value,
+                        Args = args
+                    };
                     continue;
                 }
                 if (prefix.ToLower() == "camera")
@@ -199,6 +213,9 @@ namespace Novels
 
                 if (!loadingDone)
                 {
+                    queue.Clear();
+                    queue.Enqueue(lastLocation);
+
                     loadingDone = true;
                     await _ctx.HideLoading();
                 }
@@ -216,9 +233,9 @@ namespace Novels
                     await _ctx.Character.Hide();
                 }
 
-                while(queue.Count > 0)
+                while(queue.TryDequeue(out var element))
                 {
-                    switch (queue.Dequeue())
+                    switch (element)
                     {
                         case NotificationQueue notificationQueue:
                             _ctx.Notification.Show(notificationQueue.NotificationText).Forget();

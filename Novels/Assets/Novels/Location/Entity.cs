@@ -49,24 +49,34 @@ namespace Novels.Location
             var sprite = await _ctx.GetSprite(assetName);
             _screen.SetImage(sprite);
 
-            var videoReady = false;
-            var videoDone = false;
-            var videoError = false;
-
             var url = _ctx.GetVideoURL(assetName);
-            _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
-            while (!videoError && !videoReady) await UniTask.Yield();
-
-            _screen.SetEnabledImage(videoError);
-            _screen.SetEnabledVideo(!videoError);
-
-            await _screen.ShowImage();
-            if (cutScene)
+            if (url != "None")
             {
-                if (!videoError)
-                    while (!videoDone) await UniTask.Yield();
-                else 
-                    await UniTask.Delay(3000);
+                var videoReady = false;
+                var videoDone = false;
+                var videoError = false;
+
+                _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
+                while (!videoError && !videoReady) await UniTask.Yield();
+
+                _screen.SetEnabledImage(videoError);
+                _screen.SetEnabledVideo(!videoError);
+
+                await _screen.ShowImage();
+
+                if (cutScene)
+                {
+                    if (!videoError)
+                        while (!videoDone) await UniTask.Yield();
+                    else 
+                        await UniTask.Delay(3000);// add zoom effect in future
+                }
+            }
+            else
+            {
+                _screen.SetEnabledImage(true);
+                _screen.SetEnabledVideo(false);
+                await _screen.ShowImage();
             }
         }
 
