@@ -1,10 +1,8 @@
 using System;
-using System.IO;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Novels.Location
 {
@@ -73,71 +71,6 @@ namespace Novels.Location
             }
         }
 
-        public async UniTask SetImageImmediate(string assetName, bool cutScene, string[] args)
-        {
-            Camera.allCameras[0].backgroundColor = Color.black;
-            if (args != null && args.Any(a => a == "white"))
-                Camera.allCameras[0].backgroundColor = Color.white;
-
-            _screen.HideImageImmediate();
-
-            _screen.ResetCamera();
-            _screen.ResetEffect();
-
-            Debug.Log(assetName);
-            var sprite = _ctx.GetSprite(assetName);
-            _screen.SetImage(sprite);
-
-            var videoReady = false;
-            var videoDone = false;
-            var videoError = false;
-
-            var url = _ctx.GetVideoURL(assetName);
-            _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
-            while (!videoError && !videoReady) await UniTask.Yield();
-
-            _screen.SetEnabledImage(videoError);
-            _screen.SetEnabledVideo(!videoError);
-
-            _screen.ShowImageImmediate();
-
-            await UniTask.Yield();
-        }
-
-        private void ByteArrayToCash(byte[] data, string path)
-        {
-            var file = ConvertLocalPath(path);
-            if (File.Exists(file))
-                File.Delete(file);
-            using (var fs = File.Create(file))
-            {
-                fs.Write(data, 0, data.Length);
-            }
-        }
-
-        private string ConvertLocalPath(string path)
-        {
-            var localFilesPath = GetLocalPath();
-
-            if (!Directory.Exists(localFilesPath))
-                Directory.CreateDirectory(localFilesPath);
-
-            var localExtraPath = path.Split('/');
-            for (var i = 0; i < localExtraPath.Length - 1; i++)
-            {
-                localFilesPath += "/" + localExtraPath[i];
-                if (!Directory.Exists(localFilesPath))
-                    Directory.CreateDirectory(localFilesPath);
-            }
-
-            return $"{localFilesPath}/{localExtraPath.Last()}";
-        }
-        
-        private string GetLocalPath() 
-        {
-            return $"{Application.persistentDataPath}/CachedFiles";
-        }
-
         public async UniTask SetCamera(string value)
         {
             if (value.ToLower() == "fadein")
@@ -168,44 +101,9 @@ namespace Novels.Location
             _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
         }
 
-        public void SetCameraImmediate(string value)
-        {
-            if (value.ToLower() == "fadein")
-            {
-                _screen.SetEffect(View.Screen.Effect.Dark).Forget();
-                return;
-            }
-            if (value.ToLower() == "leftright")
-            {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.LeftRight);
-                return;
-            }
-            if (value.ToLower() == "rightleft")
-            {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.RightLeft);
-                return;
-            }
-            if (value.ToLower() == "tocenter")
-            {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.ToCenter);
-                return;
-            }
-            if (value.ToLower() == "ToLeft")
-            {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.ToLeft);
-                return;
-            }
-            _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
-        }
-
         public async UniTask SetDialog(TextAlignment aligment)
         {
             await _screen.SetDialog(aligment);
-        }
-
-        public void SetDialogImmediate(TextAlignment aligment)
-        {
-            _screen.SetDialogImmediate(aligment);
         }
     }
 }

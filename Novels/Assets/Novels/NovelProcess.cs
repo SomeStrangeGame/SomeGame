@@ -86,11 +86,15 @@ namespace Novels
                     ? new string[0]
                     : locationRawArgsData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
                     locationData = (value, false, locationArgs);
+                    cutSceneData = null;
+                    cameraData = null;
                     continue;
                 }
                 if (prefix.ToLower() == "cut-scene")
                 {
                     cutSceneData = (value, true, null);
+                    locationData = null;
+                    cameraData = null;
                     continue;
                 }
                 if (prefix.ToLower() == "camera")
@@ -150,7 +154,14 @@ namespace Novels
                     });
                 }
 
-                if (!_ctx.SaveSystem.IsLoadingInProcess && !loadingDone)
+                if (_ctx.SaveSystem.TryLoad(out var savedChoice))
+                {
+                    if (savedChoice != 255)
+                        _ctx.StoryProcessor.SetChoice(savedChoice);
+                    continue;
+                }
+
+                if (!loadingDone)
                 {
                     loadingDone = true;
                     await _ctx.HideLoading();
@@ -166,89 +177,53 @@ namespace Novels
                 {
                     isNewCharacter = true;
                     lastCharacterName = characterNameTemp;
-                    if (_ctx.SaveSystem.IsLoadingInProcess)
-                        _ctx.Character.HideImmediate();
-                    else
-                        await _ctx.Character.Hide();
+                    await _ctx.Character.Hide();
                 }
                 
 
-                if (notificationData != null && !_ctx.SaveSystem.IsLoadingInProcess)
+                if (notificationData != null)
                 {
                     _ctx.Notification.Show(notificationData).Forget();
                     notificationData = null;
                 }
                 if (locationData.HasValue)
                 {
-                    if (_ctx.SaveSystem.IsLoadingInProcess)
-                        await _ctx.Location.SetImageImmediate(locationData.Value.assetName, locationData.Value.cutScene, locationData.Value.args);
-                    else
-                        await _ctx.Location.SetImage(locationData.Value.assetName, locationData.Value.cutScene, locationData.Value.args);
+                    await _ctx.Location.SetImage(locationData.Value.assetName, locationData.Value.cutScene, locationData.Value.args);
                     locationData = null;
                 }
                 if (cutSceneData.HasValue)
                 {
-                    if (_ctx.SaveSystem.IsLoadingInProcess)
-                        await _ctx.Location.SetImageImmediate(cutSceneData.Value.assetName, cutSceneData.Value.cutScene, cutSceneData.Value.args);
-                    else
-                        await _ctx.Location.SetImage(cutSceneData.Value.assetName, cutSceneData.Value.cutScene, cutSceneData.Value.args);
+                    await _ctx.Location.SetImage(cutSceneData.Value.assetName, cutSceneData.Value.cutScene, cutSceneData.Value.args);
                     cutSceneData = null;
                 }
                 if (cameraData != null)
                 {
-                    if (_ctx.SaveSystem.IsLoadingInProcess)
-                        _ctx.Location.SetCameraImmediate(cameraData);
-                    else
-                        await _ctx.Location.SetCamera(cameraData);
+                    await _ctx.Location.SetCamera(cameraData);
                     cameraData = null;
                 }
-                if (awaitData.HasValue && !_ctx.SaveSystem.IsLoadingInProcess)
+                if (awaitData.HasValue)
                 {
                     await _ctx.Waiting.Await(awaitData.Value);
                     awaitData = null;
                 }
                 if (dialogData.HasValue)
                 {
-                    if (_ctx.SaveSystem.IsLoadingInProcess)
-                        _ctx.Location.SetDialogImmediate(dialogData.Value);
-                    else
-                        await _ctx.Location.SetDialog(dialogData.Value);
+                    await _ctx.Location.SetDialog(dialogData.Value);
                     dialogData = null;
                 }
 
                 _ctx.Character.SetImage(name, args);
                 if (isNewCharacter)
                 {
-                    if (_ctx.SaveSystem.IsLoadingInProcess)
-                        _ctx.Character.ShowImmediate();
-                    else
-                        await _ctx.Character.Show(name == _ctx.MainCharacter);
+                    await _ctx.Character.Show(name == _ctx.MainCharacter);
                 }
 
-                if (_ctx.SaveSystem.IsLoadingInProcess)
-                    _ctx.Bubble.ShowImmediate();
-                else
-                    await _ctx.Bubble.Show();
+                await _ctx.Bubble.Show();
 
-                if (!_ctx.SaveSystem.TryLoad(out var result))
-                {
-                    await bubbleDone.Task;
-                }
-                else
-                {
-                    await UniTask.Yield();
-                    if (result != 255)
-                    {
-                        SetCharacterView(_ctx.Character, args, _ctx.StoryProcessor.GetChoices()[result]);
-                        _ctx.StoryProcessor.SetChoice(result);
-                    }
-                }
+                await bubbleDone.Task;
 
                 //ResetContent
-                if (_ctx.SaveSystem.IsLoadingInProcess)
-                    _ctx.Bubble.HideImmediate();
-                else
-                    await _ctx.Bubble.Hide();
+                await _ctx.Bubble.Hide();
             }
         }
 
