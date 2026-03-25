@@ -75,6 +75,9 @@ namespace Novels
             var lastCharacterName = string.Empty;
 
             LocationQueue? lastLocation = null;
+            CutSceneQueue? lastCutScene = null;
+            CameraQueue? lastCamera = null;
+            DialogQueue? lastDialog = null;
 
             while (!IsDisposed)
             {
@@ -126,6 +129,8 @@ namespace Novels
                         AssetName = value,
                         Args = args
                     };
+                    lastCutScene = null;
+                    lastCamera = null;
                     continue;
                 }
                 if (prefix.ToLower() == "cut-scene")
@@ -134,11 +139,13 @@ namespace Novels
                         AssetName = value,
                         Args = args
                     });
-                    lastLocation = new LocationQueue
+                    lastCutScene = new CutSceneQueue
                     {
                         AssetName = value,
                         Args = args
                     };
+                    lastLocation = null;
+                    lastCamera = null;
                     continue;
                 }
                 if (prefix.ToLower() == "camera")
@@ -147,6 +154,12 @@ namespace Novels
                     {
                         Value = value
                     });
+                    lastCamera = new CameraQueue
+                    {
+                        Value = value
+                    };
+                    lastLocation = null;
+                    lastCutScene = null;
                     continue;
                 }
                 if (prefix.ToLower() == "await")
@@ -174,6 +187,10 @@ namespace Novels
                 {
                     DialogAlign = dialogAlign
                 });
+                lastDialog = new DialogQueue
+                {
+                    DialogAlign = dialogAlign
+                };
 
                 _ctx.Bubble.SetText(name, characterName, value, args);
                 _ctx.Bubble.RemoveAllButtons();
@@ -214,7 +231,14 @@ namespace Novels
                 if (!loadingDone)
                 {
                     queue.Clear();
-                    queue.Enqueue(lastLocation);
+                    if (lastLocation.HasValue)
+                        queue.Enqueue(lastLocation.Value);
+                    if (lastCutScene.HasValue)
+                        queue.Enqueue(lastCutScene.Value);
+                    if (lastCamera.HasValue)
+                        queue.Enqueue(lastCamera.Value);
+                    if (lastDialog.HasValue)
+                        queue.Enqueue(lastDialog.Value);
 
                     loadingDone = true;
                     await _ctx.HideLoading();
