@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -27,6 +28,34 @@ namespace Novels
             public Action<(LogType type, string message)> OnLog;
         }
 
+        private interface IQueue { }
+        private struct NotificationQueue : IQueue
+        {
+            public string NotificationText;
+        }
+        private struct LocationQueue : IQueue
+        {
+            public string AssetName;
+            public string[] Args;
+        }
+        private struct CutSceneQueue : IQueue
+        {
+            public string AssetName;
+            public string[] Args;
+        }
+        private struct CameraQueue : IQueue
+        {
+            public string Value;
+        }
+        private struct AwaitQueue : IQueue
+        {
+            public float Timer;
+        }
+        private struct DialogQueue : IQueue
+        {
+            public TextAlignment DialogAlign;
+        }
+
         private const string _mainCharacter = "MainCharacter";
         private const string _wardrobe = "Wardrobe";
 
@@ -40,14 +69,7 @@ namespace Novels
         internal async UniTask ShowNovelProcess()
         {
             var loadingDone = false;
-
-            string notificationData = null;
-            (string assetName, bool cutScene, string[] args)? locationData = null;
-            (string assetName, bool cutScene, string[] args)? cutSceneData = null;
-            string cameraData = null;
-            float? awaitData = null;
-            TextAlignment? dialogData = null;
-
+            var queue = new Queue<IQueue>();
             var lastCharacterName = string.Empty;
 
             while (!IsDisposed)
@@ -60,6 +82,12 @@ namespace Novels
                 var data = text.Split(":");
                 var prefix = data.FirstOrDefault().Trim();
                 var value = data.LastOrDefault().Trim();
+
+                var rawPrefixData = prefix.Split("(");
+                var name = rawPrefixData.FirstOrDefault().Trim();
+                var args = rawPrefixData.Length <= 1
+                    ? new string[0]
+                    : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
 
                 if (prefix.ToLower() == "title") continue;
                 if (prefix.ToLower() == "series") continue;
@@ -75,45 +103,47 @@ namespace Novels
 
                 if (prefix.ToLower() == "notification")
                 {
-                    notificationData = value;
+                    queue.Enqueue(new NotificationQueue
+                    {
+                        NotificationText = value
+                    });
                     continue;
                 }
 
                 if (prefix.ToLower().Contains("location"))
                 {
-                    var locationRawArgsData = prefix.Split("(");
-                    var locationArgs = locationRawArgsData.Length <= 1
-                    ? new string[0]
-                    : locationRawArgsData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
-                    locationData = (value, false, locationArgs);
-                    cutSceneData = null;
-                    cameraData = null;
+                    queue.Enqueue(new LocationQueue
+                    {
+                        AssetName = value,
+                        Args = args
+                    });
                     continue;
                 }
                 if (prefix.ToLower() == "cut-scene")
                 {
-                    cutSceneData = (value, true, null);
-                    locationData = null;
-                    cameraData = null;
+                    queue.Enqueue(new CutSceneQueue{
+                        AssetName = value,
+                        Args = args
+                    });
                     continue;
                 }
                 if (prefix.ToLower() == "camera")
                 {
-                    cameraData = value;
+                    queue.Enqueue(new CameraQueue
+                    {
+                        Value = value
+                    });
                     continue;
                 }
                 if (prefix.ToLower() == "await")
                 {
                     if (int.TryParse(value, out var seconds))
-                        awaitData = seconds;
+                        queue.Enqueue(new AwaitQueue
+                        {
+                            Timer = seconds
+                        });
                     continue;
                 }
-
-                var rawPrefixData = prefix.Split("(");
-                var name = rawPrefixData.FirstOrDefault().Trim();
-                var args = rawPrefixData.Length <= 1
-                    ? new string[0]
-                    : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
 
                 var characterName = string.Empty;
                 if (!_ctx.Localization.TryGetValue(name, out characterName))
@@ -126,7 +156,10 @@ namespace Novels
                     dialogAlign = TextAlignment.Center;
                 else
                     dialogAlign = TextAlignment.Right;
-                dialogData = dialogAlign;
+                queue.Enqueue(new DialogQueue
+                {
+                    DialogAlign = dialogAlign
+                });
 
                 _ctx.Bubble.SetText(name, characterName, value, args);
                 _ctx.Bubble.RemoveAllButtons();
@@ -183,35 +216,29 @@ namespace Novels
                     await _ctx.Character.Hide();
                 }
 
-                if (notificationData != null)
+                while(queue.Count > 0)
                 {
-                    _ctx.Notification.Show(notificationData).Forget();
-                    notificationData = null;
-                }
-                if (locationData.HasValue)
-                {
-                    await _ctx.Location.SetImage(locationData.Value.assetName, locationData.Value.cutScene, locationData.Value.args);
-                    locationData = null;
-                }
-                if (cutSceneData.HasValue)
-                {
-                    await _ctx.Location.SetImage(cutSceneData.Value.assetName, cutSceneData.Value.cutScene, cutSceneData.Value.args);
-                    cutSceneData = null;
-                }
-                if (cameraData != null)
-                {
-                    await _ctx.Location.SetCamera(cameraData);
-                    cameraData = null;
-                }
-                if (awaitData.HasValue)
-                {
-                    await _ctx.Waiting.Await(awaitData.Value);
-                    awaitData = null;
-                }
-                if (dialogData.HasValue)
-                {
-                    await _ctx.Location.SetDialog(dialogData.Value);
-                    dialogData = null;
+                    switch (queue.Dequeue())
+                    {
+                        case NotificationQueue notificationQueue:
+                            _ctx.Notification.Show(notificationQueue.NotificationText).Forget();
+                        break;
+                        case LocationQueue locationQueue:
+                            await _ctx.Location.SetImage(locationQueue.AssetName, false, locationQueue.Args);
+                        break;
+                        case CutSceneQueue cutSceneQueue:
+                            await _ctx.Location.SetImage(cutSceneQueue.AssetName, true, cutSceneQueue.Args);
+                        break;
+                        case CameraQueue cameraQueue:
+                            await _ctx.Location.SetCamera(cameraQueue.Value);
+                        break;
+                        case AwaitQueue awaitQueue:
+                            await _ctx.Waiting.Await(awaitQueue.Timer);
+                        break;
+                        case DialogQueue dialogQueue:
+                            await _ctx.Location.SetDialog(dialogQueue.DialogAlign);
+                        break;
+                    }
                 }
 
                 await _ctx.Character.SetImage(name, args);
@@ -225,6 +252,7 @@ namespace Novels
                 await bubbleDone.Task;
 
                 //ResetContent
+                queue.Clear();
                 await _ctx.Bubble.Hide();
             }
         }

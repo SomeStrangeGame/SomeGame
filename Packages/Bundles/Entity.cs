@@ -68,7 +68,6 @@ namespace Bundles
 
         public string GetVideoURL(string assetName)
         {
-            Debug.Log($"Try get: {assetName}\n{string.Join("\n", _videos.Keys)}");
             if (!_videos.ContainsKey(assetName.ToLower())) return "None";
             return _videos[assetName.ToLower()];
         }

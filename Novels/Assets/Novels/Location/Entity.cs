@@ -43,7 +43,6 @@ namespace Novels.Location
                 Camera.allCameras[0].backgroundColor = Color.white;
 
             await _screen.HideImage();
-
             _screen.ResetCamera();
             _screen.ResetEffect();
 
