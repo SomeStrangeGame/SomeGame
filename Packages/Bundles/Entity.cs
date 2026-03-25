@@ -19,7 +19,6 @@ namespace Bundles
         private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new();
 
-        private readonly Dictionary<string, GameObject> _bundledPrefabs = new();
         private readonly Dictionary<string, ScriptableObject> _bundledSOs = new();
         private readonly Dictionary<string, string> _videos = new();
 
@@ -60,12 +59,12 @@ namespace Bundles
             return _bundledSOs[assetName.ToLower()] as T;
         }
 
-        public GameObject GetBundledPrefab(string bundleName, string assetName)
+        public async UniTask<GameObject> GetBundledPrefab(string bundleName, string assetName)
         {
             var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
-            if (!_bundledPrefabs.ContainsKey(assetName.ToLower())) return null;
-            return _bundledPrefabs[assetName.ToLower()];
+            if (string.IsNullOrEmpty(assetName)) return null;
+            return await assetBundle.LoadAssetAsync<GameObject>(assetName) as GameObject;
         }
 
         public string GetVideoURL(string assetName)
@@ -176,12 +175,7 @@ namespace Bundles
 
         private async UniTask AddAssetToDict(string asset, string bundlesKey)
         {
-            if (asset.Contains(".prefab"))
-            {
-                if (!_bundledPrefabs.ContainsKey(asset.ToLower()))
-                    _bundledPrefabs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<GameObject>(asset) as GameObject;
-            }
-            else if (asset.Contains(".asset"))
+            if (asset.Contains(".asset"))
             {
                 if (!_bundledSOs.ContainsKey(asset.ToLower()))
                     _bundledSOs[asset.ToLower()] = await _bundles[bundlesKey].LoadAssetAsync<ScriptableObject>(asset) as ScriptableObject;

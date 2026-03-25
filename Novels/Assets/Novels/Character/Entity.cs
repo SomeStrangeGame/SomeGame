@@ -1,5 +1,4 @@
 using System;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -11,7 +10,7 @@ namespace Novels.Character
         public struct Ctx
         {
             public string MainCharacterName;
-            public Func<GameObject> GetScreenPrefab;
+            public Func<UniTask<GameObject>> GetScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
@@ -37,9 +36,9 @@ namespace Novels.Character
             _ctx = ctx;
         }
 
-        public void Init()
+        public async UniTask Init()
         {
-            var prefab = _ctx.GetScreenPrefab();
+            var prefab = await _ctx.GetScreenPrefab();
             var screenGO = GameObject.Instantiate(prefab);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.HideImageImmediate();
