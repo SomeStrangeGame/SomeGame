@@ -64,10 +64,7 @@ namespace Novels
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bundles.GetAssetBundle(_ctx.Data.NovelsLoadingBundleName);
 
-            using (new LoadingPriority.Entity(ThreadPriority.Low, _defaultThreadPriority))
-                await bundles.LoadAssetsToDict(_ctx.Data.NovelsLoadingBundleName);
-
-            var mainLoading = CreateMainLoading(bundles, pathGetter);
+            var mainLoading = await CreateMainLoading(bundles, pathGetter);
 
             //preloading init
             var firstPreloding = UniTask.WhenAll(
@@ -88,9 +85,6 @@ namespace Novels
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await firstPreloding;
 
-            using (new LoadingPriority.Entity(ThreadPriority.Low, _defaultThreadPriority))
-                await bundles.LoadAssetsToDict(_ctx.Data.NovelsSettingBundleName);
-
             var settingProcessCtx = new SettingProcess.Ctx
             {
                 DefaultThreadPriority = _defaultThreadPriority,
@@ -101,7 +95,7 @@ namespace Novels
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
 
-            var loading = CreateLoading(bundles, pathGetter);
+            var loading = await CreateLoading(bundles, pathGetter);
             await loading.Show();
             await mainLoading.Hide();
 
@@ -113,19 +107,16 @@ namespace Novels
                 storyText = storyTextTemp;
             }
 
-            using (new LoadingPriority.Entity(ThreadPriority.Low, _defaultThreadPriority))
-                await bundles.LoadAssetsToDict();
-
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bundles.LoadVideosToDict();
 
-            var localization = CreateLocalization(bundles, pathGetter);
+            var localization = await CreateLocalization(bundles, pathGetter);
             var storyProcessor = CreateStoryProcessor(storyText);
             var saveSystem = CreateSaveSystem();
-            var bubble = CreateBubble(bundles, pathGetter);
-            var location = CreateLocation(bundles, pathGetter);
-            var character = CreateCharacter(bundles, pathGetter);
-            var notification = CreateNotification(bundles, pathGetter);
+            var bubble = await CreateBubble(bundles, pathGetter);
+            var location = await CreateLocation(bundles, pathGetter);
+            var character = await CreateCharacter(bundles, pathGetter);
+            var notification = await CreateNotification(bundles, pathGetter);
             var waiting = CreateWaiting();
 
             var novelProcessCtx = new NovelProcess.Ctx

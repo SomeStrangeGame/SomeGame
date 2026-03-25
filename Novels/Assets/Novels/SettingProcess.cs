@@ -10,7 +10,7 @@ namespace Novels
         internal struct Ctx
         {
             internal ThreadPriority DefaultThreadPriority;
-            internal Func<GameObject> GetBundledPrefab;
+            internal Func<UniTask<GameObject>> GetBundledPrefab;
             internal Func<UniTask> ShowLoading;
             internal Func<UniTask> HideLoading;
         }
@@ -28,7 +28,7 @@ namespace Novels
             {
                 GetBundledPrefab = _ctx.GetBundledPrefab,
             }).AddTo(this);
-            setting.Init();
+            await setting.Init();
                 
             var settingDone = new UniTaskCompletionSource();
             SetDoneButton(setting, settingDone);

@@ -5,7 +5,7 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private Character.Entity CreateCharacter(Bundles.Entity bundles, PathGetter.Entity pathGetter)
+        private async UniTask<Character.Entity> CreateCharacter(Bundles.Entity bundles, PathGetter.Entity pathGetter)
         {
             var character = new Character.Entity(new Character.Entity.Ctx
             {
@@ -17,7 +17,7 @@ namespace Novels
                 GetClothesPath = pathGetter.GetCharacterClothesPath,
                 GetHairSprite = pathGetter.GetCharacterHairPath
             }).AddTo(this);
-            character.Init();
+            await character.Init();
 
             return character;
         }

@@ -5,7 +5,7 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private Location.Entity CreateLocation(Bundles.Entity bundles, PathGetter.Entity pathGetter)
+        private async UniTask<Location.Entity> CreateLocation(Bundles.Entity bundles, PathGetter.Entity pathGetter)
         {
             var location = new Location.Entity(new Location.Entity.Ctx
             {
@@ -15,7 +15,7 @@ namespace Novels
 
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
-            location.Init();
+            await location.Init();
 
             return location;
         }

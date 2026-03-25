@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Novels.Bubble
         public struct Ctx
         {
             public string MainCharacter;
-            public Func<GameObject> GetBubblePrefab;
+            public Func<UniTask<GameObject>> GetBubblePrefab;
         }
 
         private readonly Ctx _ctx;
@@ -23,9 +24,9 @@ namespace Novels.Bubble
             _ctx = ctx;
         }
 
-        public void Init()
+        public async UniTask Init()
         {
-            var prefab = _ctx.GetBubblePrefab();
+            var prefab = await _ctx.GetBubblePrefab();
             var screenGO = GameObject.Instantiate(prefab);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.HideImmediate();
