@@ -133,7 +133,7 @@ namespace Novels
                     lastCamera = null;
                     continue;
                 }
-                if (prefix.ToLower() == "cut-scene")
+                if (prefix.ToLower().Contains("cut-scene"))
                 {
                     queue.Enqueue(new CutSceneQueue{
                         AssetName = value,

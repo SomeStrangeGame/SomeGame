@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 2935016967
+CRC: 1214531693
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 14d2aeb1a743f4efca9c2418b138300e
+    Hash: ec230eb3a4a59102669958aa921aca52
   TypeTreeHash:
     serializedVersion: 2
     Hash: fe29d5df21c6bf032c4ab52e9781dd9c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: b8ba41e5abcfed9a7367fbf9628dc1d2
+    Hash: b9538928b6fdb9b483117a060c0789c9
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -109,6 +109,7 @@ Assets:
 - Assets/RemoteAssets/Location/TZM/Locations/Charlie2.png
 - Assets/RemoteAssets/Location/TZM/Locations/PhilsKitchen.png
 - Assets/RemoteAssets/Location/TZM/Locations/Damon1_Euro.png
+- Assets/RemoteAssets/Location/TZM/Locations/Shark1.png
 - Assets/RemoteAssets/Location/TZM/Locations/Bench.png
 - Assets/RemoteAssets/Location/TZM/Locations/EmbankmentDay.png
 - Assets/RemoteAssets/Location/TZM/Locations/Photo_Latin.png

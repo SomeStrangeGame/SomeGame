@@ -47,6 +47,7 @@ namespace Novels.Location
             _screen.ResetEffect();
 
             var sprite = await _ctx.GetSprite(assetName);
+            Debug.Log(assetName);
             _screen.SetImage(sprite);
 
             var url = _ctx.GetVideoURL(assetName);

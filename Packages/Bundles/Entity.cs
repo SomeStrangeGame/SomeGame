@@ -116,9 +116,6 @@ namespace Bundles
             foreach (var video in allVideos)
             {
                 var videoName = video.Split("/").Last();
-                var firstChar = char.ToUpper(videoName[0]);
-                var otherText = videoName.Substring(1).ToLower();
-                videoName = $"{firstChar}{otherText}";
 
                 var log = (LogType.Warning, $"No video for {video}");
                 try
