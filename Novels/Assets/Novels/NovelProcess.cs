@@ -144,8 +144,8 @@ namespace Novels
                         AssetName = value,
                         Args = args
                     };
-                    lastLocation = null;
-                    lastCamera = null;
+                    //lastLocation = null;
+                    //lastCamera = null;
                     continue;
                 }
                 if (prefix.ToLower() == "camera")
@@ -158,8 +158,8 @@ namespace Novels
                     {
                         Value = value
                     };
-                    lastLocation = null;
-                    lastCutScene = null;
+                    //lastLocation = null;
+                    //lastCutScene = null;
                     continue;
                 }
                 if (prefix.ToLower() == "await")
@@ -233,10 +233,10 @@ namespace Novels
                     queue.Clear();
                     if (lastLocation.HasValue)
                         queue.Enqueue(lastLocation.Value);
-                    if (lastCutScene.HasValue)
-                        queue.Enqueue(lastCutScene.Value);
-                    if (lastCamera.HasValue)
-                        queue.Enqueue(lastCamera.Value);
+                    //if (lastCutScene.HasValue)
+                    //    queue.Enqueue(lastCutScene.Value);
+                    //if (lastCamera.HasValue)
+                    //    queue.Enqueue(lastCamera.Value);
                     if (lastDialog.HasValue)
                         queue.Enqueue(lastDialog.Value);
 
