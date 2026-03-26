@@ -120,8 +120,10 @@ namespace Novels.Location.View
             _image.enabled = state;
         }
 
-        public void SetVideo(string url, bool loop, Action onVideoReady, Action onVideoDone, Action onVideoFailed)
+        public void SetVideo(string url, bool loop, RenderTexture rt, Action onVideoReady, Action onVideoDone, Action onVideoFailed)
         {
+            _video.GetComponentInChildren<RawImage>(true).texture = rt;
+            _video.targetTexture = rt;
             _video.url = url;
             _video.isLooping = loop;
             _video.Play();

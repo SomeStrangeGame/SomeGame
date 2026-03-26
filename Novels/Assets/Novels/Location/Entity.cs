@@ -56,7 +56,9 @@ namespace Novels.Location
                 var videoDone = false;
                 var videoError = false;
 
-                _screen.SetVideo(url, !cutScene, () => videoReady = true, () => videoDone = true, () => videoError = true);
+                var rt = new RenderTexture(sprite.texture.width, sprite.texture.height, 16, RenderTextureFormat.ARGB32);
+                rt.Create();
+                _screen.SetVideo(url, !cutScene, rt, () => videoReady = true, () => videoDone = true, () => videoError = true);
                 while (!videoError && !videoReady) await UniTask.Yield();
 
                 _screen.SetEnabledImage(videoError);

@@ -20,47 +20,103 @@ VAR суша = 0
 VAR вода = 0
 
 //Локации
-VAR LocWardrobeDryDay = "Wardrobe dry day"
-VAR LocHotelRoom = "Hotel room"
+VAR LocWardrobeDay = "Wardrobe"
+VAR LocWardrobeNight = "Wardrobe_Dark"
+VAR LocWardrobeWaterDay = "Wardrobe_Water"
+VAR LocWardrobeWaterNight = "Wardrobe_Dark_Water"
+VAR LocHotelRoom = "HotelRoom"
+VAR LocHotelRoom2 = "HotelRoom2"
 VAR LocWindow = "Window"
 VAR LocCafe = "Cafe"
 VAR LocPier = "Pier"
-VAR LocBoatInMove = "Boat in move"
-VAR LocBoatInSee = "Boat in see"
-VAR LocSandyBeach = "Sandy beach"
-VAR LocUnderWater = "Under water"
-VAR LocBoatInSeeEvening = "Boat in see evening"
-VAR LocBoatInSeeNight = "Boat in see night"
-VAR LocLightingIsland = "Lighting island"
-VAR LocIslandUnderwater = "Island underwater"
-VAR LocLightingCaveWithPool = "Lighting cave with pool"
-VAR LocTempleMainRoom = "Temple main room"
-VAR LocTemple = "Temple"
-VAR LocAtlantica = "Atlantica"
-VAR LocAtlanticaDestroyUnderwater = "Atlantica destroy underwater"
-VAR LocAtlanticaDestroy = "Atlantica destroy"
-VAR LocAtlanticaInGround = "Atlantica in ground"
-VAR LocMainRoom = "Main room"
-VAR LocLightingMeteor = "Lighting meteor"
+VAR LocPierDamonDay = "PierDamonDay"
+VAR LocPierDamonSunset = "PierDamonSunset"
+VAR LocBoatInMove = "BoatInMove"
+VAR LocBoat = "Boat"
+VAR LocSandyBeach = "SandyBeach"
+VAR LocUnderWater = "Underwater_Water"
+VAR LocBoatSunset = "BoatSunset"
+VAR LocBoatAtNight = "BoatAtNight_Dark"
+VAR LocLightingIsland = "LightingIsland_Dark"
+VAR LocUnLightingIsland = "UnLightingIsland"
+VAR LocIslandUnderwater = "IslandUnderwater_Water"
+VAR LocCavePoolNight = "CavePoolNight"
+VAR LocCavePoolDay = "CavePoolDay"
+VAR LocMainRoom = "MainRoom"
+VAR LocTemple = "Temple_Water"
+VAR LocAtlantis = "Atlantis_Water"
+VAR LocAtlantisDestroyUnderwater = "AtlantisDestroyUnderwater_Water_Dark"
+VAR LocAtlantisDestroy = "AtlantisDestroy"
+VAR LocAtlantisNoDestroy = "AtlantisNoDestroy"
+VAR LocAtlantisInGround = "AtlantisInGround"
+VAR LocMainHallEmpty = "MainHallEmpty_Water"
+VAR LocMainHall = "MainHall_Water"
+VAR LocLightingMeteor = "LightingMeteor"
 VAR LocMeteor = "Meteor"
-VAR LocBridgeInAtlantica = "Bridge in Atlantica"
-VAR LocBridgeInCity = "Bridge in city"
+VAR LocBridgeToAtlantis = "BridgeToAtlantis_Water"
+VAR LocBridge1 = "Bridge1_Water"
 VAR LocBikeStop = "Bike stop"
-VAR LocBikeInMove = "Bike in move"
-VAR LocBike = "Bike"
-VAR LocOldTown = "Old town"
-VAR LocAlexasRoom = "Alexas room"
-VAR LocLightingCaveWater = "Lighting cave water"
-VAR LocTonel = "Tonel"
-VAR LocTonelWithPath = "Tonel with path"
+VAR LocBikeInMove = "BikeInMove_Water"
+VAR LocBike = "Bike_Water"
+VAR LocOldTown = "OldTown_Water"
+VAR LocAlexasRoom = "AlexasRoom_Water"
+VAR LocWhirlpoolNight = "WhirlpoolNight"
+VAR LocWhirlpoolDay = "WhirlpoolDay"
+VAR LocTonel = "Tonel_Water"
+VAR LocTonelClosed = "TonelClosed_Water"
+VAR LocTonelWithPath = "TonelWithPath_Water"
+VAR LocBath = "Bath"
+VAR LocBench = "Bench"
+VAR LocBoutique = "Boutique"
+VAR LocDamonsRoom = "DamonsRoom"
+VAR LocEmbankmentDay = "EmbankmentDay"
+VAR LocEmbankmentEvening = "EmbankmentEvening"
+VAR LocEmbankmentNight = "EmbankmentNight"
+VAR LocIcecream = "Icecream"
+VAR LocPhilsHouse = "PhilsHouse"
+VAR LocPhilsKitchen = "PhilsKitchen"
+VAR LocProhod = "Prohod_Dark_Water"
+VAR LocSeaGarden1 = "SeaGarden1_Water"
+VAR LocSeaGarden2 = "SeaGarden2_Water"
+VAR LocStatueAtlan = "StatueAtlan"
+VAR LocYacht = "Yacht"
+VAR LocYachtSofa = "YachtSofa"
+VAR LocYachtSunset = "YachtSunset"
+VAR LocYachtTableNight = "YachtTableNight"
+VAR LocYachtTableSunset = "YachtTableSunset"
 
 //Кат-сцены
-VAR CSWindowIn = "Window in"
+VAR CSWindow = "Window in"
 VAR CSShark = "Shark"
-VAR CSAlexaOnBike = "Alexa on bike"
-VAR CSMeteorLight = "Meteor light"
-VAR CSWithAlexaOnBike = "With Alexa on bike"
-VAR CSCityInDeep = "City in deep"
+VAR CSShark1 = "Shark1"
+VAR CSSharkEat = "SharkEat"
+VAR CSLightingMeteor = "LightingMeteor"
+VAR CSImmersionAtlantis = "ImmersionAtlantis"
+VAR CSJellyfish = "Jellyfish"
+VAR CSLily = "Lily"
+VAR CSAlexa1 = "Alexa1"
+VAR CSAlexa2 = "Alexa2"
+VAR CSCharlie1 = "Charlie"
+VAR CSCharlie2 = "Charlie2"
+VAR CSCharon1 = "Charon1"
+VAR CSCharon2 = "Charon2"
+VAR CSArrivalInAtlantis = "ArrivalInAtlantis"
+VAR CSDamon1E = "Damon1_Euro"
+VAR CSDamon1As = "Damon1_Asia"
+VAR CSDamon1L = "Damon1_Latin"
+VAR CSDamon1Af = "Damon1_Afro"
+VAR CSPhotoE = "Photo_Euro"
+VAR CSPhotoAs = "Photo_Asia"
+VAR CSPhotoL = "Photo_Latin"
+VAR CSPhotoAf = "Photo_Afro"
+VAR CSTrubaE = "Truba_Euro"
+VAR CSTrubaAs = "Truba_Asia"
+VAR CSTrubaL = "Truba_Latin"
+VAR CSTrubaAf = "Truba_Afro"
+VAR CSVvodovoroteE = "Vvodovorote_Euro"
+VAR CSVvodovoroteAs = "Vvodovorote_Asia"
+VAR CSVvodovoroteL = "Vvodovorote_Latin"
+VAR CSVvodovoroteAf = "Vvodovorote_Afro"
 
 //Персонажи
 VAR CharWardrobe = "Wardrobe"
@@ -105,7 +161,7 @@ Stats: Решительность, Милосердие, Слава, Сила о
 
 === TZMs01e01 ===
 
-Location: {LocWardrobeDryDay}
+Location: {LocWardrobeDay}
 Music: основная
 
 ...: Вот-вот начнётся твоя история. Но для начала выбери, как будет выглядеть героиня.
@@ -132,7 +188,23 @@ Keyboard (Введи своё имя): Salli
 
 {CharMainCharacter}: Я выгляжу…
 +[Отлично. Пускай начнётся история.] -> начало
-+[Хорошо, но хочу собрать образ ещё раз.] -> внешность
++[Хорошо, но хочу посмотреть дополнительные наряды.] -> доп_наряды
++[Хорошо, но хочу посмотреть дополнительные причёски.] -> доп_причёски
+
+- (доп_наряды)
++[В цветочек]
++[Волнистый топ]
++[На завязочках]
++[Текущий наряд ]
+- -> внешность
+
+- (доп_причёски)
++[Ободок]
++[Бант]
++[Мальвинка]
++[Текущая причёска]
+- -> внешность
+
 
 - (начало)
 
@@ -214,8 +286,7 @@ Camera: fadein
 
 ...: Я выглянула в окно.
 
-Cut-scene: {CSWindowIn}
-Location: {LocWindow}
+Cut-scene: {CSWindow}
 
 ...: Со всех сторон на меня смотрели аккуратные белые здания, украшающие остров.
 
@@ -382,7 +453,7 @@ Music: тишина
 {CharMainCharacter} (улыбка): Как же хорошо!
 }
 
-Location: {LocBoatInSee}
+Location: {LocBoat}
 Ambient: штиль
 
 ...: Я остановилась посреди моря. 
@@ -491,7 +562,7 @@ Notification: Майами. 15 лет назад.
 
 {CharMainCharacter} (маленькая, радость1): Ух ты! Посколее бы подласти!
 
-Location (белый): {LocBoatInSee}
+Location (белый): {LocBoat}
 Ambient: штиль
 Music: тишина
 
@@ -532,7 +603,8 @@ Ambient: тишина
 
 ...: Внезапно я заметила большую белую акулу, плывущую в мою сторону.
 
-Cut-scene: {CSShark}
+Cut-scene: {CSShark1}
+Location: {LocUnderWater}
 
 ... (Подсказка): Некоторые выборы имеют ограничение во времени. Выбирай быстрее!
 
@@ -549,6 +621,8 @@ Cut-scene: {CSShark}
 ...: Акула тут же поменяла направление и поплыла за мной.
 
 ...: Она была в разы быстрее меня...
+
+Cut-scene (end): {CSSharkEat}
 
 Camera: injury
 
@@ -568,7 +642,11 @@ Await: 2
 
 ...: Акула уже была всего в нескольких метрах.
 
+Cut-scene (end): {CSShark}
+
 ...: Она опрокинула на меня свой равнодушный взгляд и поплыла дальше, в поисках добычи поинтереснее.
+
+Location: {LocUnderWater}
 
 {not 1_1_4_1 && not 1_1_4_3 :
 Notification: +1 Слава
@@ -606,6 +684,8 @@ Ambient: под водой
 
 ...: Шансы были неравные...
 
+Cut-scene (end): {CSSharkEat}
+
 Camera: injury
 
 Notification: Ты разозлила акулу. Вернись немного назад и попробуй избежать смерти.
@@ -617,7 +697,7 @@ Await: 2
 
 ... (Подсказка): Некоторые выборы, как тот, что ты сделала, могут увеличить значение /*значок Слава*/ Славы. Уровень твоей Славы напрямую влияет на отношение персонажей истории к тебе.
 
-Location: {LocBoatInSee}
+Location: {LocBoat}
 Ambient: штиль
 Music: тишина
 
@@ -657,7 +737,7 @@ Notification: Динофлагелляты – биолюминесцентны�
 
 ...: Я погрузилась в увлекательный мир микробиологии и потеряла счёт времени...
 
-Location: {LocBoatInSeeEvening}
+Location: {LocBoatSunset}
 Music: романтичная
 
 ...: Спустя несколько часов солнце приблизилось к горизонту и окрасило небо закатными красками.
@@ -674,7 +754,7 @@ Music: романтичная
 
 ...: Я заворожённо смотрела на то, как опускается закатное солнце и, совсем выдохшись из сил, заснула прямо в катере...
 
-Location: {LocBoatInSeeNight}
+Location: {LocBoatAtNight}
 Music: тишина
 
 ...: Я проснулась, когда на часах было около двух ночи.
@@ -738,7 +818,19 @@ Ambient: под водой
 
 ...: И я поплыла в тоннель...
 
-Location: {LocLightingCaveWithPool}
+Location: {LocProhod}
+
+...: Тоннель казался бесконечным.
+
+...: Динофлагелляты то и дело проплывали мимо, вынуждая меня заострить на них своё внимание.
+
+{CharMainCharacter} (мысли, улыбка): «Моя маленькая мечта осуществилась».
+
+{CharMainCharacter} (мысли, задумчивость): «Но меня не покидает чувство, что она приведёт меня к чему-то бОльшему».
+
+{CharMainCharacter} (мысли): «Гораздо бОльшему...»
+
+Location: {LocCavePoolNight}
 Ambient: тишина
 
 ...: Я очутилась в природном бассейне, который находился внутри острова.
@@ -777,7 +869,7 @@ Notification: Сделанный ранее выбор повлиял на на�
 
 ...: Стены пещеры засветились ярче.
 
-Location: {LocLightingCaveWater}
+Location: {LocWhirlpoolNight}
 Music: тревожная 
 
 {CharMainCharacter} (мысли, удивление): «Что происходит?»
@@ -818,6 +910,8 @@ Notification: +1 Решительность
 }
 
 ...: Меня затянуло в водоворот...
+
+Cut-scene: {CSVvodovoroteE}
 
 Location: {LocTonel}
 Ambient: под водой
@@ -1388,7 +1482,7 @@ Camera: rightleft
 
 {CharMainCharacter} (удивление): …
 
-Cut-scene: {CSAlexaOnBike}
+Cut-scene: {CSAlexa1}
 
 {CharAlexa} (невидимка): Что смотришь? Запрыгивай!
 
@@ -1408,8 +1502,6 @@ Cut-scene: {CSAlexaOnBike}
 -
 
 {1_1_12_1:
-
-Cut-scene: {CSWithAlexaOnBike}
 
 Notification: Алексе приятны твои прикосновения.
 ~ Alexa++
@@ -1458,7 +1550,10 @@ Camera: fadein
 
 ...: Но и эти мысли полетели в небытие вслед за остальными.
 
-Location: {LocBikeStop}
+Location: {LocBridge1}
+Music: основная
+Камера: слева
+Await: 2
 
 ...: Мы остановились на обрыве скалы.
 
@@ -1466,10 +1561,7 @@ Location: {LocBikeStop}
 
 ...: От представшей передо мной картины я потеряла дар речи...
 
-Location: {LocBridgeInCity}
-Music: основная
-
-Await: 2
+Камера: сместить вправо
 
 ...: Передо мной открылся вид на огромный... Нет, просто гигантский город.
 
@@ -1489,7 +1581,7 @@ Await: 2
 
 {CharAlexa}: Да. Это единственный вход в город.
 
-Location: {LocBridgeInAtlantica}
+Location: {LocBridgeToAtlantis}
 
 ...: По обе стороны от нас проплывали атланты. 
 
@@ -1535,7 +1627,9 @@ Location: {LocBridgeInAtlantica}
 
 {CharMainCharacter}: Возможно, ты права.
 
-Location: {LocAtlantica}
+Cut-scene: {CSArrivalInAtlantis}
+
+Location: {LocAtlantis}
 
 ...: Мы проплыли сквозь массивную арку, обрамляющую главные ворота Атлантиды.
 
@@ -1575,7 +1669,7 @@ Location: {LocAtlantica}
 {
 - 1_1_13_1:
 
-Location: {LocAtlanticaInGround}
+Location: {LocAtlantisInGround}
 Music: спокойная
 
 Notification: Атлантида. 10 тысяч лет назад.
@@ -1606,7 +1700,7 @@ Notification: За 100 лет до трагедии.
 
 ... (Алекса): Но стоило Царю прикоснуться к этому камню, как метеорит засветился и будто бы ожил.
 
-Cut-scene: {CSMeteorLight}
+Cut-scene: {CSLightingMeteor}
 Location: {LocLightingMeteor}
 
 {CharAtlanII} (удивление): Потрясающе…
@@ -1639,7 +1733,7 @@ Location: {LocMainRoom}
 
 {CharDemetra}: В нашей семье его будут носить в память о героически погибшем царе Атлане II!
 
-Location: {LocAtlanticaInGround}
+Location: {LocStatueAtlan}
 
 ... (Алекса): Метеорит очистили и установили в центре города, как и приказала царица.
 
@@ -1649,7 +1743,7 @@ Location: {LocAtlanticaInGround}
 
 ... (Алекса): До тех пор, пока не произошла та самая трагедия, из-за которой наша цивилизация канула на морское дно.
 
-Location: {LocAtlanticaDestroy}
+Location: {LocAtlantisDestroy}
 Music: тревожная
 
 Notification: День трагедии.
@@ -1660,9 +1754,9 @@ Notification: День трагедии.
 
 ... (Алекса): Весь наш остров ушёл под воду в разлом между тектоническими плитами.
 
-Cut-scene: {CSCityInDeep}
+Cut-scene: {CSImmersionAtlantis}
 
-Location: {LocAtlanticaDestroyUnderwater}
+Location: {LocAtlantisDestroyUnderwater}
 Music: загадочная
 
 ... (Алекса): Но энергия, которая нас погубила, даровала нам жизнь под водой.
@@ -1673,7 +1767,7 @@ Music: загадочная
 
 Notification: Ты узнала любопытную информацию.
 
-Location: {LocAtlantica}
+Location: {LocAtlantis}
 Music: основная
 
 Notification: Настоящее время.
@@ -1766,7 +1860,7 @@ Location: {LocTemple}
 
 {CharAlexa} (ухмылка): Ты увидишь самого царя Атлантиды!
 
-Location: {LocTempleMainRoom}
+Location: {LocMainHall}
 
 ...: Мы заплыли в просторное помещение с высокими потолками, служащее атлантам пристанищем для проведения торжественных приёмов.
 
@@ -1844,6 +1938,8 @@ Notification: +1 Милосердие
 {CharMainCharacter} (задумчивость): …
 *(1_1_15_1) [«А он и правда красавчик».] //(возможность получить Славу и двойное улучшение отношений с Хароном)
 
+Cut-scene: {CSCharon1}
+
 ...: Я стала внимательно разглядывать мужчину.
 
 ...: Было видно, что внутри него скрывается огромная сила, но он этого никак не показывал.
@@ -1852,7 +1948,7 @@ Notification: +1 Милосердие
 
 ...: Его скучающий взгляд медленно перемещался по толпе, пока не дошёл до меня.
 
-{CharHaron} (Мужчина): …
+{CharHaron} (Мужчина, невидимка): …
 
 {CharMainCharacter} (удивление): …
 
@@ -1867,12 +1963,14 @@ Notification: +1 Милосердие
 
 {CharMainCharacter} (скепсис): …
 
+Cut-scene: {CSCharon2}
+
 Notification: +1 Слава
 ~ Слава++
 
 ...: Уголок его рта чуть дёрнулся в подобии усмешки.
 
-{CharHaron} (Мужчина, ухмылка): …
+{CharHaron} (Мужчина): …
 
 Notification: Мужчина запомнил тебя.
 ~ Haron++
@@ -1888,7 +1986,7 @@ Notification: Мужчина запомнил тебя.
 Notification: Мужчина оценил твой наряд.
 ~ Haron++
 
-{CharHaron} (Мужчина, флирт): ...
+{CharHaron} (Мужчина): ...
 }
 
 ...: А затем он перевёл взгляд и стал рассматривать росписи на стенах. 
@@ -1903,6 +2001,8 @@ Notification: Мужчина оценил твой наряд.
 --
 
 ...: Я тоже решила уделить свое внимание росписям.
+
+Location: {LocMainHall}
 
 *(1_1_15_2) [«По-моему, ничего особенного».]
 
