@@ -47,10 +47,12 @@ namespace Novels.Location
             _screen.ResetEffect();
 
             var sprite = await _ctx.GetSprite(assetName);
-            Debug.Log(assetName);
             _screen.SetImage(sprite);
 
             var url = _ctx.GetVideoURL(assetName);
+#if UNITY_EDITOR_OSX
+            url = $"file:///Users/iantonishin/SomeGame/Novels/{url}";
+#endif
             if (url != "None")
             {
                 var videoReady = false;
