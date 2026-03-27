@@ -9,7 +9,9 @@ namespace Novels
         {
             var saveSystem = new Save.Entity(new Save.Entity.Ctx
             {
-                SaveFileName = "Save",
+                SaveChoiceFileName = "SaveChoice",
+                SaveLocationFileName = "SaveLocation",
+                SaveCameraFileName = "SaveCamera",
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
             saveSystem.Init();

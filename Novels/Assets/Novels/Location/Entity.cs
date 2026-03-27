@@ -73,6 +73,9 @@ namespace Novels.Location
                         while (!videoDone) await UniTask.Yield();
                     else 
                         await UniTask.Delay(3000);// add zoom effect in future
+                    
+                    if (!args.Contains("end"))
+                        await SetImage(assetName, false, args);
                 }
             }
             else
