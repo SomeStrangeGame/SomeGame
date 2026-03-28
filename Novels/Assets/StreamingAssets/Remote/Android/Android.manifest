@@ -1,27 +1,27 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 2922689446
+CRC: 2848100707
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
     Info_0:
-      Name: novels_setting
-      Dependencies: {}
-    Info_1:
-      Name: novels_character
-      Dependencies: {}
-    Info_2:
       Name: novels_bubble
       Dependencies: {}
+    Info_1:
+      Name: novels_loading
+      Dependencies: {}
+    Info_2:
+      Name: novels_character
+      Dependencies: {}
     Info_3:
-      Name: novels_location
-      Dependencies: {}
-    Info_4:
-      Name: novels_notification
-      Dependencies: {}
-    Info_5:
       Name: novels_localization
       Dependencies: {}
+    Info_4:
+      Name: novels_location
+      Dependencies: {}
+    Info_5:
+      Name: novels_setting
+      Dependencies: {}
     Info_6:
-      Name: novels_loading
+      Name: novels_notification
       Dependencies: {}
