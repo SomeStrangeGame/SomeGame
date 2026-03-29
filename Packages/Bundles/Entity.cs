@@ -116,13 +116,16 @@ namespace Bundles
             foreach (var video in allVideos)
             {
                 var videoName = video.Split("/").Last();
+                var firstChar = char.ToUpper(videoName[0]);
+                var otherText = videoName.Substring(1).ToLower();
+                videoName = $"{firstChar}{otherText}";
 
                 var log = (LogType.Warning, $"No video for {video}");
                 try
                 {
                     var videoFile = _cache.ByteArrayFromCash($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
                     _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                    log = (LogType.Log, $"Get video local from: {videoName.ToLower()} - {_videos[videoName.ToLower()]}");
+                    log = (LogType.Log, $"Get video local from: {videoName} - {_videos[videoName.ToLower()]}");
                 }
                 catch
                 {
@@ -135,14 +138,15 @@ namespace Bundles
                             await videoRequest.SendWebRequest();
                             _cache.ByteArrayToCash(videoRequest.downloadHandler.data, $"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
                             _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                            log = (LogType.Warning, $"Load video remote: {videoName.ToLower()} - {_videos[videoName.ToLower()]}");
+                            log = (LogType.Warning, $"Load video remote: {videoName} - {_videos[videoName.ToLower()]}");
                         }
                     }
                     catch
                     {
-                        //ignore
+                        // ignore
                     }
                 }
+                Debug.LogError(log.Item2);
                 _ctx.OnLog.Invoke(log);
             }
         }
