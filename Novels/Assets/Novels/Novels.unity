@@ -353,7 +353,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _data:
-    _prefix: TZM
+    _prefix: TZM_1
     _mainCharacter: Salli
     _storyTextPath: s01e01.ink.json
     _novelsLoadingBundleName: novels_loading

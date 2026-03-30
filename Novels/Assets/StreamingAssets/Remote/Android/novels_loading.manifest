@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 3329514199
+CRC: 1429513958
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 7643c728387130d0845c190ab78a8f5d
+    Hash: 22585aaf50751fb1b8b4c04df6378af7
   TypeTreeHash:
     serializedVersion: 2
     Hash: 40412e7660a5b4bbc3c63715d8f9573f
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 4f9fc3bef0106a4df8f6cb45dfd2e2e7
+    Hash: 322b47cb90503ccfac6a885214fd2139
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -43,8 +43,8 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
 Assets:
-- Assets/RemoteAssets/Loading/TZM/Header.png
-- Assets/RemoteAssets/Loading/TZM/Background.png
+- Assets/RemoteAssets/Loading/TZM_1/Header.png
+- Assets/RemoteAssets/Loading/TZM_1/Background.png
 - Assets/RemoteAssets/Loading/Screen.prefab
-- Assets/RemoteAssets/Loading/TZM/Screen.prefab
+- Assets/RemoteAssets/Loading/TZM_1/Screen.prefab
 Dependencies: []

@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 835267857
+CRC: 316677320
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 2f43011bd9bf4940f233d8e3cf925bed
+    Hash: e6f7288358b9d2c0a408569fb4c9da41
   TypeTreeHash:
     serializedVersion: 2
     Hash: a45073e3e817594c2f78cbe02948253b
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: e563a43de04167d3da431832f107f40a
+    Hash: 2b9c317e5609746a9a1b5c6845a3f5a5
 HashAppended: 0
 ClassTypes:
 - Class: 114
@@ -23,5 +23,5 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: Localization
   ClassName: Localization.LocalizationData/Pair/Languages
 Assets:
-- Assets/RemoteAssets/Localization/TZM/LocalizationData.asset
+- Assets/RemoteAssets/Localization/TZM_1/LocalizationData.asset
 Dependencies: []

@@ -115,10 +115,10 @@ namespace Bundles
             var allVideos = _bundles["Remote/Android/novels_location"].GetAllAssetNames().Where(a => a.Contains(".png")).Select(a => a.Replace(".png", "")).ToArray();
             foreach (var video in allVideos)
             {
-                var videoName = video.Split("/").Last();
-                var firstChar = char.ToUpper(videoName[0]);
-                var otherText = videoName.Substring(1).ToLower();
-                videoName = $"{firstChar}{otherText}";
+                var videoName = video.Split("/").Last().ToLower();
+                //var firstChar = char.ToUpper(videoName[0]);
+                //var otherText = videoName.Substring(1).ToLower();
+                //videoName = $"{firstChar}{otherText}";
 
                 var log = (LogType.Warning, $"No video for {video}");
                 try

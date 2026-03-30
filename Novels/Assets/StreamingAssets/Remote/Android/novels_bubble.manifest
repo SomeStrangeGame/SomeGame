@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 2151919196
+CRC: 4150565309
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 8acfc15ceab563eabf09adb04b34d50d
+    Hash: 529dd9b7e44eaeabd65ecf4b774dd460
   TypeTreeHash:
     serializedVersion: 2
     Hash: d3c3b88297607772a0c7462dac83cc5c
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 01edcfdd7f36d45e1ed1296d64f1a05a
+    Hash: 349b5a3b4f2cbfb834fc782634bd9f73
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -75,12 +75,12 @@ SerializeReferenceClassIdentifiers:
 - AssemblyName: UnityEngine.UI
   ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/RemoteAssets/Bubble/TZM/Sprites/NoCharacter/Bubble.png
-- Assets/RemoteAssets/Bubble/TZM/Sprites/Character/Bubble.png
-- Assets/RemoteAssets/Bubble/TZM/Sprites/Header.png
-- Assets/RemoteAssets/Bubble/TZM/LiberationSans-Regular.ttf
-- Assets/RemoteAssets/Bubble/TZM/Sprites/Button.png
-- Assets/RemoteAssets/Bubble/TZM/Sprites/Character/Point.png
-- Assets/RemoteAssets/Bubble/TZM/Screen.prefab
-- Assets/RemoteAssets/Bubble/TZM/Sprites/Character/PointMind.png
+- Assets/RemoteAssets/Bubble/TZM_1/Sprites/NoCharacter/Bubble.png
+- Assets/RemoteAssets/Bubble/TZM_1/Sprites/Character/Bubble.png
+- Assets/RemoteAssets/Bubble/TZM_1/Sprites/Header.png
+- Assets/RemoteAssets/Bubble/TZM_1/LiberationSans-Regular.ttf
+- Assets/RemoteAssets/Bubble/TZM_1/Sprites/Button.png
+- Assets/RemoteAssets/Bubble/TZM_1/Sprites/Character/Point.png
+- Assets/RemoteAssets/Bubble/TZM_1/Screen.prefab
+- Assets/RemoteAssets/Bubble/TZM_1/Sprites/Character/PointMind.png
 Dependencies: []
