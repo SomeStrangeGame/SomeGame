@@ -146,7 +146,6 @@ namespace Bundles
                         // ignore
                     }
                 }
-                Debug.LogError(log.Item2);
                 _ctx.OnLog.Invoke(log);
             }
         }

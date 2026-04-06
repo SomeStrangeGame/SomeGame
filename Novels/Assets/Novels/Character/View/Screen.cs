@@ -44,12 +44,23 @@ namespace Novels.Character.View
             ClearImagesIfNeed();
         }
 
-        public void ShowImageImmediate()
+        public void ShowImageImmediate(bool isLeft)
         {
             ClearImagesIfNeed();
 
-            _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
+
+            var bodyOffset = 120f;
+            _mainBody.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _clothes.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+
+            var endPosition  = _canvasGroup.transform.localPosition;
+
+            _canvasGroup.transform.localPosition = endPosition;
+            _canvasGroup.alpha = 1f;
         }
 
         public async UniTask ShowImage(bool isLeft)

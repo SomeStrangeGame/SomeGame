@@ -11,8 +11,6 @@ namespace Novels.Save
         public struct Ctx
         {
             public string SaveChoiceFileName;
-            public string SaveLocationFileName;
-            public string SaveCameraFileName;
             public Action<(LogType type, string message)> OnLog;
         }
 
@@ -55,22 +53,6 @@ namespace Novels.Save
             return true;
         }
 
-        public void SaveLocation(string assetName)
-        {
-            using( var cache = new Cache.Entity())
-            {
-                cache.TextToCache("SaveLocation", assetName);
-            }
-        }
-
-        public void SaveCamera(string value)
-        {
-            using( var cache = new Cache.Entity())
-            {
-                cache.TextToCache("SaveCamera", value);
-            }
-        }
-
         public bool TryLoadChoice(out byte result)
         {
             result = 255;
@@ -78,38 +60,6 @@ namespace Novels.Save
             result = _initSave.First();
             _initSave.RemoveAt(0);
             return true;
-        }
-
-        public string LoadLocation()
-        {
-            using (var cache = new Cache.Entity())
-            {
-                try
-                {
-                    return cache.TextFromCache(_ctx.SaveLocationFileName);
-                }
-                catch
-                {
-                    _ctx.OnLog((LogType.Log, "No save location file"));
-                    return null;
-                }
-            }
-        }
-
-        public string LoadCamera()
-        {
-            using (var cache = new Cache.Entity())
-            {
-                try
-                {
-                    return cache.TextFromCache(_ctx.SaveCameraFileName);
-                }
-                catch
-                {
-                    _ctx.OnLog((LogType.Log, "No save camera file"));
-                    return null;
-                }
-            }
         }
     }
 }

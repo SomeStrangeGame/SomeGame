@@ -68,9 +68,10 @@ namespace Novels
 
         internal async UniTask ShowNovelProcess()
         {
-            var loadingDone = false;
             var queue = new Queue<IQueue>();
             var lastCharacterName = string.Empty;
+
+            await _ctx.HideLoading();
 
             while (!IsDisposed)
             {
@@ -194,27 +195,7 @@ namespace Novels
                         SetCharacterView(_ctx.Character, args, _ctx.StoryProcessor.GetChoices()[savedChoice]);
                         _ctx.StoryProcessor.SetChoice(savedChoice);
                     }
-                    continue;
-                }
-
-                if (!loadingDone)
-                {
-                    queue.Clear();
-                    var loadedLocation = _ctx.SaveSystem.LoadLocation();
-                    if (!string.IsNullOrEmpty(loadedLocation))
-                        queue.Enqueue(new LocationQueue
-                        {
-                            AssetName = loadedLocation,
-                            Args = null,
-                        });
-                    var loadedCamera = _ctx.SaveSystem.LoadCamera();
-                    if (!string.IsNullOrEmpty(loadedCamera))
-                        queue.Enqueue(new CameraQueue
-                        {
-                            Value = loadedCamera,
-                        });
-                    loadingDone = true;
-                    await _ctx.HideLoading();
+                    bubbleDone.TrySetResult();
                 }
 
                 //ShowContent
@@ -227,7 +208,10 @@ namespace Novels
                 {
                     isNewCharacter = true;
                     lastCharacterName = characterNameTemp;
-                    await _ctx.Character.Hide();
+                    if (!_ctx.SaveSystem.IsLoadingInProcess)
+                        await _ctx.Character.Hide();
+                    else
+                        _ctx.Character.HideImmediate();
                 }
 
                 while(queue.TryDequeue(out var element))
@@ -235,25 +219,24 @@ namespace Novels
                     switch (element)
                     {
                         case NotificationQueue notificationQueue:
-                            _ctx.Notification.Show(notificationQueue.NotificationText).Forget();
+                            if (!_ctx.SaveSystem.IsLoadingInProcess)
+                                _ctx.Notification.Show(notificationQueue.NotificationText).Forget();
                         break;
                         case LocationQueue locationQueue:
-                            await _ctx.Location.SetImage(locationQueue.AssetName, false, locationQueue.Args);
-                            _ctx.SaveSystem.SaveLocation(locationQueue.AssetName);
+                            await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, locationQueue.AssetName, false, false, locationQueue.Args);
                         break;
                         case CutSceneQueue cutSceneQueue:
-                            await _ctx.Location.SetImage(cutSceneQueue.AssetName, true, cutSceneQueue.Args);
-                            _ctx.SaveSystem.SaveLocation(cutSceneQueue.AssetName);
+                            await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, cutSceneQueue.AssetName, true, false, cutSceneQueue.Args);
                         break;
                         case CameraQueue cameraQueue:
-                            await _ctx.Location.SetCamera(cameraQueue.Value);
-                            _ctx.SaveSystem.SaveCamera(cameraQueue.Value);
+                            await _ctx.Location.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, cameraQueue.Value);
                         break;
                         case AwaitQueue awaitQueue:
-                            await _ctx.Waiting.Await(awaitQueue.Timer);
+                            if (!_ctx.SaveSystem.IsLoadingInProcess)
+                                await _ctx.Waiting.Await(awaitQueue.Timer);
                         break;
                         case DialogQueue dialogQueue:
-                            await _ctx.Location.SetDialog(dialogQueue.DialogAlign);
+                            await _ctx.Location.SetDialog(_ctx.SaveSystem.IsLoadingInProcess, dialogQueue.DialogAlign);
                         break;
                     }
                 }
@@ -261,17 +244,25 @@ namespace Novels
                 await _ctx.Character.SetImage(name, args);
                 if (isNewCharacter)
                 {
-                    await _ctx.Character.Show(name == _ctx.MainCharacter);
+                    if (!_ctx.SaveSystem.IsLoadingInProcess)
+                        await _ctx.Character.Show(name == _ctx.MainCharacter);
+                    else
+                        _ctx.Character.ShowImmediate(name == _ctx.MainCharacter);
                 }
 
-                await _ctx.Bubble.Show();
+                if (!_ctx.SaveSystem.IsLoadingInProcess)
+                    await _ctx.Bubble.Show();
+                else
+                    _ctx.Bubble.ShowImmediate();
 
                 await bubbleDone.Task;
 
                 //ResetContent
-                _ctx.SaveSystem.SaveCamera(string.Empty);
                 queue.Clear();
-                await _ctx.Bubble.Hide();
+                if (!_ctx.SaveSystem.IsLoadingInProcess)
+                    await _ctx.Bubble.Hide();
+                else
+                    _ctx.Bubble.HideImmediate();
             }
         }
 

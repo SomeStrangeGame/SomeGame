@@ -87,9 +87,9 @@ namespace Novels.Character
             await _screen.ShowImage(isLeft);
         }
 
-        public void ShowImmediate()
+        public void ShowImmediate(bool isLeft)
         {
-            _screen.ShowImageImmediate();
+            _screen.ShowImageImmediate(isLeft);
         }
 
         private async UniTask SetMainBody(string name, string view, string[] args)
