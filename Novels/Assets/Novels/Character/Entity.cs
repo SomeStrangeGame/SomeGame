@@ -27,7 +27,6 @@ namespace Novels.Character
         private View.Screen _screen;
 
         private string _mainCharacterView;
-        private string _currentMainCharacterView;
         private string _mainCharacterClothes;
         private string _currentCharacterClothes;
         private string _mainCharacterHair;
@@ -94,7 +93,7 @@ namespace Novels.Character
 
         private async UniTask SetMainBody(string name, string view, string[] args)
         {
-            var mainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, _currentMainCharacterView));
+            var mainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, null));
             foreach (var arg in args)
             {
                 var customBody = arg;
@@ -102,12 +101,10 @@ namespace Novels.Character
                 {
                     view = $"{view}/Child";
                     customBody = null;
-                    _currentMainCharacterView = null;
                 }
                 var currentMainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, customBody));
                 if (currentMainBodySprite != null)
                 {
-                    _currentMainCharacterView = customBody;
                     mainBodySprite = currentMainBodySprite;
                     break;
                 }
