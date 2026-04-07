@@ -134,12 +134,14 @@ namespace Novels.Character
 
         private async UniTask SetClothes(string name, string clothes, string[] args, int clothesIndex = 1)
         {
+            Debug.Log($"{string.Join(", ", args)}");
             foreach (var arg in args)
             {
                 var customClothes = arg;
                 if (customClothes.ToLower() == _child)
                 {
                     customClothes = null;
+                    clothes = null;
                     _currentCharacterClothes = null;
                 }
                 else if (customClothes.ToLower() == "убрать одежду")
