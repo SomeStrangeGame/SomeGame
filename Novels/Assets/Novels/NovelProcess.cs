@@ -56,9 +56,6 @@ namespace Novels
             public TextAlignment DialogAlign;
         }
 
-        private const string _mainCharacter = "MainCharacter";
-        private const string _wardrobe = "Wardrobe";
-
         private Ctx _ctx;
 
         internal NovelProcess(Ctx ctx)
@@ -147,8 +144,7 @@ namespace Novels
                 }
 
                 var characterName = string.Empty;
-                if (!_ctx.Localization.TryGetValue(name, out characterName))
-                    _ctx.OnLog.Invoke((LogType.Warning, $"No localized character name [{name}]"));
+                _ctx.Localization.TryGetValue(name, out characterName);
 
                 TextAlignment dialogAlign;
                 if (name == _ctx.MainCharacter)
@@ -176,8 +172,7 @@ namespace Novels
                 foreach (var choice in choices)
                 {
                     var choiceText = choice.text;
-                    if (!_ctx.Localization.TryGetValue(choice.text, out choiceText))
-                        _ctx.OnLog.Invoke((LogType.Warning, $"No localized choice [{choice.text}]"));
+                    _ctx.Localization.TryGetValue(choice.text, out choiceText);
                     _ctx.Bubble.AddOrUpdateButton(choice.index, name, choiceText, args, id =>
                     {
                         SetCharacterView(_ctx.Character, args, choice);
