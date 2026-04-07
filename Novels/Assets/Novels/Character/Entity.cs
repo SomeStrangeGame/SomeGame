@@ -30,6 +30,7 @@ namespace Novels.Character
         private string _mainCharacterClothes;
         private string _currentCharacterClothes;
         private string _mainCharacterHair;
+        private string _currentCharacterHair;
 
 
         public Entity(Ctx ctx)
@@ -139,7 +140,6 @@ namespace Novels.Character
                 var customClothes = arg;
                 if (customClothes.ToLower() == _child)
                 {
-                    customClothes = null;
                     clothes = null;
                     _currentCharacterClothes = null;
                 }
@@ -161,36 +161,32 @@ namespace Novels.Character
 
         private async UniTask SetHairs(string name, string hair, string[] args, string color = "Блонд")
         {
-            var defaultBackHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, hair, "Back", color));
-            _screen.SetBackHairs(defaultBackHairSprite);
             foreach (var arg in args)
             {
                 if (arg.ToLower() == _child)
                 {
-                    _screen.SetBackHairs(null);
+                    _currentCharacterHair = null;
+                    hair = null;
+                }
+                else if (arg.ToLower() == "убрать причёску" || arg.ToLower() == "убрать прическу")
+                {
+                    _currentCharacterHair = null;
                 }
                 var backHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Back", color));
                 if (backHairSprite != null) 
                 {
-                    _screen.SetBackHairs(backHairSprite);
+                    _currentCharacterHair = arg;
                     break;
-                }
-            }
-            var defaultFrontHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, hair, "Front", color));
-            _screen.SetFrontHairs(defaultFrontHairSprite);
-            foreach (var arg in args)
-            {
-                if (arg.ToLower() == _child)
-                {
-                    _screen.SetFrontHairs(null);
                 }
                 var frontHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Front", color));
                 if (frontHairSprite != null) 
                 {
-                    _screen.SetFrontHairs(frontHairSprite);
+                    _currentCharacterHair = arg;
                     break;
                 }
             }
+            _screen.SetBackHairs(await _ctx.GetSprite(_ctx.GetHairSprite(name, _currentCharacterHair ?? hair, "Back", color)));
+            _screen.SetFrontHairs(await _ctx.GetSprite(_ctx.GetHairSprite(name, _currentCharacterHair ?? hair, "Front", color)));
         }
 
         public async UniTask Hide()
