@@ -113,41 +113,45 @@ namespace Bundles
         public async UniTask LoadVideosToDict()
         {
             var allVideos = _bundles["Remote/Android/novels_location"].GetAllAssetNames().Where(a => a.Contains(".png")).Select(a => a.Replace(".png", "")).ToArray();
+            List<UniTask> cacheVideoProcesses = new();
             foreach (var video in allVideos)
             {
-                var videoName = video.Split("/").Last().ToLower();
-                //var firstChar = char.ToUpper(videoName[0]);
-                //var otherText = videoName.Substring(1).ToLower();
-                //videoName = $"{firstChar}{otherText}";
+                cacheVideoProcesses.Add(CacheVideo(video));
+            }
+            await UniTask.WhenAll(cacheVideoProcesses);
+        }
 
-                var log = (LogType.Warning, $"No video for {video}");
+        private async UniTask CacheVideo(string video)
+        {
+            var videoName = video.Split("/").Last().ToLower();
+
+            var log = (LogType.Warning, $"No video for {video}");
+            try
+            {
+                var videoFile = _cache.ByteArrayFromCash($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                log = (LogType.Log, $"Get video local from: {videoName} - {_videos[videoName.ToLower()]}");
+            }
+            catch
+            {
                 try
                 {
-                    var videoFile = _cache.ByteArrayFromCash($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                    _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                    log = (LogType.Log, $"Get video local from: {videoName} - {_videos[videoName.ToLower()]}");
+                    var url = GetRemotePath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                    using (var videoRequest = UnityWebRequest.Get(url))
+                    {
+                        SetHeaders(videoRequest);
+                        await videoRequest.SendWebRequest();
+                        _cache.ByteArrayToCash(videoRequest.downloadHandler.data, $"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                        _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                        log = (LogType.Warning, $"Load video remote: {videoName} - {_videos[videoName.ToLower()]}");
+                    }
                 }
                 catch
                 {
-                    try
-                    {
-                        var url = GetRemotePath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                        using (var videoRequest = UnityWebRequest.Get(url))
-                        {
-                            SetHeaders(videoRequest);
-                            await videoRequest.SendWebRequest();
-                            _cache.ByteArrayToCash(videoRequest.downloadHandler.data, $"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                            _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                            log = (LogType.Warning, $"Load video remote: {videoName} - {_videos[videoName.ToLower()]}");
-                        }
-                    }
-                    catch
-                    {
-                        // ignore
-                    }
+                    // ignore
                 }
-                _ctx.OnLog.Invoke(log);
             }
+            _ctx.OnLog.Invoke(log);
         }
 
         private string GetBundleKey(string bundleName)
