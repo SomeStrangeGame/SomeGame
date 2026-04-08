@@ -65,7 +65,7 @@ namespace Novels.Location
 
                 var rt = new RenderTexture(sprite.texture.width, sprite.texture.height, 16, RenderTextureFormat.ARGB32);
                 rt.Create();
-                var playbackSpeed = immediate ? Time.timeScale * 5f : Time.timeScale;
+                var playbackSpeed = (immediate && cutScene) ? Time.timeScale * 5f : Time.timeScale;
                 _screen.SetVideo(url, !cutScene, rt, playbackSpeed, () => videoReady = true, () => videoDone = true, () => videoError = true);
                 while (!videoError && !videoReady) await UniTask.Yield();
 
@@ -86,7 +86,7 @@ namespace Novels.Location
                     }
                     else
                     {
-                        if (immediate)
+                        if (!immediate)
                             await UniTask.Delay(3000);// add zoom effect in future
                         else
                             await UniTask.Yield();

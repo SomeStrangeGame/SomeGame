@@ -16,6 +16,10 @@ namespace Bundles
             public Action<(LogType type, string message)> OnLog;
         }
 
+        private readonly Dictionary<string, Sprite> _sprites = new();
+        private readonly Dictionary<string, ScriptableObject> _scriptableObjects = new();
+        private readonly Dictionary<string, GameObject> _prefabs = new();
+
         private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new();
 
@@ -47,7 +51,9 @@ namespace Bundles
             var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
-            return await assetBundle.LoadAssetAsync<Sprite>(assetName) as Sprite;
+            if (!_sprites.ContainsKey(assetName))
+                _sprites[assetName] = await assetBundle.LoadAssetAsync<Sprite>(assetName) as Sprite;
+            return _sprites[assetName];
         }
 
         public async UniTask<T> GetBundledSO<T>(string bundleName, string assetName) where T : ScriptableObject
@@ -55,7 +61,9 @@ namespace Bundles
             var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
-            return await assetBundle.LoadAssetAsync<T>(assetName) as T;
+            if (!_scriptableObjects.ContainsKey(assetName))
+                _scriptableObjects[assetName] = await assetBundle.LoadAssetAsync<T>(assetName) as T;
+            return _scriptableObjects[assetName] as T;
         }
 
         public async UniTask<GameObject> GetBundledPrefab(string bundleName, string assetName)
@@ -63,7 +71,9 @@ namespace Bundles
             var assetBundle = _bundles[GetBundleKey(bundleName)];
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
-            return await assetBundle.LoadAssetAsync<GameObject>(assetName) as GameObject;
+            if (!_prefabs.ContainsKey(assetName))
+                _prefabs[assetName] = await assetBundle.LoadAssetAsync<GameObject>(assetName) as GameObject;
+            return _prefabs[assetName];
         }
 
         public string GetVideoURL(string assetName)
