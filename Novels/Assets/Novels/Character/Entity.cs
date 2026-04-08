@@ -54,11 +54,13 @@ namespace Novels.Character
         public void SetMainCharacterClothes(string clothes)
         {
             _mainCharacterClothes = clothes;
+            _currentCharacterClothes = null;
         }
 
         public void SetMainCharacterHair(string hair)
         {
             _mainCharacterHair = hair;
+            _currentCharacterHair = null;
         }
 
         public async UniTask SetImage(string name, params string[] args)
