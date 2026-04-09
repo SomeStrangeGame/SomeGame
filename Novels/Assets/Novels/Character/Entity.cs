@@ -15,7 +15,8 @@ namespace Novels.Character
             public Func<string, string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
             public Func<string, string, int, string> GetClothesPath;
-            public Func<string, string, string, string, string> GetHairSprite;
+            public Func<string, string, string, string, string> GetHairPath;
+            public Func<string, string, string, string> GetAccessoriesPath;
         }
 
         private const string _mainCharacter = "MainCharacter";
@@ -31,6 +32,7 @@ namespace Novels.Character
         private string _currentCharacterClothes;
         private string _mainCharacterHair;
         private string _currentCharacterHair;
+        private string _currentCharacterAccessories;
 
 
         public Entity(Ctx ctx)
@@ -81,7 +83,8 @@ namespace Novels.Character
                 SetMainBody(name, view, args),
                 SetEmotion(name, view, args),
                 SetClothes(name, clothes, args),
-                SetHairs(name, hair, args));
+                SetHairs(name, hair, args),
+                SetAccessoiries(name, args));
         }
 
         public async UniTask Show(bool isLeft)
@@ -174,21 +177,57 @@ namespace Novels.Character
                 {
                     _currentCharacterHair = null;
                 }
-                var backHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Back", color));
+                var backHairSprite = await _ctx.GetSprite(_ctx.GetHairPath(name, arg, "Back", color));
                 if (backHairSprite != null) 
                 {
                     _currentCharacterHair = arg;
                     break;
                 }
-                var frontHairSprite = await _ctx.GetSprite(_ctx.GetHairSprite(name, arg, "Front", color));
+                var frontHairSprite = await _ctx.GetSprite(_ctx.GetHairPath(name, arg, "Front", color));
                 if (frontHairSprite != null) 
                 {
                     _currentCharacterHair = arg;
                     break;
                 }
             }
-            _screen.SetBackHairs(await _ctx.GetSprite(_ctx.GetHairSprite(name, _currentCharacterHair ?? hair, "Back", color)));
-            _screen.SetFrontHairs(await _ctx.GetSprite(_ctx.GetHairSprite(name, _currentCharacterHair ?? hair, "Front", color)));
+            _screen.SetBackHairs(await _ctx.GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, "Back", color)));
+            _screen.SetFrontHairs(await _ctx.GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, "Front", color)));
+        }
+
+        private async UniTask SetAccessoiries(string name, string[] args)
+        {
+            foreach (var arg in args)
+            {
+                if (arg.ToLower() == _child)
+                {
+                    _currentCharacterAccessories = null;
+                }
+                else if (arg.ToLower() == "убрать аксессуар")
+                {
+                    _currentCharacterAccessories = null;
+                }
+                var backAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, "Back"));
+                if (backAccessoriesSprite != null) 
+                {
+                    _currentCharacterAccessories = arg;
+                    break;
+                }
+                var middleAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, "Middle"));
+                if (middleAccessoriesSprite != null) 
+                {
+                    _currentCharacterAccessories = arg;
+                    break;
+                }
+                var frontAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, "Front"));
+                if (frontAccessoriesSprite != null) 
+                {
+                    _currentCharacterAccessories = arg;
+                    break;
+                }
+            }
+            _screen.SetBackAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, "Back")));
+            _screen.SetMiddleAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, "Middle")));
+            _screen.SetFrontAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, "Front")));
         }
 
         public async UniTask Hide()

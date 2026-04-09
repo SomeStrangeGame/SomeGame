@@ -15,7 +15,8 @@ namespace Novels
                 GetMainBodyPath = pathGetter.GetCharacterMainBodyPath,
                 GetEmotionPath = pathGetter.GetCharacterEmotionPath,
                 GetClothesPath = pathGetter.GetCharacterClothesPath,
-                GetHairSprite = pathGetter.GetCharacterHairPath
+                GetHairPath = pathGetter.GetCharacterHairPath,
+                GetAccessoriesPath = pathGetter.GetCharacterAccessoiresPath
             }).AddTo(this);
             await character.Init();
 

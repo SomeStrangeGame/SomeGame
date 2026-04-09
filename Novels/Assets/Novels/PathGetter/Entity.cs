@@ -112,6 +112,16 @@ namespace Novels.PathGetter
             return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}.png";
         }
 
+        public string GetCharacterAccessoiresPath(string name, string arg, string direction)
+        {
+            if (string.IsNullOrEmpty(name)) return string.Empty;
+            if (string.IsNullOrEmpty(arg)) return string.Empty;
+
+            var firstChar = char.ToUpper(arg[0]);
+            var otherText = arg.Substring(1).ToLower();
+            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Accessories/{direction}/{firstChar}{otherText}.png";
+        }
+
         public string GetNotificationPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;

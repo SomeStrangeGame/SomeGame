@@ -13,6 +13,9 @@ namespace Novels.Character.View
         [SerializeField] private Image _emotion;
         [SerializeField] private Image _backHairs;
         [SerializeField] private Image _frontHairs;
+        [SerializeField] private Image _backAccessories;
+        [SerializeField] private Image _middleAccessories;
+        [SerializeField] private Image _frontAccessories;
 
         public void SetMainBody(Sprite sprite)
         {
@@ -44,6 +47,24 @@ namespace Novels.Character.View
             ClearImagesIfNeed();
         }
 
+        public void SetBackAccessories(Sprite sprite)
+        {
+            _backAccessories.sprite = sprite;
+            ClearImagesIfNeed();
+        }
+
+        public void SetMiddleAccessories(Sprite sprite)
+        {
+            _middleAccessories.sprite = sprite;
+            ClearImagesIfNeed();
+        }
+
+        public void SetFrontAccessories(Sprite sprite)
+        {
+            _frontAccessories.sprite = sprite;
+            ClearImagesIfNeed();
+        }
+
         public void ShowImageImmediate(bool isLeft)
         {
             ClearImagesIfNeed();
@@ -56,6 +77,9 @@ namespace Novels.Character.View
             _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
             _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
             _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _backAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _middleAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _frontAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
 
             var endPosition  = _canvasGroup.transform.localPosition;
 
@@ -76,6 +100,9 @@ namespace Novels.Character.View
             _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
             _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
             _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _backAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _middleAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            _frontAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
 
             var startPosition = _canvasGroup.transform.localPosition + Vector3.right * (isLeft ? -100f : 100f);
             var endPosition  = _canvasGroup.transform.localPosition;
@@ -127,6 +154,9 @@ namespace Novels.Character.View
             _clothes.color = _clothes.sprite == null ? Color.clear : Color.white;
             _frontHairs.color = _frontHairs.sprite == null ? Color.clear : Color.white;
             _backHairs.color = _backHairs.sprite == null ? Color.clear : Color.white;
+            _backAccessories.color = _backAccessories.sprite == null ? Color.clear : Color.white;
+            _middleAccessories.color = _middleAccessories.sprite == null ? Color.clear : Color.white;
+            _frontAccessories.color = _frontAccessories.sprite == null ? Color.clear : Color.white;
         }
     }
 }
