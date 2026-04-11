@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.0.62f1
-CRC: 1840356534
+CRC: 2501251509
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 4913dd196ddf159e35846685d797e68c
+    Hash: 437407fcc0ec0c439a56fbafb3b599e8
   TypeTreeHash:
     serializedVersion: 2
-    Hash: fe417782042ec57bad5e7c4e0c43b9f9
+    Hash: b8f0d25248197ebed05b4c9b5d97f787
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 0f9abb18110a528abd170aab5bdb98f5
+    Hash: 77b60b229df4054c3dd4afdafad9bd4c
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -43,6 +43,8 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 128
   Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
 - Class: 222
   Script: {instanceID: 0}
 - Class: 223
@@ -73,4 +75,6 @@ SerializeReferenceClassIdentifiers:
 Assets:
 - Assets/RemoteAssets/Notification/TZM_1/LiberationSans-Regular.ttf
 - Assets/RemoteAssets/Notification/TZM_1/Screen.prefab
+- Assets/RemoteAssets/Notification/TZM_1/Sprites/NotifcationPlaque.png
+- Assets/RemoteAssets/Notification/TZM_1/Sprites/Sticker.png
 Dependencies: []
