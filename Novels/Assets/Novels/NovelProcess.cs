@@ -162,26 +162,28 @@ namespace Novels
                 _ctx.Bubble.RemoveAllButtons();
                 var choices = _ctx.StoryProcessor.GetChoices();
                 if (choices.Count > 0)
+                {
                     _ctx.Bubble.ResetBackgroundButton();
+                    foreach (var choice in choices)
+                    {
+                        var choiceText = choice.text;
+                        _ctx.Localization.TryGetValue(choice.text, out choiceText);
+                        _ctx.Bubble.AddOrUpdateButton(choice.index, name, choiceText, args, id =>
+                        {
+                            SetCharacterView(_ctx.Character, args, choice);
+
+                            _ctx.SaveSystem.TrySaveChoice((byte)id);
+                            _ctx.StoryProcessor.SetChoice(id);
+                            bubbleDone.TrySetResult();
+                        });
+                    }
+                }
                 else
                     _ctx.Bubble.SetBackgroundButton(() => 
                     {
                         _ctx.SaveSystem.TrySaveChoice();
                         bubbleDone.TrySetResult();
                     });
-                foreach (var choice in choices)
-                {
-                    var choiceText = choice.text;
-                    _ctx.Localization.TryGetValue(choice.text, out choiceText);
-                    _ctx.Bubble.AddOrUpdateButton(choice.index, name, choiceText, args, id =>
-                    {
-                        SetCharacterView(_ctx.Character, args, choice);
-
-                        _ctx.SaveSystem.TrySaveChoice((byte)id);
-                        _ctx.StoryProcessor.SetChoice(id);
-                        bubbleDone.TrySetResult();
-                    });
-                }
 
                 if (_ctx.SaveSystem.TryLoadChoice(out var savedChoice))
                 {
