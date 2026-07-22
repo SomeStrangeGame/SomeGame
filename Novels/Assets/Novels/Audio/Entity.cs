@@ -26,17 +26,13 @@ namespace Novels.Audio
 
         private readonly Ctx _ctx;
 
-        private readonly Dictionary<string, GameObject> _musicObjects;
-        private readonly Dictionary<string, GameObject> _soundObjects;
-        private readonly Dictionary<string, GameObject> _ambientObjects;
+        private readonly Dictionary<Audio, GameObject> _audioObjects;
 
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
 
-            _musicObjects = new ();
-            _soundObjects = new ();
-            _ambientObjects = new ();
+            _audioObjects = new ();
         }
         
         public async UniTask PlayAudio(string assetName, Audio type)
@@ -46,6 +42,7 @@ namespace Novels.Audio
             AudioClip audioClip = null;
             using (var audioRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.WAV))
             {
+                Debug.Log($"Play audio {assetName}");
                 SetHeaders(audioRequest);
                 await audioRequest.SendWebRequest();
 
@@ -70,30 +67,36 @@ namespace Novels.Audio
                 switch (audioType)
                 {
                     case Audio.Music:
-                        if (_musicObjects.TryGetValue(assetName, out var objMusic))
+                        if (_audioObjects.TryGetValue(audioType, out var objMusic))
                         {
                             GameObject.Destroy(objMusic);
-                            _musicObjects.Remove(assetName);
+                            _audioObjects.Remove(audioType);
                         }
                         break;
                     case Audio.Sound:
-                        if (_soundObjects.TryGetValue(assetName, out var objSound))
+                        if (_audioObjects.TryGetValue(audioType, out var objSound))
                         {
                             GameObject.Destroy(objSound);
-                            _soundObjects.Remove(assetName);
+                            _audioObjects.Remove(audioType);
                         }
                         break;
                     case Audio.Ambient:
-                        if (_ambientObjects.TryGetValue(assetName, out var ambientSource))
+                        if (_audioObjects.TryGetValue(audioType, out var ambientSource))
                         {
                             GameObject.Destroy(ambientSource);
-                            _ambientObjects.Remove(assetName);
+                            _audioObjects.Remove(audioType);
                         }
                         break;
                 }
                 return null;
             }
-            var audioObject = new GameObject(assetName);
+            if (_audioObjects.TryGetValue(audioType, out var objAudio))
+            {
+                GameObject.Destroy(objAudio);
+                _audioObjects.Remove(audioType);
+            }
+
+            var audioObject = new GameObject($"{assetName}-{audioType}");
             var audioSource = audioObject.AddComponent<AudioSource>();
             audioSource.clip = audioClip;
             audioSource.playOnAwake = false;
@@ -101,15 +104,15 @@ namespace Novels.Audio
             {
                 case Audio.Music:
                     audioSource.loop = true;
-                    _musicObjects[assetName] = audioObject;
+                    _audioObjects[audioType] = audioObject;
                     break;
                 case Audio.Sound:
                     audioSource.loop = false;
-                    _soundObjects[assetName] = audioObject;
+                    _audioObjects[audioType] = audioObject;
                     break;
                 case Audio.Ambient:
                     audioSource.loop = true;
-                    _ambientObjects[assetName] = audioObject;
+                    _audioObjects[audioType] = audioObject;
                     break;
             }
             audioSource.Play();
