@@ -39,6 +39,16 @@ namespace Novels
             public string AssetName;
             public string[] Args;
         }
+        private struct SoundQueue : IQueue
+        {
+            public string AssetName;
+            public string[] Args;
+        }
+        private struct AmbientQueue : IQueue
+        {
+            public string AssetName;
+            public string[] Args;
+        }
         private struct LocationQueue : IQueue
         {
             public string AssetName;
@@ -101,9 +111,6 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("keyboard")) continue;
 
-                if (prefix.ToLower() == "sound") continue;
-                if (prefix.ToLower() == "ambient") continue;
-
                 if (prefix.ToLower() == "notification")
                 {
                     queue.Enqueue(new NotificationQueue
@@ -133,6 +140,24 @@ namespace Novels
                 if (prefix.ToLower().Contains("music"))
                 {
                     queue.Enqueue(new MusicQueue
+                    {
+                        AssetName = value,
+                        Args = args
+                    });
+                    continue;
+                }
+                if (prefix.ToLower().Contains("sound"))
+                {
+                    queue.Enqueue(new SoundQueue
+                    {
+                        AssetName = value,
+                        Args = args
+                    });
+                    continue;
+                }
+                if (prefix.ToLower().Contains("ambient"))
+                {
+                    queue.Enqueue(new AmbientQueue
                     {
                         AssetName = value,
                         Args = args
@@ -241,6 +266,12 @@ namespace Novels
                         break;
                         case MusicQueue musicQueue:
                             await _ctx.Audio.PlayAudio(musicQueue.AssetName, Audio.Entity.Audio.Music);
+                        break;
+                        case SoundQueue soundQueue:
+                            await _ctx.Audio.PlayAudio(soundQueue.AssetName, Audio.Entity.Audio.Sound);
+                        break;
+                        case AmbientQueue ambientQueue:
+                            await _ctx.Audio.PlayAudio(ambientQueue.AssetName, Audio.Entity.Audio.Ambient);
                         break;
                         case CameraQueue cameraQueue:
                             await _ctx.Location.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, cameraQueue.Value);

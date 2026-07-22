@@ -13,6 +13,7 @@ namespace Novels.Audio
         {
             Music,
             Sound,
+            Ambient
         }
 
         public struct Ctx
@@ -26,12 +27,16 @@ namespace Novels.Audio
         private readonly Ctx _ctx;
 
         private readonly Dictionary<string, GameObject> _musicObjects;
+        private readonly Dictionary<string, GameObject> _soundObjects;
+        private readonly Dictionary<string, GameObject> _ambientObjects;
 
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
 
             _musicObjects = new ();
+            _soundObjects = new ();
+            _ambientObjects = new ();
         }
         
         public async UniTask PlayAudio(string assetName, Audio type)
@@ -47,6 +52,7 @@ namespace Novels.Audio
                 audioClip = DownloadHandlerAudioClip.GetContent(audioRequest);
             }
             UpdateAudioSource(assetName, audioClip, type);
+            _ctx.OnLog?.Invoke((LogType.Log, $"Play audio {assetName}"));
         }
 
         private void SetHeaders(UnityWebRequest request)
@@ -64,13 +70,25 @@ namespace Novels.Audio
                 switch (audioType)
                 {
                     case Audio.Music:
-                        if (_musicObjects.TryGetValue(assetName, out var obj))
+                        if (_musicObjects.TryGetValue(assetName, out var objMusic))
                         {
-                            GameObject.Destroy(obj);
+                            GameObject.Destroy(objMusic);
                             _musicObjects.Remove(assetName);
                         }
                         break;
                     case Audio.Sound:
+                        if (_soundObjects.TryGetValue(assetName, out var objSound))
+                        {
+                            GameObject.Destroy(objSound);
+                            _soundObjects.Remove(assetName);
+                        }
+                        break;
+                    case Audio.Ambient:
+                        if (_ambientObjects.TryGetValue(assetName, out var ambientSource))
+                        {
+                            GameObject.Destroy(ambientSource);
+                            _ambientObjects.Remove(assetName);
+                        }
                         break;
                 }
                 return null;
@@ -87,6 +105,11 @@ namespace Novels.Audio
                     break;
                 case Audio.Sound:
                     audioSource.loop = false;
+                    _soundObjects[assetName] = audioObject;
+                    break;
+                case Audio.Ambient:
+                    audioSource.loop = true;
+                    _ambientObjects[assetName] = audioObject;
                     break;
             }
             audioSource.Play();
