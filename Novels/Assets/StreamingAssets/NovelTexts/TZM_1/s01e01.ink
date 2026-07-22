@@ -526,7 +526,7 @@ Notification: Выбор повлияет на историю в будущем!
 {CharMainCharacter} (мысли, улыбка): «Ох, бабушка, спасибо тебе, что с самого детства учила меня не бояться воды».
 
 Location (white): {LocSandyBeach}
-Music: позитив
+Music: позитивная
 Ambient: тишина
 
 Notification: Майами. 15 лет назад.

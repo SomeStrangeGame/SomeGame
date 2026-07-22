@@ -240,8 +240,7 @@ namespace Novels
                             await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, cutSceneQueue.AssetName, true, false, cutSceneQueue.Args);
                         break;
                         case MusicQueue musicQueue:
-                            if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                await _ctx.Audio.PlayAudio(musicQueue.AssetName);
+                            await _ctx.Audio.PlayAudio(musicQueue.AssetName, Audio.Entity.Audio.Music);
                         break;
                         case CameraQueue cameraQueue:
                             await _ctx.Location.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, cameraQueue.Value);
