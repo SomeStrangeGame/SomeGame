@@ -118,6 +118,7 @@ namespace Novels
             var character = await CreateCharacter(bundles, pathGetter);
             var notification = await CreateNotification(bundles, pathGetter);
             var waiting = CreateWaiting();
+            var audio = CreateAudio(bundles);
 
             var novelProcessCtx = new NovelProcess.Ctx
             {
@@ -127,6 +128,7 @@ namespace Novels
                 Notification = notification,
                 Location = location,
                 Waiting = waiting,
+                Audio = audio,
                 Localization = localization,
                 Bubble = bubble,
                 SaveSystem = saveSystem,

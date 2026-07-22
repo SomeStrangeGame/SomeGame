@@ -17,6 +17,7 @@ namespace Novels
             internal Notification.Entity Notification;
             internal Location.Entity Location;
             internal Waiting.Entity Waiting;
+            internal Audio.Entity Audio;
             internal Localization.Entity Localization;
             internal Bubble.Entity Bubble;
             internal Save.Entity SaveSystem;
@@ -32,6 +33,11 @@ namespace Novels
         private struct NotificationQueue : IQueue
         {
             public string NotificationText;
+        }
+        private struct MusicQueue : IQueue
+        {
+            public string AssetName;
+            public string[] Args;
         }
         private struct LocationQueue : IQueue
         {
@@ -95,7 +101,6 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("keyboard")) continue;
 
-                if (prefix.ToLower() == "music") continue;
                 if (prefix.ToLower() == "sound") continue;
                 if (prefix.ToLower() == "ambient") continue;
 
@@ -120,6 +125,15 @@ namespace Novels
                 if (prefix.ToLower().Contains("cut-scene"))
                 {
                     queue.Enqueue(new CutSceneQueue{
+                        AssetName = value,
+                        Args = args
+                    });
+                    continue;
+                }
+                if (prefix.ToLower().Contains("music"))
+                {
+                    queue.Enqueue(new MusicQueue
+                    {
                         AssetName = value,
                         Args = args
                     });
@@ -224,6 +238,10 @@ namespace Novels
                         break;
                         case CutSceneQueue cutSceneQueue:
                             await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, cutSceneQueue.AssetName, true, false, cutSceneQueue.Args);
+                        break;
+                        case MusicQueue musicQueue:
+                            if (!_ctx.SaveSystem.IsLoadingInProcess)
+                                await _ctx.Audio.PlayAudio(musicQueue.AssetName);
                         break;
                         case CameraQueue cameraQueue:
                             await _ctx.Location.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, cameraQueue.Value);

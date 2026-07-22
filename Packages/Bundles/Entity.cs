@@ -24,6 +24,7 @@ namespace Bundles
         private readonly Dictionary<string, AssetBundle> _bundles = new();
 
         private readonly Dictionary<string, string> _videos = new();
+        private readonly Dictionary<string, string> _audio = new();
 
         private Ctx _ctx;
 
@@ -136,23 +137,24 @@ namespace Bundles
             var videoName = video.Split("/").Last().ToLower();
 
             var log = (LogType.Warning, $"No video for {video}");
+            var path = $"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4";
             try
             {
-                var videoFile = _cache.ByteArrayFromCash($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                var videoFile = _cache.ByteArrayFromCash(path);
+                _videos[videoName.ToLower()] = _cache.ConvertLocalPath(path);
                 log = (LogType.Log, $"Get video local from: {videoName} - {_videos[videoName.ToLower()]}");
             }
             catch
             {
                 try
                 {
-                    var url = GetRemotePath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                    var url = GetRemotePath(path);
                     using (var videoRequest = UnityWebRequest.Get(url))
                     {
                         SetHeaders(videoRequest);
                         await videoRequest.SendWebRequest();
-                        _cache.ByteArrayToCash(videoRequest.downloadHandler.data, $"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
-                        _videos[videoName.ToLower()] = _cache.ConvertLocalPath($"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4");
+                        _cache.ByteArrayToCash(videoRequest.downloadHandler.data, path);
+                        _videos[videoName.ToLower()] = _cache.ConvertLocalPath(path);
                         log = (LogType.Warning, $"Load video remote: {videoName} - {_videos[videoName.ToLower()]}");
                     }
                 }
@@ -162,6 +164,19 @@ namespace Bundles
                 }
             }
             _ctx.OnLog.Invoke(log);
+        }
+
+        public void LoadAudioToDict(string audio)
+        {
+            var audioName = audio.Split("/").Last().ToLower();
+            var path = $"NovelsAudio/{_ctx.Prefix}/{audioName}.wav";
+            _audio[audioName.ToLower()] = GetRemotePath(path);
+        }
+
+        public string GetAudioURL(string assetName)
+        {
+            if (!_audio.ContainsKey(assetName.ToLower())) return "None";
+            return _audio[assetName.ToLower()];
         }
 
         private string GetBundleKey(string bundleName)
