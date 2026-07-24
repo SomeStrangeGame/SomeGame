@@ -77,12 +77,10 @@ namespace Novels.Audio
                 _audioObjects.Remove(audioType);
             }
 
-            Debug.Log("DebugMarker1");
             var audioObject = new GameObject($"{assetName}-{audioType}");
             var audioSource = audioObject.AddComponent<AudioSource>();
             audioSource.clip = audioClip;
             audioSource.playOnAwake = false;
-            Debug.Log("DebugMarker2");
             switch (audioType)
             {
                 case Audio.Music:
@@ -101,7 +99,6 @@ namespace Novels.Audio
                     audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups("Ambient")[0];
                     break;
             }
-            Debug.Log("DebugMarker3");
             audioSource.Play();
             return audioSource;
         }

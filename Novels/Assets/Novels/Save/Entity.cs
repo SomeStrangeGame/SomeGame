@@ -43,6 +43,7 @@ namespace Novels.Save
 
         public bool TrySaveChoice(byte unit = 255)
         {
+            return false;
             if (IsLoadingInProcess) return false;
 
             _save.Add(unit);
