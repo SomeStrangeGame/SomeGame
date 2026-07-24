@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
+using UnityEngine.Audio;
 using UnityEngine.Networking;
 
 namespace Novels.Audio
@@ -20,6 +21,7 @@ namespace Novels.Audio
         {
             public Func<string, string> GetAudioURL;
             public Action<string> LoadAudioToDict;
+            public AudioMixer AudioMixer;
 
             public Action<(LogType type, string message)> OnLog;
         }
@@ -37,19 +39,26 @@ namespace Novels.Audio
         
         public async UniTask PlayAudio(string assetName, Audio type)
         {
-            _ctx.LoadAudioToDict(assetName);
-            var audioURL = _ctx.GetAudioURL(assetName);
-            AudioClip audioClip = null;
-            using (var audioRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.WAV))
+            try
             {
-                Debug.Log($"Play audio {assetName}");
-                SetHeaders(audioRequest);
-                await audioRequest.SendWebRequest();
+                _ctx.LoadAudioToDict(assetName);
+                var audioURL = _ctx.GetAudioURL(assetName);
+                AudioClip audioClip = null;
+                using (var audioRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.WAV))
+                {
+                    SetHeaders(audioRequest);
+                    await audioRequest.SendWebRequest();
 
-                audioClip = DownloadHandlerAudioClip.GetContent(audioRequest);
+                    audioClip = DownloadHandlerAudioClip.GetContent(audioRequest);
+                }
+                UpdateAudioSource(assetName, audioClip, type);
+                _ctx.OnLog?.Invoke((LogType.Log, $"Play audio {assetName}"));
             }
-            UpdateAudioSource(assetName, audioClip, type);
-            _ctx.OnLog?.Invoke((LogType.Log, $"Play audio {assetName}"));
+            catch (Exception ex)
+            {
+                ClearAudio(type);
+                _ctx.OnLog?.Invoke((LogType.Log, $"Clear audio {type}\n{ex.Message}"));
+            }
         }
 
         private void SetHeaders(UnityWebRequest request)
@@ -62,61 +71,67 @@ namespace Novels.Audio
 
         private AudioSource UpdateAudioSource(string assetName, AudioClip audioClip, Audio audioType)
         {
-            if (assetName == "тишина")
-            {
-                switch (audioType)
-                {
-                    case Audio.Music:
-                        if (_audioObjects.TryGetValue(audioType, out var objMusic))
-                        {
-                            GameObject.Destroy(objMusic);
-                            _audioObjects.Remove(audioType);
-                        }
-                        break;
-                    case Audio.Sound:
-                        if (_audioObjects.TryGetValue(audioType, out var objSound))
-                        {
-                            GameObject.Destroy(objSound);
-                            _audioObjects.Remove(audioType);
-                        }
-                        break;
-                    case Audio.Ambient:
-                        if (_audioObjects.TryGetValue(audioType, out var ambientSource))
-                        {
-                            GameObject.Destroy(ambientSource);
-                            _audioObjects.Remove(audioType);
-                        }
-                        break;
-                }
-                return null;
-            }
             if (_audioObjects.TryGetValue(audioType, out var objAudio))
             {
                 GameObject.Destroy(objAudio);
                 _audioObjects.Remove(audioType);
             }
 
+            Debug.Log("DebugMarker1");
             var audioObject = new GameObject($"{assetName}-{audioType}");
             var audioSource = audioObject.AddComponent<AudioSource>();
             audioSource.clip = audioClip;
             audioSource.playOnAwake = false;
+            Debug.Log("DebugMarker2");
             switch (audioType)
             {
                 case Audio.Music:
                     audioSource.loop = true;
                     _audioObjects[audioType] = audioObject;
+                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups("Music")[0];
                     break;
                 case Audio.Sound:
                     audioSource.loop = false;
                     _audioObjects[audioType] = audioObject;
+                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups("Sound")[0];
                     break;
                 case Audio.Ambient:
                     audioSource.loop = true;
                     _audioObjects[audioType] = audioObject;
+                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups("Ambient")[0];
                     break;
             }
+            Debug.Log("DebugMarker3");
             audioSource.Play();
             return audioSource;
+        }
+
+        private void ClearAudio(Audio audioType)
+        {
+            switch (audioType)
+            {
+                case Audio.Music:
+                    if (_audioObjects.TryGetValue(audioType, out var objMusic))
+                    {
+                        GameObject.Destroy(objMusic);
+                        _audioObjects.Remove(audioType);
+                    }
+                    break;
+                case Audio.Sound:
+                    if (_audioObjects.TryGetValue(audioType, out var objSound))
+                    {
+                        GameObject.Destroy(objSound);
+                        _audioObjects.Remove(audioType);
+                    }
+                    break;
+                case Audio.Ambient:
+                    if (_audioObjects.TryGetValue(audioType, out var ambientSource))
+                    {
+                        GameObject.Destroy(ambientSource);
+                        _audioObjects.Remove(audioType);
+                    }
+                    break;
+            }
         }
     }
 }

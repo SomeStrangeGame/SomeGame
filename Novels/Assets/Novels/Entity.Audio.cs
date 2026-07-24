@@ -10,6 +10,7 @@ namespace Novels
             {
                 GetAudioURL = assetName => bundles.GetAudioURL(assetName),
                 LoadAudioToDict = bundles.LoadAudioToDict,
+                AudioMixer = _ctx.Data.AudioMixer,
 
                 OnLog = _ctx.OnLog,
             }).AddTo(this);

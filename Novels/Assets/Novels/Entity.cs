@@ -2,6 +2,7 @@ using System;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Novels
 {
@@ -23,6 +24,8 @@ namespace Novels
         [SerializeField] private string _novelsNotificationBundleName;
         [SerializeField] private string _novelsLocalizationBundleName;
 
+        [SerializeField] private AudioMixer _audioMixer;
+
         internal readonly string Prefix => _prefix;
         internal readonly string MainCharacter => _mainCharacter;
 
@@ -35,6 +38,8 @@ namespace Novels
         internal readonly string NovelsCharacterBundleName => _novelsCharacterBundleName;
         internal readonly string NovelsNotificationBundleName => _novelsNotificationBundleName;
         internal readonly string NovelsLocalizationBundleName => _novelsLocalizationBundleName;
+
+        internal readonly AudioMixer AudioMixer => _audioMixer;
     }
 
     internal partial class Entity : BaseDisposable
