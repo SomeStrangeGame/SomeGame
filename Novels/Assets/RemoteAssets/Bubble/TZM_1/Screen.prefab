@@ -1687,37 +1687,39 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a0611a97e4be34d19a8bd82d495899f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _bubbles:
-  - _type: 0
-    _root: {fileID: 1982718939224666695}
-    _header: {fileID: 2079147756323848316}
-    _text: {fileID: 582945343224599575}
-    _extraObjects: []
-  - _type: 2
-    _root: {fileID: 4226539364931089966}
-    _header: {fileID: 939081843759839311}
-    _text: {fileID: 2080254210932930884}
-    _extraObjects:
-    - {fileID: 7793783692806772683}
-  - _type: 1
-    _root: {fileID: 4191151694607311737}
-    _header: {fileID: 2972215923185371228}
-    _text: {fileID: 4739581548258826096}
-    _extraObjects:
-    - {fileID: 7940650310017583340}
-  - _type: 3
-    _root: {fileID: 6798736176679757644}
-    _header: {fileID: 1511349125992289025}
-    _text: {fileID: 4144768857679889277}
-    _extraObjects: []
-  - _type: 4
-    _root: {fileID: 2205343528439453366}
-    _header: {fileID: 8415508432729007430}
-    _text: {fileID: 7503267815130482102}
-    _extraObjects:
-    - {fileID: 1591274111306655134}
-  _buttonPrefab: {fileID: 5694083270899737406}
-  _backgroundButton: {fileID: 920034428511903397}
+  _bubblesView:
+    _root: {fileID: 5772959261391716041}
+    _bubbles:
+    - _type: 0
+      _root: {fileID: 1982718939224666695}
+      _header: {fileID: 2079147756323848316}
+      _text: {fileID: 582945343224599575}
+      _extraObjects: []
+    - _type: 2
+      _root: {fileID: 4226539364931089966}
+      _header: {fileID: 939081843759839311}
+      _text: {fileID: 2080254210932930884}
+      _extraObjects:
+      - {fileID: 7793783692806772683}
+    - _type: 1
+      _root: {fileID: 4191151694607311737}
+      _header: {fileID: 2972215923185371228}
+      _text: {fileID: 4739581548258826096}
+      _extraObjects:
+      - {fileID: 7940650310017583340}
+    - _type: 3
+      _root: {fileID: 6798736176679757644}
+      _header: {fileID: 1511349125992289025}
+      _text: {fileID: 4144768857679889277}
+      _extraObjects: []
+    - _type: 4
+      _root: {fileID: 2205343528439453366}
+      _header: {fileID: 8415508432729007430}
+      _text: {fileID: 7503267815130482102}
+      _extraObjects:
+      - {fileID: 1591274111306655134}
+    _buttonPrefab: {fileID: 5694083270899737406}
+    _backgroundButton: {fileID: 920034428511903397}
   _showHideDuration: 0.2
   _canvasGroup: {fileID: 6503039597023592230}
 --- !u!225 &6503039597023592230

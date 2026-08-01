@@ -197,6 +197,7 @@ namespace Novels
                     DialogAlign = dialogAlign
                 });
 
+                // set bubble screen
                 _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
                 {
                     Name = name,

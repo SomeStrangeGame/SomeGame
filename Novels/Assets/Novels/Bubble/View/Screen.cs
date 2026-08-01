@@ -46,50 +46,63 @@ namespace Novels.Bubble.View
         }
 
         [Serializable]
-        private struct BubblePopUp
+        private struct Bubbles
         {
-            [SerializeField] BubbleCtx.BubbleType _type;
-            [SerializeField] private GameObject _root;
-            [SerializeField] private Text _header;
-            [SerializeField] private Text _text;
-            [SerializeField] private GameObject[] _extraObjects;
-
-            internal readonly void SetText(string header, string description)
+            [Serializable]
+            internal struct BubblePopUp
             {
-                if (string.IsNullOrEmpty(description))
+                [SerializeField] BubbleCtx.BubbleType _type;
+                [SerializeField] private GameObject _root;
+                [SerializeField] private Text _header;
+                [SerializeField] private Text _text;
+                [SerializeField] private GameObject[] _extraObjects;
+
+                internal readonly void SetText(string header, string description)
                 {
-                    description = header;
-                    header = string.Empty;
+                    if (string.IsNullOrEmpty(description))
+                    {
+                        description = header;
+                        header = string.Empty;
+                    }
+
+                    _header.text = header;
+                    _text.text = description;
+
+                    _header.gameObject.SetActive(!string.IsNullOrEmpty(header));
+                    _text.gameObject.SetActive(!string.IsNullOrEmpty(description));
+                    foreach(var extraObject in _extraObjects)
+                        extraObject.SetActive(!string.IsNullOrEmpty(description));
                 }
 
-                _header.text = header;
-                _text.text = description;
+                internal readonly bool IsCorrectType(BubbleCtx.BubbleType type) 
+                {
+                    var result = _type == type;
+                    _root.SetActive(result);
+                    return result;
+                }
 
-                _header.gameObject.SetActive(!string.IsNullOrEmpty(header));
-                _text.gameObject.SetActive(!string.IsNullOrEmpty(description));
-                foreach(var extraObject in _extraObjects)
-                    extraObject.SetActive(!string.IsNullOrEmpty(description));
+                internal readonly bool TryGetRoot(BubbleCtx.BubbleType type, out GameObject root)
+                {
+                    root = null;
+                    var result = type == _type;
+                    if (result) root = _root;
+                    return result;
+                }
             }
 
-            internal readonly bool IsCorrectType(BubbleCtx.BubbleType type) 
-            {
-                var result = _type == type;
-                _root.SetActive(result);
-                return result;
-            }
+            [SerializeField] private GameObject _root;
+            [SerializeField] private BubblePopUp[] _bubbles;
+            [SerializeField] private Button _buttonPrefab;
+            [SerializeField] private Button _backgroundButton;
 
-            internal readonly bool TryGetRoot(BubbleCtx.BubbleType type, out GameObject root)
-            {
-                root = null;
-                var result = type == _type;
-                if (result) root = _root;
-                return result;
-            }
+            public readonly GameObject Root => _root;
+            public readonly BubblePopUp[] BubblesPopUp => _bubbles;
+            public readonly Button ButtonPrefab => _buttonPrefab;
+            public readonly Button BackgroundButton => _backgroundButton;
         }
 
-        [SerializeField] private BubblePopUp[] _bubbles;
-        [SerializeField] private Button _buttonPrefab;
-        [SerializeField] private Button _backgroundButton;
+        [SerializeField] private Bubbles _bubblesView;
+
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
 
@@ -142,7 +155,9 @@ namespace Novels.Bubble.View
 
         public void SetBubbleScreen(BubbleCtx ctx)
         {
-            foreach (var bubble in _bubbles)
+            _bubblesView.Root.SetActive(true);
+            
+            foreach (var bubble in _bubblesView.BubblesPopUp)
             {
                 bubble.IsCorrectType(ctx.Type);
                 bubble.SetText(ctx.Text.Header, ctx.Text.Text);
@@ -155,12 +170,12 @@ namespace Novels.Bubble.View
             foreach(var button in ctx.Buttons)
             {
                 GameObject root = null;
-                foreach (var bubble in _bubbles)
+                foreach (var bubble in _bubblesView.BubblesPopUp)
                     if (bubble.TryGetRoot(ctx.Type, out root)) break;
                     
-                _buttonPrefab.gameObject.SetActive(false);
+                _bubblesView.ButtonPrefab.gameObject.SetActive(false);
                 if (!_buttons.TryGetValue(button.Id, out var inSceneButton))
-                    inSceneButton = Instantiate(_buttonPrefab, root.transform);
+                    inSceneButton = Instantiate(_bubblesView.ButtonPrefab, root.transform);
 
                 _buttons[button.Id] = inSceneButton;
                 inSceneButton.GetComponentInChildren<Text>(true).text = button.Text;
@@ -168,8 +183,8 @@ namespace Novels.Bubble.View
                 inSceneButton.onClick.AddListener(() => button.OnClick.Invoke(button.Id));
                 inSceneButton.gameObject.SetActive(true);
             }
-            _backgroundButton.onClick.RemoveAllListeners();
-            _backgroundButton.onClick.AddListener(() => ctx.OnBackgroundClick?.Invoke());
+            _bubblesView.BackgroundButton.onClick.RemoveAllListeners();
+            _bubblesView.BackgroundButton.onClick.AddListener(() => ctx.OnBackgroundClick?.Invoke());
         }
     }
 }

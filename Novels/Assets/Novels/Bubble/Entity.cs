@@ -94,6 +94,7 @@ namespace Novels.Bubble
                 Text = b.Text,
                 OnClick = b.OnClick
             }).ToArray();
+            
             _screen.SetBubbleScreen(new View.Screen.BubbleCtx
             {
                 Type = bubbleType,
