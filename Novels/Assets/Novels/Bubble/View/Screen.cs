@@ -10,13 +10,6 @@ namespace Novels.Bubble.View
     {
         public struct BubbleCtx
         {
-            public enum TextAlign
-            {
-                Left,
-                Center,
-                Right
-            }
-
             public enum BubbleType
             {
                 NoCharacter,
@@ -156,7 +149,7 @@ namespace Novels.Bubble.View
         public void SetBubbleScreen(BubbleCtx ctx)
         {
             _bubblesView.Root.SetActive(true);
-            
+
             foreach (var bubble in _bubblesView.BubblesPopUp)
             {
                 bubble.IsCorrectType(ctx.Type);
