@@ -78,7 +78,7 @@ namespace Novels.Bubble
             if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "дисклеймер")) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
             else if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "подсказка")) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
             else if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "мысли")) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftMinds;
-            else if (ctx.Name == "..." || ctx.Name == "Wardrobe") bubbleType = View.Screen.BubbleCtx.BubbleType.NoCharacter;
+            else if (ctx.Name == "...") bubbleType = View.Screen.BubbleCtx.BubbleType.NoCharacter;
             else if (ctx.Name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftCharacter;
             else bubbleType = View.Screen.BubbleCtx.BubbleType.RightCharacter;
 

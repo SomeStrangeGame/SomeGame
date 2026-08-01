@@ -197,36 +197,44 @@ namespace Novels
                     DialogAlign = dialogAlign
                 });
 
-                // set bubble screen
-                _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
+                if (name == "some wardrobe trigger")
                 {
-                    Name = name,
-                    Args = args,
-                    Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
+                    // set wardrobe screen here...
+                }
+                else if (name == "some choose trigger")
+                {
+                    //set choose screen here...
+                }
+                else
+                {
+                    _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
                     {
-                        Header = characterName,
-                        Text = value
-                    },
-                    Buttons = _ctx.StoryProcessor.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
-                    {
-                        Id = c.index,
-                        Text = c.text,
-                        OnClick = id =>
+                        Name = name,
+                        Args = args,
+                        Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
                         {
-                            SetCharacterView(_ctx.Character, args, c);
-                            _ctx.SaveSystem.TrySaveChoice((byte)id);
-                            _ctx.StoryProcessor.SetChoice(id);
+                            Header = characterName,
+                            Text = value
+                        },
+                        Buttons = _ctx.StoryProcessor.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                        {
+                            Id = c.index,
+                            Text = c.text,
+                            OnClick = id =>
+                            {
+                                SetCharacterView(_ctx.Character, args, c);
+                                _ctx.SaveSystem.TrySaveChoice((byte)id);
+                                _ctx.StoryProcessor.SetChoice(id);
+                                bubbleDone.TrySetResult();
+                            }
+                        }).ToArray(),
+                        OnBackgroundClick = () =>
+                        {
+                            _ctx.SaveSystem.TrySaveChoice();
                             bubbleDone.TrySetResult();
                         }
-                    }).ToArray(),
-                    OnBackgroundClick = () =>
-                    {
-                        _ctx.SaveSystem.TrySaveChoice();
-                        bubbleDone.TrySetResult();
-                    }
-                });
-                //or set choose screen here...
-                //or set wardrobe screen here...
+                    });
+                }
 
                 if (_ctx.SaveSystem.TryLoadChoice(out var savedChoice))
                 {
