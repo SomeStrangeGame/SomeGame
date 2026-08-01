@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -13,6 +12,27 @@ namespace Novels.Bubble
         {
             public string MainCharacter;
             public Func<UniTask<GameObject>> GetBubblePrefab;
+        }
+
+        public struct BubbleScreenCtx
+        {
+            public struct TextCtx
+            {
+                public string Header;
+                public string Text;
+            }
+
+            public struct ButtonCtx
+            {
+                public int Id;
+                public string Text;
+                public Action<int> OnClick;
+            }
+            public string Name;
+            public string[] Args;
+            public TextCtx Text;
+            public ButtonCtx[] Buttons;
+            public Action OnBackgroundClick;
         }
 
         private readonly Ctx _ctx;
@@ -52,52 +72,39 @@ namespace Novels.Bubble
             _screen.HideImmediate();
         }
 
-        public void SetText(string name, string header, string text, string[] args)
+        public void SetBubbleScreen(BubbleScreenCtx ctx)
         {
-            var bubbleType = GetBubbleType(name, args);
-            if (bubbleType == View.Screen.BubbleType.Hint)
+            View.Screen.BubbleCtx.BubbleType bubbleType;
+            if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "дисклеймер")) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
+            else if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "подсказка")) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
+            else if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "мысли")) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftMinds;
+            else if (ctx.Name == "..." || ctx.Name == "Wardrobe") bubbleType = View.Screen.BubbleCtx.BubbleType.NoCharacter;
+            else if (ctx.Name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftCharacter;
+            else bubbleType = View.Screen.BubbleCtx.BubbleType.RightCharacter;
+
+            var header = ctx.Text.Header;
+            if (bubbleType == View.Screen.BubbleCtx.BubbleType.Hint)
             {
-                if (args != null && args.Any(arg => arg.ToLower() == "дисклеймер")) header = "Дисклеймер";
-                if (args != null && args.Any(arg => arg.ToLower() == "подсказка")) header = "Подсказка";
+                if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "дисклеймер")) header = "Дисклеймер";
+                if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "подсказка")) header = "Подсказка";
             }
-            _screen.SetText(bubbleType, header, text);
-        }
-
-        public void AddOrUpdateButton(int id, string name, string text, string[] args, Action<int> onClick)
-        {
-            _screen.AddOrUpdateButton(id, GetBubbleType(name, args), text, onClick);
-        }
-
-        private View.Screen.BubbleType GetBubbleType(string name, string[] args)
-        {
-            View.Screen.BubbleType bubbleType;
-            if (args != null && args.Any(arg => arg.ToLower() == "дисклеймер")) bubbleType = View.Screen.BubbleType.Hint;
-            else if (args != null && args.Any(arg => arg.ToLower() == "подсказка")) bubbleType = View.Screen.BubbleType.Hint;
-            else if (args != null && args.Any(arg => arg.ToLower() == "мысли")) bubbleType = View.Screen.BubbleType.LeftMinds;
-            else if (name == "..." || name == "Wardrobe") bubbleType = View.Screen.BubbleType.NoCharacter;
-            else if (name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleType.LeftCharacter;
-            else bubbleType = View.Screen.BubbleType.RightCharacter;
-            return bubbleType;
-        }
-
-        public void RemoveAllButtons()
-        {
-            _screen.RemoveAllButtons();
-        }
-
-        public void RemoveButton(int id)
-        {
-            _screen.RemoveButton(id);
-        }
-
-        public void SetBackgroundButton(Action onClick)
-        {
-            _screen.SetBackgroundButton(onClick);
-        }
-
-        public void ResetBackgroundButton()
-        {
-            _screen.ResetBackgroundButton();
+            var buttons = ctx.Buttons.Select(b => new View.Screen.BubbleCtx.ButtonCtx
+            {
+                Id = b.Id,
+                Text = b.Text,
+                OnClick = b.OnClick
+            }).ToArray();
+            _screen.SetBubbleScreen(new View.Screen.BubbleCtx
+            {
+                Type = bubbleType,
+                Text = new View.Screen.BubbleCtx.TextCtx
+                {
+                    Header = header,
+                    Text = ctx.Text.Text
+                },
+                Buttons = buttons,
+                OnBackgroundClick = buttons.Length == 0 ? ctx.OnBackgroundClick : null
+            });
         }
     }
 }

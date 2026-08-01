@@ -8,26 +8,47 @@ namespace Novels.Bubble.View
 {
     public class Screen : MonoBehaviour
     {
-        public enum TextAlign
+        public struct BubbleCtx
         {
-            Left,
-            Center,
-            Right
-        }
+            public enum TextAlign
+            {
+                Left,
+                Center,
+                Right
+            }
 
-        public enum BubbleType
-        {
-            NoCharacter,
-            LeftCharacter,
-            RightCharacter,
-            Hint,
-            LeftMinds,
+            public enum BubbleType
+            {
+                NoCharacter,
+                LeftCharacter,
+                RightCharacter,
+                Hint,
+                LeftMinds,
+            }
+
+            public struct TextCtx
+            {
+                public string Header;
+                public string Text;
+            }
+
+            public struct ButtonCtx
+            {
+                public int Id;
+                public string Text;
+                public Action<int> OnClick;
+            }
+
+            public BubbleType Type;
+            public TextCtx Text;
+            public ButtonCtx[] Buttons;
+            public Action OnBackgroundClick;
         }
 
         [Serializable]
         private struct BubblePopUp
         {
-            [SerializeField] BubbleType _type;
+            [SerializeField] BubbleCtx.BubbleType _type;
             [SerializeField] private GameObject _root;
             [SerializeField] private Text _header;
             [SerializeField] private Text _text;
@@ -50,14 +71,14 @@ namespace Novels.Bubble.View
                     extraObject.SetActive(!string.IsNullOrEmpty(description));
             }
 
-            internal readonly bool IsCorrectType(BubbleType type) 
+            internal readonly bool IsCorrectType(BubbleCtx.BubbleType type) 
             {
                 var result = _type == type;
                 _root.SetActive(result);
                 return result;
             }
 
-            internal bool TryGetRoot(BubbleType type, out GameObject root)
+            internal readonly bool TryGetRoot(BubbleCtx.BubbleType type, out GameObject root)
             {
                 root = null;
                 var result = type == _type;
@@ -119,57 +140,36 @@ namespace Novels.Bubble.View
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public void SetText(BubbleType bubbleType, string header, string text)
+        public void SetBubbleScreen(BubbleCtx ctx)
         {
             foreach (var bubble in _bubbles)
             {
-                bubble.IsCorrectType(bubbleType);
-                bubble.SetText(header, text);
+                bubble.IsCorrectType(ctx.Type);
+                bubble.SetText(ctx.Text.Header, ctx.Text.Text);
             }
-        }
 
-        public void AddOrUpdateButton(int id, BubbleType bubbleType, string text, Action<int> onClick)
-        {
-            GameObject root = null;
-            foreach (var bubble in _bubbles)
-                if (bubble.TryGetRoot(bubbleType, out root)) break;
-                
-            _buttonPrefab.gameObject.SetActive(false);
-            if (!_buttons.TryGetValue(id, out var button))
-                button = Instantiate(_buttonPrefab, root.transform);
-
-            _buttons[id] = button;
-            button.GetComponentInChildren<Text>(true).text = text;
-            button.onClick.RemoveAllListeners();
-            button.onClick.AddListener(() => onClick.Invoke(id));
-            button.gameObject.SetActive(true);
-        }
-
-        public void RemoveAllButtons()
-        {
             foreach(var buttonPair in _buttons)
                 Destroy(buttonPair.Value.gameObject);
-
             _buttons.Clear();
-        }
 
-        public void RemoveButton(int id)
-        {
-            if (!_buttons.TryGetValue(id, out var button)) return;
+            foreach(var button in ctx.Buttons)
+            {
+                GameObject root = null;
+                foreach (var bubble in _bubbles)
+                    if (bubble.TryGetRoot(ctx.Type, out root)) break;
+                    
+                _buttonPrefab.gameObject.SetActive(false);
+                if (!_buttons.TryGetValue(button.Id, out var inSceneButton))
+                    inSceneButton = Instantiate(_buttonPrefab, root.transform);
 
-            Destroy(button.gameObject);
-            _buttons.Remove(id);
-        }
-
-        public void SetBackgroundButton(Action onClick)
-        {
-            ResetBackgroundButton();
-            _backgroundButton.onClick.AddListener(() => onClick.Invoke());
-        }
-
-        public void ResetBackgroundButton()
-        {
+                _buttons[button.Id] = inSceneButton;
+                inSceneButton.GetComponentInChildren<Text>(true).text = button.Text;
+                inSceneButton.onClick.RemoveAllListeners();
+                inSceneButton.onClick.AddListener(() => button.OnClick.Invoke(button.Id));
+                inSceneButton.gameObject.SetActive(true);
+            }
             _backgroundButton.onClick.RemoveAllListeners();
+            _backgroundButton.onClick.AddListener(() => ctx.OnBackgroundClick?.Invoke());
         }
     }
 }

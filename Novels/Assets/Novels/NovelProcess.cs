@@ -197,32 +197,33 @@ namespace Novels
                     DialogAlign = dialogAlign
                 });
 
-                _ctx.Bubble.SetText(name, characterName, value, args);
-                _ctx.Bubble.RemoveAllButtons();
-                var choices = _ctx.StoryProcessor.GetChoices();
-                if (choices.Count > 0)
+                _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
                 {
-                    _ctx.Bubble.ResetBackgroundButton();
-                    foreach (var choice in choices)
+                    Name = name,
+                    Args = args,
+                    Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
                     {
-                        var choiceText = choice.text;
-                        _ctx.Localization.TryGetValue(choice.text, out choiceText);
-                        _ctx.Bubble.AddOrUpdateButton(choice.index, name, choiceText, args, id =>
+                        Header = characterName,
+                        Text = value
+                    },
+                    Buttons = _ctx.StoryProcessor.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                    {
+                        Id = c.index,
+                        Text = c.text,
+                        OnClick = id =>
                         {
-                            SetCharacterView(_ctx.Character, args, choice);
-
+                            SetCharacterView(_ctx.Character, args, c);
                             _ctx.SaveSystem.TrySaveChoice((byte)id);
                             _ctx.StoryProcessor.SetChoice(id);
                             bubbleDone.TrySetResult();
-                        });
-                    }
-                }
-                else
-                    _ctx.Bubble.SetBackgroundButton(() => 
+                        }
+                    }).ToArray(),
+                    OnBackgroundClick = () =>
                     {
                         _ctx.SaveSystem.TrySaveChoice();
                         bubbleDone.TrySetResult();
-                    });
+                    }
+                });
 
                 if (_ctx.SaveSystem.TryLoadChoice(out var savedChoice))
                 {
