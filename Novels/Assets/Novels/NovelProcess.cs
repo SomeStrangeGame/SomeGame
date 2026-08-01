@@ -225,6 +225,8 @@ namespace Novels
                         bubbleDone.TrySetResult();
                     }
                 });
+                //or set choose screen here...
+                //or set wardrobe screen here...
 
                 if (_ctx.SaveSystem.TryLoadChoice(out var savedChoice))
                 {
