@@ -91,6 +91,20 @@ namespace Novels
         {
             public TextAlignment DialogAlign;
         }
+        private struct HideCharacterQueue : IQueue
+        {
+            public bool IsNewCharacter;
+        }
+        private struct SetBubbleQueue : IQueue
+        {
+            public string Name;
+            public string Value;
+            public string[] Args;
+        }
+        private struct LoadChoiceQueue : IQueue
+        {
+            public string[] Args;
+        }
 
         private Ctx _ctx;
 
@@ -116,7 +130,6 @@ namespace Novels
                 var data = text.Split(":");
                 var prefix = data.FirstOrDefault().Trim();
                 var value = data.LastOrDefault().Trim();
-
                 var rawPrefixData = prefix.Split("(");
                 var name = rawPrefixData.FirstOrDefault().Trim();
                 var args = rawPrefixData.Length <= 1
@@ -128,7 +141,6 @@ namespace Novels
                 if (prefix.ToLower() == "genres") continue;
                 if (prefix.ToLower() == "annotation") continue;
                 if (prefix.ToLower() == "stats") continue;
-
                 if (prefix.ToLower().Contains("keyboard")) continue;
 
                 if (prefix.ToLower() == "notification")
@@ -149,6 +161,7 @@ namespace Novels
                     });
                     continue;
                 }
+
                 if (prefix.ToLower().Contains("cut-scene"))
                 {
                     queue.Enqueue(new CutSceneQueue{
@@ -157,6 +170,7 @@ namespace Novels
                     });
                     continue;
                 }
+
                 if (prefix.ToLower().Contains("music"))
                 {
                     queue.Enqueue(new MusicQueue
@@ -166,6 +180,7 @@ namespace Novels
                     });
                     continue;
                 }
+
                 if (prefix.ToLower().Contains("sound"))
                 {
                     queue.Enqueue(new SoundQueue
@@ -175,6 +190,7 @@ namespace Novels
                     });
                     continue;
                 }
+
                 if (prefix.ToLower().Contains("ambient"))
                 {
                     queue.Enqueue(new AmbientQueue
@@ -184,6 +200,7 @@ namespace Novels
                     });
                     continue;
                 }
+
                 if (prefix.ToLower() == "camera")
                 {
                     queue.Enqueue(new CameraQueue
@@ -192,6 +209,7 @@ namespace Novels
                     });
                     continue;
                 }
+
                 if (prefix.ToLower() == "await")
                 {
                     if (int.TryParse(value, out var seconds))
@@ -201,8 +219,6 @@ namespace Novels
                         });
                     continue;
                 }
-
-                
 
                 TextAlignment dialogAlign;
                 if (name == _ctx.MainCharacter)
@@ -216,75 +232,101 @@ namespace Novels
                     DialogAlign = dialogAlign
                 });
 
-                if (name == "some wardrobe trigger")
+                var tempQueueLoadChoice = queue.Reverse().ToList();
+                tempQueueLoadChoice.Add(new LoadChoiceQueue
                 {
-                    // set wardrobe screen here...
-                }
-                else if (name == "some choose trigger")
-                {
-                    //set choose screen here...
-                }
-                else
-                {
-                    _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
-                    {
-                        Name = name,
-                        Args = args,
-                        Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
-                        {
-                            Header = _ctx.GetLocalizationValue(name),
-                            Text = value
-                        },
-                        Buttons = _ctx.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
-                        {
-                            Id = c.index,
-                            Text = c.text,
-                            OnClick = id =>
-                            {
-                                SetCharacterView(args, c);
-                                _ctx.SaveSystem.TrySaveChoice((byte)id);
-                                _ctx.SetChoice(id);
-                                bubbleDone.TrySetResult();
-                            }
-                        }).ToArray(),
-                        OnBackgroundClick = () =>
-                        {
-                            _ctx.SaveSystem.TrySaveChoice();
-                            bubbleDone.TrySetResult();
-                        }
-                    });
-                }
+                    Args = args,
+                });
+                tempQueueLoadChoice.Reverse();
+                queue = new Queue<IQueue>(tempQueueLoadChoice);
 
-                if (_ctx.SaveSystem.TryLoadChoice(out var savedChoice))
+                var tempQueueSetBubble = queue.Reverse().ToList();
+                tempQueueSetBubble.Add(new SetBubbleQueue
                 {
-                    if (savedChoice != 255)
-                    {
-                        SetCharacterView(args, _ctx.GetChoices()[savedChoice]);
-                        _ctx.SetChoice(savedChoice);
-                    }
-                    bubbleDone.TrySetResult();
-                }
-
-                //ShowContent
+                    Name = name,
+                    Value = value,
+                    Args = args,
+                });
+                tempQueueSetBubble.Reverse();
+                queue = new Queue<IQueue>(tempQueueSetBubble);
 
                 var characterNameTemp = $"{name}";
                 if (args.Any(a => a.ToLower() == "маленькая"))
                     characterNameTemp += "_child";
-                var isNewCharacter = false;
-                if (lastCharacterName != characterNameTemp)
+                var isNewCharacter = lastCharacterName != characterNameTemp;
+                var tempQueueHideCharacter = queue.Reverse().ToList();
+                tempQueueHideCharacter.Add(new HideCharacterQueue
                 {
-                    isNewCharacter = true;
-                    lastCharacterName = characterNameTemp;
-                    if (!_ctx.SaveSystem.IsLoadingInProcess)
-                        await _ctx.CharacterHide();
-                    else
-                        _ctx.CharacterHideImmediate();
-                }
+                    IsNewCharacter = isNewCharacter,
+                });
+                tempQueueHideCharacter.Reverse();
+                queue = new Queue<IQueue>(tempQueueHideCharacter);
 
                 while(queue.TryDequeue(out var element))
                 {
                     switch (element)
                     {
+                        case HideCharacterQueue hideCharacterQueue:
+                            if (hideCharacterQueue.IsNewCharacter)
+                            {
+                                lastCharacterName = characterNameTemp;
+                                if (!_ctx.SaveSystem.IsLoadingInProcess)
+                                    await _ctx.CharacterHide();
+                                else
+                                    _ctx.CharacterHideImmediate();
+                            }
+                        break;
+                        case SetBubbleQueue setBubbleQueue:
+                            if (name == "some wardrobe trigger")
+                            {
+                                // set wardrobe screen here...
+                            }
+                            else if (name == "some choose trigger")
+                            {
+                                //set choose screen here...
+                            }
+                            else
+                            {
+                                _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
+                                {
+                                    Name = name,
+                                    Args = args,
+                                    Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
+                                    {
+                                        Header = _ctx.GetLocalizationValue(name),
+                                        Text = value
+                                    },
+                                    Buttons = _ctx.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                                    {
+                                        Id = c.index,
+                                        Text = c.text,
+                                        OnClick = id =>
+                                        {
+                                            SetCharacterView(args, c);
+                                            _ctx.SaveSystem.TrySaveChoice((byte)id);
+                                            _ctx.SetChoice(id);
+                                            bubbleDone.TrySetResult();
+                                        }
+                                    }).ToArray(),
+                                    OnBackgroundClick = () =>
+                                    {
+                                        _ctx.SaveSystem.TrySaveChoice();
+                                        bubbleDone.TrySetResult();
+                                    }
+                                });
+                            }
+                        break;
+                        case LoadChoiceQueue loadChoiceQueue:
+                            if (_ctx.SaveSystem.TryLoadChoice(out var savedChoice))
+                            {
+                                if (savedChoice != 255)
+                                {
+                                    SetCharacterView(loadChoiceQueue.Args, _ctx.GetChoices()[savedChoice]);
+                                    _ctx.SetChoice(savedChoice);
+                                }
+                                bubbleDone.TrySetResult();
+                            }
+                        break;
                         case NotificationQueue notificationQueue:
                             if (!_ctx.SaveSystem.IsLoadingInProcess)
                                 _ctx.ShowNotification(notificationQueue.NotificationText).Forget()  ;
