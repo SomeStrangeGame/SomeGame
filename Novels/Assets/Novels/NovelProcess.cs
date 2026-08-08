@@ -202,7 +202,7 @@ namespace Novels
                     continue;
                 }
 
-                var characterName = _ctx.GetLocalizationValue(name);
+                
 
                 TextAlignment dialogAlign;
                 if (name == _ctx.MainCharacter)
@@ -232,7 +232,7 @@ namespace Novels
                         Args = args,
                         Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
                         {
-                            Header = characterName,
+                            Header = _ctx.GetLocalizationValue(name),
                             Text = value
                         },
                         Buttons = _ctx.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
