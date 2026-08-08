@@ -63,6 +63,8 @@ namespace Novels
 
         internal async UniTask Init()
         {
+            var saveSystem = CreateSaveSystem();
+
             var pathGetter = CreatePathGetter();
             var bundles = CreateBundles();
 
@@ -96,6 +98,8 @@ namespace Novels
                 GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, pathGetter.GetSettingPrefabAssetName("Screen")),
                 ShowLoading = mainLoading.Show,
                 HideLoading = mainLoading.Hide,
+                ContainAnySave = () => saveSystem.IsLoadingInProcess,
+                ClearSave = () => saveSystem.Clear(),
             };
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
@@ -117,7 +121,6 @@ namespace Novels
 
             var localization = await CreateLocalization(bundles, pathGetter);
             var storyProcessor = CreateStoryProcessor(storyText);
-            var saveSystem = CreateSaveSystem();
             var bubble = await CreateBubble(bundles, pathGetter);
             var location = await CreateLocation(bundles, pathGetter);
             var character = await CreateCharacter(bundles, pathGetter);

@@ -13,6 +13,8 @@ namespace Novels
             internal Func<UniTask<GameObject>> GetBundledPrefab;
             internal Func<UniTask> ShowLoading;
             internal Func<UniTask> HideLoading;
+            internal Func<bool> ContainAnySave;
+            internal Action ClearSave;
         }
 
         private Ctx _ctx;
@@ -28,28 +30,33 @@ namespace Novels
             {
                 GetBundledPrefab = _ctx.GetBundledPrefab,
             }).AddTo(this);
-            await setting.Init();
-                
-            var settingDone = new UniTaskCompletionSource();
-            SetDoneButton(setting, settingDone);
+
+            using (new LoadingPriority.Entity(ThreadPriority.High, _ctx.DefaultThreadPriority))
+                await setting.Init();
+
+            setting.SetDescription("Тайна затерянного мира");
+
+            var newGame = new UniTaskCompletionSource();
+            setting.AddOrUpdateButton("newGame", "<b>Новая игра</b>", () =>
+            {
+                newGame.TrySetResult();
+            });
+
+            var continueGame = new UniTaskCompletionSource();
+            if (_ctx.ContainAnySave())
+            {
+                setting.AddOrUpdateButton("continueGame", "<b>Продолжить</b>", () =>
+                {
+                    _ctx.ClearSave();
+                    continueGame.TrySetResult();
+                });
+            }
 
             setting.Show();
             await _ctx.HideLoading();
-            await settingDone.Task;
+            await UniTask.WhenAny(newGame.Task, continueGame.Task);
             await _ctx.ShowLoading();
             setting.Hide();
-        }
-
-        private void SetDoneButton(Setting.Entity setting, UniTaskCompletionSource settingDone)
-        {
-            SetDone();
-            void SetDone()
-            {
-                setting.AddOrUpdateButton("done", "<b>Начать</b>", () =>
-                {
-                    settingDone.TrySetResult();
-                });
-            }
         }
     }
 }

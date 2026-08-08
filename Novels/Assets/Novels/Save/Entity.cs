@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Disposable;
 using UnityEngine;
@@ -43,7 +44,6 @@ namespace Novels.Save
 
         public bool TrySaveChoice(byte unit = 255)
         {
-            return false;
             if (IsLoadingInProcess) return false;
 
             _save.Add(unit);
@@ -61,6 +61,23 @@ namespace Novels.Save
             result = _initSave.First();
             _initSave.RemoveAt(0);
             return true;
+        }
+
+        public void Clear()
+        {
+            var cachPath = $"{Application.persistentDataPath}/CachedFiles/Remote";
+            #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
+            cachPath = $"file://{cachPath}";
+            #endif
+            if (Directory.Exists(cachPath))
+            {
+                Directory.Delete(cachPath, true);
+                Debug.Log("Clear cache files done!");
+            }
+            else
+            {
+                Debug.Log($"No cache files in {cachPath}");
+            }
         }
     }
 }

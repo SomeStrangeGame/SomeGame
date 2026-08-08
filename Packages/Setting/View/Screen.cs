@@ -7,9 +7,15 @@ namespace Setting.View
 {
     public class Screen : MonoBehaviour
     {
+        [SerializeField] private Text _description;
         [SerializeField] private Button _buttonPrefab;
 
         private readonly Dictionary<string, Button> _buttons = new();
+
+        public void SetDescription(string text)
+        {
+            _description.text = text;
+        }
 
         public void AddOrUpdateButton(string id, string text, Action onClick)
         {

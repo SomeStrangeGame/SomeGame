@@ -38,6 +38,11 @@ namespace Setting
             _screen.gameObject.SetActive(false);
         }
 
+        public void SetDescription(string text)
+        {
+            _screen.SetDescription(text);
+        }
+
         public void AddOrUpdateButton(string id, string text, Action onClick)
         {
             _screen.AddOrUpdateButton(id, text, onClick);
