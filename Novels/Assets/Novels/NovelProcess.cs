@@ -13,7 +13,9 @@ namespace Novels
         {
             internal string MainCharacter;
 
-            internal StoryProcessor.Entity StoryProcessor;
+            internal Func<string> GetNextText;
+            internal Func<List<Ink.Runtime.Choice>> GetChoices;
+            internal Action<int> SetChoice;
             internal Notification.Entity Notification;
             internal Location.Entity Location;
             internal Waiting.Entity Waiting;
@@ -90,8 +92,8 @@ namespace Novels
             {
                 var bubbleDone = new UniTaskCompletionSource();
 
-                _ctx.StoryProcessor.TryGetNextText(out var text);
-                if (string.IsNullOrEmpty(text) && _ctx.StoryProcessor.GetChoices().Count == 0) continue;
+                var text = _ctx.GetNextText();
+                if (string.IsNullOrEmpty(text) && _ctx.GetChoices().Count == 0) continue;
 
                 var data = text.Split(":");
                 var prefix = data.FirstOrDefault().Trim();
@@ -215,7 +217,7 @@ namespace Novels
                             Header = characterName,
                             Text = value
                         },
-                        Buttons = _ctx.StoryProcessor.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                        Buttons = _ctx.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
                         {
                             Id = c.index,
                             Text = c.text,
@@ -223,7 +225,7 @@ namespace Novels
                             {
                                 SetCharacterView(_ctx.Character, args, c);
                                 _ctx.SaveSystem.TrySaveChoice((byte)id);
-                                _ctx.StoryProcessor.SetChoice(id);
+                                _ctx.SetChoice(id);
                                 bubbleDone.TrySetResult();
                             }
                         }).ToArray(),
@@ -239,8 +241,8 @@ namespace Novels
                 {
                     if (savedChoice != 255)
                     {
-                        SetCharacterView(_ctx.Character, args, _ctx.StoryProcessor.GetChoices()[savedChoice]);
-                        _ctx.StoryProcessor.SetChoice(savedChoice);
+                        SetCharacterView(_ctx.Character, args, _ctx.GetChoices()[savedChoice]);
+                        _ctx.SetChoice(savedChoice);
                     }
                     bubbleDone.TrySetResult();
                 }

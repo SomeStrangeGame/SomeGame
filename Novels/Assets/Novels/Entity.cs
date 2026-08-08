@@ -177,7 +177,9 @@ namespace Novels
             {
                 MainCharacter = _ctx.Data.MainCharacter,
 
-                StoryProcessor = storyProcessor,
+                GetNextText = () => storyProcessor.GetNextText(),
+                GetChoices = () => storyProcessor.GetChoices(),
+                SetChoice = index => storyProcessor.SetChoice(index),
                 Notification = notification,
                 Location = location,
                 Waiting = waiting,

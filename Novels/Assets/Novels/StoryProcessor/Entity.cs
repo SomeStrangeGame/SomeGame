@@ -22,13 +22,11 @@ namespace Novels.StoryProcessor
             _story = new Story(_ctx.StoryText);
         }
 
-        public bool TryGetNextText(out string text)
+        public string GetNextText()
         {
-            text = string.Empty;
-            if (!_story.canContinue) return false;
+            if (!_story.canContinue) return string.Empty;
             
-            text = _story.Continue().Trim();
-            return true;
+            return _story.Continue().Trim();
         }
 
         public List<Choice> GetChoices()
