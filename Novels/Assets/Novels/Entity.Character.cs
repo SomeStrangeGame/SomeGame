@@ -7,18 +7,18 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private async UniTask<Character.Entity> CreateCharacter(GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, PathGetter.Entity pathGetter)
+        private Character.Entity CreateCharacter(GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, string, string, string> GetMainBodyPath, Func<string, string, string, string> GetEmotionPath, Func<string, string, int, string> GetClothesPath, Func<string, string, string, string, string> GetHairPath, Func<string, string, string, string> GetAccessoriesPath)
         {
             var character = new Character.Entity(new Character.Entity.Ctx
             {
                 MainCharacterName = _ctx.Data.MainCharacter,
                 ScreenPrefab = screenPrefab,
                 GetSprite = getSprite,
-                GetMainBodyPath = pathGetter.GetCharacterMainBodyPath,
-                GetEmotionPath = pathGetter.GetCharacterEmotionPath,
-                GetClothesPath = pathGetter.GetCharacterClothesPath,
-                GetHairPath = pathGetter.GetCharacterHairPath,
-                GetAccessoriesPath = pathGetter.GetCharacterAccessoiresPath
+                GetMainBodyPath = GetMainBodyPath,
+                GetEmotionPath = GetEmotionPath,
+                GetClothesPath = GetClothesPath,
+                GetHairPath = GetHairPath,
+                GetAccessoriesPath = GetAccessoriesPath
             }).AddTo(this);
             character.Init();
 

@@ -156,13 +156,13 @@ namespace Novels
             GameObject characterScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 characterScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, pathGetter.GetCharacterPrefabAssetName("Screen"));
-            var character = await CreateCharacter(characterScreen, async a => 
+            var character = CreateCharacter(characterScreen, async a => 
                 {
                     Sprite characterSprite = null;
                     using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                         characterSprite = await bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, a);
                     return characterSprite;
-                }, pathGetter);
+                }, pathGetter.GetCharacterMainBodyPath, pathGetter.GetCharacterEmotionPath, pathGetter.GetCharacterClothesPath, pathGetter.GetCharacterHairPath, pathGetter.GetCharacterAccessoriesPath);
 
             GameObject notificationScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))

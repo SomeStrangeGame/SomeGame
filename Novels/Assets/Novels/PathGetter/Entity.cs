@@ -111,7 +111,7 @@ namespace Novels.PathGetter
             return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}.png";
         }
 
-        public string GetCharacterAccessoiresPath(string name, string arg, string direction)
+        public string GetCharacterAccessoriesPath(string name, string arg, string direction)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
             if (string.IsNullOrEmpty(arg)) return string.Empty;
