@@ -16,14 +16,32 @@ namespace Novels
             internal Func<string> GetNextText;
             internal Func<List<Ink.Runtime.Choice>> GetChoices;
             internal Action<int> SetChoice;
-            internal Notification.Entity Notification;
-            internal Location.Entity Location;
-            internal Waiting.Entity Waiting;
-            internal Audio.Entity Audio;
+
+            internal Func<string, UniTask> ShowNotification;
+
+            internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
+            internal Func<bool, string, UniTask> SetCamera;
+            internal Func<bool, TextAlignment, UniTask> SetDialogue;
+
+            internal Func<float, UniTask> Wait;
+
+            internal Func<string, Audio.Entity.Audio, UniTask> PlayAudio;
+
             internal Func<string, string> GetLocalizationValue;
+
             internal Bubble.Entity Bubble;
+
             internal Save.Entity SaveSystem;
-            internal Character.Entity Character;
+
+            internal Action<string> SetMainCharacterView;
+            internal Action<string> SetMainCharacterClothes;
+            internal Action<string> SetMainCharacterHair;
+            internal Func<UniTask> CharacterHide;
+            internal Action CharacterHideImmediate;
+            internal Func<bool, UniTask> CharacterShow;
+            internal Action<bool> CharacterShowImmediate;
+            internal Func<string, string[], UniTask> CharacterSetImage;
+
 
             internal Func<UniTask> ShowLoading;
             internal Func<UniTask> HideLoading;
@@ -223,7 +241,7 @@ namespace Novels
                             Text = c.text,
                             OnClick = id =>
                             {
-                                SetCharacterView(_ctx.Character, args, c);
+                                SetCharacterView(args, c);
                                 _ctx.SaveSystem.TrySaveChoice((byte)id);
                                 _ctx.SetChoice(id);
                                 bubbleDone.TrySetResult();
@@ -241,7 +259,7 @@ namespace Novels
                 {
                     if (savedChoice != 255)
                     {
-                        SetCharacterView(_ctx.Character, args, _ctx.GetChoices()[savedChoice]);
+                        SetCharacterView(args, _ctx.GetChoices()[savedChoice]);
                         _ctx.SetChoice(savedChoice);
                     }
                     bubbleDone.TrySetResult();
@@ -258,9 +276,9 @@ namespace Novels
                     isNewCharacter = true;
                     lastCharacterName = characterNameTemp;
                     if (!_ctx.SaveSystem.IsLoadingInProcess)
-                        await _ctx.Character.Hide();
+                        await _ctx.CharacterHide();
                     else
-                        _ctx.Character.HideImmediate();
+                        _ctx.CharacterHideImmediate();
                 }
 
                 while(queue.TryDequeue(out var element))
@@ -269,43 +287,43 @@ namespace Novels
                     {
                         case NotificationQueue notificationQueue:
                             if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                _ctx.Notification.Show(notificationQueue.NotificationText).Forget();
+                                _ctx.ShowNotification(notificationQueue.NotificationText).Forget()  ;
                         break;
                         case LocationQueue locationQueue:
-                            await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, locationQueue.AssetName, false, false, locationQueue.Args);
+                            await _ctx.SetImage(_ctx.SaveSystem.IsLoadingInProcess, locationQueue.AssetName, false, false, locationQueue.Args);
                         break;
                         case CutSceneQueue cutSceneQueue:
-                            await _ctx.Location.SetImage(_ctx.SaveSystem.IsLoadingInProcess, cutSceneQueue.AssetName, true, false, cutSceneQueue.Args);
+                            await _ctx.SetImage(_ctx.SaveSystem.IsLoadingInProcess, cutSceneQueue.AssetName, true, false, cutSceneQueue.Args);
                         break;
                         case MusicQueue musicQueue:
-                            await _ctx.Audio.PlayAudio(musicQueue.AssetName, Audio.Entity.Audio.Music);
+                            await _ctx.PlayAudio(musicQueue.AssetName, Audio.Entity.Audio.Music);
                         break;
                         case SoundQueue soundQueue:
-                            await _ctx.Audio.PlayAudio(soundQueue.AssetName, Audio.Entity.Audio.Sound);
+                            await _ctx.PlayAudio(soundQueue.AssetName, Audio.Entity.Audio.Sound);
                         break;
                         case AmbientQueue ambientQueue:
-                            await _ctx.Audio.PlayAudio(ambientQueue.AssetName, Audio.Entity.Audio.Ambient);
+                            await _ctx.PlayAudio(ambientQueue.AssetName, Audio.Entity.Audio.Ambient);
                         break;
                         case CameraQueue cameraQueue:
-                            await _ctx.Location.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, cameraQueue.Value);
+                            await _ctx.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, cameraQueue.Value);
                         break;
                         case AwaitQueue awaitQueue:
                             if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                await _ctx.Waiting.Await(awaitQueue.Timer);
+                                await _ctx.Wait(awaitQueue.Timer);
                         break;
                         case DialogQueue dialogQueue:
-                            await _ctx.Location.SetDialog(_ctx.SaveSystem.IsLoadingInProcess, dialogQueue.DialogAlign);
+                            await _ctx.SetDialogue(_ctx.SaveSystem.IsLoadingInProcess, dialogQueue.DialogAlign);
                         break;
                     }
                 }
 
-                await _ctx.Character.SetImage(name, args);
+                await _ctx.CharacterSetImage(name, args);
                 if (isNewCharacter)
                 {
                     if (!_ctx.SaveSystem.IsLoadingInProcess)
-                        await _ctx.Character.Show(name == _ctx.MainCharacter);
+                        await _ctx.CharacterShow(name == _ctx.MainCharacter);
                     else
-                        _ctx.Character.ShowImmediate(name == _ctx.MainCharacter);
+                        _ctx.CharacterShowImmediate(name == _ctx.MainCharacter);
                 }
 
                 if (!_ctx.SaveSystem.IsLoadingInProcess)
@@ -324,14 +342,14 @@ namespace Novels
             }
         }
 
-        private void SetCharacterView(Character.Entity character, string[] args, Ink.Runtime.Choice choice)
+        private void SetCharacterView(string[] args, Ink.Runtime.Choice choice)
         {
             if (args.Any(a => a == "Выбери внешность"))
-                character.SetMainCharacterView(choice.text);
+                _ctx.SetMainCharacterView(choice.text);
             if (args.Any(a => a == "Выбери одежду"))
-                character.SetMainCharacterClothes(choice.text);
+                _ctx.SetMainCharacterClothes(choice.text);
             if (args.Any(a => a == "Выбери прическу" || a == "Выбери причёску"))
-                character.SetMainCharacterHair(choice.text);
+                _ctx.SetMainCharacterHair(choice.text);
         }
     }
 }

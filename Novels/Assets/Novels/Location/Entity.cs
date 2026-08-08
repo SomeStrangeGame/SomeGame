@@ -140,9 +140,9 @@ namespace Novels.Location
             _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
         }
 
-        public async UniTask SetDialog(bool immediate, TextAlignment aligment)
+        public async UniTask SetDialogue(bool immediate, TextAlignment aligment)
         {
-            await _screen.SetDialog(immediate, aligment);
+            await _screen.SetDialogue(immediate, aligment);
         }
     }
 }

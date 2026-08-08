@@ -239,7 +239,7 @@ namespace Novels.Location.View
             }
         }
 
-        public async UniTask SetDialog(bool immediate, TextAlignment aligment)
+        public async UniTask SetDialogue(bool immediate, TextAlignment aligment)
         {
             if (_image.sprite == null) return;
 

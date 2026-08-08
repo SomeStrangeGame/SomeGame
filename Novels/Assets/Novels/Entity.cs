@@ -177,17 +177,30 @@ namespace Novels
             {
                 MainCharacter = _ctx.Data.MainCharacter,
 
-                GetNextText = () => storyProcessor.GetNextText(),
-                GetChoices = () => storyProcessor.GetChoices(),
-                SetChoice = index => storyProcessor.SetChoice(index),
-                Notification = notification,
-                Location = location,
-                Waiting = waiting,
-                Audio = audio,
+                GetNextText = storyProcessor.GetNextText,
+                GetChoices = storyProcessor.GetChoices,
+                SetChoice = storyProcessor.SetChoice,
+
+                ShowNotification = notification.Show,
+
+                SetImage = location.SetImage,
+                SetCamera = location.SetCamera,
+                SetDialogue = location.SetDialogue,
+
+                Wait = waiting.Await,
+                PlayAudio = audio.PlayAudio,
                 GetLocalizationValue = localization.GetValue,
                 Bubble = bubble,
                 SaveSystem = saveSystem,
-                Character = character,
+
+                SetMainCharacterView = character.SetMainCharacterView,
+                SetMainCharacterClothes = character.SetMainCharacterClothes,
+                SetMainCharacterHair = character.SetMainCharacterHair,
+                CharacterHide = character.Hide,
+                CharacterHideImmediate = character.HideImmediate,
+                CharacterShow = character.Show,
+                CharacterShowImmediate = character.ShowImmediate,
+                CharacterSetImage = character.SetImage,
 
                 ShowLoading = loading.Show,
                 HideLoading = loading.Hide,
