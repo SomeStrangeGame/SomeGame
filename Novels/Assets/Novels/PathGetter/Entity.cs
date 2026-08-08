@@ -1,5 +1,4 @@
 using Disposable;
-using UnityEngine;
 
 namespace Novels.PathGetter
 {

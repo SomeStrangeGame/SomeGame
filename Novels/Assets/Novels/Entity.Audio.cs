@@ -1,15 +1,16 @@
+using System;
 using Disposable;
 
 namespace Novels
 {
     internal partial class Entity
     {   
-        private Audio.Entity CreateAudio(Bundles.Entity bundles)
+        private Audio.Entity CreateAudio(Func<string, string> getAudioURL, Action<string> loadAudionToDict)
         {
             return new Audio.Entity(new Audio.Entity.Ctx
             {
-                GetAudioURL = assetName => bundles.GetAudioURL(assetName),
-                LoadAudioToDict = bundles.LoadAudioToDict,
+                GetAudioURL = getAudioURL,
+                LoadAudioToDict = loadAudionToDict,
                 AudioMixer = _ctx.Data.AudioMixer,
 
                 OnLog = _ctx.OnLog,

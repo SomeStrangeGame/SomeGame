@@ -18,7 +18,7 @@ namespace Novels
             internal Location.Entity Location;
             internal Waiting.Entity Waiting;
             internal Audio.Entity Audio;
-            internal Localization.Entity Localization;
+            internal Func<string, string> GetLocalizationValue;
             internal Bubble.Entity Bubble;
             internal Save.Entity SaveSystem;
             internal Character.Entity Character;
@@ -182,8 +182,7 @@ namespace Novels
                     continue;
                 }
 
-                var characterName = string.Empty;
-                _ctx.Localization.TryGetValue(name, out characterName);
+                var characterName = _ctx.GetLocalizationValue(name);
 
                 TextAlignment dialogAlign;
                 if (name == _ctx.MainCharacter)

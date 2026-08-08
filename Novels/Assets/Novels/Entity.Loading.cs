@@ -1,30 +1,31 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
+using UnityEngine;
 
 namespace Novels
 {
     internal partial class Entity
     {
-        private async UniTask<Loading.Entity> CreateMainLoading(Bundles.Entity bundles, PathGetter.Entity pathGetter)
+        private Loading.Entity CreateMainLoading(GameObject bundledPrefab)
         {
             var loadingCtx = new Loading.Entity.Ctx
             {
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetMainLoadingPrefabAssetName("Screen")),
+                BundledPrefab = bundledPrefab,
             };
             var loading = new Loading.Entity(loadingCtx).AddTo(this);
-            await loading.Init();
+            loading.Init();
 
             return loading;
         }
 
-        private async UniTask<Loading.Entity> CreateLoading(Bundles.Entity bundles, PathGetter.Entity pathGetter)
+        private Loading.Entity CreateLoading(GameObject bundledPrefab)
         {
             var loadingCtx = new Loading.Entity.Ctx
             {
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetLoadingPrefabAssetName("Screen")),
+                BundledPrefab = bundledPrefab,
             };
             var loading = new Loading.Entity(loadingCtx).AddTo(this);
-            await loading.Init();
+            loading.Init();
 
             return loading;
         }

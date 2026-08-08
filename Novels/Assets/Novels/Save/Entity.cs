@@ -78,6 +78,8 @@ namespace Novels.Save
             {
                 Debug.Log($"No cache files in {cachPath}");
             }
+            _save.Clear();
+            _initSave.Clear();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Novels.StoryProcessor
 
         private readonly Ctx _ctx;
 
-        private Story _story;
+        private readonly Story _story;
 
         public Entity(Ctx ctx)
         {

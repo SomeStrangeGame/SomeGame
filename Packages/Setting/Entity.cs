@@ -1,5 +1,4 @@
 using System;
-using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ namespace Setting
     {
         public struct Ctx
         {
-            public Func<UniTask<GameObject>> GetBundledPrefab;
+            public GameObject BundledPrefab;
         }
 
         private View.Screen _screen;
@@ -20,9 +19,9 @@ namespace Setting
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
-            var screenPrefabGO = await _ctx.GetBundledPrefab();
+            var screenPrefabGO = _ctx.BundledPrefab;
             var screenGO = GameObject.Instantiate(screenPrefabGO);
 
             _screen = screenGO.GetComponent<View.Screen>();

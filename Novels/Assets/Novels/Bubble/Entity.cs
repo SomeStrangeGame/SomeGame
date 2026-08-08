@@ -11,7 +11,7 @@ namespace Novels.Bubble
         public struct Ctx
         {
             public string MainCharacter;
-            public Func<UniTask<GameObject>> GetBubblePrefab;
+            public GameObject BubblePrefab;
         }
 
         public struct BubbleScreenCtx
@@ -44,9 +44,9 @@ namespace Novels.Bubble
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
-            var prefab = await _ctx.GetBubblePrefab();
+            var prefab = _ctx.BubblePrefab;
             var screenGO = GameObject.Instantiate(prefab);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.HideImmediate();

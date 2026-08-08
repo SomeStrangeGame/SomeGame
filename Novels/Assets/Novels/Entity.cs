@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Disposable;
+using Localization;
 using UnityEngine;
 using UnityEngine.Audio;
 
@@ -66,15 +67,18 @@ namespace Novels
             var saveSystem = CreateSaveSystem();
 
             var pathGetter = CreatePathGetter();
-            var bundles = CreateBundles();
 
+            var bundles = CreateBundles();
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bundles.GetAssetBundle(_ctx.Data.NovelsLoadingBundleName);
 
-            var mainLoading = await CreateMainLoading(bundles, pathGetter);
+            GameObject mainLoadingScreen = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                mainLoadingScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetMainLoadingPrefabAssetName("Screen"));
+            var mainLoading = CreateMainLoading(mainLoadingScreen);
 
             //preloading init
-            var firstPreloding = UniTask.WhenAll(
+            var firstPreloading = UniTask.WhenAll(
                 bundles.GetAssetBundle(_ctx.Data.NovelsSettingBundleName)
             );
             var secondPreloading = UniTask.WhenAll(
@@ -90,12 +94,15 @@ namespace Novels
 
             //preloading loading first
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await firstPreloding;
+                await firstPreloading;
 
+            GameObject settingsScreen = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                settingsScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, pathGetter.GetSettingPrefabAssetName("Screen"));
             var settingProcessCtx = new SettingProcess.Ctx
             {
                 DefaultThreadPriority = _defaultThreadPriority,
-                GetBundledPrefab = () => bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, pathGetter.GetSettingPrefabAssetName("Screen")),
+                BundledPrefab = settingsScreen,
                 ShowLoading = mainLoading.Show,
                 HideLoading = mainLoading.Hide,
                 ContainAnySave = () => saveSystem.IsLoadingInProcess,
@@ -104,8 +111,12 @@ namespace Novels
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
             await settingProcess.ShowSettingProcess();
 
-            var loading = await CreateLoading(bundles, pathGetter);
+            GameObject loadingScreen = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                loadingScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetLoadingPrefabAssetName("Screen"));
+            var loading = CreateLoading(loadingScreen);
             await loading.Show();
+
             await mainLoading.Hide();
 
             //preloading loading second
@@ -119,14 +130,48 @@ namespace Novels
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
                 await bundles.LoadVideosToDict();
 
-            var localization = await CreateLocalization(bundles, pathGetter);
+            LocalizationData localizationData = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                localizationData = await bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, pathGetter.GetLocalizationDataAssetName("LocalizationData"));
+            var localization = CreateLocalization(localizationData);
+
             var storyProcessor = CreateStoryProcessor(storyText);
-            var bubble = await CreateBubble(bundles, pathGetter);
-            var location = await CreateLocation(bundles, pathGetter);
-            var character = await CreateCharacter(bundles, pathGetter);
-            var notification = await CreateNotification(bundles, pathGetter);
+
+            GameObject bubblePrefab = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                bubblePrefab = await bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, pathGetter.GetBubblePrefabAssetName("Screen"));
+            var bubble = CreateBubble(bubblePrefab);
+
+            GameObject locationScreen = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                locationScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationPrefabAssetName("Screen"));
+            var location = await CreateLocation(locationScreen, async a =>
+                {
+                    Sprite locationImage = null;
+                    using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                        locationImage = await bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationImagePath(a));
+                    return locationImage;
+                }, a => bundles.GetVideoURL(a));
+
+            GameObject characterScreen = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                characterScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, pathGetter.GetCharacterPrefabAssetName("Screen"));
+            var character = await CreateCharacter(characterScreen, async a => 
+                {
+                    Sprite characterSprite = null;
+                    using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                        characterSprite = await bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, a);
+                    return characterSprite;
+                }, pathGetter);
+
+            GameObject notificationScreen = null;
+            using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
+                notificationScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsNotificationBundleName, pathGetter.GetNotificationPrefabAssetName("Screen"));
+            var notification = CreateNotification(notificationScreen);
+
             var waiting = CreateWaiting();
-            var audio = CreateAudio(bundles);
+
+            var audio = CreateAudio(a => bundles.GetAudioURL(a), a => bundles.LoadAudioToDict(a));
 
             var novelProcessCtx = new NovelProcess.Ctx
             {
@@ -137,7 +182,7 @@ namespace Novels
                 Location = location,
                 Waiting = waiting,
                 Audio = audio,
-                Localization = localization,
+                GetLocalizationValue = localization.GetValue,
                 Bubble = bubble,
                 SaveSystem = saveSystem,
                 Character = character,

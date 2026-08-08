@@ -10,7 +10,7 @@ namespace Novels.Character
         public struct Ctx
         {
             public string MainCharacterName;
-            public Func<UniTask<GameObject>> GetScreenPrefab;
+            public GameObject ScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string, string, string> GetMainBodyPath;
             public Func<string, string, string, string> GetEmotionPath;
@@ -40,10 +40,9 @@ namespace Novels.Character
             _ctx = ctx;
         }
 
-        public async UniTask Init()
+        public void Init()
         {
-            var prefab = await _ctx.GetScreenPrefab();
-            var screenGO = GameObject.Instantiate(prefab);
+            var screenGO = GameObject.Instantiate(_ctx.ScreenPrefab);
             _screen = screenGO.GetComponent<View.Screen>();
             _screen.HideImageImmediate();
         }

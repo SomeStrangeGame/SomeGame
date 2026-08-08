@@ -6,16 +6,13 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private async UniTask<Localization.Entity> CreateLocalization(Bundles.Entity bundles, PathGetter.Entity pathGetter)
+        private Localization.Entity CreateLocalization(LocalizationData localizationSO)
         {
-            var localization = new Localization.Entity(new Localization.Entity.Ctx
+            return new Localization.Entity(new Localization.Entity.Ctx
             {
                 Language = LocalizationData.Language.Rus,
-                GetLocalizationSO = () => bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, pathGetter.GetLocalizationDataAssetName("LocalizationData")),
+                LocalizationSO = localizationSO,
             }).AddTo(this);
-            await localization.Init();
-
-            return localization;
         }
     }
 }
