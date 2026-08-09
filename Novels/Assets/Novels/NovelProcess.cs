@@ -95,6 +95,12 @@ namespace Novels
         {
             public bool IsNewCharacter;
         }
+        private struct ShowCharacterQueue : IQueue
+        {
+            public bool IsNewCharacter;
+            public string Name;
+            public string[] Args;
+        }
         private struct SetBubbleQueue : IQueue
         {
             public string Name;
@@ -104,6 +110,10 @@ namespace Novels
         private struct LoadChoiceQueue : IQueue
         {
             public string[] Args;
+        }
+        private struct ShowBubbleQueue : IQueue
+        {
+            
         }
 
         private Ctx _ctx;
@@ -262,6 +272,15 @@ namespace Novels
                 tempQueueHideCharacter.Reverse();
                 queue = new Queue<IQueue>(tempQueueHideCharacter);
 
+                queue.Enqueue(new ShowCharacterQueue
+                {
+                    Name = name,
+                    IsNewCharacter = isNewCharacter,
+                    Args = args,
+                });
+
+                queue.Enqueue(new ShowBubbleQueue());
+
                 while(queue.TryDequeue(out var element))
                 {
                     switch (element)
@@ -356,24 +375,26 @@ namespace Novels
                         case DialogQueue dialogQueue:
                             await _ctx.SetDialogue(_ctx.SaveSystem.IsLoadingInProcess, dialogQueue.DialogAlign);
                         break;
+                        case ShowCharacterQueue showCharacterQueue:
+                            await _ctx.CharacterSetImage(name, args);
+                            if (isNewCharacter)
+                            {
+                                if (!_ctx.SaveSystem.IsLoadingInProcess)
+                                    await _ctx.CharacterShow(name == _ctx.MainCharacter);
+                                else
+                                    _ctx.CharacterShowImmediate(name == _ctx.MainCharacter);
+                            }
+                        break;
+                        case ShowBubbleQueue showBubbleQueue:
+                            if (!_ctx.SaveSystem.IsLoadingInProcess)
+                                await _ctx.Bubble.Show();
+                            else
+                                _ctx.Bubble.ShowImmediate();
+
+                            await bubbleDone.Task;
+                        break;
                     }
                 }
-
-                await _ctx.CharacterSetImage(name, args);
-                if (isNewCharacter)
-                {
-                    if (!_ctx.SaveSystem.IsLoadingInProcess)
-                        await _ctx.CharacterShow(name == _ctx.MainCharacter);
-                    else
-                        _ctx.CharacterShowImmediate(name == _ctx.MainCharacter);
-                }
-
-                if (!_ctx.SaveSystem.IsLoadingInProcess)
-                    await _ctx.Bubble.Show();
-                else
-                    _ctx.Bubble.ShowImmediate();
-
-                await bubbleDone.Task;
 
                 //ResetContent
                 queue.Clear();
