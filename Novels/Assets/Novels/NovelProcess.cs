@@ -48,25 +48,8 @@ namespace Novels
 
             public Action<(LogType type, string message)> OnLog;
         }
-
-        private interface IQueue
-        {
-            public UniTask Run();
-        }
         
-        private struct NotificationQueue : IQueue
-        {
-            internal Func<bool> IsLoadingInProcess;
-            internal string NotificationText;
-            internal Func<string, UniTask> ShowNotification;
-
-            public async readonly UniTask Run()
-            {
-                if (!IsLoadingInProcess())
-                        ShowNotification(NotificationText).Forget();
-            }
-        }
-        private struct MusicQueue : IQueue
+        private struct MusicQueue : QueueProcess.IQueue
         {
             internal Func<string, UniTask> PlayAudio;
             internal string AssetName;
@@ -76,7 +59,7 @@ namespace Novels
                 await PlayAudio(AssetName);
             }
         }
-        private struct SoundQueue : IQueue
+        private struct SoundQueue : QueueProcess.IQueue
         {
             internal Func<string, UniTask> PlayAudio;
             internal string AssetName;
@@ -86,7 +69,7 @@ namespace Novels
                 await PlayAudio(AssetName);
             }
         }
-        private struct AmbientQueue : IQueue
+        private struct AmbientQueue : QueueProcess.IQueue
         {
             internal Func<string, UniTask> PlayAudio;
             internal string AssetName;
@@ -96,7 +79,7 @@ namespace Novels
                 await PlayAudio(AssetName);
             }
         }
-        private struct LocationQueue : IQueue
+        private struct LocationQueue : QueueProcess.IQueue
         {
             internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
             internal Func<bool> IsLoadingInProcess;
@@ -108,7 +91,7 @@ namespace Novels
                 await SetImage(IsLoadingInProcess(), AssetName, false, false, Args);
             }
         }
-        private struct CutSceneQueue : IQueue
+        private struct CutSceneQueue : QueueProcess.IQueue
         {
             internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
             internal Func<bool> IsLoadingInProcess;
@@ -120,7 +103,7 @@ namespace Novels
                 await SetImage(IsLoadingInProcess(), AssetName, true, false, Args);
             }
         }
-        private struct CameraQueue : IQueue
+        private struct CameraQueue : QueueProcess.IQueue
         {
             internal Func<bool> IsLoadingInProcess;
             internal Func<bool, string, UniTask> SetCamera;
@@ -131,7 +114,7 @@ namespace Novels
                 await SetCamera(IsLoadingInProcess(), Value);
             }
         }
-        private struct AwaitQueue : IQueue
+        private struct AwaitQueue : QueueProcess.IQueue
         {
             internal Func<bool> IsLoadingInProcess;
             internal Func<float, UniTask> Wait;
@@ -143,7 +126,7 @@ namespace Novels
                     await Wait(Timer);
             }
         }
-        private struct DialogQueue : IQueue
+        private struct DialogQueue : QueueProcess.IQueue
         {
             internal Func<bool, TextAlignment, UniTask> SetDialogue;
             internal Func<bool> IsLoadingInProcess;
@@ -154,7 +137,7 @@ namespace Novels
                 await SetDialogue(IsLoadingInProcess(), DialogAlign);
             }
         }
-        private struct HideCharacterQueue : IQueue
+        private struct HideCharacterQueue : QueueProcess.IQueue
         {
             internal Func<bool> IsLoadingInProcess;
             internal Func<UniTask> CharacterHide;
@@ -174,7 +157,7 @@ namespace Novels
                 }
             }
         }
-        private struct ShowCharacterQueue : IQueue
+        private struct ShowCharacterQueue : QueueProcess.IQueue
         {
             internal Func<string, string[], UniTask> CharacterSetImage;
             internal Func<bool> IsLoadingInProcess;
@@ -197,7 +180,7 @@ namespace Novels
                 }
             }
         }
-        internal class SetBubbleQueue : IQueue
+        internal class SetBubbleQueue : QueueProcess.IQueue
         {
             internal struct BubbleCtx
             {
@@ -296,7 +279,7 @@ namespace Novels
                 }
             }
         }
-        private struct LoadChoiceQueue : IQueue
+        private struct LoadChoiceQueue : QueueProcess.IQueue
         {
             internal UniTaskCompletionSource BubbleDone;
             internal Func<bool> IsLoadingInProcess;
@@ -320,7 +303,7 @@ namespace Novels
                 }
             }
         }
-        private struct ShowBubbleQueue : IQueue
+        private struct ShowBubbleQueue : QueueProcess.IQueue
         {
             internal UniTaskCompletionSource BubbleDone;
             internal Func<bool> IsLoadingInProcess;
@@ -337,7 +320,7 @@ namespace Novels
                 await BubbleDone.Task;
             }
         }
-        private struct HideBubbleQueue : IQueue
+        private struct HideBubbleQueue : QueueProcess.IQueue
         {
             internal Func<bool> IsLoadingInProcess;
             internal Func<UniTask> BubbleHide;
@@ -361,7 +344,7 @@ namespace Novels
 
         internal async UniTask ShowNovelProcess()
         {
-            var queue = new Queue<IQueue>();
+            var queue = new Queue<QueueProcess.IQueue>();
             var lastCharacterName = string.Empty;
 
             await _ctx.HideLoading();
@@ -391,7 +374,7 @@ namespace Novels
 
                 if (prefix.ToLower() == "notification")
                 {
-                    queue.Enqueue(new NotificationQueue
+                    queue.Enqueue(new QueueProcess.NotificationQueue
                     {
                         IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         NotificationText = value,
@@ -503,7 +486,7 @@ namespace Novels
                     Args = args,
                 });
                 tempQueueLoadChoice.Reverse();
-                queue = new Queue<IQueue>(tempQueueLoadChoice);
+                queue = new Queue<QueueProcess.IQueue>(tempQueueLoadChoice);
 
                 var tempQueueSetBubble = queue.Reverse().ToList();
                 tempQueueSetBubble.Add(new SetBubbleQueue
@@ -555,7 +538,7 @@ namespace Novels
                     },
                 });
                 tempQueueSetBubble.Reverse();
-                queue = new Queue<IQueue>(tempQueueSetBubble);
+                queue = new Queue<QueueProcess.IQueue>(tempQueueSetBubble);
 
                 var characterNameTemp = $"{name}";
                 if (args.Any(a => a.ToLower() == "маленькая"))
@@ -571,7 +554,7 @@ namespace Novels
                     OnHidecharacter = () => lastCharacterName = characterNameTemp,
                 });
                 tempQueueHideCharacter.Reverse();
-                queue = new Queue<IQueue>(tempQueueHideCharacter);
+                queue = new Queue<QueueProcess.IQueue>(tempQueueHideCharacter);
 
                 queue.Enqueue(new ShowCharacterQueue
                 {
