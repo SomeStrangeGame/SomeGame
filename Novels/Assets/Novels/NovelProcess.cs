@@ -49,71 +49,246 @@ namespace Novels
             public Action<(LogType type, string message)> OnLog;
         }
 
-        private interface IQueue { }
+        private interface IQueue
+        {
+            public UniTask Run();
+        }
+        
         private struct NotificationQueue : IQueue
         {
-            public string NotificationText;
+            internal Save.Entity SaveSystem;
+            internal string NotificationText;
+            internal Func<string, UniTask> ShowNotification;
+
+            public async readonly UniTask Run()
+            {
+                if (!SaveSystem.IsLoadingInProcess)
+                        ShowNotification(NotificationText).Forget();
+            }
         }
         private struct MusicQueue : IQueue
         {
-            public string AssetName;
-            public string[] Args;
+            internal Func<string, Audio.Entity.Audio, UniTask> PlayAudio;
+            internal string AssetName;
+
+            public async readonly UniTask Run()
+            {
+                await PlayAudio(AssetName, Audio.Entity.Audio.Music);
+            }
         }
         private struct SoundQueue : IQueue
         {
-            public string AssetName;
-            public string[] Args;
+            internal Func<string, Audio.Entity.Audio, UniTask> PlayAudio;
+            internal string AssetName;
+
+            public async readonly UniTask Run()
+            {
+                await PlayAudio(AssetName, Audio.Entity.Audio.Sound);
+            }
         }
         private struct AmbientQueue : IQueue
         {
-            public string AssetName;
-            public string[] Args;
+            internal Func<string, Audio.Entity.Audio, UniTask> PlayAudio;
+            internal string AssetName;
+
+            public async readonly UniTask Run()
+            {
+                await PlayAudio(AssetName, Audio.Entity.Audio.Ambient);
+            }
         }
         private struct LocationQueue : IQueue
         {
-            public string AssetName;
-            public string[] Args;
+            internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
+            internal Save.Entity SaveSystem;
+            internal string AssetName;
+            internal string[] Args;
+
+            public async readonly UniTask Run()
+            {
+                await SetImage(SaveSystem.IsLoadingInProcess, AssetName, false, false, Args);
+            }
         }
         private struct CutSceneQueue : IQueue
         {
-            public string AssetName;
-            public string[] Args;
+            internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
+            internal Save.Entity SaveSystem;
+            internal string AssetName;
+            internal string[] Args;
+
+            public async readonly UniTask Run()
+            {
+                await SetImage(SaveSystem.IsLoadingInProcess, AssetName, true, false, Args);
+            }
         }
         private struct CameraQueue : IQueue
         {
-            public string Value;
+            internal Save.Entity SaveSystem;
+            internal Func<bool, string, UniTask> SetCamera;
+            internal string Value;
+
+            public async readonly UniTask Run()
+            {
+                await SetCamera(SaveSystem.IsLoadingInProcess, Value);
+            }
         }
         private struct AwaitQueue : IQueue
         {
-            public float Timer;
+            internal Save.Entity SaveSystem;
+            internal Func<float, UniTask> Wait;
+            internal float Timer;
+
+            public async readonly UniTask Run()
+            {
+                if (!SaveSystem.IsLoadingInProcess)
+                    await Wait(Timer);
+            }
         }
         private struct DialogQueue : IQueue
         {
-            public TextAlignment DialogAlign;
+            internal Func<bool, TextAlignment, UniTask> SetDialogue;
+            internal Save.Entity SaveSystem;
+            internal TextAlignment DialogAlign;
+
+            public async readonly UniTask Run()
+            {
+                await SetDialogue(SaveSystem.IsLoadingInProcess, DialogAlign);
+            }
         }
         private struct HideCharacterQueue : IQueue
         {
-            public bool IsNewCharacter;
+            internal Save.Entity SaveSystem;
+            internal Func<UniTask> CharacterHide;
+            internal Action CharacterHideImmediate;
+            internal bool IsNewCharacter;
+            internal Action OnHidecharacter;
+
+            public async readonly UniTask Run()
+            {
+                if (IsNewCharacter)
+                {
+                    OnHidecharacter();
+                    if (!SaveSystem.IsLoadingInProcess)
+                        await CharacterHide();
+                    else
+                        CharacterHideImmediate();
+                }
+            }
         }
         private struct ShowCharacterQueue : IQueue
         {
-            public bool IsNewCharacter;
-            public string Name;
-            public string[] Args;
+            internal Func<string, string[], UniTask> CharacterSetImage;
+            internal Save.Entity SaveSystem;
+            internal Func<bool, UniTask> CharacterShow;
+            internal Action<bool> CharacterShowImmediate;
+            internal bool IsNewCharacter;
+            internal string Name;
+            internal string[] Args;
+            internal string MainCharacter;
+
+            public async readonly UniTask Run()
+            {
+                await CharacterSetImage(Name, Args);
+                if (IsNewCharacter)
+                {
+                    if (!SaveSystem.IsLoadingInProcess)
+                        await CharacterShow(Name == MainCharacter);
+                    else
+                        CharacterShowImmediate(Name == MainCharacter);
+                }
+            }
         }
-        private struct SetBubbleQueue : IQueue
+        private class SetBubbleQueue : IQueue
         {
-            public string Name;
-            public string Value;
-            public string[] Args;
+            internal UniTaskCompletionSource BubbleDone;
+            internal Bubble.Entity Bubble;
+            internal Func<string, string> GetLocalizationValue;
+            internal Func<List<Ink.Runtime.Choice>> GetChoices;
+            internal Action<string[], Ink.Runtime.Choice> SetCharacterView;
+            internal Save.Entity SaveSystem;
+            internal Action<int> SetChoice;
+            internal string Name;
+            internal string Value;
+            internal string[] Args;
+
+            public async UniTask Run()
+            {
+                if (Name == "some wardrobe trigger")
+                {
+                    // set wardrobe screen here...
+                }
+                else if (Name == "some choose trigger")
+                {
+                    //set choose screen here...
+                }
+                else
+                {
+                    Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
+                    {
+                        Name = Name,
+                        Args = Args,
+                        Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
+                        {
+                            Header = GetLocalizationValue(Name),
+                            Text = Value
+                        },
+                        Buttons = GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                        {
+                            Id = c.index,
+                            Text = c.text,
+                            OnClick = id =>
+                            {
+                                SetCharacterView(Args, c);
+                                SaveSystem.TrySaveChoice((byte)id);
+                                SetChoice(id);
+                                BubbleDone.TrySetResult();
+                            }
+                        }).ToArray(),
+                        OnBackgroundClick = () =>
+                        {
+                            SaveSystem.TrySaveChoice();
+                            BubbleDone.TrySetResult();
+                        }
+                    });
+                }
+            }
         }
         private struct LoadChoiceQueue : IQueue
         {
-            public string[] Args;
+            internal UniTaskCompletionSource BubbleDone;
+            internal Save.Entity SaveSystem;
+            internal Func<List<Ink.Runtime.Choice>> GetChoices;
+            internal Action<int> SetChoice;
+            internal Action<string[], Ink.Runtime.Choice> SetCharacterView;
+            internal string[] Args;
+
+            public async readonly UniTask Run()
+            {
+                if (SaveSystem.TryLoadChoice(out var savedChoice))
+                {
+                    if (savedChoice != 255)
+                    {
+                        SetCharacterView(Args, GetChoices()[savedChoice]);
+                        SetChoice(savedChoice);
+                    }
+                    BubbleDone.TrySetResult();
+                }
+            }
         }
         private struct ShowBubbleQueue : IQueue
         {
-            
+            internal UniTaskCompletionSource BubbleDone;
+            internal Save.Entity SaveSystem;
+            internal Bubble.Entity Bubble;
+
+            public async readonly UniTask Run()
+            {
+                if (!SaveSystem.IsLoadingInProcess)
+                    await Bubble.Show();
+                else
+                    Bubble.ShowImmediate();
+
+                await BubbleDone.Task;
+            }
         }
 
         private Ctx _ctx;
@@ -157,7 +332,9 @@ namespace Novels
                 {
                     queue.Enqueue(new NotificationQueue
                     {
-                        NotificationText = value
+                        SaveSystem = _ctx.SaveSystem,
+                        NotificationText = value,
+                        ShowNotification = _ctx.ShowNotification
                     });
                     continue;
                 }
@@ -166,6 +343,8 @@ namespace Novels
                 {
                     queue.Enqueue(new LocationQueue
                     {
+                        SaveSystem = _ctx.SaveSystem,
+                        SetImage = _ctx.SetImage,
                         AssetName = value,
                         Args = args
                     });
@@ -185,8 +364,8 @@ namespace Novels
                 {
                     queue.Enqueue(new MusicQueue
                     {
-                        AssetName = value,
-                        Args = args
+                        PlayAudio = _ctx.PlayAudio,
+                        AssetName = value
                     });
                     continue;
                 }
@@ -195,8 +374,8 @@ namespace Novels
                 {
                     queue.Enqueue(new SoundQueue
                     {
+                        PlayAudio = _ctx.PlayAudio,
                         AssetName = value,
-                        Args = args
                     });
                     continue;
                 }
@@ -205,8 +384,8 @@ namespace Novels
                 {
                     queue.Enqueue(new AmbientQueue
                     {
+                        PlayAudio = _ctx.PlayAudio,
                         AssetName = value,
-                        Args = args
                     });
                     continue;
                 }
@@ -215,6 +394,8 @@ namespace Novels
                 {
                     queue.Enqueue(new CameraQueue
                     {
+                        SaveSystem = _ctx.SaveSystem,
+                        SetCamera = _ctx.SetCamera,
                         Value = value
                     });
                     continue;
@@ -239,12 +420,19 @@ namespace Novels
                     dialogAlign = TextAlignment.Right;
                 queue.Enqueue(new DialogQueue
                 {
+                    SaveSystem = _ctx.SaveSystem,
+                    SetDialogue = _ctx.SetDialogue,
                     DialogAlign = dialogAlign
                 });
 
                 var tempQueueLoadChoice = queue.Reverse().ToList();
                 tempQueueLoadChoice.Add(new LoadChoiceQueue
                 {
+                    BubbleDone = bubbleDone,
+                    GetChoices = _ctx.GetChoices,
+                    SetChoice = _ctx.SetChoice,
+                    SetCharacterView = SetCharacterView,
+                    SaveSystem = _ctx.SaveSystem,
                     Args = args,
                 });
                 tempQueueLoadChoice.Reverse();
@@ -253,10 +441,18 @@ namespace Novels
                 var tempQueueSetBubble = queue.Reverse().ToList();
                 tempQueueSetBubble.Add(new SetBubbleQueue
                 {
+                    BubbleDone = bubbleDone,
+                    Bubble = _ctx.Bubble,
+                    GetLocalizationValue = _ctx.GetLocalizationValue,
+                    GetChoices = _ctx.GetChoices,
+                    SetCharacterView = SetCharacterView,
+                    SaveSystem = _ctx.SaveSystem,
+                    SetChoice = _ctx.SetChoice,
                     Name = name,
                     Value = value,
                     Args = args,
                 });
+                
                 tempQueueSetBubble.Reverse();
                 queue = new Queue<IQueue>(tempQueueSetBubble);
 
@@ -267,131 +463,79 @@ namespace Novels
                 var tempQueueHideCharacter = queue.Reverse().ToList();
                 tempQueueHideCharacter.Add(new HideCharacterQueue
                 {
+                    SaveSystem = _ctx.SaveSystem,
+                    CharacterHide = _ctx.CharacterHide,
+                    CharacterHideImmediate = _ctx.CharacterHideImmediate,
                     IsNewCharacter = isNewCharacter,
+                    OnHidecharacter = () => lastCharacterName = characterNameTemp,
                 });
                 tempQueueHideCharacter.Reverse();
                 queue = new Queue<IQueue>(tempQueueHideCharacter);
 
                 queue.Enqueue(new ShowCharacterQueue
                 {
+                    CharacterSetImage = _ctx.CharacterSetImage,
+                    SaveSystem = _ctx.SaveSystem,
+                    CharacterShow = _ctx.CharacterShow,
+                    CharacterShowImmediate = _ctx.CharacterShowImmediate,
                     Name = name,
                     IsNewCharacter = isNewCharacter,
                     Args = args,
+                    MainCharacter = _ctx.MainCharacter,
                 });
 
-                queue.Enqueue(new ShowBubbleQueue());
+                queue.Enqueue(new ShowBubbleQueue
+                {
+                    BubbleDone = bubbleDone,
+                    Bubble = _ctx.Bubble,
+                    SaveSystem = _ctx.SaveSystem,
+                });
 
                 while(queue.TryDequeue(out var element))
                 {
                     switch (element)
                     {
                         case HideCharacterQueue hideCharacterQueue:
-                            if (hideCharacterQueue.IsNewCharacter)
-                            {
-                                lastCharacterName = characterNameTemp;
-                                if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                    await _ctx.CharacterHide();
-                                else
-                                    _ctx.CharacterHideImmediate();
-                            }
+                            await hideCharacterQueue.Run();
                         break;
                         case SetBubbleQueue setBubbleQueue:
-                            if (name == "some wardrobe trigger")
-                            {
-                                // set wardrobe screen here...
-                            }
-                            else if (name == "some choose trigger")
-                            {
-                                //set choose screen here...
-                            }
-                            else
-                            {
-                                _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
-                                {
-                                    Name = name,
-                                    Args = args,
-                                    Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
-                                    {
-                                        Header = _ctx.GetLocalizationValue(name),
-                                        Text = value
-                                    },
-                                    Buttons = _ctx.GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
-                                    {
-                                        Id = c.index,
-                                        Text = c.text,
-                                        OnClick = id =>
-                                        {
-                                            SetCharacterView(args, c);
-                                            _ctx.SaveSystem.TrySaveChoice((byte)id);
-                                            _ctx.SetChoice(id);
-                                            bubbleDone.TrySetResult();
-                                        }
-                                    }).ToArray(),
-                                    OnBackgroundClick = () =>
-                                    {
-                                        _ctx.SaveSystem.TrySaveChoice();
-                                        bubbleDone.TrySetResult();
-                                    }
-                                });
-                            }
+                            await setBubbleQueue.Run();
                         break;
                         case LoadChoiceQueue loadChoiceQueue:
-                            if (_ctx.SaveSystem.TryLoadChoice(out var savedChoice))
-                            {
-                                if (savedChoice != 255)
-                                {
-                                    SetCharacterView(loadChoiceQueue.Args, _ctx.GetChoices()[savedChoice]);
-                                    _ctx.SetChoice(savedChoice);
-                                }
-                                bubbleDone.TrySetResult();
-                            }
+                            await loadChoiceQueue.Run();
                         break;
                         case NotificationQueue notificationQueue:
-                            if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                _ctx.ShowNotification(notificationQueue.NotificationText).Forget()  ;
+                            await notificationQueue.Run();
                         break;
                         case LocationQueue locationQueue:
-                            await _ctx.SetImage(_ctx.SaveSystem.IsLoadingInProcess, locationQueue.AssetName, false, false, locationQueue.Args);
+                            await locationQueue.Run();
                         break;
                         case CutSceneQueue cutSceneQueue:
-                            await _ctx.SetImage(_ctx.SaveSystem.IsLoadingInProcess, cutSceneQueue.AssetName, true, false, cutSceneQueue.Args);
+                            await cutSceneQueue.Run();
                         break;
                         case MusicQueue musicQueue:
-                            await _ctx.PlayAudio(musicQueue.AssetName, Audio.Entity.Audio.Music);
+                            await musicQueue.Run();
                         break;
                         case SoundQueue soundQueue:
-                            await _ctx.PlayAudio(soundQueue.AssetName, Audio.Entity.Audio.Sound);
+                            await soundQueue.Run();
                         break;
                         case AmbientQueue ambientQueue:
-                            await _ctx.PlayAudio(ambientQueue.AssetName, Audio.Entity.Audio.Ambient);
+                            await ambientQueue.Run();
                         break;
                         case CameraQueue cameraQueue:
-                            await _ctx.SetCamera(_ctx.SaveSystem.IsLoadingInProcess, cameraQueue.Value);
+                            await cameraQueue.Run();
                         break;
                         case AwaitQueue awaitQueue:
-                            if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                await _ctx.Wait(awaitQueue.Timer);
+                            await awaitQueue.Run();
                         break;
                         case DialogQueue dialogQueue:
-                            await _ctx.SetDialogue(_ctx.SaveSystem.IsLoadingInProcess, dialogQueue.DialogAlign);
+                            await dialogQueue.Run();
                         break;
                         case ShowCharacterQueue showCharacterQueue:
-                            await _ctx.CharacterSetImage(name, args);
-                            if (isNewCharacter)
-                            {
-                                if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                    await _ctx.CharacterShow(name == _ctx.MainCharacter);
-                                else
-                                    _ctx.CharacterShowImmediate(name == _ctx.MainCharacter);
-                            }
+                            await showCharacterQueue.Run();
                         break;
                         case ShowBubbleQueue showBubbleQueue:
-                            if (!_ctx.SaveSystem.IsLoadingInProcess)
-                                await _ctx.Bubble.Show();
-                            else
-                                _ctx.Bubble.ShowImmediate();
-
-                            await bubbleDone.Task;
+                            await showBubbleQueue.Run();
                         break;
                     }
                 }
