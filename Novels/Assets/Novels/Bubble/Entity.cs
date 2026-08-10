@@ -84,12 +84,18 @@ namespace Novels.Bubble
 
         public void SetWardrobeScreen(WardrobeScreenCtx ctx)
         {
-            //set wardrobe here...
+            _screen.SetWardrobeScreen(new View.Screen.WardrobeCtx
+            {
+                // set wardrobe ctx here...
+            });
         }
 
         public void SetChooseScreen(ChooseScreenCtx ctx)
         {
-            //set choose here...
+            _screen.SetChooseScreen(new View.Screen.ChooseCtx
+            {
+                // set wardrobe ctx here...
+            });
         }
 
         public void SetBubbleScreen(BubbleScreenCtx ctx)
