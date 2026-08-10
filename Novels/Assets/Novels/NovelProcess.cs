@@ -204,7 +204,8 @@ namespace Novels
             internal Func<string, string> GetLocalizationValue;
             internal Func<List<Ink.Runtime.Choice>> GetChoices;
             internal Action<string[], Ink.Runtime.Choice> SetCharacterView;
-            internal Save.Entity SaveSystem;
+            internal Action<byte> SaveChoice;
+            internal Func<bool> IsLoadingInProcess;
             internal Action<int> SetChoice;
             internal string Name;
             internal string Value;
@@ -238,14 +239,16 @@ namespace Novels
                             OnClick = id =>
                             {
                                 SetCharacterView(Args, c);
-                                SaveSystem.TrySaveChoice((byte)id);
+                                if (!IsLoadingInProcess())
+                                    SaveChoice((byte)id);
                                 SetChoice(id);
                                 BubbleDone.TrySetResult();
                             }
                         }).ToArray(),
                         OnBackgroundClick = () =>
                         {
-                            SaveSystem.TrySaveChoice();
+                            if (!IsLoadingInProcess())
+                                SaveChoice(255);
                             BubbleDone.TrySetResult();
                         }
                     });
@@ -469,7 +472,8 @@ namespace Novels
                     GetLocalizationValue = _ctx.GetLocalizationValue,
                     GetChoices = _ctx.GetChoices,
                     SetCharacterView = SetCharacterView,
-                    SaveSystem = _ctx.SaveSystem,
+                    SaveChoice = _ctx.SaveSystem.SaveChoice,
+                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     SetChoice = _ctx.SetChoice,
                     Name = name,
                     Value = value,

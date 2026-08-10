@@ -42,16 +42,13 @@ namespace Novels.Save
             _initSave = _save.ToList();
         }
 
-        public bool TrySaveChoice(byte unit = 255)
+        public void SaveChoice(byte unit = 255)
         {
-            if (IsLoadingInProcess) return false;
-
             _save.Add(unit);
             using( var cache = new Cache.Entity())
             {
                 cache.ByteArrayToCash(_save.ToArray(), _ctx.SaveChoiceFileName);
             }
-            return true;
         }
 
         public byte LoadChoice()
