@@ -291,6 +291,20 @@ namespace Novels
             }
         }
 
+        private struct HideBubbleQueue : IQueue
+        {
+            internal Save.Entity SaveSystem;
+            internal Bubble.Entity Bubble;
+
+            public async readonly UniTask Run()
+            {
+                if (!SaveSystem.IsLoadingInProcess)
+                    await Bubble.Hide();
+                else
+                    Bubble.HideImmediate();
+            }
+        }
+
         private Ctx _ctx;
 
         internal NovelProcess(Ctx ctx)
@@ -452,7 +466,6 @@ namespace Novels
                     Value = value,
                     Args = args,
                 });
-                
                 tempQueueSetBubble.Reverse();
                 queue = new Queue<IQueue>(tempQueueSetBubble);
 
@@ -491,61 +504,18 @@ namespace Novels
                     SaveSystem = _ctx.SaveSystem,
                 });
 
+                queue.Enqueue(new HideBubbleQueue
+                {
+                    Bubble = _ctx.Bubble,
+                    SaveSystem = _ctx.SaveSystem,
+                });
+
                 while(queue.TryDequeue(out var element))
                 {
-                    switch (element)
-                    {
-                        case HideCharacterQueue hideCharacterQueue:
-                            await hideCharacterQueue.Run();
-                        break;
-                        case SetBubbleQueue setBubbleQueue:
-                            await setBubbleQueue.Run();
-                        break;
-                        case LoadChoiceQueue loadChoiceQueue:
-                            await loadChoiceQueue.Run();
-                        break;
-                        case NotificationQueue notificationQueue:
-                            await notificationQueue.Run();
-                        break;
-                        case LocationQueue locationQueue:
-                            await locationQueue.Run();
-                        break;
-                        case CutSceneQueue cutSceneQueue:
-                            await cutSceneQueue.Run();
-                        break;
-                        case MusicQueue musicQueue:
-                            await musicQueue.Run();
-                        break;
-                        case SoundQueue soundQueue:
-                            await soundQueue.Run();
-                        break;
-                        case AmbientQueue ambientQueue:
-                            await ambientQueue.Run();
-                        break;
-                        case CameraQueue cameraQueue:
-                            await cameraQueue.Run();
-                        break;
-                        case AwaitQueue awaitQueue:
-                            await awaitQueue.Run();
-                        break;
-                        case DialogQueue dialogQueue:
-                            await dialogQueue.Run();
-                        break;
-                        case ShowCharacterQueue showCharacterQueue:
-                            await showCharacterQueue.Run();
-                        break;
-                        case ShowBubbleQueue showBubbleQueue:
-                            await showBubbleQueue.Run();
-                        break;
-                    }
+                    await element.Run();
                 }
 
-                //ResetContent
                 queue.Clear();
-                if (!_ctx.SaveSystem.IsLoadingInProcess)
-                    await _ctx.Bubble.Hide();
-                else
-                    _ctx.Bubble.HideImmediate();
             }
         }
 
