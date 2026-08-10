@@ -278,14 +278,15 @@ namespace Novels
         {
             internal UniTaskCompletionSource BubbleDone;
             internal Func<bool> IsLoadingInProcess;
-            internal Bubble.Entity Bubble;
+            internal Func<UniTask> BubbleShow;
+            internal Action BubbleShowImmediate;
 
             public async readonly UniTask Run()
             {
                 if (!IsLoadingInProcess())
-                    await Bubble.Show();
+                    await BubbleShow();
                 else
-                    Bubble.ShowImmediate();
+                    BubbleShowImmediate();
 
                 await BubbleDone.Task;
             }
@@ -293,14 +294,15 @@ namespace Novels
         private struct HideBubbleQueue : IQueue
         {
             internal Func<bool> IsLoadingInProcess;
-            internal Bubble.Entity Bubble;
+            internal Func<UniTask> BubbleHide;
+            internal Action BubbleHideImmediate;
 
             public async readonly UniTask Run()
             {
                 if (!IsLoadingInProcess())
-                    await Bubble.Hide();
+                    await BubbleHide();
                 else
-                    Bubble.HideImmediate();
+                    BubbleHideImmediate();
             }
         }
 
@@ -504,13 +506,15 @@ namespace Novels
                 queue.Enqueue(new ShowBubbleQueue
                 {
                     BubbleDone = bubbleDone,
-                    Bubble = _ctx.Bubble,
+                    BubbleShow = _ctx.Bubble.Show,
+                    BubbleShowImmediate = _ctx.Bubble.ShowImmediate,
                     IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                 });
 
                 queue.Enqueue(new HideBubbleQueue
                 {
-                    Bubble = _ctx.Bubble,
+                    BubbleHide = _ctx.Bubble.Hide,
+                    BubbleHideImmediate = _ctx.Bubble.HideImmediate,
                     IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                 });
 
