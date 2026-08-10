@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 4126501932
+CRC: 3257324534
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 6891564c9da981bbb2e4706adfa5f9f3
+    Hash: 3f34b36d719989ebe78a93f0ebfa064c
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 5bee39e06bdc55407d8ae4ceeb6906f6
+    Hash: 2907bc650da3fee12ad6531c53967036
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: c919d779e3ba40a79cb5010feea412a5
+    Hash: e3725fe0084de1a64eca1e10d8c19ad5
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -58,6 +58,10 @@ SerializeReferenceClassIdentifiers:
   ClassName: Novels.Bubble.View.Screen/Bubbles
 - AssemblyName: Novels.Bubble.View
   ClassName: Novels.Bubble.View.Screen/Bubbles/BubblePopUp
+- AssemblyName: Novels.Bubble.View
+  ClassName: Novels.Bubble.View.Screen/Choose
+- AssemblyName: Novels.Bubble.View
+  ClassName: Novels.Bubble.View.Screen/Wardrobe
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
 - AssemblyName: UnityEngine.CoreModule

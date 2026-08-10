@@ -49,36 +49,6 @@ namespace Novels
             public Action<(LogType type, string message)> OnLog;
         }
         
-        private struct MusicQueue : QueueProcess.IQueue
-        {
-            internal Func<string, UniTask> PlayAudio;
-            internal string AssetName;
-
-            public async readonly UniTask Run()
-            {
-                await PlayAudio(AssetName);
-            }
-        }
-        private struct SoundQueue : QueueProcess.IQueue
-        {
-            internal Func<string, UniTask> PlayAudio;
-            internal string AssetName;
-
-            public async readonly UniTask Run()
-            {
-                await PlayAudio(AssetName);
-            }
-        }
-        private struct AmbientQueue : QueueProcess.IQueue
-        {
-            internal Func<string, UniTask> PlayAudio;
-            internal string AssetName;
-
-            public async readonly UniTask Run()
-            {
-                await PlayAudio(AssetName);
-            }
-        }
         private struct LocationQueue : QueueProcess.IQueue
         {
             internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
@@ -409,7 +379,7 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("music"))
                 {
-                    queue.Enqueue(new MusicQueue
+                    queue.Enqueue(new QueueProcess.AudioQueue
                     {
                         PlayAudio = assetName => _ctx.PlayAudio(assetName, Audio.Entity.Audio.Music),
                         AssetName = value
@@ -419,7 +389,7 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("sound"))
                 {
-                    queue.Enqueue(new SoundQueue
+                    queue.Enqueue(new QueueProcess.AudioQueue
                     {
                         PlayAudio = assetName => _ctx.PlayAudio(assetName, Audio.Entity.Audio.Sound),
                         AssetName = value,
@@ -429,7 +399,7 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("ambient"))
                 {
-                    queue.Enqueue(new AmbientQueue
+                    queue.Enqueue(new QueueProcess.AudioQueue
                     {
                         PlayAudio = assetName => _ctx.PlayAudio(assetName, Audio.Entity.Audio.Ambient),
                         AssetName = value,
