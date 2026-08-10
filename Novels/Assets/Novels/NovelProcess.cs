@@ -197,10 +197,41 @@ namespace Novels
                 }
             }
         }
-        private class SetBubbleQueue : IQueue
+        internal class SetBubbleQueue : IQueue
         {
+            internal struct BubbleCtx
+            {
+                internal struct TextCtx
+                {
+                    internal string Header;
+                    internal string Text;
+                }
+
+                internal struct ButtonCtx
+                {
+                    internal int Id;
+                    internal string Text;
+                    internal Action<int> OnClick;
+                }
+
+                internal string Name;
+                internal string[] Args;
+                internal TextCtx Text;
+                internal ButtonCtx[] Buttons;
+                internal Action OnBackgroundClick;
+            }
+
+            internal struct WardrobeCtx
+            {
+                
+            }
+
+            internal struct ChooseCtx
+            {
+                
+            }
+
             internal UniTaskCompletionSource BubbleDone;
-            internal Bubble.Entity Bubble;
             internal Func<string, string> GetLocalizationValue;
             internal Func<List<Ink.Runtime.Choice>> GetChoices;
             internal Action<string[], Ink.Runtime.Choice> SetCharacterView;
@@ -211,28 +242,38 @@ namespace Novels
             internal string Value;
             internal string[] Args;
 
+            internal Action<BubbleCtx> SetBubbleScreen;
+            internal Action<WardrobeCtx> SetWardrobeScreen;
+            internal Action<ChooseCtx> SetChooseScreen;
+
             public async UniTask Run()
             {
                 if (Name == "some wardrobe trigger")
                 {
-                    // set wardrobe screen here...
+                    SetWardrobeScreen(new WardrobeCtx
+                    {
+                        // set wardrobe here...
+                    });
                 }
                 else if (Name == "some choose trigger")
                 {
-                    //set choose screen here...
+                    SetChooseScreen(new ChooseCtx
+                    {
+                        //set choose here...
+                    });
                 }
                 else
                 {
-                    Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
+                    SetBubbleScreen(new BubbleCtx
                     {
                         Name = Name,
                         Args = Args,
-                        Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
+                        Text = new BubbleCtx.TextCtx
                         {
                             Header = GetLocalizationValue(Name),
                             Text = Value
                         },
-                        Buttons = GetChoices().Select(c => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                        Buttons = GetChoices().Select(c => new BubbleCtx.ButtonCtx
                         {
                             Id = c.index,
                             Text = c.text,
@@ -468,7 +509,6 @@ namespace Novels
                 tempQueueSetBubble.Add(new SetBubbleQueue
                 {
                     BubbleDone = bubbleDone,
-                    Bubble = _ctx.Bubble,
                     GetLocalizationValue = _ctx.GetLocalizationValue,
                     GetChoices = _ctx.GetChoices,
                     SetCharacterView = SetCharacterView,
@@ -478,6 +518,41 @@ namespace Novels
                     Name = name,
                     Value = value,
                     Args = args,
+
+                    SetBubbleScreen = data =>
+                    {
+                        _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
+                        {
+                            Name = data.Name,
+                            Args = data.Args,
+                            Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
+                            {
+                                Header = data.Text.Header,
+                                Text = data.Text.Text,
+                            },
+                            Buttons = data.Buttons.Select(b => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                            {
+                                Id = b.Id,
+                                Text = b.Text,
+                                OnClick = b.OnClick
+                            }).ToArray(),
+                            OnBackgroundClick = data.OnBackgroundClick
+                        });
+                    },
+                    SetWardrobeScreen = data =>
+                    {
+                        _ctx.Bubble.SetWardrobeScreen(new Bubble.Entity.WardrobeScreenCtx
+                        {
+                            //migrate wardrobe here...
+                        });
+                    },
+                    SetChooseScreen = data =>
+                    {
+                        _ctx.Bubble.SetChooseScreen(new Bubble.Entity.ChooseScreenCtx
+                        {
+                            // migrate choose here...
+                        });
+                    },
                 });
                 tempQueueSetBubble.Reverse();
                 queue = new Queue<IQueue>(tempQueueSetBubble);

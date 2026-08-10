@@ -14,6 +14,16 @@ namespace Novels.Bubble
             public GameObject BubblePrefab;
         }
 
+        public struct WardrobeScreenCtx
+        {
+            // wardrobe ctx
+        }
+
+        public struct ChooseScreenCtx
+        {
+            // choose ctx
+        }
+
         public struct BubbleScreenCtx
         {
             public struct TextCtx
@@ -70,6 +80,16 @@ namespace Novels.Bubble
         public void HideImmediate()
         {
             _screen.HideImmediate();
+        }
+
+        public void SetWardrobeScreen(WardrobeScreenCtx ctx)
+        {
+            //set wardrobe here...
+        }
+
+        public void SetChooseScreen(ChooseScreenCtx ctx)
+        {
+            //set choose here...
         }
 
         public void SetBubbleScreen(BubbleScreenCtx ctx)
