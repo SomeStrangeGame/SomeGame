@@ -56,107 +56,107 @@ namespace Novels
         
         private struct NotificationQueue : IQueue
         {
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal string NotificationText;
             internal Func<string, UniTask> ShowNotification;
 
             public async readonly UniTask Run()
             {
-                if (!SaveSystem.IsLoadingInProcess)
+                if (!IsLoadingInProcess())
                         ShowNotification(NotificationText).Forget();
             }
         }
         private struct MusicQueue : IQueue
         {
-            internal Func<string, Audio.Entity.Audio, UniTask> PlayAudio;
+            internal Func<string, UniTask> PlayAudio;
             internal string AssetName;
 
             public async readonly UniTask Run()
             {
-                await PlayAudio(AssetName, Audio.Entity.Audio.Music);
+                await PlayAudio(AssetName);
             }
         }
         private struct SoundQueue : IQueue
         {
-            internal Func<string, Audio.Entity.Audio, UniTask> PlayAudio;
+            internal Func<string, UniTask> PlayAudio;
             internal string AssetName;
 
             public async readonly UniTask Run()
             {
-                await PlayAudio(AssetName, Audio.Entity.Audio.Sound);
+                await PlayAudio(AssetName);
             }
         }
         private struct AmbientQueue : IQueue
         {
-            internal Func<string, Audio.Entity.Audio, UniTask> PlayAudio;
+            internal Func<string, UniTask> PlayAudio;
             internal string AssetName;
 
             public async readonly UniTask Run()
             {
-                await PlayAudio(AssetName, Audio.Entity.Audio.Ambient);
+                await PlayAudio(AssetName);
             }
         }
         private struct LocationQueue : IQueue
         {
             internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal string AssetName;
             internal string[] Args;
 
             public async readonly UniTask Run()
             {
-                await SetImage(SaveSystem.IsLoadingInProcess, AssetName, false, false, Args);
+                await SetImage(IsLoadingInProcess(), AssetName, false, false, Args);
             }
         }
         private struct CutSceneQueue : IQueue
         {
             internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal string AssetName;
             internal string[] Args;
 
             public async readonly UniTask Run()
             {
-                await SetImage(SaveSystem.IsLoadingInProcess, AssetName, true, false, Args);
+                await SetImage(IsLoadingInProcess(), AssetName, true, false, Args);
             }
         }
         private struct CameraQueue : IQueue
         {
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal Func<bool, string, UniTask> SetCamera;
             internal string Value;
 
             public async readonly UniTask Run()
             {
-                await SetCamera(SaveSystem.IsLoadingInProcess, Value);
+                await SetCamera(IsLoadingInProcess(), Value);
             }
         }
         private struct AwaitQueue : IQueue
         {
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal Func<float, UniTask> Wait;
             internal float Timer;
 
             public async readonly UniTask Run()
             {
-                if (!SaveSystem.IsLoadingInProcess)
+                if (!IsLoadingInProcess())
                     await Wait(Timer);
             }
         }
         private struct DialogQueue : IQueue
         {
             internal Func<bool, TextAlignment, UniTask> SetDialogue;
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal TextAlignment DialogAlign;
 
             public async readonly UniTask Run()
             {
-                await SetDialogue(SaveSystem.IsLoadingInProcess, DialogAlign);
+                await SetDialogue(IsLoadingInProcess(), DialogAlign);
             }
         }
         private struct HideCharacterQueue : IQueue
         {
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal Func<UniTask> CharacterHide;
             internal Action CharacterHideImmediate;
             internal bool IsNewCharacter;
@@ -167,7 +167,7 @@ namespace Novels
                 if (IsNewCharacter)
                 {
                     OnHidecharacter();
-                    if (!SaveSystem.IsLoadingInProcess)
+                    if (!IsLoadingInProcess())
                         await CharacterHide();
                     else
                         CharacterHideImmediate();
@@ -177,7 +177,7 @@ namespace Novels
         private struct ShowCharacterQueue : IQueue
         {
             internal Func<string, string[], UniTask> CharacterSetImage;
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal Func<bool, UniTask> CharacterShow;
             internal Action<bool> CharacterShowImmediate;
             internal bool IsNewCharacter;
@@ -190,7 +190,7 @@ namespace Novels
                 await CharacterSetImage(Name, Args);
                 if (IsNewCharacter)
                 {
-                    if (!SaveSystem.IsLoadingInProcess)
+                    if (!IsLoadingInProcess())
                         await CharacterShow(Name == MainCharacter);
                     else
                         CharacterShowImmediate(Name == MainCharacter);
@@ -277,12 +277,12 @@ namespace Novels
         private struct ShowBubbleQueue : IQueue
         {
             internal UniTaskCompletionSource BubbleDone;
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal Bubble.Entity Bubble;
 
             public async readonly UniTask Run()
             {
-                if (!SaveSystem.IsLoadingInProcess)
+                if (!IsLoadingInProcess())
                     await Bubble.Show();
                 else
                     Bubble.ShowImmediate();
@@ -290,15 +290,14 @@ namespace Novels
                 await BubbleDone.Task;
             }
         }
-
         private struct HideBubbleQueue : IQueue
         {
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
             internal Bubble.Entity Bubble;
 
             public async readonly UniTask Run()
             {
-                if (!SaveSystem.IsLoadingInProcess)
+                if (!IsLoadingInProcess())
                     await Bubble.Hide();
                 else
                     Bubble.HideImmediate();
@@ -346,7 +345,7 @@ namespace Novels
                 {
                     queue.Enqueue(new NotificationQueue
                     {
-                        SaveSystem = _ctx.SaveSystem,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         NotificationText = value,
                         ShowNotification = _ctx.ShowNotification
                     });
@@ -357,7 +356,7 @@ namespace Novels
                 {
                     queue.Enqueue(new LocationQueue
                     {
-                        SaveSystem = _ctx.SaveSystem,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetImage = _ctx.SetImage,
                         AssetName = value,
                         Args = args
@@ -367,7 +366,10 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("cut-scene"))
                 {
-                    queue.Enqueue(new CutSceneQueue{
+                    queue.Enqueue(new CutSceneQueue
+                    {
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                        SetImage = _ctx.SetImage,
                         AssetName = value,
                         Args = args
                     });
@@ -378,7 +380,7 @@ namespace Novels
                 {
                     queue.Enqueue(new MusicQueue
                     {
-                        PlayAudio = _ctx.PlayAudio,
+                        PlayAudio = assetName => _ctx.PlayAudio(assetName, Audio.Entity.Audio.Music),
                         AssetName = value
                     });
                     continue;
@@ -388,7 +390,7 @@ namespace Novels
                 {
                     queue.Enqueue(new SoundQueue
                     {
-                        PlayAudio = _ctx.PlayAudio,
+                        PlayAudio = assetName => _ctx.PlayAudio(assetName, Audio.Entity.Audio.Sound),
                         AssetName = value,
                     });
                     continue;
@@ -398,7 +400,7 @@ namespace Novels
                 {
                     queue.Enqueue(new AmbientQueue
                     {
-                        PlayAudio = _ctx.PlayAudio,
+                        PlayAudio = assetName => _ctx.PlayAudio(assetName, Audio.Entity.Audio.Ambient),
                         AssetName = value,
                     });
                     continue;
@@ -408,7 +410,7 @@ namespace Novels
                 {
                     queue.Enqueue(new CameraQueue
                     {
-                        SaveSystem = _ctx.SaveSystem,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetCamera = _ctx.SetCamera,
                         Value = value
                     });
@@ -420,6 +422,8 @@ namespace Novels
                     if (int.TryParse(value, out var seconds))
                         queue.Enqueue(new AwaitQueue
                         {
+                            IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                            Wait = _ctx.Wait,
                             Timer = seconds
                         });
                     continue;
@@ -434,7 +438,7 @@ namespace Novels
                     dialogAlign = TextAlignment.Right;
                 queue.Enqueue(new DialogQueue
                 {
-                    SaveSystem = _ctx.SaveSystem,
+                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     SetDialogue = _ctx.SetDialogue,
                     DialogAlign = dialogAlign
                 });
@@ -476,7 +480,7 @@ namespace Novels
                 var tempQueueHideCharacter = queue.Reverse().ToList();
                 tempQueueHideCharacter.Add(new HideCharacterQueue
                 {
-                    SaveSystem = _ctx.SaveSystem,
+                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     CharacterHide = _ctx.CharacterHide,
                     CharacterHideImmediate = _ctx.CharacterHideImmediate,
                     IsNewCharacter = isNewCharacter,
@@ -488,7 +492,7 @@ namespace Novels
                 queue.Enqueue(new ShowCharacterQueue
                 {
                     CharacterSetImage = _ctx.CharacterSetImage,
-                    SaveSystem = _ctx.SaveSystem,
+                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     CharacterShow = _ctx.CharacterShow,
                     CharacterShowImmediate = _ctx.CharacterShowImmediate,
                     Name = name,
@@ -501,13 +505,13 @@ namespace Novels
                 {
                     BubbleDone = bubbleDone,
                     Bubble = _ctx.Bubble,
-                    SaveSystem = _ctx.SaveSystem,
+                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                 });
 
                 queue.Enqueue(new HideBubbleQueue
                 {
                     Bubble = _ctx.Bubble,
-                    SaveSystem = _ctx.SaveSystem,
+                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                 });
 
                 while(queue.TryDequeue(out var element))
