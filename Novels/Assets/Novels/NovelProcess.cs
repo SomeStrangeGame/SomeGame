@@ -255,7 +255,8 @@ namespace Novels
         private struct LoadChoiceQueue : IQueue
         {
             internal UniTaskCompletionSource BubbleDone;
-            internal Save.Entity SaveSystem;
+            internal Func<bool> IsLoadingInProcess;
+            internal Func<byte> LoadChoice;
             internal Func<List<Ink.Runtime.Choice>> GetChoices;
             internal Action<int> SetChoice;
             internal Action<string[], Ink.Runtime.Choice> SetCharacterView;
@@ -263,8 +264,9 @@ namespace Novels
 
             public async readonly UniTask Run()
             {
-                if (SaveSystem.TryLoadChoice(out var savedChoice))
+                if (IsLoadingInProcess())
                 {
+                    var savedChoice = LoadChoice();
                     if (savedChoice != 255)
                     {
                         SetCharacterView(Args, GetChoices()[savedChoice]);
@@ -452,7 +454,8 @@ namespace Novels
                     GetChoices = _ctx.GetChoices,
                     SetChoice = _ctx.SetChoice,
                     SetCharacterView = SetCharacterView,
-                    SaveSystem = _ctx.SaveSystem,
+                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                    LoadChoice = _ctx.SaveSystem.LoadChoice,
                     Args = args,
                 });
                 tempQueueLoadChoice.Reverse();

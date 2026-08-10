@@ -54,13 +54,11 @@ namespace Novels.Save
             return true;
         }
 
-        public bool TryLoadChoice(out byte result)
+        public byte LoadChoice()
         {
-            result = 255;
-            if (!IsLoadingInProcess) return false;
-            result = _initSave.First();
+            var result = _initSave.First();
             _initSave.RemoveAt(0);
-            return true;
+            return result;
         }
 
         public void Clear()
