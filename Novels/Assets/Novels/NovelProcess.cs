@@ -32,9 +32,16 @@ namespace Novels
 
             internal Func<string, string> GetLocalizationValue;
 
-            internal Bubble.Entity Bubble;
+            internal Func<UniTask> BubbleShow;
+            internal Action BubbleShowImmediate;
+            internal Func<UniTask> BubbleHide;
+            internal Action BubbleHideImmediate;
+            internal Action<Bubble.Entity.BubbleScreenCtx> SetBubbleScreen;
+            internal Action<Bubble.Entity.WardrobeScreenCtx> SetWardrobeScreen;
+            internal Action<Bubble.Entity.ChooseScreenCtx> SetChooseScreen;
 
-            internal Save.Entity SaveSystem;
+            internal List<byte> Save;
+            internal Action<byte> SaveChoice;
 
             internal Action<string> SetMainCharacterView;
             internal Action<string> SetMainCharacterClothes;
@@ -64,7 +71,7 @@ namespace Novels
             var queue = new Queue<QueueProcess.IQueue>();
             var lastCharacterName = string.Empty;
 
-            var save = _ctx.SaveSystem.InitSave;
+            var save = new List<byte>(_ctx.Save);
 
             await _ctx.HideLoading();
 
@@ -220,7 +227,7 @@ namespace Novels
                         GetLocalizationValue = _ctx.GetLocalizationValue,
                         Choices = choices,
                         SetCharacterView = SetCharacterView,
-                        SaveChoice = _ctx.SaveSystem.SaveChoice,
+                        SaveChoice = _ctx.SaveChoice,
                         SetChoice = _ctx.SetChoice,
                         Name = name,
                         Value = value,
@@ -228,7 +235,7 @@ namespace Novels
 
                         SetBubbleScreen = data =>
                         {
-                            _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
+                            _ctx.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
                             {
                                 Name = data.Name,
                                 Args = data.Args,
@@ -248,14 +255,14 @@ namespace Novels
                         },
                         SetWardrobeScreen = data =>
                         {
-                            _ctx.Bubble.SetWardrobeScreen(new Bubble.Entity.WardrobeScreenCtx
+                            _ctx.SetWardrobeScreen(new Bubble.Entity.WardrobeScreenCtx
                             {
                                 //migrate wardrobe here...
                             });
                         },
                         SetChooseScreen = data =>
                         {
-                            _ctx.Bubble.SetChooseScreen(new Bubble.Entity.ChooseScreenCtx
+                            _ctx.SetChooseScreen(new Bubble.Entity.ChooseScreenCtx
                             {
                                 // migrate choose here...
                             });
@@ -286,13 +293,13 @@ namespace Novels
                     queue.Enqueue(new QueueProcess.BubbleQueue.ShowBubbleQueue
                     {
                         BubbleDone = bubbleDone,
-                        BubbleShow = _ctx.Bubble.Show,
-                        BubbleShowImmediate = _ctx.Bubble.ShowImmediate,
+                        BubbleShow = _ctx.BubbleShow,
+                        BubbleShowImmediate = _ctx.BubbleShowImmediate,
                     });
                     queue.Enqueue(new QueueProcess.BubbleQueue.HideBubbleQueue
                     {
-                        BubbleHide = _ctx.Bubble.Hide,
-                        BubbleHideImmediate = _ctx.Bubble.HideImmediate,
+                        BubbleHide = _ctx.BubbleHide,
+                        BubbleHideImmediate = _ctx.BubbleHideImmediate,
                     });
                 }
 

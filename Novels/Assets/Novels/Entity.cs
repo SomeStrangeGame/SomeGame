@@ -105,7 +105,7 @@ namespace Novels
                 BundledPrefab = settingsScreen,
                 ShowLoading = mainLoading.Show,
                 HideLoading = mainLoading.Hide,
-                ContainAnySave = () => saveSystem.IsLoadingInProcess,
+                ContainAnySave = () => saveSystem.ContainAnySave,
                 ClearSave = () => saveSystem.Clear(),
             };
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
@@ -191,10 +191,21 @@ namespace Novels
                 SetDialogueImmediate = location.SetDialogueImmediate,
 
                 Wait = waiting.Await,
+
                 PlayAudio = audio.PlayAudio,
+
                 GetLocalizationValue = localization.GetValue,
-                Bubble = bubble,
-                SaveSystem = saveSystem,
+
+                BubbleShow = bubble.Show,
+                BubbleShowImmediate = bubble.ShowImmediate,
+                BubbleHide = bubble.Hide,
+                BubbleHideImmediate = bubble.HideImmediate,
+                SetBubbleScreen = bubble.SetBubbleScreen,
+                SetWardrobeScreen = bubble.SetWardrobeScreen,
+                SetChooseScreen = bubble.SetChooseScreen,
+
+                Save = saveSystem.InitSave,
+                SaveChoice = saveSystem.SaveChoice,
 
                 SetMainCharacterView = character.SetMainCharacterView,
                 SetMainCharacterClothes = character.SetMainCharacterClothes,

@@ -19,7 +19,7 @@ namespace Novels.Save
         private List<byte> _save = new();
         private List<byte> _initSave = new();
 
-        public bool IsLoadingInProcess => _initSave.Count > 0;
+        public bool ContainAnySave => _initSave.Count > 0;
         public List<byte> InitSave => _initSave;
 
         public Entity(Ctx ctx)
@@ -50,13 +50,6 @@ namespace Novels.Save
             {
                 cache.ByteArrayToCash(_save.ToArray(), _ctx.SaveChoiceFileName);
             }
-        }
-
-        public byte LoadChoice()
-        {
-            var result = _initSave.First();
-            _initSave.RemoveAt(0);
-            return result;
         }
 
         public void Clear()
