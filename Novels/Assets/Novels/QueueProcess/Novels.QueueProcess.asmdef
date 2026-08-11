@@ -2,7 +2,8 @@
     "name": "Novels.QueueProcess",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:58bed0e7c5306824586d7eda03609289"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

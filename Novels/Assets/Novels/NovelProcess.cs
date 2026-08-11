@@ -48,262 +48,6 @@ namespace Novels
 
             public Action<(LogType type, string message)> OnLog;
         }
-        
-        private struct LocationQueue : QueueProcess.IQueue
-        {
-            internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
-            internal Func<bool> IsLoadingInProcess;
-            internal string AssetName;
-            internal string[] Args;
-
-            public async readonly UniTask Run()
-            {
-                await SetImage(IsLoadingInProcess(), AssetName, false, false, Args);
-            }
-        }
-        private struct CutSceneQueue : QueueProcess.IQueue
-        {
-            internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
-            internal Func<bool> IsLoadingInProcess;
-            internal string AssetName;
-            internal string[] Args;
-
-            public async readonly UniTask Run()
-            {
-                await SetImage(IsLoadingInProcess(), AssetName, true, false, Args);
-            }
-        }
-        private struct CameraQueue : QueueProcess.IQueue
-        {
-            internal Func<bool> IsLoadingInProcess;
-            internal Func<bool, string, UniTask> SetCamera;
-            internal string Value;
-
-            public async readonly UniTask Run()
-            {
-                await SetCamera(IsLoadingInProcess(), Value);
-            }
-        }
-        private struct AwaitQueue : QueueProcess.IQueue
-        {
-            internal Func<bool> IsLoadingInProcess;
-            internal Func<float, UniTask> Wait;
-            internal float Timer;
-
-            public async readonly UniTask Run()
-            {
-                if (!IsLoadingInProcess())
-                    await Wait(Timer);
-            }
-        }
-        private struct DialogQueue : QueueProcess.IQueue
-        {
-            internal Func<bool, TextAlignment, UniTask> SetDialogue;
-            internal Func<bool> IsLoadingInProcess;
-            internal TextAlignment DialogAlign;
-
-            public async readonly UniTask Run()
-            {
-                await SetDialogue(IsLoadingInProcess(), DialogAlign);
-            }
-        }
-        private struct HideCharacterQueue : QueueProcess.IQueue
-        {
-            internal Func<bool> IsLoadingInProcess;
-            internal Func<UniTask> CharacterHide;
-            internal Action CharacterHideImmediate;
-            internal bool IsNewCharacter;
-            internal Action OnHidecharacter;
-
-            public async readonly UniTask Run()
-            {
-                if (IsNewCharacter)
-                {
-                    OnHidecharacter();
-                    if (!IsLoadingInProcess())
-                        await CharacterHide();
-                    else
-                        CharacterHideImmediate();
-                }
-            }
-        }
-        private struct ShowCharacterQueue : QueueProcess.IQueue
-        {
-            internal Func<string, string[], UniTask> CharacterSetImage;
-            internal Func<bool> IsLoadingInProcess;
-            internal Func<bool, UniTask> CharacterShow;
-            internal Action<bool> CharacterShowImmediate;
-            internal bool IsNewCharacter;
-            internal string Name;
-            internal string[] Args;
-            internal string MainCharacter;
-
-            public async readonly UniTask Run()
-            {
-                await CharacterSetImage(Name, Args);
-                if (IsNewCharacter)
-                {
-                    if (!IsLoadingInProcess())
-                        await CharacterShow(Name == MainCharacter);
-                    else
-                        CharacterShowImmediate(Name == MainCharacter);
-                }
-            }
-        }
-        internal class SetBubbleQueue : QueueProcess.IQueue
-        {
-            internal struct BubbleCtx
-            {
-                internal struct TextCtx
-                {
-                    internal string Header;
-                    internal string Text;
-                }
-
-                internal struct ButtonCtx
-                {
-                    internal int Id;
-                    internal string Text;
-                    internal Action<int> OnClick;
-                }
-
-                internal string Name;
-                internal string[] Args;
-                internal TextCtx Text;
-                internal ButtonCtx[] Buttons;
-                internal Action OnBackgroundClick;
-            }
-
-            internal struct WardrobeCtx
-            {
-                
-            }
-
-            internal struct ChooseCtx
-            {
-                
-            }
-
-            internal UniTaskCompletionSource BubbleDone;
-            internal Func<string, string> GetLocalizationValue;
-            internal Func<List<Ink.Runtime.Choice>> GetChoices;
-            internal Action<string[], Ink.Runtime.Choice> SetCharacterView;
-            internal Action<byte> SaveChoice;
-            internal Func<bool> IsLoadingInProcess;
-            internal Action<int> SetChoice;
-            internal string Name;
-            internal string Value;
-            internal string[] Args;
-
-            internal Action<BubbleCtx> SetBubbleScreen;
-            internal Action<WardrobeCtx> SetWardrobeScreen;
-            internal Action<ChooseCtx> SetChooseScreen;
-
-            public async UniTask Run()
-            {
-                if (Name == "some wardrobe trigger")
-                {
-                    SetWardrobeScreen(new WardrobeCtx
-                    {
-                        // set wardrobe here...
-                    });
-                }
-                else if (Name == "some choose trigger")
-                {
-                    SetChooseScreen(new ChooseCtx
-                    {
-                        //set choose here...
-                    });
-                }
-                else
-                {
-                    SetBubbleScreen(new BubbleCtx
-                    {
-                        Name = Name,
-                        Args = Args,
-                        Text = new BubbleCtx.TextCtx
-                        {
-                            Header = GetLocalizationValue(Name),
-                            Text = Value
-                        },
-                        Buttons = GetChoices().Select(c => new BubbleCtx.ButtonCtx
-                        {
-                            Id = c.index,
-                            Text = c.text,
-                            OnClick = id =>
-                            {
-                                SetCharacterView(Args, c);
-                                if (!IsLoadingInProcess())
-                                    SaveChoice((byte)id);
-                                SetChoice(id);
-                                BubbleDone.TrySetResult();
-                            }
-                        }).ToArray(),
-                        OnBackgroundClick = () =>
-                        {
-                            if (!IsLoadingInProcess())
-                                SaveChoice(255);
-                            BubbleDone.TrySetResult();
-                        }
-                    });
-                }
-            }
-        }
-        private struct LoadChoiceQueue : QueueProcess.IQueue
-        {
-            internal UniTaskCompletionSource BubbleDone;
-            internal Func<bool> IsLoadingInProcess;
-            internal Func<byte> LoadChoice;
-            internal Func<List<Ink.Runtime.Choice>> GetChoices;
-            internal Action<int> SetChoice;
-            internal Action<string[], Ink.Runtime.Choice> SetCharacterView;
-            internal string[] Args;
-
-            public async readonly UniTask Run()
-            {
-                if (IsLoadingInProcess())
-                {
-                    var savedChoice = LoadChoice();
-                    if (savedChoice != 255)
-                    {
-                        SetCharacterView(Args, GetChoices()[savedChoice]);
-                        SetChoice(savedChoice);
-                    }
-                    BubbleDone.TrySetResult();
-                }
-            }
-        }
-        private struct ShowBubbleQueue : QueueProcess.IQueue
-        {
-            internal UniTaskCompletionSource BubbleDone;
-            internal Func<bool> IsLoadingInProcess;
-            internal Func<UniTask> BubbleShow;
-            internal Action BubbleShowImmediate;
-
-            public async readonly UniTask Run()
-            {
-                if (!IsLoadingInProcess())
-                    await BubbleShow();
-                else
-                    BubbleShowImmediate();
-
-                await BubbleDone.Task;
-            }
-        }
-        private struct HideBubbleQueue : QueueProcess.IQueue
-        {
-            internal Func<bool> IsLoadingInProcess;
-            internal Func<UniTask> BubbleHide;
-            internal Action BubbleHideImmediate;
-
-            public async readonly UniTask Run()
-            {
-                if (!IsLoadingInProcess())
-                    await BubbleHide();
-                else
-                    BubbleHideImmediate();
-            }
-        }
 
         private Ctx _ctx;
 
@@ -355,7 +99,7 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("location"))
                 {
-                    queue.Enqueue(new LocationQueue
+                    queue.Enqueue(new QueueProcess.BackgroundQueue.LocationQueue
                     {
                         IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetImage = _ctx.SetImage,
@@ -367,7 +111,7 @@ namespace Novels
 
                 if (prefix.ToLower().Contains("cut-scene"))
                 {
-                    queue.Enqueue(new CutSceneQueue
+                    queue.Enqueue(new QueueProcess.BackgroundQueue.CutSceneQueue
                     {
                         IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetImage = _ctx.SetImage,
@@ -409,7 +153,7 @@ namespace Novels
 
                 if (prefix.ToLower() == "camera")
                 {
-                    queue.Enqueue(new CameraQueue
+                    queue.Enqueue(new QueueProcess.BackgroundQueue.CameraQueue
                     {
                         IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetCamera = _ctx.SetCamera,
@@ -421,7 +165,7 @@ namespace Novels
                 if (prefix.ToLower() == "await")
                 {
                     if (int.TryParse(value, out var seconds))
-                        queue.Enqueue(new AwaitQueue
+                        queue.Enqueue(new QueueProcess.AwaitQueue
                         {
                             IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                             Wait = _ctx.Wait,
@@ -437,7 +181,7 @@ namespace Novels
                     dialogAlign = TextAlignment.Center;
                 else
                     dialogAlign = TextAlignment.Right;
-                queue.Enqueue(new DialogQueue
+                queue.Enqueue(new QueueProcess.CharacterQueue.DialogQueue
                 {
                     IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     SetDialogue = _ctx.SetDialogue,
@@ -445,7 +189,7 @@ namespace Novels
                 });
 
                 var tempQueueLoadChoice = queue.Reverse().ToList();
-                tempQueueLoadChoice.Add(new LoadChoiceQueue
+                tempQueueLoadChoice.Add(new QueueProcess.LoadChoiceQueue
                 {
                     BubbleDone = bubbleDone,
                     GetChoices = _ctx.GetChoices,
@@ -459,7 +203,7 @@ namespace Novels
                 queue = new Queue<QueueProcess.IQueue>(tempQueueLoadChoice);
 
                 var tempQueueSetBubble = queue.Reverse().ToList();
-                tempQueueSetBubble.Add(new SetBubbleQueue
+                tempQueueSetBubble.Add(new QueueProcess.BubbleQueue.SetBubbleQueue
                 {
                     BubbleDone = bubbleDone,
                     GetLocalizationValue = _ctx.GetLocalizationValue,
@@ -515,7 +259,7 @@ namespace Novels
                     characterNameTemp += "_child";
                 var isNewCharacter = lastCharacterName != characterNameTemp;
                 var tempQueueHideCharacter = queue.Reverse().ToList();
-                tempQueueHideCharacter.Add(new HideCharacterQueue
+                tempQueueHideCharacter.Add(new QueueProcess.CharacterQueue.HideCharacterQueue
                 {
                     IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     CharacterHide = _ctx.CharacterHide,
@@ -526,7 +270,7 @@ namespace Novels
                 tempQueueHideCharacter.Reverse();
                 queue = new Queue<QueueProcess.IQueue>(tempQueueHideCharacter);
 
-                queue.Enqueue(new ShowCharacterQueue
+                queue.Enqueue(new QueueProcess.CharacterQueue.ShowCharacterQueue
                 {
                     CharacterSetImage = _ctx.CharacterSetImage,
                     IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
@@ -538,7 +282,7 @@ namespace Novels
                     MainCharacter = _ctx.MainCharacter,
                 });
 
-                queue.Enqueue(new ShowBubbleQueue
+                queue.Enqueue(new QueueProcess.BubbleQueue.ShowBubbleQueue
                 {
                     BubbleDone = bubbleDone,
                     BubbleShow = _ctx.Bubble.Show,
@@ -546,7 +290,7 @@ namespace Novels
                     IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                 });
 
-                queue.Enqueue(new HideBubbleQueue
+                queue.Enqueue(new QueueProcess.BubbleQueue.HideBubbleQueue
                 {
                     BubbleHide = _ctx.Bubble.Hide,
                     BubbleHideImmediate = _ctx.Bubble.HideImmediate,
