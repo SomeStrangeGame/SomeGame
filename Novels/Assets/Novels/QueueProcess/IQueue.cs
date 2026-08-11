@@ -5,6 +5,7 @@ namespace Novels.QueueProcess
     public interface IQueue
     {
         public UniTask Run();
+        public UniTask RunImmediate(byte choice);
     }
 }
 

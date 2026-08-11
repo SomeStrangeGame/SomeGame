@@ -20,6 +20,7 @@ namespace Novels.Save
         private List<byte> _initSave = new();
 
         public bool IsLoadingInProcess => _initSave.Count > 0;
+        public List<byte> InitSave => _initSave;
 
         public Entity(Ctx ctx)
         {

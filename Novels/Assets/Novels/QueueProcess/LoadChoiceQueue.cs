@@ -16,6 +16,7 @@ namespace Novels.QueueProcess
 
         public async readonly UniTask Run()
         {
+            return;
             if (IsLoadingInProcess())
             {
                 var savedChoice = LoadChoice();
@@ -26,6 +27,11 @@ namespace Novels.QueueProcess
                 }
                 BubbleDone.TrySetResult();
             }
+        }
+
+        public async readonly UniTask RunImmediate(byte choice)
+        {
+            
         }
     }
 }

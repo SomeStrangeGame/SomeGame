@@ -14,6 +14,11 @@ namespace Novels.QueueProcess
             if (!IsLoadingInProcess())
                 ShowNotification(NotificationText).Forget();
         }
+
+        public async readonly UniTask RunImmediate(byte choice)
+        {
+            
+        }
     }
 }
 

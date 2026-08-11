@@ -12,5 +12,10 @@ namespace Novels.QueueProcess
         {
             await PlayAudio(AssetName);
         }
+
+        public async readonly UniTask RunImmediate(byte choice)
+        {
+            await PlayAudio(AssetName);
+        }
     }
 }

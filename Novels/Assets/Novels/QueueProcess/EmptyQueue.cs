@@ -8,5 +8,10 @@ namespace Novels.QueueProcess
         {
             
         }
+
+        public async readonly UniTask RunImmediate(byte choice)
+        {
+            
+        }
     }
 }

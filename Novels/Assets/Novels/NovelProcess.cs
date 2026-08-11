@@ -20,8 +20,11 @@ namespace Novels
             internal Func<string, UniTask> ShowNotification;
 
             internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
+            internal Func<string, bool, bool, string[], UniTask> SetImageImmediate;
             internal Func<bool, string, UniTask> SetCamera;
+            internal Func<string, UniTask> SetCameraImmediate;
             internal Func<bool, TextAlignment, UniTask> SetDialogue;
+            internal Func<TextAlignment, UniTask> SetDialogueImmediate;
 
             internal Func<float, UniTask> Wait;
 
@@ -61,14 +64,19 @@ namespace Novels
             var queue = new Queue<QueueProcess.IQueue>();
             var lastCharacterName = string.Empty;
 
+            var save = _ctx.SaveSystem.InitSave;
+
             await _ctx.HideLoading();
 
             while (!IsDisposed)
             {
                 await UniTask.Yield();
 
+                var bubbleDone = new UniTaskCompletionSource();
+
                 var text = _ctx.GetNextText();
                 var choices = _ctx.GetChoices();
+
                 var data = text.Split(":");
                 var prefix = data.FirstOrDefault().Trim();
                 var value = data.LastOrDefault().Trim();
@@ -84,7 +92,6 @@ namespace Novels
                         : (name == "..." || name == "Wardrobe") 
                             ? TextAlignment.Center 
                             : TextAlignment.Right;
-                var bubbleDone = new UniTaskCompletionSource();
                 var characterNameTemp = $"{name}";
                     if (args.Any(a => a.ToLower() == "маленькая"))
                         characterNameTemp += "_child";
@@ -143,6 +150,7 @@ namespace Novels
                     {
                         IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetImage = _ctx.SetImage,
+                        SetImageImmediate = _ctx.SetImageImmediate,
                         AssetName = value,
                         Args = args
                     });
@@ -154,6 +162,7 @@ namespace Novels
                     {
                         IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetImage = _ctx.SetImage,
+                        SetImageImmediate = _ctx.SetImageImmediate,
                         AssetName = value,
                         Args = args
                     });
@@ -192,6 +201,7 @@ namespace Novels
                     {
                         IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetCamera = _ctx.SetCamera,
+                        SetCameraImmediate = _ctx.SetCameraImmediate,
                         Value = value
                     });
                     continue;
@@ -209,12 +219,6 @@ namespace Novels
                 }
                 else
                 {
-                    queue.Enqueue(new QueueProcess.CharacterQueue.DialogQueue
-                    {
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                        SetDialogue = _ctx.SetDialogue,
-                        DialogAlign = dialogAlign
-                    });
                     queue = queue.EnqueueFirst(new QueueProcess.LoadChoiceQueue
                     {
                         BubbleDone = bubbleDone,
@@ -279,7 +283,13 @@ namespace Novels
                         CharacterHide = _ctx.CharacterHide,
                         CharacterHideImmediate = _ctx.CharacterHideImmediate,
                         IsNewCharacter = isNewCharacter,
-                        OnHidecharacter = () => Debug.Log("Empty")//lastCharacterName = characterNameTemp,
+                    });
+                    queue.Enqueue(new QueueProcess.CharacterQueue.DialogQueue
+                    {
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                        SetDialogue = _ctx.SetDialogue,
+                        SetDialogueImmediate = _ctx.SetDialogueImmediate,
+                        DialogAlign = dialogAlign
                     });
                     queue.Enqueue(new QueueProcess.CharacterQueue.ShowCharacterQueue
                     {
@@ -307,10 +317,23 @@ namespace Novels
                     });
                 }
 
-                while (queue.TryDequeue(out var element))
+                if (save.Count > 0)
                 {
-                    await element.Run();
+                    var result = save.First();
+                    save.RemoveAt(0);
+                    while (queue.TryDequeue(out var element))
+                    {
+                        await element.RunImmediate(result);
+                    }
                 }
+                else
+                {
+                    while (queue.TryDequeue(out var element))
+                    {
+                        await element.Run();
+                    }
+                }
+                
             }
         }
 

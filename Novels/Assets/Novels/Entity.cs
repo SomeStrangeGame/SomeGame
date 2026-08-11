@@ -184,8 +184,11 @@ namespace Novels
                 ShowNotification = notification.Show,
 
                 SetImage = location.SetImage,
+                SetImageImmediate = location.SetImageImmediate,
                 SetCamera = location.SetCamera,
+                SetCameraImmediate = location.SetCameraImmediate,
                 SetDialogue = location.SetDialogue,
+                SetDialogueImmediate = location.SetDialogueImmediate,
 
                 Wait = waiting.Await,
                 PlayAudio = audio.PlayAudio,

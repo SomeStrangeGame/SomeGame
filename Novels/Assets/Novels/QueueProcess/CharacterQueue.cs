@@ -9,12 +9,18 @@ namespace Novels.QueueProcess
         public struct DialogQueue : IQueue
         {
             public Func<bool, TextAlignment, UniTask> SetDialogue;
+            public Func<TextAlignment, UniTask> SetDialogueImmediate;
             public Func<bool> IsLoadingInProcess;
             public TextAlignment DialogAlign;
 
             public async readonly UniTask Run()
             {
                 await SetDialogue(IsLoadingInProcess(), DialogAlign);
+            }
+
+            public async readonly UniTask RunImmediate(byte choice)
+            {
+                await SetDialogueImmediate(DialogAlign);
             }
         }
         public struct HideCharacterQueue : IQueue
@@ -23,18 +29,21 @@ namespace Novels.QueueProcess
             public Func<UniTask> CharacterHide;
             public Action CharacterHideImmediate;
             public bool IsNewCharacter;
-            public Action OnHidecharacter;
 
             public async readonly UniTask Run()
             {
                 if (IsNewCharacter)
                 {
-                    OnHidecharacter();
                     if (!IsLoadingInProcess())
                         await CharacterHide();
                     else
                         CharacterHideImmediate();
                 }
+            }
+
+            public async readonly UniTask RunImmediate(byte choice)
+            {
+                CharacterHideImmediate();
             }
         }
         public struct ShowCharacterQueue : IQueue
@@ -58,6 +67,11 @@ namespace Novels.QueueProcess
                     else
                         CharacterShowImmediate(Name == MainCharacter);
                 }
+            }
+
+            public async readonly UniTask RunImmediate(byte choice)
+            {
+                CharacterShowImmediate(Name == MainCharacter);
             }
         }
     }

@@ -105,6 +105,16 @@ namespace Novels.QueueProcess
                     });
                 }
             }
+
+            public async UniTask RunImmediate(byte choice)
+            {
+                if (choice != 255)
+                {
+                    SetCharacterView(Args, Choices[choice]);
+                    SetChoice(choice);
+                }
+                BubbleDone.TrySetResult();
+            }
         }
 
         public struct ShowBubbleQueue : IQueue
@@ -123,6 +133,12 @@ namespace Novels.QueueProcess
 
                 await BubbleDone.Task;
             }
+
+            public async readonly UniTask RunImmediate(byte choice)
+            {
+                BubbleShowImmediate();
+                await BubbleDone.Task;
+            }
         }
         public struct HideBubbleQueue : IQueue
         {
@@ -136,6 +152,11 @@ namespace Novels.QueueProcess
                     await BubbleHide();
                 else
                     BubbleHideImmediate();
+            }
+
+            public async readonly UniTask RunImmediate(byte choice)
+            {
+                BubbleHideImmediate();
             }
         }
     }
