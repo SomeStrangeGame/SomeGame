@@ -43,7 +43,7 @@ namespace Novels.QueueProcess
 
             public UniTaskCompletionSource BubbleDone;
             public Func<string, string> GetLocalizationValue;
-            public Func<List<Ink.Runtime.Choice>> GetChoices;
+            public List<Ink.Runtime.Choice> Choices;
             public Action<string[], Ink.Runtime.Choice> SetCharacterView;
             public Action<byte> SaveChoice;
             public Func<bool> IsLoadingInProcess;
@@ -83,7 +83,7 @@ namespace Novels.QueueProcess
                             Header = GetLocalizationValue(Name),
                             Text = Value
                         },
-                        Buttons = GetChoices().Select(c => new BubbleCtx.ButtonCtx
+                        Buttons = Choices.Select(c => new BubbleCtx.ButtonCtx
                         {
                             Id = c.index,
                             Text = c.text,

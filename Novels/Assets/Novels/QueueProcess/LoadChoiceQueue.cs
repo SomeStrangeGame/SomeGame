@@ -9,7 +9,7 @@ namespace Novels.QueueProcess
         public UniTaskCompletionSource BubbleDone;
         public Func<bool> IsLoadingInProcess;
         public Func<byte> LoadChoice;
-        public Func<List<Ink.Runtime.Choice>> GetChoices;
+        public List<Ink.Runtime.Choice> Choices;
         public Action<int> SetChoice;
         public Action<string[], Ink.Runtime.Choice> SetCharacterView;
         public string[] Args;
@@ -21,7 +21,7 @@ namespace Novels.QueueProcess
                 var savedChoice = LoadChoice();
                 if (savedChoice != 255)
                 {
-                    SetCharacterView(Args, GetChoices()[savedChoice]);
+                    SetCharacterView(Args, Choices[savedChoice]);
                     SetChoice(savedChoice);
                 }
                 BubbleDone.TrySetResult();

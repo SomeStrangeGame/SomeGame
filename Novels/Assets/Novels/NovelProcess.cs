@@ -61,19 +61,14 @@ namespace Novels
             var queue = new Queue<QueueProcess.IQueue>();
             var lastCharacterName = string.Empty;
 
-            //load here...
-
             await _ctx.HideLoading();
 
             while (!IsDisposed)
             {
                 await UniTask.Yield();
 
-                var bubbleDone = new UniTaskCompletionSource();
-
                 var text = _ctx.GetNextText();
-                if (string.IsNullOrEmpty(text) && _ctx.GetChoices().Count == 0) continue;
-
+                var choices = _ctx.GetChoices();
                 var data = text.Split(":");
                 var prefix = data.FirstOrDefault().Trim();
                 var value = data.LastOrDefault().Trim();
@@ -82,15 +77,57 @@ namespace Novels
                 var args = rawPrefixData.Length <= 1
                     ? new string[0]
                     : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
+                var dialogAlign = (name == _ctx.MainCharacter) 
+                    ? TextAlignment.Left
+                    : (name == "...")
+                        ? TextAlignment.Center
+                        : (name == "..." || name == "Wardrobe") 
+                            ? TextAlignment.Center 
+                            : TextAlignment.Right;
+                var bubbleDone = new UniTaskCompletionSource();
+                var characterNameTemp = $"{name}";
+                    if (args.Any(a => a.ToLower() == "маленькая"))
+                        characterNameTemp += "_child";
+                var isNewCharacter = lastCharacterName != characterNameTemp;
+                if (isNewCharacter)
+                    lastCharacterName = characterNameTemp;
 
-                if (prefix.ToLower() == "title") continue;
-                if (prefix.ToLower() == "series") continue;
-                if (prefix.ToLower() == "genres") continue;
-                if (prefix.ToLower() == "annotation") continue;
-                if (prefix.ToLower() == "stats") continue;
-                if (prefix.ToLower().Contains("keyboard")) continue;
-
-                if (prefix.ToLower() == "notification")
+                if (string.IsNullOrEmpty(text) && choices.Count == 0)
+                {
+                    queue.Enqueue(new QueueProcess.EmptyQueue());
+                    continue;
+                }
+                else if (prefix.ToLower() == "title")
+                {
+                    queue.Enqueue(new QueueProcess.EmptyQueue());
+                    continue;
+                }
+                else if (prefix.ToLower() == "series")
+                {
+                    queue.Enqueue(new QueueProcess.EmptyQueue());
+                    continue;
+                }
+                else if (prefix.ToLower() == "genres")
+                {
+                    queue.Enqueue(new QueueProcess.EmptyQueue());
+                    continue;
+                }
+                else if (prefix.ToLower() == "annotation")
+                {
+                    queue.Enqueue(new QueueProcess.EmptyQueue());
+                    continue;
+                }
+                else if (prefix.ToLower() == "stats")
+                {
+                    queue.Enqueue(new QueueProcess.EmptyQueue());
+                    continue;
+                }
+                else if (prefix.ToLower().Contains("keyboard"))
+                {
+                    queue.Enqueue(new QueueProcess.EmptyQueue());
+                    continue;
+                }
+                else if (prefix.ToLower() == "notification")
                 {
                     queue.Enqueue(new QueueProcess.NotificationQueue
                     {
@@ -100,8 +137,7 @@ namespace Novels
                     });
                     continue;
                 }
-
-                if (prefix.ToLower().Contains("location"))
+                else if (prefix.ToLower().Contains("location"))
                 {
                     queue.Enqueue(new QueueProcess.BackgroundQueue.LocationQueue
                     {
@@ -112,8 +148,7 @@ namespace Novels
                     });
                     continue;
                 }
-
-                if (prefix.ToLower().Contains("cut-scene"))
+                else if (prefix.ToLower().Contains("cut-scene"))
                 {
                     queue.Enqueue(new QueueProcess.BackgroundQueue.CutSceneQueue
                     {
@@ -124,8 +159,7 @@ namespace Novels
                     });
                     continue;
                 }
-
-                if (prefix.ToLower().Contains("music"))
+                else if (prefix.ToLower().Contains("music"))
                 {
                     queue.Enqueue(new QueueProcess.AudioQueue
                     {
@@ -134,8 +168,7 @@ namespace Novels
                     });
                     continue;
                 }
-
-                if (prefix.ToLower().Contains("sound"))
+                else if (prefix.ToLower().Contains("sound"))
                 {
                     queue.Enqueue(new QueueProcess.AudioQueue
                     {
@@ -144,8 +177,7 @@ namespace Novels
                     });
                     continue;
                 }
-
-                if (prefix.ToLower().Contains("ambient"))
+                else if (prefix.ToLower().Contains("ambient"))
                 {
                     queue.Enqueue(new QueueProcess.AudioQueue
                     {
@@ -154,8 +186,7 @@ namespace Novels
                     });
                     continue;
                 }
-
-                if (prefix.ToLower() == "camera")
+                else if (prefix.ToLower() == "camera")
                 {
                     queue.Enqueue(new QueueProcess.BackgroundQueue.CameraQueue
                     {
@@ -165,8 +196,7 @@ namespace Novels
                     });
                     continue;
                 }
-
-                if (prefix.ToLower() == "await")
+                else if (prefix.ToLower() == "await")
                 {
                     if (int.TryParse(value, out var seconds))
                         queue.Enqueue(new QueueProcess.AwaitQueue
@@ -177,128 +207,110 @@ namespace Novels
                         });
                     continue;
                 }
-
-                TextAlignment dialogAlign;
-                if (name == _ctx.MainCharacter)
-                    dialogAlign = TextAlignment.Left;
-                else if (name == "..." || name == "Wardrobe")
-                    dialogAlign = TextAlignment.Center;
                 else
-                    dialogAlign = TextAlignment.Right;
-                queue.Enqueue(new QueueProcess.CharacterQueue.DialogQueue
                 {
-                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                    SetDialogue = _ctx.SetDialogue,
-                    DialogAlign = dialogAlign
-                });
-
-                queue = queue.EnqueueFirst(new QueueProcess.LoadChoiceQueue
-                {
-                    BubbleDone = bubbleDone,
-                    GetChoices = _ctx.GetChoices,
-                    SetChoice = _ctx.SetChoice,
-                    SetCharacterView = SetCharacterView,
-                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                    LoadChoice = _ctx.SaveSystem.LoadChoice,
-                    Args = args,
-                });
-
-                queue = queue.EnqueueFirst(new QueueProcess.BubbleQueue.SetBubbleQueue
-                {
-                    BubbleDone = bubbleDone,
-                    GetLocalizationValue = _ctx.GetLocalizationValue,
-                    GetChoices = _ctx.GetChoices,
-                    SetCharacterView = SetCharacterView,
-                    SaveChoice = _ctx.SaveSystem.SaveChoice,
-                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                    SetChoice = _ctx.SetChoice,
-                    Name = name,
-                    Value = value,
-                    Args = args,
-
-                    SetBubbleScreen = data =>
+                    queue.Enqueue(new QueueProcess.CharacterQueue.DialogQueue
                     {
-                        _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                        SetDialogue = _ctx.SetDialogue,
+                        DialogAlign = dialogAlign
+                    });
+                    queue = queue.EnqueueFirst(new QueueProcess.LoadChoiceQueue
+                    {
+                        BubbleDone = bubbleDone,
+                        Choices = choices,
+                        SetChoice = _ctx.SetChoice,
+                        SetCharacterView = SetCharacterView,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                        LoadChoice = _ctx.SaveSystem.LoadChoice,
+                        Args = args,
+                    });
+                    queue = queue.EnqueueFirst(new QueueProcess.BubbleQueue.SetBubbleQueue
+                    {
+                        BubbleDone = bubbleDone,
+                        GetLocalizationValue = _ctx.GetLocalizationValue,
+                        Choices = choices,
+                        SetCharacterView = SetCharacterView,
+                        SaveChoice = _ctx.SaveSystem.SaveChoice,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                        SetChoice = _ctx.SetChoice,
+                        Name = name,
+                        Value = value,
+                        Args = args,
+
+                        SetBubbleScreen = data =>
                         {
-                            Name = data.Name,
-                            Args = data.Args,
-                            Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
+                            _ctx.Bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
                             {
-                                Header = data.Text.Header,
-                                Text = data.Text.Text,
-                            },
-                            Buttons = data.Buttons.Select(b => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                                Name = data.Name,
+                                Args = data.Args,
+                                Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
+                                {
+                                    Header = data.Text.Header,
+                                    Text = data.Text.Text,
+                                },
+                                Buttons = data.Buttons.Select(b => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
+                                {
+                                    Id = b.Id,
+                                    Text = b.Text,
+                                    OnClick = b.OnClick
+                                }).ToArray(),
+                                OnBackgroundClick = data.OnBackgroundClick
+                            });
+                        },
+                        SetWardrobeScreen = data =>
+                        {
+                            _ctx.Bubble.SetWardrobeScreen(new Bubble.Entity.WardrobeScreenCtx
                             {
-                                Id = b.Id,
-                                Text = b.Text,
-                                OnClick = b.OnClick
-                            }).ToArray(),
-                            OnBackgroundClick = data.OnBackgroundClick
-                        });
-                    },
-                    SetWardrobeScreen = data =>
-                    {
-                        _ctx.Bubble.SetWardrobeScreen(new Bubble.Entity.WardrobeScreenCtx
+                                //migrate wardrobe here...
+                            });
+                        },
+                        SetChooseScreen = data =>
                         {
-                            //migrate wardrobe here...
-                        });
-                    },
-                    SetChooseScreen = data =>
+                            _ctx.Bubble.SetChooseScreen(new Bubble.Entity.ChooseScreenCtx
+                            {
+                                // migrate choose here...
+                            });
+                        },
+                    });
+                    queue = queue.EnqueueFirst(new QueueProcess.CharacterQueue.HideCharacterQueue
                     {
-                        _ctx.Bubble.SetChooseScreen(new Bubble.Entity.ChooseScreenCtx
-                        {
-                            // migrate choose here...
-                        });
-                    },
-                });
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                        CharacterHide = _ctx.CharacterHide,
+                        CharacterHideImmediate = _ctx.CharacterHideImmediate,
+                        IsNewCharacter = isNewCharacter,
+                        OnHidecharacter = () => Debug.Log("Empty")//lastCharacterName = characterNameTemp,
+                    });
+                    queue.Enqueue(new QueueProcess.CharacterQueue.ShowCharacterQueue
+                    {
+                        CharacterSetImage = _ctx.CharacterSetImage,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                        CharacterShow = _ctx.CharacterShow,
+                        CharacterShowImmediate = _ctx.CharacterShowImmediate,
+                        Name = name,
+                        IsNewCharacter = isNewCharacter,
+                        Args = args,
+                        MainCharacter = _ctx.MainCharacter,
+                    });
+                    queue.Enqueue(new QueueProcess.BubbleQueue.ShowBubbleQueue
+                    {
+                        BubbleDone = bubbleDone,
+                        BubbleShow = _ctx.Bubble.Show,
+                        BubbleShowImmediate = _ctx.Bubble.ShowImmediate,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                    });
+                    queue.Enqueue(new QueueProcess.BubbleQueue.HideBubbleQueue
+                    {
+                        BubbleHide = _ctx.Bubble.Hide,
+                        BubbleHideImmediate = _ctx.Bubble.HideImmediate,
+                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
+                    });
+                }
 
-                var characterNameTemp = $"{name}";
-                if (args.Any(a => a.ToLower() == "маленькая"))
-                    characterNameTemp += "_child";
-                var isNewCharacter = lastCharacterName != characterNameTemp;
-                queue = queue.EnqueueFirst(new QueueProcess.CharacterQueue.HideCharacterQueue
-                {
-                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                    CharacterHide = _ctx.CharacterHide,
-                    CharacterHideImmediate = _ctx.CharacterHideImmediate,
-                    IsNewCharacter = isNewCharacter,
-                    OnHidecharacter = () => lastCharacterName = characterNameTemp,
-                });
-
-
-                queue.Enqueue(new QueueProcess.CharacterQueue.ShowCharacterQueue
-                {
-                    CharacterSetImage = _ctx.CharacterSetImage,
-                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                    CharacterShow = _ctx.CharacterShow,
-                    CharacterShowImmediate = _ctx.CharacterShowImmediate,
-                    Name = name,
-                    IsNewCharacter = isNewCharacter,
-                    Args = args,
-                    MainCharacter = _ctx.MainCharacter,
-                });
-
-                queue.Enqueue(new QueueProcess.BubbleQueue.ShowBubbleQueue
-                {
-                    BubbleDone = bubbleDone,
-                    BubbleShow = _ctx.Bubble.Show,
-                    BubbleShowImmediate = _ctx.Bubble.ShowImmediate,
-                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                });
-
-                queue.Enqueue(new QueueProcess.BubbleQueue.HideBubbleQueue
-                {
-                    BubbleHide = _ctx.Bubble.Hide,
-                    BubbleHideImmediate = _ctx.Bubble.HideImmediate,
-                    IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                });
-
-                while(queue.TryDequeue(out var element))
+                while (queue.TryDequeue(out var element))
                 {
                     await element.Run();
                 }
-
-                queue.Clear();
             }
         }
 
