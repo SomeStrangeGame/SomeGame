@@ -46,7 +46,6 @@ namespace Novels.QueueProcess
             public List<Ink.Runtime.Choice> Choices;
             public Action<string[], Ink.Runtime.Choice> SetCharacterView;
             public Action<byte> SaveChoice;
-            public Func<bool> IsLoadingInProcess;
             public Action<int> SetChoice;
             public string Name;
             public string Value;
@@ -90,16 +89,14 @@ namespace Novels.QueueProcess
                             OnClick = id =>
                             {
                                 SetCharacterView(Args, c);
-                                if (!IsLoadingInProcess())
-                                    SaveChoice((byte)id);
+                                SaveChoice((byte)id);
                                 SetChoice(id);
                                 BubbleDone.TrySetResult();
                             }
                         }).ToArray(),
                         OnBackgroundClick = () =>
                         {
-                            if (!IsLoadingInProcess())
-                                SaveChoice(255);
+                            SaveChoice(255);
                             BubbleDone.TrySetResult();
                         }
                     });
@@ -120,16 +117,12 @@ namespace Novels.QueueProcess
         public struct ShowBubbleQueue : IQueue
         {
             public UniTaskCompletionSource BubbleDone;
-            public Func<bool> IsLoadingInProcess;
             public Func<UniTask> BubbleShow;
             public Action BubbleShowImmediate;
 
             public async readonly UniTask Run()
             {
-                if (!IsLoadingInProcess())
-                    await BubbleShow();
-                else
-                    BubbleShowImmediate();
+                await BubbleShow();
 
                 await BubbleDone.Task;
             }
@@ -142,16 +135,12 @@ namespace Novels.QueueProcess
         }
         public struct HideBubbleQueue : IQueue
         {
-            public Func<bool> IsLoadingInProcess;
             public Func<UniTask> BubbleHide;
             public Action BubbleHideImmediate;
 
             public async readonly UniTask Run()
             {
-                if (!IsLoadingInProcess())
-                    await BubbleHide();
-                else
-                    BubbleHideImmediate();
+                await BubbleHide();
             }
 
             public async readonly UniTask RunImmediate(byte choice)

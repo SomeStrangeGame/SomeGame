@@ -35,16 +35,13 @@ namespace Novels.Location
             _screen.ResetEffect();
         }
 
-        public async UniTask SetImage(bool immediate, string assetName, bool cutScene, bool forceNoVideo, string[] args)
+        public async UniTask SetImage(string assetName, bool cutScene, bool forceNoVideo, string[] args)
         {
             Camera.allCameras[0].backgroundColor = Color.black;
             if (args != null && args.Any(a => a == "white"))
                 Camera.allCameras[0].backgroundColor = Color.white;
 
-            if (!immediate)
-                await _screen.HideImage();
-            else
-                _screen.HideImageImmediate();
+            await _screen.HideImage();
 
             _screen.ResetCamera();
             _screen.ResetEffect();
@@ -64,17 +61,14 @@ namespace Novels.Location
 
                 var rt = new RenderTexture(sprite.texture.width, sprite.texture.height, 16, RenderTextureFormat.ARGB32);
                 rt.Create();
-                var playbackSpeed = (immediate && cutScene) ? Time.timeScale * 5f : Time.timeScale;
+                var playbackSpeed = Time.timeScale;
                 _screen.SetVideo(url, !cutScene, rt, playbackSpeed, () => videoReady = true, () => videoDone = true, () => videoError = true);
                 while (!videoError && !videoReady) await UniTask.Yield();
 
                 _screen.SetEnabledImage(videoError);
                 _screen.SetEnabledVideo(!videoError);
 
-                if (!immediate)
-                    await _screen.ShowImage();
-                else
-                    _screen.ShowImageImmediate();
+                await _screen.ShowImage();
 
                 if (cutScene)
                 {
@@ -85,14 +79,11 @@ namespace Novels.Location
                     }
                     else
                     {
-                        if (!immediate)
-                            await UniTask.Delay(3000);// add zoom effect in future
-                        else
-                            await UniTask.Yield();
+                        await UniTask.Delay(3000);// add zoom effect in future
                     }
                     
                     if (!args.Contains("end"))
-                        await SetImage(immediate, assetName, false, true, args);
+                        await SetImage(assetName, false, true, args);
                 }
             }
             else
@@ -100,10 +91,7 @@ namespace Novels.Location
                 _screen.SetEnabledImage(true);
                 _screen.SetEnabledVideo(false);
 
-                if (!immediate)
-                    await _screen.ShowImage();
-                else
-                    _screen.ShowImageImmediate();
+                await _screen.ShowImage();
             }
         }
 
@@ -167,34 +155,31 @@ namespace Novels.Location
             }
         }
 
-        public async UniTask SetCamera(bool immediate, string value)
+        public async UniTask SetCamera(string value)
         {
             if (value.ToLower() == "fadein")
             {
-                if (!immediate)
-                    _screen.SetEffect(View.Screen.Effect.Dark).Forget();
-                else
-                    _screen.SetEffectImmediate(View.Screen.Effect.Dark);
+                _screen.SetEffect(View.Screen.Effect.Dark).Forget();
                 return;
             }
             if (value.ToLower() == "leftright")
             {
-                await _screen.SetCamera(immediate, View.Screen.CameraEffect.LeftRight);
+                await _screen.SetCamera(View.Screen.CameraEffect.LeftRight);
                 return;
             }
             if (value.ToLower() == "rightleft")
             {
-                await _screen.SetCamera(immediate, View.Screen.CameraEffect.RightLeft);
+                await _screen.SetCamera(View.Screen.CameraEffect.RightLeft);
                 return;
             }
             if (value.ToLower() == "tocenter")
             {
-                await _screen.SetCamera(immediate, View.Screen.CameraEffect.ToCenter);
+                await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
                 return;
             }
             if (value.ToLower() == "ToLeft")
             {
-                await _screen.SetCamera(immediate, View.Screen.CameraEffect.ToLeft);
+                await _screen.SetCamera(View.Screen.CameraEffect.ToLeft);
                 return;
             }
             _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
@@ -230,9 +215,9 @@ namespace Novels.Location
             _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
         }
 
-        public async UniTask SetDialogue(bool immediate, TextAlignment aligment)
+        public async UniTask SetDialogue(TextAlignment aligment)
         {
-            await _screen.SetDialogue(immediate, aligment);
+            await _screen.SetDialogue(aligment);
         }
 
         public async UniTask SetDialogueImmediate(TextAlignment aligment)

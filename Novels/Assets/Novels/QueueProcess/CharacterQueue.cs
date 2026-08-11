@@ -8,14 +8,13 @@ namespace Novels.QueueProcess
     {
         public struct DialogQueue : IQueue
         {
-            public Func<bool, TextAlignment, UniTask> SetDialogue;
+            public Func<TextAlignment, UniTask> SetDialogue;
             public Func<TextAlignment, UniTask> SetDialogueImmediate;
-            public Func<bool> IsLoadingInProcess;
             public TextAlignment DialogAlign;
 
             public async readonly UniTask Run()
             {
-                await SetDialogue(IsLoadingInProcess(), DialogAlign);
+                await SetDialogue(DialogAlign);
             }
 
             public async readonly UniTask RunImmediate(byte choice)
@@ -25,7 +24,6 @@ namespace Novels.QueueProcess
         }
         public struct HideCharacterQueue : IQueue
         {
-            public Func<bool> IsLoadingInProcess;
             public Func<UniTask> CharacterHide;
             public Action CharacterHideImmediate;
             public bool IsNewCharacter;
@@ -34,10 +32,7 @@ namespace Novels.QueueProcess
             {
                 if (IsNewCharacter)
                 {
-                    if (!IsLoadingInProcess())
-                        await CharacterHide();
-                    else
-                        CharacterHideImmediate();
+                    await CharacterHide();
                 }
             }
 
@@ -49,7 +44,6 @@ namespace Novels.QueueProcess
         public struct ShowCharacterQueue : IQueue
         {
             public Func<string, string[], UniTask> CharacterSetImage;
-            public Func<bool> IsLoadingInProcess;
             public Func<bool, UniTask> CharacterShow;
             public Action<bool> CharacterShowImmediate;
             public bool IsNewCharacter;
@@ -62,10 +56,7 @@ namespace Novels.QueueProcess
                 await CharacterSetImage(Name, Args);
                 if (IsNewCharacter)
                 {
-                    if (!IsLoadingInProcess())
-                        await CharacterShow(Name == MainCharacter);
-                    else
-                        CharacterShowImmediate(Name == MainCharacter);
+                    await CharacterShow(Name == MainCharacter);
                 }
             }
 

@@ -165,7 +165,7 @@ namespace Novels.Location.View
             _image.transform.localPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
         }
 
-        public async UniTask SetCamera(bool immediate, CameraEffect effect)
+        public async UniTask SetCamera(CameraEffect effect)
         {
             var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
             var spriteWidth = _image.sprite.texture.width * scaleFactor;
@@ -180,61 +180,26 @@ namespace Novels.Location.View
             switch (effect)
             {
                 case CameraEffect.LeftRight:
-                    if (!immediate)
-                    {
-                        await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
-                        await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration);
-                    }
-                    else
-                    {
-                        MoveImmediate(_image.transform, cameraRightPosition);
-                    }
+                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
+                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration);
                     break;
                 case CameraEffect.RightLeft:
-                    if (!immediate)
-                    {
-                        await Move(_image.transform, cameraCurrentPosition, cameraRightPosition, _cameraDuration);
-                        await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration);
-                    }
-                    else
-                    {
-                        MoveImmediate(_image.transform, cameraLeftPosition);
-                    }
+                    await Move(_image.transform, cameraCurrentPosition, cameraRightPosition, _cameraDuration);
+                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration);
                     break;
                 case CameraEffect.ToCenter:
-                    if (!immediate)
-                    {
-                        await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration);
-                    }
-                    else
-                    {
-                        MoveImmediate(_image.transform, cameraCenterPosition);
-                    }
+                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration);
                     break;
                 case CameraEffect.ToLeft:
-                    if (!immediate)
-                    {
-                        await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
-                    }
-                    else
-                    {
-                        MoveImmediate(_image.transform, cameraLeftPosition);
-                    }
+                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration);
                     break;
                 case CameraEffect.Shaking:
-                    if (!immediate)
-                    {
-                        await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration / 10f);
-                        await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
-                        await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
-                        await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
-                        await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
-                        await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f);
-                    }
-                    else
-                    {
-                        MoveImmediate(_image.transform, cameraCenterPosition);
-                    }
+                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f);
+                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f);
                     break;
             }
         }
@@ -271,7 +236,7 @@ namespace Novels.Location.View
             }
         }
 
-        public async UniTask SetDialogue(bool immediate, TextAlignment aligment)
+        public async UniTask SetDialogue(TextAlignment aligment)
         {
             if (_image.sprite == null) return;
 
@@ -287,10 +252,7 @@ namespace Novels.Location.View
                 TextAlignment.Right => cameraRightPosition,
                 _ => cameraCenterPosition,
             };
-            if (!immediate)
-                await Move(_image.transform, cameraCurrentPosition, targetPosition, _dialogDuration);
-            else
-                MoveImmediate(_image.transform, targetPosition);
+            await Move(_image.transform, cameraCurrentPosition, targetPosition, _dialogDuration);
         }
 
         public void SetDialogueImmediate(TextAlignment aligment)

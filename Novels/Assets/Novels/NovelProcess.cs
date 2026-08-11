@@ -19,11 +19,11 @@ namespace Novels
 
             internal Func<string, UniTask> ShowNotification;
 
-            internal Func<bool, string, bool, bool, string[], UniTask> SetImage;
+            internal Func<string, bool, bool, string[], UniTask> SetImage;
             internal Func<string, bool, bool, string[], UniTask> SetImageImmediate;
-            internal Func<bool, string, UniTask> SetCamera;
+            internal Func<string, UniTask> SetCamera;
             internal Func<string, UniTask> SetCameraImmediate;
-            internal Func<bool, TextAlignment, UniTask> SetDialogue;
+            internal Func<TextAlignment, UniTask> SetDialogue;
             internal Func<TextAlignment, UniTask> SetDialogueImmediate;
 
             internal Func<float, UniTask> Wait;
@@ -138,7 +138,6 @@ namespace Novels
                 {
                     queue.Enqueue(new QueueProcess.NotificationQueue
                     {
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         NotificationText = value,
                         ShowNotification = _ctx.ShowNotification
                     });
@@ -148,7 +147,6 @@ namespace Novels
                 {
                     queue.Enqueue(new QueueProcess.BackgroundQueue.LocationQueue
                     {
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetImage = _ctx.SetImage,
                         SetImageImmediate = _ctx.SetImageImmediate,
                         AssetName = value,
@@ -160,7 +158,6 @@ namespace Novels
                 {
                     queue.Enqueue(new QueueProcess.BackgroundQueue.CutSceneQueue
                     {
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetImage = _ctx.SetImage,
                         SetImageImmediate = _ctx.SetImageImmediate,
                         AssetName = value,
@@ -199,7 +196,6 @@ namespace Novels
                 {
                     queue.Enqueue(new QueueProcess.BackgroundQueue.CameraQueue
                     {
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetCamera = _ctx.SetCamera,
                         SetCameraImmediate = _ctx.SetCameraImmediate,
                         Value = value
@@ -211,7 +207,6 @@ namespace Novels
                     if (int.TryParse(value, out var seconds))
                         queue.Enqueue(new QueueProcess.AwaitQueue
                         {
-                            IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                             Wait = _ctx.Wait,
                             Timer = seconds
                         });
@@ -219,16 +214,6 @@ namespace Novels
                 }
                 else
                 {
-                    queue = queue.EnqueueFirst(new QueueProcess.LoadChoiceQueue
-                    {
-                        BubbleDone = bubbleDone,
-                        Choices = choices,
-                        SetChoice = _ctx.SetChoice,
-                        SetCharacterView = SetCharacterView,
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
-                        LoadChoice = _ctx.SaveSystem.LoadChoice,
-                        Args = args,
-                    });
                     queue = queue.EnqueueFirst(new QueueProcess.BubbleQueue.SetBubbleQueue
                     {
                         BubbleDone = bubbleDone,
@@ -236,7 +221,6 @@ namespace Novels
                         Choices = choices,
                         SetCharacterView = SetCharacterView,
                         SaveChoice = _ctx.SaveSystem.SaveChoice,
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetChoice = _ctx.SetChoice,
                         Name = name,
                         Value = value,
@@ -279,14 +263,12 @@ namespace Novels
                     });
                     queue = queue.EnqueueFirst(new QueueProcess.CharacterQueue.HideCharacterQueue
                     {
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         CharacterHide = _ctx.CharacterHide,
                         CharacterHideImmediate = _ctx.CharacterHideImmediate,
                         IsNewCharacter = isNewCharacter,
                     });
                     queue.Enqueue(new QueueProcess.CharacterQueue.DialogQueue
                     {
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         SetDialogue = _ctx.SetDialogue,
                         SetDialogueImmediate = _ctx.SetDialogueImmediate,
                         DialogAlign = dialogAlign
@@ -294,7 +276,6 @@ namespace Novels
                     queue.Enqueue(new QueueProcess.CharacterQueue.ShowCharacterQueue
                     {
                         CharacterSetImage = _ctx.CharacterSetImage,
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                         CharacterShow = _ctx.CharacterShow,
                         CharacterShowImmediate = _ctx.CharacterShowImmediate,
                         Name = name,
@@ -307,13 +288,11 @@ namespace Novels
                         BubbleDone = bubbleDone,
                         BubbleShow = _ctx.Bubble.Show,
                         BubbleShowImmediate = _ctx.Bubble.ShowImmediate,
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     });
                     queue.Enqueue(new QueueProcess.BubbleQueue.HideBubbleQueue
                     {
                         BubbleHide = _ctx.Bubble.Hide,
                         BubbleHideImmediate = _ctx.Bubble.HideImmediate,
-                        IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     });
                 }
 
