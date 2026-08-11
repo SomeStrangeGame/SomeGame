@@ -61,10 +61,14 @@ namespace Novels
             var queue = new Queue<QueueProcess.IQueue>();
             var lastCharacterName = string.Empty;
 
+            //load here...
+
             await _ctx.HideLoading();
 
             while (!IsDisposed)
             {
+                await UniTask.Yield();
+
                 var bubbleDone = new UniTaskCompletionSource();
 
                 var text = _ctx.GetNextText();
@@ -188,8 +192,7 @@ namespace Novels
                     DialogAlign = dialogAlign
                 });
 
-                var tempQueueLoadChoice = queue.Reverse().ToList();
-                tempQueueLoadChoice.Add(new QueueProcess.LoadChoiceQueue
+                queue = queue.EnqueueFirst(new QueueProcess.LoadChoiceQueue
                 {
                     BubbleDone = bubbleDone,
                     GetChoices = _ctx.GetChoices,
@@ -199,11 +202,8 @@ namespace Novels
                     LoadChoice = _ctx.SaveSystem.LoadChoice,
                     Args = args,
                 });
-                tempQueueLoadChoice.Reverse();
-                queue = new Queue<QueueProcess.IQueue>(tempQueueLoadChoice);
 
-                var tempQueueSetBubble = queue.Reverse().ToList();
-                tempQueueSetBubble.Add(new QueueProcess.BubbleQueue.SetBubbleQueue
+                queue = queue.EnqueueFirst(new QueueProcess.BubbleQueue.SetBubbleQueue
                 {
                     BubbleDone = bubbleDone,
                     GetLocalizationValue = _ctx.GetLocalizationValue,
@@ -251,15 +251,12 @@ namespace Novels
                         });
                     },
                 });
-                tempQueueSetBubble.Reverse();
-                queue = new Queue<QueueProcess.IQueue>(tempQueueSetBubble);
 
                 var characterNameTemp = $"{name}";
                 if (args.Any(a => a.ToLower() == "маленькая"))
                     characterNameTemp += "_child";
                 var isNewCharacter = lastCharacterName != characterNameTemp;
-                var tempQueueHideCharacter = queue.Reverse().ToList();
-                tempQueueHideCharacter.Add(new QueueProcess.CharacterQueue.HideCharacterQueue
+                queue = queue.EnqueueFirst(new QueueProcess.CharacterQueue.HideCharacterQueue
                 {
                     IsLoadingInProcess = () => _ctx.SaveSystem.IsLoadingInProcess,
                     CharacterHide = _ctx.CharacterHide,
@@ -267,8 +264,7 @@ namespace Novels
                     IsNewCharacter = isNewCharacter,
                     OnHidecharacter = () => lastCharacterName = characterNameTemp,
                 });
-                tempQueueHideCharacter.Reverse();
-                queue = new Queue<QueueProcess.IQueue>(tempQueueHideCharacter);
+
 
                 queue.Enqueue(new QueueProcess.CharacterQueue.ShowCharacterQueue
                 {
@@ -314,6 +310,17 @@ namespace Novels
                 _ctx.SetMainCharacterClothes(choice.text);
             if (args.Any(a => a == "Выбери прическу" || a == "Выбери причёску"))
                 _ctx.SetMainCharacterHair(choice.text);
+        }
+    }
+
+    internal static class QueueExt
+    {
+        internal static Queue<T> EnqueueFirst<T>(this Queue<T> queue, T item)
+        {
+            var tempReversed = queue.Reverse().ToList();
+            tempReversed.Add(item);
+            tempReversed.Reverse();
+            return new Queue<T>(tempReversed);
         }
     }
 }
