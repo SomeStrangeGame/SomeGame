@@ -42,11 +42,19 @@ namespace Novels.QueueProcess
             }
 
             public UniTaskCompletionSource BubbleDone;
+
             public Func<string, string> GetLocalizationValue;
+
             public List<Ink.Runtime.Choice> Choices;
-            public Action<string[], Ink.Runtime.Choice> SetCharacterView;
+
+            public Action<string> SetMainCharacterView;
+            public Action<string> SetMainCharacterClothes;
+            public Action<string> SetMainCharacterHair;
+
             public Action<byte> SaveChoice;
+
             public Action<int> SetChoice;
+
             public string Name;
             public string Value;
             public string[] Args;
@@ -89,6 +97,7 @@ namespace Novels.QueueProcess
                             OnClick = id =>
                             {
                                 SetCharacterView(Args, c);
+
                                 SaveChoice((byte)id);
                                 SetChoice(id);
                                 BubbleDone.TrySetResult();
@@ -111,6 +120,16 @@ namespace Novels.QueueProcess
                     SetChoice(choice);
                 }
                 BubbleDone.TrySetResult();
+            }
+
+            private void SetCharacterView(string[] args, Ink.Runtime.Choice choice)
+            {
+                if (args.Any(a => a == "Выбери внешность"))
+                    SetMainCharacterView(choice.text);
+                if (args.Any(a => a == "Выбери одежду"))
+                    SetMainCharacterClothes(choice.text);
+                if (args.Any(a => a == "Выбери прическу" || a == "Выбери причёску"))
+                    SetMainCharacterHair(choice.text);
             }
         }
 

@@ -226,7 +226,9 @@ namespace Novels
                         BubbleDone = bubbleDone,
                         GetLocalizationValue = _ctx.GetLocalizationValue,
                         Choices = choices,
-                        SetCharacterView = SetCharacterView,
+                        SetMainCharacterView = _ctx.SetMainCharacterView,
+                        SetMainCharacterClothes = _ctx.SetMainCharacterClothes,
+                        SetMainCharacterHair = _ctx.SetMainCharacterHair,
                         SaveChoice = _ctx.SaveChoice,
                         SetChoice = _ctx.SetChoice,
                         Name = name,
@@ -321,16 +323,6 @@ namespace Novels
                 }
                 
             }
-        }
-
-        private void SetCharacterView(string[] args, Ink.Runtime.Choice choice)
-        {
-            if (args.Any(a => a == "Выбери внешность"))
-                _ctx.SetMainCharacterView(choice.text);
-            if (args.Any(a => a == "Выбери одежду"))
-                _ctx.SetMainCharacterClothes(choice.text);
-            if (args.Any(a => a == "Выбери прическу" || a == "Выбери причёску"))
-                _ctx.SetMainCharacterHair(choice.text);
         }
     }
 
