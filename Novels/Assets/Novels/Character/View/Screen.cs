@@ -65,21 +65,30 @@ namespace Novels.Character.View
             ClearImagesIfNeed();
         }
 
-        public void ShowImageImmediate(bool isLeft)
+        public void ShowImageImmediate(bool? isLeft)
         {
             ClearImagesIfNeed();
 
             _canvasGroup.gameObject.SetActive(true);
 
             var bodyOffset = 120f;
-            _mainBody.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _clothes.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _backAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _middleAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _frontAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            if (isLeft.HasValue)
+            {
+                if (isLeft.Value)
+                    bodyOffset = -bodyOffset;
+            }
+            else
+            {
+                bodyOffset = 0f;
+            }
+            _mainBody.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _clothes.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _backAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _middleAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _frontAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
 
             var endPosition  = _canvasGroup.transform.localPosition;
 
@@ -87,7 +96,7 @@ namespace Novels.Character.View
             _canvasGroup.alpha = 1f;
         }
 
-        public async UniTask ShowImage(bool isLeft)
+        public async UniTask ShowImage(bool? isLeft)
         {
             ClearImagesIfNeed();
 
@@ -95,16 +104,25 @@ namespace Novels.Character.View
             _canvasGroup.gameObject.SetActive(true);
 
             var bodyOffset = 120f;
-            _mainBody.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _clothes.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _backAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _middleAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
-            _frontAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * (isLeft ? -bodyOffset : bodyOffset) * _mainBody.canvas.scaleFactor;
+            if (isLeft.HasValue)
+            {
+                if (isLeft.Value)
+                    bodyOffset = -bodyOffset;
+            }
+            else
+            {
+                bodyOffset = 0f;
+            }
+            _mainBody.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _clothes.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _emotion.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _backHairs.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _frontHairs.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _backAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _middleAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
+            _frontAccessories.transform.position = _canvasGroup.transform.position + Vector3.right * bodyOffset * _mainBody.canvas.scaleFactor;
 
-            var startPosition = _canvasGroup.transform.localPosition + Vector3.right * (isLeft ? -100f : 100f);
+            var startPosition = _canvasGroup.transform.localPosition + Vector3.right * (isLeft.HasValue ? isLeft.Value ? -100f : 100f : 0f);
             var endPosition  = _canvasGroup.transform.localPosition;
 
             _canvasGroup.transform.localPosition = startPosition;

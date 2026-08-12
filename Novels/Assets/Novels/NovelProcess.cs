@@ -48,8 +48,8 @@ namespace Novels
             internal Action<string> SetMainCharacterHair;
             internal Func<UniTask> CharacterHide;
             internal Action CharacterHideImmediate;
-            internal Func<bool, UniTask> CharacterShow;
-            internal Action<bool> CharacterShowImmediate;
+            internal Func<bool?, UniTask> CharacterShow;
+            internal Action<bool?> CharacterShowImmediate;
             internal Func<string, string[], UniTask> CharacterSetImage;
 
 
@@ -94,11 +94,9 @@ namespace Novels
                     : rawPrefixData.LastOrDefault().Split(")").FirstOrDefault().Split(",").Select(a => a.Trim()).ToArray();
                 var dialogAlign = (name == _ctx.MainCharacter) 
                     ? TextAlignment.Left
-                    : (name == "...")
+                    : (name == "..." || name == "Wardrobe")
                         ? TextAlignment.Center
-                        : (name == "..." || name == "Wardrobe") 
-                            ? TextAlignment.Center 
-                            : TextAlignment.Right;
+                        : TextAlignment.Right;
                 var characterNameTemp = $"{name}";
                     if (args.Any(a => a.ToLower() == "маленькая"))
                         characterNameTemp += "_child";

@@ -43,9 +43,11 @@ namespace Novels.QueueProcess
         }
         public struct ShowCharacterQueue : IQueue
         {
+            private const string _wardrobe = "Wardrobe";
+
             public Func<string, string[], UniTask> CharacterSetImage;
-            public Func<bool, UniTask> CharacterShow;
-            public Action<bool> CharacterShowImmediate;
+            public Func<bool?, UniTask> CharacterShow;
+            public Action<bool?> CharacterShowImmediate;
             public bool IsNewCharacter;
             public string Name;
             public string[] Args;
@@ -56,13 +58,13 @@ namespace Novels.QueueProcess
                 await CharacterSetImage(Name, Args);
                 if (IsNewCharacter)
                 {
-                    await CharacterShow(Name == MainCharacter);
+                    await CharacterShow(Name != _wardrobe ? Name == MainCharacter : null);
                 }
             }
 
             public async readonly UniTask RunImmediate(byte choice)
             {
-                CharacterShowImmediate(Name == MainCharacter);
+                CharacterShowImmediate(Name != _wardrobe ? Name == MainCharacter : null);
             }
         }
     }

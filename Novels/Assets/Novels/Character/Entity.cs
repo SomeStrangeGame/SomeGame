@@ -86,12 +86,12 @@ namespace Novels.Character
                 SetAccessoiries(name, args));
         }
 
-        public async UniTask Show(bool isLeft)
+        public async UniTask Show(bool? isLeft)
         {
             await _screen.ShowImage(isLeft);
         }
 
-        public void ShowImmediate(bool isLeft)
+        public void ShowImmediate(bool? isLeft)
         {
             _screen.ShowImageImmediate(isLeft);
         }
