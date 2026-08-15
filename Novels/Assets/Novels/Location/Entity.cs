@@ -189,21 +189,22 @@ namespace Novels.Location
             _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
         }
 
-        public async UniTask SetCameraImmediate(StoryContracts.StoryCameraAction action)
+        public UniTask SetCameraImmediate(StoryContracts.StoryCameraAction action)
         {
             if (action == StoryContracts.StoryCameraAction.FadeIn)
             {
                 _screen.SetEffectImmediate(View.Screen.Effect.Dark);
-                return;
+                return UniTask.CompletedTask;
             }
 
             if (TryGetCameraEffect(action, out var effect))
             {
                 _screen.SetCameraImmediate(effect);
-                return;
+                return UniTask.CompletedTask;
             }
 
             _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
+            return UniTask.CompletedTask;
         }
 
         private static bool TryGetCameraEffect(
@@ -243,9 +244,10 @@ namespace Novels.Location
             await _screen.SetDialogue(ToViewAlignment(alignment), _ctx.CancellationToken);
         }
 
-        public async UniTask SetDialogueImmediate(StoryContracts.StoryDialogueAlignment alignment)
+        public UniTask SetDialogueImmediate(StoryContracts.StoryDialogueAlignment alignment)
         {
             _screen.SetDialogueImmediate(ToViewAlignment(alignment));
+            return UniTask.CompletedTask;
         }
 
         private static TextAlignment ToViewAlignment(

@@ -51,6 +51,7 @@ namespace Editor
         [MenuItem("Build/All Bundles")]
         private static void BuildAllAssetBundles()
         {
+            NovelContentValidator.ValidateOrThrow();
             ClearConsole();
 
             var remotePath = $"{Application.streamingAssetsPath}/Remote";

@@ -78,7 +78,7 @@ namespace Novels.QueueProcess
                     var choice = context.SavedChoice;
                     if (choice != _noChoice)
                     {
-                        var selectedChoice = _choices.First(item => item.Id == choice);
+                        var selectedChoice = GetSavedChoice(choice);
                         ApplyChoiceActions(selectedChoice);
                         _setChoice(selectedChoice.Id);
                     }
@@ -153,6 +153,18 @@ namespace Novels.QueueProcess
 
                 if ((_choiceActions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
                     _setMainCharacterHair(choice.Text);
+            }
+
+            private StoryContracts.StoryChoice GetSavedChoice(byte choiceId)
+            {
+                foreach (var choice in _choices)
+                {
+                    if (choice.Id == choiceId)
+                        return choice;
+                }
+
+                throw new InvalidOperationException(
+                    $"Saved choice '{choiceId}' is not available in the current dialogue.");
             }
         }
 

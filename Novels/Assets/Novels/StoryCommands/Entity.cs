@@ -14,10 +14,7 @@ namespace Novels.StoryCommands
 
             if (choices.Length > 0 && parseResult.Command.Type != StoryCommandType.Dialogue)
             {
-                return StoryStepResult.Failure(
-                    StoryCommandSyntax.ChoicesWithoutDialogue,
-                    "Choices can only belong to a dialogue command.",
-                    source);
+                parseResult = Parse(string.Empty, true);
             }
 
             return StoryStepResult.Success(new StoryStep(parseResult.Command, choices));

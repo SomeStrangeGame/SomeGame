@@ -13,10 +13,13 @@ namespace Novels
             var saveSystem = new Save.Entity(new Save.Entity.Ctx
             {
                 SaveChoiceFileName = _saveChoiceFileName,
+                ContentId = $"{_definition.Id}/{_definition.Episode.Id}",
+                ContentVersion = _definition.Episode.ContentVersion,
                 ReadBytes = cache.ReadBytes,
                 WriteBytes = cache.WriteBytes,
                 Delete = cache.Delete,
                 OnLog = _ctx.OnLog,
+                OnError = _ctx.OnError,
             }).AddTo(this);
             saveSystem.Init();
 

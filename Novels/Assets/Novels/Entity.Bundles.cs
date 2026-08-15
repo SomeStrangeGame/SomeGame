@@ -9,7 +9,7 @@ namespace Novels
         {
             return new Bundles.Entity(new Bundles.Entity.Ctx
             {
-                Prefix = _ctx.Data.Prefix,
+                Prefix = _definition.Prefix,
                 CancellationToken = _ctx.CancellationToken,
                 OnLog = _ctx.OnLog,
             }).AddTo(this);

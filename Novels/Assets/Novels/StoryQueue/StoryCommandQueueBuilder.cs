@@ -13,53 +13,50 @@ namespace Novels.StoryQueue
 
         internal QueueProcess.IQueue Build(StoryCommands.StoryCommand command)
         {
-            switch (command.Type)
+            switch (command)
             {
-                case StoryCommands.StoryCommandType.Empty:
-                case StoryCommands.StoryCommandType.Metadata:
-                case StoryCommands.StoryCommandType.Keyboard:
+                case StoryCommands.EmptyStoryCommand:
+                case StoryCommands.MetadataStoryCommand:
+                case StoryCommands.KeyboardStoryCommand:
                     return new QueueProcess.EmptyQueue();
 
-                case StoryCommands.StoryCommandType.Notification:
+                case StoryCommands.NotificationStoryCommand notification:
                     return new QueueProcess.NotificationQueue(
                         _ctx.ShowNotification,
-                        command.Notification.Text);
+                        notification.Data.Text);
 
-                case StoryCommands.StoryCommandType.Location:
-                case StoryCommands.StoryCommandType.CutScene:
+                case StoryCommands.BackgroundStoryCommand background:
                     return new QueueProcess.BackgroundQueue.SetBackgroundQueue(
                         _ctx.SetImage,
                         _ctx.SetImageImmediate,
-                        command.Background.AssetName,
-                        command.Background.Presentation);
+                        background.Data.AssetName,
+                        background.Data.Presentation);
 
-                case StoryCommands.StoryCommandType.Music:
-                case StoryCommands.StoryCommandType.Sound:
-                case StoryCommands.StoryCommandType.Ambient:
-                    var playAudio = command.Type == StoryCommands.StoryCommandType.Music
+                case StoryCommands.AudioStoryCommand audio:
+                    var playAudio = audio.Type == StoryCommands.StoryCommandType.Music
                         ? _ctx.PlayMusic
-                        : command.Type == StoryCommands.StoryCommandType.Sound
+                        : audio.Type == StoryCommands.StoryCommandType.Sound
                             ? _ctx.PlaySound
                             : _ctx.PlayAmbient;
                     return new QueueProcess.AudioQueue(
                         playAudio,
-                        command.Audio.AssetName);
+                        audio.Data.AssetName);
 
-                case StoryCommands.StoryCommandType.Camera:
+                case StoryCommands.CameraStoryCommand camera:
                     return new QueueProcess.BackgroundQueue.CameraQueue(
                         _ctx.SetCamera,
                         _ctx.SetCameraImmediate,
-                        command.Camera.Action);
+                        camera.Data.Action);
 
-                case StoryCommands.StoryCommandType.Wait:
+                case StoryCommands.WaitStoryCommand wait:
                     return new QueueProcess.AwaitQueue(
                         _ctx.Wait,
-                        command.Wait.Duration);
+                        wait.Data.Duration);
 
                 default:
                     throw new ArgumentOutOfRangeException(
-                        nameof(command.Type),
-                        command.Type,
+                        nameof(command),
+                        command.GetType().FullName,
                         "The command is not supported by the story command queue builder.");
             }
         }

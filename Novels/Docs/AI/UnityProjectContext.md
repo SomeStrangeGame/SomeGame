@@ -25,13 +25,16 @@
 - `Assets/Editor/CreateAssetBundles.cs`: manual Android AssetBundle builder/cache clearer.
 - `../../Packages/*`: shared local packages; moving `Novels` alone breaks the relative `file:` dependencies.
 - `Novels`: broad composition-root assembly referencing feature assemblies and shared packages.
+- `Novels.Content`: immutable `NovelDefinition` and `EpisodeDefinition` configuration independent of scene serialization.
+- `Novels.Diagnostics`: neutral error code, severity, source, and exception contracts.
+- `Novels.Editor`: editor-only validation of loaded novel configuration and Android bundle output.
 - Feature assemblies: `StoryCommands`, `StoryProcessor`, `StoryQueue`, `QueueProcess`, `Bubble`, `Character`, `Location`, `Notification`, `Audio`, `Waiting`, `Save`, `PathGetter`, with separate View assemblies where applicable. `StoryContracts` owns the shared vocabulary consumed by story-driven features.
 
 ## Scenes And Startup
 
 - Only enabled build scene: `Assets/Novels/Novels.unity`.
 - Scene `EntryPoint.OnEnable()` initializes UniTask's player loop, caps FPS at 30, constructs `Novels.Entity`, and starts an exception-observing session wrapper.
-- `Entity.Init()` loads the main loading UI, settings, story and feature bundles, then constructs localization, Ink, UI/features, save, audio, and `NovelProcess`.
+- `Entity.Init()` creates `NovelBootstrapProcess`. The bootstrap coordinates application preparation, New Game/Continue selection, episode preparation, and episode execution through delegates; root partial factories remain responsible for concrete object creation.
 - Scene data selects prefix `TZM_1`, main character `Salli`, story `s01e01.ink.json`, and seven `novels_*` bundles.
 - `StoryCommandParser` converts legacy colon-delimited Ink lines into typed commands; `NovelProcess` maps them to queued actions for location/cut-scene, audio, camera, waits, notifications, character presentation, dialogue, and choices.
 
@@ -48,10 +51,17 @@
 - `QueueExecutionContext` carries the novel-session cancellation token. Queue commands are immutable after construction, validate required delegates in their constructors, and cancel user-input waits without leaving the executor suspended.
 - Notifications preserve their non-blocking story behavior through a Notification-owned FIFO dispatcher. The dispatcher serializes presentation, observes cancellation and exceptions, and replaces queue-level fire-and-forget work.
 - `Save.Entity` receives byte-storage operations through delegates and no longer references the Cache assembly. The root `Entity.SaveSystem` factory owns the Cache adapter. Cache owns filesystem path resolution, atomic byte writes, existence checks, and exact-key deletion; filesystem paths are converted to `file://` URLs only at the Bundles video boundary.
+- Save storage writes a versioned binary envelope containing content identity, content version, and the choice payload. Legacy raw-byte saves remain readable and migrate on the next write. Saves belonging to another episode/version are not replayed.
 - `StoryProcessor.ReadNext()` exposes typed `Content`, `Choices`, and `Completed` control flow. `NovelProcess` handles completion before parsing and terminates without adding an artificial queue item.
+- Story completion asks `StoryQueue.TryComplete()` for a final batch so commands authored after the last Dialogue are not discarded. No empty batch or artificial command is emitted.
+- `StoryCommand` is a closed polymorphic hierarchy. Every concrete command owns exactly one valid payload; the public parser facade and authored syntax remain unchanged.
+- Choices exposed beside a non-dialogue/metadata Ink line are attached to an empty `Dialogue`, preserving choice presentation without visible speaker text.
 - `EntryPoint` owns the cancellation token for one enabled novel session and cancels it before root disposal. Runtime feature entities destroy the screens and audio objects they instantiate, while session-bound loading, animation, request, wait, and execution operations observe cancellation.
 - `SettingProcess` returns a typed `SettingSelection`, uses one cancellation-aware completion source, and receives localized UI text through a delegate. Localization is loaded before the settings screen; New Game side effects remain owned by the composition flow.
 - The shared Bundles package validates UnityWebRequest results, observes session cancellation, uses versioned persistent-cache keys, resolves the active platform rather than a hard-coded Android bundle key, and owns StreamingAssets URL conversion. Audio requests apply the same result validation and no longer send response-only CORS headers.
+- Bundles can create an episode `Scope`. The scope records owned bundle names, uses bundle-qualified asset-cache keys, unloads its bundles with `Unload(false)`, and removes their cached asset references at episode completion/disposal.
+- Runtime parse, save, initialization, and queue-execution failures use `Novels.Diagnostics.NovelError` with Warning, Recoverable, or Fatal severity. Existing feature logs remain available for local diagnostics.
+- `Novels/Validate Content` checks the loaded EntryPoint configuration, compiled Ink path, AudioMixer assignment, AssetBundle authoring names, and built Android version files. Bundle building runs the same validation before recreating output.
 - Shared `BaseDisposable` is idempotent, marks itself disposed before child teardown, cleans every owned disposable even after an exception, and immediately disposes items added after owner disposal.
 - `Location.VideoPlayback` owns VideoPlayer subscriptions and the active RenderTexture. It prepares video with timeout and session cancellation, releases GPU resources on replacement/disposal, and reports readiness/completion/failure to the unified live/immediate background flow in `Location.Entity`.
 - `Character.Entity` owns per-character appearance state keyed by resolved character identity. It resolves a complete sprite set before touching the View, and `ShowCharacterQueue` rebuilds the same character presentation in live and replay modes while varying only the show animation.
@@ -65,7 +75,7 @@
 
 - Unity Test Framework is present transitively, but no EditMode or PlayMode tests were found.
 - No project-local CI/test command was found. Tests were not created or run, and no scene/prefab was saved.
-- The generated Unity solution compiled after the second refactoring wave with 0 errors and 0 warnings. A separate Unity batch-mode import could not run because the project was already open in another Editor instance; the open Editor's final import/Console state and runtime behavior remain unverified.
+- Unity regenerated response/project files for the architecture wave. Every changed asmdef compiled through Unity Roslyn, and the complete generated solution compiled with 0 errors and 0 warnings. Tests were not created or run. A separate Unity batch-mode import remained unavailable because the project was already open in another Editor instance; runtime behavior remains unverified.
 
 ## Risks And Unknowns
 

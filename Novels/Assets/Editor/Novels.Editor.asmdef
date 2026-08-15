@@ -1,11 +1,12 @@
 {
-    "name": "Novels.Save",
+    "name": "Novels.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:4e92d100654dc45f98cda46918112b48",
-        "GUID:a951b35e2f7c4fa29eb3849b8a51938c"
+        "GUID:4d5cc99a41c424872a2bd557c650099c"
     ],
-    "includePlatforms": [],
+    "includePlatforms": [
+        "Editor"
+    ],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

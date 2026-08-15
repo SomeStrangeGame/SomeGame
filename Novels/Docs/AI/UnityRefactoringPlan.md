@@ -10,6 +10,25 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-15
 
+## Architecture wave completed on 2026-08-15
+
+The eight follow-up architecture items are complete:
+
+1. `StoryQueue.TryComplete()` flushes commands after the final Dialogue when Ink completes.
+2. Save data uses a versioned content-aware envelope and reads the legacy raw-byte format.
+3. `Novels.Content` defines immutable `NovelDefinition` and `EpisodeDefinition` models; existing scene `Data` is adapted without changing the scene asset.
+4. `NovelBootstrapProcess` owns application/start-selection/episode workflow while root partial factories still create concrete dependencies.
+5. `Novels.Editor` validates loaded content configuration and protects AssetBundle building with the same validation.
+6. `Bundles.Scope` gives episode bundles explicit lifetime ownership and removes bundle-qualified cached references when released.
+7. Story commands are a closed class hierarchy with payloads that cannot be combined into invalid states.
+8. `Novels.Diagnostics` supplies typed Warning/Recoverable/Fatal errors for parsing, persistence, initialization, and queue execution.
+
+Additional integration corrections made while validating this wave:
+
+- Choices accompanying metadata/non-dialogue Ink output are attached to an empty `Dialogue` instead of being rejected.
+- Video cleanup tolerates the scene destroying its VideoPlayer before root disposal.
+- Full generated-solution compilation completed with 0 errors and 0 warnings; tests were neither created nor run.
+
 ## Current architectural baseline
 
 The story pipeline refactoring is complete:

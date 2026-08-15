@@ -32,7 +32,7 @@ namespace Novels
 
                 Dialogue = new StoryQueue.Entity.DialogueCtx
                 {
-                    MainCharacter = _ctx.Data.MainCharacter,
+                    MainCharacter = _definition.MainCharacter,
 
                     SetDialogue = location.SetDialogue,
                     SetDialogueImmediate = location.SetDialogueImmediate,

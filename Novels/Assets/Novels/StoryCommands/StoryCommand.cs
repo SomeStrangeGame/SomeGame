@@ -18,50 +18,30 @@ namespace Novels.StoryCommands
         Dialogue,
     }
 
-    public sealed class StoryCommand
+    public abstract class StoryCommand
     {
-        private StoryCommand(
-            StoryCommandType type,
-            string source,
-            DialogueCommandData dialogue = null,
-            BackgroundCommandData background = null,
-            AudioCommandData audio = null,
-            NotificationCommandData notification = null,
-            CameraCommandData camera = null,
-            WaitCommandData wait = null)
+        protected StoryCommand(StoryCommandType type, string source)
         {
             Type = type;
             Source = source ?? string.Empty;
-            Dialogue = dialogue;
-            Background = background;
-            Audio = audio;
-            Notification = notification;
-            Camera = camera;
-            Wait = wait;
         }
 
         public StoryCommandType Type { get; }
         public string Source { get; }
-        public DialogueCommandData Dialogue { get; }
-        public BackgroundCommandData Background { get; }
-        public AudioCommandData Audio { get; }
-        public NotificationCommandData Notification { get; }
-        public CameraCommandData Camera { get; }
-        public WaitCommandData Wait { get; }
 
         internal static StoryCommand CreateEmpty(string source)
         {
-            return new StoryCommand(StoryCommandType.Empty, source);
+            return new EmptyStoryCommand(source);
         }
 
         internal static StoryCommand CreateMetadata(string source)
         {
-            return new StoryCommand(StoryCommandType.Metadata, source);
+            return new MetadataStoryCommand(source);
         }
 
         internal static StoryCommand CreateKeyboard(string source)
         {
-            return new StoryCommand(StoryCommandType.Keyboard, source);
+            return new KeyboardStoryCommand(source);
         }
 
         internal static StoryCommand CreateDialogue(
@@ -72,10 +52,9 @@ namespace Novels.StoryCommands
             StoryContracts.StoryChoiceAction choiceActions,
             StoryContracts.CharacterPresentation character)
         {
-            return new StoryCommand(
-                StoryCommandType.Dialogue,
+            return new DialogueStoryCommand(
                 source,
-                dialogue: new DialogueCommandData(
+                new DialogueCommandData(
                     speaker,
                     text,
                     presentation,
@@ -92,13 +71,16 @@ namespace Novels.StoryCommands
             if (type != StoryCommandType.Location
                 && type != StoryCommandType.CutScene)
             {
-                throw new ArgumentOutOfRangeException(nameof(type), type, "The command type does not use background data.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(type),
+                    type,
+                    "The command type does not use background data.");
             }
 
-            return new StoryCommand(
+            return new BackgroundStoryCommand(
                 type,
                 source,
-                background: new BackgroundCommandData(assetName, presentation));
+                new BackgroundCommandData(assetName, presentation));
         }
 
         internal static StoryCommand CreateAudio(
@@ -110,37 +92,134 @@ namespace Novels.StoryCommands
                 && type != StoryCommandType.Sound
                 && type != StoryCommandType.Ambient)
             {
-                throw new ArgumentOutOfRangeException(nameof(type), type, "The command type does not use audio data.");
+                throw new ArgumentOutOfRangeException(
+                    nameof(type),
+                    type,
+                    "The command type does not use audio data.");
             }
 
-            return new StoryCommand(type, source, audio: new AudioCommandData(assetName));
+            return new AudioStoryCommand(
+                type,
+                source,
+                new AudioCommandData(assetName));
         }
 
         internal static StoryCommand CreateNotification(string source, string text)
         {
-            return new StoryCommand(
-                StoryCommandType.Notification,
+            return new NotificationStoryCommand(
                 source,
-                notification: new NotificationCommandData(text));
+                new NotificationCommandData(text));
         }
 
         internal static StoryCommand CreateCamera(
             string source,
             StoryContracts.StoryCameraAction action)
         {
-            return new StoryCommand(
-                StoryCommandType.Camera,
+            return new CameraStoryCommand(
                 source,
-                camera: new CameraCommandData(action));
+                new CameraCommandData(action));
         }
 
         internal static StoryCommand CreateWait(string source, int duration)
         {
-            return new StoryCommand(
-                StoryCommandType.Wait,
-                source,
-                wait: new WaitCommandData(duration));
+            return new WaitStoryCommand(source, new WaitCommandData(duration));
         }
+    }
+
+    public sealed class EmptyStoryCommand : StoryCommand
+    {
+        internal EmptyStoryCommand(string source)
+            : base(StoryCommandType.Empty, source)
+        {
+        }
+    }
+
+    public sealed class MetadataStoryCommand : StoryCommand
+    {
+        internal MetadataStoryCommand(string source)
+            : base(StoryCommandType.Metadata, source)
+        {
+        }
+    }
+
+    public sealed class KeyboardStoryCommand : StoryCommand
+    {
+        internal KeyboardStoryCommand(string source)
+            : base(StoryCommandType.Keyboard, source)
+        {
+        }
+    }
+
+    public sealed class DialogueStoryCommand : StoryCommand
+    {
+        internal DialogueStoryCommand(string source, DialogueCommandData data)
+            : base(StoryCommandType.Dialogue, source)
+        {
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        public DialogueCommandData Data { get; }
+    }
+
+    public sealed class BackgroundStoryCommand : StoryCommand
+    {
+        internal BackgroundStoryCommand(
+            StoryCommandType type,
+            string source,
+            BackgroundCommandData data)
+            : base(type, source)
+        {
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        public BackgroundCommandData Data { get; }
+    }
+
+    public sealed class AudioStoryCommand : StoryCommand
+    {
+        internal AudioStoryCommand(
+            StoryCommandType type,
+            string source,
+            AudioCommandData data)
+            : base(type, source)
+        {
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        public AudioCommandData Data { get; }
+    }
+
+    public sealed class NotificationStoryCommand : StoryCommand
+    {
+        internal NotificationStoryCommand(string source, NotificationCommandData data)
+            : base(StoryCommandType.Notification, source)
+        {
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        public NotificationCommandData Data { get; }
+    }
+
+    public sealed class CameraStoryCommand : StoryCommand
+    {
+        internal CameraStoryCommand(string source, CameraCommandData data)
+            : base(StoryCommandType.Camera, source)
+        {
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        public CameraCommandData Data { get; }
+    }
+
+    public sealed class WaitStoryCommand : StoryCommand
+    {
+        internal WaitStoryCommand(string source, WaitCommandData data)
+            : base(StoryCommandType.Wait, source)
+        {
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        public WaitCommandData Data { get; }
     }
 
     public readonly struct StoryParseError
@@ -159,7 +238,10 @@ namespace Novels.StoryCommands
 
     public readonly struct StoryParseResult
     {
-        private StoryParseResult(StoryCommand command, StoryParseError error, bool isSuccess)
+        private StoryParseResult(
+            StoryCommand command,
+            StoryParseError error,
+            bool isSuccess)
         {
             Command = command;
             Error = error;
@@ -175,9 +257,15 @@ namespace Novels.StoryCommands
             return new StoryParseResult(command, default, true);
         }
 
-        internal static StoryParseResult Failure(string code, string message, string source)
+        internal static StoryParseResult Failure(
+            string code,
+            string message,
+            string source)
         {
-            return new StoryParseResult(null, new StoryParseError(code, message, source), false);
+            return new StoryParseResult(
+                null,
+                new StoryParseError(code, message, source),
+                false);
         }
     }
 }

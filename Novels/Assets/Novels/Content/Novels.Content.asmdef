@@ -1,10 +1,7 @@
 {
-    "name": "Novels.Save",
+    "name": "Novels.Content",
     "rootNamespace": "",
-    "references": [
-        "GUID:4e92d100654dc45f98cda46918112b48",
-        "GUID:a951b35e2f7c4fa29eb3849b8a51938c"
-    ],
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

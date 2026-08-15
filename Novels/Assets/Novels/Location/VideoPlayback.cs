@@ -123,9 +123,9 @@ namespace Novels.Location
             {
                 _ctx.VideoPlayer.Stop();
                 _ctx.VideoPlayer.targetTexture = null;
+                _ctx.SetTexture(null);
             }
 
-            _ctx.SetTexture(null);
             ReleaseRenderTexture();
         }
 
@@ -165,13 +165,16 @@ namespace Novels.Location
         protected override void OnDispose()
         {
             base.OnDispose();
-            Stop();
             if (_ctx.VideoPlayer == null)
+            {
+                ReleaseRenderTexture();
                 return;
+            }
 
             _ctx.VideoPlayer.prepareCompleted -= OnPrepared;
             _ctx.VideoPlayer.loopPointReached -= OnCompleted;
             _ctx.VideoPlayer.errorReceived -= OnFailed;
+            Stop();
         }
     }
 }

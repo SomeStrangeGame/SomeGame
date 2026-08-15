@@ -8,9 +8,8 @@ namespace Novels
         {
             return new PathGetter.Entity(new PathGetter.Entity.Ctx
             {
-                Prefix = _ctx.Data.Prefix,
+                Prefix = _definition.Prefix,
             }).AddTo(this);
         }
     }
 }
-

@@ -74,7 +74,7 @@ namespace Novels.StoryQueue
         {
             var command = step.Command;
 
-            if (command.Type != StoryCommands.StoryCommandType.Dialogue)
+            if (command is not StoryCommands.DialogueStoryCommand dialogueCommand)
             {
                 _pendingQueue.Enqueue(_storyCommandQueueBuilder.Build(command));
                 queue = null;
@@ -83,7 +83,7 @@ namespace Novels.StoryQueue
 
             var bubbleDone = new UniTaskCompletionSource();
             var dialogueQueue = _dialogueQueueBuilder.Build(
-                command.Dialogue,
+                dialogueCommand.Data,
                 step.Choices,
                 bubbleDone);
 
@@ -92,6 +92,19 @@ namespace Novels.StoryQueue
             EnqueueRange(queue, _pendingQueue);
             EnqueueRange(queue, dialogueQueue.AfterCommands);
 
+            _pendingQueue = new Queue<QueueProcess.IQueue>();
+            return true;
+        }
+
+        public bool TryComplete(out Queue<QueueProcess.IQueue> queue)
+        {
+            if (_pendingQueue.Count == 0)
+            {
+                queue = null;
+                return false;
+            }
+
+            queue = _pendingQueue;
             _pendingQueue = new Queue<QueueProcess.IQueue>();
             return true;
         }

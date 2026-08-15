@@ -12,10 +12,13 @@ namespace Novels.Save
         public struct Ctx
         {
             public string SaveChoiceFileName;
+            public string ContentId;
+            public string ContentVersion;
             public Func<string, byte[]> ReadBytes;
             public Action<string, byte[]> WriteBytes;
             public Action<string> Delete;
             public Action<(LogType type, string message)> OnLog;
+            public Action<Diagnostics.NovelError> OnError;
         }
 
         private readonly Ctx _ctx;
@@ -38,7 +41,20 @@ namespace Novels.Save
 
             try
             {
-                _save = _ctx.ReadBytes(_ctx.SaveChoiceFileName).ToList();
+                var decoded = SaveDataCodec.Decode(
+                    _ctx.ReadBytes(_ctx.SaveChoiceFileName));
+                if (!decoded.IsLegacy && !MatchesCurrentContent(decoded))
+                {
+                    _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                        Diagnostics.NovelErrorCodes.SaveContentMismatch,
+                        Diagnostics.NovelErrorSeverity.Warning,
+                        $"Save content '{decoded.ContentId}@{decoded.ContentVersion}' does not match current content '{_ctx.ContentId}@{_ctx.ContentVersion}'. Replay was skipped."));
+                    return;
+                }
+
+                _save = decoded.Choices.ToList();
+                if (decoded.IsLegacy)
+                    _ctx.OnLog((LogType.Log, "Legacy save loaded; it will be migrated on the next write."));
             }
             catch (FileNotFoundException)
             {
@@ -46,7 +62,11 @@ namespace Novels.Save
             }
             catch (Exception exception)
             {
-                _ctx.OnLog((LogType.Error, $"Failed to read save file: {exception.Message}"));
+                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.SaveReadFailed,
+                    Diagnostics.NovelErrorSeverity.Recoverable,
+                    "Failed to read save file. Replay was skipped.",
+                    exception: exception));
             }
             _initialChoices = _save.ToArray();
         }
@@ -62,7 +82,23 @@ namespace Novels.Save
         public void SaveChoice(byte unit = 255)
         {
             _save.Add(unit);
-            _ctx.WriteBytes(_ctx.SaveChoiceFileName, _save.ToArray());
+            try
+            {
+                _ctx.WriteBytes(
+                    _ctx.SaveChoiceFileName,
+                    SaveDataCodec.Encode(
+                        _ctx.ContentId,
+                        _ctx.ContentVersion,
+                        _save.ToArray()));
+            }
+            catch (Exception exception)
+            {
+                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.SaveWriteFailed,
+                    Diagnostics.NovelErrorSeverity.Recoverable,
+                    "Failed to write save file. The current session will continue.",
+                    exception: exception));
+            }
         }
 
         public void Clear()
@@ -71,6 +107,18 @@ namespace Novels.Save
             _save.Clear();
             _initialChoices = Array.Empty<byte>();
             _initialChoicePosition = 0;
+        }
+
+        private bool MatchesCurrentContent(SaveDataCodec.DecodedSave save)
+        {
+            return string.Equals(
+                    save.ContentId,
+                    _ctx.ContentId,
+                    StringComparison.Ordinal)
+                && string.Equals(
+                    save.ContentVersion,
+                    _ctx.ContentVersion,
+                    StringComparison.Ordinal);
         }
     }
 }

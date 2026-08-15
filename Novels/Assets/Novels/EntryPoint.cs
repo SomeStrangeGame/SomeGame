@@ -31,6 +31,7 @@ namespace Novels
                     using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
                         logs.Log("[Novels]", data);
                 },
+                OnError = ReportError,
             });
             Run(_entity, _sessionCancellation.Token).Forget();
         }
@@ -46,8 +47,11 @@ namespace Novels
             }
             catch (Exception exception)
             {
-                using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
-                    logs.Log("[Novels]", (LogType.Error, $"Initialization failed: {exception}"));
+                ReportError(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.InitializationFailed,
+                    Diagnostics.NovelErrorSeverity.Fatal,
+                    "Novel initialization failed.",
+                    exception: exception));
             }
         }
 
@@ -69,6 +73,15 @@ namespace Novels
                 _sessionCancellation = null;
                 _entity = null;
             }
+        }
+
+        private void ReportError(Diagnostics.NovelError error)
+        {
+            var logType = error.Severity == Diagnostics.NovelErrorSeverity.Warning
+                ? LogType.Warning
+                : LogType.Error;
+            using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
+                logs.Log("[Novels]", (logType, error.ToString()));
         }
     }
 }

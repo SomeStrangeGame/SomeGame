@@ -43,6 +43,11 @@ namespace Bundles
             ClearBundles();
         }
 
+        public Scope CreateScope()
+        {
+            return new Scope(this);
+        }
+
         private void ClearBundles()
         {
             foreach(var bundle in _bundles)
@@ -55,13 +60,14 @@ namespace Bundles
             var assetBundle = GetLoadedBundle(bundleName);
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
-            if (!_sprites.ContainsKey(assetName))
+            var assetKey = GetAssetKey(bundleName, assetName);
+            if (!_sprites.ContainsKey(assetKey))
             {
-                _sprites[assetName] = await assetBundle
+                _sprites[assetKey] = await assetBundle
                     .LoadAssetAsync<Sprite>(assetName)
                     .WithCancellation(_ctx.CancellationToken) as Sprite;
             }
-            return _sprites[assetName];
+            return _sprites[assetKey];
         }
 
         public async UniTask<T> GetBundledSO<T>(string bundleName, string assetName) where T : ScriptableObject
@@ -69,13 +75,14 @@ namespace Bundles
             var assetBundle = GetLoadedBundle(bundleName);
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
-            if (!_scriptableObjects.ContainsKey(assetName))
+            var assetKey = GetAssetKey(bundleName, assetName);
+            if (!_scriptableObjects.ContainsKey(assetKey))
             {
-                _scriptableObjects[assetName] = await assetBundle
+                _scriptableObjects[assetKey] = await assetBundle
                     .LoadAssetAsync<T>(assetName)
                     .WithCancellation(_ctx.CancellationToken) as T;
             }
-            return _scriptableObjects[assetName] as T;
+            return _scriptableObjects[assetKey] as T;
         }
 
         public async UniTask<GameObject> GetBundledPrefab(string bundleName, string assetName)
@@ -83,13 +90,14 @@ namespace Bundles
             var assetBundle = GetLoadedBundle(bundleName);
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
-            if (!_prefabs.ContainsKey(assetName))
+            var assetKey = GetAssetKey(bundleName, assetName);
+            if (!_prefabs.ContainsKey(assetKey))
             {
-                _prefabs[assetName] = await assetBundle
+                _prefabs[assetKey] = await assetBundle
                     .LoadAssetAsync<GameObject>(assetName)
                     .WithCancellation(_ctx.CancellationToken) as GameObject;
             }
-            return _prefabs[assetName];
+            return _prefabs[assetKey];
         }
 
         public string GetVideoURL(string assetName)
@@ -227,6 +235,40 @@ namespace Bundles
         private string GetBundleKey(string bundleName)
         {
             return $"Remote/{GetPlatform()}/{bundleName}";
+        }
+
+        internal void ReleaseBundles(IEnumerable<string> bundleNames)
+        {
+            foreach (var bundleName in bundleNames)
+            {
+                var bundleKey = GetBundleKey(bundleName);
+                if (_bundles.Remove(bundleKey, out var bundle) && bundle != null)
+                    bundle.Unload(false);
+
+                RemoveAssets(_sprites, bundleKey);
+                RemoveAssets(_scriptableObjects, bundleKey);
+                RemoveAssets(_prefabs, bundleKey);
+            }
+
+            _videos.Clear();
+            _audio.Clear();
+        }
+
+        private string GetAssetKey(string bundleName, string assetName)
+        {
+            return $"{GetBundleKey(bundleName)}|{assetName}";
+        }
+
+        private static void RemoveAssets<T>(
+            IDictionary<string, T> assets,
+            string bundleKey)
+        {
+            var prefix = $"{bundleKey}|";
+            var keys = assets.Keys
+                .Where(key => key.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+            foreach (var key in keys)
+                assets.Remove(key);
         }
 
         private async UniTask<string> GetBundleVersionAsync(string bundleName)
