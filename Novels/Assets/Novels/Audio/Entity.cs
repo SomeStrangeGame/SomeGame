@@ -10,6 +10,10 @@ namespace Novels.Audio
 {
     public class Entity : BaseDisposable
     {
+        private const string _musicMixerGroup = "Music";
+        private const string _soundMixerGroup = "Sound";
+        private const string _ambientMixerGroup = "Ambient";
+
         public enum Audio
         {
             Music,
@@ -86,17 +90,17 @@ namespace Novels.Audio
                 case Audio.Music:
                     audioSource.loop = true;
                     _audioObjects[audioType] = audioObject;
-                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups("Music")[0];
+                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups(_musicMixerGroup)[0];
                     break;
                 case Audio.Sound:
                     audioSource.loop = false;
                     _audioObjects[audioType] = audioObject;
-                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups("Sound")[0];
+                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups(_soundMixerGroup)[0];
                     break;
                 case Audio.Ambient:
                     audioSource.loop = true;
                     _audioObjects[audioType] = audioObject;
-                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups("Ambient")[0];
+                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups(_ambientMixerGroup)[0];
                     break;
             }
             audioSource.Play();
@@ -132,4 +136,3 @@ namespace Novels.Audio
         }
     }
 }
-

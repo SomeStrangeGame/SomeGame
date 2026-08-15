@@ -101,18 +101,18 @@ namespace Novels.Bubble
         public void SetBubbleScreen(BubbleScreenCtx ctx)
         {
             View.Screen.BubbleCtx.BubbleType bubbleType;
-            if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "дисклеймер")) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
-            else if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "подсказка")) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
-            else if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "мысли")) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftMinds;
-            else if (ctx.Name == "...") bubbleType = View.Screen.BubbleCtx.BubbleType.NoCharacter;
+            if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Disclaimer)) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
+            else if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Hint)) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
+            else if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Thoughts)) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftMinds;
+            else if (ctx.Name == StoryContracts.StorySpeakers.Narrator) bubbleType = View.Screen.BubbleCtx.BubbleType.NoCharacter;
             else if (ctx.Name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftCharacter;
             else bubbleType = View.Screen.BubbleCtx.BubbleType.RightCharacter;
 
             var header = ctx.Text.Header;
             if (bubbleType == View.Screen.BubbleCtx.BubbleType.Hint)
             {
-                if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "дисклеймер")) header = "Дисклеймер";
-                if (ctx.Args != null && ctx.Args.Any(arg => arg.ToLower() == "подсказка")) header = "Подсказка";
+                if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Disclaimer)) header = "Дисклеймер";
+                if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Hint)) header = "Подсказка";
             }
             var buttons = ctx.Buttons.Select(b => new View.Screen.BubbleCtx.ButtonCtx
             {
@@ -133,6 +133,11 @@ namespace Novels.Bubble
                 OnBackgroundClick = buttons.Length == 0 ? ctx.OnBackgroundClick : null
             });
         }
+
+        private static bool HasArgument(string[] arguments, string expected)
+        {
+            return arguments != null && arguments.Any(argument =>
+                string.Equals(argument, expected, StringComparison.OrdinalIgnoreCase));
+        }
     }
 }
-

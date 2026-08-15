@@ -9,6 +9,10 @@ namespace Novels.QueueProcess
     {
         public class SetBubbleQueue : IQueue
         {
+            private const string _wardrobeTrigger = "some wardrobe trigger";
+            private const string _chooseTrigger = "some choose trigger";
+            private const byte _noChoice = byte.MaxValue;
+
             public struct BubbleCtx
             {
                 public struct TextCtx
@@ -65,14 +69,14 @@ namespace Novels.QueueProcess
 
             public async UniTask Run()
             {
-                if (Name == "some wardrobe trigger")
+                if (Name == _wardrobeTrigger)
                 {
                     SetWardrobeScreen(new WardrobeCtx
                     {
                         // set wardrobe here...
                     });
                 }
-                else if (Name == "some choose trigger")
+                else if (Name == _chooseTrigger)
                 {
                     SetChooseScreen(new ChooseCtx
                     {
@@ -105,7 +109,7 @@ namespace Novels.QueueProcess
                         }).ToArray(),
                         OnBackgroundClick = () =>
                         {
-                            SaveChoice(255);
+                            SaveChoice(_noChoice);
                             BubbleDone.TrySetResult();
                         }
                     });
@@ -114,7 +118,7 @@ namespace Novels.QueueProcess
 
             public async UniTask RunImmediate(byte choice)
             {
-                if (choice != 255)
+                if (choice != _noChoice)
                 {
                     SetCharacterView(Args, Choices[choice]);
                     SetChoice(choice);
@@ -124,11 +128,12 @@ namespace Novels.QueueProcess
 
             private void SetCharacterView(string[] args, Ink.Runtime.Choice choice)
             {
-                if (args.Any(a => a == "Выбери внешность"))
+                if (args.Any(a => a == StoryContracts.StoryChoiceActions.SelectAppearance))
                     SetMainCharacterView(choice.text);
-                if (args.Any(a => a == "Выбери одежду"))
+                if (args.Any(a => a == StoryContracts.StoryChoiceActions.SelectClothes))
                     SetMainCharacterClothes(choice.text);
-                if (args.Any(a => a == "Выбери прическу" || a == "Выбери причёску"))
+                if (args.Any(a => a == StoryContracts.StoryChoiceActions.SelectHairLegacy
+                    || a == StoryContracts.StoryChoiceActions.SelectHair))
                     SetMainCharacterHair(choice.text);
             }
         }

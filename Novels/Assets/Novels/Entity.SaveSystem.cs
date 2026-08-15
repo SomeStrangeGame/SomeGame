@@ -5,11 +5,13 @@ namespace Novels
 {
     internal partial class Entity
     {
+        private const string _saveChoiceFileName = "SaveChoice";
+
         private Save.Entity CreateSaveSystem()
         {
             var saveSystem = new Save.Entity(new Save.Entity.Ctx
             {
-                SaveChoiceFileName = "SaveChoice",
+                SaveChoiceFileName = _saveChoiceFileName,
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
             saveSystem.Init();
@@ -18,4 +20,3 @@ namespace Novels
         }
     }
 }
-

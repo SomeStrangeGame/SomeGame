@@ -7,6 +7,9 @@ namespace Novels
 {
     internal class SettingProcess : BaseDisposable
     {
+        private const string _newGameButtonId = "newGame";
+        private const string _continueGameButtonId = "continueGame";
+
         internal struct Ctx
         {
             internal ThreadPriority DefaultThreadPriority;
@@ -36,7 +39,7 @@ namespace Novels
             setting.SetDescription("Тайна затерянного мира");
 
             var newGame = new UniTaskCompletionSource();
-            setting.AddOrUpdateButton("newGame", "<b>Новая игра</b>", () =>
+            setting.AddOrUpdateButton(_newGameButtonId, "<b>Новая игра</b>", () =>
             {
                 _ctx.ClearSave();
                 newGame.TrySetResult();
@@ -45,7 +48,7 @@ namespace Novels
             var continueGame = new UniTaskCompletionSource();
             if (_ctx.ContainAnySave())
             {
-                setting.AddOrUpdateButton("continueGame", "<b>Продолжить</b>", () =>
+                setting.AddOrUpdateButton(_continueGameButtonId, "<b>Продолжить</b>", () =>
                 {
                     continueGame.TrySetResult();
                 });
@@ -59,4 +62,3 @@ namespace Novels
         }
     }
 }
-

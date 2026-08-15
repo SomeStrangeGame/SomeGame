@@ -20,8 +20,11 @@ namespace Novels.Character
         }
 
         private const string _mainCharacter = "MainCharacter";
-        private const string _wardrobe = "Wardrobe";
-        private const string _child = "маленькая";
+        private const string _childView = "Child";
+        private const string _backLayer = "Back";
+        private const string _middleLayer = "Middle";
+        private const string _frontLayer = "Front";
+        private const string _defaultHairColor = "Блонд";
 
         private readonly Ctx _ctx;
 
@@ -70,7 +73,7 @@ namespace Novels.Character
             var clothes = string.Empty;
             var hair = string.Empty;
             var isLeft = name == _ctx.MainCharacterName;
-            if (isLeft || name == _wardrobe)
+            if (isLeft || name == StoryContracts.StorySpeakers.Wardrobe)
             {
                 name = _mainCharacter;
                 view = _mainCharacterView;
@@ -102,9 +105,9 @@ namespace Novels.Character
             foreach (var arg in args)
             {
                 var customBody = arg;
-                if (arg.ToLower() == _child)
+                if (string.Equals(arg, StoryContracts.StoryArguments.Child, StringComparison.OrdinalIgnoreCase))
                 {
-                    view = $"{view}/Child";
+                    view = $"{view}/{_childView}";
                     customBody = null;
                 }
                 var currentMainBodySprite = await _ctx.GetSprite(_ctx.GetMainBodyPath(name, view, customBody));
@@ -123,9 +126,9 @@ namespace Novels.Character
             foreach (var arg in args)
             {
                 var emotion = arg;
-                if (arg.ToLower() == _child)
+                if (string.Equals(arg, StoryContracts.StoryArguments.Child, StringComparison.OrdinalIgnoreCase))
                 {
-                    view = $"{view}/Child";
+                    view = $"{view}/{_childView}";
                     emotion = null;
                 }
                 var emotionSprite = await _ctx.GetSprite(_ctx.GetEmotionPath(name, view, emotion));
@@ -142,12 +145,12 @@ namespace Novels.Character
             foreach (var arg in args)
             {
                 var customClothes = arg;
-                if (customClothes.ToLower() == _child)
+                if (string.Equals(customClothes, StoryContracts.StoryArguments.Child, StringComparison.OrdinalIgnoreCase))
                 {
                     clothes = null;
                     _currentCharacterClothes = null;
                 }
-                else if (customClothes.ToLower() == "убрать одежду")
+                else if (string.Equals(customClothes, StoryContracts.StoryArguments.RemoveClothes, StringComparison.OrdinalIgnoreCase))
                 {
                     customClothes = null;
                     _currentCharacterClothes = null;
@@ -163,70 +166,71 @@ namespace Novels.Character
             _screen.SetClothes(clothesSprite);
         }
 
-        private async UniTask SetHairs(string name, string hair, string[] args, string color = "Блонд")
+        private async UniTask SetHairs(string name, string hair, string[] args, string color = _defaultHairColor)
         {
             foreach (var arg in args)
             {
-                if (arg.ToLower() == _child)
+                if (string.Equals(arg, StoryContracts.StoryArguments.Child, StringComparison.OrdinalIgnoreCase))
                 {
                     _currentCharacterHair = null;
                     hair = null;
                 }
-                else if (arg.ToLower() == "убрать причёску" || arg.ToLower() == "убрать прическу")
+                else if (string.Equals(arg, StoryContracts.StoryArguments.RemoveHair, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(arg, StoryContracts.StoryArguments.RemoveHairLegacy, StringComparison.OrdinalIgnoreCase))
                 {
                     _currentCharacterHair = null;
                 }
-                var backHairSprite = await _ctx.GetSprite(_ctx.GetHairPath(name, arg, "Back", color));
+                var backHairSprite = await _ctx.GetSprite(_ctx.GetHairPath(name, arg, _backLayer, color));
                 if (backHairSprite != null) 
                 {
                     _currentCharacterHair = arg;
                     break;
                 }
-                var frontHairSprite = await _ctx.GetSprite(_ctx.GetHairPath(name, arg, "Front", color));
+                var frontHairSprite = await _ctx.GetSprite(_ctx.GetHairPath(name, arg, _frontLayer, color));
                 if (frontHairSprite != null) 
                 {
                     _currentCharacterHair = arg;
                     break;
                 }
             }
-            _screen.SetBackHairs(await _ctx.GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, "Back", color)));
-            _screen.SetFrontHairs(await _ctx.GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, "Front", color)));
+            _screen.SetBackHairs(await _ctx.GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, _backLayer, color)));
+            _screen.SetFrontHairs(await _ctx.GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, _frontLayer, color)));
         }
 
         private async UniTask SetAccessoiries(string name, string[] args)
         {
             foreach (var arg in args)
             {
-                if (arg.ToLower() == _child)
+                if (string.Equals(arg, StoryContracts.StoryArguments.Child, StringComparison.OrdinalIgnoreCase))
                 {
                     _currentCharacterAccessories = null;
                 }
-                else if (arg.ToLower() == "убрать аксессуар")
+                else if (string.Equals(arg, StoryContracts.StoryArguments.RemoveAccessory, StringComparison.OrdinalIgnoreCase))
                 {
                     _currentCharacterAccessories = null;
                 }
-                var backAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, "Back"));
+                var backAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, _backLayer));
                 if (backAccessoriesSprite != null) 
                 {
                     _currentCharacterAccessories = arg;
                     break;
                 }
-                var middleAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, "Middle"));
+                var middleAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, _middleLayer));
                 if (middleAccessoriesSprite != null) 
                 {
                     _currentCharacterAccessories = arg;
                     break;
                 }
-                var frontAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, "Front"));
+                var frontAccessoriesSprite = await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, arg, _frontLayer));
                 if (frontAccessoriesSprite != null) 
                 {
                     _currentCharacterAccessories = arg;
                     break;
                 }
             }
-            _screen.SetBackAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, "Back")));
-            _screen.SetMiddleAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, "Middle")));
-            _screen.SetFrontAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, "Front")));
+            _screen.SetBackAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, _backLayer)));
+            _screen.SetMiddleAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, _middleLayer)));
+            _screen.SetFrontAccessories(await _ctx.GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, _frontLayer)));
         }
 
         public async UniTask Hide()
@@ -240,4 +244,3 @@ namespace Novels.Character
         }
     }
 }
-

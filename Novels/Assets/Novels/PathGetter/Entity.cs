@@ -4,6 +4,12 @@ namespace Novels.PathGetter
 {
     public class Entity : BaseDisposable
     {
+        private const string _remoteAssetsRoot = "Assets/RemoteAssets";
+        private const string _prefabExtension = ".prefab";
+        private const string _imageExtension = ".png";
+        private const string _assetExtension = ".asset";
+        private const string _mainBodyAssetName = "Main";
+
         public struct Ctx
         {
             public string Prefix;
@@ -27,35 +33,35 @@ namespace Novels.PathGetter
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Loading/{assetName}.prefab";
+            return $"{_remoteAssetsRoot}/Loading/{assetName}{_prefabExtension}";
         }
 
         public string GetLoadingPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Loading/{_ctx.Prefix}/{assetName}.prefab";
+            return $"{_remoteAssetsRoot}/Loading/{_ctx.Prefix}/{assetName}{_prefabExtension}";
         }
 
         public string GetSettingPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Setting/{_ctx.Prefix}/{assetName}.prefab";
+            return $"{_remoteAssetsRoot}/Setting/{_ctx.Prefix}/{assetName}{_prefabExtension}";
         }
 
         public string GetBubblePrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Bubble/{_ctx.Prefix}/{assetName}.prefab";
+            return $"{_remoteAssetsRoot}/Bubble/{_ctx.Prefix}/{assetName}{_prefabExtension}";
         }
 
         public string GetLocationPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Location/{_ctx.Prefix}/{assetName}.prefab";
+            return $"{_remoteAssetsRoot}/Location/{_ctx.Prefix}/{assetName}{_prefabExtension}";
         }
 
         public string GetLocationImagePath(string assetName)
@@ -64,21 +70,21 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(assetName[0]);
             var otherText = assetName.Substring(1).ToLower();
-            return $"Assets/RemoteAssets/Location/{_ctx.Prefix}/Locations/{firstChar}{otherText}.png";
+            return $"{_remoteAssetsRoot}/Location/{_ctx.Prefix}/Locations/{firstChar}{otherText}{_imageExtension}";
         }
 
         public string GetCharacterPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/{assetName}.prefab";
+            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/{assetName}{_prefabExtension}";
         }
 
         public string GetCharacterMainBodyPath(string name, string view, string arg)
         {
             if (string.IsNullOrEmpty(name)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/{view}/{arg ?? "Main"}.png";
+            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/{view}/{arg ?? _mainBodyAssetName}{_imageExtension}";
         }
 
         public string GetCharacterEmotionPath(string name, string view, string arg)
@@ -88,7 +94,7 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/{view}/Emotions/{firstChar}{otherText}.png";
+            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/{view}/Emotions/{firstChar}{otherText}{_imageExtension}";
         }
 
         public string GetCharacterClothesPath(string name, string arg, int index)
@@ -98,7 +104,7 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}.png";
+            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}{_imageExtension}";
         }
 
         public string GetCharacterHairPath(string name, string arg, string direction, string color)
@@ -108,7 +114,7 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}.png";
+            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}{_imageExtension}";
         }
 
         public string GetCharacterAccessoriesPath(string name, string arg, string direction)
@@ -118,22 +124,21 @@ namespace Novels.PathGetter
 
             var firstChar = char.ToUpper(arg[0]);
             var otherText = arg.Substring(1).ToLower();
-            return $"Assets/RemoteAssets/Character/{_ctx.Prefix}/Characters/{name}/Accessories/{direction}/{firstChar}{otherText}.png";
+            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Accessories/{direction}/{firstChar}{otherText}{_imageExtension}";
         }
 
         public string GetNotificationPrefabAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Notification/{_ctx.Prefix}/{assetName}.prefab";
+            return $"{_remoteAssetsRoot}/Notification/{_ctx.Prefix}/{assetName}{_prefabExtension}";
         }
 
         public string GetLocalizationDataAssetName(string assetName)
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            return $"Assets/RemoteAssets/Localization/{_ctx.Prefix}/{assetName}.asset";
+            return $"{_remoteAssetsRoot}/Localization/{_ctx.Prefix}/{assetName}{_assetExtension}";
         }
     }
 }
-

@@ -8,6 +8,18 @@ namespace Novels.Location
 {
     public class Entity : BaseDisposable
     {
+        private const string _noVideo = "None";
+        private const int _cutSceneFallbackDelayMilliseconds = 3000;
+
+        private static class CameraCommands
+        {
+            internal const string FadeIn = "fadein";
+            internal const string LeftRight = "leftright";
+            internal const string RightLeft = "rightleft";
+            internal const string ToCenter = "tocenter";
+            internal const string ToLeft = "toleft";
+        }
+
         public struct Ctx
         {
             public GameObject ScreenPrefab;
@@ -38,7 +50,7 @@ namespace Novels.Location
         public async UniTask SetImage(string assetName, bool cutScene, bool forceNoVideo, string[] args)
         {
             Camera.allCameras[0].backgroundColor = Color.black;
-            if (args != null && args.Any(a => a == "white"))
+            if (args != null && args.Any(a => a == StoryContracts.StoryArguments.WhiteBackground))
                 Camera.allCameras[0].backgroundColor = Color.white;
 
             await _screen.HideImage();
@@ -53,7 +65,7 @@ namespace Novels.Location
 #if UNITY_EDITOR_OSX
             url = $"file:///Users/iantonishin/SomeGame/Novels/{url}";
 #endif
-            if (!forceNoVideo && url.Split("/").Last() != "None")
+            if (!forceNoVideo && url.Split("/").Last() != _noVideo)
             {
                 var videoReady = false;
                 var videoDone = false;
@@ -79,10 +91,10 @@ namespace Novels.Location
                     }
                     else
                     {
-                        await UniTask.Delay(3000);// add zoom effect in future
+                        await UniTask.Delay(_cutSceneFallbackDelayMilliseconds);// add zoom effect in future
                     }
                     
-                    if (!args.Contains("end"))
+                    if (!args.Contains(StoryContracts.StoryArguments.EndCutScene))
                         await SetImage(assetName, false, true, args);
                 }
             }
@@ -98,7 +110,7 @@ namespace Novels.Location
         public async UniTask SetImageImmediate(string assetName, bool cutScene, bool forceNoVideo, string[] args)
         {
             Camera.allCameras[0].backgroundColor = Color.black;
-            if (args != null && args.Any(a => a == "white"))
+            if (args != null && args.Any(a => a == StoryContracts.StoryArguments.WhiteBackground))
                 Camera.allCameras[0].backgroundColor = Color.white;
 
             _screen.HideImageImmediate();
@@ -113,7 +125,7 @@ namespace Novels.Location
 #if UNITY_EDITOR_OSX
             url = $"file:///Users/iantonishin/SomeGame/Novels/{url}";
 #endif
-            if (!forceNoVideo && url.Split("/").Last() != "None")
+            if (!forceNoVideo && url.Split("/").Last() != _noVideo)
             {
                 var videoReady = false;
                 var videoDone = false;
@@ -142,7 +154,7 @@ namespace Novels.Location
                         await UniTask.Yield();
                     }
                     
-                    if (!args.Contains("end"))
+                    if (!args.Contains(StoryContracts.StoryArguments.EndCutScene))
                         await SetImageImmediate(assetName, false, true, args);
                 }
             }
@@ -157,27 +169,27 @@ namespace Novels.Location
 
         public async UniTask SetCamera(string value)
         {
-            if (value.ToLower() == "fadein")
+            if (string.Equals(value, CameraCommands.FadeIn, StringComparison.OrdinalIgnoreCase))
             {
                 _screen.SetEffect(View.Screen.Effect.Dark).Forget();
                 return;
             }
-            if (value.ToLower() == "leftright")
+            if (string.Equals(value, CameraCommands.LeftRight, StringComparison.OrdinalIgnoreCase))
             {
                 await _screen.SetCamera(View.Screen.CameraEffect.LeftRight);
                 return;
             }
-            if (value.ToLower() == "rightleft")
+            if (string.Equals(value, CameraCommands.RightLeft, StringComparison.OrdinalIgnoreCase))
             {
                 await _screen.SetCamera(View.Screen.CameraEffect.RightLeft);
                 return;
             }
-            if (value.ToLower() == "tocenter")
+            if (string.Equals(value, CameraCommands.ToCenter, StringComparison.OrdinalIgnoreCase))
             {
                 await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
                 return;
             }
-            if (value.ToLower() == "ToLeft")
+            if (string.Equals(value, CameraCommands.ToLeft, StringComparison.OrdinalIgnoreCase))
             {
                 await _screen.SetCamera(View.Screen.CameraEffect.ToLeft);
                 return;
@@ -187,27 +199,27 @@ namespace Novels.Location
 
         public async UniTask SetCameraImmediate(string value)
         {
-            if (value.ToLower() == "fadein")
+            if (string.Equals(value, CameraCommands.FadeIn, StringComparison.OrdinalIgnoreCase))
             {
                 _screen.SetEffectImmediate(View.Screen.Effect.Dark);
                 return;
             }
-            if (value.ToLower() == "leftright")
+            if (string.Equals(value, CameraCommands.LeftRight, StringComparison.OrdinalIgnoreCase))
             {
                 _screen.SetCameraImmediate(View.Screen.CameraEffect.LeftRight);
                 return;
             }
-            if (value.ToLower() == "rightleft")
+            if (string.Equals(value, CameraCommands.RightLeft, StringComparison.OrdinalIgnoreCase))
             {
                 _screen.SetCameraImmediate(View.Screen.CameraEffect.RightLeft);
                 return;
             }
-            if (value.ToLower() == "tocenter")
+            if (string.Equals(value, CameraCommands.ToCenter, StringComparison.OrdinalIgnoreCase))
             {
                 _screen.SetCameraImmediate(View.Screen.CameraEffect.ToCenter);
                 return;
             }
-            if (value.ToLower() == "ToLeft")
+            if (string.Equals(value, CameraCommands.ToLeft, StringComparison.OrdinalIgnoreCase))
             {
                 _screen.SetCameraImmediate(View.Screen.CameraEffect.ToLeft);
                 return;
@@ -226,4 +238,3 @@ namespace Novels.Location
         }
     }
 }
-
