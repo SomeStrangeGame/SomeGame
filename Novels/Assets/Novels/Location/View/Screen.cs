@@ -55,9 +55,7 @@ namespace Novels.Location.View
 
         [SerializeField] private AnimationCurve _moveCurve;
 
-        private Action _onVideoReady;
-        private Action _onVideoDone;
-        private Action _onVideoFailed;
+        public VideoPlayer VideoPlayer => _video;
 
         public void SetImage(Sprite sprite)
         {
@@ -121,39 +119,10 @@ namespace Novels.Location.View
             _image.enabled = state;
         }
 
-        public void SetVideo(string url, bool loop, RenderTexture rt, float playbackSpeed, Action onVideoReady, Action onVideoDone, Action onVideoFailed)
+        public void SetVideoTexture(RenderTexture renderTexture)
         {
-            _video.GetComponentInChildren<RawImage>(true).texture = rt;
-            _video.targetTexture = rt;
-            _video.url = url;
-            _video.isLooping = loop;
-            _video.Play();
-            _video.playbackSpeed = playbackSpeed;
-
-            _onVideoReady = onVideoReady;
-            _onVideoDone = onVideoDone;
-            _onVideoFailed = onVideoFailed;
-            _video.prepareCompleted += OnVideoReady;
-            _video.loopPointReached += OnVideoDone;
-            _video.errorReceived += OnVideoFailed;
-        }
-
-        private void OnVideoReady(VideoPlayer source)
-        {
-            _onVideoReady?.Invoke();
-            _video.loopPointReached -= OnVideoReady;
-        }
-
-        private void OnVideoDone(VideoPlayer source)
-        {
-            _onVideoDone?.Invoke();
-            _video.loopPointReached -= OnVideoDone;
-        }
-
-        private void OnVideoFailed(VideoPlayer source, string message)
-        {
-            _onVideoFailed?.Invoke();
-            _video.errorReceived -= OnVideoFailed;
+            _videoImage.texture = renderTexture;
+            _video.targetTexture = renderTexture;
         }
 
         public void SetEnabledVideo(bool state)

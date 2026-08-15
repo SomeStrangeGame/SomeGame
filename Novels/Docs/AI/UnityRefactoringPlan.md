@@ -228,6 +228,18 @@ Confidence: Confirmed code defects; memory impact needs profiler/runtime validat
 
 Estimated size: Medium to large
 
+Status: Completed on 2026-08-15
+
+Implemented result:
+
+- `Novels.Location.VideoPlayback` is the single owner of VideoPlayer event subscriptions, the active RenderTexture, video preparation, completion, failure handling, and cleanup.
+- Video events are subscribed once and removed symmetrically during disposal.
+- Replacing, rejecting, timing out, or disposing playback stops the player and releases and destroys the active RenderTexture.
+- Video preparation has a 10-second timeout and observes the existing novel-session cancellation token.
+- `Location.Entity` uses one shared background path with a local `Live`/`Immediate` mode while preserving replay speed and cut-scene fallback behavior.
+- `Location.View.Screen` retains the serialized VideoPlayer but no longer owns callback state.
+- Camera lookup remains unchanged and can be addressed separately; no scene or prefab serialization changed.
+
 #### Evidence
 
 - `Location.Entity` creates a new `RenderTexture` for video playback in both live and replay paths.
