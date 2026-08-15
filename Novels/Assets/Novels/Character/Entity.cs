@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -30,13 +31,11 @@ namespace Novels.Character
         private readonly Ctx _ctx;
 
         private View.Screen _screen;
+        private readonly Dictionary<string, CharacterAppearanceState> _appearanceByCharacter = new();
 
         private string _mainCharacterView;
         private string _mainCharacterClothes;
-        private string _currentCharacterClothes;
         private string _mainCharacterHair;
-        private string _currentCharacterHair;
-        private string _currentCharacterAccessories;
 
 
         public Entity(Ctx ctx)
@@ -59,13 +58,13 @@ namespace Novels.Character
         public void SetMainCharacterClothes(string clothes)
         {
             _mainCharacterClothes = clothes;
-            _currentCharacterClothes = null;
+            GetAppearanceState(_mainCharacter).Clothes = null;
         }
 
         public void SetMainCharacterHair(string hair)
         {
             _mainCharacterHair = hair;
-            _currentCharacterHair = null;
+            GetAppearanceState(_mainCharacter).Hair = null;
         }
 
         public async UniTask SetImage(StoryContracts.CharacterRenderRequest request)
@@ -84,12 +83,21 @@ namespace Novels.Character
                 hair = _mainCharacterHair;
             }
 
-            await UniTask.WhenAll(
-                SetMainBody(name, view, presentation),
-                SetEmotion(name, view, presentation),
-                SetClothes(name, clothes, presentation),
-                SetHairs(name, hair, presentation),
-                SetAccessoiries(name, presentation));
+            var appearance = GetAppearanceState(name ?? string.Empty);
+
+            var (mainBody, emotion, clothesSprite, hairSprites, accessorySprites) = await UniTask.WhenAll(
+                ResolveMainBody(name, view, presentation),
+                ResolveEmotion(name, view, presentation),
+                ResolveClothes(name, clothes, presentation, appearance),
+                ResolveHair(name, hair, presentation, appearance),
+                ResolveAccessories(name, presentation, appearance));
+
+            Apply(new CharacterSpriteSet(
+                mainBody,
+                emotion,
+                clothesSprite,
+                hairSprites,
+                accessorySprites));
         }
 
         public async UniTask Show(StoryContracts.StoryCharacterPosition position)
@@ -117,7 +125,17 @@ namespace Novels.Character
             return _ctx.GetSprite(path).AttachExternalCancellation(_ctx.CancellationToken);
         }
 
-        private async UniTask SetMainBody(
+        private CharacterAppearanceState GetAppearanceState(string identity)
+        {
+            if (_appearanceByCharacter.TryGetValue(identity, out var appearance))
+                return appearance;
+
+            appearance = new CharacterAppearanceState();
+            _appearanceByCharacter.Add(identity, appearance);
+            return appearance;
+        }
+
+        private async UniTask<Sprite> ResolveMainBody(
             string name,
             string view,
             StoryContracts.CharacterPresentation presentation)
@@ -140,15 +158,14 @@ namespace Novels.Character
                     break;
                 }
             }
-            _screen.SetMainBody(mainBodySprite);
+            return mainBodySprite;
         }
 
-        private async UniTask SetEmotion(
+        private async UniTask<Sprite> ResolveEmotion(
             string name,
             string view,
             StoryContracts.CharacterPresentation presentation)
         {
-            _screen.SetEmotion(null);
             if (presentation.IsChild)
                 view = $"{view}/{_childView}";
 
@@ -156,27 +173,27 @@ namespace Novels.Character
             {
                 var emotionSprite = await GetSprite(_ctx.GetEmotionPath(name, view, candidate));
                 if (emotionSprite != null)
-                {
-                    _screen.SetEmotion(emotionSprite);
-                    break;
-                }
+                    return emotionSprite;
             }
+
+            return null;
         }
 
-        private async UniTask SetClothes(
+        private async UniTask<Sprite> ResolveClothes(
             string name,
             string clothes,
             StoryContracts.CharacterPresentation presentation,
+            CharacterAppearanceState appearance,
             int clothesIndex = 1)
         {
             if (presentation.IsChild)
             {
                 clothes = null;
-                _currentCharacterClothes = null;
+                appearance.Clothes = null;
             }
             else if (presentation.RemoveClothes)
             {
-                _currentCharacterClothes = null;
+                appearance.Clothes = null;
             }
 
             foreach (var candidate in presentation.AssetCandidates)
@@ -184,28 +201,28 @@ namespace Novels.Character
                 var sprite = await GetSprite(_ctx.GetClothesPath(name, candidate, clothesIndex));
                 if (sprite != null) 
                 {
-                    _currentCharacterClothes = candidate;
+                    appearance.Clothes = candidate;
                     break;
                 }
             }
-            var clothesSprite = await GetSprite(_ctx.GetClothesPath(name, _currentCharacterClothes ?? clothes, clothesIndex));
-            _screen.SetClothes(clothesSprite);
+            return await GetSprite(_ctx.GetClothesPath(name, appearance.Clothes ?? clothes, clothesIndex));
         }
 
-        private async UniTask SetHairs(
+        private async UniTask<CharacterHairSprites> ResolveHair(
             string name,
             string hair,
             StoryContracts.CharacterPresentation presentation,
+            CharacterAppearanceState appearance,
             string color = _defaultHairColor)
         {
             if (presentation.IsChild)
             {
-                _currentCharacterHair = null;
+                appearance.Hair = null;
                 hair = null;
             }
             else if (presentation.RemoveHair)
             {
-                _currentCharacterHair = null;
+                appearance.Hair = null;
             }
 
             foreach (var candidate in presentation.AssetCandidates)
@@ -213,51 +230,69 @@ namespace Novels.Character
                 var backHairSprite = await GetSprite(_ctx.GetHairPath(name, candidate, _backLayer, color));
                 if (backHairSprite != null) 
                 {
-                    _currentCharacterHair = candidate;
+                    appearance.Hair = candidate;
                     break;
                 }
                 var frontHairSprite = await GetSprite(_ctx.GetHairPath(name, candidate, _frontLayer, color));
                 if (frontHairSprite != null) 
                 {
-                    _currentCharacterHair = candidate;
+                    appearance.Hair = candidate;
                     break;
                 }
             }
-            _screen.SetBackHairs(await GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, _backLayer, color)));
-            _screen.SetFrontHairs(await GetSprite(_ctx.GetHairPath(name, _currentCharacterHair ?? hair, _frontLayer, color)));
+            var resolvedHair = appearance.Hair ?? hair;
+            var (back, front) = await UniTask.WhenAll(
+                GetSprite(_ctx.GetHairPath(name, resolvedHair, _backLayer, color)),
+                GetSprite(_ctx.GetHairPath(name, resolvedHair, _frontLayer, color)));
+            return new CharacterHairSprites(back, front);
         }
 
-        private async UniTask SetAccessoiries(
+        private async UniTask<CharacterAccessorySprites> ResolveAccessories(
             string name,
-            StoryContracts.CharacterPresentation presentation)
+            StoryContracts.CharacterPresentation presentation,
+            CharacterAppearanceState appearance)
         {
             if (presentation.IsChild || presentation.RemoveAccessory)
-                _currentCharacterAccessories = null;
+                appearance.Accessories = null;
 
             foreach (var candidate in presentation.AssetCandidates)
             {
                 var backAccessoriesSprite = await GetSprite(_ctx.GetAccessoriesPath(name, candidate, _backLayer));
                 if (backAccessoriesSprite != null) 
                 {
-                    _currentCharacterAccessories = candidate;
+                    appearance.Accessories = candidate;
                     break;
                 }
                 var middleAccessoriesSprite = await GetSprite(_ctx.GetAccessoriesPath(name, candidate, _middleLayer));
                 if (middleAccessoriesSprite != null) 
                 {
-                    _currentCharacterAccessories = candidate;
+                    appearance.Accessories = candidate;
                     break;
                 }
                 var frontAccessoriesSprite = await GetSprite(_ctx.GetAccessoriesPath(name, candidate, _frontLayer));
                 if (frontAccessoriesSprite != null) 
                 {
-                    _currentCharacterAccessories = candidate;
+                    appearance.Accessories = candidate;
                     break;
                 }
             }
-            _screen.SetBackAccessories(await GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, _backLayer)));
-            _screen.SetMiddleAccessories(await GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, _middleLayer)));
-            _screen.SetFrontAccessories(await GetSprite(_ctx.GetAccessoriesPath(name, _currentCharacterAccessories, _frontLayer)));
+            var (back, middle, front) = await UniTask.WhenAll(
+                GetSprite(_ctx.GetAccessoriesPath(name, appearance.Accessories, _backLayer)),
+                GetSprite(_ctx.GetAccessoriesPath(name, appearance.Accessories, _middleLayer)),
+                GetSprite(_ctx.GetAccessoriesPath(name, appearance.Accessories, _frontLayer)));
+            return new CharacterAccessorySprites(back, middle, front);
+        }
+
+        private void Apply(CharacterSpriteSet sprites)
+        {
+            _screen.SetMainBody(sprites.MainBody);
+            _screen.SetEmotion(sprites.Emotion);
+            _screen.SetClothes(sprites.Clothes);
+            _screen.SetBackHairs(sprites.Hair.Back);
+            _screen.SetFrontHairs(sprites.Hair.Front);
+            _screen.SetBackAccessories(sprites.Accessories.Back);
+            _screen.SetMiddleAccessories(sprites.Accessories.Middle);
+            _screen.SetFrontAccessories(sprites.Accessories.Front);
         }
 
         public async UniTask Hide()

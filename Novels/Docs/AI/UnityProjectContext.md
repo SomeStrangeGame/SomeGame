@@ -49,6 +49,7 @@
 - `StoryProcessor.ReadNext()` exposes typed `Content`, `Choices`, and `Completed` control flow. `NovelProcess` handles completion before parsing and terminates without adding an artificial queue item.
 - `EntryPoint` owns the cancellation token for one enabled novel session and cancels it before root disposal. Runtime feature entities destroy the screens and audio objects they instantiate, while session-bound loading, animation, request, wait, and execution operations observe cancellation.
 - `Location.VideoPlayback` owns VideoPlayer subscriptions and the active RenderTexture. It prepares video with timeout and session cancellation, releases GPU resources on replacement/disposal, and reports readiness/completion/failure to the unified live/immediate background flow in `Location.Entity`.
+- `Character.Entity` owns per-character appearance state keyed by resolved character identity. It resolves a complete sprite set before touching the View, and `ShowCharacterQueue` rebuilds the same character presentation in live and replay modes while varying only the show animation.
 - Lifetime ownership uses custom `BaseDisposable` and `.AddTo(this)`; async APIs use UniTask.
 - Namespaces follow feature folders. Private fields are `_camelCase`; serialized references are `[SerializeField] private`; braces use Allman style; XML docs and nullable annotations are absent.
 

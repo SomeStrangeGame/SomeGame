@@ -291,6 +291,17 @@ Confidence: Likely correctness risk
 
 Estimated size: Medium
 
+Status: Completed on 2026-08-15
+
+Implemented result:
+
+- `Character.Entity` stores clothes, hair, and accessory selection in a `CharacterAppearanceState` keyed by resolved character identity for the lifetime of the novel session.
+- Main-character and Wardrobe requests share the explicit `MainCharacter` identity, while other speakers retain independent state by authored name.
+- Main-character choice setters invalidate only the corresponding main-character resolved state.
+- Sprite lookup produces a complete `CharacterSpriteSet`; the View is updated only after all sprite groups finish resolving.
+- `ShowCharacterQueue` resolves and applies the same sprite state in live and replay modes; only animated versus immediate presentation differs.
+- Scene, prefab, story syntax, asset path construction, and assembly dependencies remain unchanged.
+
 #### Evidence
 
 - `Character.Entity` stores one `_currentCharacterClothes`, `_currentCharacterHair`, and `_currentCharacterAccessories` value for all non-main speakers.

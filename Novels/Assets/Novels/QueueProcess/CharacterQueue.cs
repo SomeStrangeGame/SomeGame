@@ -47,13 +47,14 @@ namespace Novels.QueueProcess
 
             public async readonly UniTask Run(QueueExecutionContext context)
             {
+                await CharacterSetImage(Character);
+
                 if (context.Mode == QueueExecutionMode.Replay)
                 {
                     CharacterShowImmediate(Character.Position);
                     return;
                 }
 
-                await CharacterSetImage(Character);
                 if (IsNewCharacter)
                     await CharacterShow(Character.Position);
             }
