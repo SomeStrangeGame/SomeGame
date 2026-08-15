@@ -12,6 +12,9 @@ namespace Novels.Save
         public struct Ctx
         {
             public string SaveChoiceFileName;
+            public Func<string, byte[]> ReadBytes;
+            public Action<string, byte[]> WriteBytes;
+            public Action<string> Delete;
             public Action<(LogType type, string message)> OnLog;
         }
 
@@ -33,16 +36,17 @@ namespace Novels.Save
             _initialChoices = Array.Empty<byte>();
             _initialChoicePosition = 0;
 
-            using (var cache = new Cache.Entity())
+            try
             {
-                try
-                {
-                    _save = cache.ByteArrayFromCash(_ctx.SaveChoiceFileName).ToList();
-                }
-                catch
-                {
-                    _ctx.OnLog((LogType.Log, "No save file"));
-                }
+                _save = _ctx.ReadBytes(_ctx.SaveChoiceFileName).ToList();
+            }
+            catch (FileNotFoundException)
+            {
+                _ctx.OnLog((LogType.Log, "No save file"));
+            }
+            catch (Exception exception)
+            {
+                _ctx.OnLog((LogType.Error, $"Failed to read save file: {exception.Message}"));
             }
             _initialChoices = _save.ToArray();
         }
@@ -58,27 +62,12 @@ namespace Novels.Save
         public void SaveChoice(byte unit = 255)
         {
             _save.Add(unit);
-            using( var cache = new Cache.Entity())
-            {
-                cache.ByteArrayToCash(_save.ToArray(), _ctx.SaveChoiceFileName);
-            }
+            _ctx.WriteBytes(_ctx.SaveChoiceFileName, _save.ToArray());
         }
 
         public void Clear()
         {
-            var cachPath = $"{Application.persistentDataPath}/CachedFiles/Remote";
-            #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            cachPath = $"file://{cachPath}";
-            #endif
-            if (Directory.Exists(cachPath))
-            {
-                Directory.Delete(cachPath, true);
-                Debug.Log("Clear cache files done!");
-            }
-            else
-            {
-                Debug.Log($"No cache files in {cachPath}");
-            }
+            _ctx.Delete(_ctx.SaveChoiceFileName);
             _save.Clear();
             _initialChoices = Array.Empty<byte>();
             _initialChoicePosition = 0;

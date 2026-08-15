@@ -9,9 +9,13 @@ namespace Novels
 
         private Save.Entity CreateSaveSystem()
         {
+            var cache = new Cache.Entity().AddTo(this);
             var saveSystem = new Save.Entity(new Save.Entity.Ctx
             {
                 SaveChoiceFileName = _saveChoiceFileName,
+                ReadBytes = cache.ReadBytes,
+                WriteBytes = cache.WriteBytes,
+                Delete = cache.Delete,
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
             saveSystem.Init();

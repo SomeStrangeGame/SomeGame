@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -9,6 +10,7 @@ namespace Novels.Notification
         public struct Ctx
         {
             public GameObject NotificationPrefab;
+            public CancellationToken CancellationToken;
         }
 
         private bool _lastNotifInProcess;
@@ -32,21 +34,28 @@ namespace Novels.Notification
 
         public async UniTask Show(string text)
         {
-            while(_lastNotifInProcess) await UniTask.NextFrame();
+            while(_lastNotifInProcess) await UniTask.NextFrame(_ctx.CancellationToken);
             
             _lastNotifInProcess = true;
             _screen.SetText(text);
             
-            await _screen.Show();
+            await _screen.Show(_ctx.CancellationToken);
             var timer = 3f;
             while(timer > 0)
             {
-                await UniTask.Yield();
+                await UniTask.Yield(_ctx.CancellationToken);
                 timer -= Time.deltaTime;
             }
-            await _screen.Hide();
+            await _screen.Hide(_ctx.CancellationToken);
             _lastNotifInProcess = false;
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            _lastNotifInProcess = false;
+            if (_screen != null)
+                GameObject.Destroy(_screen.gameObject);
         }
     }
 }
-

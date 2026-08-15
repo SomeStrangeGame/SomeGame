@@ -17,7 +17,8 @@ namespace Novels
                 GetEmotionPath = GetEmotionPath,
                 GetClothesPath = GetClothesPath,
                 GetHairPath = GetHairPath,
-                GetAccessoriesPath = GetAccessoriesPath
+                GetAccessoriesPath = GetAccessoriesPath,
+                CancellationToken = _ctx.CancellationToken,
             }).AddTo(this);
             character.Init();
 

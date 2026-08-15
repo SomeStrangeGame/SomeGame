@@ -15,12 +15,12 @@
   <Project Path="Novels.Location.View.csproj" />
   <Project Path="Novels.PathGetter.csproj" />
   <Project Path="Novels.StoryQueue.csproj" />
+  <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Bundles.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="LoadingPriority.csproj" />
   <Project Path="Novels.Audio.csproj" />
   <Project Path="Setting.View.csproj" />
-  <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Waiting.csproj" />
   <Project Path="Novels.Character.View.csproj" />
   <Project Path="Novels.Save.csproj" />

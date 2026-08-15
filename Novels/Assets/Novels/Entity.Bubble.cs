@@ -11,6 +11,7 @@ namespace Novels
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
                 BubblePrefab = bubblePrefab,
+                CancellationToken = _ctx.CancellationToken,
             }).AddTo(this);
             bubble.Init();
 

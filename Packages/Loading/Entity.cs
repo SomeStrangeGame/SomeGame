@@ -1,6 +1,7 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
 using System;
+using System.Threading;
 using UnityEngine;
 
 namespace Loading
@@ -10,6 +11,7 @@ namespace Loading
         public struct Ctx
         {
             public GameObject BundledPrefab;
+            public CancellationToken CancellationToken;
         }
 
         private View.Screen _screen;
@@ -28,8 +30,8 @@ namespace Loading
             _screen = screenGO.GetComponent<View.Screen>();
         }
 
-        public async UniTask Show() => await _screen.Show();
-        public async UniTask Hide() => await _screen.Hide();
+        public async UniTask Show() => await _screen.Show(_ctx.CancellationToken);
+        public async UniTask Hide() => await _screen.Hide(_ctx.CancellationToken);
 
         protected override void OnDispose()
         {

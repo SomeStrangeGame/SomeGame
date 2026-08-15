@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
@@ -96,7 +97,7 @@ namespace Novels.Character.View
             _canvasGroup.alpha = 1f;
         }
 
-        public async UniTask ShowImage(bool? isLeft)
+        public async UniTask ShowImage(bool? isLeft, CancellationToken cancellationToken)
         {
             ClearImagesIfNeed();
 
@@ -132,7 +133,7 @@ namespace Novels.Character.View
                 _canvasGroup.transform.localPosition = Vector3.Lerp(startPosition, endPosition, 1f - (timer / _showHideImageDuration));
                 _canvasGroup.alpha = 1f - (timer / _showHideImageDuration);
                 timer -= Time.deltaTime;
-                await UniTask.Yield();
+                await UniTask.Yield(cancellationToken);
             }
             _canvasGroup.transform.localPosition = endPosition;
             _canvasGroup.alpha = 1f;
@@ -146,7 +147,7 @@ namespace Novels.Character.View
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public async UniTask HideImage()
+        public async UniTask HideImage(CancellationToken cancellationToken)
         {
             ClearImagesIfNeed();
 
@@ -158,7 +159,7 @@ namespace Novels.Character.View
             {
                 _canvasGroup.alpha = timer / _showHideImageDuration;
                 timer -= Time.deltaTime;
-                await UniTask.Yield();
+                await UniTask.Yield(cancellationToken);
             }
 
             _canvasGroup.alpha = 0f;
@@ -178,4 +179,3 @@ namespace Novels.Character.View
         }
     }
 }
-

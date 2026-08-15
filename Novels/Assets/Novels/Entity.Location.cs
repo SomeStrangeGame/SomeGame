@@ -14,6 +14,7 @@ namespace Novels
                 ScreenPrefab = screenPrefab,
                 GetSprite = getSprite,
                 GetVideoURL = getVideoURL,
+                CancellationToken = _ctx.CancellationToken,
 
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
@@ -23,4 +24,3 @@ namespace Novels
         }
     }
 }
-

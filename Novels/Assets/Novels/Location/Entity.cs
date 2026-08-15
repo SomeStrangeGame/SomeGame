@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -16,6 +17,7 @@ namespace Novels.Location
             public GameObject ScreenPrefab;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string> GetVideoURL;
+            public CancellationToken CancellationToken;
 
             public Action<(LogType type, string message)> OnLog;
         }
@@ -60,18 +62,15 @@ namespace Novels.Location
                 ? Color.white
                 : Color.black;
 
-            await _screen.HideImage();
+            await _screen.HideImage(_ctx.CancellationToken);
 
             _screen.ResetCamera();
             _screen.ResetEffect();
 
-            var sprite = await _ctx.GetSprite(assetName);
+            var sprite = await _ctx.GetSprite(assetName).AttachExternalCancellation(_ctx.CancellationToken);
             _screen.SetImage(sprite);
 
             var url = _ctx.GetVideoURL(assetName);
-#if UNITY_EDITOR_OSX
-            url = $"file:///Users/iantonishin/SomeGame/Novels/{url}";
-#endif
             if (!forceNoVideo && url.Split("/").Last() != _noVideo)
             {
                 var videoReady = false;
@@ -82,23 +81,23 @@ namespace Novels.Location
                 rt.Create();
                 var playbackSpeed = Time.timeScale;
                 _screen.SetVideo(url, !cutScene, rt, playbackSpeed, () => videoReady = true, () => videoDone = true, () => videoError = true);
-                while (!videoError && !videoReady) await UniTask.Yield();
+                while (!videoError && !videoReady) await UniTask.Yield(_ctx.CancellationToken);
 
                 _screen.SetEnabledImage(videoError);
                 _screen.SetEnabledVideo(!videoError);
 
-                await _screen.ShowImage();
+                await _screen.ShowImage(_ctx.CancellationToken);
 
                 if (cutScene)
                 {
                     if (!videoError)
                     {
                         while (!videoDone)
-                            await UniTask.Yield();
+                            await UniTask.Yield(_ctx.CancellationToken);
                     }
                     else
                     {
-                        await UniTask.Delay(_cutSceneFallbackDelayMilliseconds);// add zoom effect in future
+                        await UniTask.Delay(_cutSceneFallbackDelayMilliseconds, cancellationToken: _ctx.CancellationToken);// add zoom effect in future
                     }
                     
                     if (!presentation.KeepFinalVideoFrame)
@@ -110,7 +109,7 @@ namespace Novels.Location
                 _screen.SetEnabledImage(true);
                 _screen.SetEnabledVideo(false);
 
-                await _screen.ShowImage();
+                await _screen.ShowImage(_ctx.CancellationToken);
             }
         }
 
@@ -141,13 +140,10 @@ namespace Novels.Location
             _screen.ResetCamera();
             _screen.ResetEffect();
 
-            var sprite = await _ctx.GetSprite(assetName);
+            var sprite = await _ctx.GetSprite(assetName).AttachExternalCancellation(_ctx.CancellationToken);
             _screen.SetImage(sprite);
 
             var url = _ctx.GetVideoURL(assetName);
-#if UNITY_EDITOR_OSX
-            url = $"file:///Users/iantonishin/SomeGame/Novels/{url}";
-#endif
             if (!forceNoVideo && url.Split("/").Last() != _noVideo)
             {
                 var videoReady = false;
@@ -158,7 +154,7 @@ namespace Novels.Location
                 rt.Create();
                 var playbackSpeed = cutScene ? Time.timeScale * 5f : Time.timeScale;
                 _screen.SetVideo(url, !cutScene, rt, playbackSpeed, () => videoReady = true, () => videoDone = true, () => videoError = true);
-                while (!videoError && !videoReady) await UniTask.Yield();
+                while (!videoError && !videoReady) await UniTask.Yield(_ctx.CancellationToken);
 
                 _screen.SetEnabledImage(videoError);
                 _screen.SetEnabledVideo(!videoError);
@@ -170,11 +166,11 @@ namespace Novels.Location
                     if (!videoError)
                     {
                         while (!videoDone)
-                            await UniTask.Yield();
+                            await UniTask.Yield(_ctx.CancellationToken);
                     }
                     else
                     {
-                        await UniTask.Yield();
+                        await UniTask.Yield(_ctx.CancellationToken);
                     }
                     
                     if (!presentation.KeepFinalVideoFrame)
@@ -194,13 +190,13 @@ namespace Novels.Location
         {
             if (action == StoryContracts.StoryCameraAction.FadeIn)
             {
-                _screen.SetEffect(View.Screen.Effect.Dark).Forget();
+                await _screen.SetEffect(View.Screen.Effect.Dark, _ctx.CancellationToken);
                 return;
             }
 
             if (TryGetCameraEffect(action, out var effect))
             {
-                await _screen.SetCamera(effect);
+                await _screen.SetCamera(effect, _ctx.CancellationToken);
                 return;
             }
 
@@ -258,7 +254,7 @@ namespace Novels.Location
 
         public async UniTask SetDialogue(StoryContracts.StoryDialogueAlignment alignment)
         {
-            await _screen.SetDialogue(ToViewAlignment(alignment));
+            await _screen.SetDialogue(ToViewAlignment(alignment), _ctx.CancellationToken);
         }
 
         public async UniTask SetDialogueImmediate(StoryContracts.StoryDialogueAlignment alignment)
@@ -275,6 +271,13 @@ namespace Novels.Location
                 StoryContracts.StoryDialogueAlignment.Right => TextAlignment.Right,
                 _ => TextAlignment.Center,
             };
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            if (_screen != null)
+                GameObject.Destroy(_screen.gameObject);
         }
     }
 }

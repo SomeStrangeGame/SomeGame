@@ -11,6 +11,7 @@ namespace Novels
             var loadingCtx = new Loading.Entity.Ctx
             {
                 BundledPrefab = bundledPrefab,
+                CancellationToken = _ctx.CancellationToken,
             };
             var loading = new Loading.Entity(loadingCtx).AddTo(this);
             loading.Init();
@@ -23,6 +24,7 @@ namespace Novels
             var loadingCtx = new Loading.Entity.Ctx
             {
                 BundledPrefab = bundledPrefab,
+                CancellationToken = _ctx.CancellationToken,
             };
             var loading = new Loading.Entity(loadingCtx).AddTo(this);
             loading.Init();
@@ -31,4 +33,3 @@ namespace Novels
         }
     }
 }
-

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Disposable;
 
 namespace Novels
@@ -12,10 +13,10 @@ namespace Novels
                 GetAudioURL = getAudioURL,
                 LoadAudioToDict = loadAudionToDict,
                 AudioMixer = _ctx.Data.AudioMixer,
+                CancellationToken = _ctx.CancellationToken,
 
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
         }
     }
 }
-

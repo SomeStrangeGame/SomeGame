@@ -11,6 +11,7 @@ namespace Novels
             var notification = new Notification.Entity(new Notification.Entity.Ctx
             {
                 NotificationPrefab = notificationPrefab,
+                CancellationToken = _ctx.CancellationToken,
             }).AddTo(this);
             notification.Init();
 
@@ -18,4 +19,3 @@ namespace Novels
         }
     }
 }
-

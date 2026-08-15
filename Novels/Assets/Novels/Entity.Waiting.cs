@@ -6,8 +6,10 @@ namespace Novels
     {
         private Waiting.Entity CreateWaiting()
         {
-            return new Waiting.Entity().AddTo(this);
+            return new Waiting.Entity(new Waiting.Entity.Ctx
+            {
+                CancellationToken = _ctx.CancellationToken,
+            }).AddTo(this);
         }
     }
 }
-

@@ -1,3 +1,4 @@
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
@@ -15,7 +16,7 @@ namespace Loading.View
             _marker.rotation *= Quaternion.Euler(_markerSpeed * Time.unscaledDeltaTime * Vector3.up);
         }
 
-        public async UniTask Show()
+        public async UniTask Show(CancellationToken cancellationToken)
         {
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
@@ -25,13 +26,13 @@ namespace Loading.View
             {
                 _canvasGroup.alpha = 1f - (timer / _showHideDuration);
                 timer -= Time.unscaledDeltaTime;
-                await UniTask.Yield();
+                await UniTask.Yield(cancellationToken);
             }
 
             _canvasGroup.alpha = 1f;
         }
 
-        public async UniTask Hide()
+        public async UniTask Hide(CancellationToken cancellationToken)
         {
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
@@ -41,7 +42,7 @@ namespace Loading.View
             {
                 _canvasGroup.alpha = timer / _showHideDuration;
                 timer -= Time.unscaledDeltaTime;
-                await UniTask.Yield();
+                await UniTask.Yield(cancellationToken);
             }
 
             _canvasGroup.alpha = 0f;
@@ -49,4 +50,3 @@ namespace Loading.View
         }
     }
 }
-

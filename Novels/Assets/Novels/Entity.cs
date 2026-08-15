@@ -4,6 +4,7 @@ using Disposable;
 using Localization;
 using UnityEngine;
 using UnityEngine.Audio;
+using CancellationToken = System.Threading.CancellationToken;
 
 namespace Novels
 {
@@ -50,6 +51,7 @@ namespace Novels
         internal struct Ctx
         {
             internal Data Data;
+            internal CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
         }
 
@@ -72,11 +74,11 @@ namespace Novels
 
             var bundles = CreateBundles();
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await bundles.GetAssetBundle(_ctx.Data.NovelsLoadingBundleName);
+                await bundles.GetAssetBundle(_ctx.Data.NovelsLoadingBundleName).AttachExternalCancellation(_ctx.CancellationToken);
 
             GameObject mainLoadingScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                mainLoadingScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetMainLoadingPrefabAssetName(_screenAssetName));
+                mainLoadingScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetMainLoadingPrefabAssetName(_screenAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var mainLoading = CreateMainLoading(mainLoadingScreen);
 
             //preloading init
@@ -92,15 +94,15 @@ namespace Novels
                 bundles.GetAssetBundle(_ctx.Data.NovelsLocalizationBundleName)
             );
 
-            await mainLoading.Show();
+            await mainLoading.Show().AttachExternalCancellation(_ctx.CancellationToken);
 
             //preloading loading first
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await firstPreloading;
+                await firstPreloading.AttachExternalCancellation(_ctx.CancellationToken);
 
             GameObject settingsScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                settingsScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, pathGetter.GetSettingPrefabAssetName(_screenAssetName));
+                settingsScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsSettingBundleName, pathGetter.GetSettingPrefabAssetName(_screenAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var settingProcessCtx = new SettingProcess.Ctx
             {
                 DefaultThreadPriority = _defaultThreadPriority,
@@ -111,30 +113,30 @@ namespace Novels
                 ClearSave = () => saveSystem.Clear(),
             };
             var settingProcess = new SettingProcess(settingProcessCtx).AddTo(this);
-            await settingProcess.ShowSettingProcess();
+            await settingProcess.ShowSettingProcess().AttachExternalCancellation(_ctx.CancellationToken);
 
             GameObject loadingScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                loadingScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetLoadingPrefabAssetName(_screenAssetName));
+                loadingScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLoadingBundleName, pathGetter.GetLoadingPrefabAssetName(_screenAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var loading = CreateLoading(loadingScreen);
-            await loading.Show();
+            await loading.Show().AttachExternalCancellation(_ctx.CancellationToken);
 
-            await mainLoading.Hide();
+            await mainLoading.Hide().AttachExternalCancellation(_ctx.CancellationToken);
 
             //preloading loading second
             var storyText = string.Empty;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
             {
-                var (storyTextTemp, _, _, _, _, _) = await secondPreloading;
+                var (storyTextTemp, _, _, _, _, _) = await secondPreloading.AttachExternalCancellation(_ctx.CancellationToken);
                 storyText = storyTextTemp;
             }
 
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                await bundles.LoadVideosToDict();
+                await bundles.LoadVideosToDict().AttachExternalCancellation(_ctx.CancellationToken);
 
             LocalizationData localizationData = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                localizationData = await bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, pathGetter.GetLocalizationDataAssetName(_localizationDataAssetName));
+                localizationData = await bundles.GetBundledSO<LocalizationData>(_ctx.Data.NovelsLocalizationBundleName, pathGetter.GetLocalizationDataAssetName(_localizationDataAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var localization = CreateLocalization(localizationData);
 
             var storyProcessor = CreateStoryProcessor(storyText);
@@ -142,34 +144,34 @@ namespace Novels
 
             GameObject bubblePrefab = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                bubblePrefab = await bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, pathGetter.GetBubblePrefabAssetName(_screenAssetName));
+                bubblePrefab = await bundles.GetBundledPrefab(_ctx.Data.NovelsBubbleBundleName, pathGetter.GetBubblePrefabAssetName(_screenAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var bubble = CreateBubble(bubblePrefab);
 
             GameObject locationScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                locationScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationPrefabAssetName(_screenAssetName));
+                locationScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationPrefabAssetName(_screenAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var location = await CreateLocation(locationScreen, async a =>
                 {
                     Sprite locationImage = null;
                     using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                        locationImage = await bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationImagePath(a));
+                        locationImage = await bundles.GetBundledSprite(_ctx.Data.NovelsLocationBundleName, pathGetter.GetLocationImagePath(a)).AttachExternalCancellation(_ctx.CancellationToken);
                     return locationImage;
                 }, a => bundles.GetVideoURL(a));
 
             GameObject characterScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                characterScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, pathGetter.GetCharacterPrefabAssetName(_screenAssetName));
+                characterScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsCharacterBundleName, pathGetter.GetCharacterPrefabAssetName(_screenAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var character = CreateCharacter(characterScreen, async a => 
                 {
                     Sprite characterSprite = null;
                     using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                        characterSprite = await bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, a);
+                        characterSprite = await bundles.GetBundledSprite(_ctx.Data.NovelsCharacterBundleName, a).AttachExternalCancellation(_ctx.CancellationToken);
                     return characterSprite;
                 }, pathGetter.GetCharacterMainBodyPath, pathGetter.GetCharacterEmotionPath, pathGetter.GetCharacterClothesPath, pathGetter.GetCharacterHairPath, pathGetter.GetCharacterAccessoriesPath);
 
             GameObject notificationScreen = null;
             using (new LoadingPriority.Entity(ThreadPriority.High, _defaultThreadPriority))
-                notificationScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsNotificationBundleName, pathGetter.GetNotificationPrefabAssetName(_screenAssetName));
+                notificationScreen = await bundles.GetBundledPrefab(_ctx.Data.NovelsNotificationBundleName, pathGetter.GetNotificationPrefabAssetName(_screenAssetName)).AttachExternalCancellation(_ctx.CancellationToken);
             var notification = CreateNotification(notificationScreen);
 
             var waiting = CreateWaiting();
@@ -189,14 +191,14 @@ namespace Novels
 
             var novelProcessCtx = new NovelProcess.Ctx
             {
-                GetNextStep = () => storyCommands.ParseStep(
-                    storyProcessor.GetNextText(),
-                    storyProcessor.GetChoices()),
+                ReadNext = storyProcessor.ReadNext,
+                ParseStep = storyCommands.ParseStep,
                 BuildQueue = storyQueue.TryBuild,
                 ExecuteQueue = queueExecutor.Run,
 
                 GetNextSavedChoice = saveSystem.GetNextSavedChoice,
                 HideLoading = loading.Hide,
+                CancellationToken = _ctx.CancellationToken,
 
                 OnLog = _ctx.OnLog,
             };

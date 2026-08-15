@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -26,6 +27,7 @@ namespace Novels.Audio
             public Func<string, string> GetAudioURL;
             public Action<string> LoadAudioToDict;
             public AudioMixer AudioMixer;
+            public CancellationToken CancellationToken;
 
             public Action<(LogType type, string message)> OnLog;
         }
@@ -51,12 +53,16 @@ namespace Novels.Audio
                 using (var audioRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.WAV))
                 {
                     SetHeaders(audioRequest);
-                    await audioRequest.SendWebRequest();
+                    await audioRequest.SendWebRequest().WithCancellation(_ctx.CancellationToken);
 
                     audioClip = DownloadHandlerAudioClip.GetContent(audioRequest);
                 }
                 UpdateAudioSource(assetName, audioClip, type);
                 _ctx.OnLog?.Invoke((LogType.Log, $"Play audio {assetName}"));
+            }
+            catch (OperationCanceledException) when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+                throw;
             }
             catch (Exception ex)
             {
@@ -133,6 +139,17 @@ namespace Novels.Audio
                     }
                     break;
             }
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            foreach (var audioObject in _audioObjects.Values)
+            {
+                if (audioObject != null)
+                    GameObject.Destroy(audioObject);
+            }
+            _audioObjects.Clear();
         }
     }
 }

@@ -36,18 +36,15 @@ namespace Editor
         [MenuItem("Build/Clear Cache")]
         private static void ClearCache()
         {
-            var cachPath = $"{Application.persistentDataPath}/CachedFiles/Remote";
-            #if UNITY_STANDALONE_OSX || UNITY_EDITOR_OSX
-            cachPath = $"file://{cachPath}";
-            #endif
-            if (Directory.Exists(cachPath))
+            var cachePath = Path.Combine(Application.persistentDataPath, "CachedFiles", "Remote");
+            if (Directory.Exists(cachePath))
             {
-                Directory.Delete(cachPath, true);
+                Directory.Delete(cachePath, true);
                 Debug.Log("Clear cache files done!");
             }
             else
             {
-                Debug.Log($"No cache files in {cachPath}");
+                Debug.Log($"No cache files in {cachePath}");
             }
         }
 
@@ -115,4 +112,3 @@ namespace Editor
         }
     }
 }
-

@@ -141,7 +141,7 @@ namespace Bundles
             try
             {
                 var videoFile = _cache.ByteArrayFromCash(path);
-                _videos[videoName.ToLower()] = _cache.ConvertLocalPath(path);
+                _videos[videoName.ToLower()] = ToFileUrl(_cache.ConvertLocalPath(path));
                 log = (LogType.Log, $"Get video local from: {videoName} - {_videos[videoName.ToLower()]}");
             }
             catch
@@ -154,7 +154,7 @@ namespace Bundles
                         SetHeaders(videoRequest);
                         await videoRequest.SendWebRequest();
                         _cache.ByteArrayToCash(videoRequest.downloadHandler.data, path);
-                        _videos[videoName.ToLower()] = _cache.ConvertLocalPath(path);
+                        _videos[videoName.ToLower()] = ToFileUrl(_cache.ConvertLocalPath(path));
                         log = (LogType.Warning, $"Load video remote: {videoName} - {_videos[videoName.ToLower()]}");
                     }
                 }
@@ -164,6 +164,11 @@ namespace Bundles
                 }
             }
             _ctx.OnLog.Invoke(log);
+        }
+
+        private static string ToFileUrl(string path)
+        {
+            return new Uri(path).AbsoluteUri;
         }
 
         public void LoadAudioToDict(string audio)
@@ -243,4 +248,3 @@ namespace Bundles
         }
     }
 }
-

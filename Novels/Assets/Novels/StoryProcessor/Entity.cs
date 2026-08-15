@@ -21,21 +21,31 @@ namespace Novels.StoryProcessor
             _story = new Story(_ctx.StoryText);
         }
 
-        public string GetNextText()
+        public StoryReadResult ReadNext()
         {
-            if (!_story.canContinue) return string.Empty;
-            
-            return _story.Continue().Trim();
+            var hasContent = _story.canContinue;
+            var source = hasContent
+                ? _story.Continue().Trim()
+                : string.Empty;
+            var choices = GetChoices();
+
+            if (choices.Length > 0)
+                return new StoryReadResult(StoryReadStatus.Choices, source, choices);
+
+            if (!hasContent)
+                return new StoryReadResult(StoryReadStatus.Completed, source, choices);
+
+            return new StoryReadResult(StoryReadStatus.Content, source, choices);
         }
 
-        public StoryContracts.StoryChoice[] GetChoices()
+        private StoryContracts.StoryChoice[] GetChoices()
         {
-            var choices = _story.currentChoices;
-            var result = new StoryContracts.StoryChoice[choices.Count];
+            var currentChoices = _story.currentChoices;
+            var result = new StoryContracts.StoryChoice[currentChoices.Count];
 
-            for (var index = 0; index < choices.Count; index++)
+            for (var index = 0; index < currentChoices.Count; index++)
             {
-                var choice = choices[index];
+                var choice = currentChoices[index];
                 result[index] = new StoryContracts.StoryChoice(choice.index, choice.text);
             }
 

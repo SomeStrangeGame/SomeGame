@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -11,6 +12,7 @@ namespace Novels.Bubble
         public struct Ctx
         {
             public GameObject BubblePrefab;
+            public CancellationToken CancellationToken;
         }
 
         public struct WardrobeScreenCtx
@@ -64,7 +66,7 @@ namespace Novels.Bubble
 
         public async UniTask Show()
         {
-            await _screen.Show();
+            await _screen.Show(_ctx.CancellationToken);
         }
 
         public void ShowImmediate()
@@ -74,7 +76,7 @@ namespace Novels.Bubble
 
         public async UniTask Hide()
         {
-            await _screen.Hide();
+            await _screen.Hide(_ctx.CancellationToken);
         }
 
         public void HideImmediate()
@@ -152,6 +154,13 @@ namespace Novels.Bubble
                 Buttons = buttons,
                 OnBackgroundClick = buttons.Length == 0 ? ctx.OnBackgroundClick : null
             });
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            if (_screen != null)
+                GameObject.Destroy(_screen.gameObject);
         }
 
     }
