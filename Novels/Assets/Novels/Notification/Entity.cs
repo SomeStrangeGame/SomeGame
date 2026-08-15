@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -11,9 +13,11 @@ namespace Novels.Notification
         {
             public GameObject NotificationPrefab;
             public CancellationToken CancellationToken;
+            public Action<(LogType type, string message)> OnLog;
         }
 
-        private bool _lastNotifInProcess;
+        private readonly Queue<string> _pendingNotifications = new();
+        private bool _isProcessing;
 
         private readonly Ctx _ctx;
 
@@ -21,7 +25,6 @@ namespace Novels.Notification
 
         public Entity(Ctx ctx)
         {
-            _lastNotifInProcess = false;
             _ctx = ctx;
         }
 
@@ -32,28 +35,50 @@ namespace Novels.Notification
             _screen.HideImmediate();
         }
 
-        public async UniTask Show(string text)
+        public void Enqueue(string text)
         {
-            while(_lastNotifInProcess) await UniTask.NextFrame(_ctx.CancellationToken);
-            
-            _lastNotifInProcess = true;
-            _screen.SetText(text);
-            
-            await _screen.Show(_ctx.CancellationToken);
-            var timer = 3f;
-            while(timer > 0)
+            _pendingNotifications.Enqueue(text ?? string.Empty);
+            if (!_isProcessing)
+                ProcessQueue().Forget();
+        }
+
+        private async UniTaskVoid ProcessQueue()
+        {
+            _isProcessing = true;
+            try
             {
-                await UniTask.Yield(_ctx.CancellationToken);
-                timer -= Time.deltaTime;
+                while (_pendingNotifications.TryDequeue(out var text))
+                {
+                    _ctx.CancellationToken.ThrowIfCancellationRequested();
+                    _screen.SetText(text);
+
+                    await _screen.Show(_ctx.CancellationToken);
+                    await UniTask.Delay(
+                        TimeSpan.FromSeconds(3),
+                        cancellationToken: _ctx.CancellationToken);
+                    await _screen.Hide(_ctx.CancellationToken);
+                }
             }
-            await _screen.Hide(_ctx.CancellationToken);
-            _lastNotifInProcess = false;
+            catch (OperationCanceledException) when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+            }
+            catch (Exception exception)
+            {
+                _ctx.OnLog?.Invoke((
+                    LogType.Error,
+                    $"Notification processing failed: {exception}"));
+            }
+            finally
+            {
+                _isProcessing = false;
+            }
         }
 
         protected override void OnDispose()
         {
             base.OnDispose();
-            _lastNotifInProcess = false;
+            _pendingNotifications.Clear();
+            _isProcessing = false;
             if (_screen != null)
                 GameObject.Destroy(_screen.gameObject);
         }

@@ -1,3 +1,5 @@
+using System.Threading;
+
 namespace Novels.QueueProcess
 {
     public enum QueueExecutionMode
@@ -10,23 +12,34 @@ namespace Novels.QueueProcess
     {
         private QueueExecutionContext(
             QueueExecutionMode mode,
-            byte savedChoice)
+            byte savedChoice,
+            CancellationToken cancellationToken)
         {
             Mode = mode;
             SavedChoice = savedChoice;
+            CancellationToken = cancellationToken;
         }
 
         public QueueExecutionMode Mode { get; }
         public byte SavedChoice { get; }
+        public CancellationToken CancellationToken { get; }
 
-        public static QueueExecutionContext Live()
+        public static QueueExecutionContext Live(CancellationToken cancellationToken)
         {
-            return new QueueExecutionContext(QueueExecutionMode.Live, default);
+            return new QueueExecutionContext(
+                QueueExecutionMode.Live,
+                default,
+                cancellationToken);
         }
 
-        public static QueueExecutionContext Replay(byte savedChoice)
+        public static QueueExecutionContext Replay(
+            byte savedChoice,
+            CancellationToken cancellationToken)
         {
-            return new QueueExecutionContext(QueueExecutionMode.Replay, savedChoice);
+            return new QueueExecutionContext(
+                QueueExecutionMode.Replay,
+                savedChoice,
+                cancellationToken);
         }
     }
 }

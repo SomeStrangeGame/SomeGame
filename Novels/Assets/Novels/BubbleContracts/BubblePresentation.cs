@@ -2,6 +2,18 @@ using System;
 
 namespace Novels.BubbleContracts
 {
+    public static class BubbleTriggers
+    {
+        public const string Wardrobe = "some wardrobe trigger";
+        public const string Choose = "some choose trigger";
+    }
+
+    public static class BubbleTextKeys
+    {
+        public const string Disclaimer = "Дисклеймер";
+        public const string Hint = "Подсказка";
+    }
+
     public sealed class WardrobePresentation
     {
     }

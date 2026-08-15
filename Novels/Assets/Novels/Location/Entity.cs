@@ -21,6 +21,7 @@ namespace Novels.Location
         public struct Ctx
         {
             public GameObject ScreenPrefab;
+            public Camera TargetCamera;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, string> GetVideoURL;
             public CancellationToken CancellationToken;
@@ -73,7 +74,10 @@ namespace Novels.Location
             bool forceNoVideo,
             bool cutScene)
         {
-            Camera.allCameras[0].backgroundColor = presentation.BackgroundColor
+            if (_ctx.TargetCamera == null)
+                throw new InvalidOperationException("Location target Camera is not configured.");
+
+            _ctx.TargetCamera.backgroundColor = presentation.BackgroundColor
                 == StoryContracts.StoryBackgroundColor.White
                 ? Color.white
                 : Color.black;

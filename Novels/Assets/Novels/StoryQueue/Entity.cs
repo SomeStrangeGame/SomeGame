@@ -8,7 +8,7 @@ namespace Novels.StoryQueue
     {
         public struct CommandCtx
         {
-            public Func<string, UniTask> ShowNotification;
+            public Action<string> ShowNotification;
 
             public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImage;
             public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImageImmediate;

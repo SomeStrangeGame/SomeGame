@@ -7,11 +7,12 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private async UniTask<Location.Entity> CreateLocation(GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, string> getVideoURL)
+        private Location.Entity CreateLocation(GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, string> getVideoURL)
         {
             var location = new Location.Entity(new Location.Entity.Ctx
             {
                 ScreenPrefab = screenPrefab,
+                TargetCamera = Camera.main,
                 GetSprite = getSprite,
                 GetVideoURL = getVideoURL,
                 CancellationToken = _ctx.CancellationToken,

@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Novels.StoryCommands
 {
@@ -38,7 +37,7 @@ namespace Novels.StoryCommands
                         string.Empty,
                         StoryContracts.DialoguePresentation.Character,
                         StoryContracts.StoryChoiceAction.None,
-                        ParseCharacterPresentation(Array.Empty<string>()))
+                        StoryCommandMapper.ParseCharacterPresentation(Array.Empty<string>()))
                     : StoryCommand.CreateEmpty(source);
                 return StoryParseResult.Success(command);
             }
@@ -51,7 +50,7 @@ namespace Novels.StoryCommands
                 ? normalizedSource
                 : normalizedSource.Substring(separatorIndex + 1).Trim();
 
-            var prefixResult = ParsePrefix(prefix, source);
+            var prefixResult = StoryPrefixParser.Parse(prefix, source);
             if (!prefixResult.IsSuccess)
             {
                 return StoryParseResult.Failure(
@@ -76,9 +75,9 @@ namespace Novels.StoryCommands
                     source,
                     name,
                     value,
-                    ParsePresentation(name, arguments),
-                    ParseChoiceActions(arguments),
-                    ParseCharacterPresentation(arguments)));
+                    StoryCommandMapper.ParsePresentation(name, arguments),
+                    StoryCommandMapper.ParseChoiceActions(arguments),
+                    StoryCommandMapper.ParseCharacterPresentation(arguments)));
             }
 
             switch (commandType)
@@ -92,7 +91,7 @@ namespace Novels.StoryCommands
                         commandType,
                         source,
                         value,
-                        ParseBackgroundPresentation(commandType, arguments)));
+                        StoryCommandMapper.ParseBackgroundPresentation(commandType, arguments)));
 
                 case StoryCommandType.Music:
                 case StoryCommandType.Sound:
@@ -100,7 +99,7 @@ namespace Novels.StoryCommands
                     return StoryParseResult.Success(StoryCommand.CreateAudio(commandType, source, value));
 
                 case StoryCommandType.Camera:
-                    if (!TryParseCameraAction(value, out var cameraAction))
+                    if (!StoryCommandMapper.TryParseCameraAction(value, out var cameraAction))
                     {
                         return StoryParseResult.Failure(
                             StoryCommandSyntax.UnsupportedCameraAction,
@@ -123,220 +122,6 @@ namespace Novels.StoryCommands
 
                 default:
                     throw new ArgumentOutOfRangeException(nameof(commandType), commandType, null);
-            }
-        }
-
-        private static StoryContracts.DialoguePresentation ParsePresentation(
-            string speaker,
-            string[] arguments)
-        {
-            if (HasArgument(arguments, StoryContracts.StoryArguments.Disclaimer))
-                return StoryContracts.DialoguePresentation.Disclaimer;
-
-            if (HasArgument(arguments, StoryContracts.StoryArguments.Hint))
-                return StoryContracts.DialoguePresentation.Hint;
-
-            if (HasArgument(arguments, StoryContracts.StoryArguments.Thoughts))
-                return StoryContracts.DialoguePresentation.Thoughts;
-
-            if (speaker == StoryContracts.StorySpeakers.Narrator)
-                return StoryContracts.DialoguePresentation.Narrator;
-
-            if (speaker == StoryContracts.StorySpeakers.Wardrobe)
-                return StoryContracts.DialoguePresentation.Wardrobe;
-
-            return StoryContracts.DialoguePresentation.Character;
-        }
-
-        private static StoryContracts.StoryChoiceAction ParseChoiceActions(string[] arguments)
-        {
-            var result = StoryContracts.StoryChoiceAction.None;
-
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectAppearance))
-                result |= StoryContracts.StoryChoiceAction.SelectAppearance;
-
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectClothes))
-                result |= StoryContracts.StoryChoiceAction.SelectClothes;
-
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHair)
-                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHairLegacy))
-            {
-                result |= StoryContracts.StoryChoiceAction.SelectHair;
-            }
-
-            return result;
-        }
-
-        private static StoryContracts.CharacterPresentation ParseCharacterPresentation(string[] arguments)
-        {
-            var assetCandidates = new List<string>(arguments.Length);
-
-            foreach (var argument in arguments)
-            {
-                if (!IsDialogueControlArgument(argument))
-                    assetCandidates.Add(argument);
-            }
-
-            return new StoryContracts.CharacterPresentation(
-                HasArgument(arguments, StoryContracts.StoryArguments.Child),
-                HasArgument(arguments, StoryContracts.StoryArguments.RemoveClothes),
-                HasArgument(arguments, StoryContracts.StoryArguments.RemoveHair)
-                    || HasArgument(arguments, StoryContracts.StoryArguments.RemoveHairLegacy),
-                HasArgument(arguments, StoryContracts.StoryArguments.RemoveAccessory),
-                assetCandidates.ToArray());
-        }
-
-        private static StoryContracts.StoryBackgroundPresentation ParseBackgroundPresentation(
-            StoryCommandType commandType,
-            string[] arguments)
-        {
-            var type = commandType == StoryCommandType.CutScene
-                ? StoryContracts.StoryBackgroundType.CutScene
-                : StoryContracts.StoryBackgroundType.Location;
-            var color = HasArgument(arguments, StoryContracts.StoryArguments.WhiteBackground)
-                ? StoryContracts.StoryBackgroundColor.White
-                : StoryContracts.StoryBackgroundColor.Black;
-            var keepFinalVideoFrame = type == StoryContracts.StoryBackgroundType.CutScene
-                && HasArgument(arguments, StoryContracts.StoryArguments.EndCutScene);
-
-            return new StoryContracts.StoryBackgroundPresentation(
-                type,
-                color,
-                keepFinalVideoFrame);
-        }
-
-        private static bool TryParseCameraAction(
-            string value,
-            out StoryContracts.StoryCameraAction action)
-        {
-            if (IsArgument(value, StoryContracts.StoryCameraActions.FadeIn))
-                action = StoryContracts.StoryCameraAction.FadeIn;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.LeftRight))
-                action = StoryContracts.StoryCameraAction.PanLeftToRight;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.RightLeft))
-                action = StoryContracts.StoryCameraAction.PanRightToLeft;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToCenter))
-                action = StoryContracts.StoryCameraAction.MoveToCenter;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToLeft))
-                action = StoryContracts.StoryCameraAction.MoveToLeft;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.Shaking))
-                action = StoryContracts.StoryCameraAction.Shake;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.Injury))
-                action = StoryContracts.StoryCameraAction.Injury;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.Splashes))
-                action = StoryContracts.StoryCameraAction.Splashes;
-            else
-            {
-                action = default;
-                return false;
-            }
-
-            return true;
-        }
-
-        private static bool IsDialogueControlArgument(string argument)
-        {
-            return IsArgument(argument, StoryContracts.StoryArguments.Child)
-                || IsArgument(argument, StoryContracts.StoryArguments.Disclaimer)
-                || IsArgument(argument, StoryContracts.StoryArguments.Hint)
-                || IsArgument(argument, StoryContracts.StoryArguments.Thoughts)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveClothes)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveHair)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveHairLegacy)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveAccessory)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectAppearance)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectClothes)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectHair)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectHairLegacy);
-        }
-
-        private static bool HasArgument(string[] arguments, string expected)
-        {
-            foreach (var argument in arguments)
-            {
-                if (IsArgument(argument, expected))
-                    return true;
-            }
-
-            return false;
-        }
-
-        private static bool IsArgument(string argument, string expected)
-        {
-            return string.Equals(argument, expected, StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static PrefixParseResult ParsePrefix(string prefix, string source)
-        {
-            var openParenthesisIndex = prefix.IndexOf('(');
-            if (openParenthesisIndex < 0)
-                return PrefixParseResult.Success(prefix.Trim(), Array.Empty<string>());
-
-            var closeParenthesisIndex = prefix.LastIndexOf(')');
-            if (closeParenthesisIndex < openParenthesisIndex)
-            {
-                return PrefixParseResult.Failure(
-                    StoryCommandSyntax.InvalidArguments,
-                    "Command arguments have no closing parenthesis.",
-                    source);
-            }
-
-            if (prefix.Substring(closeParenthesisIndex + 1).Trim().Length > 0)
-            {
-                return PrefixParseResult.Failure(
-                    StoryCommandSyntax.InvalidArguments,
-                    "Unexpected text after command arguments.",
-                    source);
-            }
-
-            var name = prefix.Substring(0, openParenthesisIndex).Trim();
-            var argumentsSource = prefix.Substring(openParenthesisIndex + 1, closeParenthesisIndex - openParenthesisIndex - 1);
-            var rawArguments = argumentsSource.Split(',');
-            var arguments = new List<string>(rawArguments.Length);
-
-            foreach (var rawArgument in rawArguments)
-            {
-                var argument = rawArgument.Trim();
-                if (argument.Length > 0)
-                    arguments.Add(argument);
-            }
-
-            return PrefixParseResult.Success(name, arguments.ToArray());
-        }
-
-        private readonly struct ParsedPrefix
-        {
-            internal ParsedPrefix(string name, string[] arguments)
-            {
-                Name = name;
-                Arguments = arguments;
-            }
-
-            internal string Name { get; }
-            internal string[] Arguments { get; }
-        }
-
-        private readonly struct PrefixParseResult
-        {
-            private PrefixParseResult(bool isSuccess, ParsedPrefix prefix, StoryParseError error)
-            {
-                IsSuccess = isSuccess;
-                Prefix = prefix;
-                Error = error;
-            }
-
-            internal bool IsSuccess { get; }
-            internal ParsedPrefix Prefix { get; }
-            internal StoryParseError Error { get; }
-
-            internal static PrefixParseResult Success(string name, string[] arguments)
-            {
-                return new PrefixParseResult(true, new ParsedPrefix(name, arguments), default);
-            }
-
-            internal static PrefixParseResult Failure(string code, string message, string source)
-            {
-                return new PrefixParseResult(false, default, new StoryParseError(code, message, source));
             }
         }
     }

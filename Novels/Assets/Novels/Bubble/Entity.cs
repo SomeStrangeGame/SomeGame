@@ -93,17 +93,6 @@ namespace Novels.Bubble
                     break;
             }
 
-            var header = presentation.Text.Header;
-            switch (presentation.DialoguePresentation)
-            {
-                case StoryContracts.DialoguePresentation.Disclaimer:
-                    header = "Дисклеймер";
-                    break;
-
-                case StoryContracts.DialoguePresentation.Hint:
-                    header = "Подсказка";
-                    break;
-            }
             var buttons = presentation.Choices.Select(choice => new View.Screen.BubbleCtx.ButtonCtx
             {
                 Id = choice.Id,
@@ -116,7 +105,7 @@ namespace Novels.Bubble
                 Type = bubbleType,
                 Text = new View.Screen.BubbleCtx.TextCtx
                 {
-                    Header = header,
+                    Header = presentation.Text.Header,
                     Text = presentation.Text.Text
                 },
                 Buttons = buttons,

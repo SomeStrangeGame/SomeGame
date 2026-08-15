@@ -17,7 +17,7 @@ namespace Novels
             {
                 Command = new StoryQueue.Entity.CommandCtx
                 {
-                    ShowNotification = notification.Show,
+                    ShowNotification = notification.Enqueue,
 
                     SetImage = location.SetImage,
                     SetImageImmediate = location.SetImageImmediate,

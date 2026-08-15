@@ -27,8 +27,9 @@ The story pipeline refactoring is complete:
 - `Save.Entity` owns the initial saved-choice snapshot and replay cursor.
 - Root composition uses partial factory files such as `Entity.StoryQueue.cs` and `Entity.QueueProcess.cs`.
 
-The last full C# compilation completed with 0 errors and 0 warnings. No tests
-were created or run.
+The latest generated-solution C# compilation completed with 0 errors and 0
+warnings. No tests were created or run. A separate Unity batch-mode import was
+blocked because the project was already open in another Editor instance.
 
 ## Standing constraints and conventions
 
@@ -385,13 +386,22 @@ QueueProcess directly to a concrete Unity View.
 
 ## Optional lower-priority cleanup
 
-These are not part of the recommended critical path:
+The following second-wave items were completed on 2026-08-15:
 
-1. Split the 343-line `StoryCommands.Entity` internally into tokenization/prefix parsing and typed command mapping. Keep the public parser API unchanged.
-2. Replace public mutable QueueProcess fields with constructors and readonly properties to make invalid queue items harder to construct.
-3. Pin the UniTask and Ink Git dependencies to explicit tags or commits in `Packages/manifest.json`; the lock file currently records hashes, but regenerating it can follow floating Git references.
-4. Correct the assembly typo `Novels.Notication.View` to `Novels.Notification.View` only as an isolated asmdef migration with reference verification.
-5. Move hardcoded user-facing Setting/Bubble strings into the existing localization boundary when localization requirements are defined.
+1. Queue execution now carries session cancellation; Bubble choice waits terminate with the session.
+2. Notification owns a non-blocking FIFO dispatcher instead of QueueProcess starting an unobserved task.
+3. Setting returns a typed, cancellation-aware selection and consumes localized text.
+4. Bundles validates and cancels requests, uses versioned cache keys, and removes its hard-coded Android video lookup.
+5. Shared BaseDisposable is idempotent and completes owned cleanup after disposal failures.
+6. QueueProcess commands are constructor-built and immutable.
+7. StoryCommands is split internally into prefix parsing and typed command mapping while preserving its public API.
+8. Location receives Camera through its context, Bubble headers use localization, the Notification View asmdef typo is fixed with its GUID preserved, and Git dependencies are pinned to the existing lock hashes.
+
+Remaining work is intentionally separate from this refactoring wave:
+
+1. Decide whether the missing render-pipeline assets should be restored with URP or the stale SRP references removed.
+2. Design a release content strategy for approximately 1.2 GB under StreamingAssets, primarily WAV audio and MP4 video.
+3. Remove the tracked Android signing keystore from version control and rotate it if the repository has been shared.
 
 ## Areas that are currently healthy
 
@@ -405,11 +415,11 @@ These are not part of the recommended critical path:
 
 ## Audit limitations
 
-This plan is based on static repository inspection and the immediately previous
-successful C# compilation. Unity Editor Console, Play Mode, profiler captures,
-target-device behavior, and an Android player build were not inspected. No test
-suite exists in the project, and tests must not be added or run under the
-current user constraint.
+This plan is based on static repository inspection and a successful generated-
+solution C# compilation. The final Unity Editor import/Console state, Play Mode,
+profiler captures, target-device behavior, and an Android player build were not
+inspected. No test suite exists in the project, and tests must not be added or
+run under the current user constraint.
 
 ## Instructions for the next agent/model
 

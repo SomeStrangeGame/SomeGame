@@ -54,10 +54,21 @@ namespace Novels
         private void OnDisable()
         {
             _sessionCancellation?.Cancel();
-            _entity?.Dispose();
-            _sessionCancellation?.Dispose();
-            _sessionCancellation = null;
-            _entity = null;
+            try
+            {
+                _entity?.Dispose();
+            }
+            catch (Exception exception)
+            {
+                using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
+                    logs.Log("[Novels]", (LogType.Error, $"Disposal failed: {exception}"));
+            }
+            finally
+            {
+                _sessionCancellation?.Dispose();
+                _sessionCancellation = null;
+                _entity = null;
+            }
         }
     }
 }

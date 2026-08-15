@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask",
-    "com.inkle.ink-unity-integration": "https://github.com/inkle/ink-unity-integration.git#upm",
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#73a63b7f672b88f7e9992f6917eb458a8cbb6fa9",
+    "com.inkle.ink-unity-integration": "https://github.com/inkle/ink-unity-integration.git#770b372042728fc9df9d26ae19287cf6145d47a5",
     "com.unity.2d.sprite": "1.0.0",
     "com.unity.ai.navigation": "2.0.11",
     "com.unity.ide.visualstudio": "2.0.27",

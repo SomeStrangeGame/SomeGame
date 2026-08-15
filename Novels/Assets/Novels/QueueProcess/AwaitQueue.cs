@@ -3,15 +3,22 @@ using Cysharp.Threading.Tasks;
 
 namespace Novels.QueueProcess
 {
-    public struct AwaitQueue : IQueue
+    public readonly struct AwaitQueue : IQueue
     {
-        public Func<float, UniTask> Wait;
-        public float Timer;
+        private readonly Func<float, UniTask> _wait;
+        private readonly float _timer;
 
-        public async readonly UniTask Run(QueueExecutionContext context)
+        public AwaitQueue(Func<float, UniTask> wait, float timer)
         {
+            _wait = wait ?? throw new ArgumentNullException(nameof(wait));
+            _timer = timer;
+        }
+
+        public async UniTask Run(QueueExecutionContext context)
+        {
+            context.CancellationToken.ThrowIfCancellationRequested();
             if (context.Mode == QueueExecutionMode.Live)
-                await Wait(Timer);
+                await _wait(_timer);
         }
     }
 }

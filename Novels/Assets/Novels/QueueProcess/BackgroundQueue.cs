@@ -5,33 +5,59 @@ namespace Novels.QueueProcess
 {
     public class BackgroundQueue
     {
-        public struct SetBackgroundQueue : IQueue
+        public readonly struct SetBackgroundQueue : IQueue
         {
-            public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImage;
-            public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImageImmediate;
-            public string AssetName;
-            public StoryContracts.StoryBackgroundPresentation Presentation;
+            private readonly Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> _setImage;
+            private readonly Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> _setImageImmediate;
+            private readonly string _assetName;
+            private readonly StoryContracts.StoryBackgroundPresentation _presentation;
 
-            public async readonly UniTask Run(QueueExecutionContext context)
+            public SetBackgroundQueue(
+                Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> setImage,
+                Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> setImageImmediate,
+                string assetName,
+                StoryContracts.StoryBackgroundPresentation presentation)
             {
+                _setImage = setImage ?? throw new ArgumentNullException(nameof(setImage));
+                _setImageImmediate = setImageImmediate
+                    ?? throw new ArgumentNullException(nameof(setImageImmediate));
+                _assetName = assetName ?? string.Empty;
+                _presentation = presentation;
+            }
+
+            public async UniTask Run(QueueExecutionContext context)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
                 if (context.Mode == QueueExecutionMode.Replay)
-                    await SetImageImmediate(AssetName, Presentation);
+                    await _setImageImmediate(_assetName, _presentation);
                 else
-                    await SetImage(AssetName, Presentation);
+                    await _setImage(_assetName, _presentation);
             }
         }
-        public struct CameraQueue : IQueue
+        public readonly struct CameraQueue : IQueue
         {
-            public Func<StoryContracts.StoryCameraAction, UniTask> SetCamera;
-            public Func<StoryContracts.StoryCameraAction, UniTask> SetCameraImmediate;
-            public StoryContracts.StoryCameraAction Action;
+            private readonly Func<StoryContracts.StoryCameraAction, UniTask> _setCamera;
+            private readonly Func<StoryContracts.StoryCameraAction, UniTask> _setCameraImmediate;
+            private readonly StoryContracts.StoryCameraAction _action;
 
-            public async readonly UniTask Run(QueueExecutionContext context)
+            public CameraQueue(
+                Func<StoryContracts.StoryCameraAction, UniTask> setCamera,
+                Func<StoryContracts.StoryCameraAction, UniTask> setCameraImmediate,
+                StoryContracts.StoryCameraAction action)
             {
+                _setCamera = setCamera ?? throw new ArgumentNullException(nameof(setCamera));
+                _setCameraImmediate = setCameraImmediate
+                    ?? throw new ArgumentNullException(nameof(setCameraImmediate));
+                _action = action;
+            }
+
+            public async UniTask Run(QueueExecutionContext context)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
                 if (context.Mode == QueueExecutionMode.Replay)
-                    await SetCameraImmediate(Action);
+                    await _setCameraImmediate(_action);
                 else
-                    await SetCamera(Action);
+                    await _setCamera(_action);
             }
         }
     }

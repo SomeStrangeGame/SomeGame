@@ -52,8 +52,12 @@ namespace Novels.Audio
                 AudioClip audioClip = null;
                 using (var audioRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.WAV))
                 {
-                    SetHeaders(audioRequest);
                     await audioRequest.SendWebRequest().WithCancellation(_ctx.CancellationToken);
+                    if (audioRequest.result != UnityWebRequest.Result.Success)
+                    {
+                        throw new InvalidOperationException(
+                            $"Audio request failed [{audioRequest.responseCode}] {audioURL}: {audioRequest.error}");
+                    }
 
                     audioClip = DownloadHandlerAudioClip.GetContent(audioRequest);
                 }
@@ -67,16 +71,8 @@ namespace Novels.Audio
             catch (Exception ex)
             {
                 ClearAudio(type);
-                _ctx.OnLog?.Invoke((LogType.Log, $"Clear audio {type}\n{ex.Message}"));
+                _ctx.OnLog?.Invoke((LogType.Warning, $"Clear audio {type}\n{ex.Message}"));
             }
-        }
-
-        private void SetHeaders(UnityWebRequest request)
-        {
-            request.SetRequestHeader("Access-Control-Allow-Credentials", "true");
-            request.SetRequestHeader("Access-Control-Allow-Headers", "Accept, X-Access-Token, X-Application-Name, X-Request-Sent-Time");
-            request.SetRequestHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-            request.SetRequestHeader("Access-Control-Allow-Origin", "*");
         }
 
         private AudioSource UpdateAudioSource(string assetName, AudioClip audioClip, Audio audioType)
@@ -96,21 +92,34 @@ namespace Novels.Audio
                 case Audio.Music:
                     audioSource.loop = true;
                     _audioObjects[audioType] = audioObject;
-                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups(_musicMixerGroup)[0];
+                    audioSource.outputAudioMixerGroup = GetMixerGroup(_musicMixerGroup);
                     break;
                 case Audio.Sound:
                     audioSource.loop = false;
                     _audioObjects[audioType] = audioObject;
-                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups(_soundMixerGroup)[0];
+                    audioSource.outputAudioMixerGroup = GetMixerGroup(_soundMixerGroup);
                     break;
                 case Audio.Ambient:
                     audioSource.loop = true;
                     _audioObjects[audioType] = audioObject;
-                    audioSource.outputAudioMixerGroup = _ctx.AudioMixer.FindMatchingGroups(_ambientMixerGroup)[0];
+                    audioSource.outputAudioMixerGroup = GetMixerGroup(_ambientMixerGroup);
                     break;
             }
             audioSource.Play();
             return audioSource;
+        }
+
+        private AudioMixerGroup GetMixerGroup(string groupName)
+        {
+            if (_ctx.AudioMixer == null)
+                throw new InvalidOperationException("AudioMixer is not configured.");
+
+            var groups = _ctx.AudioMixer.FindMatchingGroups(groupName);
+            if (groups.Length == 0)
+                throw new InvalidOperationException(
+                    $"AudioMixer group '{groupName}' is not configured.");
+
+            return groups[0];
         }
 
         private void ClearAudio(Audio audioType)

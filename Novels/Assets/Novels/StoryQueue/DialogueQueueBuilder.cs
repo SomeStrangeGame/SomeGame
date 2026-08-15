@@ -63,45 +63,35 @@ namespace Novels.StoryQueue
             return new DialogueQueueBuildResult(
                 new QueueProcess.IQueue[]
                 {
-                    new QueueProcess.CharacterQueue.HideCharacterQueue
-                    {
-                        CharacterHide = _ctx.CharacterHide,
-                        CharacterHideImmediate = _ctx.CharacterHideImmediate,
-                        IsNewCharacter = isNewCharacter,
-                    },
+                    new QueueProcess.CharacterQueue.HideCharacterQueue(
+                        _ctx.CharacterHide,
+                        _ctx.CharacterHideImmediate,
+                        isNewCharacter),
                     setBubble,
                 },
                 new QueueProcess.IQueue[]
                 {
-                    new QueueProcess.CharacterQueue.SetDialogueQueue
-                    {
-                        SetDialogue = _ctx.SetDialogue,
-                        SetDialogueImmediate = _ctx.SetDialogueImmediate,
-                        Alignment = GetDialogueAlignment(role)
-                    },
-                    new QueueProcess.CharacterQueue.ShowCharacterQueue
-                    {
-                        CharacterSetImage = _ctx.CharacterSetImage,
-                        CharacterShow = _ctx.CharacterShow,
-                        CharacterShowImmediate = _ctx.CharacterShowImmediate,
-                        IsNewCharacter = isNewCharacter,
-                        Character = new StoryContracts.CharacterRenderRequest(
+                    new QueueProcess.CharacterQueue.SetDialogueQueue(
+                        _ctx.SetDialogue,
+                        _ctx.SetDialogueImmediate,
+                        GetDialogueAlignment(role)),
+                    new QueueProcess.CharacterQueue.ShowCharacterQueue(
+                        _ctx.CharacterSetImage,
+                        _ctx.CharacterShow,
+                        _ctx.CharacterShowImmediate,
+                        isNewCharacter,
+                        new StoryContracts.CharacterRenderRequest(
                             name,
                             role,
                             position,
-                            dialogue.Character),
-                    },
-                    new QueueProcess.BubbleQueue.ShowBubbleQueue
-                    {
-                        BubbleDone = bubbleDone,
-                        BubbleShow = _ctx.BubbleShow,
-                        BubbleShowImmediate = _ctx.BubbleShowImmediate,
-                    },
-                    new QueueProcess.BubbleQueue.HideBubbleQueue
-                    {
-                        BubbleHide = _ctx.BubbleHide,
-                        BubbleHideImmediate = _ctx.BubbleHideImmediate,
-                    },
+                            dialogue.Character)),
+                    new QueueProcess.BubbleQueue.ShowBubbleQueue(
+                        bubbleDone,
+                        _ctx.BubbleShow,
+                        _ctx.BubbleShowImmediate),
+                    new QueueProcess.BubbleQueue.HideBubbleQueue(
+                        _ctx.BubbleHide,
+                        _ctx.BubbleHideImmediate),
                 });
         }
 
@@ -111,25 +101,23 @@ namespace Novels.StoryQueue
             StoryContracts.StoryChoice[] choices,
             UniTaskCompletionSource bubbleDone)
         {
-            return new QueueProcess.BubbleQueue.SetBubbleQueue
-            {
-                BubbleDone = bubbleDone,
-                GetLocalizationValue = _ctx.GetLocalizationValue,
-                Choices = choices,
-                SetMainCharacterView = _ctx.SetMainCharacterView,
-                SetMainCharacterClothes = _ctx.SetMainCharacterClothes,
-                SetMainCharacterHair = _ctx.SetMainCharacterHair,
-                SaveChoice = _ctx.SaveChoice,
-                SetChoice = _ctx.SetChoice,
-                Name = dialogue.Speaker,
-                Value = dialogue.Text,
-                SpeakerRole = role,
-                Presentation = dialogue.Presentation,
-                ChoiceActions = dialogue.ChoiceActions,
-                SetBubbleScreen = _ctx.SetBubbleScreen,
-                SetWardrobeScreen = _ctx.SetWardrobeScreen,
-                SetChooseScreen = _ctx.SetChooseScreen,
-            };
+            return new QueueProcess.BubbleQueue.SetBubbleQueue(
+                bubbleDone,
+                _ctx.GetLocalizationValue,
+                choices,
+                _ctx.SetMainCharacterView,
+                _ctx.SetMainCharacterClothes,
+                _ctx.SetMainCharacterHair,
+                _ctx.SaveChoice,
+                _ctx.SetChoice,
+                dialogue.Speaker,
+                dialogue.Text,
+                role,
+                dialogue.Presentation,
+                dialogue.ChoiceActions,
+                _ctx.SetBubbleScreen,
+                _ctx.SetWardrobeScreen,
+                _ctx.SetChooseScreen);
         }
 
         private StoryContracts.StorySpeakerRole ResolveSpeakerRole(
@@ -175,17 +163,13 @@ namespace Novels.StoryQueue
         {
             return new QueueProcess.IQueue[]
             {
-                new QueueProcess.BubbleQueue.ShowBubbleQueue
-                {
-                    BubbleDone = bubbleDone,
-                    BubbleShow = _ctx.BubbleShow,
-                    BubbleShowImmediate = _ctx.BubbleShowImmediate,
-                },
-                new QueueProcess.BubbleQueue.HideBubbleQueue
-                {
-                    BubbleHide = _ctx.BubbleHide,
-                    BubbleHideImmediate = _ctx.BubbleHideImmediate,
-                },
+                new QueueProcess.BubbleQueue.ShowBubbleQueue(
+                    bubbleDone,
+                    _ctx.BubbleShow,
+                    _ctx.BubbleShowImmediate),
+                new QueueProcess.BubbleQueue.HideBubbleQueue(
+                    _ctx.BubbleHide,
+                    _ctx.BubbleHideImmediate),
             };
         }
     }

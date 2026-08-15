@@ -2,10 +2,12 @@ using Cysharp.Threading.Tasks;
 
 namespace Novels.QueueProcess
 {
-    public struct EmptyQueue : IQueue
+    public readonly struct EmptyQueue : IQueue
     {
-        public async readonly UniTask Run(QueueExecutionContext context)
+        public UniTask Run(QueueExecutionContext context)
         {
+            context.CancellationToken.ThrowIfCancellationRequested();
+            return UniTask.CompletedTask;
         }
     }
 }

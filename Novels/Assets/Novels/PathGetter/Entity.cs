@@ -68,8 +68,8 @@ namespace Novels.PathGetter
         {
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
-            var firstChar = char.ToUpper(assetName[0]);
-            var otherText = assetName.Substring(1).ToLower();
+            var firstChar = char.ToUpperInvariant(assetName[0]);
+            var otherText = assetName.Substring(1).ToLowerInvariant();
             return $"{_remoteAssetsRoot}/Location/{_ctx.Prefix}/Locations/{firstChar}{otherText}{_imageExtension}";
         }
 
@@ -92,8 +92,8 @@ namespace Novels.PathGetter
             if (string.IsNullOrEmpty(name)) return string.Empty;
             if (string.IsNullOrEmpty(arg)) return string.Empty;
 
-            var firstChar = char.ToUpper(arg[0]);
-            var otherText = arg.Substring(1).ToLower();
+            var firstChar = char.ToUpperInvariant(arg[0]);
+            var otherText = arg.Substring(1).ToLowerInvariant();
             return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/{view}/Emotions/{firstChar}{otherText}{_imageExtension}";
         }
 
@@ -102,8 +102,8 @@ namespace Novels.PathGetter
             if (string.IsNullOrEmpty(name)) return string.Empty;
             if (string.IsNullOrEmpty(arg)) return string.Empty;
 
-            var firstChar = char.ToUpper(arg[0]);
-            var otherText = arg.Substring(1).ToLower();
+            var firstChar = char.ToUpperInvariant(arg[0]);
+            var otherText = arg.Substring(1).ToLowerInvariant();
             return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}{_imageExtension}";
         }
 
@@ -112,8 +112,8 @@ namespace Novels.PathGetter
             if (string.IsNullOrEmpty(name)) return string.Empty;
             if (string.IsNullOrEmpty(arg)) return string.Empty;
 
-            var firstChar = char.ToUpper(arg[0]);
-            var otherText = arg.Substring(1).ToLower();
+            var firstChar = char.ToUpperInvariant(arg[0]);
+            var otherText = arg.Substring(1).ToLowerInvariant();
             return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}{_imageExtension}";
         }
 
@@ -122,8 +122,8 @@ namespace Novels.PathGetter
             if (string.IsNullOrEmpty(name)) return string.Empty;
             if (string.IsNullOrEmpty(arg)) return string.Empty;
 
-            var firstChar = char.ToUpper(arg[0]);
-            var otherText = arg.Substring(1).ToLower();
+            var firstChar = char.ToUpperInvariant(arg[0]);
+            var otherText = arg.Substring(1).ToLowerInvariant();
             return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Accessories/{direction}/{firstChar}{otherText}{_imageExtension}";
         }
 

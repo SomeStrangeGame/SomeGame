@@ -21,21 +21,17 @@ namespace Novels.StoryQueue
                     return new QueueProcess.EmptyQueue();
 
                 case StoryCommands.StoryCommandType.Notification:
-                    return new QueueProcess.NotificationQueue
-                    {
-                        NotificationText = command.Notification.Text,
-                        ShowNotification = _ctx.ShowNotification
-                    };
+                    return new QueueProcess.NotificationQueue(
+                        _ctx.ShowNotification,
+                        command.Notification.Text);
 
                 case StoryCommands.StoryCommandType.Location:
                 case StoryCommands.StoryCommandType.CutScene:
-                    return new QueueProcess.BackgroundQueue.SetBackgroundQueue
-                    {
-                        SetImage = _ctx.SetImage,
-                        SetImageImmediate = _ctx.SetImageImmediate,
-                        AssetName = command.Background.AssetName,
-                        Presentation = command.Background.Presentation,
-                    };
+                    return new QueueProcess.BackgroundQueue.SetBackgroundQueue(
+                        _ctx.SetImage,
+                        _ctx.SetImageImmediate,
+                        command.Background.AssetName,
+                        command.Background.Presentation);
 
                 case StoryCommands.StoryCommandType.Music:
                 case StoryCommands.StoryCommandType.Sound:
@@ -45,26 +41,20 @@ namespace Novels.StoryQueue
                         : command.Type == StoryCommands.StoryCommandType.Sound
                             ? _ctx.PlaySound
                             : _ctx.PlayAmbient;
-                    return new QueueProcess.AudioQueue
-                    {
-                        PlayAudio = playAudio,
-                        AssetName = command.Audio.AssetName,
-                    };
+                    return new QueueProcess.AudioQueue(
+                        playAudio,
+                        command.Audio.AssetName);
 
                 case StoryCommands.StoryCommandType.Camera:
-                    return new QueueProcess.BackgroundQueue.CameraQueue
-                    {
-                        SetCamera = _ctx.SetCamera,
-                        SetCameraImmediate = _ctx.SetCameraImmediate,
-                        Action = command.Camera.Action
-                    };
+                    return new QueueProcess.BackgroundQueue.CameraQueue(
+                        _ctx.SetCamera,
+                        _ctx.SetCameraImmediate,
+                        command.Camera.Action);
 
                 case StoryCommands.StoryCommandType.Wait:
-                    return new QueueProcess.AwaitQueue
-                    {
-                        Wait = _ctx.Wait,
-                        Timer = command.Wait.Duration
-                    };
+                    return new QueueProcess.AwaitQueue(
+                        _ctx.Wait,
+                        command.Wait.Duration);
 
                 default:
                     throw new ArgumentOutOfRangeException(

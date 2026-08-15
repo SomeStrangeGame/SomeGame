@@ -5,58 +5,101 @@ namespace Novels.QueueProcess
 {
     public class CharacterQueue
     {
-        public struct SetDialogueQueue : IQueue
+        public readonly struct SetDialogueQueue : IQueue
         {
-            public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogue;
-            public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogueImmediate;
-            public StoryContracts.StoryDialogueAlignment Alignment;
+            private readonly Func<StoryContracts.StoryDialogueAlignment, UniTask> _setDialogue;
+            private readonly Func<StoryContracts.StoryDialogueAlignment, UniTask> _setDialogueImmediate;
+            private readonly StoryContracts.StoryDialogueAlignment _alignment;
 
-            public async readonly UniTask Run(QueueExecutionContext context)
+            public SetDialogueQueue(
+                Func<StoryContracts.StoryDialogueAlignment, UniTask> setDialogue,
+                Func<StoryContracts.StoryDialogueAlignment, UniTask> setDialogueImmediate,
+                StoryContracts.StoryDialogueAlignment alignment)
             {
+                _setDialogue = setDialogue ?? throw new ArgumentNullException(nameof(setDialogue));
+                _setDialogueImmediate = setDialogueImmediate
+                    ?? throw new ArgumentNullException(nameof(setDialogueImmediate));
+                _alignment = alignment;
+            }
+
+            public async UniTask Run(QueueExecutionContext context)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
                 if (context.Mode == QueueExecutionMode.Replay)
-                    await SetDialogueImmediate(Alignment);
+                    await _setDialogueImmediate(_alignment);
                 else
-                    await SetDialogue(Alignment);
+                    await _setDialogue(_alignment);
             }
         }
-        public struct HideCharacterQueue : IQueue
+        public readonly struct HideCharacterQueue : IQueue
         {
-            public Func<UniTask> CharacterHide;
-            public Action CharacterHideImmediate;
-            public bool IsNewCharacter;
+            private readonly Func<UniTask> _characterHide;
+            private readonly Action _characterHideImmediate;
+            private readonly bool _isNewCharacter;
 
-            public async readonly UniTask Run(QueueExecutionContext context)
+            public HideCharacterQueue(
+                Func<UniTask> characterHide,
+                Action characterHideImmediate,
+                bool isNewCharacter)
             {
+                _characterHide = characterHide
+                    ?? throw new ArgumentNullException(nameof(characterHide));
+                _characterHideImmediate = characterHideImmediate
+                    ?? throw new ArgumentNullException(nameof(characterHideImmediate));
+                _isNewCharacter = isNewCharacter;
+            }
+
+            public async UniTask Run(QueueExecutionContext context)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
                 if (context.Mode == QueueExecutionMode.Replay)
                 {
-                    CharacterHideImmediate();
+                    _characterHideImmediate();
                     return;
                 }
 
-                if (IsNewCharacter)
-                    await CharacterHide();
+                if (_isNewCharacter)
+                    await _characterHide();
             }
         }
-        public struct ShowCharacterQueue : IQueue
+        public readonly struct ShowCharacterQueue : IQueue
         {
-            public Func<StoryContracts.CharacterRenderRequest, UniTask> CharacterSetImage;
-            public Func<StoryContracts.StoryCharacterPosition, UniTask> CharacterShow;
-            public Action<StoryContracts.StoryCharacterPosition> CharacterShowImmediate;
-            public bool IsNewCharacter;
-            public StoryContracts.CharacterRenderRequest Character;
+            private readonly Func<StoryContracts.CharacterRenderRequest, UniTask> _characterSetImage;
+            private readonly Func<StoryContracts.StoryCharacterPosition, UniTask> _characterShow;
+            private readonly Action<StoryContracts.StoryCharacterPosition> _characterShowImmediate;
+            private readonly bool _isNewCharacter;
+            private readonly StoryContracts.CharacterRenderRequest _character;
 
-            public async readonly UniTask Run(QueueExecutionContext context)
+            public ShowCharacterQueue(
+                Func<StoryContracts.CharacterRenderRequest, UniTask> characterSetImage,
+                Func<StoryContracts.StoryCharacterPosition, UniTask> characterShow,
+                Action<StoryContracts.StoryCharacterPosition> characterShowImmediate,
+                bool isNewCharacter,
+                StoryContracts.CharacterRenderRequest character)
             {
-                await CharacterSetImage(Character);
+                _characterSetImage = characterSetImage
+                    ?? throw new ArgumentNullException(nameof(characterSetImage));
+                _characterShow = characterShow
+                    ?? throw new ArgumentNullException(nameof(characterShow));
+                _characterShowImmediate = characterShowImmediate
+                    ?? throw new ArgumentNullException(nameof(characterShowImmediate));
+                _isNewCharacter = isNewCharacter;
+                _character = character;
+            }
+
+            public async UniTask Run(QueueExecutionContext context)
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                await _characterSetImage(_character);
 
                 if (context.Mode == QueueExecutionMode.Replay)
                 {
-                    CharacterShowImmediate(Character.Position);
+                    _characterShowImmediate(_character.Position);
                     return;
                 }
 
-                if (IsNewCharacter)
-                    await CharacterShow(Character.Position);
+                if (_isNewCharacter)
+                    await _characterShow(_character.Position);
             }
         }
     }

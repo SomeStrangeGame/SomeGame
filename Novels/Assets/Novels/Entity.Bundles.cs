@@ -1,3 +1,4 @@
+using System.Threading;
 using Disposable;
 
 namespace Novels
@@ -9,9 +10,9 @@ namespace Novels
             return new Bundles.Entity(new Bundles.Entity.Ctx
             {
                 Prefix = _ctx.Data.Prefix,
+                CancellationToken = _ctx.CancellationToken,
                 OnLog = _ctx.OnLog,
             }).AddTo(this);
         }
     }
 }
-

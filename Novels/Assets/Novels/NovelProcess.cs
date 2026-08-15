@@ -14,7 +14,8 @@ namespace Novels
             out Queue<QueueProcess.IQueue> queue);
         internal delegate UniTask ExecuteQueueDelegate(
             Queue<QueueProcess.IQueue> queue,
-            byte? savedChoice);
+            byte? savedChoice,
+            CancellationToken cancellationToken);
 
         internal struct Ctx
         {
@@ -59,7 +60,10 @@ namespace Novels
                 if (!_ctx.BuildQueue(stepResult.Step, out var queue))
                     continue;
 
-                await _ctx.ExecuteQueue(queue, _ctx.GetNextSavedChoice()).AttachExternalCancellation(_ctx.CancellationToken);
+                await _ctx.ExecuteQueue(
+                    queue,
+                    _ctx.GetNextSavedChoice(),
+                    _ctx.CancellationToken);
             }
         }
     }
