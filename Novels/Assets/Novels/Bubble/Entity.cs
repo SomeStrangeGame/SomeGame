@@ -10,7 +10,6 @@ namespace Novels.Bubble
     {
         public struct Ctx
         {
-            public string MainCharacter;
             public GameObject BubblePrefab;
         }
 
@@ -39,7 +38,8 @@ namespace Novels.Bubble
                 public Action<int> OnClick;
             }
             public string Name;
-            public string[] Args;
+            public StoryContracts.StorySpeakerRole SpeakerRole;
+            public StoryContracts.DialoguePresentation Presentation;
             public TextCtx Text;
             public ButtonCtx[] Buttons;
             public Action OnBackgroundClick;
@@ -101,18 +101,38 @@ namespace Novels.Bubble
         public void SetBubbleScreen(BubbleScreenCtx ctx)
         {
             View.Screen.BubbleCtx.BubbleType bubbleType;
-            if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Disclaimer)) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
-            else if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Hint)) bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
-            else if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Thoughts)) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftMinds;
-            else if (ctx.Name == StoryContracts.StorySpeakers.Narrator) bubbleType = View.Screen.BubbleCtx.BubbleType.NoCharacter;
-            else if (ctx.Name == _ctx.MainCharacter) bubbleType = View.Screen.BubbleCtx.BubbleType.LeftCharacter;
-            else bubbleType = View.Screen.BubbleCtx.BubbleType.RightCharacter;
+            switch (ctx.Presentation)
+            {
+                case StoryContracts.DialoguePresentation.Disclaimer:
+                case StoryContracts.DialoguePresentation.Hint:
+                    bubbleType = View.Screen.BubbleCtx.BubbleType.Hint;
+                    break;
+
+                case StoryContracts.DialoguePresentation.Thoughts:
+                    bubbleType = View.Screen.BubbleCtx.BubbleType.LeftMinds;
+                    break;
+
+                case StoryContracts.DialoguePresentation.Narrator:
+                    bubbleType = View.Screen.BubbleCtx.BubbleType.NoCharacter;
+                    break;
+
+                default:
+                    bubbleType = ctx.SpeakerRole == StoryContracts.StorySpeakerRole.MainCharacter
+                        ? View.Screen.BubbleCtx.BubbleType.LeftCharacter
+                        : View.Screen.BubbleCtx.BubbleType.RightCharacter;
+                    break;
+            }
 
             var header = ctx.Text.Header;
-            if (bubbleType == View.Screen.BubbleCtx.BubbleType.Hint)
+            switch (ctx.Presentation)
             {
-                if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Disclaimer)) header = "Дисклеймер";
-                if (HasArgument(ctx.Args, StoryContracts.StoryArguments.Hint)) header = "Подсказка";
+                case StoryContracts.DialoguePresentation.Disclaimer:
+                    header = "Дисклеймер";
+                    break;
+
+                case StoryContracts.DialoguePresentation.Hint:
+                    header = "Подсказка";
+                    break;
             }
             var buttons = ctx.Buttons.Select(b => new View.Screen.BubbleCtx.ButtonCtx
             {
@@ -134,10 +154,5 @@ namespace Novels.Bubble
             });
         }
 
-        private static bool HasArgument(string[] arguments, string expected)
-        {
-            return arguments != null && arguments.Any(argument =>
-                string.Equals(argument, expected, StringComparison.OrdinalIgnoreCase));
-        }
     }
 }

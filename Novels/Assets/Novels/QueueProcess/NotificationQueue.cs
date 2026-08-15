@@ -8,15 +8,10 @@ namespace Novels.QueueProcess
         public string NotificationText;
         public Func<string, UniTask> ShowNotification;
 
-        public async readonly UniTask Run()
+        public async readonly UniTask Run(QueueExecutionContext context)
         {
-            ShowNotification(NotificationText).Forget();
-        }
-
-        public async readonly UniTask RunImmediate(byte choice)
-        {
-            
+            if (context.Mode == QueueExecutionMode.Live)
+                ShowNotification(NotificationText).Forget();
         }
     }
 }
-

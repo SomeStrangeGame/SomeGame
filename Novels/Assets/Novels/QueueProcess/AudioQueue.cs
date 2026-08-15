@@ -8,12 +8,7 @@ namespace Novels.QueueProcess
         public Func<string, UniTask> PlayAudio;
         public string AssetName;
 
-        public async readonly UniTask Run()
-        {
-            await PlayAudio(AssetName);
-        }
-
-        public async readonly UniTask RunImmediate(byte choice)
+        public async readonly UniTask Run(QueueExecutionContext context)
         {
             await PlayAudio(AssetName);
         }

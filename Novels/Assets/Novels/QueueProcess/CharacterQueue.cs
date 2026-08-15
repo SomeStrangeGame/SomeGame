@@ -1,25 +1,22 @@
 using System;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 
 namespace Novels.QueueProcess
 {
     public class CharacterQueue
     {
-        public struct DialogQueue : IQueue
+        public struct SetDialogueQueue : IQueue
         {
-            public Func<TextAlignment, UniTask> SetDialogue;
-            public Func<TextAlignment, UniTask> SetDialogueImmediate;
-            public TextAlignment DialogAlign;
+            public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogue;
+            public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogueImmediate;
+            public StoryContracts.StoryDialogueAlignment Alignment;
 
-            public async readonly UniTask Run()
+            public async readonly UniTask Run(QueueExecutionContext context)
             {
-                await SetDialogue(DialogAlign);
-            }
-
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                await SetDialogueImmediate(DialogAlign);
+                if (context.Mode == QueueExecutionMode.Replay)
+                    await SetDialogueImmediate(Alignment);
+                else
+                    await SetDialogue(Alignment);
             }
         }
         public struct HideCharacterQueue : IQueue
@@ -28,41 +25,37 @@ namespace Novels.QueueProcess
             public Action CharacterHideImmediate;
             public bool IsNewCharacter;
 
-            public async readonly UniTask Run()
+            public async readonly UniTask Run(QueueExecutionContext context)
             {
-                if (IsNewCharacter)
+                if (context.Mode == QueueExecutionMode.Replay)
                 {
-                    await CharacterHide();
+                    CharacterHideImmediate();
+                    return;
                 }
-            }
 
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                CharacterHideImmediate();
+                if (IsNewCharacter)
+                    await CharacterHide();
             }
         }
         public struct ShowCharacterQueue : IQueue
         {
-            public Func<string, string[], UniTask> CharacterSetImage;
-            public Func<bool?, UniTask> CharacterShow;
-            public Action<bool?> CharacterShowImmediate;
+            public Func<StoryContracts.CharacterRenderRequest, UniTask> CharacterSetImage;
+            public Func<StoryContracts.StoryCharacterPosition, UniTask> CharacterShow;
+            public Action<StoryContracts.StoryCharacterPosition> CharacterShowImmediate;
             public bool IsNewCharacter;
-            public string Name;
-            public string[] Args;
-            public string MainCharacter;
+            public StoryContracts.CharacterRenderRequest Character;
 
-            public async readonly UniTask Run()
+            public async readonly UniTask Run(QueueExecutionContext context)
             {
-                await CharacterSetImage(Name, Args);
-                if (IsNewCharacter)
+                if (context.Mode == QueueExecutionMode.Replay)
                 {
-                    await CharacterShow(Name != StoryContracts.StorySpeakers.Wardrobe ? Name == MainCharacter : null);
+                    CharacterShowImmediate(Character.Position);
+                    return;
                 }
-            }
 
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                CharacterShowImmediate(Name != StoryContracts.StorySpeakers.Wardrobe ? Name == MainCharacter : null);
+                await CharacterSetImage(Character);
+                if (IsNewCharacter)
+                    await CharacterShow(Character.Position);
             }
         }
     }

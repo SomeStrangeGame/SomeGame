@@ -17,10 +17,10 @@ namespace Novels.Save
 
         private readonly Ctx _ctx;
         private List<byte> _save = new();
-        private List<byte> _initSave = new();
+        private byte[] _initialChoices = Array.Empty<byte>();
+        private int _initialChoicePosition;
 
-        public bool ContainAnySave => _initSave.Count > 0;
-        public List<byte> InitSave => _initSave;
+        public bool ContainAnySave => _initialChoices.Length > 0;
 
         public Entity(Ctx ctx)
         {
@@ -29,6 +29,10 @@ namespace Novels.Save
 
         public void Init()
         {
+            _save.Clear();
+            _initialChoices = Array.Empty<byte>();
+            _initialChoicePosition = 0;
+
             using (var cache = new Cache.Entity())
             {
                 try
@@ -40,7 +44,15 @@ namespace Novels.Save
                     _ctx.OnLog((LogType.Log, "No save file"));
                 }
             }
-            _initSave = _save.ToList();
+            _initialChoices = _save.ToArray();
+        }
+
+        public byte? GetNextSavedChoice()
+        {
+            if (_initialChoicePosition >= _initialChoices.Length)
+                return null;
+
+            return _initialChoices[_initialChoicePosition++];
         }
 
         public void SaveChoice(byte unit = 255)
@@ -68,8 +80,8 @@ namespace Novels.Save
                 Debug.Log($"No cache files in {cachPath}");
             }
             _save.Clear();
-            _initSave.Clear();
+            _initialChoices = Array.Empty<byte>();
+            _initialChoicePosition = 0;
         }
     }
 }
-

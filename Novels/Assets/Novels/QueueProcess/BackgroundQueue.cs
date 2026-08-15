@@ -5,56 +5,34 @@ namespace Novels.QueueProcess
 {
     public class BackgroundQueue
     {
-        public struct LocationQueue : IQueue
+        public struct SetBackgroundQueue : IQueue
         {
-            public Func<string, bool, bool, string[], UniTask> SetImage;
-            public Func<string, bool, bool, string[], UniTask> SetImageImmediate;
+            public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImage;
+            public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImageImmediate;
             public string AssetName;
-            public string[] Args;
+            public StoryContracts.StoryBackgroundPresentation Presentation;
 
-            public async readonly UniTask Run()
+            public async readonly UniTask Run(QueueExecutionContext context)
             {
-                await SetImage(AssetName, false, false, Args);
-            }
-
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                await SetImageImmediate(AssetName, false, false, Args);
-            }
-        }
-        public struct CutSceneQueue : IQueue
-        {
-            public Func<string, bool, bool, string[], UniTask> SetImage;
-            public Func<string, bool, bool, string[], UniTask> SetImageImmediate;
-            public string AssetName;
-            public string[] Args;
-
-            public async readonly UniTask Run()
-            {
-                await SetImage(AssetName, true, false, Args);
-            }
-
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                await SetImageImmediate(AssetName, true, false, Args);
+                if (context.Mode == QueueExecutionMode.Replay)
+                    await SetImageImmediate(AssetName, Presentation);
+                else
+                    await SetImage(AssetName, Presentation);
             }
         }
         public struct CameraQueue : IQueue
         {
-            public Func<string, UniTask> SetCamera;
-            public Func<string, UniTask> SetCameraImmediate;
-            public string Value;
+            public Func<StoryContracts.StoryCameraAction, UniTask> SetCamera;
+            public Func<StoryContracts.StoryCameraAction, UniTask> SetCameraImmediate;
+            public StoryContracts.StoryCameraAction Action;
 
-            public async readonly UniTask Run()
+            public async readonly UniTask Run(QueueExecutionContext context)
             {
-                await SetCamera(Value);
-            }
-
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                await SetCameraImmediate(Value);
+                if (context.Mode == QueueExecutionMode.Replay)
+                    await SetCameraImmediate(Action);
+                else
+                    await SetCamera(Action);
             }
         }
     }
 }
-

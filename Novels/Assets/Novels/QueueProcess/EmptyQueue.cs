@@ -4,14 +4,8 @@ namespace Novels.QueueProcess
 {
     public struct EmptyQueue : IQueue
     {
-        public async readonly UniTask Run()
+        public async readonly UniTask Run(QueueExecutionContext context)
         {
-            
-        }
-
-        public async readonly UniTask RunImmediate(byte choice)
-        {
-            
         }
     }
 }

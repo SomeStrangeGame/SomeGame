@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
 namespace Novels.QueueProcess
@@ -29,7 +28,8 @@ namespace Novels.QueueProcess
                 }
 
                 public string Name;
-                public string[] Args;
+                public StoryContracts.StorySpeakerRole SpeakerRole;
+                public StoryContracts.DialoguePresentation Presentation;
                 public TextCtx Text;
                 public ButtonCtx[] Buttons;
                 public Action OnBackgroundClick;
@@ -49,7 +49,7 @@ namespace Novels.QueueProcess
 
             public Func<string, string> GetLocalizationValue;
 
-            public List<Ink.Runtime.Choice> Choices;
+            public StoryContracts.StoryChoice[] Choices;
 
             public Action<string> SetMainCharacterView;
             public Action<string> SetMainCharacterClothes;
@@ -61,14 +61,29 @@ namespace Novels.QueueProcess
 
             public string Name;
             public string Value;
-            public string[] Args;
+            public StoryContracts.StorySpeakerRole SpeakerRole;
+            public StoryContracts.DialoguePresentation Presentation;
+            public StoryContracts.StoryChoiceAction ChoiceActions;
 
             public Action<BubbleCtx> SetBubbleScreen;
             public Action<WardrobeCtx> SetWardrobeScreen;
             public Action<ChooseCtx> SetChooseScreen;
 
-            public async UniTask Run()
+            public async UniTask Run(QueueExecutionContext context)
             {
+                if (context.Mode == QueueExecutionMode.Replay)
+                {
+                    var choice = context.SavedChoice;
+                    if (choice != _noChoice)
+                    {
+                        var selectedChoice = Choices.First(item => item.Id == choice);
+                        ApplyChoiceActions(selectedChoice);
+                        SetChoice(selectedChoice.Id);
+                    }
+                    BubbleDone.TrySetResult();
+                    return;
+                }
+
                 if (Name == _wardrobeTrigger)
                 {
                     SetWardrobeScreen(new WardrobeCtx
@@ -88,7 +103,8 @@ namespace Novels.QueueProcess
                     SetBubbleScreen(new BubbleCtx
                     {
                         Name = Name,
-                        Args = Args,
+                        SpeakerRole = SpeakerRole,
+                        Presentation = Presentation,
                         Text = new BubbleCtx.TextCtx
                         {
                             Header = GetLocalizationValue(Name),
@@ -96,13 +112,13 @@ namespace Novels.QueueProcess
                         },
                         Buttons = Choices.Select(c => new BubbleCtx.ButtonCtx
                         {
-                            Id = c.index,
-                            Text = c.text,
+                            Id = c.Id,
+                            Text = c.Text,
                             OnClick = id =>
                             {
-                                SetCharacterView(Args, c);
+                                ApplyChoiceActions(c);
 
-                                SaveChoice((byte)id);
+                                SaveChoice(ToSaveChoiceId(id));
                                 SetChoice(id);
                                 BubbleDone.TrySetResult();
                             }
@@ -116,25 +132,24 @@ namespace Novels.QueueProcess
                 }
             }
 
-            public async UniTask RunImmediate(byte choice)
+            private static byte ToSaveChoiceId(int id)
             {
-                if (choice != _noChoice)
-                {
-                    SetCharacterView(Args, Choices[choice]);
-                    SetChoice(choice);
-                }
-                BubbleDone.TrySetResult();
+                if (id < byte.MinValue || id >= _noChoice)
+                    throw new ArgumentOutOfRangeException(nameof(id), id, "Choice id must fit the save format range 0-254.");
+
+                return (byte)id;
             }
 
-            private void SetCharacterView(string[] args, Ink.Runtime.Choice choice)
+            private void ApplyChoiceActions(StoryContracts.StoryChoice choice)
             {
-                if (args.Any(a => a == StoryContracts.StoryChoiceActions.SelectAppearance))
-                    SetMainCharacterView(choice.text);
-                if (args.Any(a => a == StoryContracts.StoryChoiceActions.SelectClothes))
-                    SetMainCharacterClothes(choice.text);
-                if (args.Any(a => a == StoryContracts.StoryChoiceActions.SelectHairLegacy
-                    || a == StoryContracts.StoryChoiceActions.SelectHair))
-                    SetMainCharacterHair(choice.text);
+                if ((ChoiceActions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+                    SetMainCharacterView(choice.Text);
+
+                if ((ChoiceActions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                    SetMainCharacterClothes(choice.Text);
+
+                if ((ChoiceActions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                    SetMainCharacterHair(choice.Text);
             }
         }
 
@@ -144,16 +159,13 @@ namespace Novels.QueueProcess
             public Func<UniTask> BubbleShow;
             public Action BubbleShowImmediate;
 
-            public async readonly UniTask Run()
+            public async readonly UniTask Run(QueueExecutionContext context)
             {
-                await BubbleShow();
+                if (context.Mode == QueueExecutionMode.Replay)
+                    BubbleShowImmediate();
+                else
+                    await BubbleShow();
 
-                await BubbleDone.Task;
-            }
-
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                BubbleShowImmediate();
                 await BubbleDone.Task;
             }
         }
@@ -162,14 +174,12 @@ namespace Novels.QueueProcess
             public Func<UniTask> BubbleHide;
             public Action BubbleHideImmediate;
 
-            public async readonly UniTask Run()
+            public async readonly UniTask Run(QueueExecutionContext context)
             {
-                await BubbleHide();
-            }
-
-            public async readonly UniTask RunImmediate(byte choice)
-            {
-                BubbleHideImmediate();
+                if (context.Mode == QueueExecutionMode.Replay)
+                    BubbleHideImmediate();
+                else
+                    await BubbleHide();
             }
         }
     }

@@ -1,7 +1,9 @@
 {
     "name": "Novels.StoryCommands",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:b06a9b52787e42a9ad9a2acdf98db8c1"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

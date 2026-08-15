@@ -175,52 +175,27 @@ namespace Novels
             var waiting = CreateWaiting();
 
             var audio = CreateAudio(a => bundles.GetAudioURL(a), a => bundles.LoadAudioToDict(a));
+            var storyQueue = CreateStoryQueue(
+                storyProcessor,
+                notification,
+                location,
+                waiting,
+                audio,
+                localization,
+                bubble,
+                saveSystem,
+                character);
+            var queueExecutor = CreateQueueExecutor();
 
             var novelProcessCtx = new NovelProcess.Ctx
             {
-                MainCharacter = _ctx.Data.MainCharacter,
+                GetNextStep = () => storyCommands.ParseStep(
+                    storyProcessor.GetNextText(),
+                    storyProcessor.GetChoices()),
+                BuildQueue = storyQueue.TryBuild,
+                ExecuteQueue = queueExecutor.Run,
 
-                GetNextText = storyProcessor.GetNextText,
-                GetChoices = storyProcessor.GetChoices,
-                SetChoice = storyProcessor.SetChoice,
-                ParseCommand = storyCommands.Parse,
-
-                ShowNotification = notification.Show,
-
-                SetImage = location.SetImage,
-                SetImageImmediate = location.SetImageImmediate,
-                SetCamera = location.SetCamera,
-                SetCameraImmediate = location.SetCameraImmediate,
-                SetDialogue = location.SetDialogue,
-                SetDialogueImmediate = location.SetDialogueImmediate,
-
-                Wait = waiting.Await,
-
-                PlayAudio = audio.PlayAudio,
-
-                GetLocalizationValue = localization.GetValue,
-
-                BubbleShow = bubble.Show,
-                BubbleShowImmediate = bubble.ShowImmediate,
-                BubbleHide = bubble.Hide,
-                BubbleHideImmediate = bubble.HideImmediate,
-                SetBubbleScreen = bubble.SetBubbleScreen,
-                SetWardrobeScreen = bubble.SetWardrobeScreen,
-                SetChooseScreen = bubble.SetChooseScreen,
-
-                Save = saveSystem.InitSave,
-                SaveChoice = saveSystem.SaveChoice,
-
-                SetMainCharacterView = character.SetMainCharacterView,
-                SetMainCharacterClothes = character.SetMainCharacterClothes,
-                SetMainCharacterHair = character.SetMainCharacterHair,
-                CharacterHide = character.Hide,
-                CharacterHideImmediate = character.HideImmediate,
-                CharacterShow = character.Show,
-                CharacterShowImmediate = character.ShowImmediate,
-                CharacterSetImage = character.SetImage,
-
-                ShowLoading = loading.Show,
+                GetNextSavedChoice = saveSystem.GetNextSavedChoice,
                 HideLoading = loading.Hide,
 
                 OnLog = _ctx.OnLog,

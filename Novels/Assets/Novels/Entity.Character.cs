@@ -11,7 +11,6 @@ namespace Novels
         {
             var character = new Character.Entity(new Character.Entity.Ctx
             {
-                MainCharacterName = _ctx.Data.MainCharacter,
                 ScreenPrefab = screenPrefab,
                 GetSprite = getSprite,
                 GetMainBodyPath = GetMainBodyPath,
@@ -26,4 +25,3 @@ namespace Novels
         }
     }
 }
-

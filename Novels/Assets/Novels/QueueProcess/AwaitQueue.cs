@@ -8,15 +8,10 @@ namespace Novels.QueueProcess
         public Func<float, UniTask> Wait;
         public float Timer;
 
-        public async readonly UniTask Run()
+        public async readonly UniTask Run(QueueExecutionContext context)
         {
-            await Wait(Timer);
-        }
-
-        public async readonly UniTask RunImmediate(byte choice)
-        {
-            
+            if (context.Mode == QueueExecutionMode.Live)
+                await Wait(Timer);
         }
     }
 }
-

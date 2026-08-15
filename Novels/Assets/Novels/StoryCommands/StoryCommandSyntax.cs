@@ -8,6 +8,8 @@ namespace Novels.StoryCommands
         internal const string Keyboard = "keyboard";
         internal const string InvalidWaitDuration = "INVALID_WAIT_DURATION";
         internal const string InvalidArguments = "INVALID_ARGUMENTS";
+        internal const string ChoicesWithoutDialogue = "CHOICES_WITHOUT_DIALOGUE";
+        internal const string UnsupportedCameraAction = "UNSUPPORTED_CAMERA_ACTION";
 
         internal static readonly HashSet<string> MetadataNames = new(StringComparer.OrdinalIgnoreCase)
         {

@@ -27,4 +27,16 @@ namespace Novels.StoryContracts
         public const string SelectHair = "Выбери причёску";
         public const string SelectHairLegacy = "Выбери прическу";
     }
+
+    public static class StoryCameraActions
+    {
+        public const string FadeIn = "fadein";
+        public const string LeftRight = "leftright";
+        public const string RightLeft = "rightleft";
+        public const string ToCenter = "tocenter";
+        public const string ToLeft = "toleft";
+        public const string Shaking = "shaking";
+        public const string Injury = "injury";
+        public const string Splashes = "splashes";
+    }
 }

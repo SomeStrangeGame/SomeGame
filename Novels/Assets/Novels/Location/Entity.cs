@@ -11,15 +11,6 @@ namespace Novels.Location
         private const string _noVideo = "None";
         private const int _cutSceneFallbackDelayMilliseconds = 3000;
 
-        private static class CameraCommands
-        {
-            internal const string FadeIn = "fadein";
-            internal const string LeftRight = "leftright";
-            internal const string RightLeft = "rightleft";
-            internal const string ToCenter = "tocenter";
-            internal const string ToLeft = "toleft";
-        }
-
         public struct Ctx
         {
             public GameObject ScreenPrefab;
@@ -47,11 +38,27 @@ namespace Novels.Location
             _screen.ResetEffect();
         }
 
-        public async UniTask SetImage(string assetName, bool cutScene, bool forceNoVideo, string[] args)
+        public UniTask SetImage(
+            string assetName,
+            StoryContracts.StoryBackgroundPresentation presentation)
         {
-            Camera.allCameras[0].backgroundColor = Color.black;
-            if (args != null && args.Any(a => a == StoryContracts.StoryArguments.WhiteBackground))
-                Camera.allCameras[0].backgroundColor = Color.white;
+            return SetImage(
+                assetName,
+                presentation,
+                false,
+                presentation.Type == StoryContracts.StoryBackgroundType.CutScene);
+        }
+
+        private async UniTask SetImage(
+            string assetName,
+            StoryContracts.StoryBackgroundPresentation presentation,
+            bool forceNoVideo,
+            bool cutScene)
+        {
+            Camera.allCameras[0].backgroundColor = presentation.BackgroundColor
+                == StoryContracts.StoryBackgroundColor.White
+                ? Color.white
+                : Color.black;
 
             await _screen.HideImage();
 
@@ -94,8 +101,8 @@ namespace Novels.Location
                         await UniTask.Delay(_cutSceneFallbackDelayMilliseconds);// add zoom effect in future
                     }
                     
-                    if (!args.Contains(StoryContracts.StoryArguments.EndCutScene))
-                        await SetImage(assetName, false, true, args);
+                    if (!presentation.KeepFinalVideoFrame)
+                        await SetImage(assetName, presentation, true, false);
                 }
             }
             else
@@ -107,11 +114,27 @@ namespace Novels.Location
             }
         }
 
-        public async UniTask SetImageImmediate(string assetName, bool cutScene, bool forceNoVideo, string[] args)
+        public UniTask SetImageImmediate(
+            string assetName,
+            StoryContracts.StoryBackgroundPresentation presentation)
         {
-            Camera.allCameras[0].backgroundColor = Color.black;
-            if (args != null && args.Any(a => a == StoryContracts.StoryArguments.WhiteBackground))
-                Camera.allCameras[0].backgroundColor = Color.white;
+            return SetImageImmediate(
+                assetName,
+                presentation,
+                false,
+                presentation.Type == StoryContracts.StoryBackgroundType.CutScene);
+        }
+
+        private async UniTask SetImageImmediate(
+            string assetName,
+            StoryContracts.StoryBackgroundPresentation presentation,
+            bool forceNoVideo,
+            bool cutScene)
+        {
+            Camera.allCameras[0].backgroundColor = presentation.BackgroundColor
+                == StoryContracts.StoryBackgroundColor.White
+                ? Color.white
+                : Color.black;
 
             _screen.HideImageImmediate();
 
@@ -154,8 +177,8 @@ namespace Novels.Location
                         await UniTask.Yield();
                     }
                     
-                    if (!args.Contains(StoryContracts.StoryArguments.EndCutScene))
-                        await SetImageImmediate(assetName, false, true, args);
+                    if (!presentation.KeepFinalVideoFrame)
+                        await SetImageImmediate(assetName, presentation, true, false);
                 }
             }
             else
@@ -167,74 +190,91 @@ namespace Novels.Location
             }
         }
 
-        public async UniTask SetCamera(string value)
+        public async UniTask SetCamera(StoryContracts.StoryCameraAction action)
         {
-            if (string.Equals(value, CameraCommands.FadeIn, StringComparison.OrdinalIgnoreCase))
+            if (action == StoryContracts.StoryCameraAction.FadeIn)
             {
                 _screen.SetEffect(View.Screen.Effect.Dark).Forget();
                 return;
             }
-            if (string.Equals(value, CameraCommands.LeftRight, StringComparison.OrdinalIgnoreCase))
+
+            if (TryGetCameraEffect(action, out var effect))
             {
-                await _screen.SetCamera(View.Screen.CameraEffect.LeftRight);
+                await _screen.SetCamera(effect);
                 return;
             }
-            if (string.Equals(value, CameraCommands.RightLeft, StringComparison.OrdinalIgnoreCase))
-            {
-                await _screen.SetCamera(View.Screen.CameraEffect.RightLeft);
-                return;
-            }
-            if (string.Equals(value, CameraCommands.ToCenter, StringComparison.OrdinalIgnoreCase))
-            {
-                await _screen.SetCamera(View.Screen.CameraEffect.ToCenter);
-                return;
-            }
-            if (string.Equals(value, CameraCommands.ToLeft, StringComparison.OrdinalIgnoreCase))
-            {
-                await _screen.SetCamera(View.Screen.CameraEffect.ToLeft);
-                return;
-            }
-            _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
+
+            _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
         }
 
-        public async UniTask SetCameraImmediate(string value)
+        public async UniTask SetCameraImmediate(StoryContracts.StoryCameraAction action)
         {
-            if (string.Equals(value, CameraCommands.FadeIn, StringComparison.OrdinalIgnoreCase))
+            if (action == StoryContracts.StoryCameraAction.FadeIn)
             {
                 _screen.SetEffectImmediate(View.Screen.Effect.Dark);
                 return;
             }
-            if (string.Equals(value, CameraCommands.LeftRight, StringComparison.OrdinalIgnoreCase))
+
+            if (TryGetCameraEffect(action, out var effect))
             {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.LeftRight);
+                _screen.SetCameraImmediate(effect);
                 return;
             }
-            if (string.Equals(value, CameraCommands.RightLeft, StringComparison.OrdinalIgnoreCase))
-            {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.RightLeft);
-                return;
-            }
-            if (string.Equals(value, CameraCommands.ToCenter, StringComparison.OrdinalIgnoreCase))
-            {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.ToCenter);
-                return;
-            }
-            if (string.Equals(value, CameraCommands.ToLeft, StringComparison.OrdinalIgnoreCase))
-            {
-                _screen.SetCameraImmediate(View.Screen.CameraEffect.ToLeft);
-                return;
-            }
-            _ctx.OnLog((LogType.Error, $"Camera value [{value}] not implemented"));
+
+            _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
         }
 
-        public async UniTask SetDialogue(TextAlignment aligment)
+        private static bool TryGetCameraEffect(
+            StoryContracts.StoryCameraAction action,
+            out View.Screen.CameraEffect effect)
         {
-            await _screen.SetDialogue(aligment);
+            switch (action)
+            {
+                case StoryContracts.StoryCameraAction.PanLeftToRight:
+                    effect = View.Screen.CameraEffect.LeftRight;
+                    return true;
+
+                case StoryContracts.StoryCameraAction.PanRightToLeft:
+                    effect = View.Screen.CameraEffect.RightLeft;
+                    return true;
+
+                case StoryContracts.StoryCameraAction.MoveToCenter:
+                    effect = View.Screen.CameraEffect.ToCenter;
+                    return true;
+
+                case StoryContracts.StoryCameraAction.MoveToLeft:
+                    effect = View.Screen.CameraEffect.ToLeft;
+                    return true;
+
+                case StoryContracts.StoryCameraAction.Shake:
+                    effect = View.Screen.CameraEffect.Shaking;
+                    return true;
+
+                default:
+                    effect = default;
+                    return false;
+            }
         }
 
-        public async UniTask SetDialogueImmediate(TextAlignment aligment)
+        public async UniTask SetDialogue(StoryContracts.StoryDialogueAlignment alignment)
         {
-            _screen.SetDialogueImmediate(aligment);
+            await _screen.SetDialogue(ToViewAlignment(alignment));
+        }
+
+        public async UniTask SetDialogueImmediate(StoryContracts.StoryDialogueAlignment alignment)
+        {
+            _screen.SetDialogueImmediate(ToViewAlignment(alignment));
+        }
+
+        private static TextAlignment ToViewAlignment(
+            StoryContracts.StoryDialogueAlignment alignment)
+        {
+            return alignment switch
+            {
+                StoryContracts.StoryDialogueAlignment.Left => TextAlignment.Left,
+                StoryContracts.StoryDialogueAlignment.Right => TextAlignment.Right,
+                _ => TextAlignment.Center,
+            };
         }
     }
 }

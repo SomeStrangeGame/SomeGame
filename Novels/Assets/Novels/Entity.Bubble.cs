@@ -10,7 +10,6 @@ namespace Novels
         {
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
-                MainCharacter = _ctx.Data.MainCharacter,
                 BubblePrefab = bubblePrefab,
             }).AddTo(this);
             bubble.Init();
@@ -19,4 +18,3 @@ namespace Novels
         }
     }
 }
-

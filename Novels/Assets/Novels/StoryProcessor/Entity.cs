@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using Disposable;
 using Ink.Runtime;
 
@@ -29,9 +28,18 @@ namespace Novels.StoryProcessor
             return _story.Continue().Trim();
         }
 
-        public List<Choice> GetChoices()
+        public StoryContracts.StoryChoice[] GetChoices()
         {
-            return _story.currentChoices;
+            var choices = _story.currentChoices;
+            var result = new StoryContracts.StoryChoice[choices.Count];
+
+            for (var index = 0; index < choices.Count; index++)
+            {
+                var choice = choices[index];
+                result[index] = new StoryContracts.StoryChoice(choice.index, choice.text);
+            }
+
+            return result;
         }
 
         public void SetChoice(int index)
@@ -40,4 +48,3 @@ namespace Novels.StoryProcessor
         }
     }
 }
-

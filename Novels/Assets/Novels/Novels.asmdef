@@ -2,7 +2,6 @@
     "name": "Novels",
     "rootNamespace": "",
     "references": [
-        "GUID:58bed0e7c5306824586d7eda03609289",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:08af714e793fe4559bd573a498e63041",
         "GUID:07943f4cfbec34e578de307bd44b329b",
@@ -23,7 +22,8 @@
         "GUID:8c81dd99212244891938b15892929d2f",
         "GUID:7c9a684725a454143bd7ddeab226745e",
         "GUID:0f5cc96bf4a241c7a2e6863af998b277",
-        "GUID:b06a9b52787e42a9ad9a2acdf98db8c1"
+        "GUID:b06a9b52787e42a9ad9a2acdf98db8c1",
+        "GUID:c13959d190b049c8a1d92181254bd866"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
