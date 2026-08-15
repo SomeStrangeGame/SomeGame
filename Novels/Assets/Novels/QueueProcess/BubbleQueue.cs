@@ -8,42 +8,7 @@ namespace Novels.QueueProcess
     {
         public class SetBubbleQueue : IQueue
         {
-            private const string _wardrobeTrigger = "some wardrobe trigger";
-            private const string _chooseTrigger = "some choose trigger";
             private const byte _noChoice = byte.MaxValue;
-
-            public struct BubbleCtx
-            {
-                public struct TextCtx
-                {
-                    public string Header;
-                    public string Text;
-                }
-
-                public struct ButtonCtx
-                {
-                    public int Id;
-                    public string Text;
-                    public Action<int> OnClick;
-                }
-
-                public string Name;
-                public StoryContracts.StorySpeakerRole SpeakerRole;
-                public StoryContracts.DialoguePresentation Presentation;
-                public TextCtx Text;
-                public ButtonCtx[] Buttons;
-                public Action OnBackgroundClick;
-            }
-
-            public struct WardrobeCtx
-            {
-
-            }
-
-            public struct ChooseCtx
-            {
-
-            }
 
             public UniTaskCompletionSource BubbleDone;
 
@@ -65,9 +30,9 @@ namespace Novels.QueueProcess
             public StoryContracts.DialoguePresentation Presentation;
             public StoryContracts.StoryChoiceAction ChoiceActions;
 
-            public Action<BubbleCtx> SetBubbleScreen;
-            public Action<WardrobeCtx> SetWardrobeScreen;
-            public Action<ChooseCtx> SetChooseScreen;
+            public Action<BubbleContracts.BubblePresentation> SetBubbleScreen;
+            public Action<BubbleContracts.WardrobePresentation> SetWardrobeScreen;
+            public Action<BubbleContracts.ChoosePresentation> SetChooseScreen;
 
             public async UniTask Run(QueueExecutionContext context)
             {
@@ -84,51 +49,39 @@ namespace Novels.QueueProcess
                     return;
                 }
 
-                if (Name == _wardrobeTrigger)
+                if (Name == "some wardrobe trigger...")
                 {
-                    SetWardrobeScreen(new WardrobeCtx
-                    {
-                        // set wardrobe here...
-                    });
+                    SetWardrobeScreen(new BubbleContracts.WardrobePresentation());
                 }
-                else if (Name == _chooseTrigger)
+                else if (Name == "some choose trigger...")
                 {
-                    SetChooseScreen(new ChooseCtx
-                    {
-                        //set choose here...
-                    });
+                    SetChooseScreen(new BubbleContracts.ChoosePresentation());
                 }
                 else
                 {
-                    SetBubbleScreen(new BubbleCtx
-                    {
-                        Name = Name,
-                        SpeakerRole = SpeakerRole,
-                        Presentation = Presentation,
-                        Text = new BubbleCtx.TextCtx
-                        {
-                            Header = GetLocalizationValue(Name),
-                            Text = Value
-                        },
-                        Buttons = Choices.Select(c => new BubbleCtx.ButtonCtx
-                        {
-                            Id = c.Id,
-                            Text = c.Text,
-                            OnClick = id =>
+                    SetBubbleScreen(new BubbleContracts.BubblePresentation(
+                        Name,
+                        SpeakerRole,
+                        Presentation,
+                        new BubbleContracts.BubbleText(
+                            GetLocalizationValue(Name),
+                            Value),
+                        Choices.Select(c => new BubbleContracts.BubbleChoice(
+                            c.Id,
+                            c.Text,
+                            id =>
                             {
                                 ApplyChoiceActions(c);
 
                                 SaveChoice(ToSaveChoiceId(id));
                                 SetChoice(id);
                                 BubbleDone.TrySetResult();
-                            }
-                        }).ToArray(),
-                        OnBackgroundClick = () =>
+                            })).ToArray(),
+                        () =>
                         {
                             SaveChoice(_noChoice);
                             BubbleDone.TrySetResult();
-                        }
-                    });
+                        }));
                 }
             }
 

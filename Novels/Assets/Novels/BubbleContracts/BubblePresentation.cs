@@ -1,0 +1,64 @@
+using System;
+
+namespace Novels.BubbleContracts
+{
+    public sealed class WardrobePresentation
+    {
+    }
+
+    public sealed class ChoosePresentation
+    {
+    }
+
+    public sealed class BubblePresentation
+    {
+        public BubblePresentation(
+            string name,
+            StoryContracts.StorySpeakerRole speakerRole,
+            StoryContracts.DialoguePresentation dialoguePresentation,
+            BubbleText text,
+            BubbleChoice[] choices,
+            Action onBackgroundClick)
+        {
+            Name = name ?? string.Empty;
+            SpeakerRole = speakerRole;
+            DialoguePresentation = dialoguePresentation;
+            Text = text;
+            Choices = choices ?? Array.Empty<BubbleChoice>();
+            OnBackgroundClick = onBackgroundClick;
+        }
+
+        public string Name { get; }
+        public StoryContracts.StorySpeakerRole SpeakerRole { get; }
+        public StoryContracts.DialoguePresentation DialoguePresentation { get; }
+        public BubbleText Text { get; }
+        public BubbleChoice[] Choices { get; }
+        public Action OnBackgroundClick { get; }
+    }
+
+    public readonly struct BubbleText
+    {
+        public BubbleText(string header, string text)
+        {
+            Header = header ?? string.Empty;
+            Text = text ?? string.Empty;
+        }
+
+        public string Header { get; }
+        public string Text { get; }
+    }
+
+    public readonly struct BubbleChoice
+    {
+        public BubbleChoice(int id, string text, Action<int> onClick)
+        {
+            Id = id;
+            Text = text ?? string.Empty;
+            OnClick = onClick;
+        }
+
+        public int Id { get; }
+        public string Text { get; }
+        public Action<int> OnClick { get; }
+    }
+}

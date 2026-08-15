@@ -339,6 +339,19 @@ Confidence: Confirmed duplication, not a current functional defect
 
 Estimated size: Medium
 
+Status: Completed on 2026-08-15
+
+Implemented result:
+
+- Added the independent `Novels.Bubble.Contracts` assembly with neutral `BubblePresentation`, `BubbleText`, and `BubbleChoice` types; it depends only on `Novels.StoryContracts` and contains no Unity types.
+- QueueProcess, StoryQueue, Bubble, and the composition root reference the shared contract explicitly.
+- `SetBubbleQueue` creates one presentation object while retaining ownership of save/replay choice execution and completion callbacks.
+- The root composition passes `bubble.SetBubbleScreen` directly and no longer maps equivalent DTOs.
+- `Bubble.Entity` performs the single meaningful conversion from neutral presentation to the existing UI-specific `View.Screen.BubbleCtx`.
+- Wardrobe and Choose now follow the same shared-contract path through `WardrobePresentation` and `ChoosePresentation`; their marker contracts remain intentionally empty until the features are implemented.
+- Their exact future trigger strings are centralized in `BubbleTriggers` without changing either literal.
+- The six-step primary refactoring plan is complete.
+
 #### Evidence
 
 Similar Bubble DTOs currently exist in:

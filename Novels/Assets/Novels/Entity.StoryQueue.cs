@@ -1,5 +1,3 @@
-using System.Linq;
-
 namespace Novels
 {
     internal partial class Entity
@@ -45,41 +43,9 @@ namespace Novels
                     BubbleShowImmediate = bubble.ShowImmediate,
                     BubbleHide = bubble.Hide,
                     BubbleHideImmediate = bubble.HideImmediate,
-                    SetBubbleScreen = data =>
-                    {
-                        bubble.SetBubbleScreen(new Bubble.Entity.BubbleScreenCtx
-                        {
-                            Name = data.Name,
-                            SpeakerRole = data.SpeakerRole,
-                            Presentation = data.Presentation,
-                            Text = new Bubble.Entity.BubbleScreenCtx.TextCtx
-                            {
-                                Header = data.Text.Header,
-                                Text = data.Text.Text,
-                            },
-                            Buttons = data.Buttons.Select(button => new Bubble.Entity.BubbleScreenCtx.ButtonCtx
-                            {
-                                Id = button.Id,
-                                Text = button.Text,
-                                OnClick = button.OnClick
-                            }).ToArray(),
-                            OnBackgroundClick = data.OnBackgroundClick
-                        });
-                    },
-                    SetWardrobeScreen = data =>
-                    {
-                        bubble.SetWardrobeScreen(new Bubble.Entity.WardrobeScreenCtx
-                        {
-                            //migrate wardrobe here...
-                        });
-                    },
-                    SetChooseScreen = data =>
-                    {
-                        bubble.SetChooseScreen(new Bubble.Entity.ChooseScreenCtx
-                        {
-                            // migrate choose here...
-                        });
-                    },
+                    SetBubbleScreen = bubble.SetBubbleScreen,
+                    SetWardrobeScreen = bubble.SetWardrobeScreen,
+                    SetChooseScreen = bubble.SetChooseScreen,
 
                     SaveChoice = save.SaveChoice,
                     SetChoice = storyProcessor.SetChoice,

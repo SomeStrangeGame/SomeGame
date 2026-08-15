@@ -15,38 +15,6 @@ namespace Novels.Bubble
             public CancellationToken CancellationToken;
         }
 
-        public struct WardrobeScreenCtx
-        {
-            // wardrobe ctx
-        }
-
-        public struct ChooseScreenCtx
-        {
-            // choose ctx
-        }
-
-        public struct BubbleScreenCtx
-        {
-            public struct TextCtx
-            {
-                public string Header;
-                public string Text;
-            }
-
-            public struct ButtonCtx
-            {
-                public int Id;
-                public string Text;
-                public Action<int> OnClick;
-            }
-            public string Name;
-            public StoryContracts.StorySpeakerRole SpeakerRole;
-            public StoryContracts.DialoguePresentation Presentation;
-            public TextCtx Text;
-            public ButtonCtx[] Buttons;
-            public Action OnBackgroundClick;
-        }
-
         private readonly Ctx _ctx;
 
         private View.Screen _screen;
@@ -84,7 +52,7 @@ namespace Novels.Bubble
             _screen.HideImmediate();
         }
 
-        public void SetWardrobeScreen(WardrobeScreenCtx ctx)
+        public void SetWardrobeScreen(BubbleContracts.WardrobePresentation presentation)
         {
             _screen.SetWardrobeScreen(new View.Screen.WardrobeCtx
             {
@@ -92,7 +60,7 @@ namespace Novels.Bubble
             });
         }
 
-        public void SetChooseScreen(ChooseScreenCtx ctx)
+        public void SetChooseScreen(BubbleContracts.ChoosePresentation presentation)
         {
             _screen.SetChooseScreen(new View.Screen.ChooseCtx
             {
@@ -100,10 +68,10 @@ namespace Novels.Bubble
             });
         }
 
-        public void SetBubbleScreen(BubbleScreenCtx ctx)
+        public void SetBubbleScreen(BubbleContracts.BubblePresentation presentation)
         {
             View.Screen.BubbleCtx.BubbleType bubbleType;
-            switch (ctx.Presentation)
+            switch (presentation.DialoguePresentation)
             {
                 case StoryContracts.DialoguePresentation.Disclaimer:
                 case StoryContracts.DialoguePresentation.Hint:
@@ -119,14 +87,14 @@ namespace Novels.Bubble
                     break;
 
                 default:
-                    bubbleType = ctx.SpeakerRole == StoryContracts.StorySpeakerRole.MainCharacter
+                    bubbleType = presentation.SpeakerRole == StoryContracts.StorySpeakerRole.MainCharacter
                         ? View.Screen.BubbleCtx.BubbleType.LeftCharacter
                         : View.Screen.BubbleCtx.BubbleType.RightCharacter;
                     break;
             }
 
-            var header = ctx.Text.Header;
-            switch (ctx.Presentation)
+            var header = presentation.Text.Header;
+            switch (presentation.DialoguePresentation)
             {
                 case StoryContracts.DialoguePresentation.Disclaimer:
                     header = "Дисклеймер";
@@ -136,11 +104,11 @@ namespace Novels.Bubble
                     header = "Подсказка";
                     break;
             }
-            var buttons = ctx.Buttons.Select(b => new View.Screen.BubbleCtx.ButtonCtx
+            var buttons = presentation.Choices.Select(choice => new View.Screen.BubbleCtx.ButtonCtx
             {
-                Id = b.Id,
-                Text = b.Text,
-                OnClick = b.OnClick
+                Id = choice.Id,
+                Text = choice.Text,
+                OnClick = choice.OnClick
             }).ToArray();
             
             _screen.SetBubbleScreen(new View.Screen.BubbleCtx
@@ -149,10 +117,10 @@ namespace Novels.Bubble
                 Text = new View.Screen.BubbleCtx.TextCtx
                 {
                     Header = header,
-                    Text = ctx.Text.Text
+                    Text = presentation.Text.Text
                 },
                 Buttons = buttons,
-                OnBackgroundClick = buttons.Length == 0 ? ctx.OnBackgroundClick : null
+                OnBackgroundClick = buttons.Length == 0 ? presentation.OnBackgroundClick : null
             });
         }
 

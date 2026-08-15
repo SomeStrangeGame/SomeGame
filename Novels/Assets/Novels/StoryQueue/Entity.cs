@@ -34,9 +34,9 @@ namespace Novels.StoryQueue
             public Action BubbleShowImmediate;
             public Func<UniTask> BubbleHide;
             public Action BubbleHideImmediate;
-            public Action<QueueProcess.BubbleQueue.SetBubbleQueue.BubbleCtx> SetBubbleScreen;
-            public Action<QueueProcess.BubbleQueue.SetBubbleQueue.WardrobeCtx> SetWardrobeScreen;
-            public Action<QueueProcess.BubbleQueue.SetBubbleQueue.ChooseCtx> SetChooseScreen;
+            public Action<BubbleContracts.BubblePresentation> SetBubbleScreen;
+            public Action<BubbleContracts.WardrobePresentation> SetWardrobeScreen;
+            public Action<BubbleContracts.ChoosePresentation> SetChooseScreen;
 
             public Action<byte> SaveChoice;
             public Action<int> SetChoice;

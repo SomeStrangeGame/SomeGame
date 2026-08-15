@@ -1,10 +1,8 @@
 {
-    "name": "Novels.QueueProcess",
+    "name": "Novels.Bubble.Contracts",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23",
-        "GUID:b06a9b52787e42a9ad9a2acdf98db8c1",
-        "GUID:a7f53a6e8e3144ed845dce4c71a85679"
+        "GUID:b06a9b52787e42a9ad9a2acdf98db8c1"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
