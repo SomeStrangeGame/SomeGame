@@ -27,19 +27,19 @@ namespace Bundles
             _onLog = onLog;
         }
 
-        internal ContentRelease Current { get; private set; }
+        internal ContentReleaseSnapshot Current { get; private set; }
 
-        internal async UniTask<ContentRelease> LoadAsync(
+        internal async UniTask<ContentReleaseSnapshot> LoadAsync(
             string clientVersion,
             int supportedSchemaVersion)
         {
             var path = $"Remote/{_platform}/release.json";
             var cachePath = $"Remote/{_platform}/Releases/current.json";
-            ContentRelease release;
+            ContentReleaseDto release;
             try
             {
                 var json = await _source.DownloadText(path);
-                release = JsonUtility.FromJson<ContentRelease>(json);
+                release = JsonUtility.FromJson<ContentReleaseDto>(json);
                 ContentReleaseValidator.Validate(
                     release,
                     clientVersion,
@@ -63,7 +63,7 @@ namespace Bundles
                         "Content release is unavailable and no cached release exists.",
                         exception);
                 }
-                release = JsonUtility.FromJson<ContentRelease>(
+                release = JsonUtility.FromJson<ContentReleaseDto>(
                     _cache.TextFromCache(cachePath));
                 ContentReleaseValidator.Validate(
                     release,
@@ -74,8 +74,8 @@ namespace Bundles
                     $"Use cached content release '{release.releaseId}'."));
             }
 
-            Current = release;
-            return release;
+            Current = new ContentReleaseSnapshot(release);
+            return Current;
         }
     }
 }

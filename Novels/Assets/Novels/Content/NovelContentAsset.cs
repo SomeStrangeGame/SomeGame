@@ -42,8 +42,14 @@ namespace Novels.Content
                     StringComparer.OrdinalIgnoreCase);
                 foreach (var entry in _audioExtensions ?? Array.Empty<AudioExtensionEntry>())
                 {
-                    if (!string.IsNullOrWhiteSpace(entry.AssetId))
-                        audioExtensions[entry.AssetId] = entry.Extension;
+                    if (string.IsNullOrWhiteSpace(entry.AssetId))
+                        continue;
+                    if (!audioExtensions.TryAdd(entry.AssetId, entry.Extension))
+                    {
+                        throw new InvalidOperationException(
+                            $"Duplicate audio extension override '{entry.AssetId}' "
+                            + $"in episode '{_id}'.");
+                    }
                 }
 
                 return new EpisodeDefinition(
@@ -104,7 +110,7 @@ namespace Novels.Content
 
         public AudioMixer AudioMixer => _audioMixer;
 
-        public NovelDefinition ToDefinition(string locale = null)
+        public NovelDefinition ToDefinition(string locale)
         {
             return new NovelDefinition(
                 _id,

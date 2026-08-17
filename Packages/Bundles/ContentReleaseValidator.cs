@@ -7,7 +7,7 @@ namespace Bundles
     public static class ContentReleaseValidator
     {
         public static void Validate(
-            ContentRelease release,
+            ContentReleaseDto release,
             string clientVersion,
             int supportedSchemaVersion)
         {
@@ -102,6 +102,15 @@ namespace Bundles
                             $"Delivery group '{group.id}' totals do not match its files.");
                     }
                 }
+            }
+            var expectedReleaseId = ContentReleaseFingerprint.Compute(release);
+            if (!string.Equals(
+                    release.releaseId,
+                    expectedReleaseId,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ContentIntegrityException(
+                    $"Content release ID '{release.releaseId}' does not match its payload.");
             }
         }
 

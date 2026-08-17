@@ -41,31 +41,52 @@ namespace Bundles
             string bundleName,
             string assetName)
         {
-            EnsureOwned(bundleName);
-            return _owner.GetBundledSprite(bundleName, assetName);
+            return GetBundledSprite(new BundleAssetAddress(bundleName, assetName));
+        }
+
+        public UniTask<Sprite> GetBundledSprite(BundleAssetAddress address)
+        {
+            EnsureOwned(address.BundleName);
+            return _owner.GetBundledSprite(address);
         }
 
         public UniTask<Sprite> TryGetBundledSprite(
             string bundleName,
             string assetName)
         {
-            EnsureOwned(bundleName);
-            return _owner.TryGetBundledSprite(bundleName, assetName);
+            return TryGetBundledSprite(new BundleAssetAddress(bundleName, assetName));
+        }
+
+        public UniTask<Sprite> TryGetBundledSprite(BundleAssetAddress address)
+        {
+            EnsureOwned(address.BundleName);
+            return _owner.TryGetBundledSprite(address);
         }
 
         public UniTask<T> GetBundledSO<T>(string bundleName, string assetName)
             where T : ScriptableObject
         {
-            EnsureOwned(bundleName);
-            return _owner.GetBundledSO<T>(bundleName, assetName);
+            return GetBundledSO<T>(new BundleAssetAddress(bundleName, assetName));
+        }
+
+        public UniTask<T> GetBundledSO<T>(BundleAssetAddress address)
+            where T : ScriptableObject
+        {
+            EnsureOwned(address.BundleName);
+            return _owner.GetBundledSO<T>(address);
         }
 
         public UniTask<GameObject> GetBundledPrefab(
             string bundleName,
             string assetName)
         {
-            EnsureOwned(bundleName);
-            return _owner.GetBundledPrefab(bundleName, assetName);
+            return GetBundledPrefab(new BundleAssetAddress(bundleName, assetName));
+        }
+
+        public UniTask<GameObject> GetBundledPrefab(BundleAssetAddress address)
+        {
+            EnsureOwned(address.BundleName);
+            return _owner.GetBundledPrefab(address);
         }
 
         public UniTask<string> ResolveVideoUrl(string assetName) =>

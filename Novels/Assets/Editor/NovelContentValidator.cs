@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -90,14 +89,14 @@ namespace Editor
             }
             else
             {
-                ValidateCatalogScreen(catalogScreen, errors);
+                PrefabContentValidator.ValidateCatalog(catalogScreen, errors);
                 ValidateBundleAssignment(
                     Novels.Catalog.CatalogAddresses.ScreenAssetName,
                     Novels.Catalog.CatalogAddresses.BundleName,
                     errors);
             }
 
-            if (string.IsNullOrWhiteSpace(catalog.Resolve().Title))
+            if (string.IsNullOrWhiteSpace(catalog.Resolve("en").Title))
                 errors.Add("Novel catalog title is empty.");
             if (catalog.Entries.Count == 0)
                 errors.Add("Novel catalog has no entries.");
@@ -112,7 +111,7 @@ namespace Editor
                 }
                 if (!contentIds.Add(entry.ContentId))
                     errors.Add($"Duplicate catalog content ID: {entry.ContentId}");
-                if (string.IsNullOrWhiteSpace(entry.Resolve().Title))
+                if (string.IsNullOrWhiteSpace(entry.Resolve("en").Title))
                     errors.Add($"Catalog entry '{entry.ContentId}' has no title.");
                 if (string.IsNullOrWhiteSpace(entry.ContentBundleName))
                     errors.Add($"Catalog entry '{entry.ContentId}' has no content bundle.");
@@ -136,160 +135,12 @@ namespace Editor
                     contentAsset,
                     entry.ContentId,
                     entry.ContentBundleName,
-                    validateBuiltOutput,
                     errors);
             }
-            ValidateBootstrapPrefab(errors);
+            PrefabContentValidator.ValidateBootstrap(errors);
             if (validateBuiltOutput)
-                ValidateReleaseManifest(errors);
+                BuiltReleaseValidator.Validate(errors);
             return errors;
-        }
-
-        private static void ValidateCatalogScreen(
-            GameObject prefab,
-            ICollection<string> errors)
-        {
-            var screen = prefab.GetComponent<Novels.Catalog.View.Screen>();
-            if (screen == null)
-            {
-                errors.Add("Catalog screen prefab has no Catalog.View.Screen component.");
-                return;
-            }
-
-            var serializedScreen = new SerializedObject(screen);
-            foreach (var propertyName in new[] { "_title", "_cardPrefab" })
-            {
-                if (serializedScreen.FindProperty(propertyName)?.objectReferenceValue == null)
-                    errors.Add($"Catalog screen prefab has no '{propertyName}' reference.");
-            }
-            var card = serializedScreen.FindProperty("_cardPrefab")?.objectReferenceValue
-                as Novels.Catalog.View.Card;
-            if (card != null)
-            {
-                var serializedCard = new SerializedObject(card);
-                foreach (var propertyName in new[]
-                         {
-                             "_title",
-                             "_description",
-                             "_status",
-                             "_button",
-                         })
-                {
-                    if (serializedCard.FindProperty(propertyName)?.objectReferenceValue == null)
-                        errors.Add($"Catalog card prefab has no '{propertyName}' reference.");
-                }
-            }
-            if (prefab.transform.localScale == Vector3.zero)
-                errors.Add("Catalog screen prefab root has zero scale.");
-            var viewport = prefab.transform.Find("Content/Viewport");
-            if (viewport == null || viewport.GetComponent<UnityEngine.UI.RectMask2D>() == null)
-                errors.Add("Catalog screen viewport must use RectMask2D.");
-        }
-
-        private static void ValidateBootstrapPrefab(ICollection<string> errors)
-        {
-            const string path = "Assets/Resources/Novels/BootstrapScreen.prefab";
-            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
-            if (prefab == null)
-            {
-                errors.Add($"Local bootstrap prefab is missing: {path}");
-                return;
-            }
-
-            var screen = prefab.GetComponent<Novels.Bootstrap.View.Screen>();
-            if (screen == null)
-            {
-                errors.Add($"Local bootstrap prefab has no Screen component: {path}");
-                return;
-            }
-
-            var serializedScreen = new SerializedObject(screen);
-            foreach (var propertyName in new[] { "_message", "_retryLabel", "_retry" })
-            {
-                if (serializedScreen.FindProperty(propertyName)?.objectReferenceValue == null)
-                    errors.Add($"Local bootstrap prefab has no '{propertyName}' reference.");
-            }
-            if (prefab.transform.localScale == Vector3.zero)
-                errors.Add("Local bootstrap prefab root has zero scale.");
-        }
-
-        private static void ValidateReleaseManifest(ICollection<string> errors)
-        {
-            var remoteRoot = Path.Combine(
-                Application.streamingAssetsPath,
-                "Remote",
-                "Android");
-            var path = Path.Combine(remoteRoot, "release.json");
-            if (!File.Exists(path))
-            {
-                errors.Add($"Built Android content release is missing: {path}");
-                return;
-            }
-
-            Bundles.ContentRelease release;
-            try
-            {
-                release = JsonUtility.FromJson<Bundles.ContentRelease>(
-                    File.ReadAllText(path));
-            }
-            catch (Exception exception)
-            {
-                errors.Add($"Content release cannot be parsed: {exception.Message}");
-                return;
-            }
-            if (release == null || string.IsNullOrWhiteSpace(release.releaseId))
-            {
-                errors.Add("Content release ID is empty.");
-                return;
-            }
-            try
-            {
-                Bundles.ContentReleaseValidator.Validate(
-                    release,
-                    Application.version,
-                    1);
-            }
-            catch (Exception exception)
-            {
-                errors.Add($"Content release is invalid: {exception.Message}");
-                return;
-            }
-
-            foreach (var releaseBundle in release.bundles)
-            {
-                if (releaseBundle == null
-                    || string.IsNullOrWhiteSpace(releaseBundle.name))
-                {
-                    errors.Add("Release contains a bundle without a name.");
-                    continue;
-                }
-                var versionPath = Path.Combine(
-                    remoteRoot,
-                    releaseBundle.name,
-                    "version.txt");
-                if (!File.Exists(versionPath))
-                {
-                    errors.Add(
-                        $"Release bundle is missing: '{releaseBundle.name}'.");
-                }
-                else if (!string.Equals(
-                        File.ReadAllText(versionPath).Trim(),
-                        releaseBundle.version,
-                        StringComparison.Ordinal))
-                {
-                    errors.Add(
-                        $"Release version does not match bundle "
-                        + $"'{releaseBundle.name}'.");
-                }
-            }
-
-            foreach (var file in ContentFilePolicy.EnumerateFiles())
-            {
-                var relative = ContentFilePolicy.GetRelativePath(file);
-                if (release.FindFile(relative) == null)
-                    errors.Add($"Release does not describe file '{relative}'.");
-            }
-
         }
 
         private static void ValidateBundleAssignment(
@@ -313,13 +164,12 @@ namespace Editor
             Novels.Content.NovelContentAsset contentAsset,
             string expectedContentId,
             string contentBundleName,
-            bool validateBuiltOutput,
             ICollection<string> errors)
         {
             Novels.Content.NovelDefinition definition;
             try
             {
-                definition = contentAsset.ToDefinition();
+                definition = contentAsset.ToDefinition("en");
             }
             catch (Exception exception)
             {
@@ -355,14 +205,16 @@ namespace Editor
                     episode.CharacterBundleName,
                     episode.NotificationBundleName,
                 })),
-                validateBuiltOutput,
                 errors);
 
             foreach (var episode in definition.Episodes)
             {
-                ValidateStory(definition.Prefix, episode.StoryPath, errors);
-                ValidateStorySyntax(definition.Prefix, episode, errors);
                 ValidateMedia(definition.Prefix, episode, errors);
+                StoryReferenceValidator.Validate(
+                    definition.Prefix,
+                    definition.MainCharacter,
+                    episode,
+                    errors);
             }
         }
 
@@ -394,89 +246,8 @@ namespace Editor
             }
         }
 
-        private static void ValidateStorySyntax(
-            string prefix,
-            Novels.Content.EpisodeDefinition episode,
-            ICollection<string> errors)
-        {
-            var path = Path.Combine(
-                Application.streamingAssetsPath,
-                "NovelTexts",
-                prefix,
-                episode.StoryPath);
-            if (!File.Exists(path))
-                return;
-
-            var parser = new Novels.StoryCommands.Entity();
-            var json = File.ReadAllText(path);
-            var matches = Regex.Matches(
-                json,
-                "\"\\^(?<text>(?:\\\\.|[^\"\\\\])*)\"");
-            foreach (Match match in matches)
-            {
-                var source = Regex.Unescape(match.Groups["text"].Value);
-                if (!source.Contains(":"))
-                    continue;
-                var result = parser.Parse(source, false);
-                if (!result.IsSuccess)
-                {
-                    errors.Add(
-                        $"Story command [{result.Error.Code}] in '{episode.StoryPath}': "
-                        + $"{result.Error.Message} Source: {source}");
-                }
-                else if (result.Command is Novels.StoryCommands.AudioStoryCommand audio)
-                {
-                    if (episode.Media.SilentAudioIds.Contains(
-                            audio.Data.AssetName,
-                            StringComparer.OrdinalIgnoreCase))
-                    {
-                        continue;
-                    }
-                    var extension = Path.GetExtension(audio.Data.AssetName);
-                    if (extension.Length == 0)
-                    {
-                        extension = episode.Media.AudioExtensions.TryGetValue(
-                            audio.Data.AssetName,
-                            out var configuredExtension)
-                            ? configuredExtension
-                            : episode.Media.DefaultAudioExtension;
-                    }
-                    var audioPath = Path.Combine(
-                        Application.streamingAssetsPath,
-                        "NovelsAudio",
-                        prefix,
-                        audio.Data.AssetName + (Path.GetExtension(audio.Data.AssetName).Length == 0
-                            ? extension
-                            : string.Empty));
-                    if (!File.Exists(audioPath))
-                        errors.Add($"Story audio does not exist: {audioPath}");
-                }
-            }
-        }
-
-        private static void ValidateStory(
-            string prefix,
-            string storyPath,
-            ICollection<string> errors)
-        {
-            if (string.IsNullOrWhiteSpace(prefix)
-                || string.IsNullOrWhiteSpace(storyPath))
-            {
-                return;
-            }
-
-            var path = Path.Combine(
-                Application.streamingAssetsPath,
-                "NovelTexts",
-                prefix,
-                storyPath);
-            if (!File.Exists(path))
-                errors.Add($"Compiled Ink story does not exist: {path}");
-        }
-
         private static void ValidateBundles(
             IEnumerable<string> configuredBundles,
-            bool validateBuiltOutput,
             ICollection<string> errors)
         {
             var existingBundles = new HashSet<string>(
@@ -489,25 +260,6 @@ namespace Editor
                 if (!existingBundles.Contains(bundle))
                     errors.Add($"AssetBundle '{bundle}' is not assigned to any asset.");
 
-                if (validateBuiltOutput)
-                {
-                    var versionPath = Path.Combine(
-                        Application.streamingAssetsPath,
-                        "Remote",
-                        "Android",
-                        bundle,
-                        "version.txt");
-                    if (!File.Exists(versionPath))
-                        errors.Add($"Built Android bundle version is missing: {versionPath}");
-                    var manifestPath = Path.Combine(
-                        Application.streamingAssetsPath,
-                        "Remote",
-                        "Android",
-                        bundle,
-                        "manifest.json");
-                    if (!File.Exists(manifestPath))
-                        errors.Add($"Built Android bundle manifest is missing: {manifestPath}");
-                }
             }
         }
     }

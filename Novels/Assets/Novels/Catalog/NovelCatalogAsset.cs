@@ -41,7 +41,7 @@ namespace Novels.Catalog
         public string ContentId => _contentId;
         public string ContentBundleName => _contentBundleName;
         public string ContentAssetName => _contentAssetName;
-        public CatalogText Resolve(string locale = null) =>
+        public CatalogText Resolve(string locale) =>
             NovelCatalogAsset.Resolve(_localizations, locale);
     }
 
@@ -53,7 +53,7 @@ namespace Novels.Catalog
 
         private ReadOnlyCollection<NovelCatalogEntry> _readOnlyEntries;
 
-        public CatalogText Resolve(string locale = null) =>
+        public CatalogText Resolve(string locale) =>
             Resolve(_localizations, locale);
         public IReadOnlyList<NovelCatalogEntry> Entries =>
             _readOnlyEntries ??= Array.AsReadOnly(

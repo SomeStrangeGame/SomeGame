@@ -7,9 +7,6 @@ namespace Editor
 {
     internal static class ContentBuildReport
     {
-        private const long _largeFileWarning = 64L * 1024L * 1024L;
-        private const long _largeReleaseWarning = 1024L * 1024L * 1024L;
-
         internal static ContentDeliveryGroupEntry[] BuildGroups(
             IReadOnlyCollection<ContentFileEntry> files)
         {
@@ -30,7 +27,8 @@ namespace Editor
 
         internal static void Log(
             IReadOnlyCollection<ContentFileEntry> files,
-            IReadOnlyCollection<ContentDeliveryGroupEntry> groups)
+            IReadOnlyCollection<ContentDeliveryGroupEntry> groups,
+            NovelContentBuildProfile profile)
         {
             var total = files.Sum(file => file.size);
             Debug.Log(
@@ -42,13 +40,14 @@ namespace Editor
                     $"Novel content group '{group.id}': {group.fileCount} files, "
                     + FormatBytes(group.size));
             }
-            if (total > _largeReleaseWarning)
+            if (total > profile.TotalBudgetBytes)
             {
                 Debug.LogWarning(
-                    $"Novel content payload exceeds {FormatBytes(_largeReleaseWarning)}: "
+                    $"Novel content payload exceeds {FormatBytes(profile.TotalBudgetBytes)}: "
                     + FormatBytes(total));
             }
-            foreach (var file in files.Where(file => file.size > _largeFileWarning))
+            foreach (var file in files.Where(
+                         file => file.size > profile.LargeFileWarningBytes))
             {
                 Debug.LogWarning(
                     $"Large content file '{file.path}': {FormatBytes(file.size)}");
@@ -60,7 +59,7 @@ namespace Editor
                          && file.path.EndsWith(
                              ".wav",
                              System.StringComparison.OrdinalIgnoreCase)
-                         && file.size > 16L * 1024L * 1024L))
+                         && file.size > profile.LargeWavWarningBytes))
             {
                 Debug.LogWarning(
                     $"Large WAV '{file.path}' ({FormatBytes(file.size)}). "

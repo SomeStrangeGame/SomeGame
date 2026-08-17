@@ -8,12 +8,17 @@ namespace Editor
 {
     internal static class ContentPublishArtifactBuilder
     {
-        internal static void Build(BuildTarget target)
+        internal static string Build(
+            ContentBuildResult result,
+            NovelContentBuildProfile profile)
         {
-            var platform = AssetBundleBuildPipeline.GetPlatformName(target);
+            var platform = result.Platform;
             var projectPath = Directory.GetParent(Application.dataPath)?.FullName
                 ?? throw new InvalidOperationException("Project path cannot be resolved.");
-            var outputRoot = Path.Combine(projectPath, "Build", "NovelContent", platform);
+            var outputRoot = Path.Combine(
+                projectPath,
+                profile.PublishRoot.Replace('/', Path.DirectorySeparatorChar),
+                platform);
             var stagingRoot = outputRoot + ".staging";
             var backupRoot = outputRoot + ".previous";
             if (Directory.Exists(stagingRoot))
@@ -30,9 +35,12 @@ namespace Editor
                     remoteSource,
                     Path.Combine(stagingRoot, "Remote", platform));
                 var releasePath = Path.Combine(remoteSource, "release.json");
-                var release = JsonUtility.FromJson<ContentRelease>(
+                var release = JsonUtility.FromJson<ContentReleaseDto>(
                     File.ReadAllText(releasePath));
-                ContentReleaseValidator.Validate(release, Application.version, 1);
+                ContentReleaseValidator.Validate(
+                    release,
+                    Application.version,
+                    profile.ContentSchemaVersion);
                 foreach (var file in release.files ?? Array.Empty<ContentFileEntry>())
                 {
                     var source = Path.Combine(
@@ -53,6 +61,8 @@ namespace Editor
                 if (Directory.Exists(backupRoot))
                     Directory.Delete(backupRoot, true);
                 Debug.Log($"Novel publish artifact completed: {outputRoot}");
+                result.PublishPath = outputRoot;
+                return outputRoot;
             }
             catch
             {

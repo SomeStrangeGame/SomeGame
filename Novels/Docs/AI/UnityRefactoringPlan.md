@@ -10,6 +10,22 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-17
 
+## Architecture wave completed on 2026-08-17 (explicit content contracts)
+
+All nine approved items are complete:
+
+1. Content models reject duplicate episode IDs, media IDs, and normalized locale codes at their construction boundaries.
+2. Bundle/asset pairs use `BundleAssetAddress`; required and optional asset lookup remain distinct operations.
+3. `CharacterSpriteResolver` owns character appearance state and sprite-address conventions, leaving `Character.Entity` focused on presentation.
+4. `BundlePayloadLoader` owns release resolution, verification, download, cache, and opening; `BundleStore` owns loaded-bundle records, leases, and asset caching. Legacy per-bundle `version.txt` and `manifest.json` delivery was removed.
+5. Mutable release JSON DTOs are validated and converted to an immutable `ContentReleaseSnapshot`; `ContentReleaseFingerprint` creates the canonical release ID from sorted content metadata.
+6. Editor validation is split into prefab, built-release, and story-reference validators. Static background, secondary-character, audio, and compiled Ink references are checked before publication.
+7. `Entity.NovelPreparation` owns resource preparation/preloading and `Entity.EpisodeComposition` owns runtime feature composition.
+8. Locale resolution always receives an explicit locale; ambient current-culture fallback was removed.
+9. `NovelContentBuildProfile` owns targets, compatibility values, publish path, and content budgets. The platform-neutral build pipeline returns `ContentBuildResult` values consumed by validation and publishing.
+
+The Android release and publish artifact were rebuilt successfully. Release `8c5c3b96f97e8a423fb15694af77d9c8375593111fa7601e305f927bed4957ab` pins 10 bundles and 115 external files; every size and SHA-256 entry was verified. Unity compilation and `NovelContentValidator.ValidateBatch` completed without errors. Tests were not created or run, and existing UI assets and dimensions were not changed.
+
 ## Architecture wave completed on 2026-08-17 (delivery hardening)
 
 Nine follow-up items are complete; the proposed safe-area/UI resizing item was explicitly excluded to preserve game-design dimensions:

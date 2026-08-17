@@ -40,6 +40,16 @@
 
 ## Architecture And Conventions
 
+- Content invariants are enforced at model boundaries: episode IDs, media IDs, and normalized locale codes must be unique case-insensitively.
+- Bundle assets are addressed by immutable `BundleAssetAddress` values. Required loads fail explicitly, while optional sprite probes use a separate API.
+- `CharacterSpriteResolver` owns appearance state and character sprite-address resolution; `Character.Entity` is limited to presentation orchestration.
+- `BundlePayloadLoader` owns release-based payload acquisition and integrity, while `BundleStore` owns bundle records, leases, and asset caching. Runtime delivery uses the platform `release.json` exclusively; legacy per-bundle pointer/manifest files are no longer produced or consumed.
+- Serialized `ContentReleaseDto` objects exist only at the JSON boundary. Runtime code receives an immutable `ContentReleaseSnapshot`, and `ContentReleaseFingerprint` calculates its canonical ID from deterministically sorted metadata.
+- Editor validation is composed from `PrefabContentValidator`, `BuiltReleaseValidator`, and `StoryReferenceValidator`. In addition to authoring structure and release integrity, it scans Ink for statically resolvable background, character, and audio references.
+- Root composition is split between `Entity.NovelPreparation` for immutable prepared resources and preloading, and `Entity.EpisodeComposition` for feature construction and episode execution.
+- Locale fallback is deterministic but never ambient: every catalog/content resolution call supplies the session locale explicitly.
+- `NovelContentBuildProfile` defines build targets, compatibility metadata, output root, and reporting budgets. Builds return platform-neutral `ContentBuildResult` values used by validation and publish-artifact creation.
+
 - Confirmed manual composition root: a partial `Novels.Entity` wires feature entities using nested `Ctx` structs and delegates; no DI container.
 - Confirmed Entity/View split: disposable plain-C# feature entities drive uGUI `Screen` MonoBehaviours.
 - Confirmed command queue with async and immediate/replay modes; saved choices are persisted as bytes.
@@ -132,6 +142,9 @@
 - Isolated Unity compilation and `NovelContentValidator.ValidateBatch` completed without errors. Tests were not created or run.
 
 ## Testing And Tooling
+
+- The latest Android content release is `8c5c3b96f97e8a423fb15694af77d9c8375593111fa7601e305f927bed4957ab`: 10 bundles and 115 external files. Both the StreamingAssets copy and publish artifact passed exact byte-size and SHA-256 verification.
+- A final isolated Unity batch compile and `NovelContentValidator.ValidateBatch` completed successfully after the explicit-content-contracts wave. Tests were not created or run, and no UI asset or dimension was changed.
 
 - Unity Test Framework is present transitively, but no EditMode or PlayMode tests were found.
 - No project-local CI/test command was found. Tests were not created or run, and no scene/prefab was saved.

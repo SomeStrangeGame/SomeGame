@@ -140,13 +140,15 @@ namespace Novels
 
             var catalog = await _priorityLoader.Run(() => _bundles
                 .GetBundledSO<Catalog.NovelCatalogAsset>(
-                    Catalog.CatalogAddresses.BundleName,
-                    Catalog.CatalogAddresses.AssetName)
+                    new Bundles.BundleAssetAddress(
+                        Catalog.CatalogAddresses.BundleName,
+                        Catalog.CatalogAddresses.AssetName))
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var screen = await _priorityLoader.Run(() => _bundles
                 .GetBundledPrefab(
-                    Catalog.CatalogAddresses.BundleName,
-                    Catalog.CatalogAddresses.ScreenAssetName)
+                    new Bundles.BundleAssetAddress(
+                        Catalog.CatalogAddresses.BundleName,
+                        Catalog.CatalogAddresses.ScreenAssetName))
                 .AttachExternalCancellation(_ctx.CancellationToken));
             if (catalog == null || screen == null)
             {
@@ -162,7 +164,9 @@ namespace Novels
             Catalog.NovelCatalogAsset catalog,
             GameObject screen)
         {
-            var entries = catalog.Entries.ToDictionary(entry => entry.ContentId);
+            var entries = catalog.Entries.ToDictionary(
+                entry => entry.ContentId,
+                StringComparer.OrdinalIgnoreCase);
             var items = catalog.Entries.Select(entry =>
             {
                 var text = entry.Resolve(_locale.Code);
@@ -187,7 +191,9 @@ namespace Novels
             Content.NovelDefinition definition,
             GameObject screen)
         {
-            var episodes = definition.Episodes.ToDictionary(episode => episode.Id);
+            var episodes = definition.Episodes.ToDictionary(
+                episode => episode.Id,
+                StringComparer.OrdinalIgnoreCase);
             var items = definition.Episodes
                 .Select(episode => new Catalog.CatalogItem(
                     episode.Id,

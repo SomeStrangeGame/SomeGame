@@ -44,9 +44,9 @@ namespace Bundles
             if (release != null && descriptor == null)
             {
                 throw new ContentIntegrityException(
-                    $"File '{path}' is absent from release '{release.releaseId}'.");
+                    $"File '{path}' is absent from release '{release.ReleaseId}'.");
             }
-            var releaseId = release?.releaseId ?? "legacy";
+            var releaseId = release?.ReleaseId ?? "legacy";
             var cachePath = $"RemoteFiles/{releaseId}/{path}";
             var localPath = _cache.GetLocalPath(cachePath, false);
             var verify = descriptor != null;
@@ -55,8 +55,8 @@ namespace Bundles
             {
                 await _integrity.VerifyAsync(
                     path,
-                    descriptor?.size ?? 0,
-                    descriptor?.sha256,
+                    descriptor?.Size ?? 0,
+                    descriptor?.Sha256,
                     localPath,
                     verify);
             }
@@ -74,15 +74,15 @@ namespace Bundles
                     _cancellationToken.ThrowIfCancellationRequested();
                     await _integrity.VerifyAsync(
                         path,
-                        descriptor?.size ?? 0,
-                        descriptor?.sha256,
+                        descriptor?.Size ?? 0,
+                        descriptor?.Sha256,
                         temporaryPath,
                         verify);
                     _cache.CommitTemporaryFile(temporaryPath, cachePath);
                     _integrity.Trust(
                         localPath,
-                        descriptor?.size ?? 0,
-                        descriptor?.sha256,
+                        descriptor?.Size ?? 0,
+                        descriptor?.Sha256,
                         verify);
                     downloaded = true;
                 }

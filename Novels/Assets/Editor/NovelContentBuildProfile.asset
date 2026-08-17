@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 96f5c75f3bc843d093e025792d7d6104, type: 3}
+  m_Name: NovelContentBuildProfile
+  m_EditorClassIdentifier: 
+  _targets:
+  - 13
+  _contentSchemaVersion: 1
+  _minimumClientVersion: ''
+  _publishRoot: Build/NovelContent
+  _totalBudgetBytes: 1073741824
+  _largeFileWarningBytes: 67108864
+  _largeWavWarningBytes: 16777216

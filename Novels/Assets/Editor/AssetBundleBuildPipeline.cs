@@ -11,8 +11,11 @@ namespace Editor
 {
     internal static class AssetBundleBuildPipeline
     {
-        internal static void Build(params BuildTarget[] targets)
+        internal static IReadOnlyList<ContentBuildResult> Build(
+            NovelContentBuildProfile profile)
         {
+            var targets = profile?.Targets
+                ?? throw new ArgumentNullException(nameof(profile));
             if (targets == null || targets.Length == 0)
                 throw new ArgumentException("At least one build target is required.", nameof(targets));
 
@@ -28,8 +31,14 @@ namespace Editor
             try
             {
                 Directory.CreateDirectory(stagingPath);
+                var releases = new Dictionary<BuildTarget, string>();
                 foreach (var target in targets)
-                    BuildTargetBundles(target, Path.Combine(stagingPath, GetPlatformName(target)));
+                {
+                    releases[target] = BuildTargetBundles(
+                        target,
+                        Path.Combine(stagingPath, GetPlatformName(target)),
+                        profile);
+                }
 
                 if (Directory.Exists(backupPath))
                     Directory.Delete(backupPath, true);
@@ -41,6 +50,12 @@ namespace Editor
 
                 AssetDatabase.Refresh();
                 Debug.Log($"AssetBundle build completed: {remotePath}");
+                return targets.Select(target => new ContentBuildResult(
+                        target,
+                        GetPlatformName(target),
+                        releases[target],
+                        Path.Combine(remotePath, GetPlatformName(target))))
+                    .ToArray();
             }
             catch
             {
@@ -52,7 +67,10 @@ namespace Editor
             }
         }
 
-        private static void BuildTargetBundles(BuildTarget target, string targetPath)
+        private static string BuildTargetBundles(
+            BuildTarget target,
+            string targetPath,
+            NovelContentBuildProfile profile)
         {
             Directory.CreateDirectory(targetPath);
             var manifest = BuildPipeline.BuildAssetBundles(
@@ -82,22 +100,6 @@ namespace Editor
                 File.Move(sourceFile, temporaryFile);
                 Directory.CreateDirectory(bundleDirectory);
                 File.Move(temporaryFile, Path.Combine(bundleDirectory, hash));
-                File.WriteAllText(
-                    Path.Combine(bundleDirectory, "version.txt"),
-                    hash,
-                    new UTF8Encoding(false));
-                File.WriteAllText(
-                    Path.Combine(bundleDirectory, "manifest.json"),
-                    JsonUtility.ToJson(
-                        new BundleIntegrityManifest
-                        {
-                            version = hash,
-                            size = bundleSize,
-                            sha256 = sha256,
-                            crc = crc,
-                        },
-                        true),
-                    new UTF8Encoding(false));
                 releaseBundles.Add(new Bundles.BundleReleaseEntry
                 {
                     name = bundle,
@@ -110,31 +112,25 @@ namespace Editor
 
             var releaseFiles = BuildReleaseFiles();
             var deliveryGroups = ContentBuildReport.BuildGroups(releaseFiles);
-            var releaseId = ComputeReleaseId(releaseBundles, releaseFiles);
-            var release = new Bundles.ContentRelease
+            var release = new Bundles.ContentReleaseDto
             {
-                releaseId = releaseId,
-                minimumClientVersion = Application.version,
-                contentSchemaVersion = 1,
+                minimumClientVersion = profile.MinimumClientVersion,
+                contentSchemaVersion = profile.ContentSchemaVersion,
                 bundles = releaseBundles.ToArray(),
                 files = releaseFiles.ToArray(),
                 deliveryGroups = deliveryGroups,
             };
-            Bundles.ContentReleaseValidator.Validate(release, Application.version, 1);
+            release.releaseId = Bundles.ContentReleaseFingerprint.Compute(release);
+            Bundles.ContentReleaseValidator.Validate(
+                release,
+                Application.version,
+                profile.ContentSchemaVersion);
             File.WriteAllText(
                 Path.Combine(targetPath, "release.json"),
                 JsonUtility.ToJson(release, true),
                 new UTF8Encoding(false));
-            ContentBuildReport.Log(releaseFiles, deliveryGroups);
-        }
-
-        [Serializable]
-        private sealed class BundleIntegrityManifest
-        {
-            public string version;
-            public long size;
-            public string sha256;
-            public uint crc;
+            ContentBuildReport.Log(releaseFiles, deliveryGroups, profile);
+            return release.releaseId;
         }
 
         private static List<Bundles.ContentFileEntry> BuildReleaseFiles()
@@ -156,21 +152,7 @@ namespace Editor
                 .ToList();
         }
 
-        private static string ComputeReleaseId(
-            IEnumerable<Bundles.BundleReleaseEntry> bundles,
-            IEnumerable<Bundles.ContentFileEntry> files)
-        {
-            var source = string.Join(
-                "\n",
-                bundles.OrderBy(bundle => bundle.name, StringComparer.Ordinal)
-                    .Select(bundle => $"B:{bundle.name}:{bundle.version}:{bundle.sha256}")
-                    .Concat(files.Select(file =>
-                        $"F:{file.path}:{file.size}:{file.sha256}")));
-            using var sha = SHA256.Create();
-            return ToHex(sha.ComputeHash(Encoding.UTF8.GetBytes(source)));
-        }
-
-        private static string ComputeSha256(string path)
+        internal static string ComputeSha256(string path)
         {
             using var sha = SHA256.Create();
             using var stream = File.OpenRead(path);

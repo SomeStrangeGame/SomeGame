@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Bundles
 {
     [Serializable]
-    public sealed class ContentRelease
+    public sealed class ContentReleaseDto
     {
         public string releaseId;
         public string minimumClientVersion;
@@ -12,51 +14,6 @@ namespace Bundles
         public BundleReleaseEntry[] bundles;
         public ContentFileEntry[] files;
         public ContentDeliveryGroupEntry[] deliveryGroups;
-
-        [NonSerialized] private Dictionary<string, BundleReleaseEntry> _bundleMap;
-        [NonSerialized] private Dictionary<string, ContentFileEntry> _fileMap;
-
-        public BundleReleaseEntry FindBundle(string name)
-        {
-            _bundleMap ??= BuildMap(
-                bundles,
-                entry => entry.name,
-                StringComparer.OrdinalIgnoreCase);
-            return name != null && _bundleMap.TryGetValue(name, out var entry)
-                ? entry
-                : null;
-        }
-
-        public ContentFileEntry FindFile(string path)
-        {
-            _fileMap ??= BuildMap(
-                files,
-                entry => entry.path,
-                StringComparer.OrdinalIgnoreCase);
-            return path != null && _fileMap.TryGetValue(path, out var entry)
-                ? entry
-                : null;
-        }
-
-        private static Dictionary<string, T> BuildMap<T>(
-            IEnumerable<T> entries,
-            Func<T, string> getKey,
-            IEqualityComparer<string> comparer)
-            where T : class
-        {
-            var result = new Dictionary<string, T>(comparer);
-            if (entries == null)
-                return result;
-            foreach (var entry in entries)
-            {
-                if (entry == null)
-                    continue;
-                var key = getKey(entry);
-                if (!string.IsNullOrWhiteSpace(key))
-                    result[key] = entry;
-            }
-            return result;
-        }
     }
 
     [Serializable]
@@ -67,17 +24,6 @@ namespace Bundles
         public long size;
         public string sha256;
         public uint crc;
-
-        public BundleManifest ToManifest()
-        {
-            return new BundleManifest
-            {
-                version = version,
-                size = size,
-                sha256 = sha256,
-                crc = crc,
-            };
-        }
     }
 
     [Serializable]
@@ -95,5 +41,95 @@ namespace Bundles
         public string id;
         public int fileCount;
         public long size;
+    }
+
+    public sealed class ContentReleaseSnapshot
+    {
+        private readonly IReadOnlyDictionary<string, BundleReleaseDescriptor> _bundlesByName;
+        private readonly IReadOnlyDictionary<string, ContentFileDescriptor> _filesByPath;
+
+        internal ContentReleaseSnapshot(ContentReleaseDto source)
+        {
+            ReleaseId = source.releaseId;
+            MinimumClientVersion = source.minimumClientVersion;
+            ContentSchemaVersion = source.contentSchemaVersion;
+            var bundles = (source.bundles ?? Array.Empty<BundleReleaseEntry>())
+                .Select(value => new BundleReleaseDescriptor(value))
+                .ToArray();
+            var files = (source.files ?? Array.Empty<ContentFileEntry>())
+                .Select(value => new ContentFileDescriptor(value))
+                .ToArray();
+            var groups = (source.deliveryGroups ?? Array.Empty<ContentDeliveryGroupEntry>())
+                .Select(value => new ContentDeliveryGroupDescriptor(value))
+                .ToArray();
+            Bundles = Array.AsReadOnly(bundles);
+            Files = Array.AsReadOnly(files);
+            DeliveryGroups = Array.AsReadOnly(groups);
+            _bundlesByName = new ReadOnlyDictionary<string, BundleReleaseDescriptor>(
+                bundles.ToDictionary(value => value.Name, StringComparer.OrdinalIgnoreCase));
+            _filesByPath = new ReadOnlyDictionary<string, ContentFileDescriptor>(
+                files.ToDictionary(value => value.Path, StringComparer.OrdinalIgnoreCase));
+        }
+
+        public string ReleaseId { get; }
+        public string MinimumClientVersion { get; }
+        public int ContentSchemaVersion { get; }
+        public IReadOnlyList<BundleReleaseDescriptor> Bundles { get; }
+        public IReadOnlyList<ContentFileDescriptor> Files { get; }
+        public IReadOnlyList<ContentDeliveryGroupDescriptor> DeliveryGroups { get; }
+
+        public BundleReleaseDescriptor FindBundle(string name) =>
+            name != null && _bundlesByName.TryGetValue(name, out var value) ? value : null;
+
+        public ContentFileDescriptor FindFile(string path) =>
+            path != null && _filesByPath.TryGetValue(path, out var value) ? value : null;
+    }
+
+    public sealed class BundleReleaseDescriptor
+    {
+        internal BundleReleaseDescriptor(BundleReleaseEntry source)
+        {
+            Name = source.name;
+            Version = source.version;
+            Size = source.size;
+            Sha256 = source.sha256;
+            Crc = source.crc;
+        }
+
+        public string Name { get; }
+        public string Version { get; }
+        public long Size { get; }
+        public string Sha256 { get; }
+        public uint Crc { get; }
+    }
+
+    public sealed class ContentFileDescriptor
+    {
+        internal ContentFileDescriptor(ContentFileEntry source)
+        {
+            Path = source.path;
+            Size = source.size;
+            Sha256 = source.sha256;
+            DeliveryGroup = source.deliveryGroup;
+        }
+
+        public string Path { get; }
+        public long Size { get; }
+        public string Sha256 { get; }
+        public string DeliveryGroup { get; }
+    }
+
+    public sealed class ContentDeliveryGroupDescriptor
+    {
+        internal ContentDeliveryGroupDescriptor(ContentDeliveryGroupEntry source)
+        {
+            Id = source.id;
+            FileCount = source.fileCount;
+            Size = source.size;
+        }
+
+        public string Id { get; }
+        public int FileCount { get; }
+        public long Size { get; }
     }
 }

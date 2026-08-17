@@ -33,9 +33,11 @@ namespace Editor
         public static void BuildAndroidBundles()
         {
             NovelContentValidator.ValidateOrThrow();
-            AssetBundleBuildPipeline.Build(BuildTarget.Android);
+            var profile = NovelContentBuildProfile.Load();
+            var results = AssetBundleBuildPipeline.Build(profile);
             NovelContentValidator.ValidateBuiltOutputOrThrow();
-            ContentPublishArtifactBuilder.Build(BuildTarget.Android);
+            foreach (var result in results)
+                ContentPublishArtifactBuilder.Build(result, profile);
         }
 
         public static void BuildAndroidBundlesBatch()

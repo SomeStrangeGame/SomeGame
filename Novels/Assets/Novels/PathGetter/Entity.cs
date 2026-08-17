@@ -8,7 +8,6 @@ namespace Novels.PathGetter
         private const string _prefabExtension = ".prefab";
         private const string _imageExtension = ".png";
         private const string _assetExtension = ".asset";
-        private const string _mainBodyAssetName = "Main";
 
         public struct Ctx
         {
@@ -78,53 +77,6 @@ namespace Novels.PathGetter
             if (string.IsNullOrEmpty(assetName)) return string.Empty;
 
             return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/{assetName}{_prefabExtension}";
-        }
-
-        public string GetCharacterMainBodyPath(string name, string view, string arg)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-
-            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/{view}/{arg ?? _mainBodyAssetName}{_imageExtension}";
-        }
-
-        public string GetCharacterEmotionPath(string name, string view, string arg)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-            if (string.IsNullOrEmpty(arg)) return string.Empty;
-
-            var firstChar = char.ToUpperInvariant(arg[0]);
-            var otherText = arg.Substring(1).ToLowerInvariant();
-            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/{view}/Emotions/{firstChar}{otherText}{_imageExtension}";
-        }
-
-        public string GetCharacterClothesPath(string name, string arg, int index)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-            if (string.IsNullOrEmpty(arg)) return string.Empty;
-
-            var firstChar = char.ToUpperInvariant(arg[0]);
-            var otherText = arg.Substring(1).ToLowerInvariant();
-            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Clothes/{firstChar}{otherText}/{index}{_imageExtension}";
-        }
-
-        public string GetCharacterHairPath(string name, string arg, string direction, string color)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-            if (string.IsNullOrEmpty(arg)) return string.Empty;
-
-            var firstChar = char.ToUpperInvariant(arg[0]);
-            var otherText = arg.Substring(1).ToLowerInvariant();
-            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Hairs/{direction}/{firstChar}{otherText}/{color}{_imageExtension}";
-        }
-
-        public string GetCharacterAccessoriesPath(string name, string arg, string direction)
-        {
-            if (string.IsNullOrEmpty(name)) return string.Empty;
-            if (string.IsNullOrEmpty(arg)) return string.Empty;
-
-            var firstChar = char.ToUpperInvariant(arg[0]);
-            var otherText = arg.Substring(1).ToLowerInvariant();
-            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/Characters/{name}/Accessories/{direction}/{firstChar}{otherText}{_imageExtension}";
         }
 
         public string GetNotificationPrefabAssetName(string assetName)

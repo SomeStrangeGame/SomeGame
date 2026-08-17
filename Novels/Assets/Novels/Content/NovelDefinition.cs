@@ -49,6 +49,16 @@ namespace Novels.Content
             var episodeArray = episodes?.ToArray() ?? Array.Empty<EpisodeDefinition>();
             if (episodeArray.Length == 0 || episodeArray.Any(episode => episode == null))
                 throw new ArgumentException("At least one valid episode is required.", nameof(episodes));
+            var episodeIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var episode in episodeArray)
+            {
+                if (!episodeIds.Add(episode.Id))
+                {
+                    throw new ArgumentException(
+                        $"Duplicate episode ID '{episode.Id}'.",
+                        nameof(episodes));
+                }
+            }
             Episodes = Array.AsReadOnly(episodeArray);
         }
 
