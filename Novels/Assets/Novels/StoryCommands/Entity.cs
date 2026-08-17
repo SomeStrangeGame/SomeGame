@@ -39,7 +39,9 @@ namespace Novels.StoryCommands
                 return StoryParseResult.Success(command);
             }
 
-            var separatorIndex = normalizedSource.IndexOf(':');
+            var separatorIndex = StorySyntaxTokenizer.IndexOfUnescaped(
+                normalizedSource,
+                ':');
             var prefix = separatorIndex < 0
                 ? normalizedSource
                 : normalizedSource.Substring(0, separatorIndex).Trim();

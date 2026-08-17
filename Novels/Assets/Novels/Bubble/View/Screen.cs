@@ -128,7 +128,7 @@ namespace Novels.Bubble.View
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
 
-        private readonly Dictionary<int, Button> _buttons = new();
+        private readonly List<Button> _buttonPool = new();
 
         public void ShowImmediate()
         {
@@ -205,25 +205,33 @@ namespace Novels.Bubble.View
                 bubble.SetText(ctx.Text.Header, ctx.Text.Text);
             }
 
-            foreach(var buttonPair in _buttons)
-                Destroy(buttonPair.Value.gameObject);
-            _buttons.Clear();
-
-            foreach(var button in ctx.Buttons)
+            GameObject root = null;
+            foreach (var bubble in _bubblesView.BubblesPopUp)
             {
-                GameObject root = null;
-                foreach (var bubble in _bubblesView.BubblesPopUp)
-                    if (bubble.TryGetRoot(ctx.Type, out root)) break;
-                    
-                _bubblesView.ButtonPrefab.gameObject.SetActive(false);
-                if (!_buttons.TryGetValue(button.Id, out var inSceneButton))
-                    inSceneButton = Instantiate(_bubblesView.ButtonPrefab, root.transform);
+                if (bubble.TryGetRoot(ctx.Type, out root))
+                    break;
+            }
 
-                _buttons[button.Id] = inSceneButton;
+            var buttons = ctx.Buttons ?? Array.Empty<BubbleCtx.ButtonCtx>();
+            for (var index = 0; index < buttons.Length; index++)
+            {
+                var button = buttons[index];
+                _bubblesView.ButtonPrefab.gameObject.SetActive(false);
+                if (index >= _buttonPool.Count)
+                    _buttonPool.Add(Instantiate(_bubblesView.ButtonPrefab, root.transform));
+
+                var inSceneButton = _buttonPool[index];
+                inSceneButton.transform.SetParent(root.transform, false);
                 inSceneButton.GetComponentInChildren<Text>(true).text = button.Text;
                 inSceneButton.onClick.RemoveAllListeners();
                 inSceneButton.onClick.AddListener(() => button.OnClick.Invoke(button.Id));
                 inSceneButton.gameObject.SetActive(true);
+            }
+
+            for (var index = buttons.Length; index < _buttonPool.Count; index++)
+            {
+                _buttonPool[index].onClick.RemoveAllListeners();
+                _buttonPool[index].gameObject.SetActive(false);
             }
             _bubblesView.BackgroundButton.onClick.RemoveAllListeners();
             _bubblesView.BackgroundButton.onClick.AddListener(() => ctx.OnBackgroundClick?.Invoke());

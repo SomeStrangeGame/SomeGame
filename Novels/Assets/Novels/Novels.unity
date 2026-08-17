@@ -352,18 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e48598c4e9e74c8b97fd78dae12d82d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _data:
-    _prefix: TZM_1
-    _mainCharacter: Salli
-    _storyTextPath: s01e01.ink.json
-    _novelsLoadingBundleName: novels_loading
-    _novelsSettingBundleName: novels_setting
-    _novelsBubbleBundleName: novels_bubble
-    _novelsLocationBundleName: novels_location
-    _novelsCharacterBundleName: novels_character
-    _novelsNotificationBundleName: novels_notification
-    _novelsLocalizationBundleName: novels_localization
-    _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
+  _content: {fileID: 11400000, guid: 7cf435ba470b40ac914cb1cd4e65cbcf, type: 2}
   _logs: 255
 --- !u!1 &1371491167
 GameObject:

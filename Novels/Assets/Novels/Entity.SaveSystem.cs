@@ -24,6 +24,7 @@ namespace Novels
                 OnError = _ctx.OnError,
             }).AddTo(this);
             saveSystem.Init();
+            _saveSystem = saveSystem;
 
             return saveSystem;
         }

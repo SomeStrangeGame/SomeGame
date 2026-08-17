@@ -16,6 +16,7 @@ namespace Bundles
             public string Prefix;
             public CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
+            public Action<BundleFailure> OnFailure;
         }
 
         private readonly Dictionary<string, Sprite> _sprites = new(StringComparer.OrdinalIgnoreCase);
@@ -24,6 +25,8 @@ namespace Bundles
 
         private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, Dictionary<string, string>> _assetNames = new(
+            StringComparer.OrdinalIgnoreCase);
 
         private readonly StreamingAssetsSource _source;
         private readonly MediaResolver _media;
@@ -54,6 +57,7 @@ namespace Bundles
             foreach(var bundle in _bundles)
                 bundle.Value.Unload(false);
             _bundles.Clear();
+            _assetNames.Clear();
         }
 
         public async UniTask<Sprite> GetBundledSprite(string bundleName, string assetName)
@@ -61,6 +65,8 @@ namespace Bundles
             var assetBundle = GetLoadedBundle(bundleName);
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
+            assetName = ResolveAssetName(bundleName, assetName);
+            if (assetName == null) return null;
             var assetKey = GetAssetKey(bundleName, assetName);
             if (!_sprites.ContainsKey(assetKey))
             {
@@ -76,6 +82,13 @@ namespace Bundles
             var assetBundle = GetLoadedBundle(bundleName);
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
+            var requestedName = assetName;
+            assetName = ResolveAssetName(bundleName, assetName);
+            if (assetName == null)
+            {
+                ReportMissingAsset(bundleName, requestedName);
+                return null;
+            }
             var assetKey = GetAssetKey(bundleName, assetName);
             if (!_scriptableObjects.ContainsKey(assetKey))
             {
@@ -91,6 +104,13 @@ namespace Bundles
             var assetBundle = GetLoadedBundle(bundleName);
             if (assetBundle == null) return null;
             if (string.IsNullOrEmpty(assetName)) return null;
+            var requestedName = assetName;
+            assetName = ResolveAssetName(bundleName, assetName);
+            if (assetName == null)
+            {
+                ReportMissingAsset(bundleName, requestedName);
+                return null;
+            }
             var assetKey = GetAssetKey(bundleName, assetName);
             if (!_prefabs.ContainsKey(assetKey))
             {
@@ -118,6 +138,9 @@ namespace Bundles
             if (string.IsNullOrEmpty(bundleName)) 
             {
                 _ctx.OnLog.Invoke(log);
+                _ctx.OnFailure?.Invoke(new BundleFailure(
+                    BundleFailureCodes.InvalidBundleName,
+                    "Bundle name is empty."));
                 return null;
             }
 
@@ -139,6 +162,7 @@ namespace Bundles
                 if (cachedBundle == null)
                     throw new InvalidDataException($"Cached bundle '{cachePath}' is invalid.");
                 _bundles[bundlesKey] = cachedBundle;
+                RegisterAssetNames(bundlesKey, cachedBundle);
                 _cache.PruneDirectory(bundlesKey, bundlesVersion);
                 log = (LogType.Log, $"Get local bundle from {cachePath}");
             }
@@ -157,6 +181,7 @@ namespace Bundles
                 if (downloadedBundle == null)
                     throw new InvalidDataException($"Downloaded bundle '{bundlesPath}' is invalid.");
                 _bundles[bundlesKey] = downloadedBundle;
+                RegisterAssetNames(bundlesKey, downloadedBundle);
                 _cache.PruneDirectory(bundlesKey, bundlesVersion);
             }
             _ctx.OnLog.Invoke(log);
@@ -179,6 +204,7 @@ namespace Bundles
                 RemoveAssets(_sprites, bundleKey);
                 RemoveAssets(_scriptableObjects, bundleKey);
                 RemoveAssets(_prefabs, bundleKey);
+                _assetNames.Remove(bundleKey);
             }
 
             _media.Clear();
@@ -187,6 +213,35 @@ namespace Bundles
         private string GetAssetKey(string bundleName, string assetName)
         {
             return $"{GetBundleKey(bundleName)}|{assetName}";
+        }
+
+        public string ResolveAssetName(string bundleName, string requestedName)
+        {
+            if (string.IsNullOrWhiteSpace(requestedName))
+                return null;
+            var bundleKey = GetBundleKey(bundleName);
+            if (_assetNames.TryGetValue(bundleKey, out var names)
+                && names.TryGetValue(requestedName, out var actualName))
+            {
+                return actualName;
+            }
+
+            return null;
+        }
+
+        private void ReportMissingAsset(string bundleName, string requestedName)
+        {
+            _ctx.OnFailure?.Invoke(new BundleFailure(
+                BundleFailureCodes.AssetNotFound,
+                $"Asset '{requestedName}' is absent from bundle '{bundleName}'."));
+        }
+
+        private void RegisterAssetNames(string bundleKey, AssetBundle bundle)
+        {
+            var names = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var assetName in bundle.GetAllAssetNames())
+                names[assetName] = assetName;
+            _assetNames[bundleKey] = names;
         }
 
         private static void RemoveAssets<T>(

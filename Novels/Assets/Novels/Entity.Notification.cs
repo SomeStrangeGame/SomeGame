@@ -12,7 +12,7 @@ namespace Novels
             {
                 NotificationPrefab = notificationPrefab,
                 CancellationToken = _ctx.CancellationToken,
-                OnLog = _ctx.OnLog,
+                OnError = _ctx.OnError,
             }).AddTo(owner);
             notification.Init();
 

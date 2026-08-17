@@ -3,56 +3,10 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
-using UnityEngine.Audio;
 using ThreadPriority = UnityEngine.ThreadPriority;
 
 namespace Novels
 {
-    [Serializable]
-    internal struct Data
-    {
-        [SerializeField] private string _prefix;
-        [SerializeField] private string _mainCharacter;
-
-        [Space]
-        [SerializeField] private string _storyTextPath;
-        [SerializeField] private string _novelId;
-        [SerializeField] private string _episodeId;
-        [SerializeField] private string _contentVersion;
-
-        [Space]
-        [SerializeField] private string _novelsLoadingBundleName;
-        [SerializeField] private string _novelsSettingBundleName;
-        [SerializeField] private string _novelsBubbleBundleName;
-        [SerializeField] private string _novelsLocationBundleName;
-        [SerializeField] private string _novelsCharacterBundleName;
-        [SerializeField] private string _novelsNotificationBundleName;
-        [SerializeField] private string _novelsLocalizationBundleName;
-
-        [SerializeField] private AudioMixer _audioMixer;
-
-        internal readonly string Prefix => _prefix;
-        internal readonly string MainCharacter => _mainCharacter;
-        internal readonly string StoryTextPath => _storyTextPath;
-        internal readonly string NovelId => string.IsNullOrWhiteSpace(_novelId)
-            ? _prefix
-            : _novelId;
-        internal readonly string EpisodeId => string.IsNullOrWhiteSpace(_episodeId)
-            ? _storyTextPath
-            : _episodeId;
-        internal readonly string ContentVersion => string.IsNullOrWhiteSpace(_contentVersion)
-            ? "1"
-            : _contentVersion;
-        internal readonly string NovelsLoadingBundleName => _novelsLoadingBundleName;
-        internal readonly string NovelsSettingBundleName => _novelsSettingBundleName;
-        internal readonly string NovelsBubbleBundleName => _novelsBubbleBundleName;
-        internal readonly string NovelsLocationBundleName => _novelsLocationBundleName;
-        internal readonly string NovelsCharacterBundleName => _novelsCharacterBundleName;
-        internal readonly string NovelsNotificationBundleName => _novelsNotificationBundleName;
-        internal readonly string NovelsLocalizationBundleName => _novelsLocalizationBundleName;
-        internal readonly AudioMixer AudioMixer => _audioMixer;
-    }
-
     internal partial class Entity : BaseDisposable
     {
         private const string _screenAssetName = "Screen";
@@ -61,7 +15,7 @@ namespace Novels
 
         internal struct Ctx
         {
-            internal Data Data;
+            internal Content.NovelContentAsset Content;
             internal CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
@@ -70,11 +24,15 @@ namespace Novels
         private readonly Ctx _ctx;
         private readonly Content.NovelDefinition _definition;
         private readonly PriorityLoader _priorityLoader;
+        private Save.Entity _saveSystem;
 
         internal Entity(Ctx ctx)
         {
             _ctx = ctx;
-            _definition = CreateNovelDefinition(ctx.Data);
+            if (ctx.Content == null)
+                throw new ArgumentNullException(nameof(ctx.Content));
+
+            _definition = ctx.Content.ToDefinition();
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
             Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
@@ -92,6 +50,11 @@ namespace Novels
                 }).AddTo(this);
 
             await bootstrap.Run();
+        }
+
+        internal UniTask FlushSaveAsync()
+        {
+            return _saveSystem?.FlushAsync() ?? UniTask.CompletedTask;
         }
     }
 }

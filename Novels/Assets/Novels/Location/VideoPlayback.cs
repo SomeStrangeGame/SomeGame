@@ -46,7 +46,7 @@ namespace Novels.Location
             internal VideoPlayer VideoPlayer;
             internal Action<RenderTexture> SetTexture;
             internal CancellationToken CancellationToken;
-            internal Action<(LogType type, string message)> OnLog;
+            internal Action<Diagnostics.NovelError> OnError;
         }
 
         private readonly Ctx _ctx;
@@ -149,7 +149,10 @@ namespace Novels.Location
 
         private void LogFailure(string url)
         {
-            _ctx.OnLog?.Invoke((LogType.Error, $"Failed to play video [{url}]: {_error}"));
+            _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                Diagnostics.NovelErrorCodes.VideoPlaybackFailed,
+                Diagnostics.NovelErrorSeverity.Recoverable,
+                $"Failed to play video '{url}': {_error}"));
         }
 
         private void ReleaseRenderTexture()

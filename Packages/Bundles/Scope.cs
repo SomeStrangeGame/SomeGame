@@ -53,6 +53,12 @@ namespace Bundles
         public UniTask<string> ResolveAudioUrl(string assetName) =>
             _owner.ResolveAudioUrl(assetName);
 
+        public string ResolveAssetName(string bundleName, string requestedName)
+        {
+            EnsureOwned(bundleName);
+            return _owner.ResolveAssetName(bundleName, requestedName);
+        }
+
         protected override void OnDispose()
         {
             _owner.ReleaseBundles(_bundleNames);

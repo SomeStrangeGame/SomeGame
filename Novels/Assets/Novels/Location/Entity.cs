@@ -24,7 +24,6 @@ namespace Novels.Location
             public Func<string, UniTask<string>> ResolveVideoUrl;
             public CancellationToken CancellationToken;
 
-            public Action<(LogType type, string message)> OnLog;
             public Action<Diagnostics.NovelError> OnError;
         }
 
@@ -50,7 +49,7 @@ namespace Novels.Location
                 VideoPlayer = _screen.VideoPlayer,
                 SetTexture = _screen.SetVideoTexture,
                 CancellationToken = _ctx.CancellationToken,
-                OnLog = _ctx.OnLog,
+                OnError = _ctx.OnError,
             }).AddTo(this);
         }
 
@@ -182,7 +181,6 @@ namespace Novels.Location
                 return;
             }
 
-            _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
             ReportUnsupportedCameraAction(action);
         }
 
@@ -200,7 +198,6 @@ namespace Novels.Location
                 return UniTask.CompletedTask;
             }
 
-            _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
             ReportUnsupportedCameraAction(action);
             return UniTask.CompletedTask;
         }

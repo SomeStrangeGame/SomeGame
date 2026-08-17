@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 
 namespace Novels.StoryCommands
 {
@@ -32,17 +31,9 @@ namespace Novels.StoryCommands
             var argumentsSource = prefix.Substring(
                 openParenthesisIndex + 1,
                 closeParenthesisIndex - openParenthesisIndex - 1);
-            var rawArguments = argumentsSource.Split(',');
-            var arguments = new List<string>(rawArguments.Length);
-
-            foreach (var rawArgument in rawArguments)
-            {
-                var argument = rawArgument.Trim();
-                if (argument.Length > 0)
-                    arguments.Add(argument);
-            }
-
-            return PrefixParseResult.Success(name, arguments.ToArray());
+            return PrefixParseResult.Success(
+                name,
+                StorySyntaxTokenizer.SplitArguments(argumentsSource));
         }
     }
 

@@ -8,7 +8,7 @@ namespace Novels
 {
     public class EntryPoint : MonoBehaviour
     {
-        [SerializeField] private Data _data;
+        [SerializeField] private Content.NovelContentAsset _content;
         [SerializeField] private Logs.Entity.ShowLogs _logs;
 
         private Entity _entity;
@@ -24,7 +24,7 @@ namespace Novels
             _sessionCancellation = new CancellationTokenSource();
             _entity = new Entity(new Entity.Ctx
             {
-                Data = _data,
+                Content = _content,
                 CancellationToken = _sessionCancellation.Token,
                 OnLog = data => 
                 {
@@ -72,6 +72,28 @@ namespace Novels
                 _sessionCancellation?.Dispose();
                 _sessionCancellation = null;
                 _entity = null;
+            }
+        }
+
+        private void OnApplicationPause(bool pauseStatus)
+        {
+            if (pauseStatus && _entity != null)
+                FlushSave(_entity).Forget();
+        }
+
+        private async UniTaskVoid FlushSave(Entity entity)
+        {
+            try
+            {
+                await entity.FlushSaveAsync();
+            }
+            catch (Exception exception)
+            {
+                ReportError(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.SaveWriteFailed,
+                    Diagnostics.NovelErrorSeverity.Recoverable,
+                    "Failed to flush save data while pausing.",
+                    exception: exception));
             }
         }
 

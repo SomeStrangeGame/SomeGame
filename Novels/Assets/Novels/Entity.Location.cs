@@ -17,7 +17,6 @@ namespace Novels
                 ResolveVideoUrl = resolveVideoUrl,
                 CancellationToken = _ctx.CancellationToken,
 
-                OnLog = _ctx.OnLog,
                 OnError = _ctx.OnError,
             }).AddTo(owner);
             location.Init();

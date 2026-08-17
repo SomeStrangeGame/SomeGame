@@ -10,6 +10,23 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-15
 
+## Architecture wave completed on 2026-08-17 (third review)
+
+The nine items from the third project review are complete: authoring content is
+stored in `NovelContentAsset`; episode lifetime and final save flush are owned by
+`EpisodeRuntime`; SaveWriter is observable; Sound uses a bounded voice pool;
+Bubble choices reuse buttons; loaded bundle names form an address catalog;
+bundle builds use staging and rollback; compiled Ink/media receive Editor
+validation; infrastructure failures cross package boundaries as neutral typed
+failures and are adapted to `NovelError` at composition.
+
+The existing scene is wired directly to `Assets/Novels/Content/TZM_1.asset`;
+the redundant legacy scene `Data` fields have been removed. The versioned save
+envelope remains compatible. An isolated Unity
+6000.3.11f1 compile and batch content validation completed successfully. Tests
+were not created or run, and the destructive AssetBundle build command itself
+was not executed during validation.
+
 ## Architecture wave completed on 2026-08-17
 
 The second review wave is complete: damaged metadata was repaired; explicit
@@ -30,7 +47,7 @@ The eight follow-up architecture items are complete:
 
 1. `StoryQueue.TryComplete()` flushes commands after the final Dialogue when Ink completes.
 2. Save data uses a versioned content-aware envelope and reads the legacy raw-byte format.
-3. `Novels.Content` defines immutable `NovelDefinition` and `EpisodeDefinition` models; existing scene `Data` is adapted without changing the scene asset.
+3. `Novels.Content` defines immutable `NovelDefinition` and `EpisodeDefinition` models; the scene now references the authoring asset directly (the temporary legacy `Data` adapter was removed in the later authoring wave).
 4. `NovelBootstrapProcess` owns application/start-selection/episode workflow while root partial factories still create concrete dependencies.
 5. `Novels.Editor` validates loaded content configuration and protects AssetBundle building with the same validation.
 6. `Bundles.Scope` gives episode bundles explicit lifetime ownership and removes bundle-qualified cached references when released.

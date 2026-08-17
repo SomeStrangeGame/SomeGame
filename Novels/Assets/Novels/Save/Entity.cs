@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
 
@@ -99,6 +100,11 @@ namespace Novels.Save
             _save.Clear();
             _initialChoices = Array.Empty<byte>();
             _initialChoicePosition = 0;
+        }
+
+        public UniTask FlushAsync()
+        {
+            return _writer.FlushAsync();
         }
 
         private void ReportWriteFailure(Exception exception)

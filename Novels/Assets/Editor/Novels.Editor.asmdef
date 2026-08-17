@@ -2,7 +2,10 @@
     "name": "Novels.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:4d5cc99a41c424872a2bd557c650099c"
+        "GUID:4d5cc99a41c424872a2bd557c650099c",
+        "GUID:6820401752ad470d9242a7a164f36117",
+        "GUID:0f5cc96bf4a241c7a2e6863af998b277",
+        "GUID:b06a9b52787e42a9ad9a2acdf98db8c1"
     ],
     "includePlatforms": [
         "Editor"

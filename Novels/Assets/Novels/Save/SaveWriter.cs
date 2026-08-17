@@ -15,6 +15,7 @@ namespace Novels.Save
         private readonly CancellationTokenSource _cancellation = new();
         private byte[] _pending;
         private bool _running;
+        private UniTaskCompletionSource _idle;
 
         internal SaveWriter(
             string key,
@@ -34,8 +35,24 @@ namespace Novels.Save
                 if (_running)
                     return;
                 _running = true;
+                _idle = new UniTaskCompletionSource();
             }
             Run().Forget();
+        }
+
+        internal async UniTask FlushAsync()
+        {
+            while (true)
+            {
+                UniTask wait;
+                lock (_gate)
+                {
+                    if (!_running && _pending == null)
+                        return;
+                    wait = _idle.Task;
+                }
+                await wait;
+            }
         }
 
         internal void Reset(Action clearStorage)
@@ -46,7 +63,7 @@ namespace Novels.Save
                 clearStorage();
         }
 
-        private async UniTaskVoid Run()
+        private async UniTask Run()
         {
             while (!_cancellation.IsCancellationRequested)
             {
@@ -58,6 +75,7 @@ namespace Novels.Save
                     if (data == null)
                     {
                         _running = false;
+                        _idle.TrySetResult();
                         return;
                     }
                 }
@@ -99,6 +117,7 @@ namespace Novels.Save
                 }
             }
             _cancellation.Dispose();
+            _idle?.TrySetResult();
             base.OnDispose();
         }
     }

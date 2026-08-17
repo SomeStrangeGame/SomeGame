@@ -86,6 +86,21 @@
 - Audio and unsupported-camera failures use `NovelError`; shared-package transport logs remain package-neutral.
 - An isolated Unity 6000.3.11f1 import/compile completed without C# errors or warnings. Tests and Play Mode were not run.
 
+## Architecture wave completed on 2026-08-17 (authoring and runtime ownership)
+
+- `NovelContentAsset` is the sole authoring source for novel identity, application bundles, episodes, media, AudioMixer, and content versions. `EntryPoint` references `Content/TZM_1.asset` directly and passes it to the composition root.
+- `NovelDefinition`, episode collections, video IDs, audio overrides, and silent-audio IDs expose defensive read-only collections.
+- `EpisodeRuntime`, created through the root partial factory, owns the episode scope and guarantees save flushing at episode completion.
+- `SaveWriter` exposes an observable `FlushAsync`; episode completion and application pause wait for pending coalesced writes. Disposal retains the synchronous last-resort flush.
+- Audio uses dedicated loop sources for Music/Ambient and a four-voice Sound pool. Sound clips are not evicted while a voice is using them.
+- Authored `тишина` is an explicit silent-audio ID that stops its channel without requesting a nonexistent file.
+- Bubble choice buttons are pooled and rebound instead of destroyed and instantiated for every dialogue.
+- Bundles records the exact names present in every loaded bundle and resolves requested addresses case-insensitively through this catalog before loading.
+- Shared Bundles failures use package-neutral `BundleFailure`; the composition root adapts them to `NovelError`. Notification and video playback failures now use typed errors directly.
+- Story command tokenization supports escaped separators in arguments, while the Editor validator scans compiled Ink strings for parse errors and missing static audio.
+- AssetBundle building uses a Library staging directory, validates the build manifest, and swaps output only after all requested targets succeed. Console history is no longer cleared.
+- Isolated Unity compilation and `NovelContentValidator.ValidateBatch` completed without errors. Tests were not created or run.
+
 ## Testing And Tooling
 
 - Unity Test Framework is present transitively, but no EditMode or PlayMode tests were found.
@@ -95,10 +110,9 @@
 ## Risks And Unknowns
 
 - Render-pipeline configuration may be stale or incomplete; validate inside the Editor before graphics work.
-- Bundle names and path conventions remain implicit string contracts. Shared story speakers and arguments are centralized in `StoryContracts`; story command names are normalized into typed commands at the parser boundary.
+- Bundle names remain authored string contracts, but loaded asset addresses are resolved against an exact per-bundle catalog. Shared story speakers and arguments are centralized in `StoryContracts`; story command names are normalized into typed commands at the parser boundary.
 - Wardrobe/choose paths contain exact centralized future placeholders and their empty presentation contracts remain intentionally unfinished.
-- AssetBundle building deletes and recreates `StreamingAssets/Remote`; treat the menu command as destructive.
-- Repository was already dirty: untracked path `file:/` existed and was not touched.
+- AssetBundle building replaces `StreamingAssets/Remote` only after a successful staging build and restores the previous output if the swap fails; it is still a material content operation.
 - The Android signing keystore is tracked by Git and should be removed from version control and rotated if the repository has been shared; no secret value was copied here.
 
 ## Evidence Inspected

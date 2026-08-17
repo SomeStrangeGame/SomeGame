@@ -13,7 +13,7 @@ namespace Novels.Notification
         {
             public GameObject NotificationPrefab;
             public CancellationToken CancellationToken;
-            public Action<(LogType type, string message)> OnLog;
+            public Action<Diagnostics.NovelError> OnError;
         }
 
         private readonly Queue<string> _pendingNotifications = new();
@@ -64,9 +64,11 @@ namespace Novels.Notification
             }
             catch (Exception exception)
             {
-                _ctx.OnLog?.Invoke((
-                    LogType.Error,
-                    $"Notification processing failed: {exception}"));
+                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.NotificationFailed,
+                    Diagnostics.NovelErrorSeverity.Recoverable,
+                    "Notification processing failed.",
+                    exception: exception));
             }
             finally
             {

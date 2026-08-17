@@ -57,6 +57,8 @@ namespace Bundles
         {
             if (string.IsNullOrWhiteSpace(assetName))
                 return UniTask.FromResult<string>(null);
+            if (_manifest.IsSilentAudio(assetName))
+                return UniTask.FromResult<string>(null);
 
             var extension = Path.GetExtension(assetName);
             var fileName = extension.Length == 0

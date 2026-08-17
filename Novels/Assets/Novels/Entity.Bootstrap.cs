@@ -12,6 +12,7 @@ namespace Novels
             internal Save.Entity SaveSystem;
             internal PathGetter.Entity PathGetter;
             internal Bundles.Entity Bundles;
+            internal EpisodeRuntime EpisodeRuntime;
             internal EpisodeScope EpisodeScope;
             internal Bundles.Scope EpisodeBundles;
             internal Loading.Entity MainLoading;
@@ -30,7 +31,8 @@ namespace Novels
             state.SaveSystem = CreateSaveSystem();
             state.PathGetter = CreatePathGetter();
             state.Bundles = CreateBundles();
-            state.EpisodeScope = new EpisodeScope().AddTo(this);
+            state.EpisodeRuntime = CreateEpisodeRuntime().AddTo(this);
+            state.EpisodeScope = state.EpisodeRuntime.Scope;
             state.EpisodeBundles = state.Bundles.CreateScope()
                 .AddTo(state.EpisodeScope);
 
@@ -216,13 +218,16 @@ namespace Novels
                     CancellationToken = _ctx.CancellationToken,
                     OnError = _ctx.OnError,
                 }).AddTo(state.EpisodeScope);
+            state.EpisodeRuntime.Configure(
+                novelProcess.ShowNovelProcess,
+                state.SaveSystem.FlushAsync);
             try
             {
-                await novelProcess.ShowNovelProcess();
+                await state.EpisodeRuntime.Run();
             }
             finally
             {
-                state.EpisodeScope.Dispose();
+                state.EpisodeRuntime.Dispose();
             }
         }
     }

@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -36,7 +35,9 @@ namespace Novels.Audio
         private readonly Ctx _ctx;
 
         private const int _soundCacheCapacity = 8;
-        private readonly Dictionary<Audio, AudioSource> _audioSources;
+        private const int _soundVoiceCount = 4;
+        private readonly Dictionary<Audio, AudioSource> _loopSources;
+        private readonly List<AudioSource> _soundVoices = new();
         private readonly Dictionary<string, AudioClip> _soundClips = new(StringComparer.OrdinalIgnoreCase);
         private readonly Queue<string> _soundClipOrder = new();
 
@@ -44,7 +45,7 @@ namespace Novels.Audio
         {
             _ctx = ctx;
 
-            _audioSources = new();
+            _loopSources = new();
         }
         
         public async UniTask PlayAudio(string assetName, Audio type)
@@ -53,7 +54,11 @@ namespace Novels.Audio
             {
                 var audioURL = await _ctx.ResolveAudioUrl(assetName);
                 if (string.IsNullOrEmpty(audioURL))
-                    throw new FileNotFoundException($"Audio '{assetName}' is absent from the media manifest.");
+                {
+                    ClearAudio(type);
+                    _ctx.OnLog?.Invoke((LogType.Log, $"Stop audio {type}"));
+                    return;
+                }
 
                 var audioClip = type == Audio.Sound && _soundClips.TryGetValue(assetName, out var cached)
                     ? cached
@@ -88,7 +93,6 @@ namespace Novels.Audio
             catch (Exception ex)
             {
                 ClearAudio(type);
-                _ctx.OnLog?.Invoke((LogType.Warning, $"Clear audio {type}\n{ex.Message}"));
                 _ctx.OnError?.Invoke(new Diagnostics.NovelError(
                     Diagnostics.NovelErrorCodes.AudioPlaybackFailed,
                     Diagnostics.NovelErrorSeverity.Recoverable,
@@ -99,13 +103,9 @@ namespace Novels.Audio
 
         private AudioSource UpdateAudioSource(string assetName, AudioClip audioClip, Audio audioType)
         {
-            if (!_audioSources.TryGetValue(audioType, out var audioSource))
-            {
-                var audioObject = new GameObject($"NovelAudio-{audioType}");
-                audioSource = audioObject.AddComponent<AudioSource>();
-                audioSource.playOnAwake = false;
-                _audioSources[audioType] = audioSource;
-            }
+            var audioSource = audioType == Audio.Sound
+                ? GetSoundVoice()
+                : GetLoopSource(audioType);
 
             audioSource.Stop();
             if (audioType != Audio.Sound && audioSource.clip != null)
@@ -131,6 +131,42 @@ namespace Novels.Audio
             return audioSource;
         }
 
+        private AudioSource GetLoopSource(Audio audioType)
+        {
+            if (_loopSources.TryGetValue(audioType, out var source))
+                return source;
+
+            source = CreateAudioSource($"NovelAudio-{audioType}");
+            _loopSources[audioType] = source;
+            return source;
+        }
+
+        private AudioSource GetSoundVoice()
+        {
+            foreach (var voice in _soundVoices)
+            {
+                if (!voice.isPlaying)
+                    return voice;
+            }
+
+            if (_soundVoices.Count < _soundVoiceCount)
+            {
+                var voice = CreateAudioSource($"NovelAudio-Sound-{_soundVoices.Count}");
+                _soundVoices.Add(voice);
+                return voice;
+            }
+
+            return _soundVoices[0];
+        }
+
+        private static AudioSource CreateAudioSource(string name)
+        {
+            var audioObject = new GameObject(name);
+            var source = audioObject.AddComponent<AudioSource>();
+            source.playOnAwake = false;
+            return source;
+        }
+
         private AudioMixerGroup GetMixerGroup(string groupName)
         {
             if (_ctx.AudioMixer == null)
@@ -146,7 +182,17 @@ namespace Novels.Audio
 
         private void ClearAudio(Audio audioType)
         {
-            if (_audioSources.TryGetValue(audioType, out var source))
+            if (audioType == Audio.Sound)
+            {
+                foreach (var voice in _soundVoices)
+                {
+                    voice.Stop();
+                    voice.clip = null;
+                }
+                return;
+            }
+
+            if (_loopSources.TryGetValue(audioType, out var source))
             {
                 source.Stop();
                 source.clip = null;
@@ -166,23 +212,52 @@ namespace Novels.Audio
                 return;
             _soundClips[assetName] = clip;
             _soundClipOrder.Enqueue(assetName);
-            while (_soundClipOrder.Count > _soundCacheCapacity)
+            var attempts = _soundClipOrder.Count;
+            while (_soundClips.Count > _soundCacheCapacity && attempts-- > 0)
             {
                 var oldest = _soundClipOrder.Dequeue();
-                if (_soundClips.Remove(oldest, out var removed) && removed != null)
+                if (!_soundClips.TryGetValue(oldest, out var removed))
+                    continue;
+                if (IsClipInUse(removed))
+                {
+                    _soundClipOrder.Enqueue(oldest);
+                    continue;
+                }
+                _soundClips.Remove(oldest);
+                if (removed != null)
                     GameObject.Destroy(removed);
             }
+        }
+
+        private bool IsClipInUse(AudioClip clip)
+        {
+            foreach (var voice in _soundVoices)
+            {
+                if (voice.isPlaying && voice.clip == clip)
+                    return true;
+            }
+            return false;
         }
 
         protected override void OnDispose()
         {
             base.OnDispose();
-            foreach (var audioSource in _audioSources.Values)
+            foreach (var audioSource in _loopSources.Values)
             {
                 if (audioSource != null)
+                {
+                    if (audioSource.clip != null)
+                        GameObject.Destroy(audioSource.clip);
                     GameObject.Destroy(audioSource.gameObject);
+                }
             }
-            _audioSources.Clear();
+            _loopSources.Clear();
+            foreach (var voice in _soundVoices)
+            {
+                if (voice != null)
+                    GameObject.Destroy(voice.gameObject);
+            }
+            _soundVoices.Clear();
             foreach (var clip in _soundClips.Values)
             {
                 if (clip != null)
