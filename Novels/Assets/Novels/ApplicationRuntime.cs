@@ -11,7 +11,7 @@ namespace Novels
     internal sealed class ApplicationRuntime : BaseDisposable
     {
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
-        private const int _supportedContentSchemaVersion = 2;
+        private const int _supportedContentSchemaVersion = 3;
 
         internal struct Ctx
         {
@@ -54,22 +54,6 @@ namespace Novels
             while (!_environment.CancellationToken.IsCancellationRequested)
             {
                 var content = await SelectContent(catalog.catalog, catalog.screen);
-                try
-                {
-                    await PrepareContent(bootstrap, content.ContentId);
-                }
-                catch (Exception exception) when (
-                    exception is Bundles.ContentSourceException
-                    || exception is Bundles.ContentIntegrityException
-                    || exception is Bundles.ContentStorageException)
-                {
-                    _ctx.OnError?.Invoke(new Diagnostics.NovelError(
-                        Diagnostics.NovelErrorCodes.ContentPreparationFailed,
-                        Diagnostics.NovelErrorSeverity.Recoverable,
-                        "Story content could not be prepared.",
-                        exception: exception));
-                    continue;
-                }
                 var novel = new Entity(new Entity.Ctx
                 {
                     Bundles = _bundles,
@@ -79,6 +63,8 @@ namespace Novels
                     TargetCamera = _environment.TargetCamera,
                     SelectEpisode = definition =>
                         SelectEpisode(definition, catalog.screen),
+                    PrepareEpisodeContent = (definition, episode) =>
+                        PrepareEpisodeContent(bootstrap, definition, episode),
                     CancellationToken = _environment.CancellationToken,
                     OnLog = _ctx.OnLog,
                     OnError = _ctx.OnError,
@@ -86,7 +72,28 @@ namespace Novels
                 _activeNovel.Replace(novel);
                 try
                 {
-                    var result = await novel.Init();
+                    EpisodeRunResult result;
+                    try
+                    {
+                        result = await novel.Init();
+                    }
+                    catch (Exception exception) when (
+                        exception is Bundles.ContentSourceException
+                        || exception is Bundles.ContentIntegrityException
+                        || exception is Bundles.ContentStorageException
+                        || exception is Bundles.ContentConfigurationException)
+                    {
+                        _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                            Diagnostics.NovelErrorCodes.ContentPreparationFailed,
+                            Diagnostics.NovelErrorSeverity.Recoverable,
+                            "Story content could not be prepared.",
+                            exception: exception,
+                            context: new Diagnostics.NovelErrorContext(
+                                _bundles.ReleaseId,
+                                content.ContentId,
+                                deliveryMode: _bundles.DeliveryMode.ToString())));
+                        continue;
+                    }
                     if (result.Status == EpisodeRunStatus.Cancelled)
                         return;
                     if (result.Status == EpisodeRunStatus.Failed)
@@ -135,6 +142,11 @@ namespace Novels
         internal UniTask FlushSaveAsync()
         {
             return _activeNovel.Value?.FlushSaveAsync() ?? UniTask.CompletedTask;
+        }
+
+        internal void FlushSaveSynchronously()
+        {
+            _activeNovel.Value?.FlushSaveSynchronously();
         }
 
         private Bundles.Entity CreateBundles()
@@ -237,9 +249,10 @@ namespace Novels
                 _localization.Get(ApplicationText.Retry));
         }
 
-        private async UniTask PrepareContent(
+        private async UniTask PrepareEpisodeContent(
             Bootstrap.Entity bootstrap,
-            string deliveryGroup)
+            Content.NovelDefinition definition,
+            Content.EpisodeDefinition episode)
         {
             if (_bundles.DeliveryMode == Bundles.ContentDeliveryMode.Embedded)
                 return;
@@ -247,11 +260,20 @@ namespace Novels
             bootstrap.ShowLoading(message);
             try
             {
-                await _bundles.PrepareDeliveryGroup(
-                    deliveryGroup,
-                    progress => bootstrap.ShowLoading(
-                        $"{message} {progress.CompletedFiles}/{progress.TotalFiles}"),
-                    _environment.CancellationToken);
+                var groups = new[]
+                {
+                    Content.ContentDeliveryGroupConvention.Shared(definition.Id),
+                    Content.ContentDeliveryGroupConvention.Episode(definition.Id, episode.Id),
+                };
+                foreach (var group in groups.Where(_bundles.HasDeliveryGroup))
+                {
+                    await _bundles.PrepareDeliveryGroup(
+                        group,
+                        progress => bootstrap.ShowLoading(
+                            $"{message} {progress.CompletedFiles}/{progress.TotalFiles} "
+                            + $"({progress.Ratio:P0})"),
+                        _environment.CancellationToken);
+                }
             }
             finally
             {

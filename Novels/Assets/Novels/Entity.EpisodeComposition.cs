@@ -108,7 +108,7 @@ namespace Novels
                 GetNextSavedChoice = state.SaveSystem.GetNextSavedChoice,
                 HideLoading = loading.Hide,
                 CancellationToken = cancellationToken,
-                OnError = _ctx.OnError,
+                OnError = ReportError,
             }).AddTo(state.EpisodeScope);
             state.EpisodeRuntime.Configure(
                 novelProcess.ShowNovelProcess,

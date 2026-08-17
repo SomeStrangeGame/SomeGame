@@ -23,7 +23,7 @@ namespace Novels
                 ResolveVideoUrl = resolveVideoUrl,
                 CancellationToken = cancellationToken,
 
-                OnError = _ctx.OnError,
+                OnError = ReportError,
             }).AddTo(owner);
             location.Init();
 

@@ -24,6 +24,10 @@ namespace Novels
             internal Camera TargetCamera;
             internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
+            internal Func<
+                Content.NovelDefinition,
+                Content.EpisodeDefinition,
+                UniTask> PrepareEpisodeContent;
         }
 
         private readonly Ctx _ctx;
@@ -46,6 +50,8 @@ namespace Novels
                     nameof(ctx.PersistentDataPath));
             if (ctx.SelectEpisode == null)
                 throw new ArgumentNullException(nameof(ctx.SelectEpisode));
+            if (ctx.PrepareEpisodeContent == null)
+                throw new ArgumentNullException(nameof(ctx.PrepareEpisodeContent));
             if (ctx.TargetCamera == null)
                 throw new ArgumentNullException(nameof(ctx.TargetCamera));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
@@ -56,6 +62,7 @@ namespace Novels
             var novelBundles = _ctx.Bundles.CreateScope().AddTo(this);
             _definition = await LoadContent(novelBundles, _ctx.Content);
             _episode = await _ctx.SelectEpisode(_definition);
+            await _ctx.PrepareEpisodeContent(_definition, _episode);
 
             var bootstrap = new NovelBootstrapProcess(
                 new NovelBootstrapProcess.Ctx
@@ -64,12 +71,35 @@ namespace Novels
                     CancellationToken = _ctx.CancellationToken,
                 }).AddTo(this);
 
-            return await bootstrap.Run();
+            var result = await bootstrap.Run();
+            return result.Status == EpisodeRunStatus.Failed && result.Error.HasValue
+                ? EpisodeRunResult.Failed(WithContext(result.Error.Value))
+                : result;
         }
 
         internal UniTask FlushSaveAsync()
         {
             return _saveSystem?.FlushAsync() ?? UniTask.CompletedTask;
+        }
+
+        internal void FlushSaveSynchronously()
+        {
+            _saveSystem?.FlushSynchronously();
+        }
+
+        private void ReportError(Diagnostics.NovelError error)
+        {
+            _ctx.OnError?.Invoke(WithContext(error));
+        }
+
+        private Diagnostics.NovelError WithContext(Diagnostics.NovelError error)
+        {
+            var context = new Diagnostics.NovelErrorContext(
+                _ctx.Bundles.ReleaseId,
+                _definition?.Id ?? _ctx.Content.ContentId,
+                _episode?.Id ?? string.Empty,
+                _ctx.Bundles.DeliveryMode.ToString());
+            return error.WithContext(context);
         }
     }
 }

@@ -142,6 +142,7 @@ namespace Editor
         private static List<Bundles.ContentFileEntry> BuildReleaseFiles()
         {
             var result = new List<Bundles.ContentFileEntry>();
+            var deliveryGroups = ContentDeliveryIndexBuilder.Build();
             foreach (var file in ContentFilePolicy.EnumerateFiles())
             {
                 var relative = ContentFilePolicy.GetRelativePath(file);
@@ -151,7 +152,7 @@ namespace Editor
                     path = relative,
                     size = info.Length,
                     sha256 = ComputeSha256(file),
-                    deliveryGroup = ContentFilePolicy.GetDeliveryGroup(relative),
+                    deliveryGroup = deliveryGroups[relative],
                 });
             }
             return result.OrderBy(file => file.path, StringComparer.Ordinal)
@@ -177,6 +178,7 @@ namespace Editor
             return target switch
             {
                 BuildTarget.Android => "Android",
+                BuildTarget.iOS => "iOS",
                 BuildTarget.WebGL => "WebGL",
                 BuildTarget.StandaloneOSX => "Mac",
                 BuildTarget.StandaloneWindows64 => "Win",

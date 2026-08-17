@@ -11,38 +11,61 @@ namespace Novels
     {
         [SerializeField] private Logs.Entity.ShowLogs _logs;
         [SerializeField] private Camera _targetCamera;
+        [SerializeField] private string _remoteContentBaseUrl;
 
         private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
 
         private void OnEnable()
         {
-            var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
-            PlayerLoopHelper.Initialize(ref playerLoop);
-
-            Application.targetFrameRate = 30;
-
-            _sessionCancellation = new CancellationTokenSource();
-            var environment = new ApplicationEnvironment(
-                _sessionCancellation.Token,
-                Application.persistentDataPath,
-                Application.version,
-                new Locale.LocaleProvider(CultureInfo.CurrentUICulture).Code,
-                Bundles.ContentPlatform.GetCurrent(),
-                _targetCamera);
-            _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
+            try
             {
-                Environment = environment,
-                ContentSource = new Bundles.StreamingAssetsSource(
-                    _sessionCancellation.Token),
-                OnLog = data => 
+                var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
+                PlayerLoopHelper.Initialize(ref playerLoop);
+                Application.targetFrameRate = 30;
+
+                _sessionCancellation = new CancellationTokenSource();
+                var environment = new ApplicationEnvironment(
+                    _sessionCancellation.Token,
+                    Application.persistentDataPath,
+                    Application.version,
+                    new Locale.LocaleProvider(CultureInfo.CurrentUICulture).Code,
+                    Bundles.ContentPlatform.GetCurrent(),
+                    _targetCamera);
+                _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
                 {
-                    using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
-                        logs.Log("[Novels]", data);
-                },
-                OnError = ReportError,
-            });
-            Run(_runtime, _sessionCancellation.Token).Forget();
+                    Environment = environment,
+                    ContentSource = CreateContentSource(_sessionCancellation.Token),
+                    OnLog = data =>
+                    {
+                        using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
+                            logs.Log("[Novels]", data);
+                    },
+                    OnError = ReportError,
+                });
+                Run(_runtime, _sessionCancellation.Token).Forget();
+            }
+            catch (Exception exception)
+            {
+                DisposeSession();
+                ReportError(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.InitializationFailed,
+                    Diagnostics.NovelErrorSeverity.Fatal,
+                    "Novel initialization failed.",
+                    exception: exception));
+            }
+        }
+
+        private Bundles.IContentSource CreateContentSource(
+            CancellationToken cancellationToken)
+        {
+#if UNITY_EDITOR
+            return new Bundles.StreamingAssetsSource(cancellationToken);
+#else
+            return new Bundles.HttpContentSource(
+                _remoteContentBaseUrl,
+                cancellationToken);
+#endif
         }
 
         private async UniTaskVoid Run(
@@ -68,6 +91,11 @@ namespace Novels
 
         private void OnDisable()
         {
+            DisposeSession();
+        }
+
+        private void DisposeSession()
+        {
             _sessionCancellation?.Cancel();
             try
             {
@@ -89,21 +117,29 @@ namespace Novels
         private void OnApplicationPause(bool pauseStatus)
         {
             if (pauseStatus && _runtime != null)
-                FlushSave(_runtime).Forget();
+                FlushSaveSynchronously(_runtime, "pausing");
         }
 
-        private async UniTaskVoid FlushSave(ApplicationRuntime runtime)
+        private void OnApplicationQuit()
+        {
+            if (_runtime != null)
+                FlushSaveSynchronously(_runtime, "quitting");
+        }
+
+        private void FlushSaveSynchronously(
+            ApplicationRuntime runtime,
+            string lifecycleEvent)
         {
             try
             {
-                await runtime.FlushSaveAsync();
+                runtime.FlushSaveSynchronously();
             }
             catch (Exception exception)
             {
                 ReportError(new Diagnostics.NovelError(
                     Diagnostics.NovelErrorCodes.SaveWriteFailed,
                     Diagnostics.NovelErrorSeverity.Recoverable,
-                    "Failed to flush save data while pausing.",
+                    $"Failed to flush save data while {lifecycleEvent}.",
                     exception: exception));
             }
         }

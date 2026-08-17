@@ -7,6 +7,7 @@ namespace Bundles
 {
     internal sealed class ContentDeliveryCoordinator
     {
+        private const int _maximumParallelDownloads = 3;
         private readonly ContentReleaseProvider _releases;
         private readonly ContentFileStore _files;
 
@@ -39,7 +40,10 @@ namespace Bundles
                     StringComparison.OrdinalIgnoreCase))
                 .ToArray();
             _files.ReserveGroup(files);
-            var completedBytes = 0L;
+            var downloadedBytes = new long[files.Length];
+            var completedFiles = 0;
+            var nextFile = -1;
+            var progressGate = new object();
             onProgress?.Invoke(new ContentDeliveryProgress(
                 group.Id,
                 0,
@@ -48,24 +52,56 @@ namespace Bundles
                 group.Size));
             try
             {
-                for (var index = 0; index < files.Length; index++)
-                {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    await _files.ResolveUrl(files[index].Path)
-                        .AttachExternalCancellation(cancellationToken);
-                    completedBytes += files[index].Size;
-                    onProgress?.Invoke(new ContentDeliveryProgress(
-                        group.Id,
-                        index + 1,
-                        files.Length,
-                        completedBytes,
-                        group.Size));
-                }
+                var workerCount = Math.Min(_maximumParallelDownloads, files.Length);
+                var workers = Enumerable.Range(0, workerCount)
+                    .Select(_ => DownloadWorker())
+                    .ToArray();
+                await UniTask.WhenAll(workers);
             }
             catch
             {
                 _files.ReleaseGroupReservation(files);
                 throw;
+            }
+
+            async UniTask DownloadWorker()
+            {
+                while (true)
+                {
+                    var index = Interlocked.Increment(ref nextFile);
+                    if (index >= files.Length)
+                        return;
+                    cancellationToken.ThrowIfCancellationRequested();
+                    await _files.ResolveUrl(
+                            files[index].Path,
+                            bytes => ReportProgress(index, bytes))
+                        .AttachExternalCancellation(cancellationToken);
+                    lock (progressGate)
+                    {
+                        downloadedBytes[index] = files[index].Size;
+                        completedFiles++;
+                        PublishProgress();
+                    }
+                }
+            }
+
+            void ReportProgress(int index, long bytes)
+            {
+                lock (progressGate)
+                {
+                    downloadedBytes[index] = Math.Min(files[index].Size, bytes);
+                    PublishProgress();
+                }
+            }
+
+            void PublishProgress()
+            {
+                onProgress?.Invoke(new ContentDeliveryProgress(
+                    group.Id,
+                    completedFiles,
+                    files.Length,
+                    downloadedBytes.Sum(),
+                    group.Size));
             }
         }
     }

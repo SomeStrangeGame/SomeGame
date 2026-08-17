@@ -1,10 +1,10 @@
 ﻿<Solution>
+  <Project Path="Novels.Editor.csproj" />
   <Project Path="Novels.Notification.csproj" />
   <Project Path="Disposable.csproj" />
   <Project Path="Novels.csproj" />
   <Project Path="Loading.View.csproj" />
   <Project Path="Bundles.csproj" />
-  <Project Path="Novels.Editor.csproj" />
   <Project Path="Novels.Location.csproj" />
   <Project Path="Logs.csproj" />
   <Project Path="Novels.Save.csproj" />

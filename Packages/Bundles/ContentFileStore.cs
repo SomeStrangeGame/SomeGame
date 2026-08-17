@@ -20,6 +20,8 @@ namespace Bundles
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Dictionary<string, long> _pinnedFiles = new(
             StringComparer.OrdinalIgnoreCase);
+        private readonly object _pinnedFilesGate = new();
+        private readonly object _pruneGate = new();
 
         internal ContentFileStore(
             IContentSource source,
@@ -39,7 +41,9 @@ namespace Bundles
             _onLog = onLog;
         }
 
-        internal async UniTask<string> ResolveUrl(string path)
+        internal async UniTask<string> ResolveUrl(
+            string path,
+            Action<long> onDownloadedBytes = null)
         {
             if (string.IsNullOrWhiteSpace(path))
                 return null;
@@ -59,6 +63,7 @@ namespace Bundles
                     descriptor.Sha256,
                     localPath,
                     true);
+                onDownloadedBytes?.Invoke(descriptor.Size);
             }
             catch (OperationCanceledException)
                 when (_cancellationToken.IsCancellationRequested)
@@ -70,7 +75,11 @@ namespace Bundles
                 var temporaryPath = _cache.CreateTemporaryPath(cachePath);
                 try
                 {
-                    await _source.DownloadFile(path, temporaryPath);
+                    await _source.DownloadFile(
+                        path,
+                        temporaryPath,
+                        bytes => onDownloadedBytes?.Invoke(
+                            Math.Min(bytes, descriptor.Size)));
                     _cancellationToken.ThrowIfCancellationRequested();
                     await _integrity.VerifyAsync(
                         path,
@@ -85,6 +94,7 @@ namespace Bundles
                         descriptor.Sha256,
                         true);
                     downloaded = true;
+                    onDownloadedBytes?.Invoke(descriptor.Size);
                 }
                 finally
                 {
@@ -118,8 +128,11 @@ namespace Bundles
                     $"Content requires {missingBytes} free bytes, but only "
                     + $"{available.Value} bytes are available.");
             }
-            foreach (var file in files)
-                _pinnedFiles[CachePath(release.ReleaseId, file.Path)] = file.Size;
+            lock (_pinnedFilesGate)
+            {
+                foreach (var file in files)
+                    _pinnedFiles[CachePath(release.ReleaseId, file.Path)] = file.Size;
+            }
         }
 
         internal void ReleaseGroupReservation(
@@ -128,8 +141,11 @@ namespace Bundles
             var release = _releases.Current;
             if (release == null)
                 return;
-            foreach (var file in files)
-                _pinnedFiles.Remove(CachePath(release.ReleaseId, file.Path));
+            lock (_pinnedFilesGate)
+            {
+                foreach (var file in files)
+                    _pinnedFiles.Remove(CachePath(release.ReleaseId, file.Path));
+            }
         }
 
         internal async UniTask<string> GetText(string path)
@@ -157,17 +173,25 @@ namespace Bundles
         private async UniTask PruneAsync(string protectedPath)
         {
             Exception failure = null;
+            string[] protectedPaths;
+            long pinnedBytes;
+            lock (_pinnedFilesGate)
+            {
+                protectedPaths = _pinnedFiles.Keys
+                    .Append(protectedPath)
+                    .ToArray();
+                pinnedBytes = _pinnedFiles.Values.Sum();
+            }
             await UniTask.SwitchToThreadPool();
             try
             {
-                var protectedPaths = _pinnedFiles.Keys
-                    .Append(protectedPath)
-                    .ToArray();
-                var pinnedBytes = _pinnedFiles.Values.Sum();
-                _cache.PruneBySize(
-                    "RemoteFiles",
-                    Math.Max(_cacheLimit, pinnedBytes),
-                    protectedPaths);
+                lock (_pruneGate)
+                {
+                    _cache.PruneBySize(
+                        "RemoteFiles",
+                        Math.Max(_cacheLimit, pinnedBytes),
+                        protectedPaths);
+                }
             }
             catch (Exception exception)
             {

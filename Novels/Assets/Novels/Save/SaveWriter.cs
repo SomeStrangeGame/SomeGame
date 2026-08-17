@@ -55,6 +55,21 @@ namespace Novels.Save
             }
         }
 
+        internal void FlushSynchronously()
+        {
+            byte[] pending;
+            lock (_gate)
+            {
+                pending = _pending;
+                _pending = null;
+            }
+            lock (_writeGate)
+            {
+                if (pending != null)
+                    _write(_key, pending);
+            }
+        }
+
         internal void Reset(Action clearStorage)
         {
             lock (_gate)

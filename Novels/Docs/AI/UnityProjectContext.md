@@ -152,8 +152,9 @@
 
 ## Testing And Tooling
 
-- Latest release: schema 2, Embedded mode, ID `90d8046c73f68a96080c7b16fc0536d19ab52eb396ae411f5e601b3600e1bb96`, 10 bundles, 115 external files, and one delivery group. StreamingAssets, publish, and player-seed copies all passed exact size/SHA-256 checks.
-- `NovelCiValidation.BuildAndValidateContentBatch` and `ValidateExistingContentBatch` completed successfully in isolated Unity 6000.3.11f1 batchmode. The Embedded payload is approximately 1.22 GiB, so the active non-enforcing profile emits expected total and seed budget warnings.
+- Latest release: schema 3, Remote mode, ID `01d8cdee8c3489bbaa9700cada149f5522099a87888cb0cb3a10b8f370b8406d`, 10 bundles, 115 external files, and two delivery groups: `TZM_1/s01e01` (46 files) and `TZM_1/shared` (69 files).
+- `Tools/validate-novels.sh` exposes `validate` and `content` batch commands. `Tools/build-remote-player.sh` builds Android/iOS from an isolated temporary project copy with novel StreamingAssets excluded and injects the required remote HTTP(S) root only into that copy.
+- Unity 6000.3.11f1 batch compilation and `NovelCiValidation.ValidateExistingContentBatch` completed successfully for schema 3. Tests were not created or run.
 
 - The latest Android content release is `8c5c3b96f97e8a423fb15694af77d9c8375593111fa7601e305f927bed4957ab`: 10 bundles and 115 external files. Both the StreamingAssets copy and publish artifact passed exact byte-size and SHA-256 verification.
 - A final isolated Unity batch compile and `NovelContentValidator.ValidateBatch` completed successfully after the explicit-content-contracts wave. Tests were not created or run, and no UI asset or dimension was changed.
@@ -169,6 +170,17 @@
 - Wardrobe/choose paths contain exact centralized future placeholders and their empty presentation contracts remain intentionally unfinished.
 - AssetBundle building replaces `StreamingAssets/Remote` only after a successful staging build and restores the previous output if the swap fails; it is still a material content operation.
 - The Android signing keystore is tracked by Git and should be removed from version control and rotated if the repository has been shared; no secret value was copied here.
+
+## Architecture wave completed on 2026-08-17 (remote Player delivery)
+
+- Editor sessions always construct `StreamingAssetsSource`; every non-Editor Player constructs `HttpContentSource`. The remote root must mirror the publish artifact root and contain `Remote/<platform>/release.json`.
+- Player builds use `Tools/build-remote-player.sh`. The script copies the project into a temporary staging workspace, excludes `NovelTexts`, `NovelsAudio`, `NovelsVideos`, and `Remote`, then invokes Unity there. The working project is never stripped or moved during a build.
+- Release schema 3 assigns external files to a content-shared group or a concrete episode group. Runtime delivery begins only after episode selection and prepares both relevant groups when present.
+- Delivery uses at most three concurrent downloads and reports aggregate byte progress. Cache reservations are synchronized before background pruning.
+- `StoryReferenceIndex` is the common extraction pass for compiled/source Ink validation and episode delivery indexing.
+- `NovelErrorContext` adds release, content, episode, and delivery-mode identity at the composition boundary.
+- Pause and quit use a bounded synchronous save flush; ordinary episode completion retains the asynchronous flush path. EntryPoint and EpisodeRuntime cleanup now complete after partial initialization/disposal failures.
+- Large WAV files above the profile threshold fail the content build unless converted to OGG or listed explicitly. Existing TZM_1 WAVs are documented exceptions; newly added large WAVs fail by default.
 
 ## Evidence Inspected
 

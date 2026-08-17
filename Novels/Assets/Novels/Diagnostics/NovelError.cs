@@ -2,6 +2,37 @@ using System;
 
 namespace Novels.Diagnostics
 {
+    public readonly struct NovelErrorContext
+    {
+        public NovelErrorContext(
+            string releaseId = "",
+            string contentId = "",
+            string episodeId = "",
+            string deliveryMode = "")
+        {
+            ReleaseId = releaseId ?? string.Empty;
+            ContentId = contentId ?? string.Empty;
+            EpisodeId = episodeId ?? string.Empty;
+            DeliveryMode = deliveryMode ?? string.Empty;
+        }
+
+        public string ReleaseId { get; }
+        public string ContentId { get; }
+        public string EpisodeId { get; }
+        public string DeliveryMode { get; }
+        public bool IsEmpty => string.IsNullOrEmpty(ReleaseId)
+            && string.IsNullOrEmpty(ContentId)
+            && string.IsNullOrEmpty(EpisodeId)
+            && string.IsNullOrEmpty(DeliveryMode);
+
+        public override string ToString() =>
+            $"release={Value(ReleaseId)}, content={Value(ContentId)}, "
+            + $"episode={Value(EpisodeId)}, delivery={Value(DeliveryMode)}";
+
+        private static string Value(string value) =>
+            string.IsNullOrWhiteSpace(value) ? "-" : value;
+    }
+
     public enum NovelErrorSeverity
     {
         Warning,
@@ -16,13 +47,15 @@ namespace Novels.Diagnostics
             NovelErrorSeverity severity,
             string message,
             string source = "",
-            Exception exception = null)
+            Exception exception = null,
+            NovelErrorContext context = default)
         {
             Code = code ?? string.Empty;
             Severity = severity;
             Message = message ?? string.Empty;
             Source = source ?? string.Empty;
             Exception = exception;
+            Context = context;
         }
 
         public string Code { get; }
@@ -30,6 +63,10 @@ namespace Novels.Diagnostics
         public string Message { get; }
         public string Source { get; }
         public Exception Exception { get; }
+        public NovelErrorContext Context { get; }
+
+        public NovelError WithContext(NovelErrorContext context) =>
+            new(Code, Severity, Message, Source, Exception, context);
 
         public override string ToString()
         {
@@ -39,7 +76,8 @@ namespace Novels.Diagnostics
             var exception = Exception == null
                 ? string.Empty
                 : $"\n{Exception}";
-            return $"[{Code}] {Message}{source}{exception}";
+            var context = Context.IsEmpty ? string.Empty : $"\nContext: {Context}";
+            return $"[{Code}] {Message}{context}{source}{exception}";
         }
     }
 

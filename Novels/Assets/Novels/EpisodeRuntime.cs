@@ -48,10 +48,25 @@ namespace Novels
 
         protected override void OnDispose()
         {
-            _lifetimeCancellation.Cancel();
-            Scope.Dispose();
-            _lifetimeCancellation.Dispose();
-            base.OnDispose();
+            Exception failure = null;
+            TryDispose(() => _lifetimeCancellation.Cancel(), ref failure);
+            TryDispose(Scope.Dispose, ref failure);
+            TryDispose(_lifetimeCancellation.Dispose, ref failure);
+            TryDispose(() => base.OnDispose(), ref failure);
+            if (failure != null)
+                throw failure;
+        }
+
+        private static void TryDispose(Action action, ref Exception failure)
+        {
+            try
+            {
+                action();
+            }
+            catch (Exception exception)
+            {
+                failure ??= exception;
+            }
         }
     }
 }

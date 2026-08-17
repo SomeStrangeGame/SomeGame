@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,9 +11,9 @@ namespace Editor
         internal const string AssetPath = "Assets/Editor/NovelContentBuildProfile.asset";
 
         [SerializeField] private BuildTarget[] _targets = { BuildTarget.Android };
-        [SerializeField] private int _contentSchemaVersion = 2;
+        [SerializeField] private int _contentSchemaVersion = 3;
         [SerializeField] private Bundles.ContentDeliveryMode _deliveryMode =
-            Bundles.ContentDeliveryMode.Embedded;
+            Bundles.ContentDeliveryMode.Remote;
         [SerializeField] private string[] _embeddedDeliveryGroups = Array.Empty<string>();
         [SerializeField] private string _minimumClientVersion;
         [SerializeField] private string _publishRoot = "Build/NovelContent";
@@ -23,6 +24,8 @@ namespace Editor
         [SerializeField] private bool _enforceEmbeddedBudget;
         [SerializeField] private long _largeFileWarningBytes = 64L * 1024L * 1024L;
         [SerializeField] private long _largeWavWarningBytes = 16L * 1024L * 1024L;
+        [SerializeField] private bool _enforceLargeWavPolicy = true;
+        [SerializeField] private string[] _allowedLargeWavPaths = Array.Empty<string>();
 
         internal BuildTarget[] Targets =>
             _targets == null || _targets.Length == 0
@@ -49,6 +52,11 @@ namespace Editor
         internal bool EnforceEmbeddedBudget => _enforceEmbeddedBudget;
         internal long LargeFileWarningBytes => _largeFileWarningBytes;
         internal long LargeWavWarningBytes => _largeWavWarningBytes;
+        internal bool EnforceLargeWavPolicy => _enforceLargeWavPolicy;
+        internal string[] AllowedLargeWavPaths =>
+            (_allowedLargeWavPaths ?? Array.Empty<string>())
+                .Select(NormalizePath)
+                .ToArray();
 
         internal static NovelContentBuildProfile Load()
         {
@@ -59,13 +67,23 @@ namespace Editor
 
         internal void Validate()
         {
-            if (_contentSchemaVersion < 2)
+            if (_contentSchemaVersion < 3)
             {
                 throw new InvalidOperationException(
-                    "Content schema version 2 or newer is required for delivery modes.");
+                    "Content schema version 3 or newer is required for episode delivery groups.");
             }
             if (_totalBudgetBytes <= 0 || _embeddedBudgetBytes <= 0)
                 throw new InvalidOperationException("Content budgets must be positive.");
+            if (_largeWavWarningBytes <= 0)
+                throw new InvalidOperationException("Large WAV threshold must be positive.");
+            var duplicateException = AllowedLargeWavPaths
+                .GroupBy(value => value, StringComparer.OrdinalIgnoreCase)
+                .FirstOrDefault(group => group.Count() > 1);
+            if (duplicateException != null)
+            {
+                throw new InvalidOperationException(
+                    $"Duplicate large WAV exception '{duplicateException.Key}'.");
+            }
             if (_deliveryMode == Bundles.ContentDeliveryMode.Hybrid
                 && EmbeddedDeliveryGroups.Length == 0)
             {
@@ -73,5 +91,8 @@ namespace Editor
                     "Hybrid delivery requires at least one embedded delivery group.");
             }
         }
+
+        private static string NormalizePath(string path) =>
+            (path ?? string.Empty).Trim().Replace('\\', '/').TrimStart('/');
     }
 }

@@ -39,7 +39,8 @@ namespace Editor
             foreach (var result in results)
             {
                 ContentPublishArtifactBuilder.Build(result, profile);
-                PlayerContentSeedBuilder.Build(result, profile);
+                if (profile.DeliveryMode != Bundles.ContentDeliveryMode.Remote)
+                    PlayerContentSeedBuilder.Build(result, profile);
             }
         }
 

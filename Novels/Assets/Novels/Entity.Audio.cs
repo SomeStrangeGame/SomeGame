@@ -19,7 +19,7 @@ namespace Novels
                 CancellationToken = cancellationToken,
 
                 OnLog = _ctx.OnLog,
-                OnError = _ctx.OnError,
+                OnError = ReportError,
             }).AddTo(owner);
         }
     }

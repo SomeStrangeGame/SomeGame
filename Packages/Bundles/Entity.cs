@@ -76,6 +76,24 @@ namespace Bundles
             (_releases.Current ?? throw new ContentConfigurationException(
                 "Content release is not loaded.")).DeliveryMode;
 
+        public string ReleaseId =>
+            (_releases.Current ?? throw new ContentConfigurationException(
+                "Content release is not loaded.")).ReleaseId;
+
+        public bool HasDeliveryGroup(string groupId)
+        {
+            if (string.IsNullOrWhiteSpace(groupId))
+                return false;
+            var release = _releases.Current ?? throw new ContentConfigurationException(
+                "Content release is not loaded.");
+            return System.Linq.Enumerable.Any(
+                release.DeliveryGroups,
+                group => string.Equals(
+                    group.Id,
+                    groupId,
+                    StringComparison.OrdinalIgnoreCase));
+        }
+
         public UniTask PrepareDeliveryGroup(
             string groupId,
             Action<ContentDeliveryProgress> onProgress,
@@ -134,7 +152,7 @@ namespace Bundles
         internal MediaResolver CreateMediaResolver(
             string prefix,
             MediaManifest manifest) =>
-            new(prefix, manifest, _contentFiles.ResolveUrl);
+            new(prefix, manifest, path => _contentFiles.ResolveUrl(path));
 
         protected override void OnDispose()
         {

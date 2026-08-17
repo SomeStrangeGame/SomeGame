@@ -14,8 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targets:
   - 13
-  _contentSchemaVersion: 2
-  _deliveryMode: 0
+  _contentSchemaVersion: 3
+  _deliveryMode: 2
   _embeddedDeliveryGroups: []
   _minimumClientVersion: ''
   _publishRoot: Build/NovelContent
@@ -26,3 +26,25 @@ MonoBehaviour:
   _enforceEmbeddedBudget: 0
   _largeFileWarningBytes: 67108864
   _largeWavWarningBytes: 16777216
+  _enforceLargeWavPolicy: 1
+  _allowedLargeWavPaths:
+  - NovelsAudio/TZM_1/Cheating.wav
+  - NovelsAudio/TZM_1/Club Music.wav
+  - NovelsAudio/TZM_1/Street classical.wav
+  - NovelsAudio/TZM_1/Street fun.wav
+  - NovelsAudio/TZM_1/Women battle.wav
+  - NovelsAudio/TZM_1/bazaar_ZDM.wav
+  - NovelsAudio/TZM_1/danger_ZDM.wav
+  - NovelsAudio/TZM_1/drama_ZDM.wav
+  - NovelsAudio/TZM_1/eastern_ZDM.wav
+  - NovelsAudio/TZM_1/hor_theme_ZDM.wav
+  - NovelsAudio/TZM_1/intrigue_ZDM.wav
+  - NovelsAudio/TZM_1/joser_theme_ZDM.wav
+  - NovelsAudio/TZM_1/none2.wav
+  - NovelsAudio/TZM_1/oppressive_ZDM.wav
+  - NovelsAudio/TZM_1/seth_theme_ZDM.wav
+  - NovelsAudio/TZM_1/загадочная.wav
+  - NovelsAudio/TZM_1/основная.WAV
+  - NovelsAudio/TZM_1/позитивная.wav
+  - NovelsAudio/TZM_1/романтичная.wav
+  - NovelsAudio/TZM_1/спокойная.wav

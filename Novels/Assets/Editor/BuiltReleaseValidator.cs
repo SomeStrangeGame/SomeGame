@@ -64,10 +64,13 @@ namespace Editor
                 foreach (var contentId in contentIds.Where(
                              value => !string.IsNullOrWhiteSpace(value)))
                 {
-                    if (!groups.Contains(contentId))
+                    var prefix = contentId + "/";
+                    if (!groups.Any(group => group.StartsWith(
+                            prefix,
+                            StringComparison.OrdinalIgnoreCase)))
                     {
                         errors.Add(
-                            $"Content '{contentId}' has no matching delivery group "
+                            $"Content '{contentId}' has no shared or episode delivery group "
                             + $"in {platform} release.");
                     }
                 }

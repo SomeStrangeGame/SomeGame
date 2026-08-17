@@ -70,9 +70,20 @@ namespace Editor
                              System.StringComparison.OrdinalIgnoreCase)
                          && file.size > profile.LargeWavWarningBytes))
             {
+                var allowed = profile.AllowedLargeWavPaths.Contains(
+                    file.path,
+                    System.StringComparer.OrdinalIgnoreCase);
+                if (profile.EnforceLargeWavPolicy && !allowed)
+                {
+                    throw new System.InvalidOperationException(
+                        $"Large WAV '{file.path}' ({FormatBytes(file.size)}) must be "
+                        + "converted to OGG or added to the explicit build-profile exceptions.");
+                }
                 Debug.LogWarning(
-                    $"Large WAV '{file.path}' ({FormatBytes(file.size)}). "
-                    + "Consider OGG/MP3 for streamed Music or Ambient content.");
+                    $"Large WAV '{file.path}' ({FormatBytes(file.size)}) is "
+                    + (allowed
+                        ? "explicitly allowed by the build profile."
+                        : "not blocked because the policy is disabled."));
             }
         }
 

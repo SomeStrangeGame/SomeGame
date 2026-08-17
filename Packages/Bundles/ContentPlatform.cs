@@ -14,6 +14,8 @@ namespace Bundles
             return "WebGL";
 #elif UNITY_ANDROID
             return "Android";
+#elif UNITY_IOS
+            return "iOS";
 #else
             throw new PlatformNotSupportedException(
                 "Content delivery is not configured for the active build target.");

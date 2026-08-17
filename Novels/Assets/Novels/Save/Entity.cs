@@ -104,6 +104,11 @@ namespace Novels.Save
             return _writer.FlushAsync();
         }
 
+        public void FlushSynchronously()
+        {
+            _writer.FlushSynchronously();
+        }
+
         private void ReportWriteFailure(Exception exception)
         {
             _ctx.OnError?.Invoke(new Diagnostics.NovelError(

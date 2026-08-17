@@ -1,28 +1,37 @@
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
-using UnityEngine;
 using UnityEngine.Networking;
 
 namespace Bundles
 {
-    public sealed class StreamingAssetsSource : IContentSource
+    public sealed class HttpContentSource : IContentSource
     {
+        private readonly Uri _baseUri;
         private readonly CancellationToken _cancellationToken;
 
-        public StreamingAssetsSource(CancellationToken cancellationToken)
+        public HttpContentSource(
+            string baseUrl,
+            CancellationToken cancellationToken)
         {
+            if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out var uri)
+                || (uri.Scheme != Uri.UriSchemeHttp
+                    && uri.Scheme != Uri.UriSchemeHttps))
+            {
+                throw new ArgumentException(
+                    "Remote content base URL must be an absolute HTTP(S) URL.",
+                    nameof(baseUrl));
+            }
+
+            _baseUri = new Uri(uri.AbsoluteUri.TrimEnd('/') + "/");
             _cancellationToken = cancellationToken;
         }
 
         public string GetUrl(string relativePath)
         {
-            var path = $"{Application.streamingAssetsPath}/{relativePath}";
-#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
-            return new Uri(path).AbsoluteUri;
-#else
-            return path;
-#endif
+            if (string.IsNullOrWhiteSpace(relativePath))
+                throw new ArgumentException("Content path must not be empty.", nameof(relativePath));
+            return new Uri(_baseUri, relativePath.TrimStart('/')).AbsoluteUri;
         }
 
         public async UniTask<string> DownloadText(string path)
@@ -41,9 +50,7 @@ namespace Bundles
         {
             using (var request = UnityWebRequest.Get(GetUrl(path)))
             {
-                request.downloadHandler = new DownloadHandlerFile(
-                    destinationPath,
-                    true);
+                request.downloadHandler = new DownloadHandlerFile(destinationPath, true);
                 await Send(request, onDownloadedBytes);
             }
         }
@@ -59,6 +66,7 @@ namespace Bundles
                 onDownloadedBytes?.Invoke((long)request.downloadedBytes);
                 await UniTask.Yield(PlayerLoopTiming.Update, _cancellationToken);
             }
+
             if (request.result != UnityWebRequest.Result.Success)
             {
                 throw new ContentSourceException(
