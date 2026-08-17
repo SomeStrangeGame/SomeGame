@@ -10,13 +10,21 @@ namespace Bundles
         private const int _maximumParallelDownloads = 3;
         private readonly ContentReleaseProvider _releases;
         private readonly ContentFileStore _files;
+        private readonly BundlePayloadLoader _bundles;
+        private readonly string _platform;
 
         internal ContentDeliveryCoordinator(
             ContentReleaseProvider releases,
-            ContentFileStore files)
+            ContentFileStore files,
+            BundlePayloadLoader bundles,
+            string platform)
         {
             _releases = releases ?? throw new ArgumentNullException(nameof(releases));
             _files = files ?? throw new ArgumentNullException(nameof(files));
+            _bundles = bundles ?? throw new ArgumentNullException(nameof(bundles));
+            _platform = string.IsNullOrWhiteSpace(platform)
+                ? throw new ArgumentException("Platform must not be empty.", nameof(platform))
+                : platform;
         }
 
         internal async UniTask Prepare(
@@ -39,20 +47,30 @@ namespace Bundles
                     group.Id,
                     StringComparison.OrdinalIgnoreCase))
                 .ToArray();
-            _files.ReserveGroup(files);
-            var downloadedBytes = new long[files.Length];
-            var completedFiles = 0;
-            var nextFile = -1;
+            var bundles = release.Bundles
+                .Where(value => string.Equals(
+                    value.DeliveryGroup,
+                    group.Id,
+                    StringComparison.OrdinalIgnoreCase))
+                .ToArray();
+            var missingBundleBytes = bundles.Sum(bundle => _bundles.GetMissingBytes(
+                bundle,
+                $"Remote/{_platform}/{bundle.Name}"));
+            _files.ReserveGroup(files, missingBundleBytes);
+            var itemCount = bundles.Length + files.Length;
+            var downloadedBytes = new long[itemCount];
+            var completedItems = 0;
+            var nextItem = -1;
             var progressGate = new object();
             onProgress?.Invoke(new ContentDeliveryProgress(
                 group.Id,
                 0,
-                files.Length,
+                itemCount,
                 0,
                 group.Size));
             try
             {
-                var workerCount = Math.Min(_maximumParallelDownloads, files.Length);
+                var workerCount = Math.Min(_maximumParallelDownloads, itemCount);
                 var workers = Enumerable.Range(0, workerCount)
                     .Select(_ => DownloadWorker())
                     .ToArray();
@@ -68,18 +86,31 @@ namespace Bundles
             {
                 while (true)
                 {
-                    var index = Interlocked.Increment(ref nextFile);
-                    if (index >= files.Length)
+                    var index = Interlocked.Increment(ref nextItem);
+                    if (index >= itemCount)
                         return;
                     cancellationToken.ThrowIfCancellationRequested();
-                    await _files.ResolveUrl(
-                            files[index].Path,
-                            bytes => ReportProgress(index, bytes))
-                        .AttachExternalCancellation(cancellationToken);
+                    if (index < bundles.Length)
+                    {
+                        var bundle = bundles[index];
+                        await _bundles.Prepare(
+                                bundle.Name,
+                                $"Remote/{_platform}/{bundle.Name}",
+                                bytes => ReportProgress(index, bytes))
+                            .AttachExternalCancellation(cancellationToken);
+                    }
+                    else
+                    {
+                        var file = files[index - bundles.Length];
+                        await _files.ResolveUrl(
+                                file.Path,
+                                bytes => ReportProgress(index, bytes))
+                            .AttachExternalCancellation(cancellationToken);
+                    }
                     lock (progressGate)
                     {
-                        downloadedBytes[index] = files[index].Size;
-                        completedFiles++;
+                        downloadedBytes[index] = GetSize(index);
+                        completedItems++;
                         PublishProgress();
                     }
                 }
@@ -89,7 +120,7 @@ namespace Bundles
             {
                 lock (progressGate)
                 {
-                    downloadedBytes[index] = Math.Min(files[index].Size, bytes);
+                    downloadedBytes[index] = Math.Min(GetSize(index), bytes);
                     PublishProgress();
                 }
             }
@@ -98,11 +129,15 @@ namespace Bundles
             {
                 onProgress?.Invoke(new ContentDeliveryProgress(
                     group.Id,
-                    completedFiles,
-                    files.Length,
+                    completedItems,
+                    itemCount,
                     downloadedBytes.Sum(),
                     group.Size));
             }
+
+            long GetSize(int index) => index < bundles.Length
+                ? bundles[index].Size
+                : files[index - bundles.Length].Size;
         }
     }
 }

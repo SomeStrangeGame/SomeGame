@@ -28,7 +28,7 @@
 - `Novels.Content`: immutable `NovelDefinition` and `EpisodeDefinition` configuration independent of scene serialization.
 - `Novels.Diagnostics`: neutral error code, severity, source, and exception contracts.
 - `Novels.Editor`: editor-only validation of loaded novel configuration and Android bundle output.
-- Feature assemblies: `StoryCommands`, `StoryProcessor`, `StoryQueue`, `QueueProcess`, `Bubble`, `Character`, `Location`, `Notification`, `Audio`, `Waiting`, `Save`, `PathGetter`, with separate View assemblies where applicable. `StoryContracts` owns the shared vocabulary consumed by story-driven features.
+- Feature assemblies: `StoryCommands`, `StoryProcessor`, `StoryQueue`, `QueueProcess`, `Bubble`, `Character`, `Location`, `Notification`, `Audio`, `Waiting`, and `Save`, with separate View assemblies where applicable. `StoryContracts` owns the shared vocabulary consumed by story-driven features.
 
 ## Scenes And Startup
 
@@ -44,8 +44,8 @@
 - Story execution returns `EpisodeRunResult` with `Completed`, `Failed`, or `Cancelled` status. `ApplicationRuntime` decides whether to stop or return to the catalog and is the reporting boundary for fatal execution results.
 - Every external Ink/audio/video resolution requires the active `ContentReleaseSnapshot`; no release-less or `legacy` content-file path remains.
 - `ContentDeliveryCoordinator` can prepare one release delivery group with file/byte progress, cancellation, disk-space validation, integrity verification, and cache pinning. A pinned group raises the effective LRU floor above the default 512 MiB cache limit when necessary.
-- Release schema 3 carries `Embedded`, `Hybrid`, or `Remote` delivery mode and assigns external files to delivery groups. The build profile controls mode, embedded groups, publish/player-seed roots, and optional hard budgets; the current checked-in profile uses Remote delivery.
-- `Novels.ContentAddressing` owns `ContentAddressConvention`, the dependency-free shared address schema used by PathGetter, character resolution, and Editor story-reference validation.
+- Release schema 4 carries `Embedded`, `Hybrid`, or `Remote` delivery mode and assigns both AssetBundles and external files to delivery groups. The build profile controls mode, embedded groups, publish/player-seed roots, and optional hard budgets; the current checked-in profile uses Remote delivery.
+- `Novels.ContentAddressing` owns `ContentPackageConvention`, `ContentAddressConvention`, and immutable episode-scoped `ContentAddresses`. Bundle names, definition paths, delivery-group IDs, runtime loading, character resolution, and Editor validation share these dependency-free conventions; the former `PathGetter` assembly has been removed.
 - `EntryPoint` captures immutable `ApplicationEnvironment` values and owns the explicit scene Camera reference. Runtime composition receives locale, client version, platform, persistent path, and camera without ambient lookups.
 - `NovelCiValidation.ValidateExistingContentBatch` and `BuildAndValidateContentBatch` provide non-test batch automation for content validation and complete artifact production.
 
@@ -152,11 +152,11 @@
 
 ## Testing And Tooling
 
-- Latest release: schema 3, Remote mode, ID `00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813`, 4 bundles, 115 external files, and two delivery groups: `TZM_1/s01e01` and `TZM_1/shared`.
+- Latest release: schema 4, Remote mode, ID `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a`, 4 bundles, 115 external files, and three delivery groups: `application`, `TZM_1/s01e01`, and `TZM_1/shared`.
 - `Tools/validate-novels.sh` exposes `validate` and `content` batch commands. `Tools/build-remote-player.sh` builds Android/iOS from an isolated temporary project copy with novel StreamingAssets excluded and injects the required remote HTTP(S) root only into that copy.
-- Unity 6000.3.11f1 batch compilation and `NovelCiValidation.ValidateExistingContentBatch` completed successfully for schema 3. Tests were not created or run.
+- Unity 6000.3.11f1 isolated batch compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully for schema 4. Tests were not created or run.
 
-- The latest Android content release is `00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813`: 4 bundles and 115 external files. The complete build-and-validation batch passed authoring, bundle, release, byte-size, and SHA-256 checks.
+- The latest Android content release is `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a`: 4 bundles and 115 external files. The complete build-and-validation batch passed authoring, bundle, release, byte-size, and SHA-256 checks.
 - A final isolated Unity batch compile and `NovelContentValidator.ValidateBatch` completed successfully after the explicit-content-contracts wave. Tests were not created or run, and no UI asset or dimension was changed.
 
 - Unity Test Framework is present transitively, but no EditMode or PlayMode tests were found.
@@ -175,7 +175,7 @@
 
 - Editor sessions always construct `StreamingAssetsSource`; every non-Editor Player constructs `HttpContentSource`. The remote root must mirror the publish artifact root and contain `Remote/<platform>/release.json`.
 - Player builds use `Tools/build-remote-player.sh`. The script copies the project into a temporary staging workspace, excludes `NovelTexts`, `NovelsAudio`, `NovelsVideos`, and `Remote`, then invokes Unity there. The working project is never stripped or moved during a build.
-- Release schema 3 assigns external files to a content-shared group or a concrete episode group. Runtime delivery begins only after episode selection and prepares both relevant groups when present.
+- Release schema 4 assigns AssetBundles and external files to application, content-shared, or concrete episode groups. Application delivery is prepared before catalog loading; story and episode groups are prepared after episode selection.
 - Delivery uses at most three concurrent downloads and reports aggregate byte progress. Cache reservations are synchronized before background pruning.
 - `StoryReferenceIndex` is the common extraction pass for compiled/source Ink validation and episode delivery indexing.
 - `NovelErrorContext` adds release, content, episode, and delivery-mode identity at the composition boundary.
@@ -187,9 +187,21 @@
 - All TZM_1 authoring assets now live under `Assets/RemoteAssets/Content/TZM_1`: `Definition`, story-level `Application`, and episode-level `Episodes/s01e01` subtrees make lifetime ownership visible in the filesystem.
 - AssetBundle labels are assigned only at ownership boundaries. `Content/TZM_1` produces `novels_content_tzm_1`; `Content/TZM_1/Episodes/s01e01` overrides its parent with `novels_episode_tzm_1_s01e01`. Descendant folders no longer carry feature-specific labels.
 - `NovelDefinition` carries one story bundle name and `EpisodeDefinition` carries one episode bundle name. Setting and localization load from the story bundle; loading, bubble, character, location, and notification assets load from the episode bundle.
-- `ContentAddressConvention` is the single source for the new content-rooted addresses. PathGetter, character sprite resolution, catalog indexing, and Editor reference validation use the same convention and include the episode ID where required.
+- `ContentAddressConvention` is the single source for the new content-rooted addresses. `ContentAddresses`, character sprite resolution, catalog indexing, and Editor reference validation use the same convention and include the episode ID where required.
 - The bundle topology was reduced from ten bundles to four: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`. External Ink/audio/video delivery groups remain unchanged.
 - Unity 6000.3.11f1 completed an isolated import/compile and the full Android `BuildAndValidateContentBatch` without errors. Tests and Play Mode were not run.
+
+## Architecture wave completed on 2026-08-17 (package conventions and grouped delivery)
+
+- `ContentPackageConvention` derives story/episode bundle names, definition paths, content roots, and delivery-group IDs from `contentId` and `episodeId`. Catalog and content assets no longer serialize duplicate bundle/address/prefix fields.
+- `ContentAddresses` replaces the disposable `PathGetter` compatibility facade and is created once for the selected episode.
+- `ContentProjectIndex` is the common Editor projection consumed by validation, delivery indexing, and bundle construction. `Novels/Content/Create Story` scaffolds a convention-compliant story/episode hierarchy, definition asset, catalog entry, and root AssetBundle labels.
+- Release schema 4 groups every bundle and external file. `ContentDeliveryCoordinator` downloads at most three mixed payloads concurrently, reports combined item/byte progress, and includes missing bundle bytes in its free-space check.
+- `CatalogFlow` owns release/catalog retry, application-group preparation, and story/episode selection. `ContentDeliveryFlow` owns story/episode delivery; `ApplicationRuntime` remains the session host and error boundary.
+- `EpisodeAssetLoader` waits for the episode bundle, loads the five screen prefabs concurrently, and returns an immutable `EpisodeAssetSet` before feature composition.
+- `BubblePresentationKind` carries Dialogue, Wardrobe, or Choose routing into QueueProcess. Future trigger literals are resolved once in StoryQueue instead of being compared inside queue execution.
+- `ContentRequestRunner` centralizes UnityWebRequest execution, cancellation, progress, and transport error normalization for both HTTP and StreamingAssets sources.
+- Android release `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a` contains 119 grouped payloads: 47 episode, 70 story-shared, and 2 application payloads. Unity compilation and complete content build/validation passed without errors or warnings; tests and Play Mode were not run.
 
 ## Evidence Inspected
 

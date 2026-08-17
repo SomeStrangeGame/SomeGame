@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -11,7 +10,7 @@ namespace Novels
     internal sealed class ApplicationRuntime : BaseDisposable
     {
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
-        private const int _supportedContentSchemaVersion = 3;
+        private const int _supportedContentSchemaVersion = 4;
 
         internal struct Ctx
         {
@@ -27,6 +26,8 @@ namespace Novels
         private readonly Bundles.Entity _bundles;
         private readonly DisposableSlot<Entity> _activeNovel;
         private readonly ApplicationLocalization _localization;
+        private readonly CatalogFlow _catalogFlow;
+        private readonly ContentDeliveryFlow _contentDeliveryFlow;
         private readonly string _locale;
 
         internal ApplicationRuntime(Ctx ctx)
@@ -41,6 +42,21 @@ namespace Novels
             _locale = _environment.Locale;
             _localization = new ApplicationLocalization(_locale);
             _bundles = CreateBundles().AddTo(this);
+            _catalogFlow = new CatalogFlow(new CatalogFlow.Ctx
+            {
+                Bundles = _bundles,
+                PriorityLoader = _priorityLoader,
+                Localization = _localization,
+                Locale = _locale,
+                ClientVersion = _environment.ClientVersion,
+                SupportedSchemaVersion = _supportedContentSchemaVersion,
+                CancellationToken = _environment.CancellationToken,
+                OnLog = _ctx.OnLog,
+            });
+            _contentDeliveryFlow = new ContentDeliveryFlow(
+                _bundles,
+                _localization,
+                _environment.CancellationToken);
             _activeNovel = new DisposableSlot<Entity>().AddTo(this);
         }
 
@@ -48,12 +64,11 @@ namespace Novels
         {
             using var bootstrap = new Bootstrap.Entity(_environment.CancellationToken)
                 .AddTo(this);
-            var strings = GetBootstrapStrings();
-            var catalog = await LoadCatalogWithRetry(bootstrap, strings);
+            var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
             bootstrap.Hide();
             while (!_environment.CancellationToken.IsCancellationRequested)
             {
-                var content = await SelectContent(catalog.catalog, catalog.screen);
+                var content = await _catalogFlow.SelectContent(catalog);
                 var novel = new Entity(new Entity.Ctx
                 {
                     Bundles = _bundles,
@@ -62,9 +77,12 @@ namespace Novels
                     PersistentDataPath = _environment.PersistentDataPath,
                     TargetCamera = _environment.TargetCamera,
                     SelectEpisode = definition =>
-                        SelectEpisode(definition, catalog.screen),
+                        _catalogFlow.SelectEpisode(definition, catalog.Screen),
                     PrepareEpisodeContent = (definition, episode) =>
-                        PrepareEpisodeContent(bootstrap, definition, episode),
+                        _contentDeliveryFlow.PrepareEpisode(
+                            bootstrap,
+                            definition,
+                            episode),
                     CancellationToken = _environment.CancellationToken,
                     OnLog = _ctx.OnLog,
                     OnError = _ctx.OnError,
@@ -106,39 +124,6 @@ namespace Novels
             }
         }
 
-        private async UniTask<(
-            Catalog.NovelCatalogAsset catalog,
-            GameObject screen)> LoadCatalogWithRetry(
-                Bootstrap.Entity bootstrap,
-                BootstrapStrings strings)
-        {
-            while (true)
-            {
-                try
-                {
-                    bootstrap.ShowLoading(strings.Loading);
-                    await _bundles.LoadReleaseAsync(
-                        _environment.ClientVersion,
-                        _supportedContentSchemaVersion);
-                    return await LoadCatalog();
-                }
-                catch (OperationCanceledException)
-                    when (_environment.CancellationToken.IsCancellationRequested)
-                {
-                    throw;
-                }
-                catch (Exception exception) when (
-                    exception is Bundles.ContentSourceException
-                    || exception is Bundles.ContentIntegrityException)
-                {
-                    _ctx.OnLog?.Invoke((
-                        LogType.Warning,
-                        $"Catalog loading failed: {exception}"));
-                    await bootstrap.WaitForRetry(strings.Failed, strings.Retry);
-                }
-            }
-        }
-
         internal UniTask FlushSaveAsync()
         {
             return _activeNovel.Value?.FlushSaveAsync() ?? UniTask.CompletedTask;
@@ -159,140 +144,6 @@ namespace Novels
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _ctx.OnLog,
             });
-        }
-
-        private async UniTask<(
-            Catalog.NovelCatalogAsset catalog,
-            GameObject screen)> LoadCatalog()
-        {
-            await _priorityLoader.Run(() => _bundles
-                .GetAssetBundle(Catalog.CatalogAddresses.BundleName)
-                .AttachExternalCancellation(_environment.CancellationToken));
-
-            var catalog = await _priorityLoader.Run(() => _bundles
-                .GetBundledSO<Catalog.NovelCatalogAsset>(
-                    new Bundles.BundleAssetAddress(
-                        Catalog.CatalogAddresses.BundleName,
-                        Catalog.CatalogAddresses.AssetName))
-                .AttachExternalCancellation(_environment.CancellationToken));
-            var screen = await _priorityLoader.Run(() => _bundles
-                .GetBundledPrefab(
-                    new Bundles.BundleAssetAddress(
-                        Catalog.CatalogAddresses.BundleName,
-                        Catalog.CatalogAddresses.ScreenAssetName))
-                .AttachExternalCancellation(_environment.CancellationToken));
-            if (catalog == null || screen == null)
-            {
-                throw new InvalidOperationException(
-                    $"Catalog assets could not be loaded from "
-                    + $"AssetBundle '{Catalog.CatalogAddresses.BundleName}'.");
-            }
-
-            return (catalog, screen);
-        }
-
-        private async UniTask<Catalog.NovelCatalogEntry> SelectContent(
-            Catalog.NovelCatalogAsset catalog,
-            GameObject screen)
-        {
-            var entries = catalog.Entries.ToDictionary(
-                entry => entry.ContentId,
-                StringComparer.OrdinalIgnoreCase);
-            var items = catalog.Entries.Select(entry =>
-            {
-                var text = entry.Resolve(_locale);
-                return new Catalog.CatalogItem(
-                    entry.ContentId,
-                    text.Title,
-                    text.Description,
-                    _localization.Get(ApplicationText.ContentAvailable));
-            }).ToArray();
-            using var selection = new Catalog.Entity(new Catalog.Entity.Ctx
-            {
-                BundledPrefab = screen,
-                CancellationToken = _environment.CancellationToken,
-            });
-            var selected = await selection.Select(
-                catalog.Resolve(_locale).Title,
-                items);
-            return entries[selected.Id];
-        }
-
-        private async UniTask<Content.EpisodeDefinition> SelectEpisode(
-            Content.NovelDefinition definition,
-            GameObject screen)
-        {
-            var episodes = definition.Episodes.ToDictionary(
-                episode => episode.Id,
-                StringComparer.OrdinalIgnoreCase);
-            var items = definition.Episodes
-                .Select(episode => new Catalog.CatalogItem(
-                    episode.Id,
-                    episode.Title,
-                    status: _localization.Get(ApplicationText.ContentAvailable)))
-                .ToArray();
-            using var selection = new Catalog.Entity(new Catalog.Entity.Ctx
-            {
-                BundledPrefab = screen,
-                CancellationToken = _environment.CancellationToken,
-            });
-            var title = _localization.Get(ApplicationText.ChooseEpisode);
-            var selected = await selection.Select(title, items);
-            return episodes[selected.Id];
-        }
-
-        private BootstrapStrings GetBootstrapStrings()
-        {
-            return new BootstrapStrings(
-                _localization.Get(ApplicationText.CatalogLoading),
-                _localization.Get(ApplicationText.CatalogLoadFailed),
-                _localization.Get(ApplicationText.Retry));
-        }
-
-        private async UniTask PrepareEpisodeContent(
-            Bootstrap.Entity bootstrap,
-            Content.NovelDefinition definition,
-            Content.EpisodeDefinition episode)
-        {
-            if (_bundles.DeliveryMode == Bundles.ContentDeliveryMode.Embedded)
-                return;
-            var message = _localization.Get(ApplicationText.PreparingContent);
-            bootstrap.ShowLoading(message);
-            try
-            {
-                var groups = new[]
-                {
-                    Content.ContentDeliveryGroupConvention.Shared(definition.Id),
-                    Content.ContentDeliveryGroupConvention.Episode(definition.Id, episode.Id),
-                };
-                foreach (var group in groups.Where(_bundles.HasDeliveryGroup))
-                {
-                    await _bundles.PrepareDeliveryGroup(
-                        group,
-                        progress => bootstrap.ShowLoading(
-                            $"{message} {progress.CompletedFiles}/{progress.TotalFiles} "
-                            + $"({progress.Ratio:P0})"),
-                        _environment.CancellationToken);
-                }
-            }
-            finally
-            {
-                bootstrap.Hide();
-            }
-        }
-
-        private readonly struct BootstrapStrings
-        {
-            internal BootstrapStrings(string loading, string failed, string retry)
-            {
-                Loading = loading;
-                Failed = failed;
-                Retry = retry;
-            }
-
-            internal string Loading { get; }
-            internal string Failed { get; }
-            internal string Retry { get; }
         }
     }
 }

@@ -17,9 +17,9 @@ The current source of truth supersedes bundle counts and concrete release IDs re
 - Story assets are grouped under `Assets/RemoteAssets/Content/{contentId}` with `Definition`, `Application`, and `Episodes/{episodeId}` ownership boundaries.
 - The story root owns one bundle; a concrete episode root overrides it with one episode-lifetime bundle. Feature subfolders do not carry AssetBundle labels.
 - TZM_1 currently produces four bundles: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`.
-- `NovelDefinition.BundleName` identifies the story bundle. `EpisodeDefinition.BundleName` identifies its episode bundle. `ContentAddressConvention` owns every content-rooted address.
-- Current Android release: schema 3, Remote mode, ID `00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813`, 4 bundles, 115 external files, and the `TZM_1/shared` plus `TZM_1/s01e01` delivery groups.
-- Unity 6000.3.11f1 import/compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully. Tests and Play Mode were not run.
+- Bundle names, definition paths, and delivery groups are derived by `ContentPackageConvention`; episode-scoped asset addresses are exposed by `ContentAddresses`. The former `PathGetter` assembly has been removed.
+- Current Android release: schema 4, Remote mode, ID `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a`, 4 bundles, 115 external files, and the `application`, `TZM_1/shared`, plus `TZM_1/s01e01` delivery groups.
+- Every delivery group contains both AssetBundles and external files belonging to that lifetime. Unity 6000.3.11f1 import/compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully. Tests and Play Mode were not run.
 
 ## Architecture wave completed on 2026-08-17 (lifetime and delivery modes)
 
@@ -30,7 +30,7 @@ Eight approved items are complete; release signing and remote HTTP transport wer
 3. `ContentFileStore` requires a loaded immutable release for every Ink/audio/video file; the remaining unverified `legacy` branch was removed.
 4. `ContentDeliveryCoordinator` prepares a complete story delivery group with file/byte progress, free-space validation, integrity checks, cancellation, and session pinning. Pinned groups raise the effective cache floor so a group larger than the default 512 MiB limit cannot evict itself during preparation.
 5. Schema 2 releases carry `Embedded`, `Hybrid`, or `Remote` delivery mode. `NovelContentBuildProfile` controls embedded groups, publish/player-seed roots, warning thresholds, and optional hard total/embedded budgets. `PlayerContentSeedBuilder` creates an atomic seed matching the selected mode without mutating UI or authoring assets.
-6. `Novels.ContentAddressing` is a separate dependency-free assembly. `ContentAddressConvention` is the single owner of story text, prefab, location, and character address rules used by runtime and Editor validation; `PathGetter.Entity` remains a compatibility facade.
+6. `Novels.ContentAddressing` is a separate dependency-free assembly. `ContentAddressConvention` is the single owner of story text, prefab, location, and character address rules used by runtime and Editor validation. The compatibility `PathGetter.Entity` present during that wave has since been replaced by `ContentAddresses`.
 7. `EntryPoint` captures `ApplicationEnvironment` on the main thread and supplies locale, client version, platform, persistent path, session token, and an explicit serialized Camera. Downstream composition no longer performs ambient scene/environment lookups.
 8. `NovelCiValidation` exposes batch entry points for validating existing content or rebuilding/validating the complete release, publish artifact, and player seed without introducing tests.
 

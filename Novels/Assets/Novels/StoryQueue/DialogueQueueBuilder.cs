@@ -115,6 +115,7 @@ namespace Novels.StoryQueue
                 role,
                 dialogue.Presentation,
                 dialogue.ChoiceActions,
+                BubbleContracts.BubbleTriggers.Resolve(dialogue.Speaker),
                 _ctx.Bubble.SetBubbleScreen,
                 _ctx.Bubble.SetWardrobeScreen,
                 _ctx.Bubble.SetChooseScreen);

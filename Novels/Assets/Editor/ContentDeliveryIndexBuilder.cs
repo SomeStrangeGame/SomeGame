@@ -10,21 +10,15 @@ namespace Editor
     {
         internal static IReadOnlyDictionary<string, string> Build()
         {
-            var catalog = AssetDatabase.LoadAssetAtPath<Novels.Catalog.NovelCatalogAsset>(
-                Novels.Catalog.CatalogAddresses.AssetName)
-                ?? throw new InvalidOperationException("Novel catalog asset is missing.");
+            var project = ContentProjectIndex.BuildOrThrow("en");
             var owners = new Dictionary<string, HashSet<string>>(
                 StringComparer.OrdinalIgnoreCase);
             var prefixToContent = new Dictionary<string, string>(
                 StringComparer.OrdinalIgnoreCase);
 
-            foreach (var entry in catalog.Entries.Where(value => value != null))
+            foreach (var item in project.Entries)
             {
-                var asset = AssetDatabase.LoadAssetAtPath<Novels.Content.NovelContentAsset>(
-                    entry.ContentAssetName)
-                    ?? throw new InvalidOperationException(
-                        $"Novel content asset is missing: {entry.ContentAssetName}");
-                var definition = asset.ToDefinition("en", entry.ContentBundleName);
+                var definition = item.Definition;
                 prefixToContent[definition.Prefix] = definition.Id;
                 foreach (var episode in definition.Episodes)
                 {
@@ -60,10 +54,12 @@ namespace Editor
         }
 
         internal static string EpisodeGroup(string contentId, string episodeId) =>
-            Novels.Content.ContentDeliveryGroupConvention.Episode(contentId, episodeId);
+            Novels.ContentAddressing.ContentPackageConvention.EpisodeDeliveryGroup(
+                contentId,
+                episodeId);
 
         internal static string SharedGroup(string contentId) =>
-            Novels.Content.ContentDeliveryGroupConvention.Shared(contentId);
+            Novels.ContentAddressing.ContentPackageConvention.SharedDeliveryGroup(contentId);
 
         private static IEnumerable<string> EpisodeFiles(
             string prefix,

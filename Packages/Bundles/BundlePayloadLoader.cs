@@ -33,6 +33,19 @@ namespace Bundles
 
         internal async UniTask<AssetBundle> Load(string bundleName, string bundleKey)
         {
+            await Prepare(bundleName, bundleKey);
+            var descriptor = (_releases.Current ?? throw new ContentConfigurationException(
+                    "Content release must be loaded before AssetBundles."))
+                .FindBundle(bundleName) ?? throw new ContentIntegrityException(
+                    $"Bundle '{bundleName}' is absent from the active release.");
+            return await Open($"{bundleKey}/{descriptor.Version}");
+        }
+
+        internal async UniTask Prepare(
+            string bundleName,
+            string bundleKey,
+            Action<long> onDownloadedBytes = null)
+        {
             var release = _releases.Current ?? throw new ContentConfigurationException(
                 "Content release must be loaded before AssetBundles.");
             var descriptor = release.FindBundle(bundleName)
@@ -40,7 +53,6 @@ namespace Bundles
                     $"Bundle '{bundleName}' is absent from release '{release.ReleaseId}'.");
             var sourcePath = $"{bundleKey}/{descriptor.Version}";
             var localPath = _cache.GetLocalPath(sourcePath, false);
-            AssetBundle bundle;
             try
             {
                 await _integrity.VerifyAsync(
@@ -49,7 +61,7 @@ namespace Bundles
                     descriptor.Sha256,
                     localPath,
                     true);
-                bundle = await Open(sourcePath);
+                onDownloadedBytes?.Invoke(descriptor.Size);
                 _onLog?.Invoke((LogType.Log, $"Get local bundle from {sourcePath}"));
             }
             catch (OperationCanceledException)
@@ -66,7 +78,11 @@ namespace Bundles
                 var temporaryPath = _cache.CreateTemporaryPath(sourcePath);
                 try
                 {
-                    await _source.DownloadFile(sourcePath, temporaryPath);
+                    await _source.DownloadFile(
+                        sourcePath,
+                        temporaryPath,
+                        bytes => onDownloadedBytes?.Invoke(
+                            Math.Min(bytes, descriptor.Size)));
                     _cancellationToken.ThrowIfCancellationRequested();
                     await _integrity.VerifyAsync(
                         bundleName,
@@ -80,17 +96,31 @@ namespace Bundles
                         descriptor.Size,
                         descriptor.Sha256,
                         true);
+                    onDownloadedBytes?.Invoke(descriptor.Size);
                 }
                 finally
                 {
                     if (File.Exists(temporaryPath))
                         File.Delete(temporaryPath);
                 }
-                bundle = await Open(sourcePath);
             }
 
             _cache.PruneDirectory(bundleKey, descriptor.Version);
-            return bundle;
+        }
+
+        internal long GetMissingBytes(
+            BundleReleaseDescriptor descriptor,
+            string bundleKey)
+        {
+            if (descriptor == null)
+                throw new ArgumentNullException(nameof(descriptor));
+            var localPath = _cache.GetLocalPath(
+                $"{bundleKey}/{descriptor.Version}",
+                false);
+            return !File.Exists(localPath)
+                || new FileInfo(localPath).Length != descriptor.Size
+                    ? descriptor.Size
+                    : 0L;
         }
 
         private async UniTask<AssetBundle> Open(string sourcePath)

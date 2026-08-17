@@ -68,15 +68,10 @@ namespace Editor
             if (entryPointData.FindProperty("_targetCamera")?.objectReferenceValue == null)
                 errors.Add("Novels.EntryPoint has no target Camera reference.");
 
-            var catalog = AssetDatabase.LoadAssetAtPath<Novels.Catalog.NovelCatalogAsset>(
-                Novels.Catalog.CatalogAddresses.AssetName);
-            if (catalog == null)
-            {
-                errors.Add(
-                    $"Novel catalog does not exist: "
-                    + Novels.Catalog.CatalogAddresses.AssetName);
+            ContentProjectIndex.TryBuild("en", errors, out var project);
+            if (project == null)
                 return errors;
-            }
+            var catalog = project.Catalog;
 
             ValidateBundleAssignment(
                 Novels.Catalog.CatalogAddresses.AssetName,
@@ -104,40 +99,20 @@ namespace Editor
             if (catalog.Entries.Count == 0)
                 errors.Add("Novel catalog has no entries.");
 
-            var contentIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var entry in catalog.Entries)
+            foreach (var item in project.Entries)
             {
-                if (entry == null || string.IsNullOrWhiteSpace(entry.ContentId))
-                {
-                    errors.Add("Novel catalog contains an entry without content ID.");
-                    continue;
-                }
-                if (!contentIds.Add(entry.ContentId))
-                    errors.Add($"Duplicate catalog content ID: {entry.ContentId}");
+                var entry = item.CatalogEntry;
                 if (string.IsNullOrWhiteSpace(entry.Resolve("en").Title))
                     errors.Add($"Catalog entry '{entry.ContentId}' has no title.");
-                if (string.IsNullOrWhiteSpace(entry.ContentBundleName))
-                    errors.Add($"Catalog entry '{entry.ContentId}' has no content bundle.");
-                if (string.IsNullOrWhiteSpace(entry.ContentAssetName))
-                    errors.Add($"Catalog entry '{entry.ContentId}' has no content asset address.");
-
-                var contentAsset = AssetDatabase.LoadAssetAtPath<
-                    Novels.Content.NovelContentAsset>(entry.ContentAssetName);
-                if (contentAsset == null)
-                {
-                    errors.Add(
-                        $"NovelContentAsset does not exist: {entry.ContentAssetName}");
-                    continue;
-                }
 
                 ValidateBundleAssignment(
                     entry.ContentAssetName,
                     entry.ContentBundleName,
                     errors);
                 ValidateContentAsset(
-                    contentAsset,
+                    item.Asset,
+                    item.Definition,
                     entry.ContentId,
-                    entry.ContentBundleName,
                     errors);
             }
             PrefabContentValidator.ValidateBootstrap(errors);
@@ -169,21 +144,10 @@ namespace Editor
 
         private static void ValidateContentAsset(
             Novels.Content.NovelContentAsset contentAsset,
+            Novels.Content.NovelDefinition definition,
             string expectedContentId,
-            string contentBundleName,
             ICollection<string> errors)
         {
-            Novels.Content.NovelDefinition definition;
-            try
-            {
-                definition = contentAsset.ToDefinition("en", contentBundleName);
-            }
-            catch (Exception exception)
-            {
-                errors.Add($"Content asset '{contentAsset.name}' is invalid: {exception.Message}");
-                return;
-            }
-
             if (contentAsset.AudioMixer == null)
                 errors.Add($"Content asset '{contentAsset.name}' has no AudioMixer.");
             if (!string.Equals(
@@ -200,7 +164,7 @@ namespace Editor
                 new[]
                 {
                     Novels.Catalog.CatalogAddresses.BundleName,
-                    contentBundleName,
+                    definition.BundleName,
                     definition.MainLoadingBundleName,
                     definition.BundleName,
                 }.Concat(definition.Episodes.Select(episode => episode.BundleName)),
@@ -209,13 +173,13 @@ namespace Editor
             ValidateBundleAssignment(
                 Novels.ContentAddressing.ContentAddressConvention.SettingPrefab(
                     definition.Prefix,
-                    "Screen"),
+                    Novels.ContentAddressing.ContentAssetNames.Screen),
                 definition.BundleName,
                 errors);
             ValidateBundleAssignment(
                 Novels.ContentAddressing.ContentAddressConvention.LocalizationAsset(
                     definition.Prefix,
-                    "LocalizationData"),
+                    Novels.ContentAddressing.ContentAssetNames.LocalizationData),
                 definition.BundleName,
                 errors);
 
@@ -239,15 +203,15 @@ namespace Editor
             foreach (var assetPath in new[]
                      {
                          Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
-                             prefix, episode.Id, "Screen"),
+                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
                          Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
-                             prefix, episode.Id, "Screen"),
+                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
                          Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
-                             prefix, episode.Id, "Screen"),
+                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
                          Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
-                             prefix, episode.Id, "Screen"),
+                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
                          Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
-                             prefix, episode.Id, "Screen"),
+                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
                      })
             {
                 ValidateBundleAssignment(assetPath, episode.BundleName, errors);

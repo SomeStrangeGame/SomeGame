@@ -1,36 +1,40 @@
 {
-    "releaseId": "00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813",
+    "releaseId": "4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a",
     "minimumClientVersion": "0.1.0",
-    "contentSchemaVersion": 3,
+    "contentSchemaVersion": 4,
     "deliveryMode": 2,
     "bundles": [
         {
             "name": "novels_catalog",
-            "version": "24a991a529188958d322e607d27e5442",
-            "size": 7023,
-            "sha256": "4d24163b82f1dc515d8c2c31b49f409ad9c3b321748a7cff80e6a78739c500dd",
-            "crc": 4254631961
+            "version": "a42389e1c8a626a8db1d5dd1f40dfdd9",
+            "size": 6962,
+            "sha256": "45b16eecaa794f3d5d604113e2ba88ac5071bf0107681bf8091bbe5fda52f14e",
+            "crc": 2518171495,
+            "deliveryGroup": "application"
         },
         {
             "name": "novels_content_tzm_1",
-            "version": "e2ac70f138b95ca7950edd9978ec2315",
-            "size": 164169,
-            "sha256": "d890c745a6cfeaa718a76a181c59dd3aad6a5313cb6c1cb384e39d9afd1ce4c2",
-            "crc": 4131194833
+            "version": "57e531aafbad57b6b1045b24e2cc6311",
+            "size": 164144,
+            "sha256": "87833b40705c7cd12ab39150ad39aba4feea78e711c3fa9ecdd1363ff241fa1d",
+            "crc": 4159584725,
+            "deliveryGroup": "TZM_1/shared"
         },
         {
             "name": "novels_episode_tzm_1_s01e01",
             "version": "72bdcca1df2d19bc0467bdf1c76dda28",
             "size": 57618366,
             "sha256": "bd5b3aea6c66ed4056cd81c56e90e1d80f205aac9207a8e566be561c36b6faf4",
-            "crc": 3487297295
+            "crc": 3487297295,
+            "deliveryGroup": "TZM_1/s01e01"
         },
         {
             "name": "novels_loading_shared",
             "version": "f6594868ea9979d87c9ca3dd655def01",
             "size": 3556,
             "sha256": "83ebe225ddad24f28a8961e071870ddcfdfdad0412ceb8154ec8ccf4985e0d83",
-            "crc": 1631751893
+            "crc": 1631751893,
+            "deliveryGroup": "application"
         }
     ],
     "files": [
@@ -728,13 +732,18 @@
     "deliveryGroups": [
         {
             "id": "TZM_1/s01e01",
-            "fileCount": 46,
-            "size": 541471412
+            "payloadCount": 47,
+            "size": 599089778
         },
         {
             "id": "TZM_1/shared",
-            "fileCount": 69,
-            "size": 682848715
+            "payloadCount": 70,
+            "size": 683012859
+        },
+        {
+            "id": "application",
+            "payloadCount": 2,
+            "size": 10518
         }
     ]
 }

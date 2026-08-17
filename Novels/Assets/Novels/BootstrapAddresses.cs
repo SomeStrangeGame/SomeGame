@@ -2,7 +2,8 @@ namespace Novels
 {
     internal static class BootstrapAddresses
     {
-        internal const string ScreenAssetName = "Screen";
-        internal const string LocalizationDataAssetName = "LocalizationData";
+        internal const string ScreenAssetName = ContentAddressing.ContentAssetNames.Screen;
+        internal const string LocalizationDataAssetName =
+            ContentAddressing.ContentAssetNames.LocalizationData;
     }
 }

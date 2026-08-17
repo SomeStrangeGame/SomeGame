@@ -2,17 +2,16 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Bundles
 {
     public sealed class StreamingAssetsSource : IContentSource
     {
-        private readonly CancellationToken _cancellationToken;
+        private readonly ContentRequestRunner _requests;
 
         public StreamingAssetsSource(CancellationToken cancellationToken)
         {
-            _cancellationToken = cancellationToken;
+            _requests = new ContentRequestRunner(cancellationToken);
         }
 
         public string GetUrl(string relativePath)
@@ -25,46 +24,16 @@ namespace Bundles
 #endif
         }
 
-        public async UniTask<string> DownloadText(string path)
-        {
-            using (var request = UnityWebRequest.Get(GetUrl(path)))
-            {
-                await Send(request);
-                return request.downloadHandler.text;
-            }
-        }
+        public UniTask<string> DownloadText(string path) =>
+            _requests.DownloadText(GetUrl(path));
 
-        public async UniTask DownloadFile(
+        public UniTask DownloadFile(
             string path,
             string destinationPath,
             Action<long> onDownloadedBytes = null)
-        {
-            using (var request = UnityWebRequest.Get(GetUrl(path)))
-            {
-                request.downloadHandler = new DownloadHandlerFile(
-                    destinationPath,
-                    true);
-                await Send(request, onDownloadedBytes);
-            }
-        }
-
-        private async UniTask Send(
-            UnityWebRequest request,
-            Action<long> onDownloadedBytes = null)
-        {
-            var operation = request.SendWebRequest();
-            while (!operation.isDone)
-            {
-                _cancellationToken.ThrowIfCancellationRequested();
-                onDownloadedBytes?.Invoke((long)request.downloadedBytes);
-                await UniTask.Yield(PlayerLoopTiming.Update, _cancellationToken);
-            }
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                throw new ContentSourceException(
-                    $"Request failed [{request.responseCode}] {request.url}: {request.error}");
-            }
-            onDownloadedBytes?.Invoke((long)request.downloadedBytes);
-        }
+            => _requests.DownloadFile(
+                GetUrl(path),
+                destinationPath,
+                onDownloadedBytes);
     }
 }

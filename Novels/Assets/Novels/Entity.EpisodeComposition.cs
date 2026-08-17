@@ -9,61 +9,45 @@ namespace Novels
         private async UniTask<EpisodeRunResult> RunEpisode(PreparedNovelResources state)
         {
             var cancellationToken = state.CancellationToken;
-            var loadingAddress = new Bundles.BundleAssetAddress(
-                _episode.BundleName,
-                state.PathGetter.GetLoadingPrefabAssetName(BootstrapAddresses.ScreenAssetName));
-            var loadingScreen = await _priorityLoader.Run(() => state.EpisodeBundles
-                .GetBundledPrefab(loadingAddress)
+            var storyText = await _priorityLoader.Run(() => state.EpisodePreloading
                 .AttachExternalCancellation(cancellationToken));
+            var assets = await new EpisodeAssetLoader(new EpisodeAssetLoader.Ctx
+            {
+                Bundles = state.EpisodeBundles,
+                PriorityLoader = _priorityLoader,
+                Addresses = state.Addresses,
+                BundleName = _episode.BundleName,
+                CancellationToken = cancellationToken,
+            }).Load();
             var loading = CreateLoading(
                 state.EpisodeScope,
-                loadingScreen,
+                assets.Loading,
                 cancellationToken);
             await loading.Show().AttachExternalCancellation(cancellationToken);
             await state.MainLoading.Hide().AttachExternalCancellation(cancellationToken);
 
-            var storyText = await _priorityLoader.Run(() => state.EpisodePreloading
-                .AttachExternalCancellation(cancellationToken));
             var storyProcessor = CreateStoryProcessor(state.EpisodeScope, storyText);
             var storyCommands = CreateStoryCommands();
 
-            var bubbleAddress = new Bundles.BundleAssetAddress(
-                _episode.BundleName,
-                state.PathGetter.GetBubblePrefabAssetName(BootstrapAddresses.ScreenAssetName));
-            var bubblePrefab = await _priorityLoader.Run(() => state.EpisodeBundles
-                .GetBundledPrefab(bubbleAddress)
-                .AttachExternalCancellation(cancellationToken));
             var bubble = CreateBubble(
                 state.EpisodeScope,
-                bubblePrefab,
+                assets.Bubble,
                 cancellationToken);
 
-            var locationAddress = new Bundles.BundleAssetAddress(
-                _episode.BundleName,
-                state.PathGetter.GetLocationPrefabAssetName(BootstrapAddresses.ScreenAssetName));
-            var locationScreen = await _priorityLoader.Run(() => state.EpisodeBundles
-                .GetBundledPrefab(locationAddress)
-                .AttachExternalCancellation(cancellationToken));
             var location = CreateLocation(
                 state.EpisodeScope,
-                locationScreen,
+                assets.Location,
                 assetName => _priorityLoader.Run(() => state.EpisodeBundles
                     .GetBundledSprite(new Bundles.BundleAssetAddress(
                         _episode.BundleName,
-                        state.PathGetter.GetLocationImagePath(assetName)))
+                        state.Addresses.LocationImage(assetName)))
                     .AttachExternalCancellation(cancellationToken)),
                 state.EpisodeBundles.ResolveVideoUrl,
                 cancellationToken);
 
-            var characterAddress = new Bundles.BundleAssetAddress(
-                _episode.BundleName,
-                state.PathGetter.GetCharacterPrefabAssetName(BootstrapAddresses.ScreenAssetName));
-            var characterScreen = await _priorityLoader.Run(() => state.EpisodeBundles
-                .GetBundledPrefab(characterAddress)
-                .AttachExternalCancellation(cancellationToken));
             var character = CreateCharacter(
                 state.EpisodeScope,
-                characterScreen,
+                assets.Character,
                 assetName => _priorityLoader.Run(() => state.EpisodeBundles
                     .TryGetBundledSprite(new Bundles.BundleAssetAddress(
                         _episode.BundleName,
@@ -71,16 +55,9 @@ namespace Novels
                     .AttachExternalCancellation(cancellationToken)),
                 cancellationToken);
 
-            var notificationAddress = new Bundles.BundleAssetAddress(
-                _episode.BundleName,
-                state.PathGetter.GetNotificationPrefabAssetName(
-                    BootstrapAddresses.ScreenAssetName));
-            var notificationScreen = await _priorityLoader.Run(() => state.EpisodeBundles
-                .GetBundledPrefab(notificationAddress)
-                .AttachExternalCancellation(cancellationToken));
             var notification = CreateNotification(
                 state.EpisodeScope,
-                notificationScreen,
+                assets.Notification,
                 cancellationToken);
             var waiting = CreateWaiting(state.EpisodeScope, cancellationToken);
             var audio = CreateAudio(

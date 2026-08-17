@@ -51,7 +51,6 @@ namespace Bundles
                     : _defaultContentFileCacheLimit,
                 ctx.CancellationToken,
                 ctx.OnLog);
-            _delivery = new ContentDeliveryCoordinator(_releases, _contentFiles);
             var payloads = new BundlePayloadLoader(
                 source,
                 cache,
@@ -59,6 +58,11 @@ namespace Bundles
                 integrity,
                 ctx.CancellationToken,
                 ctx.OnLog);
+            _delivery = new ContentDeliveryCoordinator(
+                _releases,
+                _contentFiles,
+                payloads,
+                platform);
             _bundles = new BundleStore(payloads, platform, ctx.CancellationToken);
         }
 

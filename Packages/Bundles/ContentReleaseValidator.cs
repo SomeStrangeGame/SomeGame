@@ -68,7 +68,7 @@ namespace Bundles
             {
                 if (group == null
                     || string.IsNullOrWhiteSpace(group.id)
-                    || group.fileCount < 0
+                    || group.payloadCount <= 0
                     || group.size < 0)
                 {
                     throw new ContentIntegrityException(
@@ -95,17 +95,31 @@ namespace Bundles
                         actual.count + 1,
                         actual.size + file.size);
                 }
+                foreach (var bundle in release.bundles)
+                {
+                    if (string.IsNullOrWhiteSpace(bundle.deliveryGroup)
+                        || !groupIds.Contains(bundle.deliveryGroup))
+                    {
+                        throw new ContentIntegrityException(
+                            $"Bundle '{bundle.name}' has an unknown delivery group.");
+                    }
+                    actualGroups.TryGetValue(bundle.deliveryGroup, out var actual);
+                    actualGroups[bundle.deliveryGroup] = (
+                        actual.count + 1,
+                        actual.size + bundle.size);
+                }
                 foreach (var group in release.deliveryGroups)
                 {
                     actualGroups.TryGetValue(group.id, out var actual);
-                    if (group.fileCount != actual.count || group.size != actual.size)
+                    if (group.payloadCount != actual.count || group.size != actual.size)
                     {
                         throw new ContentIntegrityException(
-                            $"Delivery group '{group.id}' totals do not match its files.");
+                            $"Delivery group '{group.id}' totals do not match its payloads.");
                     }
                 }
             }
-            if (release.deliveryMode != ContentDeliveryMode.Embedded
+            if ((release.contentSchemaVersion >= 4
+                    || release.deliveryMode != ContentDeliveryMode.Embedded)
                 && groupIds.Count == 0)
             {
                 throw new ContentIntegrityException(

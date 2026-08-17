@@ -23,6 +23,7 @@ namespace Novels.QueueProcess
             private readonly StoryContracts.StorySpeakerRole _speakerRole;
             private readonly StoryContracts.DialoguePresentation _presentation;
             private readonly StoryContracts.StoryChoiceAction _choiceActions;
+            private readonly BubbleContracts.BubblePresentationKind _presentationKind;
             private readonly Action<BubbleContracts.BubblePresentation> _setBubbleScreen;
             private readonly Action<BubbleContracts.WardrobePresentation> _setWardrobeScreen;
             private readonly Action<BubbleContracts.ChoosePresentation> _setChooseScreen;
@@ -41,6 +42,7 @@ namespace Novels.QueueProcess
                 StoryContracts.StorySpeakerRole speakerRole,
                 StoryContracts.DialoguePresentation presentation,
                 StoryContracts.StoryChoiceAction choiceActions,
+                BubbleContracts.BubblePresentationKind presentationKind,
                 Action<BubbleContracts.BubblePresentation> setBubbleScreen,
                 Action<BubbleContracts.WardrobePresentation> setWardrobeScreen,
                 Action<BubbleContracts.ChoosePresentation> setChooseScreen)
@@ -62,6 +64,7 @@ namespace Novels.QueueProcess
                 _speakerRole = speakerRole;
                 _presentation = presentation;
                 _choiceActions = choiceActions;
+                _presentationKind = presentationKind;
                 _setBubbleScreen = setBubbleScreen
                     ?? throw new ArgumentNullException(nameof(setBubbleScreen));
                 _setWardrobeScreen = setWardrobeScreen
@@ -86,11 +89,11 @@ namespace Novels.QueueProcess
                     return UniTask.CompletedTask;
                 }
 
-                if (_name == BubbleContracts.BubbleTriggers.Wardrobe)
+                if (_presentationKind == BubbleContracts.BubblePresentationKind.Wardrobe)
                 {
                     _setWardrobeScreen(new BubbleContracts.WardrobePresentation());
                 }
-                else if (_name == BubbleContracts.BubbleTriggers.Choose)
+                else if (_presentationKind == BubbleContracts.BubblePresentationKind.Choose)
                 {
                     _setChooseScreen(new BubbleContracts.ChoosePresentation());
                 }

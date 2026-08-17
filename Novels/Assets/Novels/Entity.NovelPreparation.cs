@@ -12,7 +12,7 @@ namespace Novels
         {
             internal PreparedNovelResources(
                 Save.Entity saveSystem,
-                PathGetter.Entity pathGetter,
+                ContentAddressing.ContentAddresses addresses,
                 EpisodeRuntime episodeRuntime,
                 Bundles.Scope episodeBundles,
                 Loading.Entity mainLoading,
@@ -20,7 +20,7 @@ namespace Novels
                 UniTask<string> episodePreloading)
             {
                 SaveSystem = saveSystem;
-                PathGetter = pathGetter;
+                Addresses = addresses;
                 EpisodeRuntime = episodeRuntime;
                 EpisodeScope = episodeRuntime.Scope;
                 EpisodeBundles = episodeBundles;
@@ -30,7 +30,7 @@ namespace Novels
             }
 
             internal Save.Entity SaveSystem { get; }
-            internal PathGetter.Entity PathGetter { get; }
+            internal ContentAddressing.ContentAddresses Addresses { get; }
             internal EpisodeRuntime EpisodeRuntime { get; }
             internal EpisodeScope EpisodeScope { get; }
             internal CancellationToken CancellationToken =>
@@ -45,7 +45,9 @@ namespace Novels
             Bundles.Scope novelBundles)
         {
             var saveSystem = CreateSaveSystem();
-            var pathGetter = CreatePathGetter();
+            var addresses = new ContentAddressing.ContentAddresses(
+                _definition.Id,
+                _episode.Id);
             var episodeRuntime = CreateEpisodeRuntime().AddTo(this);
             var episodeBundles = _ctx.Bundles
                 .CreateScope(episodeRuntime.CancellationToken)
@@ -57,21 +59,21 @@ namespace Novels
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoadingAddress = new Bundles.BundleAssetAddress(
                 _definition.MainLoadingBundleName,
-                pathGetter.GetMainLoadingPrefabAssetName(BootstrapAddresses.ScreenAssetName));
+                addresses.MainLoadingPrefab(BootstrapAddresses.ScreenAssetName));
             var mainLoadingScreen = await _priorityLoader.Run(() => novelBundles
                 .GetBundledPrefab(mainLoadingAddress)
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoading = CreateMainLoading(mainLoadingScreen);
 
             var episodePreloading = PreloadEpisode(
-                pathGetter,
+                addresses,
                 episodeBundles,
                 episodeRuntime.CancellationToken).Preserve();
             await mainLoading.Show().AttachExternalCancellation(_ctx.CancellationToken);
 
             var localizationAddress = new Bundles.BundleAssetAddress(
                 _definition.BundleName,
-                pathGetter.GetLocalizationDataAssetName(
+                addresses.LocalizationAsset(
                     BootstrapAddresses.LocalizationDataAssetName));
             LocalizationData localizationData;
             localizationData = await _priorityLoader.Run(() => novelBundles
@@ -81,7 +83,7 @@ namespace Novels
 
             var settingsAddress = new Bundles.BundleAssetAddress(
                 _definition.BundleName,
-                pathGetter.GetSettingPrefabAssetName(BootstrapAddresses.ScreenAssetName));
+                addresses.SettingPrefab(BootstrapAddresses.ScreenAssetName));
             var settingsScreen = await _priorityLoader.Run(() => novelBundles
                 .GetBundledPrefab(settingsAddress)
                 .AttachExternalCancellation(_ctx.CancellationToken));
@@ -96,7 +98,7 @@ namespace Novels
             }).AddTo(this);
             var resources = new PreparedNovelResources(
                 saveSystem,
-                pathGetter,
+                addresses,
                 episodeRuntime,
                 episodeBundles,
                 mainLoading,
@@ -110,12 +112,12 @@ namespace Novels
         }
 
         private async UniTask<string> PreloadEpisode(
-            PathGetter.Entity pathGetter,
+            ContentAddressing.ContentAddresses addresses,
             Bundles.Scope episodeBundles,
             CancellationToken cancellationToken)
         {
             var result = await UniTask.WhenAll(
-                _ctx.Bundles.GetText(pathGetter.GetNovelTextPath(_episode.StoryPath))
+                _ctx.Bundles.GetText(addresses.NovelText(_episode.StoryPath))
                     .AttachExternalCancellation(cancellationToken),
                 episodeBundles.GetAssetBundle(_episode.BundleName));
             return result.Item1;

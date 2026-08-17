@@ -46,7 +46,6 @@ namespace Editor
                 }
                 else if (profile.DeliveryMode == ContentDeliveryMode.Hybrid)
                 {
-                    CopyDirectory(result.RemotePath, seedRemote);
                     var embeddedGroups = new HashSet<string>(
                         profile.EmbeddedDeliveryGroups,
                         StringComparer.OrdinalIgnoreCase);
@@ -66,6 +65,16 @@ namespace Editor
                     {
                         if (embeddedGroups.Contains(file.deliveryGroup))
                             CopyContentFile(file.path, stagingRoot);
+                    }
+                    foreach (var bundle in release.bundles ?? Array.Empty<BundleReleaseEntry>())
+                    {
+                        if (embeddedGroups.Contains(bundle.deliveryGroup))
+                        {
+                            CopyBundlePayload(
+                                bundle,
+                                result.RemotePath,
+                                seedRemote);
+                        }
                     }
                 }
 
@@ -109,6 +118,22 @@ namespace Editor
             var normalized = relativePath.Replace('/', Path.DirectorySeparatorChar);
             var source = Path.Combine(Application.streamingAssetsPath, normalized);
             var destination = Path.Combine(destinationRoot, normalized);
+            Directory.CreateDirectory(Path.GetDirectoryName(destination));
+            File.Copy(source, destination, true);
+        }
+
+        private static void CopyBundlePayload(
+            BundleReleaseEntry bundle,
+            string remoteSource,
+            string remoteDestination)
+        {
+            var source = Path.Combine(remoteSource, bundle.name, bundle.version);
+            var destination = Path.Combine(
+                remoteDestination,
+                bundle.name,
+                bundle.version);
+            if (!File.Exists(source))
+                throw new FileNotFoundException("Bundle payload is missing.", source);
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             File.Copy(source, destination, true);
         }

@@ -4,13 +4,11 @@ namespace Novels.ContentAddressing
 {
     public static class ContentAddressConvention
     {
-        private const string _remoteAssetsRoot = "Assets/RemoteAssets";
-
         public static string NovelText(string prefix, string path) =>
             IsMissing(path) ? string.Empty : $"NovelTexts/{prefix}/{path}";
 
         public static string MainLoadingPrefab(string assetName) =>
-            Prefab($"{_remoteAssetsRoot}/Loading", assetName);
+            Prefab("Assets/RemoteAssets/Loading", assetName);
 
         public static string LoadingPrefab(
             string prefix,
@@ -19,7 +17,7 @@ namespace Novels.ContentAddressing
             Prefab($"{EpisodeRoot(prefix, episodeId)}/Loading", assetName);
 
         public static string SettingPrefab(string prefix, string assetName) =>
-            Prefab($"{ContentRoot(prefix)}/Application/Setting", assetName);
+            Prefab($"{ContentPackageConvention.ContentRoot(prefix)}/Application/Setting", assetName);
 
         public static string BubblePrefab(
             string prefix,
@@ -112,7 +110,7 @@ namespace Novels.ContentAddressing
         public static string LocalizationAsset(string prefix, string assetName) =>
             IsMissing(assetName)
                 ? string.Empty
-                : $"{ContentRoot(prefix)}/Application/Localization/{assetName}.asset";
+                : $"{ContentPackageConvention.ContentRoot(prefix)}/Application/Localization/{assetName}.asset";
 
         public static string NormalizeAssetName(string value) =>
             IsMissing(value)
@@ -120,11 +118,8 @@ namespace Novels.ContentAddressing
                 : char.ToUpperInvariant(value[0])
                     + value.Substring(1).ToLowerInvariant();
 
-        private static string ContentRoot(string prefix) =>
-            $"{_remoteAssetsRoot}/Content/{prefix}";
-
         private static string EpisodeRoot(string prefix, string episodeId) =>
-            $"{ContentRoot(prefix)}/Episodes/{episodeId}";
+            ContentPackageConvention.EpisodeRoot(prefix, episodeId);
 
         private static string CharacterRoot(string prefix, string episodeId) =>
             $"{EpisodeRoot(prefix, episodeId)}/Character/Characters";

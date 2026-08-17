@@ -13,9 +13,7 @@ MonoBehaviour:
   m_Name: TZM_1
   m_EditorClassIdentifier: 
   _id: TZM_1
-  _prefix: TZM_1
   _mainCharacter: Salli
-  _mainLoadingBundleName: novels_loading_shared
   _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
   _episodes:
   - _id: s01e01
@@ -27,7 +25,6 @@ MonoBehaviour:
       _value: Episode 1
     _storyPath: s01e01.ink.json
     _contentVersion: 1
-    _bundleName: novels_episode_tzm_1_s01e01
     _videoIds:
     - alexasroom_water
     - arrivalInatlantis

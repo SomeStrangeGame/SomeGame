@@ -25,6 +25,7 @@ namespace Bundles
         public long size;
         public string sha256;
         public uint crc;
+        public string deliveryGroup;
     }
 
     [Serializable]
@@ -40,7 +41,7 @@ namespace Bundles
     public sealed class ContentDeliveryGroupEntry
     {
         public string id;
-        public int fileCount;
+        public int payloadCount;
         public long size;
     }
 
@@ -97,6 +98,7 @@ namespace Bundles
             Size = source.size;
             Sha256 = source.sha256;
             Crc = source.crc;
+            DeliveryGroup = source.deliveryGroup;
         }
 
         public string Name { get; }
@@ -104,6 +106,7 @@ namespace Bundles
         public long Size { get; }
         public string Sha256 { get; }
         public uint Crc { get; }
+        public string DeliveryGroup { get; }
     }
 
     public sealed class ContentFileDescriptor
@@ -127,12 +130,12 @@ namespace Bundles
         internal ContentDeliveryGroupDescriptor(ContentDeliveryGroupEntry source)
         {
             Id = source.id;
-            FileCount = source.fileCount;
+            PayloadCount = source.payloadCount;
             Size = source.size;
         }
 
         public string Id { get; }
-        public int FileCount { get; }
+        public int PayloadCount { get; }
         public long Size { get; }
     }
 }

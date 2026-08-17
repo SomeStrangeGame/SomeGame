@@ -6,6 +6,22 @@ namespace Novels.BubbleContracts
     {
         public const string Wardrobe = "some wardrobe trigger";
         public const string Choose = "some choose trigger";
+
+        public static BubblePresentationKind Resolve(string value)
+        {
+            if (string.Equals(value, Wardrobe, StringComparison.Ordinal))
+                return BubblePresentationKind.Wardrobe;
+            if (string.Equals(value, Choose, StringComparison.Ordinal))
+                return BubblePresentationKind.Choose;
+            return BubblePresentationKind.Dialogue;
+        }
+    }
+
+    public enum BubblePresentationKind
+    {
+        Dialogue,
+        Wardrobe,
+        Choose,
     }
 
     public static class BubbleTextKeys

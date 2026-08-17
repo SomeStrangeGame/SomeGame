@@ -109,11 +109,13 @@ namespace Bundles
             return new Uri(localPath).AbsoluteUri;
         }
 
-        internal void ReserveGroup(IReadOnlyCollection<ContentFileDescriptor> files)
+        internal void ReserveGroup(
+            IReadOnlyCollection<ContentFileDescriptor> files,
+            long additionalMissingBytes = 0)
         {
             var release = _releases.Current ?? throw new ContentConfigurationException(
                 "Content release must be loaded before delivery reservation.");
-            var missingBytes = 0L;
+            var missingBytes = Math.Max(0L, additionalMissingBytes);
             foreach (var file in files)
             {
                 var cachePath = CachePath(release.ReleaseId, file.Path);

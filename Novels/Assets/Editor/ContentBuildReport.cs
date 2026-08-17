@@ -8,19 +8,23 @@ namespace Editor
     internal static class ContentBuildReport
     {
         internal static ContentDeliveryGroupEntry[] BuildGroups(
+            IReadOnlyCollection<BundleReleaseEntry> bundles,
             IReadOnlyCollection<ContentFileEntry> files)
         {
-            return files.GroupBy(
-                    file => string.IsNullOrWhiteSpace(file.deliveryGroup)
+            var payloads = bundles
+                .Select(bundle => (bundle.deliveryGroup, bundle.size))
+                .Concat(files.Select(file => (file.deliveryGroup, file.size)));
+            return payloads.GroupBy(
+                    payload => string.IsNullOrWhiteSpace(payload.deliveryGroup)
                         ? "shared"
-                        : file.deliveryGroup,
+                        : payload.deliveryGroup,
                     System.StringComparer.OrdinalIgnoreCase)
                 .OrderBy(group => group.Key, System.StringComparer.Ordinal)
                 .Select(group => new ContentDeliveryGroupEntry
                 {
                     id = group.Key,
-                    fileCount = group.Count(),
-                    size = group.Sum(file => file.size),
+                    payloadCount = group.Count(),
+                    size = group.Sum(payload => payload.size),
                 })
                 .ToArray();
         }
@@ -40,7 +44,7 @@ namespace Editor
             foreach (var group in groups)
             {
                 Debug.Log(
-                    $"Novel content group '{group.id}': {group.fileCount} files, "
+                    $"Novel content group '{group.id}': {group.payloadCount} payloads, "
                     + FormatBytes(group.size));
             }
             if (total > profile.TotalBudgetBytes)

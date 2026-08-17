@@ -34,13 +34,13 @@ namespace Novels.Catalog
     public sealed class NovelCatalogEntry
     {
         [SerializeField] private string _contentId;
-        [SerializeField] private string _contentBundleName;
-        [SerializeField] private string _contentAssetName;
         [SerializeField] private CatalogLocalization[] _localizations;
 
         public string ContentId => _contentId;
-        public string ContentBundleName => _contentBundleName;
-        public string ContentAssetName => _contentAssetName;
+        public string ContentBundleName =>
+            ContentAddressing.ContentPackageConvention.ContentBundle(_contentId);
+        public string ContentAssetName =>
+            ContentAddressing.ContentPackageConvention.DefinitionAsset(_contentId);
         public CatalogText Resolve(string locale) =>
             NovelCatalogAsset.Resolve(_localizations, locale);
     }

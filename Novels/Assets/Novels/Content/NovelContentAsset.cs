@@ -27,13 +27,14 @@ namespace Novels.Content
             [SerializeField] private LocalizedTextEntry[] _localizations;
             [SerializeField] private string _storyPath;
             [SerializeField] private string _contentVersion;
-            [SerializeField] private string _bundleName;
             [SerializeField] private string[] _videoIds;
             [SerializeField] private string _defaultAudioExtension;
             [SerializeField] private string[] _silentAudioIds;
             [SerializeField] private AudioExtensionEntry[] _audioExtensions;
 
-            internal readonly EpisodeDefinition ToDefinition(string locale)
+            internal readonly EpisodeDefinition ToDefinition(
+                string contentId,
+                string locale)
             {
                 var audioExtensions = new Dictionary<string, string>(
                     StringComparer.OrdinalIgnoreCase);
@@ -50,11 +51,11 @@ namespace Novels.Content
                 }
 
                 return new EpisodeDefinition(
+                    contentId,
                     _id,
                     LocalizedText.Resolve(_localizations, _title, locale),
                     _storyPath,
                     _contentVersion,
-                    _bundleName,
                     new EpisodeMediaDefinition(
                         _videoIds,
                         audioExtensions,
@@ -93,24 +94,19 @@ namespace Novels.Content
         }
 
         [SerializeField] private string _id;
-        [SerializeField] private string _prefix;
         [SerializeField] private string _mainCharacter;
-        [SerializeField] private string _mainLoadingBundleName;
         [SerializeField] private AudioMixer _audioMixer;
         [SerializeField] private EpisodeEntry[] _episodes;
 
         public AudioMixer AudioMixer => _audioMixer;
 
-        public NovelDefinition ToDefinition(string locale, string bundleName)
+        public NovelDefinition ToDefinition(string locale)
         {
             return new NovelDefinition(
                 _id,
-                _prefix,
                 _mainCharacter,
-                _mainLoadingBundleName,
-                bundleName,
                 (_episodes ?? Array.Empty<EpisodeEntry>())
-                    .Select(episode => episode.ToDefinition(locale)));
+                    .Select(episode => episode.ToDefinition(_id, locale)));
         }
     }
 }

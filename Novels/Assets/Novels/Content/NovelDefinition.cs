@@ -8,42 +8,39 @@ namespace Novels.Content
     {
         public NovelDefinition(
             string id,
-            string prefix,
             string mainCharacter,
-            string mainLoadingBundleName,
-            string bundleName,
             EpisodeDefinition episode)
             : this(
                 id,
-                prefix,
                 mainCharacter,
-                mainLoadingBundleName,
-                bundleName,
                 new[] { episode })
         {
         }
 
         public NovelDefinition(
             string id,
-            string prefix,
             string mainCharacter,
-            string mainLoadingBundleName,
-            string bundleName,
             IEnumerable<EpisodeDefinition> episodes)
         {
             Id = Require(id, nameof(id));
-            Prefix = Require(prefix, nameof(prefix));
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
-            MainLoadingBundleName = Require(
-                mainLoadingBundleName,
-                nameof(mainLoadingBundleName));
-            BundleName = Require(bundleName, nameof(bundleName));
+            Prefix = Id;
+            MainLoadingBundleName =
+                ContentAddressing.ContentPackageConvention.SharedLoadingBundleName;
+            BundleName = ContentAddressing.ContentPackageConvention.ContentBundle(Id);
             var episodeArray = episodes?.ToArray() ?? Array.Empty<EpisodeDefinition>();
             if (episodeArray.Length == 0 || episodeArray.Any(episode => episode == null))
                 throw new ArgumentException("At least one valid episode is required.", nameof(episodes));
             var episodeIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var episode in episodeArray)
             {
+                if (!string.Equals(episode.ContentId, Id, StringComparison.OrdinalIgnoreCase))
+                {
+                    throw new ArgumentException(
+                        $"Episode '{episode.Id}' belongs to content '{episode.ContentId}', "
+                        + $"not '{Id}'.",
+                        nameof(episodes));
+                }
                 if (!episodeIds.Add(episode.Id))
                 {
                     throw new ArgumentException(
@@ -72,21 +69,25 @@ namespace Novels.Content
     public sealed class EpisodeDefinition
     {
         public EpisodeDefinition(
+            string contentId,
             string id,
             string title,
             string storyPath,
             string contentVersion,
-            string bundleName,
             EpisodeMediaDefinition media)
         {
+            ContentId = Require(contentId, nameof(contentId));
             Id = Require(id, nameof(id));
             Title = Require(title, nameof(title));
             StoryPath = Require(storyPath, nameof(storyPath));
             ContentVersion = Require(contentVersion, nameof(contentVersion));
-            BundleName = Require(bundleName, nameof(bundleName));
+            BundleName = ContentAddressing.ContentPackageConvention.EpisodeBundle(
+                ContentId,
+                Id);
             Media = media ?? throw new ArgumentNullException(nameof(media));
         }
 
+        public string ContentId { get; }
         public string Id { get; }
         public string Title { get; }
         public string StoryPath { get; }

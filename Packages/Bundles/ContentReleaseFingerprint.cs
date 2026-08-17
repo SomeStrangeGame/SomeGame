@@ -22,14 +22,15 @@ namespace Bundles
             lines.AddRange((release.bundles ?? Array.Empty<BundleReleaseEntry>())
                 .OrderBy(value => value?.name, StringComparer.Ordinal)
                 .Select(value =>
-                    $"B:{value?.name}:{value?.version}:{value?.size}:{value?.sha256}:{value?.crc}"));
+                    $"B:{value?.name}:{value?.version}:{value?.size}:{value?.sha256}:"
+                    + $"{value?.crc}:{value?.deliveryGroup}"));
             lines.AddRange((release.files ?? Array.Empty<ContentFileEntry>())
                 .OrderBy(value => value?.path, StringComparer.Ordinal)
                 .Select(value =>
                     $"F:{value?.path}:{value?.size}:{value?.sha256}:{value?.deliveryGroup}"));
             lines.AddRange((release.deliveryGroups ?? Array.Empty<ContentDeliveryGroupEntry>())
                 .OrderBy(value => value?.id, StringComparer.Ordinal)
-                .Select(value => $"G:{value?.id}:{value?.fileCount}:{value?.size}"));
+                .Select(value => $"G:{value?.id}:{value?.payloadCount}:{value?.size}"));
             using var sha = SHA256.Create();
             return ToHex(sha.ComputeHash(Encoding.UTF8.GetBytes(string.Join("\n", lines))));
         }

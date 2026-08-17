@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targets:
   - 13
-  _contentSchemaVersion: 3
+  _contentSchemaVersion: 4
   _deliveryMode: 2
   _embeddedDeliveryGroups: []
   _minimumClientVersion: ''

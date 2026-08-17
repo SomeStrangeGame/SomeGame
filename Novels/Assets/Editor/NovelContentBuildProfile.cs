@@ -11,7 +11,7 @@ namespace Editor
         internal const string AssetPath = "Assets/Editor/NovelContentBuildProfile.asset";
 
         [SerializeField] private BuildTarget[] _targets = { BuildTarget.Android };
-        [SerializeField] private int _contentSchemaVersion = 3;
+        [SerializeField] private int _contentSchemaVersion = 4;
         [SerializeField] private Bundles.ContentDeliveryMode _deliveryMode =
             Bundles.ContentDeliveryMode.Remote;
         [SerializeField] private string[] _embeddedDeliveryGroups = Array.Empty<string>();
@@ -67,10 +67,10 @@ namespace Editor
 
         internal void Validate()
         {
-            if (_contentSchemaVersion < 3)
+            if (_contentSchemaVersion < 4)
             {
                 throw new InvalidOperationException(
-                    "Content schema version 3 or newer is required for episode delivery groups.");
+                    "Content schema version 4 or newer is required for grouped bundle payloads.");
             }
             if (_totalBudgetBytes <= 0 || _embeddedBudgetBytes <= 0)
                 throw new InvalidOperationException("Content budgets must be positive.");

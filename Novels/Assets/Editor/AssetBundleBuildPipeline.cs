@@ -20,6 +20,7 @@ namespace Editor
             if (targets == null || targets.Length == 0)
                 throw new ArgumentException("At least one build target is required.", nameof(targets));
 
+            var projectIndex = ContentProjectIndex.BuildOrThrow("en");
             var remotePath = Path.Combine(Application.streamingAssetsPath, "Remote");
             var projectPath = Directory.GetParent(Application.dataPath)?.FullName
                 ?? throw new InvalidOperationException("Unity project path cannot be resolved.");
@@ -38,7 +39,8 @@ namespace Editor
                     releases[target] = BuildTargetBundles(
                         target,
                         Path.Combine(stagingPath, GetPlatformName(target)),
-                        profile);
+                        profile,
+                        projectIndex.BundleDeliveryGroups);
                 }
 
                 if (Directory.Exists(backupPath))
@@ -71,7 +73,8 @@ namespace Editor
         private static string BuildTargetBundles(
             BuildTarget target,
             string targetPath,
-            NovelContentBuildProfile profile)
+            NovelContentBuildProfile profile,
+            IReadOnlyDictionary<string, string> bundleDeliveryGroups)
         {
             Directory.CreateDirectory(targetPath);
             var manifest = BuildPipeline.BuildAssetBundles(
@@ -108,11 +111,19 @@ namespace Editor
                     size = bundleSize,
                     sha256 = sha256,
                     crc = crc,
+                    deliveryGroup = bundleDeliveryGroups.TryGetValue(
+                        bundle,
+                        out var groupId)
+                            ? groupId
+                            : throw new InvalidOperationException(
+                                $"AssetBundle '{bundle}' has no delivery-group owner."),
                 });
             }
 
             var releaseFiles = BuildReleaseFiles();
-            var deliveryGroups = ContentBuildReport.BuildGroups(releaseFiles);
+            var deliveryGroups = ContentBuildReport.BuildGroups(
+                releaseBundles,
+                releaseFiles);
             var release = new Bundles.ContentReleaseDto
             {
                 minimumClientVersion = profile.MinimumClientVersion,

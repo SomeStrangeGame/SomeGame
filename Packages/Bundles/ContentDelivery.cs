@@ -13,21 +13,21 @@ namespace Bundles
     {
         internal ContentDeliveryProgress(
             string groupId,
-            int completedFiles,
-            int totalFiles,
+            int completedItems,
+            int totalItems,
             long completedBytes,
             long totalBytes)
         {
             GroupId = groupId;
-            CompletedFiles = completedFiles;
-            TotalFiles = totalFiles;
+            CompletedItems = completedItems;
+            TotalItems = totalItems;
             CompletedBytes = completedBytes;
             TotalBytes = totalBytes;
         }
 
         public string GroupId { get; }
-        public int CompletedFiles { get; }
-        public int TotalFiles { get; }
+        public int CompletedItems { get; }
+        public int TotalItems { get; }
         public long CompletedBytes { get; }
         public long TotalBytes { get; }
         public float Ratio => TotalBytes <= 0
