@@ -228,7 +228,7 @@
 - `ContentDeliveryProgressTracker` owns aggregate item/byte accounting and coalesces ordinary progress notifications to at most one per Unity frame while always publishing completion.
 - Camera commands are mapped through one `CameraActionPlan` for both live and immediate/replay execution. Injury and splashes use transient dark/light flashes; Editor story validation checks every statically discoverable camera action against the same capability map.
 - Generic `Bundles.Scope` cannot be configured with media after construction. Episode composition receives a `MediaScope` whose immutable resolver is valid from creation and exposes video/audio resolution explicitly.
-- `CharacterAssetProfile` carries character asset-root, layer, child-view, main-character asset, and default-hair conventions from `NovelContentAsset` into runtime resolution and Editor validation. Empty serialized values preserve the previous project conventions.
+- `CharacterAssetProfile.Default` is the single code-owned character asset convention used by runtime resolution and Editor validation. `NovelContentAsset` stores only the authored main-character speaker name and no longer exposes misleading empty asset-convention fields in the Inspector.
 - `NovelRuntimeSettings` centralizes target frame rate, notification duration, and cut-scene fallback delay. A Resources asset is optional; absent settings retain the previous 30 FPS, 3-second notification, and 3000 ms fallback values.
 - Unity 6000.3.11f1 isolated compilation, existing-content validation, and the complete Android content build/validation passed without C# errors or warnings. Tests, Play Mode, and a device Player build were not run; no authored UI dimensions or visual assets were changed.
 
