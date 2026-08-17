@@ -28,6 +28,7 @@ namespace Novels
         private readonly Bundles.Entity _bundles;
         private readonly DisposableSlot<Entity> _activeNovel;
         private readonly ApplicationLocalization _localization;
+        private readonly Locale.LocaleProvider _locale;
 
         internal ApplicationRuntime(Ctx ctx)
         {
@@ -40,8 +41,8 @@ namespace Novels
                     nameof(ctx.PersistentDataPath));
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
-            _localization = new ApplicationLocalization(
-                CultureInfo.CurrentUICulture);
+            _locale = new Locale.LocaleProvider(CultureInfo.CurrentUICulture);
+            _localization = new ApplicationLocalization(_locale.Code);
             _bundles = CreateBundles().AddTo(this);
             _activeNovel = new DisposableSlot<Entity>().AddTo(this);
         }
@@ -60,6 +61,7 @@ namespace Novels
                 {
                     Bundles = _bundles,
                     Content = content,
+                    Locale = _locale.Code,
                     PersistentDataPath = _ctx.PersistentDataPath,
                     SelectEpisode = definition =>
                         SelectEpisode(definition, catalog.screen),
@@ -125,12 +127,6 @@ namespace Novels
                 PersistentDataPath = _ctx.PersistentDataPath,
                 CancellationToken = _ctx.CancellationToken,
                 OnLog = _ctx.OnLog,
-                OnFailure = failure => _ctx.OnError?.Invoke(
-                    new Diagnostics.NovelError(
-                        Diagnostics.NovelErrorCodes.BundleFailure,
-                        Diagnostics.NovelErrorSeverity.Recoverable,
-                        $"[{failure.Code}] {failure.Message}",
-                        exception: failure.Exception)),
             });
         }
 
@@ -169,7 +165,7 @@ namespace Novels
             var entries = catalog.Entries.ToDictionary(entry => entry.ContentId);
             var items = catalog.Entries.Select(entry =>
             {
-                var text = entry.Resolve();
+                var text = entry.Resolve(_locale.Code);
                 return new Catalog.CatalogItem(
                     entry.ContentId,
                     text.Title,
@@ -181,7 +177,9 @@ namespace Novels
                 BundledPrefab = screen,
                 CancellationToken = _ctx.CancellationToken,
             });
-            var selected = await selection.Select(catalog.Resolve().Title, items);
+            var selected = await selection.Select(
+                catalog.Resolve(_locale.Code).Title,
+                items);
             return entries[selected.Id];
         }
 

@@ -19,6 +19,7 @@ namespace Novels
             internal Action<Diagnostics.NovelError> OnError;
             internal Bundles.Entity Bundles;
             internal Catalog.NovelCatalogEntry Content;
+            internal string Locale;
             internal string PersistentDataPath;
             internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
@@ -52,7 +53,6 @@ namespace Novels
             var novelBundles = _ctx.Bundles.CreateScope().AddTo(this);
             _definition = await LoadContent(novelBundles, _ctx.Content);
             _episode = await _ctx.SelectEpisode(_definition);
-            ConfigureMedia(_ctx.Bundles);
 
             var bootstrap = new NovelBootstrapProcess(
                 new NovelBootstrapProcess.Ctx

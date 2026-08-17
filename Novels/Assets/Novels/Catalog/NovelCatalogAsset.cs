@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Globalization;
 using System.Linq;
 using UnityEngine;
 
@@ -65,17 +64,12 @@ namespace Novels.Catalog
             string locale)
         {
             var values = localizations ?? Array.Empty<CatalogLocalization>();
-            var requestedLocale = string.IsNullOrWhiteSpace(locale)
-                ? CultureInfo.CurrentUICulture.TwoLetterISOLanguageName
-                : locale;
-            var value = values.FirstOrDefault(item =>
-                    item != null
-                    && string.Equals(
-                        item.Locale,
-                        requestedLocale,
-                        StringComparison.OrdinalIgnoreCase))
-                ?? values.FirstOrDefault(item => item != null);
-            return value == null
+            var found = Locale.LocaleSelector.TryFind(
+                values.Where(item => item != null),
+                item => item.Locale,
+                locale,
+                out var value);
+            return !found || value == null
                 ? new CatalogText(string.Empty, string.Empty)
                 : new CatalogText(value.Title, value.Description);
         }

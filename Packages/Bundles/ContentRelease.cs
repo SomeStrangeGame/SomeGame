@@ -11,6 +11,7 @@ namespace Bundles
         public int contentSchemaVersion;
         public BundleReleaseEntry[] bundles;
         public ContentFileEntry[] files;
+        public ContentDeliveryGroupEntry[] deliveryGroups;
 
         [NonSerialized] private Dictionary<string, BundleReleaseEntry> _bundleMap;
         [NonSerialized] private Dictionary<string, ContentFileEntry> _fileMap;
@@ -85,5 +86,14 @@ namespace Bundles
         public string path;
         public long size;
         public string sha256;
+        public string deliveryGroup;
+    }
+
+    [Serializable]
+    public sealed class ContentDeliveryGroupEntry
+    {
+        public string id;
+        public int fileCount;
+        public long size;
     }
 }

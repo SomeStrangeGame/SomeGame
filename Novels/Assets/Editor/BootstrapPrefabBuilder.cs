@@ -1,4 +1,3 @@
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 
@@ -18,15 +17,10 @@ namespace Editor
         [MenuItem("Novels/Rebuild Local Bootstrap Screen")]
         private static void Build()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(_path));
             var screen = Novels.Bootstrap.View.Screen.CreateGenerated();
             try
             {
-                var prefab = PrefabUtility.SaveAsPrefabAsset(screen.gameObject, _path);
-                prefab.transform.localScale = Vector3.one;
-                EditorUtility.SetDirty(prefab.transform);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
+                GeneratedPrefabWriter.Save(screen.gameObject, _path);
             }
             finally
             {

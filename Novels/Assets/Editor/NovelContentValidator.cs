@@ -242,8 +242,18 @@ namespace Editor
                 errors.Add("Content release ID is empty.");
                 return;
             }
-            if (release.contentSchemaVersion != 1)
-                errors.Add($"Unexpected content schema: {release.contentSchemaVersion}.");
+            try
+            {
+                Bundles.ContentReleaseValidator.Validate(
+                    release,
+                    Application.version,
+                    1);
+            }
+            catch (Exception exception)
+            {
+                errors.Add($"Content release is invalid: {exception.Message}");
+                return;
+            }
 
             foreach (var releaseBundle in release.bundles)
             {
@@ -273,31 +283,11 @@ namespace Editor
                 }
             }
 
-            foreach (var directoryName in new[]
-                     {
-                         "NovelTexts",
-                         "NovelsAudio",
-                         "NovelsVideos",
-                     })
+            foreach (var file in ContentFilePolicy.EnumerateFiles())
             {
-                var directory = Path.Combine(
-                    Application.streamingAssetsPath,
-                    directoryName);
-                if (!Directory.Exists(directory))
-                    continue;
-                foreach (var file in Directory.GetFiles(
-                             directory,
-                             "*",
-                             SearchOption.AllDirectories))
-                {
-                    if (file.EndsWith(".meta", StringComparison.OrdinalIgnoreCase))
-                        continue;
-                    var relative = file.Substring(
-                            Application.streamingAssetsPath.Length + 1)
-                        .Replace(Path.DirectorySeparatorChar, '/');
-                    if (release.FindFile(relative) == null)
-                        errors.Add($"Release does not describe file '{relative}'.");
-                }
+                var relative = ContentFilePolicy.GetRelativePath(file);
+                if (release.FindFile(relative) == null)
+                    errors.Add($"Release does not describe file '{relative}'.");
             }
 
         }

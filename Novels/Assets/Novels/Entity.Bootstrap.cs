@@ -28,7 +28,7 @@ namespace Novels
             }
 
             _audioMixer = content.AudioMixer;
-            return content.ToDefinition();
+            return content.ToDefinition(_ctx.Locale);
         }
 
         private sealed class PreparedNovelResources
@@ -73,6 +73,7 @@ namespace Novels
             var episodeRuntime = CreateEpisodeRuntime().AddTo(this);
             var episodeBundles = _ctx.Bundles.CreateScope()
                 .AddTo(episodeRuntime.Scope);
+            ConfigureMedia(episodeBundles);
 
             await _priorityLoader.Run(() => novelBundles
                     .GetAssetBundle(_definition.MainLoadingBundleName)
@@ -221,7 +222,7 @@ namespace Novels
                 async assetName =>
                 {
                     return await _priorityLoader.Run(() =>
-                        state.EpisodeBundles.GetBundledSprite(
+                        state.EpisodeBundles.TryGetBundledSprite(
                                 _episode.CharacterBundleName,
                                 assetName)
                             .AttachExternalCancellation(

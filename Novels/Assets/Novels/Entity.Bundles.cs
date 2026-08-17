@@ -2,7 +2,7 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private void ConfigureMedia(Bundles.Entity bundles)
+        private void ConfigureMedia(Bundles.Scope bundles)
         {
             bundles.ConfigureMedia(
                 _definition.Prefix,

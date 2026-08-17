@@ -62,7 +62,7 @@ namespace Editor
             if (manifest == null)
                 throw new InvalidOperationException($"AssetBundle build failed for {target}.");
 
-            var releaseBundles = new List<ReleaseBundle>();
+            var releaseBundles = new List<Bundles.BundleReleaseEntry>();
             foreach (var bundle in manifest.GetAllAssetBundles())
             {
                 var hash = manifest.GetAssetBundleHash(bundle).ToString();
@@ -98,7 +98,7 @@ namespace Editor
                         },
                         true),
                     new UTF8Encoding(false));
-                releaseBundles.Add(new ReleaseBundle
+                releaseBundles.Add(new Bundles.BundleReleaseEntry
                 {
                     name = bundle,
                     version = hash,
@@ -109,20 +109,23 @@ namespace Editor
             }
 
             var releaseFiles = BuildReleaseFiles();
+            var deliveryGroups = ContentBuildReport.BuildGroups(releaseFiles);
             var releaseId = ComputeReleaseId(releaseBundles, releaseFiles);
+            var release = new Bundles.ContentRelease
+            {
+                releaseId = releaseId,
+                minimumClientVersion = Application.version,
+                contentSchemaVersion = 1,
+                bundles = releaseBundles.ToArray(),
+                files = releaseFiles.ToArray(),
+                deliveryGroups = deliveryGroups,
+            };
+            Bundles.ContentReleaseValidator.Validate(release, Application.version, 1);
             File.WriteAllText(
                 Path.Combine(targetPath, "release.json"),
-                JsonUtility.ToJson(
-                    new ReleaseManifest
-                    {
-                        releaseId = releaseId,
-                        minimumClientVersion = Application.version,
-                        contentSchemaVersion = 1,
-                        bundles = releaseBundles.ToArray(),
-                        files = releaseFiles.ToArray(),
-                    },
-                    true),
+                JsonUtility.ToJson(release, true),
                 new UTF8Encoding(false));
+            ContentBuildReport.Log(releaseFiles, deliveryGroups);
         }
 
         [Serializable]
@@ -134,75 +137,28 @@ namespace Editor
             public uint crc;
         }
 
-        [Serializable]
-        private sealed class ReleaseManifest
+        private static List<Bundles.ContentFileEntry> BuildReleaseFiles()
         {
-            public string releaseId;
-            public string minimumClientVersion;
-            public int contentSchemaVersion;
-            public ReleaseBundle[] bundles;
-            public ReleaseFile[] files;
-        }
-
-        [Serializable]
-        private sealed class ReleaseBundle
-        {
-            public string name;
-            public string version;
-            public long size;
-            public string sha256;
-            public uint crc;
-        }
-
-        [Serializable]
-        private sealed class ReleaseFile
-        {
-            public string path;
-            public long size;
-            public string sha256;
-        }
-
-        private static List<ReleaseFile> BuildReleaseFiles()
-        {
-            var result = new List<ReleaseFile>();
-            foreach (var directoryName in new[]
-                     {
-                         "NovelTexts",
-                         "NovelsAudio",
-                         "NovelsVideos",
-                     })
+            var result = new List<Bundles.ContentFileEntry>();
+            foreach (var file in ContentFilePolicy.EnumerateFiles())
             {
-                var directory = Path.Combine(
-                    Application.streamingAssetsPath,
-                    directoryName);
-                if (!Directory.Exists(directory))
-                    continue;
-                foreach (var file in Directory.GetFiles(
-                             directory,
-                             "*",
-                             SearchOption.AllDirectories))
+                var relative = ContentFilePolicy.GetRelativePath(file);
+                var info = new FileInfo(file);
+                result.Add(new Bundles.ContentFileEntry
                 {
-                    if (file.EndsWith(".meta", StringComparison.OrdinalIgnoreCase))
-                        continue;
-                    var relative = file.Substring(
-                            Application.streamingAssetsPath.Length + 1)
-                        .Replace(Path.DirectorySeparatorChar, '/');
-                    var info = new FileInfo(file);
-                    result.Add(new ReleaseFile
-                    {
-                        path = relative,
-                        size = info.Length,
-                        sha256 = ComputeSha256(file),
-                    });
-                }
+                    path = relative,
+                    size = info.Length,
+                    sha256 = ComputeSha256(file),
+                    deliveryGroup = ContentFilePolicy.GetDeliveryGroup(relative),
+                });
             }
             return result.OrderBy(file => file.path, StringComparer.Ordinal)
                 .ToList();
         }
 
         private static string ComputeReleaseId(
-            IEnumerable<ReleaseBundle> bundles,
-            IEnumerable<ReleaseFile> files)
+            IEnumerable<Bundles.BundleReleaseEntry> bundles,
+            IEnumerable<Bundles.ContentFileEntry> files)
         {
             var source = string.Join(
                 "\n",
@@ -228,7 +184,7 @@ namespace Editor
                 .ToLowerInvariant();
         }
 
-        private static string GetPlatformName(BuildTarget target)
+        internal static string GetPlatformName(BuildTarget target)
         {
             return target switch
             {

@@ -25,4 +25,17 @@ namespace Bundles
         {
         }
     }
+
+    public sealed class ContentConfigurationException : Exception
+    {
+        public ContentConfigurationException(string message)
+            : base(message)
+        {
+        }
+
+        public ContentConfigurationException(string message, Exception innerException)
+            : base(message, innerException)
+        {
+        }
+    }
 }

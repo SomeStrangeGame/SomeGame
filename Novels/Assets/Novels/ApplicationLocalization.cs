@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 
 namespace Novels
 {
@@ -17,10 +16,10 @@ namespace Novels
     {
         private readonly IReadOnlyDictionary<ApplicationText, string> _values;
 
-        internal ApplicationLocalization(CultureInfo culture)
+        internal ApplicationLocalization(string locale)
         {
             var russian = string.Equals(
-                culture?.TwoLetterISOLanguageName,
+                Locale.LocaleProvider.Normalize(locale),
                 "ru",
                 StringComparison.OrdinalIgnoreCase);
             _values = russian

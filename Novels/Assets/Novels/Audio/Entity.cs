@@ -195,15 +195,20 @@ namespace Novels.Audio
             if (_loopSources.TryGetValue(audioType, out var source))
             {
                 source.Stop();
+                var clip = source.clip;
                 source.clip = null;
+                if (clip != null)
+                    GameObject.Destroy(clip);
             }
         }
 
         private static AudioType GetAudioType(string url)
         {
-            return url.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase)
-                ? AudioType.MPEG
-                : AudioType.WAV;
+            if (url.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase))
+                return AudioType.MPEG;
+            if (url.EndsWith(".ogg", StringComparison.OrdinalIgnoreCase))
+                return AudioType.OGGVORBIS;
+            return AudioType.WAV;
         }
 
         private void CacheSound(string assetName, AudioClip clip)

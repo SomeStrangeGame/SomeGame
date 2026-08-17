@@ -85,6 +85,20 @@
 - The local bootstrap UI is shipped in the player as `Assets/Resources/Novels/BootstrapScreen.prefab`, with code generation retained as a safe fallback. The remote catalog uses a `ScrollRect` and cards with title, description, availability status, and enabled state.
 - The Android content builder now emits the release manifest after staged bundle generation. The Editor validator checks the release, pinned bundle versions, all delivered content-file descriptors, the local bootstrap prefab, and the existing authoring rules.
 
+## Architecture wave completed on 2026-08-17 (delivery hardening)
+
+- `Bundles.Entity` is now a stable facade over focused `ContentReleaseProvider`, `BundleStore`, `BundledAssetCache`, `ContentFileStore`, and `ContentIntegrityVerifier` collaborators. Missing bundles/assets fail through typed content exceptions instead of mixing callback errors and null results.
+- Required sprite requests remain strict, while character-layer candidate probing uses the explicit nullable `TryGetBundledSprite` path because absence in a particular appearance category is expected fallback behavior.
+- Bundle and external-file SHA-256 checks execute away from the Unity main thread. Immutable release paths are remembered after successful verification for the current session, and content-cache pruning runs only after a new file is committed.
+- Media resolution is immutable and episode-scoped. Each `Bundles.Scope` owns its prefix/manifest resolver, so preparing another story cannot overwrite global media configuration.
+- `ContentReleaseValidator` is shared by runtime, Editor validation, and the build pipeline. It validates schema/client versions, duplicate names and paths, normalized paths, SHA metadata, and delivery-group totals.
+- The Editor `ContentFilePolicy` is the only source of deliverable external-file rules. Hidden files and unsupported extensions (including `.DS_Store`) are excluded from releases and publish artifacts.
+- Release files carry story delivery-group metadata. The build reports total/group/file budgets, warns about oversized payloads and large WAV files, and supports streamed OGG audio at runtime.
+- A successful Android content build now atomically creates a complete ignored deploy artifact under `Build/NovelContent/Android`, containing platform bundles plus every Ink/audio/video file pinned by the release.
+- Music and ambient clips are destroyed when their channel is cleared, closing the previous orphaned-clip lifetime gap.
+- Generated bootstrap/catalog prefabs share `GeneratedPrefabWriter`, which enforces a non-zero root scale and atomic Unity prefab serialization. Existing UI dimensions, reference resolutions, and layout values remain unchanged by design.
+- `Novels.Locale` owns the session locale and deterministic locale fallback shared by application strings, catalog text, and episode titles.
+
 ## Architecture wave completed on 2026-08-17
 
 - Two unresolved merge-conflict blocks were removed from folder metadata while preserving the existing folder GUIDs.

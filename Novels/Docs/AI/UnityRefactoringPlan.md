@@ -10,6 +10,22 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-17
 
+## Architecture wave completed on 2026-08-17 (delivery hardening)
+
+Nine follow-up items are complete; the proposed safe-area/UI resizing item was explicitly excluded to preserve game-design dimensions:
+
+1. Music/Ambient channel clearing now destroys the detached clip; streamed OGG is supported in addition to WAV/MP3.
+2. `Bundles.Entity` is a facade over focused release, bundle, asset-cache, content-file, and integrity collaborators.
+3. Integrity hashing and Ink reads run outside the main thread; verified immutable paths are memoized and pruning is limited to new downloads.
+4. Media configuration is immutable and owned by the episode `Bundles.Scope`.
+5. Runtime, Editor, and build tooling share strict `ContentReleaseValidator` rules.
+6. `ContentFilePolicy` excludes hidden/junk files and the pipeline creates a complete atomic publish artifact for future CDN upload.
+7. Releases contain delivery-group totals and the build emits content-budget and large-WAV warnings.
+8. Bootstrap and catalog builders share `GeneratedPrefabWriter`; all existing UI sizes and reference resolutions are preserved.
+9. `Novels.Locale` provides one explicit session locale and shared fallback selection for application, catalog, and episode text.
+
+No save migration or safe-area behavior was reintroduced. Tests remain outside the requested workflow; validation uses Unity compilation, prefab generation, release validation, bundle construction, integrity checks, and the existing content validator.
+
 ## Architecture wave completed on 2026-08-17 (catalog-scale runtime)
 
 The ten follow-up findings are complete:

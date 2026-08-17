@@ -36,7 +36,7 @@ namespace Novels.Content
             [SerializeField] private string[] _silentAudioIds;
             [SerializeField] private AudioExtensionEntry[] _audioExtensions;
 
-            internal readonly EpisodeDefinition ToDefinition()
+            internal readonly EpisodeDefinition ToDefinition(string locale)
             {
                 var audioExtensions = new Dictionary<string, string>(
                     StringComparer.OrdinalIgnoreCase);
@@ -48,7 +48,7 @@ namespace Novels.Content
 
                 return new EpisodeDefinition(
                     _id,
-                    LocalizedText.Resolve(_localizations, _title),
+                    LocalizedText.Resolve(_localizations, _title, locale),
                     _storyPath,
                     _contentVersion,
                     _bubbleBundleName,
@@ -77,26 +77,17 @@ namespace Novels.Content
         {
             internal static string Resolve(
                 LocalizedTextEntry[] entries,
-                string fallback)
+                string fallback,
+                string locale)
             {
-                var locale = System.Globalization.CultureInfo
-                    .CurrentUICulture.TwoLetterISOLanguageName;
                 var values = entries ?? Array.Empty<LocalizedTextEntry>();
-                foreach (var entry in values)
-                {
-                    if (string.Equals(
-                            entry.Locale,
-                            locale,
-                            StringComparison.OrdinalIgnoreCase))
-                    {
-                        return string.IsNullOrWhiteSpace(entry.Value)
-                            ? fallback
-                            : entry.Value;
-                    }
-                }
-                return values.Length > 0
-                    && !string.IsNullOrWhiteSpace(values[0].Value)
-                    ? values[0].Value
+                var found = Locale.LocaleSelector.TryFind(
+                    values,
+                    entry => entry.Locale,
+                    locale,
+                    out var selected);
+                return found && !string.IsNullOrWhiteSpace(selected.Value)
+                    ? selected.Value
                     : fallback;
             }
         }
@@ -113,7 +104,7 @@ namespace Novels.Content
 
         public AudioMixer AudioMixer => _audioMixer;
 
-        public NovelDefinition ToDefinition()
+        public NovelDefinition ToDefinition(string locale = null)
         {
             return new NovelDefinition(
                 _id,
@@ -124,7 +115,7 @@ namespace Novels.Content
                 _settingBundleName,
                 _localizationBundleName,
                 (_episodes ?? Array.Empty<EpisodeEntry>())
-                    .Select(episode => episode.ToDefinition()));
+                    .Select(episode => episode.ToDefinition(locale)));
         }
     }
 }

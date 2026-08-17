@@ -1,4 +1,3 @@
-using System.IO;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -19,8 +18,6 @@ namespace Editor
         [MenuItem("Novels/Rebuild Catalog Screen")]
         private static void Build()
         {
-            Directory.CreateDirectory(Path.GetDirectoryName(_prefabPath));
-
             var root = CreateUiObject(
                 "Screen",
                 typeof(Canvas),
@@ -158,11 +155,7 @@ namespace Editor
                     cardObject.GetComponent<Novels.Catalog.View.Card>();
                 screen.ApplyModifiedPropertiesWithoutUndo();
 
-                var prefab = PrefabUtility.SaveAsPrefabAsset(root, _prefabPath);
-                prefab.transform.localScale = Vector3.one;
-                EditorUtility.SetDirty(prefab.transform);
-                AssetDatabase.SaveAssets();
-                AssetDatabase.Refresh();
+                GeneratedPrefabWriter.Save(root, _prefabPath);
             }
             finally
             {

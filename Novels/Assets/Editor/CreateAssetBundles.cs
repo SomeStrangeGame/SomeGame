@@ -35,6 +35,7 @@ namespace Editor
             NovelContentValidator.ValidateOrThrow();
             AssetBundleBuildPipeline.Build(BuildTarget.Android);
             NovelContentValidator.ValidateBuiltOutputOrThrow();
+            ContentPublishArtifactBuilder.Build(BuildTarget.Android);
         }
 
         public static void BuildAndroidBundlesBatch()

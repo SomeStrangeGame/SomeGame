@@ -11,6 +11,9 @@ namespace Bundles
         private readonly Entity _owner;
         private readonly HashSet<string> _bundleNames = new(
             StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, UniTask<AssetBundle>> _bundleLoads = new(
+            StringComparer.OrdinalIgnoreCase);
+        private MediaResolver _media;
 
         internal Scope(Entity owner)
         {
@@ -21,9 +24,17 @@ namespace Bundles
         {
             if (_bundleNames.Contains(bundleName))
                 return _owner.GetOwnedAssetBundle(bundleName);
-            var bundle = await _owner.AcquireAssetBundle(bundleName);
-            _bundleNames.Add(bundleName);
-            return bundle;
+            if (!_bundleLoads.TryGetValue(bundleName, out var loading))
+            {
+                loading = Acquire(bundleName).Preserve();
+                _bundleLoads.Add(bundleName, loading);
+            }
+            return await loading;
+        }
+
+        public void ConfigureMedia(string prefix, MediaManifest manifest)
+        {
+            _media = _owner.CreateMediaResolver(prefix, manifest);
         }
 
         public UniTask<Sprite> GetBundledSprite(
@@ -32,6 +43,14 @@ namespace Bundles
         {
             EnsureOwned(bundleName);
             return _owner.GetBundledSprite(bundleName, assetName);
+        }
+
+        public UniTask<Sprite> TryGetBundledSprite(
+            string bundleName,
+            string assetName)
+        {
+            EnsureOwned(bundleName);
+            return _owner.TryGetBundledSprite(bundleName, assetName);
         }
 
         public UniTask<T> GetBundledSO<T>(string bundleName, string assetName)
@@ -50,10 +69,10 @@ namespace Bundles
         }
 
         public UniTask<string> ResolveVideoUrl(string assetName) =>
-            _owner.ResolveVideoUrl(assetName);
+            RequireMedia().ResolveVideoUrl(assetName);
 
         public UniTask<string> ResolveAudioUrl(string assetName) =>
-            _owner.ResolveAudioUrl(assetName);
+            RequireMedia().ResolveAudioUrl(assetName);
 
         public string ResolveAssetName(string bundleName, string requestedName)
         {
@@ -65,7 +84,29 @@ namespace Bundles
         {
             _owner.ReleaseBundles(_bundleNames);
             _bundleNames.Clear();
+            _bundleLoads.Clear();
+            _media = null;
             base.OnDispose();
+        }
+
+        private async UniTask<AssetBundle> Acquire(string bundleName)
+        {
+            try
+            {
+                var bundle = await _owner.AcquireAssetBundle(bundleName);
+                _bundleNames.Add(bundleName);
+                return bundle;
+            }
+            finally
+            {
+                _bundleLoads.Remove(bundleName);
+            }
+        }
+
+        private MediaResolver RequireMedia()
+        {
+            return _media ?? throw new InvalidOperationException(
+                "Media resolver is not configured for this scope.");
         }
 
         private void EnsureOwned(string bundleName)
