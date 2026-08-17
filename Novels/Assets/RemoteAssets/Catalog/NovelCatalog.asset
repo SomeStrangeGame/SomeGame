@@ -22,7 +22,7 @@ MonoBehaviour:
   _entries:
   - _contentId: TZM_1
     _contentBundleName: novels_content_tzm_1
-    _contentAssetName: Assets/RemoteAssets/Content/TZM_1/TZM_1.asset
+    _contentAssetName: Assets/RemoteAssets/Content/TZM_1/Definition/TZM_1.asset
     _localizations:
     - _locale: ru
       _title: "\u0422\u0430\u0439\u043D\u0430 \u0437\u0430\u0442\u0435\u0440\u044F\u043D\u043D\u043E\u0433\u043E \u043C\u0438\u0440\u0430"

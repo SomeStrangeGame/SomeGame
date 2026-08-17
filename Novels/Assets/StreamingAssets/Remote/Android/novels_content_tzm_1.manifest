@@ -1,21 +1,55 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 2349305492
+CRC: 4131194833
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: ba185b3750caf53182936953ef8f15a1
+    Hash: e2ac70f138b95ca7950edd9978ec2315
   TypeTreeHash:
     serializedVersion: 2
-    Hash: e310f2785b1e03104a7e0f66fbea1e3d
+    Hash: 90a8c3f67e407cfffaa268cdcf0cb1f4
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 34e4de910b16c114f99d818d606d106b
+    Hash: fa0b61e1227e1b90ef752d403adf1cb9
 HashAppended: 0
 ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 11500000, guid: c71d6072db3e242f99534b39481bfd4c, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dde5f9ec03c4a46b193d854dafc5c7ac, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 0cd44c1031e13a943bb63640046fad76, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 5f7201a12d95ffc409449d95f23cf332, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
 - Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 223
+  Script: {instanceID: 0}
+- Class: 224
   Script: {instanceID: 0}
 - Class: 241
   Script: {instanceID: 0}
@@ -24,12 +58,37 @@ ClassTypes:
 - Class: 245
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
+- AssemblyName: Localization
+  ClassName: Localization.LocalizationData/Pair
+- AssemblyName: Localization
+  ClassName: Localization.LocalizationData/Pair/Languages
 - AssemblyName: Novels.Content
   ClassName: Novels.Content.NovelContentAsset/AudioExtensionEntry
 - AssemblyName: Novels.Content
   ClassName: Novels.Content.NovelContentAsset/EpisodeEntry
 - AssemblyName: Novels.Content
   ClassName: Novels.Content.NovelContentAsset/LocalizedTextEntry
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.Events.PersistentCallGroup
+- AssemblyName: UnityEngine.CoreModule
+  ClassName: UnityEngine.RectOffset
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.AnimationTriggers
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Button/ButtonClickedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.ColorBlock
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.FontData
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.MaskableGraphic/CullStateChangedEvent
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.Navigation
+- AssemblyName: UnityEngine.UI
+  ClassName: UnityEngine.UI.SpriteState
 Assets:
-- Assets/RemoteAssets/Content/TZM_1/TZM_1.asset
+- Assets/RemoteAssets/Content/TZM_1/Application/Setting/Screen.prefab
+- Assets/RemoteAssets/Content/TZM_1/Application/Localization/LocalizationData.asset
+- Assets/RemoteAssets/Content/TZM_1/Application/Setting/LiberationSans-Regular.ttf
+- Assets/RemoteAssets/Content/TZM_1/Definition/TZM_1.asset
 Dependencies: []

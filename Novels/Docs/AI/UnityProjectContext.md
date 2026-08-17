@@ -20,7 +20,7 @@
 
 - `Assets/Novels`: runtime composition, feature/domain assemblies, views, and the only scene.
 - `Assets/Novels/StoryCommands`: typed story-command model and legacy Ink-line parser.
-- `Assets/RemoteAssets`: bundled UI/images/localization/settings/loading authoring content.
+- `Assets/RemoteAssets`: bundled authoring content. Application-owned assets are grouped under `Content/{contentId}/Application`, episode-owned assets under `Content/{contentId}/Episodes/{episodeId}`, definitions under `Content/{contentId}/Definition`, while catalog and shared loading remain top-level shared bundles.
 - `Assets/StreamingAssets`: Ink JSON, audio/video, and built remote bundle payloads.
 - `Assets/Editor/CreateAssetBundles.cs`: manual Android AssetBundle builder/cache clearer.
 - `../../Packages/*`: shared local packages; moving `Novels` alone breaks the relative `file:` dependencies.
@@ -35,7 +35,7 @@
 - Only enabled build scene: `Assets/Novels/Novels.unity`.
 - Scene `EntryPoint.OnEnable()` initializes UniTask's player loop, caps FPS at 30, creates the concrete `IContentSource`, captures `Application.persistentDataPath` on the main thread, constructs `ApplicationRuntime`, and starts an exception-observing session wrapper.
 - `ApplicationRuntime` owns the shared bundle service, local bootstrap/retry UI, remote catalog, story selection, and the currently active novel runtime. `Entity.Init()` owns one selected story and creates `NovelBootstrapProcess`, which coordinates application preparation, New Game/Continue selection, episode preparation, and episode execution through delegates.
-- The scene contains no concrete story ID. Startup loads `NovelCatalog.asset` and its selection screen from `novels_catalog`; `Catalog.Entity/View` presents localized cards and returns a selected catalog entry. The entry supplies explicit content bundle and asset addresses such as `novels_content_tzm_1` and `Assets/RemoteAssets/Content/TZM_1/TZM_1.asset`. The loaded definition then presents an explicit episode selection and supplies per-story feature bundle names.
+- The scene contains no concrete story ID. Startup loads `NovelCatalog.asset` and its selection screen from `novels_catalog`; `Catalog.Entity/View` presents localized cards and returns a selected catalog entry. The entry supplies the story bundle and definition address, currently `novels_content_tzm_1` and `Assets/RemoteAssets/Content/TZM_1/Definition/TZM_1.asset`. The loaded definition then presents an explicit episode selection; each episode supplies one episode-lifetime bundle.
 - `StoryCommandParser` converts legacy colon-delimited Ink lines into typed commands; `NovelProcess` maps them to queued actions for location/cut-scene, audio, camera, waits, notifications, character presentation, dialogue, and choices.
 
 ## Architecture And Conventions
@@ -44,7 +44,7 @@
 - Story execution returns `EpisodeRunResult` with `Completed`, `Failed`, or `Cancelled` status. `ApplicationRuntime` decides whether to stop or return to the catalog and is the reporting boundary for fatal execution results.
 - Every external Ink/audio/video resolution requires the active `ContentReleaseSnapshot`; no release-less or `legacy` content-file path remains.
 - `ContentDeliveryCoordinator` can prepare one release delivery group with file/byte progress, cancellation, disk-space validation, integrity verification, and cache pinning. A pinned group raises the effective LRU floor above the default 512 MiB cache limit when necessary.
-- Release schema 2 carries `Embedded`, `Hybrid`, or `Remote` delivery mode. The build profile controls mode, embedded groups, publish/player-seed roots, and optional hard budgets; the current checked-in profile remains Embedded.
+- Release schema 3 carries `Embedded`, `Hybrid`, or `Remote` delivery mode and assigns external files to delivery groups. The build profile controls mode, embedded groups, publish/player-seed roots, and optional hard budgets; the current checked-in profile uses Remote delivery.
 - `Novels.ContentAddressing` owns `ContentAddressConvention`, the dependency-free shared address schema used by PathGetter, character resolution, and Editor story-reference validation.
 - `EntryPoint` captures immutable `ApplicationEnvironment` values and owns the explicit scene Camera reference. Runtime composition receives locale, client version, platform, persistent path, and camera without ambient lookups.
 - `NovelCiValidation.ValidateExistingContentBatch` and `BuildAndValidateContentBatch` provide non-test batch automation for content validation and complete artifact production.
@@ -136,7 +136,7 @@
 ## Architecture wave completed on 2026-08-17 (authoring and runtime ownership)
 
 - `NovelCatalogAsset` is the remote authoring source for available stories and localized card text. It lives in the application-owned `novels_catalog` bundle together with the `Catalog.View` screen. The selected entry supplies content ID, bundle, and full asset address; `EntryPoint` contains only composition-root configuration.
-- `NovelContentAsset` is the authoring source for one novel's identity, application bundles, episodes, media, AudioMixer, and content versions. Every story has its own content and feature bundle names (`*_tzm_1` for the current story); only the main loading screen is in `novels_loading_shared`.
+- `NovelContentAsset` is the authoring source for one novel's identity, story bundle, episodes, media, AudioMixer, and content versions. A story-level bundle owns its definition and application assets; every episode declares one episode-lifetime bundle. Only catalog and the main loading screen remain in shared bundles.
 - `Bundles.Entity` can load bundles before a novel prefix is known. Its media resolver is configured later with the prefix and episode media manifest, after `NovelContentAsset` has loaded. This keeps the local `StreamingAssets` source compatible with its future replacement by a remote server/CDN.
 - `NovelDefinition`, episode collections, video IDs, audio overrides, and silent-audio IDs expose defensive read-only collections.
 - `EpisodeRuntime`, created through the root partial factory, owns the episode scope and guarantees save flushing at episode completion.
@@ -152,11 +152,11 @@
 
 ## Testing And Tooling
 
-- Latest release: schema 3, Remote mode, ID `01d8cdee8c3489bbaa9700cada149f5522099a87888cb0cb3a10b8f370b8406d`, 10 bundles, 115 external files, and two delivery groups: `TZM_1/s01e01` (46 files) and `TZM_1/shared` (69 files).
+- Latest release: schema 3, Remote mode, ID `00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813`, 4 bundles, 115 external files, and two delivery groups: `TZM_1/s01e01` and `TZM_1/shared`.
 - `Tools/validate-novels.sh` exposes `validate` and `content` batch commands. `Tools/build-remote-player.sh` builds Android/iOS from an isolated temporary project copy with novel StreamingAssets excluded and injects the required remote HTTP(S) root only into that copy.
 - Unity 6000.3.11f1 batch compilation and `NovelCiValidation.ValidateExistingContentBatch` completed successfully for schema 3. Tests were not created or run.
 
-- The latest Android content release is `8c5c3b96f97e8a423fb15694af77d9c8375593111fa7601e305f927bed4957ab`: 10 bundles and 115 external files. Both the StreamingAssets copy and publish artifact passed exact byte-size and SHA-256 verification.
+- The latest Android content release is `00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813`: 4 bundles and 115 external files. The complete build-and-validation batch passed authoring, bundle, release, byte-size, and SHA-256 checks.
 - A final isolated Unity batch compile and `NovelContentValidator.ValidateBatch` completed successfully after the explicit-content-contracts wave. Tests were not created or run, and no UI asset or dimension was changed.
 
 - Unity Test Framework is present transitively, but no EditMode or PlayMode tests were found.
@@ -181,6 +181,15 @@
 - `NovelErrorContext` adds release, content, episode, and delivery-mode identity at the composition boundary.
 - Pause and quit use a bounded synchronous save flush; ordinary episode completion retains the asynchronous flush path. EntryPoint and EpisodeRuntime cleanup now complete after partial initialization/disposal failures.
 - Large WAV files above the profile threshold fail the content build unless converted to OGG or listed explicitly. Existing TZM_1 WAVs are documented exceptions; newly added large WAVs fail by default.
+
+## Architecture wave completed on 2026-08-17 (story content hierarchy)
+
+- All TZM_1 authoring assets now live under `Assets/RemoteAssets/Content/TZM_1`: `Definition`, story-level `Application`, and episode-level `Episodes/s01e01` subtrees make lifetime ownership visible in the filesystem.
+- AssetBundle labels are assigned only at ownership boundaries. `Content/TZM_1` produces `novels_content_tzm_1`; `Content/TZM_1/Episodes/s01e01` overrides its parent with `novels_episode_tzm_1_s01e01`. Descendant folders no longer carry feature-specific labels.
+- `NovelDefinition` carries one story bundle name and `EpisodeDefinition` carries one episode bundle name. Setting and localization load from the story bundle; loading, bubble, character, location, and notification assets load from the episode bundle.
+- `ContentAddressConvention` is the single source for the new content-rooted addresses. PathGetter, character sprite resolution, catalog indexing, and Editor reference validation use the same convention and include the episode ID where required.
+- The bundle topology was reduced from ten bundles to four: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`. External Ink/audio/video delivery groups remain unchanged.
+- Unity 6000.3.11f1 completed an isolated import/compile and the full Android `BuildAndValidateContentBatch` without errors. Tests and Play Mode were not run.
 
 ## Evidence Inspected
 

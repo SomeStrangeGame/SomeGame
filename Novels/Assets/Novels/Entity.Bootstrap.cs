@@ -25,7 +25,7 @@ namespace Novels
                     + $"AssetBundle '{entry.ContentBundleName}'.");
             }
             _audioMixer = content.AudioMixer;
-            return content.ToDefinition(_ctx.Locale);
+            return content.ToDefinition(_ctx.Locale, entry.ContentBundleName);
         }
     }
 }

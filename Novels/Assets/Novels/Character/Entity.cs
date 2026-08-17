@@ -12,6 +12,7 @@ namespace Novels.Character
         {
             public GameObject ScreenPrefab;
             public string ContentPrefix;
+            public string EpisodeId;
             public Func<string, UniTask<Sprite>> GetSprite;
             public CancellationToken CancellationToken;
         }
@@ -28,6 +29,7 @@ namespace Novels.Character
             _ctx = ctx;
             _spriteResolver = new CharacterSpriteResolver(
                 ctx.ContentPrefix,
+                ctx.EpisodeId,
                 ctx.GetSprite,
                 ctx.CancellationToken);
         }

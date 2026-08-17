@@ -18,6 +18,7 @@ namespace Novels
             {
                 ScreenPrefab = screenPrefab,
                 ContentPrefix = _definition.Prefix,
+                EpisodeId = _episode.Id,
                 GetSprite = getSprite,
                 CancellationToken = cancellationToken,
             }).AddTo(owner);

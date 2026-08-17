@@ -11,18 +11,14 @@ namespace Novels.Content
             string prefix,
             string mainCharacter,
             string mainLoadingBundleName,
-            string loadingBundleName,
-            string settingBundleName,
-            string localizationBundleName,
+            string bundleName,
             EpisodeDefinition episode)
             : this(
                 id,
                 prefix,
                 mainCharacter,
                 mainLoadingBundleName,
-                loadingBundleName,
-                settingBundleName,
-                localizationBundleName,
+                bundleName,
                 new[] { episode })
         {
         }
@@ -32,9 +28,7 @@ namespace Novels.Content
             string prefix,
             string mainCharacter,
             string mainLoadingBundleName,
-            string loadingBundleName,
-            string settingBundleName,
-            string localizationBundleName,
+            string bundleName,
             IEnumerable<EpisodeDefinition> episodes)
         {
             Id = Require(id, nameof(id));
@@ -43,9 +37,7 @@ namespace Novels.Content
             MainLoadingBundleName = Require(
                 mainLoadingBundleName,
                 nameof(mainLoadingBundleName));
-            LoadingBundleName = Require(loadingBundleName, nameof(loadingBundleName));
-            SettingBundleName = Require(settingBundleName, nameof(settingBundleName));
-            LocalizationBundleName = Require(localizationBundleName, nameof(localizationBundleName));
+            BundleName = Require(bundleName, nameof(bundleName));
             var episodeArray = episodes?.ToArray() ?? Array.Empty<EpisodeDefinition>();
             if (episodeArray.Length == 0 || episodeArray.Any(episode => episode == null))
                 throw new ArgumentException("At least one valid episode is required.", nameof(episodes));
@@ -66,9 +58,7 @@ namespace Novels.Content
         public string Prefix { get; }
         public string MainCharacter { get; }
         public string MainLoadingBundleName { get; }
-        public string LoadingBundleName { get; }
-        public string SettingBundleName { get; }
-        public string LocalizationBundleName { get; }
+        public string BundleName { get; }
         public IReadOnlyList<EpisodeDefinition> Episodes { get; }
 
         private static string Require(string value, string parameterName)
@@ -86,20 +76,14 @@ namespace Novels.Content
             string title,
             string storyPath,
             string contentVersion,
-            string bubbleBundleName,
-            string locationBundleName,
-            string characterBundleName,
-            string notificationBundleName,
+            string bundleName,
             EpisodeMediaDefinition media)
         {
             Id = Require(id, nameof(id));
             Title = Require(title, nameof(title));
             StoryPath = Require(storyPath, nameof(storyPath));
             ContentVersion = Require(contentVersion, nameof(contentVersion));
-            BubbleBundleName = Require(bubbleBundleName, nameof(bubbleBundleName));
-            LocationBundleName = Require(locationBundleName, nameof(locationBundleName));
-            CharacterBundleName = Require(characterBundleName, nameof(characterBundleName));
-            NotificationBundleName = Require(notificationBundleName, nameof(notificationBundleName));
+            BundleName = Require(bundleName, nameof(bundleName));
             Media = media ?? throw new ArgumentNullException(nameof(media));
         }
 
@@ -107,10 +91,7 @@ namespace Novels.Content
         public string Title { get; }
         public string StoryPath { get; }
         public string ContentVersion { get; }
-        public string BubbleBundleName { get; }
-        public string LocationBundleName { get; }
-        public string CharacterBundleName { get; }
-        public string NotificationBundleName { get; }
+        public string BundleName { get; }
         public EpisodeMediaDefinition Media { get; }
 
         private static string Require(string value, string parameterName)

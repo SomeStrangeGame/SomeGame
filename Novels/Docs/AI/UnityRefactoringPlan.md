@@ -10,6 +10,17 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-17
 
+## Current content layout and bundle topology
+
+The current source of truth supersedes bundle counts and concrete release IDs recorded in the historical waves below:
+
+- Story assets are grouped under `Assets/RemoteAssets/Content/{contentId}` with `Definition`, `Application`, and `Episodes/{episodeId}` ownership boundaries.
+- The story root owns one bundle; a concrete episode root overrides it with one episode-lifetime bundle. Feature subfolders do not carry AssetBundle labels.
+- TZM_1 currently produces four bundles: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`.
+- `NovelDefinition.BundleName` identifies the story bundle. `EpisodeDefinition.BundleName` identifies its episode bundle. `ContentAddressConvention` owns every content-rooted address.
+- Current Android release: schema 3, Remote mode, ID `00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813`, 4 bundles, 115 external files, and the `TZM_1/shared` plus `TZM_1/s01e01` delivery groups.
+- Unity 6000.3.11f1 import/compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully. Tests and Play Mode were not run.
+
 ## Architecture wave completed on 2026-08-17 (lifetime and delivery modes)
 
 Eight approved items are complete; release signing and remote HTTP transport were explicitly deferred:

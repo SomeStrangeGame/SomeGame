@@ -12,58 +12,77 @@ namespace Novels.ContentAddressing
         public static string MainLoadingPrefab(string assetName) =>
             Prefab($"{_remoteAssetsRoot}/Loading", assetName);
 
-        public static string LoadingPrefab(string prefix, string assetName) =>
-            Prefab($"{_remoteAssetsRoot}/Loading/{prefix}", assetName);
+        public static string LoadingPrefab(
+            string prefix,
+            string episodeId,
+            string assetName) =>
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/Loading", assetName);
 
         public static string SettingPrefab(string prefix, string assetName) =>
-            Prefab($"{_remoteAssetsRoot}/Setting/{prefix}", assetName);
+            Prefab($"{ContentRoot(prefix)}/Application/Setting", assetName);
 
-        public static string BubblePrefab(string prefix, string assetName) =>
-            Prefab($"{_remoteAssetsRoot}/Bubble/{prefix}", assetName);
+        public static string BubblePrefab(
+            string prefix,
+            string episodeId,
+            string assetName) =>
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/Bubble", assetName);
 
-        public static string LocationPrefab(string prefix, string assetName) =>
-            Prefab($"{_remoteAssetsRoot}/Location/{prefix}", assetName);
+        public static string LocationPrefab(
+            string prefix,
+            string episodeId,
+            string assetName) =>
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/Location", assetName);
 
-        public static string LocationImage(string prefix, string assetName) =>
+        public static string LocationImage(
+            string prefix,
+            string episodeId,
+            string assetName) =>
             IsMissing(assetName)
                 ? string.Empty
-                : $"{_remoteAssetsRoot}/Location/{prefix}/Locations/"
+                : $"{EpisodeRoot(prefix, episodeId)}/Location/Locations/"
                     + $"{NormalizeAssetName(assetName)}.png";
 
-        public static string CharacterPrefab(string prefix, string assetName) =>
-            Prefab($"{_remoteAssetsRoot}/Character/{prefix}", assetName);
+        public static string CharacterPrefab(
+            string prefix,
+            string episodeId,
+            string assetName) =>
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/Character", assetName);
 
         public static string CharacterMainBody(
             string prefix,
+            string episodeId,
             string name,
             string view,
             string candidate = null) =>
             IsMissing(name)
                 ? string.Empty
-                : $"{CharacterRoot(prefix)}/{name}/{view}/{candidate ?? "Main"}.png";
+                : $"{CharacterRoot(prefix, episodeId)}/{name}/{view}/{candidate ?? "Main"}.png";
 
         public static string CharacterEmotion(
             string prefix,
+            string episodeId,
             string name,
             string view,
             string candidate) =>
             NamedCharacterPath(
                 name,
                 candidate,
-                value => $"{CharacterRoot(prefix)}/{name}/{view}/Emotions/{value}.png");
+                value => $"{CharacterRoot(prefix, episodeId)}/{name}/{view}/Emotions/{value}.png");
 
         public static string CharacterClothes(
             string prefix,
+            string episodeId,
             string name,
             string candidate,
             int index) =>
             NamedCharacterPath(
                 name,
                 candidate,
-                value => $"{CharacterRoot(prefix)}/{name}/Clothes/{value}/{index}.png");
+                value => $"{CharacterRoot(prefix, episodeId)}/{name}/Clothes/{value}/{index}.png");
 
         public static string CharacterHair(
             string prefix,
+            string episodeId,
             string name,
             string candidate,
             string layer,
@@ -71,25 +90,29 @@ namespace Novels.ContentAddressing
             NamedCharacterPath(
                 name,
                 candidate,
-                value => $"{CharacterRoot(prefix)}/{name}/Hairs/{layer}/{value}/{color}.png");
+                value => $"{CharacterRoot(prefix, episodeId)}/{name}/Hairs/{layer}/{value}/{color}.png");
 
         public static string CharacterAccessory(
             string prefix,
+            string episodeId,
             string name,
             string candidate,
             string layer) =>
             NamedCharacterPath(
                 name,
                 candidate,
-                value => $"{CharacterRoot(prefix)}/{name}/Accessories/{layer}/{value}.png");
+                value => $"{CharacterRoot(prefix, episodeId)}/{name}/Accessories/{layer}/{value}.png");
 
-        public static string NotificationPrefab(string prefix, string assetName) =>
-            Prefab($"{_remoteAssetsRoot}/Notification/{prefix}", assetName);
+        public static string NotificationPrefab(
+            string prefix,
+            string episodeId,
+            string assetName) =>
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/Notification", assetName);
 
         public static string LocalizationAsset(string prefix, string assetName) =>
             IsMissing(assetName)
                 ? string.Empty
-                : $"{_remoteAssetsRoot}/Localization/{prefix}/{assetName}.asset";
+                : $"{ContentRoot(prefix)}/Application/Localization/{assetName}.asset";
 
         public static string NormalizeAssetName(string value) =>
             IsMissing(value)
@@ -97,8 +120,14 @@ namespace Novels.ContentAddressing
                 : char.ToUpperInvariant(value[0])
                     + value.Substring(1).ToLowerInvariant();
 
-        private static string CharacterRoot(string prefix) =>
-            $"{_remoteAssetsRoot}/Character/{prefix}/Characters";
+        private static string ContentRoot(string prefix) =>
+            $"{_remoteAssetsRoot}/Content/{prefix}";
+
+        private static string EpisodeRoot(string prefix, string episodeId) =>
+            $"{ContentRoot(prefix)}/Episodes/{episodeId}";
+
+        private static string CharacterRoot(string prefix, string episodeId) =>
+            $"{EpisodeRoot(prefix, episodeId)}/Character/Characters";
 
         private static string Prefab(string root, string assetName) =>
             IsMissing(assetName) ? string.Empty : $"{root}/{assetName}.prefab";

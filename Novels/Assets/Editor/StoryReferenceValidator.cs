@@ -24,7 +24,7 @@ namespace Editor
             var reported = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var background in index.Backgrounds)
             {
-                var assetPath = LocationPath(prefix, background);
+                var assetPath = LocationPath(prefix, episode.Id, background);
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
                     && reported.Add(assetPath))
@@ -35,7 +35,7 @@ namespace Editor
                 if (string.Equals(speaker, "Wardrobe", StringComparison.OrdinalIgnoreCase)
                     || string.Equals(speaker, mainCharacter, StringComparison.OrdinalIgnoreCase))
                     continue;
-                var assetPath = CharacterBodyPath(prefix, speaker);
+                var assetPath = CharacterBodyPath(prefix, episode.Id, speaker);
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
                     && reported.Add(assetPath))
@@ -65,21 +65,29 @@ namespace Editor
                 errors.Add($"Story audio does not exist: {path}");
         }
 
-        private static string LocationPath(string prefix, string assetName)
+        private static string LocationPath(
+            string prefix,
+            string episodeId,
+            string assetName)
         {
             if (string.IsNullOrWhiteSpace(assetName) || assetName.StartsWith("{", StringComparison.Ordinal))
                 return string.Empty;
             return Novels.ContentAddressing.ContentAddressConvention.LocationImage(
                 prefix,
+                episodeId,
                 assetName);
         }
 
-        private static string CharacterBodyPath(string prefix, string speaker)
+        private static string CharacterBodyPath(
+            string prefix,
+            string episodeId,
+            string speaker)
         {
             if (string.IsNullOrWhiteSpace(speaker) || speaker.StartsWith("{", StringComparison.Ordinal))
                 return string.Empty;
             return Novels.ContentAddressing.ContentAddressConvention.CharacterMainBody(
                 prefix,
+                episodeId,
                 speaker,
                 "View");
         }

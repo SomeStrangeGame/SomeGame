@@ -7,6 +7,7 @@ namespace Novels.PathGetter
         public struct Ctx
         {
             public string Prefix;
+            public string EpisodeId;
         }
 
         private Ctx _ctx;
@@ -25,6 +26,7 @@ namespace Novels.PathGetter
         public string GetLoadingPrefabAssetName(string assetName) =>
             ContentAddressing.ContentAddressConvention.LoadingPrefab(
                 _ctx.Prefix,
+                _ctx.EpisodeId,
                 assetName);
 
         public string GetSettingPrefabAssetName(string assetName) =>
@@ -35,26 +37,31 @@ namespace Novels.PathGetter
         public string GetBubblePrefabAssetName(string assetName) =>
             ContentAddressing.ContentAddressConvention.BubblePrefab(
                 _ctx.Prefix,
+                _ctx.EpisodeId,
                 assetName);
 
         public string GetLocationPrefabAssetName(string assetName) =>
             ContentAddressing.ContentAddressConvention.LocationPrefab(
                 _ctx.Prefix,
+                _ctx.EpisodeId,
                 assetName);
 
         public string GetLocationImagePath(string assetName) =>
             ContentAddressing.ContentAddressConvention.LocationImage(
                 _ctx.Prefix,
+                _ctx.EpisodeId,
                 assetName);
 
         public string GetCharacterPrefabAssetName(string assetName) =>
             ContentAddressing.ContentAddressConvention.CharacterPrefab(
                 _ctx.Prefix,
+                _ctx.EpisodeId,
                 assetName);
 
         public string GetNotificationPrefabAssetName(string assetName) =>
             ContentAddressing.ContentAddressConvention.NotificationPrefab(
                 _ctx.Prefix,
+                _ctx.EpisodeId,
                 assetName);
 
         public string GetLocalizationDataAssetName(string assetName) =>

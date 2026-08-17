@@ -176,7 +176,7 @@ namespace Editor
             Novels.Content.NovelDefinition definition;
             try
             {
-                definition = contentAsset.ToDefinition("en");
+                definition = contentAsset.ToDefinition("en", contentBundleName);
             }
             catch (Exception exception)
             {
@@ -202,26 +202,55 @@ namespace Editor
                     Novels.Catalog.CatalogAddresses.BundleName,
                     contentBundleName,
                     definition.MainLoadingBundleName,
-                    definition.LoadingBundleName,
-                    definition.SettingBundleName,
-                    definition.LocalizationBundleName,
-                }.Concat(definition.Episodes.SelectMany(episode => new[]
-                {
-                    episode.BubbleBundleName,
-                    episode.LocationBundleName,
-                    episode.CharacterBundleName,
-                    episode.NotificationBundleName,
-                })),
+                    definition.BundleName,
+                }.Concat(definition.Episodes.Select(episode => episode.BundleName)),
+                errors);
+
+            ValidateBundleAssignment(
+                Novels.ContentAddressing.ContentAddressConvention.SettingPrefab(
+                    definition.Prefix,
+                    "Screen"),
+                definition.BundleName,
+                errors);
+            ValidateBundleAssignment(
+                Novels.ContentAddressing.ContentAddressConvention.LocalizationAsset(
+                    definition.Prefix,
+                    "LocalizationData"),
+                definition.BundleName,
                 errors);
 
             foreach (var episode in definition.Episodes)
             {
+                ValidateEpisodeBundleAssignments(definition.Prefix, episode, errors);
                 ValidateMedia(definition.Prefix, episode, errors);
                 StoryReferenceValidator.Validate(
                     definition.Prefix,
                     definition.MainCharacter,
                     episode,
                     errors);
+            }
+        }
+
+        private static void ValidateEpisodeBundleAssignments(
+            string prefix,
+            Novels.Content.EpisodeDefinition episode,
+            ICollection<string> errors)
+        {
+            foreach (var assetPath in new[]
+                     {
+                         Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
+                             prefix, episode.Id, "Screen"),
+                         Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
+                             prefix, episode.Id, "Screen"),
+                         Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
+                             prefix, episode.Id, "Screen"),
+                         Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
+                             prefix, episode.Id, "Screen"),
+                         Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
+                             prefix, episode.Id, "Screen"),
+                     })
+            {
+                ValidateBundleAssignment(assetPath, episode.BundleName, errors);
             }
         }
 

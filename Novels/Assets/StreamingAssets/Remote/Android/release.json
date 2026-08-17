@@ -1,36 +1,29 @@
 {
-    "releaseId": "01d8cdee8c3489bbaa9700cada149f5522099a87888cb0cb3a10b8f370b8406d",
+    "releaseId": "00813fe705721844d4716675a14b90a97b8e6494f1fb29e641215fa894f5c813",
     "minimumClientVersion": "0.1.0",
     "contentSchemaVersion": 3,
     "deliveryMode": 2,
     "bundles": [
         {
-            "name": "novels_bubble_tzm_1",
-            "version": "219acc2b523c8e1b1921443de21a5e18",
-            "size": 235171,
-            "sha256": "ef2cc02fc9d6cb04e5946020352e6f41caf575847edb2c2f4c377726124c1062",
-            "crc": 3351548387
-        },
-        {
             "name": "novels_catalog",
-            "version": "7868ca7b890bd6d3325067601a7370a2",
-            "size": 7012,
-            "sha256": "88b5e46804a34917209fa5df54dc09cef69fbeb7f5c5b7d8b852bf0394bc4a10",
-            "crc": 218433081
-        },
-        {
-            "name": "novels_character_tzm_1",
-            "version": "67cce13b096abb223de251c33998d3f4",
-            "size": 31630951,
-            "sha256": "5e0f26240817e9bb00bafcc89784541f71e75b3e7b1931cb636237e934ea08d5",
-            "crc": 327191377
+            "version": "24a991a529188958d322e607d27e5442",
+            "size": 7023,
+            "sha256": "4d24163b82f1dc515d8c2c31b49f409ad9c3b321748a7cff80e6a78739c500dd",
+            "crc": 4254631961
         },
         {
             "name": "novels_content_tzm_1",
-            "version": "ba185b3750caf53182936953ef8f15a1",
-            "size": 3247,
-            "sha256": "c4d8c507db04b8ccba9a463648cdeee94af633c7bdb7645d4b2af554c229b025",
-            "crc": 2349305492
+            "version": "e2ac70f138b95ca7950edd9978ec2315",
+            "size": 164169,
+            "sha256": "d890c745a6cfeaa718a76a181c59dd3aad6a5313cb6c1cb384e39d9afd1ce4c2",
+            "crc": 4131194833
+        },
+        {
+            "name": "novels_episode_tzm_1_s01e01",
+            "version": "72bdcca1df2d19bc0467bdf1c76dda28",
+            "size": 57618366,
+            "sha256": "bd5b3aea6c66ed4056cd81c56e90e1d80f205aac9207a8e566be561c36b6faf4",
+            "crc": 3487297295
         },
         {
             "name": "novels_loading_shared",
@@ -38,41 +31,6 @@
             "size": 3556,
             "sha256": "83ebe225ddad24f28a8961e071870ddcfdfdad0412ceb8154ec8ccf4985e0d83",
             "crc": 1631751893
-        },
-        {
-            "name": "novels_loading_tzm_1",
-            "version": "769c67fcd36d66e0daf7a3acb4df523f",
-            "size": 276714,
-            "sha256": "0e2957bb197f04e6fb2e29d43e94b4e794a8ccab1887606f1807fb31a75ddc5e",
-            "crc": 2513263264
-        },
-        {
-            "name": "novels_localization_tzm_1",
-            "version": "7eab8c4857f610f44af5b1edb3b94659",
-            "size": 1644,
-            "sha256": "66cc83f61352779996cae273b0c1fe73435a9a8d2ad037d1ddb764a244c18a2c",
-            "crc": 2296852374
-        },
-        {
-            "name": "novels_location_tzm_1",
-            "version": "e9ceaf7131b5cc8f60e9fba04ac75a7c",
-            "size": 25309150,
-            "sha256": "87833e42897a5aa336a21379404ef6e0b93a5b99094dff55d05878d90baf07a3",
-            "crc": 3492587018
-        },
-        {
-            "name": "novels_notification_tzm_1",
-            "version": "61a749e795a52ccff00db6c12d881ee7",
-            "size": 262234,
-            "sha256": "b498040f3faa23ff0fc96df5cd7027a99ef915284566877dbd68416bfe6bc38a",
-            "crc": 2725774219
-        },
-        {
-            "name": "novels_setting_tzm_1",
-            "version": "6e72a524b88913ff58389685f5d3c019",
-            "size": 161679,
-            "sha256": "382086df988e816862b188a002b7f5e1b524739b7f70c96911758f3ce2792994",
-            "crc": 1765040318
         }
     ],
     "files": [

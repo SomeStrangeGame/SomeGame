@@ -63,19 +63,14 @@ namespace Novels
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoading = CreateMainLoading(mainLoadingScreen);
 
-            var applicationPreloading = UniTask.WhenAll(
-                novelBundles.GetAssetBundle(_definition.SettingBundleName),
-                novelBundles.GetAssetBundle(_definition.LocalizationBundleName));
             var episodePreloading = PreloadEpisode(
                 pathGetter,
                 episodeBundles,
                 episodeRuntime.CancellationToken).Preserve();
             await mainLoading.Show().AttachExternalCancellation(_ctx.CancellationToken);
-            await _priorityLoader.Run(() => applicationPreloading
-                .AttachExternalCancellation(_ctx.CancellationToken));
 
             var localizationAddress = new Bundles.BundleAssetAddress(
-                _definition.LocalizationBundleName,
+                _definition.BundleName,
                 pathGetter.GetLocalizationDataAssetName(
                     BootstrapAddresses.LocalizationDataAssetName));
             LocalizationData localizationData;
@@ -85,7 +80,7 @@ namespace Novels
             var localization = CreateLocalization(localizationData);
 
             var settingsAddress = new Bundles.BundleAssetAddress(
-                _definition.SettingBundleName,
+                _definition.BundleName,
                 pathGetter.GetSettingPrefabAssetName(BootstrapAddresses.ScreenAssetName));
             var settingsScreen = await _priorityLoader.Run(() => novelBundles
                 .GetBundledPrefab(settingsAddress)
@@ -122,11 +117,7 @@ namespace Novels
             var result = await UniTask.WhenAll(
                 _ctx.Bundles.GetText(pathGetter.GetNovelTextPath(_episode.StoryPath))
                     .AttachExternalCancellation(cancellationToken),
-                episodeBundles.GetAssetBundle(_episode.BubbleBundleName),
-                episodeBundles.GetAssetBundle(_episode.LocationBundleName),
-                episodeBundles.GetAssetBundle(_episode.CharacterBundleName),
-                episodeBundles.GetAssetBundle(_episode.NotificationBundleName),
-                episodeBundles.GetAssetBundle(_definition.LoadingBundleName));
+                episodeBundles.GetAssetBundle(_episode.BundleName));
             return result.Item1;
         }
     }

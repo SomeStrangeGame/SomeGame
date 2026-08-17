@@ -24,7 +24,7 @@ namespace Editor
                     entry.ContentAssetName)
                     ?? throw new InvalidOperationException(
                         $"Novel content asset is missing: {entry.ContentAssetName}");
-                var definition = asset.ToDefinition("en");
+                var definition = asset.ToDefinition("en", entry.ContentBundleName);
                 prefixToContent[definition.Prefix] = definition.Id;
                 foreach (var episode in definition.Episodes)
                 {

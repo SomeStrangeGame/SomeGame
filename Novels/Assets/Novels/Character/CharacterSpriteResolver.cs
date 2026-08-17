@@ -16,6 +16,7 @@ namespace Novels.Character
         private const string _defaultHairColor = "Блонд";
 
         private readonly string _contentPrefix;
+        private readonly string _episodeId;
         private readonly Func<string, UniTask<Sprite>> _getSprite;
         private readonly CancellationToken _cancellationToken;
         private readonly Dictionary<string, CharacterAppearanceState> _appearanceByCharacter =
@@ -23,12 +24,16 @@ namespace Novels.Character
 
         internal CharacterSpriteResolver(
             string contentPrefix,
+            string episodeId,
             Func<string, UniTask<Sprite>> getSprite,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(contentPrefix))
                 throw new ArgumentException("Content prefix must not be empty.", nameof(contentPrefix));
             _contentPrefix = contentPrefix;
+            if (string.IsNullOrWhiteSpace(episodeId))
+                throw new ArgumentException("Episode ID must not be empty.", nameof(episodeId));
+            _episodeId = episodeId;
             _getSprite = getSprite ?? throw new ArgumentNullException(nameof(getSprite));
             _cancellationToken = cancellationToken;
         }
@@ -213,6 +218,7 @@ namespace Novels.Character
         private string MainBodyPath(string name, string view, string candidate) =>
             ContentAddressing.ContentAddressConvention.CharacterMainBody(
                 _contentPrefix,
+                _episodeId,
                 name,
                 view,
                 candidate);
@@ -220,6 +226,7 @@ namespace Novels.Character
         private string EmotionPath(string name, string view, string candidate) =>
             ContentAddressing.ContentAddressConvention.CharacterEmotion(
                 _contentPrefix,
+                _episodeId,
                 name,
                 view,
                 candidate);
@@ -227,6 +234,7 @@ namespace Novels.Character
         private string ClothesPath(string name, string candidate, int index) =>
             ContentAddressing.ContentAddressConvention.CharacterClothes(
                 _contentPrefix,
+                _episodeId,
                 name,
                 candidate,
                 index);
@@ -234,6 +242,7 @@ namespace Novels.Character
         private string HairPath(string name, string candidate, string layer) =>
             ContentAddressing.ContentAddressConvention.CharacterHair(
                 _contentPrefix,
+                _episodeId,
                 name,
                 candidate,
                 layer,
@@ -242,6 +251,7 @@ namespace Novels.Character
         private string AccessoriesPath(string name, string candidate, string layer) =>
             ContentAddressing.ContentAddressConvention.CharacterAccessory(
                 _contentPrefix,
+                _episodeId,
                 name,
                 candidate,
                 layer);

@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 693324811
+CRC: 4116419913
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -11,26 +11,8 @@ AssetBundleManifest:
       Name: novels_content_tzm_1
       Dependencies: {}
     Info_2:
-      Name: novels_bubble_tzm_1
-      Dependencies: {}
-    Info_3:
-      Name: novels_localization_tzm_1
-      Dependencies: {}
-    Info_4:
-      Name: novels_notification_tzm_1
-      Dependencies: {}
-    Info_5:
-      Name: novels_location_tzm_1
-      Dependencies: {}
-    Info_6:
-      Name: novels_character_tzm_1
-      Dependencies: {}
-    Info_7:
-      Name: novels_setting_tzm_1
-      Dependencies: {}
-    Info_8:
       Name: novels_loading_shared
       Dependencies: {}
-    Info_9:
-      Name: novels_loading_tzm_1
+    Info_3:
+      Name: novels_episode_tzm_1_s01e01
       Dependencies: {}
