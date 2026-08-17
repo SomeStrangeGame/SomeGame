@@ -15,7 +15,7 @@ namespace Novels.Character
         private const string _frontLayer = "Front";
         private const string _defaultHairColor = "Блонд";
 
-        private readonly string _root;
+        private readonly string _contentPrefix;
         private readonly Func<string, UniTask<Sprite>> _getSprite;
         private readonly CancellationToken _cancellationToken;
         private readonly Dictionary<string, CharacterAppearanceState> _appearanceByCharacter =
@@ -28,7 +28,7 @@ namespace Novels.Character
         {
             if (string.IsNullOrWhiteSpace(contentPrefix))
                 throw new ArgumentException("Content prefix must not be empty.", nameof(contentPrefix));
-            _root = $"Assets/RemoteAssets/Character/{contentPrefix}/Characters";
+            _contentPrefix = contentPrefix;
             _getSprite = getSprite ?? throw new ArgumentNullException(nameof(getSprite));
             _cancellationToken = cancellationToken;
         }
@@ -211,36 +211,39 @@ namespace Novels.Character
                 : _getSprite(path).AttachExternalCancellation(_cancellationToken);
 
         private string MainBodyPath(string name, string view, string candidate) =>
-            string.IsNullOrEmpty(name)
-                ? string.Empty
-                : $"{_root}/{name}/{view}/{candidate ?? "Main"}.png";
+            ContentAddressing.ContentAddressConvention.CharacterMainBody(
+                _contentPrefix,
+                name,
+                view,
+                candidate);
 
         private string EmotionPath(string name, string view, string candidate) =>
-            BuildNamedPath(name, candidate, value => $"{_root}/{name}/{view}/Emotions/{value}.png");
+            ContentAddressing.ContentAddressConvention.CharacterEmotion(
+                _contentPrefix,
+                name,
+                view,
+                candidate);
 
         private string ClothesPath(string name, string candidate, int index) =>
-            BuildNamedPath(name, candidate, value => $"{_root}/{name}/Clothes/{value}/{index}.png");
+            ContentAddressing.ContentAddressConvention.CharacterClothes(
+                _contentPrefix,
+                name,
+                candidate,
+                index);
 
         private string HairPath(string name, string candidate, string layer) =>
-            BuildNamedPath(
+            ContentAddressing.ContentAddressConvention.CharacterHair(
+                _contentPrefix,
                 name,
                 candidate,
-                value => $"{_root}/{name}/Hairs/{layer}/{value}/{_defaultHairColor}.png");
+                layer,
+                _defaultHairColor);
 
         private string AccessoriesPath(string name, string candidate, string layer) =>
-            BuildNamedPath(
+            ContentAddressing.ContentAddressConvention.CharacterAccessory(
+                _contentPrefix,
                 name,
                 candidate,
-                value => $"{_root}/{name}/Accessories/{layer}/{value}.png");
-
-        private static string BuildNamedPath(
-            string name,
-            string candidate,
-            Func<string, string> build)
-        {
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(candidate))
-                return string.Empty;
-            return build(char.ToUpperInvariant(candidate[0]) + candidate.Substring(1).ToLowerInvariant());
-        }
+                layer);
     }
 }

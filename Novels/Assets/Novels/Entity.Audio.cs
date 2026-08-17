@@ -9,13 +9,14 @@ namespace Novels
     {   
         private Audio.Entity CreateAudio(
             IBaseDisposable owner,
-            Func<string, UniTask<string>> resolveAudioUrl)
+            Func<string, UniTask<string>> resolveAudioUrl,
+            CancellationToken cancellationToken)
         {
             return new Audio.Entity(new Audio.Entity.Ctx
             {
                 ResolveAudioUrl = resolveAudioUrl,
                 AudioMixer = _audioMixer,
-                CancellationToken = _ctx.CancellationToken,
+                CancellationToken = cancellationToken,
 
                 OnLog = _ctx.OnLog,
                 OnError = _ctx.OnError,

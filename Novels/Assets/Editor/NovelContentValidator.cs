@@ -64,6 +64,9 @@ namespace Editor
                 errors.Add("The loaded scene does not contain Novels.EntryPoint.");
                 return errors;
             }
+            var entryPointData = new SerializedObject(entryPoint);
+            if (entryPointData.FindProperty("_targetCamera")?.objectReferenceValue == null)
+                errors.Add("Novels.EntryPoint has no target Camera reference.");
 
             var catalog = AssetDatabase.LoadAssetAtPath<Novels.Catalog.NovelCatalogAsset>(
                 Novels.Catalog.CatalogAddresses.AssetName);
@@ -139,7 +142,11 @@ namespace Editor
             }
             PrefabContentValidator.ValidateBootstrap(errors);
             if (validateBuiltOutput)
-                BuiltReleaseValidator.Validate(errors);
+                BuiltReleaseValidator.Validate(
+                    catalog.Entries
+                        .Where(entry => entry != null)
+                        .Select(entry => entry.ContentId),
+                    errors);
             return errors;
         }
 

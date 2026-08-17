@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -155,12 +156,28 @@ namespace Cache
             long maximumBytes,
             string protectedPath = null)
         {
+            PruneBySize(
+                directoryPath,
+                maximumBytes,
+                string.IsNullOrWhiteSpace(protectedPath)
+                    ? Array.Empty<string>()
+                    : new[] { protectedPath });
+        }
+
+        public void PruneBySize(
+            string directoryPath,
+            long maximumBytes,
+            IEnumerable<string> protectedPaths)
+        {
             var directory = GetLocalPath(directoryPath, false);
             if (!Directory.Exists(directory) || maximumBytes <= 0)
                 return;
-            var protectedFile = string.IsNullOrWhiteSpace(protectedPath)
-                ? null
-                : GetLocalPath(protectedPath, false);
+            var protectedFiles = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var path in protectedPaths ?? Array.Empty<string>())
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    protectedFiles.Add(GetLocalPath(path, false));
+            }
             var files = new DirectoryInfo(directory)
                 .GetFiles("*", SearchOption.AllDirectories);
             long size = 0;
@@ -172,15 +189,25 @@ namespace Cache
             {
                 if (size <= maximumBytes)
                     break;
-                if (string.Equals(
-                        file.FullName,
-                        protectedFile,
-                        StringComparison.Ordinal))
-                {
+                if (protectedFiles.Contains(file.FullName))
                     continue;
-                }
                 size -= file.Length;
                 file.Delete();
+            }
+        }
+
+        public long? GetAvailableFreeSpace()
+        {
+            try
+            {
+                var root = Path.GetPathRoot(Path.GetFullPath(_localPath));
+                return string.IsNullOrWhiteSpace(root)
+                    ? null
+                    : new DriveInfo(root).AvailableFreeSpace;
+            }
+            catch
+            {
+                return null;
             }
         }
     }

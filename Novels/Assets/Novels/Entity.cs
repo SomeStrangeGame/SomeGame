@@ -21,6 +21,7 @@ namespace Novels
             internal Catalog.NovelCatalogEntry Content;
             internal string Locale;
             internal string PersistentDataPath;
+            internal Camera TargetCamera;
             internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
         }
@@ -45,10 +46,12 @@ namespace Novels
                     nameof(ctx.PersistentDataPath));
             if (ctx.SelectEpisode == null)
                 throw new ArgumentNullException(nameof(ctx.SelectEpisode));
+            if (ctx.TargetCamera == null)
+                throw new ArgumentNullException(nameof(ctx.TargetCamera));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
         }
 
-        internal async UniTask Init()
+        internal async UniTask<EpisodeRunResult> Init()
         {
             var novelBundles = _ctx.Bundles.CreateScope().AddTo(this);
             _definition = await LoadContent(novelBundles, _ctx.Content);
@@ -61,7 +64,7 @@ namespace Novels
                     CancellationToken = _ctx.CancellationToken,
                 }).AddTo(this);
 
-            await bootstrap.Run();
+            return await bootstrap.Run();
         }
 
         internal UniTask FlushSaveAsync()

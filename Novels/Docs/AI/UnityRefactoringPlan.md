@@ -10,6 +10,23 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-17
 
+## Architecture wave completed on 2026-08-17 (lifetime and delivery modes)
+
+Eight approved items are complete; release signing and remote HTTP transport were explicitly deferred:
+
+1. `EpisodeRuntime` owns a linked cancellation token and cancels it before disposing episode features. `Bundles.Scope` rejects work after disposal and returns a lease when an in-flight acquisition completes after its scope has ended.
+2. Story execution returns an explicit `EpisodeRunResult` (`Completed`, `Failed`, or `Cancelled`) through `NovelProcess`, `EpisodeRuntime`, the selected novel, and `ApplicationRuntime`. Fatal queue failure is no longer indistinguishable from normal completion.
+3. `ContentFileStore` requires a loaded immutable release for every Ink/audio/video file; the remaining unverified `legacy` branch was removed.
+4. `ContentDeliveryCoordinator` prepares a complete story delivery group with file/byte progress, free-space validation, integrity checks, cancellation, and session pinning. Pinned groups raise the effective cache floor so a group larger than the default 512 MiB limit cannot evict itself during preparation.
+5. Schema 2 releases carry `Embedded`, `Hybrid`, or `Remote` delivery mode. `NovelContentBuildProfile` controls embedded groups, publish/player-seed roots, warning thresholds, and optional hard total/embedded budgets. `PlayerContentSeedBuilder` creates an atomic seed matching the selected mode without mutating UI or authoring assets.
+6. `Novels.ContentAddressing` is a separate dependency-free assembly. `ContentAddressConvention` is the single owner of story text, prefab, location, and character address rules used by runtime and Editor validation; `PathGetter.Entity` remains a compatibility facade.
+7. `EntryPoint` captures `ApplicationEnvironment` on the main thread and supplies locale, client version, platform, persistent path, session token, and an explicit serialized Camera. Downstream composition no longer performs ambient scene/environment lookups.
+8. `NovelCiValidation` exposes batch entry points for validating existing content or rebuilding/validating the complete release, publish artifact, and player seed without introducing tests.
+
+Android schema-2 release `90d8046c73f68a96080c7b16fc0536d19ab52eb396ae411f5e601b3600e1bb96` contains 10 bundles, 115 external files, and one delivery group. StreamingAssets, the publish artifact, and the Embedded player seed passed exact size/SHA-256 verification. The current Embedded payload is about 1.22 GiB and intentionally produces non-blocking total/seed budget warnings; production profiles can enable hard gates. Unity compilation and both CI batch entry points completed without errors. Tests were not created or run, and UI dimensions were not changed.
+
+Deferred by explicit decision: manifest signing, pinned public keys, canonical security encoding, and `HttpContentSource`.
+
 ## Architecture wave completed on 2026-08-17 (explicit content contracts)
 
 All nine approved items are complete:

@@ -20,15 +20,23 @@ namespace Novels
             _ctx = ctx;
         }
 
-        internal async UniTask Run()
+        internal async UniTask<EpisodeRunResult> Run()
         {
-            _ctx.CancellationToken.ThrowIfCancellationRequested();
-            var session = await _ctx.Prepare();
-            if (session.Selection == SettingSelection.NewGame)
-                session.ClearSave();
+            try
+            {
+                _ctx.CancellationToken.ThrowIfCancellationRequested();
+                var session = await _ctx.Prepare();
+                if (session.Selection == SettingSelection.NewGame)
+                    session.ClearSave();
 
-            _ctx.CancellationToken.ThrowIfCancellationRequested();
-            await session.RunEpisode();
+                _ctx.CancellationToken.ThrowIfCancellationRequested();
+                return await session.RunEpisode();
+            }
+            catch (OperationCanceledException)
+                when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+                return EpisodeRunResult.Cancelled();
+            }
         }
     }
 
@@ -37,7 +45,7 @@ namespace Novels
         internal NovelStartSession(
             SettingSelection selection,
             Action clearSave,
-            Func<UniTask> runEpisode)
+            Func<UniTask<EpisodeRunResult>> runEpisode)
         {
             Selection = selection;
             ClearSave = clearSave ?? throw new ArgumentNullException(nameof(clearSave));
@@ -46,6 +54,6 @@ namespace Novels
 
         internal SettingSelection Selection { get; }
         internal Action ClearSave { get; }
-        internal Func<UniTask> RunEpisode { get; }
+        internal Func<UniTask<EpisodeRunResult>> RunEpisode { get; }
     }
 }

@@ -151,16 +151,19 @@ namespace Editor
         {
             if (string.IsNullOrWhiteSpace(assetName) || assetName.StartsWith("{", StringComparison.Ordinal))
                 return string.Empty;
-            var normalized = char.ToUpperInvariant(assetName[0])
-                + assetName.Substring(1).ToLowerInvariant();
-            return $"Assets/RemoteAssets/Location/{prefix}/Locations/{normalized}.png";
+            return Novels.ContentAddressing.ContentAddressConvention.LocationImage(
+                prefix,
+                assetName);
         }
 
         private static string CharacterBodyPath(string prefix, string speaker)
         {
             if (string.IsNullOrWhiteSpace(speaker) || speaker.StartsWith("{", StringComparison.Ordinal))
                 return string.Empty;
-            return $"Assets/RemoteAssets/Character/{prefix}/Characters/{speaker}/View/Main.png";
+            return Novels.ContentAddressing.ContentAddressConvention.CharacterMainBody(
+                prefix,
+                speaker,
+                "View");
         }
     }
 }

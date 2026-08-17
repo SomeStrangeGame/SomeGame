@@ -21,5 +21,6 @@ namespace Editor
         internal string ReleaseId { get; }
         internal string RemotePath { get; }
         internal string PublishPath { get; set; }
+        internal string PlayerSeedPath { get; set; }
     }
 }

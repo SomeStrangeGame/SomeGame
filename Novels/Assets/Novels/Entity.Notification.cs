@@ -1,17 +1,21 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
+using System.Threading;
 using UnityEngine;
 
 namespace Novels
 {
     internal partial class Entity
     {
-        private Notification.Entity CreateNotification(IBaseDisposable owner, GameObject notificationPrefab)
+        private Notification.Entity CreateNotification(
+            IBaseDisposable owner,
+            GameObject notificationPrefab,
+            CancellationToken cancellationToken)
         {
             var notification = new Notification.Entity(new Notification.Entity.Ctx
             {
                 NotificationPrefab = notificationPrefab,
-                CancellationToken = _ctx.CancellationToken,
+                CancellationToken = cancellationToken,
                 OnError = _ctx.OnError,
             }).AddTo(owner);
             notification.Init();

@@ -17,6 +17,8 @@ namespace Bundles
                 $"S:{release.contentSchemaVersion}",
                 $"C:{release.minimumClientVersion ?? string.Empty}",
             };
+            if (release.contentSchemaVersion >= 2)
+                lines.Add($"D:{(int)release.deliveryMode}");
             lines.AddRange((release.bundles ?? Array.Empty<BundleReleaseEntry>())
                 .OrderBy(value => value?.name, StringComparer.Ordinal)
                 .Select(value =>

@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 
@@ -6,17 +7,23 @@ namespace Novels
 {
     internal sealed class EpisodeRuntime : BaseDisposable
     {
-        private Func<UniTask> _run;
+        private readonly CancellationTokenSource _lifetimeCancellation;
+        private Func<UniTask<EpisodeRunResult>> _run;
         private Func<UniTask> _flushSave;
 
-        internal EpisodeRuntime()
+        internal EpisodeRuntime(CancellationToken applicationCancellationToken)
         {
-            Scope = new EpisodeScope().AddTo(this);
+            _lifetimeCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                applicationCancellationToken);
+            Scope = new EpisodeScope();
         }
 
         internal EpisodeScope Scope { get; }
+        internal CancellationToken CancellationToken => _lifetimeCancellation.Token;
 
-        internal void Configure(Func<UniTask> run, Func<UniTask> flushSave)
+        internal void Configure(
+            Func<UniTask<EpisodeRunResult>> run,
+            Func<UniTask> flushSave)
         {
             if (_run != null)
                 throw new InvalidOperationException("Episode runtime is already configured.");
@@ -24,19 +31,27 @@ namespace Novels
             _flushSave = flushSave ?? throw new ArgumentNullException(nameof(flushSave));
         }
 
-        internal async UniTask Run()
+        internal async UniTask<EpisodeRunResult> Run()
         {
             if (_run == null)
                 throw new InvalidOperationException("Episode runtime is not configured.");
 
             try
             {
-                await _run();
+                return await _run();
             }
             finally
             {
                 await _flushSave();
             }
+        }
+
+        protected override void OnDispose()
+        {
+            _lifetimeCancellation.Cancel();
+            Scope.Dispose();
+            _lifetimeCancellation.Dispose();
+            base.OnDispose();
         }
     }
 }

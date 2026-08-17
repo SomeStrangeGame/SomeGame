@@ -1,6 +1,7 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Disposable;
+using System.Threading;
 using UnityEngine;
 
 namespace Novels
@@ -10,14 +11,15 @@ namespace Novels
         private Character.Entity CreateCharacter(
             IBaseDisposable owner,
             GameObject screenPrefab,
-            Func<string, UniTask<Sprite>> getSprite)
+            Func<string, UniTask<Sprite>> getSprite,
+            CancellationToken cancellationToken)
         {
             var character = new Character.Entity(new Character.Entity.Ctx
             {
                 ScreenPrefab = screenPrefab,
                 ContentPrefix = _definition.Prefix,
                 GetSprite = getSprite,
-                CancellationToken = _ctx.CancellationToken,
+                CancellationToken = cancellationToken,
             }).AddTo(owner);
             character.Init();
 

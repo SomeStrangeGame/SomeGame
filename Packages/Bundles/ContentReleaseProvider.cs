@@ -28,6 +28,7 @@ namespace Bundles
         }
 
         internal ContentReleaseSnapshot Current { get; private set; }
+        internal CancellationToken CancellationToken => _cancellationToken;
 
         internal async UniTask<ContentReleaseSnapshot> LoadAsync(
             string clientVersion,

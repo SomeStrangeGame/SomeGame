@@ -2,9 +2,9 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private static EpisodeRuntime CreateEpisodeRuntime()
+        private EpisodeRuntime CreateEpisodeRuntime()
         {
-            return new EpisodeRuntime();
+            return new EpisodeRuntime(_ctx.CancellationToken);
         }
     }
 }

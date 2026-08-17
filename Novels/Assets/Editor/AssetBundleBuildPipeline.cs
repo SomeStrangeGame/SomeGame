@@ -16,6 +16,7 @@ namespace Editor
         {
             var targets = profile?.Targets
                 ?? throw new ArgumentNullException(nameof(profile));
+            profile.Validate();
             if (targets == null || targets.Length == 0)
                 throw new ArgumentException("At least one build target is required.", nameof(targets));
 
@@ -116,6 +117,7 @@ namespace Editor
             {
                 minimumClientVersion = profile.MinimumClientVersion,
                 contentSchemaVersion = profile.ContentSchemaVersion,
+                deliveryMode = profile.DeliveryMode,
                 bundles = releaseBundles.ToArray(),
                 files = releaseFiles.ToArray(),
                 deliveryGroups = deliveryGroups,
@@ -129,7 +131,11 @@ namespace Editor
                 Path.Combine(targetPath, "release.json"),
                 JsonUtility.ToJson(release, true),
                 new UTF8Encoding(false));
-            ContentBuildReport.Log(releaseFiles, deliveryGroups, profile);
+            ContentBuildReport.Log(
+                releaseFiles,
+                deliveryGroups,
+                releaseBundles.Sum(bundle => bundle.size),
+                profile);
             return release.releaseId;
         }
 

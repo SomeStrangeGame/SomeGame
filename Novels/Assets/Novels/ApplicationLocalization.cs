@@ -10,6 +10,7 @@ namespace Novels
         Retry,
         ChooseEpisode,
         ContentAvailable,
+        PreparingContent,
     }
 
     internal sealed class ApplicationLocalization
@@ -31,6 +32,7 @@ namespace Novels
                     [ApplicationText.Retry] = "Повторить",
                     [ApplicationText.ChooseEpisode] = "Выберите эпизод",
                     [ApplicationText.ContentAvailable] = "Доступно",
+                    [ApplicationText.PreparingContent] = "Подготовка истории",
                 }
                 : new Dictionary<ApplicationText, string>
                 {
@@ -40,6 +42,7 @@ namespace Novels
                     [ApplicationText.Retry] = "Retry",
                     [ApplicationText.ChooseEpisode] = "Choose an episode",
                     [ApplicationText.ContentAvailable] = "Available",
+                    [ApplicationText.PreparingContent] = "Preparing story",
                 };
         }
 

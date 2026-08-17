@@ -1,6 +1,8 @@
 using System;
 using System.IO;
 using System.Runtime.ExceptionServices;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -16,6 +18,8 @@ namespace Bundles
         private readonly long _cacheLimit;
         private readonly CancellationToken _cancellationToken;
         private readonly Action<(LogType type, string message)> _onLog;
+        private readonly Dictionary<string, long> _pinnedFiles = new(
+            StringComparer.OrdinalIgnoreCase);
 
         internal ContentFileStore(
             IContentSource source,
@@ -39,26 +43,22 @@ namespace Bundles
         {
             if (string.IsNullOrWhiteSpace(path))
                 return null;
-            var release = _releases.Current;
-            var descriptor = release?.FindFile(path);
-            if (release != null && descriptor == null)
-            {
-                throw new ContentIntegrityException(
-                    $"File '{path}' is absent from release '{release.ReleaseId}'.");
-            }
-            var releaseId = release?.ReleaseId ?? "legacy";
-            var cachePath = $"RemoteFiles/{releaseId}/{path}";
+            var release = _releases.Current ?? throw new ContentConfigurationException(
+                "Content release must be loaded before external files.");
+            var descriptor = release.FindFile(path) ?? throw new ContentIntegrityException(
+                $"File '{path}' is absent from release '{release.ReleaseId}'.");
+            var releaseId = release.ReleaseId;
+            var cachePath = CachePath(releaseId, path);
             var localPath = _cache.GetLocalPath(cachePath, false);
-            var verify = descriptor != null;
             var downloaded = false;
             try
             {
                 await _integrity.VerifyAsync(
                     path,
-                    descriptor?.Size ?? 0,
-                    descriptor?.Sha256,
+                    descriptor.Size,
+                    descriptor.Sha256,
                     localPath,
-                    verify);
+                    true);
             }
             catch (OperationCanceledException)
                 when (_cancellationToken.IsCancellationRequested)
@@ -74,16 +74,16 @@ namespace Bundles
                     _cancellationToken.ThrowIfCancellationRequested();
                     await _integrity.VerifyAsync(
                         path,
-                        descriptor?.Size ?? 0,
-                        descriptor?.Sha256,
+                        descriptor.Size,
+                        descriptor.Sha256,
                         temporaryPath,
-                        verify);
+                        true);
                     _cache.CommitTemporaryFile(temporaryPath, cachePath);
                     _integrity.Trust(
                         localPath,
-                        descriptor?.Size ?? 0,
-                        descriptor?.Sha256,
-                        verify);
+                        descriptor.Size,
+                        descriptor.Sha256,
+                        true);
                     downloaded = true;
                 }
                 finally
@@ -97,6 +97,39 @@ namespace Bundles
             if (downloaded)
                 await PruneAsync(cachePath);
             return new Uri(localPath).AbsoluteUri;
+        }
+
+        internal void ReserveGroup(IReadOnlyCollection<ContentFileDescriptor> files)
+        {
+            var release = _releases.Current ?? throw new ContentConfigurationException(
+                "Content release must be loaded before delivery reservation.");
+            var missingBytes = 0L;
+            foreach (var file in files)
+            {
+                var cachePath = CachePath(release.ReleaseId, file.Path);
+                var localPath = _cache.GetLocalPath(cachePath, false);
+                if (!File.Exists(localPath) || new FileInfo(localPath).Length != file.Size)
+                    missingBytes += file.Size;
+            }
+            var available = _cache.GetAvailableFreeSpace();
+            if (available.HasValue && available.Value < missingBytes)
+            {
+                throw new ContentStorageException(
+                    $"Content requires {missingBytes} free bytes, but only "
+                    + $"{available.Value} bytes are available.");
+            }
+            foreach (var file in files)
+                _pinnedFiles[CachePath(release.ReleaseId, file.Path)] = file.Size;
+        }
+
+        internal void ReleaseGroupReservation(
+            IReadOnlyCollection<ContentFileDescriptor> files)
+        {
+            var release = _releases.Current;
+            if (release == null)
+                return;
+            foreach (var file in files)
+                _pinnedFiles.Remove(CachePath(release.ReleaseId, file.Path));
         }
 
         internal async UniTask<string> GetText(string path)
@@ -127,7 +160,14 @@ namespace Bundles
             await UniTask.SwitchToThreadPool();
             try
             {
-                _cache.PruneBySize("RemoteFiles", _cacheLimit, protectedPath);
+                var protectedPaths = _pinnedFiles.Keys
+                    .Append(protectedPath)
+                    .ToArray();
+                var pinnedBytes = _pinnedFiles.Values.Sum();
+                _cache.PruneBySize(
+                    "RemoteFiles",
+                    Math.Max(_cacheLimit, pinnedBytes),
+                    protectedPaths);
             }
             catch (Exception exception)
             {
@@ -141,5 +181,8 @@ namespace Bundles
                     $"Content cache pruning failed: {failure.Message}"));
             }
         }
+
+        private static string CachePath(string releaseId, string path) =>
+            $"RemoteFiles/{releaseId}/{path}";
     }
 }

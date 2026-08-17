@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Threading;
-using System.Globalization;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -12,67 +11,86 @@ namespace Novels
     internal sealed class ApplicationRuntime : BaseDisposable
     {
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
-        private const int _supportedContentSchemaVersion = 1;
+        private const int _supportedContentSchemaVersion = 2;
 
         internal struct Ctx
         {
-            internal CancellationToken CancellationToken;
+            internal ApplicationEnvironment Environment;
             internal Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
             internal Bundles.IContentSource ContentSource;
-            internal string PersistentDataPath;
         }
 
         private readonly Ctx _ctx;
+        private readonly ApplicationEnvironment _environment;
         private readonly PriorityLoader _priorityLoader;
         private readonly Bundles.Entity _bundles;
         private readonly DisposableSlot<Entity> _activeNovel;
         private readonly ApplicationLocalization _localization;
-        private readonly Locale.LocaleProvider _locale;
+        private readonly string _locale;
 
         internal ApplicationRuntime(Ctx ctx)
         {
             _ctx = ctx;
+            _environment = ctx.Environment
+                ?? throw new ArgumentNullException(nameof(ctx.Environment));
             if (ctx.ContentSource == null)
                 throw new ArgumentNullException(nameof(ctx.ContentSource));
-            if (string.IsNullOrWhiteSpace(ctx.PersistentDataPath))
-                throw new ArgumentException(
-                    "Persistent data path must not be empty.",
-                    nameof(ctx.PersistentDataPath));
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
-            _locale = new Locale.LocaleProvider(CultureInfo.CurrentUICulture);
-            _localization = new ApplicationLocalization(_locale.Code);
+            _locale = _environment.Locale;
+            _localization = new ApplicationLocalization(_locale);
             _bundles = CreateBundles().AddTo(this);
             _activeNovel = new DisposableSlot<Entity>().AddTo(this);
         }
 
         internal async UniTask Run()
         {
-            using var bootstrap = new Bootstrap.Entity(_ctx.CancellationToken)
+            using var bootstrap = new Bootstrap.Entity(_environment.CancellationToken)
                 .AddTo(this);
             var strings = GetBootstrapStrings();
             var catalog = await LoadCatalogWithRetry(bootstrap, strings);
             bootstrap.Hide();
-            while (!_ctx.CancellationToken.IsCancellationRequested)
+            while (!_environment.CancellationToken.IsCancellationRequested)
             {
                 var content = await SelectContent(catalog.catalog, catalog.screen);
+                try
+                {
+                    await PrepareContent(bootstrap, content.ContentId);
+                }
+                catch (Exception exception) when (
+                    exception is Bundles.ContentSourceException
+                    || exception is Bundles.ContentIntegrityException
+                    || exception is Bundles.ContentStorageException)
+                {
+                    _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                        Diagnostics.NovelErrorCodes.ContentPreparationFailed,
+                        Diagnostics.NovelErrorSeverity.Recoverable,
+                        "Story content could not be prepared.",
+                        exception: exception));
+                    continue;
+                }
                 var novel = new Entity(new Entity.Ctx
                 {
                     Bundles = _bundles,
                     Content = content,
-                    Locale = _locale.Code,
-                    PersistentDataPath = _ctx.PersistentDataPath,
+                    Locale = _locale,
+                    PersistentDataPath = _environment.PersistentDataPath,
+                    TargetCamera = _environment.TargetCamera,
                     SelectEpisode = definition =>
                         SelectEpisode(definition, catalog.screen),
-                    CancellationToken = _ctx.CancellationToken,
+                    CancellationToken = _environment.CancellationToken,
                     OnLog = _ctx.OnLog,
                     OnError = _ctx.OnError,
                 });
                 _activeNovel.Replace(novel);
                 try
                 {
-                    await novel.Init();
+                    var result = await novel.Init();
+                    if (result.Status == EpisodeRunStatus.Cancelled)
+                        return;
+                    if (result.Status == EpisodeRunStatus.Failed)
+                        _ctx.OnError?.Invoke(result.Error.Value);
                 }
                 finally
                 {
@@ -93,12 +111,12 @@ namespace Novels
                 {
                     bootstrap.ShowLoading(strings.Loading);
                     await _bundles.LoadReleaseAsync(
-                        Application.version,
+                        _environment.ClientVersion,
                         _supportedContentSchemaVersion);
                     return await LoadCatalog();
                 }
                 catch (OperationCanceledException)
-                    when (_ctx.CancellationToken.IsCancellationRequested)
+                    when (_environment.CancellationToken.IsCancellationRequested)
                 {
                     throw;
                 }
@@ -124,8 +142,9 @@ namespace Novels
             return new Bundles.Entity(new Bundles.Entity.Ctx
             {
                 ContentSource = _ctx.ContentSource,
-                PersistentDataPath = _ctx.PersistentDataPath,
-                CancellationToken = _ctx.CancellationToken,
+                PersistentDataPath = _environment.PersistentDataPath,
+                Platform = _environment.ContentPlatform,
+                CancellationToken = _environment.CancellationToken,
                 OnLog = _ctx.OnLog,
             });
         }
@@ -136,20 +155,20 @@ namespace Novels
         {
             await _priorityLoader.Run(() => _bundles
                 .GetAssetBundle(Catalog.CatalogAddresses.BundleName)
-                .AttachExternalCancellation(_ctx.CancellationToken));
+                .AttachExternalCancellation(_environment.CancellationToken));
 
             var catalog = await _priorityLoader.Run(() => _bundles
                 .GetBundledSO<Catalog.NovelCatalogAsset>(
                     new Bundles.BundleAssetAddress(
                         Catalog.CatalogAddresses.BundleName,
                         Catalog.CatalogAddresses.AssetName))
-                .AttachExternalCancellation(_ctx.CancellationToken));
+                .AttachExternalCancellation(_environment.CancellationToken));
             var screen = await _priorityLoader.Run(() => _bundles
                 .GetBundledPrefab(
                     new Bundles.BundleAssetAddress(
                         Catalog.CatalogAddresses.BundleName,
                         Catalog.CatalogAddresses.ScreenAssetName))
-                .AttachExternalCancellation(_ctx.CancellationToken));
+                .AttachExternalCancellation(_environment.CancellationToken));
             if (catalog == null || screen == null)
             {
                 throw new InvalidOperationException(
@@ -169,7 +188,7 @@ namespace Novels
                 StringComparer.OrdinalIgnoreCase);
             var items = catalog.Entries.Select(entry =>
             {
-                var text = entry.Resolve(_locale.Code);
+                var text = entry.Resolve(_locale);
                 return new Catalog.CatalogItem(
                     entry.ContentId,
                     text.Title,
@@ -179,10 +198,10 @@ namespace Novels
             using var selection = new Catalog.Entity(new Catalog.Entity.Ctx
             {
                 BundledPrefab = screen,
-                CancellationToken = _ctx.CancellationToken,
+                CancellationToken = _environment.CancellationToken,
             });
             var selected = await selection.Select(
-                catalog.Resolve(_locale.Code).Title,
+                catalog.Resolve(_locale).Title,
                 items);
             return entries[selected.Id];
         }
@@ -203,7 +222,7 @@ namespace Novels
             using var selection = new Catalog.Entity(new Catalog.Entity.Ctx
             {
                 BundledPrefab = screen,
-                CancellationToken = _ctx.CancellationToken,
+                CancellationToken = _environment.CancellationToken,
             });
             var title = _localization.Get(ApplicationText.ChooseEpisode);
             var selected = await selection.Select(title, items);
@@ -216,6 +235,28 @@ namespace Novels
                 _localization.Get(ApplicationText.CatalogLoading),
                 _localization.Get(ApplicationText.CatalogLoadFailed),
                 _localization.Get(ApplicationText.Retry));
+        }
+
+        private async UniTask PrepareContent(
+            Bootstrap.Entity bootstrap,
+            string deliveryGroup)
+        {
+            if (_bundles.DeliveryMode == Bundles.ContentDeliveryMode.Embedded)
+                return;
+            var message = _localization.Get(ApplicationText.PreparingContent);
+            bootstrap.ShowLoading(message);
+            try
+            {
+                await _bundles.PrepareDeliveryGroup(
+                    deliveryGroup,
+                    progress => bootstrap.ShowLoading(
+                        $"{message} {progress.CompletedFiles}/{progress.TotalFiles}"),
+                    _environment.CancellationToken);
+            }
+            finally
+            {
+                bootstrap.Hide();
+            }
         }
 
         private readonly struct BootstrapStrings

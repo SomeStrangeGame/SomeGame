@@ -4,11 +4,6 @@ namespace Novels.PathGetter
 {
     public class Entity : BaseDisposable
     {
-        private const string _remoteAssetsRoot = "Assets/RemoteAssets";
-        private const string _prefabExtension = ".prefab";
-        private const string _imageExtension = ".png";
-        private const string _assetExtension = ".asset";
-
         public struct Ctx
         {
             public string Prefix;
@@ -21,76 +16,50 @@ namespace Novels.PathGetter
             _ctx = ctx;
         }
 
-        public string GetNovelTextPath(string path)
-        {
-            if (string.IsNullOrEmpty(path)) return string.Empty;
+        public string GetNovelTextPath(string path) =>
+            ContentAddressing.ContentAddressConvention.NovelText(_ctx.Prefix, path);
 
-            return $"NovelTexts/{_ctx.Prefix}/{path}";
-        }
+        public string GetMainLoadingPrefabAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.MainLoadingPrefab(assetName);
 
-        public string GetMainLoadingPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+        public string GetLoadingPrefabAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.LoadingPrefab(
+                _ctx.Prefix,
+                assetName);
 
-            return $"{_remoteAssetsRoot}/Loading/{assetName}{_prefabExtension}";
-        }
+        public string GetSettingPrefabAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.SettingPrefab(
+                _ctx.Prefix,
+                assetName);
 
-        public string GetLoadingPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+        public string GetBubblePrefabAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.BubblePrefab(
+                _ctx.Prefix,
+                assetName);
 
-            return $"{_remoteAssetsRoot}/Loading/{_ctx.Prefix}/{assetName}{_prefabExtension}";
-        }
+        public string GetLocationPrefabAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.LocationPrefab(
+                _ctx.Prefix,
+                assetName);
 
-        public string GetSettingPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+        public string GetLocationImagePath(string assetName) =>
+            ContentAddressing.ContentAddressConvention.LocationImage(
+                _ctx.Prefix,
+                assetName);
 
-            return $"{_remoteAssetsRoot}/Setting/{_ctx.Prefix}/{assetName}{_prefabExtension}";
-        }
+        public string GetCharacterPrefabAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.CharacterPrefab(
+                _ctx.Prefix,
+                assetName);
 
-        public string GetBubblePrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
+        public string GetNotificationPrefabAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.NotificationPrefab(
+                _ctx.Prefix,
+                assetName);
 
-            return $"{_remoteAssetsRoot}/Bubble/{_ctx.Prefix}/{assetName}{_prefabExtension}";
-        }
-
-        public string GetLocationPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"{_remoteAssetsRoot}/Location/{_ctx.Prefix}/{assetName}{_prefabExtension}";
-        }
-
-        public string GetLocationImagePath(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            var firstChar = char.ToUpperInvariant(assetName[0]);
-            var otherText = assetName.Substring(1).ToLowerInvariant();
-            return $"{_remoteAssetsRoot}/Location/{_ctx.Prefix}/Locations/{firstChar}{otherText}{_imageExtension}";
-        }
-
-        public string GetCharacterPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"{_remoteAssetsRoot}/Character/{_ctx.Prefix}/{assetName}{_prefabExtension}";
-        }
-
-        public string GetNotificationPrefabAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"{_remoteAssetsRoot}/Notification/{_ctx.Prefix}/{assetName}{_prefabExtension}";
-        }
-
-        public string GetLocalizationDataAssetName(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return string.Empty;
-
-            return $"{_remoteAssetsRoot}/Localization/{_ctx.Prefix}/{assetName}{_assetExtension}";
-        }
+        public string GetLocalizationDataAssetName(string assetName) =>
+            ContentAddressing.ContentAddressConvention.LocalizationAsset(
+                _ctx.Prefix,
+                assetName);
     }
 }

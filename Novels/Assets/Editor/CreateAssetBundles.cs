@@ -37,7 +37,10 @@ namespace Editor
             var results = AssetBundleBuildPipeline.Build(profile);
             NovelContentValidator.ValidateBuiltOutputOrThrow();
             foreach (var result in results)
+            {
                 ContentPublishArtifactBuilder.Build(result, profile);
+                PlayerContentSeedBuilder.Build(result, profile);
+            }
         }
 
         public static void BuildAndroidBundlesBatch()

@@ -28,12 +28,15 @@ namespace Editor
         internal static void Log(
             IReadOnlyCollection<ContentFileEntry> files,
             IReadOnlyCollection<ContentDeliveryGroupEntry> groups,
+            long bundleBytes,
             NovelContentBuildProfile profile)
         {
-            var total = files.Sum(file => file.size);
+            var externalBytes = files.Sum(file => file.size);
+            var total = externalBytes + bundleBytes;
             Debug.Log(
-                $"Novel content payload: {files.Count} files, "
-                + $"{FormatBytes(total)}, {groups.Count} delivery groups.");
+                $"Novel content payload: {files.Count} external files, "
+                + $"{FormatBytes(externalBytes)} external, {FormatBytes(bundleBytes)} bundles, "
+                + $"{FormatBytes(total)} total, {groups.Count} delivery groups.");
             foreach (var group in groups)
             {
                 Debug.Log(
@@ -45,6 +48,12 @@ namespace Editor
                 Debug.LogWarning(
                     $"Novel content payload exceeds {FormatBytes(profile.TotalBudgetBytes)}: "
                     + FormatBytes(total));
+                if (profile.EnforceTotalBudget)
+                {
+                    throw new System.InvalidOperationException(
+                        $"Novel content payload exceeds enforced budget "
+                        + $"{FormatBytes(profile.TotalBudgetBytes)}: {FormatBytes(total)}.");
+                }
             }
             foreach (var file in files.Where(
                          file => file.size > profile.LargeFileWarningBytes))

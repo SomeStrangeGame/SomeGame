@@ -21,6 +21,8 @@ namespace Bundles
                     $"Content schema {release.contentSchemaVersion} requires "
                     + $"a newer client (supported: {supportedSchemaVersion}).");
             }
+            if (!Enum.IsDefined(typeof(ContentDeliveryMode), release.deliveryMode))
+                throw new ContentIntegrityException("Content delivery mode is invalid.");
             if (!Version.TryParse(release.minimumClientVersion, out var minimum))
             {
                 throw new ContentIntegrityException(
@@ -102,6 +104,12 @@ namespace Bundles
                             $"Delivery group '{group.id}' totals do not match its files.");
                     }
                 }
+            }
+            if (release.deliveryMode != ContentDeliveryMode.Embedded
+                && groupIds.Count == 0)
+            {
+                throw new ContentIntegrityException(
+                    "Non-embedded content release has no delivery groups.");
             }
             var expectedReleaseId = ContentReleaseFingerprint.Compute(release);
             if (!string.Equals(

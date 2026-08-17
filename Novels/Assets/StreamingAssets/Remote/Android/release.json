@@ -1,7 +1,8 @@
 {
-    "releaseId": "8c5c3b96f97e8a423fb15694af77d9c8375593111fa7601e305f927bed4957ab",
+    "releaseId": "90d8046c73f68a96080c7b16fc0536d19ab52eb396ae411f5e601b3600e1bb96",
     "minimumClientVersion": "0.1.0",
-    "contentSchemaVersion": 1,
+    "contentSchemaVersion": 2,
+    "deliveryMode": 0,
     "bundles": [
         {
             "name": "novels_bubble_tzm_1",

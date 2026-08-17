@@ -14,9 +14,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _targets:
   - 13
-  _contentSchemaVersion: 1
+  _contentSchemaVersion: 2
+  _deliveryMode: 0
+  _embeddedDeliveryGroups: []
   _minimumClientVersion: ''
   _publishRoot: Build/NovelContent
+  _playerSeedRoot: Build/NovelContentSeed
   _totalBudgetBytes: 1073741824
+  _embeddedBudgetBytes: 268435456
+  _enforceTotalBudget: 0
+  _enforceEmbeddedBudget: 0
   _largeFileWarningBytes: 67108864
   _largeWavWarningBytes: 16777216

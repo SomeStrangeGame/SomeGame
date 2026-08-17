@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -9,19 +10,22 @@ namespace Bundles
     public sealed class Scope : BaseDisposable
     {
         private readonly Entity _owner;
+        private readonly CancellationToken _cancellationToken;
         private readonly HashSet<string> _bundleNames = new(
             StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, UniTask<AssetBundle>> _bundleLoads = new(
             StringComparer.OrdinalIgnoreCase);
         private MediaResolver _media;
 
-        internal Scope(Entity owner)
+        internal Scope(Entity owner, CancellationToken cancellationToken)
         {
             _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+            _cancellationToken = cancellationToken;
         }
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
+            EnsureActive();
             if (_bundleNames.Contains(bundleName))
                 return _owner.GetOwnedAssetBundle(bundleName);
             if (!_bundleLoads.TryGetValue(bundleName, out var loading))
@@ -34,6 +38,7 @@ namespace Bundles
 
         public void ConfigureMedia(string prefix, MediaManifest manifest)
         {
+            EnsureActive();
             _media = _owner.CreateMediaResolver(prefix, manifest);
         }
 
@@ -115,6 +120,12 @@ namespace Bundles
             try
             {
                 var bundle = await _owner.AcquireAssetBundle(bundleName);
+                if (IsDisposed || _cancellationToken.IsCancellationRequested)
+                {
+                    _owner.ReleaseBundles(new[] { bundleName });
+                    _cancellationToken.ThrowIfCancellationRequested();
+                    throw new ObjectDisposedException(nameof(Scope));
+                }
                 _bundleNames.Add(bundleName);
                 return bundle;
             }
@@ -132,11 +143,19 @@ namespace Bundles
 
         private void EnsureOwned(string bundleName)
         {
+            EnsureActive();
             if (!_bundleNames.Contains(bundleName))
             {
                 throw new InvalidOperationException(
                     $"AssetBundle '{bundleName}' is not loaded by this scope.");
             }
+        }
+
+        private void EnsureActive()
+        {
+            if (IsDisposed)
+                throw new ObjectDisposedException(nameof(Scope));
+            _cancellationToken.ThrowIfCancellationRequested();
         }
     }
 }

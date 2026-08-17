@@ -8,16 +8,28 @@ namespace Editor
 {
     internal static class BuiltReleaseValidator
     {
-        internal static void Validate(ICollection<string> errors)
+        internal static void Validate(
+            IEnumerable<string> contentIds,
+            ICollection<string> errors)
         {
             var profile = NovelContentBuildProfile.Load();
+            try
+            {
+                profile.Validate();
+            }
+            catch (Exception exception)
+            {
+                errors.Add($"Content build profile is invalid: {exception.Message}");
+                return;
+            }
             foreach (var target in profile.Targets)
-                ValidateTarget(target, profile, errors);
+                ValidateTarget(target, profile, contentIds, errors);
         }
 
         private static void ValidateTarget(
             UnityEditor.BuildTarget target,
             NovelContentBuildProfile profile,
+            IEnumerable<string> contentIds,
             ICollection<string> errors)
         {
             var platform = AssetBundleBuildPipeline.GetPlatformName(target);
@@ -41,6 +53,24 @@ namespace Editor
             {
                 errors.Add($"Content release is invalid: {exception.Message}");
                 return;
+            }
+            if (release.deliveryMode != Bundles.ContentDeliveryMode.Embedded)
+            {
+                var groups = new HashSet<string>(
+                    (release.deliveryGroups ?? Array.Empty<Bundles.ContentDeliveryGroupEntry>())
+                        .Where(group => group != null)
+                        .Select(group => group.id),
+                    StringComparer.OrdinalIgnoreCase);
+                foreach (var contentId in contentIds.Where(
+                             value => !string.IsNullOrWhiteSpace(value)))
+                {
+                    if (!groups.Contains(contentId))
+                    {
+                        errors.Add(
+                            $"Content '{contentId}' has no matching delivery group "
+                            + $"in {platform} release.");
+                    }
+                }
             }
             foreach (var bundle in release.bundles)
             {

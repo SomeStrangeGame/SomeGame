@@ -40,6 +40,15 @@
 
 ## Architecture And Conventions
 
+- Application, selected-novel, and episode lifetimes are distinct. `EpisodeRuntime` owns a linked token and cancels it before disposing `EpisodeScope`; all episode UI, waits, media, queue work, and asset awaits receive that token.
+- Story execution returns `EpisodeRunResult` with `Completed`, `Failed`, or `Cancelled` status. `ApplicationRuntime` decides whether to stop or return to the catalog and is the reporting boundary for fatal execution results.
+- Every external Ink/audio/video resolution requires the active `ContentReleaseSnapshot`; no release-less or `legacy` content-file path remains.
+- `ContentDeliveryCoordinator` can prepare one release delivery group with file/byte progress, cancellation, disk-space validation, integrity verification, and cache pinning. A pinned group raises the effective LRU floor above the default 512 MiB cache limit when necessary.
+- Release schema 2 carries `Embedded`, `Hybrid`, or `Remote` delivery mode. The build profile controls mode, embedded groups, publish/player-seed roots, and optional hard budgets; the current checked-in profile remains Embedded.
+- `Novels.ContentAddressing` owns `ContentAddressConvention`, the dependency-free shared address schema used by PathGetter, character resolution, and Editor story-reference validation.
+- `EntryPoint` captures immutable `ApplicationEnvironment` values and owns the explicit scene Camera reference. Runtime composition receives locale, client version, platform, persistent path, and camera without ambient lookups.
+- `NovelCiValidation.ValidateExistingContentBatch` and `BuildAndValidateContentBatch` provide non-test batch automation for content validation and complete artifact production.
+
 - Content invariants are enforced at model boundaries: episode IDs, media IDs, and normalized locale codes must be unique case-insensitively.
 - Bundle assets are addressed by immutable `BundleAssetAddress` values. Required loads fail explicitly, while optional sprite probes use a separate API.
 - `CharacterSpriteResolver` owns appearance state and character sprite-address resolution; `Character.Entity` is limited to presentation orchestration.
@@ -58,7 +67,7 @@
 - `StoryQueue.StoryCommandQueueBuilder` maps each non-dialogue story command to one executable queue item. `StoryQueue.DialogueQueueBuilder` owns the last-character state and returns explicit queue items that belong before and after the accumulated commands. It resolves the configured main-character name and typed dialogue presentation into a neutral `StorySpeakerRole` and `StoryCharacterPosition`; `StoryQueue.Entity` is the sole owner of command accumulation and final batch composition. Character, Bubble, and QueueProcess consume the resolved role instead of comparing authored speaker strings.
 - Dialogue background alignment remains a neutral `StoryDialogueAlignment` through StoryQueue and QueueProcess; `Location.Entity` owns the conversion to Unity's `TextAlignment` used by its View.
 - `QueueProcess.Executor` owns sequential execution and draining of completed queue batches. It converts the optional saved choice into a typed `QueueExecutionContext`; every `IQueue` has one `Run(context)` entry point and selects live or replay behavior through `QueueExecutionMode`. The executor is created through the root `Entity.QueueProcess` partial factory; `NovelProcess` receives only its execution delegate and remains responsible for story progression. `Save.Entity` owns the immutable initial-choice snapshot and its replay cursor, exposing the next saved choice through a delegate without leaking its collection.
-- `QueueExecutionContext` carries the novel-session cancellation token. Queue commands are immutable after construction, validate required delegates in their constructors, and cancel user-input waits without leaving the executor suspended.
+- `QueueExecutionContext` carries the episode-lifetime cancellation token. Queue commands are immutable after construction, validate required delegates in their constructors, and cancel user-input waits without leaving the executor suspended.
 - Notifications preserve their non-blocking story behavior through a Notification-owned FIFO dispatcher. The dispatcher serializes presentation, observes cancellation and exceptions, and replaces queue-level fire-and-forget work.
 - `Save.Entity` receives byte-storage operations through delegates and no longer references the Cache assembly. The root `Entity.SaveSystem` factory owns the Cache adapter. Cache owns filesystem path resolution, atomic byte writes, existence checks, and exact-key deletion; filesystem paths are converted to `file://` URLs only at the Bundles video boundary.
 - Save storage writes and accepts only a versioned binary envelope containing content identity, content version, and the choice payload. Saves in obsolete formats or belonging to another episode/version are not replayed.
@@ -142,6 +151,9 @@
 - Isolated Unity compilation and `NovelContentValidator.ValidateBatch` completed without errors. Tests were not created or run.
 
 ## Testing And Tooling
+
+- Latest release: schema 2, Embedded mode, ID `90d8046c73f68a96080c7b16fc0536d19ab52eb396ae411f5e601b3600e1bb96`, 10 bundles, 115 external files, and one delivery group. StreamingAssets, publish, and player-seed copies all passed exact size/SHA-256 checks.
+- `NovelCiValidation.BuildAndValidateContentBatch` and `ValidateExistingContentBatch` completed successfully in isolated Unity 6000.3.11f1 batchmode. The Embedded payload is approximately 1.22 GiB, so the active non-enforcing profile emits expected total and seed budget warnings.
 
 - The latest Android content release is `8c5c3b96f97e8a423fb15694af77d9c8375593111fa7601e305f927bed4957ab`: 10 bundles and 115 external files. Both the StreamingAssets copy and publish artifact passed exact byte-size and SHA-256 verification.
 - A final isolated Unity batch compile and `NovelContentValidator.ValidateBatch` completed successfully after the explicit-content-contracts wave. Tests were not created or run, and no UI asset or dimension was changed.

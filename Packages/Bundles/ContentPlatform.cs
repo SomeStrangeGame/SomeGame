@@ -2,9 +2,9 @@ using System;
 
 namespace Bundles
 {
-    internal static class ContentPlatform
+    public static class ContentPlatform
     {
-        internal static string GetCurrent()
+        public static string GetCurrent()
         {
 #if UNITY_STANDALONE_OSX
             return "Mac";

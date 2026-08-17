@@ -54,6 +54,7 @@ namespace Novels.Diagnostics
         public const string AudioPlaybackFailed = "AUDIO_PLAYBACK_FAILED";
         public const string UnsupportedCameraAction = "UNSUPPORTED_CAMERA_ACTION";
         public const string BundleFailure = "BUNDLE_FAILURE";
+        public const string ContentPreparationFailed = "CONTENT_PREPARATION_FAILED";
         public const string NotificationFailed = "NOTIFICATION_FAILED";
         public const string VideoPlaybackFailed = "VIDEO_PLAYBACK_FAILED";
     }

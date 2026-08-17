@@ -12,6 +12,7 @@ namespace Bundles
         {
             public IContentSource ContentSource;
             public string PersistentDataPath;
+            public string Platform;
             public long ContentFileCacheLimit;
             public CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
@@ -22,6 +23,7 @@ namespace Bundles
 
         private readonly ContentReleaseProvider _releases;
         private readonly ContentFileStore _contentFiles;
+        private readonly ContentDeliveryCoordinator _delivery;
         private readonly BundleStore _bundles;
 
         public Entity(Ctx ctx)
@@ -29,7 +31,9 @@ namespace Bundles
             var source = ctx.ContentSource
                 ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
             var cache = new Cache.Entity(ctx.PersistentDataPath).AddTo(this);
-            var platform = ContentPlatform.GetCurrent();
+            var platform = string.IsNullOrWhiteSpace(ctx.Platform)
+                ? ContentPlatform.GetCurrent()
+                : ctx.Platform;
             var integrity = new ContentIntegrityVerifier(ctx.CancellationToken);
             _releases = new ContentReleaseProvider(
                 source,
@@ -47,6 +51,7 @@ namespace Bundles
                     : _defaultContentFileCacheLimit,
                 ctx.CancellationToken,
                 ctx.OnLog);
+            _delivery = new ContentDeliveryCoordinator(_releases, _contentFiles);
             var payloads = new BundlePayloadLoader(
                 source,
                 cache,
@@ -57,12 +62,25 @@ namespace Bundles
             _bundles = new BundleStore(payloads, platform, ctx.CancellationToken);
         }
 
-        public Scope CreateScope() => new(this);
+        public Scope CreateScope() => new(this, _releases.CancellationToken);
+
+        public Scope CreateScope(CancellationToken cancellationToken) =>
+            new(this, cancellationToken);
 
         public UniTask<ContentReleaseSnapshot> LoadReleaseAsync(
             string clientVersion,
             int supportedSchemaVersion) =>
             _releases.LoadAsync(clientVersion, supportedSchemaVersion);
+
+        public ContentDeliveryMode DeliveryMode =>
+            (_releases.Current ?? throw new ContentConfigurationException(
+                "Content release is not loaded.")).DeliveryMode;
+
+        public UniTask PrepareDeliveryGroup(
+            string groupId,
+            Action<ContentDeliveryProgress> onProgress,
+            CancellationToken cancellationToken) =>
+            _delivery.Prepare(groupId, onProgress, cancellationToken);
 
         public UniTask<AssetBundle> GetAssetBundle(string bundleName) =>
             _bundles.GetPersistent(bundleName);

@@ -41,7 +41,7 @@ namespace Novels
             _ctx = ctx;
         }
 
-        internal async UniTask ShowNovelProcess()
+        internal async UniTask<EpisodeRunResult> ShowNovelProcess()
         {
             await _ctx.HideLoading().AttachExternalCancellation(_ctx.CancellationToken);
 
@@ -54,10 +54,11 @@ namespace Novels
                 {
                     if (_ctx.CompleteQueue(out var finalQueue))
                     {
-                        if (!await TryExecute(finalQueue, null))
-                            return;
+                        var execution = await TryExecute(finalQueue, null);
+                        if (execution.HasValue)
+                            return execution.Value;
                     }
-                    return;
+                    return EpisodeRunResult.Completed();
                 }
 
                 var stepResult = _ctx.ParseStep(readResult.Source, readResult.Choices);
@@ -74,12 +75,15 @@ namespace Novels
                 if (!_ctx.BuildQueue(stepResult.Step, out var queue))
                     continue;
 
-                if (!await TryExecute(queue, _ctx.GetNextSavedChoice()))
-                    return;
+                var result = await TryExecute(queue, _ctx.GetNextSavedChoice());
+                if (result.HasValue)
+                    return result.Value;
             }
+
+            return EpisodeRunResult.Cancelled();
         }
 
-        private async UniTask<bool> TryExecute(
+        private async UniTask<EpisodeRunResult?> TryExecute(
             Queue<QueueProcess.IQueue> queue,
             byte? savedChoice)
         {
@@ -89,21 +93,20 @@ namespace Novels
                     queue,
                     savedChoice,
                     _ctx.CancellationToken);
-                return true;
+                return null;
             }
             catch (OperationCanceledException)
                 when (_ctx.CancellationToken.IsCancellationRequested)
             {
-                throw;
+                return EpisodeRunResult.Cancelled();
             }
             catch (Exception exception)
             {
-                _ctx.OnError(new Diagnostics.NovelError(
+                return EpisodeRunResult.Failed(new Diagnostics.NovelError(
                     Diagnostics.NovelErrorCodes.QueueExecutionFailed,
                     Diagnostics.NovelErrorSeverity.Fatal,
                     "Story queue execution failed.",
                     exception: exception));
-                return false;
             }
         }
     }

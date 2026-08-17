@@ -38,4 +38,12 @@ namespace Bundles
         {
         }
     }
+
+    public sealed class ContentStorageException : Exception
+    {
+        public ContentStorageException(string message)
+            : base(message)
+        {
+        }
+    }
 }

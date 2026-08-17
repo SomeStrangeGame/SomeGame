@@ -1,21 +1,27 @@
 using System;
 using Cysharp.Threading.Tasks;
 using Disposable;
+using System.Threading;
 using UnityEngine;
 
 namespace Novels
 {
     internal partial class Entity
     {
-        private Location.Entity CreateLocation(IBaseDisposable owner, GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, UniTask<string>> resolveVideoUrl)
+        private Location.Entity CreateLocation(
+            IBaseDisposable owner,
+            GameObject screenPrefab,
+            Func<string, UniTask<Sprite>> getSprite,
+            Func<string, UniTask<string>> resolveVideoUrl,
+            CancellationToken cancellationToken)
         {
             var location = new Location.Entity(new Location.Entity.Ctx
             {
                 ScreenPrefab = screenPrefab,
-                TargetCamera = Camera.main,
+                TargetCamera = _ctx.TargetCamera,
                 GetSprite = getSprite,
                 ResolveVideoUrl = resolveVideoUrl,
-                CancellationToken = _ctx.CancellationToken,
+                CancellationToken = cancellationToken,
 
                 OnError = _ctx.OnError,
             }).AddTo(owner);

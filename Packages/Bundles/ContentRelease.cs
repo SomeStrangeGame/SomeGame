@@ -11,6 +11,7 @@ namespace Bundles
         public string releaseId;
         public string minimumClientVersion;
         public int contentSchemaVersion;
+        public ContentDeliveryMode deliveryMode;
         public BundleReleaseEntry[] bundles;
         public ContentFileEntry[] files;
         public ContentDeliveryGroupEntry[] deliveryGroups;
@@ -53,6 +54,7 @@ namespace Bundles
             ReleaseId = source.releaseId;
             MinimumClientVersion = source.minimumClientVersion;
             ContentSchemaVersion = source.contentSchemaVersion;
+            DeliveryMode = source.deliveryMode;
             var bundles = (source.bundles ?? Array.Empty<BundleReleaseEntry>())
                 .Select(value => new BundleReleaseDescriptor(value))
                 .ToArray();
@@ -74,6 +76,7 @@ namespace Bundles
         public string ReleaseId { get; }
         public string MinimumClientVersion { get; }
         public int ContentSchemaVersion { get; }
+        public ContentDeliveryMode DeliveryMode { get; }
         public IReadOnlyList<BundleReleaseDescriptor> Bundles { get; }
         public IReadOnlyList<ContentFileDescriptor> Files { get; }
         public IReadOnlyList<ContentDeliveryGroupDescriptor> DeliveryGroups { get; }

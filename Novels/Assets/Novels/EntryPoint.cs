@@ -1,5 +1,6 @@
 using System;
 using System.Threading;
+using System.Globalization;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -9,6 +10,7 @@ namespace Novels
     public class EntryPoint : MonoBehaviour
     {
         [SerializeField] private Logs.Entity.ShowLogs _logs;
+        [SerializeField] private Camera _targetCamera;
 
         private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
@@ -21,12 +23,18 @@ namespace Novels
             Application.targetFrameRate = 30;
 
             _sessionCancellation = new CancellationTokenSource();
+            var environment = new ApplicationEnvironment(
+                _sessionCancellation.Token,
+                Application.persistentDataPath,
+                Application.version,
+                new Locale.LocaleProvider(CultureInfo.CurrentUICulture).Code,
+                Bundles.ContentPlatform.GetCurrent(),
+                _targetCamera);
             _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
             {
-                CancellationToken = _sessionCancellation.Token,
+                Environment = environment,
                 ContentSource = new Bundles.StreamingAssetsSource(
                     _sessionCancellation.Token),
-                PersistentDataPath = Application.persistentDataPath,
                 OnLog = data => 
                 {
                     using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
