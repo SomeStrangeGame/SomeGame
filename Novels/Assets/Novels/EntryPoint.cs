@@ -10,7 +10,7 @@ namespace Novels
     {
         [SerializeField] private Logs.Entity.ShowLogs _logs;
 
-        private Entity _entity;
+        private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
 
         private void OnEnable()
@@ -21,9 +21,12 @@ namespace Novels
             Application.targetFrameRate = 30;
 
             _sessionCancellation = new CancellationTokenSource();
-            _entity = new Entity(new Entity.Ctx
+            _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
             {
                 CancellationToken = _sessionCancellation.Token,
+                ContentSource = new Bundles.StreamingAssetsSource(
+                    _sessionCancellation.Token),
+                PersistentDataPath = Application.persistentDataPath,
                 OnLog = data => 
                 {
                     using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
@@ -31,14 +34,16 @@ namespace Novels
                 },
                 OnError = ReportError,
             });
-            Run(_entity, _sessionCancellation.Token).Forget();
+            Run(_runtime, _sessionCancellation.Token).Forget();
         }
 
-        private async UniTaskVoid Run(Entity entity, CancellationToken cancellationToken)
+        private async UniTaskVoid Run(
+            ApplicationRuntime runtime,
+            CancellationToken cancellationToken)
         {
             try
             {
-                await entity.Init();
+                await runtime.Run();
             }
             catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
             {
@@ -58,7 +63,7 @@ namespace Novels
             _sessionCancellation?.Cancel();
             try
             {
-                _entity?.Dispose();
+                _runtime?.Dispose();
             }
             catch (Exception exception)
             {
@@ -69,21 +74,21 @@ namespace Novels
             {
                 _sessionCancellation?.Dispose();
                 _sessionCancellation = null;
-                _entity = null;
+                _runtime = null;
             }
         }
 
         private void OnApplicationPause(bool pauseStatus)
         {
-            if (pauseStatus && _entity != null)
-                FlushSave(_entity).Forget();
+            if (pauseStatus && _runtime != null)
+                FlushSave(_runtime).Forget();
         }
 
-        private async UniTaskVoid FlushSave(Entity entity)
+        private async UniTaskVoid FlushSave(ApplicationRuntime runtime)
         {
             try
             {
-                await entity.FlushSaveAsync();
+                await runtime.FlushSaveAsync();
             }
             catch (Exception exception)
             {

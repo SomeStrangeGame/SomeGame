@@ -10,14 +10,6 @@ namespace Novels
 {
     internal partial class Entity : BaseDisposable
     {
-        private const string _screenAssetName = "Screen";
-        private const string _localizationDataAssetName = "LocalizationData";
-        private const string _catalogBundleName = "novels_catalog";
-        private const string _catalogAssetName =
-            "Assets/RemoteAssets/Catalog/NovelCatalog.asset";
-        private const string _catalogScreenAssetName =
-            "Assets/RemoteAssets/Catalog/Screen.prefab";
-        private const string _contentBundleName = "novels_content";
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
 
         internal struct Ctx
@@ -25,28 +17,38 @@ namespace Novels
             internal CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
+            internal Bundles.Entity Bundles;
+            internal Catalog.NovelCatalogEntry Content;
+            internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
+                SelectEpisode;
         }
 
         private readonly Ctx _ctx;
         private readonly PriorityLoader _priorityLoader;
         private Content.NovelDefinition _definition;
+        private Content.EpisodeDefinition _episode;
         private AudioMixer _audioMixer;
         private Save.Entity _saveSystem;
 
         internal Entity(Ctx ctx)
         {
             _ctx = ctx;
+            if (ctx.Bundles == null)
+                throw new ArgumentNullException(nameof(ctx.Bundles));
+            if (ctx.Content == null)
+                throw new ArgumentNullException(nameof(ctx.Content));
+            if (ctx.SelectEpisode == null)
+                throw new ArgumentNullException(nameof(ctx.SelectEpisode));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
-            Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
 
         internal async UniTask Init()
         {
             var state = new BootstrapState();
-            state.Bundles = CreateBundles();
-            var catalog = await LoadCatalog(state.Bundles);
-            var contentId = await SelectContent(catalog.catalog, catalog.screen);
-            _definition = await LoadContent(state.Bundles, contentId);
+            state.Bundles = _ctx.Bundles;
+            state.NovelBundles = state.Bundles.CreateScope().AddTo(this);
+            _definition = await LoadContent(state.NovelBundles, _ctx.Content);
+            _episode = await _ctx.SelectEpisode(_definition);
             ConfigureMedia(state.Bundles);
 
             var bootstrap = new NovelBootstrapProcess(

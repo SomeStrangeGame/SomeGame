@@ -1,0 +1,71 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: TZM_1
+  m_EditorClassIdentifier: 
+  _id: TZM_1
+  _prefix: TZM_1
+  _mainCharacter: Salli
+  _mainLoadingBundleName: novels_loading_shared
+  _loadingBundleName: novels_loading_tzm_1
+  _settingBundleName: novels_setting_tzm_1
+  _localizationBundleName: novels_localization_tzm_1
+  _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
+  _episodes:
+  - _id: s01e01
+    _title: "\u042D\u043F\u0438\u0437\u043E\u0434 1"
+    _storyPath: s01e01.ink.json
+    _contentVersion: 1
+    _bubbleBundleName: novels_bubble_tzm_1
+    _locationBundleName: novels_location_tzm_1
+    _characterBundleName: novels_character_tzm_1
+    _notificationBundleName: novels_notification_tzm_1
+    _videoIds:
+    - alexasroom_water
+    - arrivalInatlantis
+    - atlantisdestroy
+    - bike_water
+    - bikeinmove_water
+    - boat
+    - boatinmove
+    - boatsunset
+    - bridge1_water
+    - immersionatlantis
+    - islandunderwater_water
+    - jellyfish
+    - lightingmeteor
+    - mainhall_water
+    - mainroom
+    - meteor
+    - oldtown_water
+    - philshouse
+    - pier
+    - prohod_dark_water
+    - sandybeach
+    - shark
+    - shark1
+    - sharkeat
+    - tonel_water
+    - tonelwithpath
+    - underwater_water
+    - wardrobe_dark_water
+    - wardrobe_water
+    - whirlpoolnight
+    - window in
+    _defaultAudioExtension: .wav
+    _silentAudioIds:
+    - тишина
+    _audioExtensions:
+    - _assetId: Horror
+      _extension: .mp3
+    - _assetId: основная
+      _extension: .WAV

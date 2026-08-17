@@ -23,6 +23,7 @@ namespace Novels.Content
         private struct EpisodeEntry
         {
             [SerializeField] private string _id;
+            [SerializeField] private string _title;
             [SerializeField] private string _storyPath;
             [SerializeField] private string _contentVersion;
             [SerializeField] private string _bubbleBundleName;
@@ -46,6 +47,7 @@ namespace Novels.Content
 
                 return new EpisodeDefinition(
                     _id,
+                    _title,
                     _storyPath,
                     _contentVersion,
                     _bubbleBundleName,
@@ -63,6 +65,7 @@ namespace Novels.Content
         [SerializeField] private string _id;
         [SerializeField] private string _prefix;
         [SerializeField] private string _mainCharacter;
+        [SerializeField] private string _mainLoadingBundleName;
         [SerializeField] private string _loadingBundleName;
         [SerializeField] private string _settingBundleName;
         [SerializeField] private string _localizationBundleName;
@@ -77,6 +80,7 @@ namespace Novels.Content
                 _id,
                 _prefix,
                 _mainCharacter,
+                _mainLoadingBundleName,
                 _loadingBundleName,
                 _settingBundleName,
                 _localizationBundleName,

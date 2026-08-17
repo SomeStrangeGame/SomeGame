@@ -8,7 +8,24 @@ work without reconstructing prior decisions from chat history.
 
 Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
-Last reviewed: 2026-08-15
+Last reviewed: 2026-08-17
+
+## Architecture wave completed on 2026-08-17 (catalog and delivery)
+
+The current ten-item refactoring wave is complete:
+
+1. Bundle transport is represented by injected `IContentSource`; `EntryPoint` is the composition root for the current `StreamingAssetsSource`.
+2. Bundle manifests/version pointers and downloaded Ink text retain a last-known-good cache fallback.
+3. Catalog entries carry explicit bundle and asset addresses, and every `TZM_1` content/feature bundle is story-specific; only the reusable main loading screen remains shared.
+4. `ApplicationRuntime` owns application-wide catalog and bundle services, while `Entity` owns one selected novel and its disposable bundle scope.
+5. A concrete `EpisodeDefinition` is selected before novel bootstrap; runtime code no longer silently reads the first episode through `NovelDefinition.Episode`.
+6. A code-created local bootstrap screen appears before remote assets exist and offers retry when the catalog cannot be loaded.
+7. Story and episode cards use dedicated `Catalog.Entity`, `Catalog.View.Screen`, and `Catalog.View.Card` assemblies instead of reusing Setting.
+8. Catalog and story-card text is localized in `NovelCatalogAsset`, with current-UI-culture selection and deterministic fallback.
+9. Catalog addresses and common bootstrap asset names are centralized in `CatalogAddresses` and `BootstrapAddresses`.
+10. Each built bundle now receives `manifest.json` containing version, byte length, SHA-256, and CRC. Runtime checks size and SHA-256 before accepting downloaded or cached bytes and remains compatible with legacy `version.txt` delivery.
+
+The Android bundles were rebuilt through the staged build pipeline and the existing content validator completed successfully. Unity compiled the changed assemblies without compiler errors or warnings. Tests were not created or run.
 
 ## Architecture wave completed on 2026-08-17 (third review)
 

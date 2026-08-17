@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -13,6 +14,8 @@ namespace Bundles
     {
         public struct Ctx
         {
+            public IContentSource ContentSource;
+            public string PersistentDataPath;
             public CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
             public Action<BundleFailure> OnFailure;
@@ -27,7 +30,7 @@ namespace Bundles
         private readonly Dictionary<string, Dictionary<string, string>> _assetNames = new(
             StringComparer.OrdinalIgnoreCase);
 
-        private readonly StreamingAssetsSource _source;
+        private readonly IContentSource _source;
         private readonly MediaResolver _media;
 
         private Ctx _ctx;
@@ -35,8 +38,9 @@ namespace Bundles
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
-            _cache = new Cache.Entity(Application.persistentDataPath).AddTo(this);
-            _source = new StreamingAssetsSource(ctx.CancellationToken);
+            _source = ctx.ContentSource
+                ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
+            _cache = new Cache.Entity(ctx.PersistentDataPath).AddTo(this);
             _media = new MediaResolver(_cache, _source, ctx.CancellationToken);
         }
 
@@ -150,11 +154,16 @@ namespace Bundles
                 return loadedBundle;
             }
 
-            var bundlesVersion = await GetBundleVersionAsync(bundleName);
+            var manifest = await GetBundleManifestAsync(bundleName);
+            var bundlesVersion = manifest.version;
             var bundlesPath = $"{bundlesKey}/{bundlesVersion}";
             var cachePath = bundlesPath;
             try
             {
+                VerifyBundle(
+                    bundleName,
+                    manifest,
+                    _cache.ReadBytes(cachePath));
                 var cachedBundle = await _cache
                     .BundleFromCache(cachePath)
                     .AttachExternalCancellation(_ctx.CancellationToken);
@@ -174,6 +183,7 @@ namespace Bundles
                 log = (LogType.Warning, $"No local bundle {bundleName} in {bundlesKey}\nTry load from {_source.GetUrl(bundlesPath)}\n---\n{e}");
                 var data = await _source.DownloadBytes(bundlesPath);
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
+                VerifyBundle(bundleName, manifest, data);
                 var downloadedBundle = await _cache
                     .BundleToCache(cachePath, data)
                     .AttachExternalCancellation(_ctx.CancellationToken);
@@ -182,6 +192,13 @@ namespace Bundles
                 _bundles[bundlesKey] = downloadedBundle;
                 RegisterAssetNames(bundlesKey, downloadedBundle);
                 _cache.PruneDirectory(bundlesKey, bundlesVersion);
+            }
+            _cache.TextToCache(GetVersionPointerPath(bundleName), bundlesVersion);
+            if (manifest.HasIntegrity)
+            {
+                _cache.TextToCache(
+                    GetManifestPointerPath(bundleName),
+                    JsonUtility.ToJson(manifest));
             }
             _ctx.OnLog.Invoke(log);
             return _bundles[bundlesKey];
@@ -258,15 +275,169 @@ namespace Bundles
         private async UniTask<string> GetBundleVersionAsync(string bundleName)
         {
             var path = $"Remote/{GetPlatform()}/{bundleName}/version.txt";
-            var bundlesVersion = (await _source.DownloadText(path)).Trim();
-            if (bundlesVersion.Length == 0)
-                throw new InvalidDataException($"Bundle version is empty for '{bundleName}'.");
-            return bundlesVersion;
+            try
+            {
+                var bundlesVersion = (await _source.DownloadText(path)).Trim();
+                if (bundlesVersion.Length == 0)
+                    throw new InvalidDataException(
+                        $"Bundle version is empty for '{bundleName}'.");
+                return bundlesVersion;
+            }
+            catch (OperationCanceledException) when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                var pointerPath = GetVersionPointerPath(bundleName);
+                if (!_cache.Exists(pointerPath))
+                {
+                    throw new InvalidOperationException(
+                        $"Bundle version for '{bundleName}' is unavailable and "
+                        + "no last-known-good version is cached.",
+                        exception);
+                }
+
+                var cachedVersion = _cache.TextFromCache(pointerPath).Trim();
+                if (cachedVersion.Length == 0)
+                    throw new InvalidDataException(
+                        $"Cached bundle version is empty for '{bundleName}'.",
+                        exception);
+
+                _ctx.OnLog?.Invoke((
+                    LogType.Warning,
+                    $"Use cached version '{cachedVersion}' for bundle "
+                    + $"'{bundleName}' because the content source is unavailable."));
+                return cachedVersion;
+            }
+        }
+
+        private async UniTask<BundleManifest> GetBundleManifestAsync(
+            string bundleName)
+        {
+            var path = $"Remote/{GetPlatform()}/{bundleName}/manifest.json";
+            try
+            {
+                var manifest = JsonUtility.FromJson<BundleManifest>(
+                    await _source.DownloadText(path));
+                ValidateManifest(bundleName, manifest);
+                return manifest;
+            }
+            catch (OperationCanceledException)
+                when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                var cachedPath = GetManifestPointerPath(bundleName);
+                if (_cache.Exists(cachedPath))
+                {
+                    try
+                    {
+                        var cached = JsonUtility.FromJson<BundleManifest>(
+                            _cache.TextFromCache(cachedPath));
+                        ValidateManifest(bundleName, cached);
+                        _ctx.OnLog?.Invoke((
+                            LogType.Warning,
+                            $"Use cached integrity manifest for bundle "
+                            + $"'{bundleName}' because the content source is unavailable."));
+                        return cached;
+                    }
+                    catch (Exception cachedException)
+                    {
+                        _ctx.OnLog?.Invoke((
+                            LogType.Warning,
+                            $"Cached manifest for '{bundleName}' is invalid: "
+                            + cachedException.Message));
+                    }
+                }
+
+                _ctx.OnLog?.Invoke((
+                    LogType.Warning,
+                    $"Integrity manifest for '{bundleName}' is unavailable; "
+                    + $"fall back to legacy version.txt. {exception.Message}"));
+                return BundleManifest.Legacy(
+                    await GetBundleVersionAsync(bundleName));
+            }
+        }
+
+        private static void ValidateManifest(
+            string bundleName,
+            BundleManifest manifest)
+        {
+            if (manifest == null
+                || string.IsNullOrWhiteSpace(manifest.version)
+                || manifest.size <= 0
+                || string.IsNullOrWhiteSpace(manifest.sha256))
+            {
+                throw new InvalidDataException(
+                    $"Integrity manifest for '{bundleName}' is incomplete.");
+            }
+        }
+
+        private static void VerifyBundle(
+            string bundleName,
+            BundleManifest manifest,
+            byte[] data)
+        {
+            if (!manifest.HasIntegrity)
+                return;
+            if (data == null || data.LongLength != manifest.size)
+            {
+                throw new InvalidDataException(
+                    $"Bundle '{bundleName}' size mismatch. Expected "
+                    + $"{manifest.size}, got {data?.LongLength ?? 0}.");
+            }
+
+            using var sha = SHA256.Create();
+            var actual = BitConverter.ToString(sha.ComputeHash(data))
+                .Replace("-", string.Empty)
+                .ToLowerInvariant();
+            if (!string.Equals(
+                    actual,
+                    manifest.sha256,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidDataException(
+                    $"Bundle '{bundleName}' SHA-256 mismatch.");
+            }
+        }
+
+        private string GetVersionPointerPath(string bundleName)
+        {
+            return $"Remote/{GetPlatform()}/BundleVersions/{bundleName}.txt";
+        }
+
+        private string GetManifestPointerPath(string bundleName)
+        {
+            return $"Remote/{GetPlatform()}/BundleManifests/{bundleName}.json";
         }
 
         public async UniTask<string> GetText(string path)
         {
-            return await _source.DownloadText(path);
+            try
+            {
+                var text = await _source.DownloadText(path);
+                _ctx.CancellationToken.ThrowIfCancellationRequested();
+                _cache.TextToCache(path, text);
+                return text;
+            }
+            catch (OperationCanceledException)
+                when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                if (!_cache.Exists(path))
+                    throw;
+                _ctx.OnLog?.Invoke((
+                    LogType.Warning,
+                    $"Use cached text '{path}' because the content source "
+                    + $"is unavailable. {exception.Message}"));
+                return _cache.TextFromCache(path);
+            }
         }
 
         private string GetPlatform()

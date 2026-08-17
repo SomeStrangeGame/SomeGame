@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
@@ -66,6 +67,18 @@ namespace Editor
                 if (!File.Exists(sourceFile))
                     throw new FileNotFoundException("Built bundle is missing.", sourceFile);
 
+                if (!BuildPipeline.GetCRCForAssetBundle(sourceFile, out var crc))
+                    throw new InvalidOperationException(
+                        $"Could not calculate CRC for bundle '{bundle}'.");
+                var bundleBytes = File.ReadAllBytes(sourceFile);
+                string sha256;
+                using (var sha = SHA256.Create())
+                {
+                    sha256 = BitConverter.ToString(sha.ComputeHash(bundleBytes))
+                        .Replace("-", string.Empty)
+                        .ToLowerInvariant();
+                }
+
                 var bundleDirectory = Path.Combine(targetPath, bundle);
                 var temporaryFile = sourceFile + ".built";
                 File.Move(sourceFile, temporaryFile);
@@ -75,7 +88,28 @@ namespace Editor
                     Path.Combine(bundleDirectory, "version.txt"),
                     hash,
                     new UTF8Encoding(false));
+                File.WriteAllText(
+                    Path.Combine(bundleDirectory, "manifest.json"),
+                    JsonUtility.ToJson(
+                        new BundleIntegrityManifest
+                        {
+                            version = hash,
+                            size = bundleBytes.LongLength,
+                            sha256 = sha256,
+                            crc = crc,
+                        },
+                        true),
+                    new UTF8Encoding(false));
             }
+        }
+
+        [Serializable]
+        private sealed class BundleIntegrityManifest
+        {
+            public string version;
+            public long size;
+            public string sha256;
+            public uint crc;
         }
 
         private static string GetPlatformName(BuildTarget target)

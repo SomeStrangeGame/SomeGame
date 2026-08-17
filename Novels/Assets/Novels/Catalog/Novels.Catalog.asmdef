@@ -1,7 +1,11 @@
 {
     "name": "Novels.Catalog",
     "rootNamespace": "",
-    "references": [],
+    "references": [
+        "GUID:f51ebe6a0ceec4240a699833d6309b23",
+        "GUID:4e92d100654dc45f98cda46918112b48",
+        "GUID:6b8f557b6ff447a9a7eca7354646b1ea"
+    ],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

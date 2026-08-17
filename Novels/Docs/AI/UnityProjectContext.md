@@ -7,7 +7,7 @@
 - Root: `/Users/iantonishin/Fork/SomeGame/Novels`
 - Unity: 6000.3.11f1 (`3000ef702840`)
 - Product: single-scene visual-novel player driven by compiled Ink and AssetBundles.
-- Last analyzed: 2026-08-15; baseline commit `2002ab14f2c42a180eb1b1ae306f46003285f7a0`.
+- Last analyzed: 2026-08-17; baseline commit `2002ab14f2c42a180eb1b1ae306f46003285f7a0`.
 
 ## Confirmed Environment
 
@@ -33,9 +33,9 @@
 ## Scenes And Startup
 
 - Only enabled build scene: `Assets/Novels/Novels.unity`.
-- Scene `EntryPoint.OnEnable()` initializes UniTask's player loop, caps FPS at 30, constructs `Novels.Entity`, and starts an exception-observing session wrapper.
-- `Entity.Init()` creates `NovelBootstrapProcess`. The bootstrap coordinates application preparation, New Game/Continue selection, episode preparation, and episode execution through delegates; root partial factories remain responsible for concrete object creation.
-- The scene contains no concrete story ID. Startup loads `NovelCatalog.asset` and its selection screen from `novels_catalog`; the selected entry supplies a content ID such as `TZM_1`. The root then loads `Assets/RemoteAssets/Content/{contentId}.asset` from `novels_content`; that asset selects the prefix, main character, episodes, media, and feature bundles.
+- Scene `EntryPoint.OnEnable()` initializes UniTask's player loop, caps FPS at 30, creates the concrete `IContentSource`, captures `Application.persistentDataPath` on the main thread, constructs `ApplicationRuntime`, and starts an exception-observing session wrapper.
+- `ApplicationRuntime` owns the shared bundle service, local bootstrap/retry UI, remote catalog, story selection, and the currently active novel runtime. `Entity.Init()` owns one selected story and creates `NovelBootstrapProcess`, which coordinates application preparation, New Game/Continue selection, episode preparation, and episode execution through delegates.
+- The scene contains no concrete story ID. Startup loads `NovelCatalog.asset` and its selection screen from `novels_catalog`; `Catalog.Entity/View` presents localized cards and returns a selected catalog entry. The entry supplies explicit content bundle and asset addresses such as `novels_content_tzm_1` and `Assets/RemoteAssets/Content/TZM_1/TZM_1.asset`. The loaded definition then presents an explicit episode selection and supplies per-story feature bundle names.
 - `StoryCommandParser` converts legacy colon-delimited Ink lines into typed commands; `NovelProcess` maps them to queued actions for location/cut-scene, audio, camera, waits, notifications, character presentation, dialogue, and choices.
 
 ## Architecture And Conventions
@@ -88,8 +88,8 @@
 
 ## Architecture wave completed on 2026-08-17 (authoring and runtime ownership)
 
-- `NovelCatalogAsset` is the remote authoring source for available stories and their selection labels. It lives in the application-owned `novels_catalog` bundle together with a generic button-list screen. The selected entry supplies the content ID; `EntryPoint` now contains only logging configuration.
-- `NovelContentAsset` is the authoring source for one novel's identity, application bundles, episodes, media, AudioMixer, and content versions. The composition root loads `RemoteAssets/Content/{contentId}.asset` from `novels_content` after catalog selection and then constructs `NovelDefinition`.
+- `NovelCatalogAsset` is the remote authoring source for available stories and localized card text. It lives in the application-owned `novels_catalog` bundle together with the `Catalog.View` screen. The selected entry supplies content ID, bundle, and full asset address; `EntryPoint` contains only composition-root configuration.
+- `NovelContentAsset` is the authoring source for one novel's identity, application bundles, episodes, media, AudioMixer, and content versions. Every story has its own content and feature bundle names (`*_tzm_1` for the current story); only the main loading screen is in `novels_loading_shared`.
 - `Bundles.Entity` can load bundles before a novel prefix is known. Its media resolver is configured later with the prefix and episode media manifest, after `NovelContentAsset` has loaded. This keeps the local `StreamingAssets` source compatible with its future replacement by a remote server/CDN.
 - `NovelDefinition`, episode collections, video IDs, audio overrides, and silent-audio IDs expose defensive read-only collections.
 - `EpisodeRuntime`, created through the root partial factory, owns the episode scope and guarantees save flushing at episode completion.

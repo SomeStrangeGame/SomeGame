@@ -8,7 +8,7 @@ namespace Editor
     internal static class CatalogPrefabBuilder
     {
         private const string _prefabPath =
-            "Assets/RemoteAssets/Catalog/Screen.prefab";
+            Novels.Catalog.CatalogAddresses.ScreenAssetName;
 
         public static void BuildBatch()
         {
@@ -26,7 +26,7 @@ namespace Editor
                 typeof(Canvas),
                 typeof(CanvasScaler),
                 typeof(GraphicRaycaster),
-                typeof(Setting.View.Screen));
+                typeof(Novels.Catalog.View.Screen));
             try
             {
                 var canvas = root.GetComponent<Canvas>();
@@ -61,34 +61,55 @@ namespace Editor
                 layout.childForceExpandWidth = true;
                 layout.childForceExpandHeight = false;
 
-                var description = CreateText("Description", 32, FontStyle.Bold);
-                description.transform.SetParent(content.transform, false);
-                description.alignment = TextAnchor.MiddleCenter;
-                description.color = new Color32(21, 21, 21, 255);
-                description.gameObject.AddComponent<LayoutElement>().preferredHeight = 140f;
+                var title = CreateText("Title", 32, FontStyle.Bold);
+                title.transform.SetParent(content.transform, false);
+                title.alignment = TextAnchor.MiddleCenter;
+                title.color = new Color32(21, 21, 21, 255);
+                title.gameObject.AddComponent<LayoutElement>().preferredHeight = 100f;
 
-                var buttonObject = CreateUiObject(
-                    "ButtonTemplate",
+                var cardObject = CreateUiObject(
+                    "CardTemplate",
                     typeof(Image),
                     typeof(Button),
-                    typeof(LayoutElement));
-                buttonObject.transform.SetParent(content.transform, false);
-                var buttonImage = buttonObject.GetComponent<Image>();
+                    typeof(LayoutElement),
+                    typeof(VerticalLayoutGroup),
+                    typeof(Novels.Catalog.View.Card));
+                cardObject.transform.SetParent(content.transform, false);
+                var buttonImage = cardObject.GetComponent<Image>();
                 buttonImage.color = new Color32(63, 94, 140, 255);
-                var button = buttonObject.GetComponent<Button>();
+                var button = cardObject.GetComponent<Button>();
                 button.targetGraphic = buttonImage;
-                buttonObject.GetComponent<LayoutElement>().preferredHeight = 96f;
+                cardObject.GetComponent<LayoutElement>().preferredHeight = 120f;
+                var cardLayout = cardObject.GetComponent<VerticalLayoutGroup>();
+                cardLayout.padding = new RectOffset(20, 20, 12, 12);
+                cardLayout.childAlignment = TextAnchor.MiddleCenter;
+                cardLayout.childControlHeight = true;
+                cardLayout.childControlWidth = true;
+                cardLayout.childForceExpandHeight = false;
 
-                var label = CreateText("Label", 24, FontStyle.Normal);
-                label.transform.SetParent(buttonObject.transform, false);
-                Stretch(label.rectTransform);
-                label.alignment = TextAnchor.MiddleCenter;
-                label.color = Color.white;
-                label.raycastTarget = false;
+                var cardTitle = CreateText("Title", 24, FontStyle.Bold);
+                cardTitle.transform.SetParent(cardObject.transform, false);
+                cardTitle.alignment = TextAnchor.MiddleCenter;
+                cardTitle.color = Color.white;
+                cardTitle.raycastTarget = false;
+                var cardDescription = CreateText("Description", 18, FontStyle.Normal);
+                cardDescription.transform.SetParent(cardObject.transform, false);
+                cardDescription.alignment = TextAnchor.MiddleCenter;
+                cardDescription.color = Color.white;
+                cardDescription.raycastTarget = false;
 
-                var screen = new SerializedObject(root.GetComponent<Setting.View.Screen>());
-                screen.FindProperty("_description").objectReferenceValue = description;
-                screen.FindProperty("_buttonPrefab").objectReferenceValue = button;
+                var card = new SerializedObject(
+                    cardObject.GetComponent<Novels.Catalog.View.Card>());
+                card.FindProperty("_title").objectReferenceValue = cardTitle;
+                card.FindProperty("_description").objectReferenceValue = cardDescription;
+                card.FindProperty("_button").objectReferenceValue = button;
+                card.ApplyModifiedPropertiesWithoutUndo();
+
+                var screen = new SerializedObject(
+                    root.GetComponent<Novels.Catalog.View.Screen>());
+                screen.FindProperty("_title").objectReferenceValue = title;
+                screen.FindProperty("_cardPrefab").objectReferenceValue =
+                    cardObject.GetComponent<Novels.Catalog.View.Card>();
                 screen.ApplyModifiedPropertiesWithoutUndo();
 
                 PrefabUtility.SaveAsPrefabAsset(root, _prefabPath);

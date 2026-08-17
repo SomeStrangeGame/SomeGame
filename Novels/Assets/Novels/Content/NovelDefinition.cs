@@ -10,6 +10,7 @@ namespace Novels.Content
             string id,
             string prefix,
             string mainCharacter,
+            string mainLoadingBundleName,
             string loadingBundleName,
             string settingBundleName,
             string localizationBundleName,
@@ -18,6 +19,7 @@ namespace Novels.Content
                 id,
                 prefix,
                 mainCharacter,
+                mainLoadingBundleName,
                 loadingBundleName,
                 settingBundleName,
                 localizationBundleName,
@@ -29,6 +31,7 @@ namespace Novels.Content
             string id,
             string prefix,
             string mainCharacter,
+            string mainLoadingBundleName,
             string loadingBundleName,
             string settingBundleName,
             string localizationBundleName,
@@ -37,6 +40,9 @@ namespace Novels.Content
             Id = Require(id, nameof(id));
             Prefix = Require(prefix, nameof(prefix));
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
+            MainLoadingBundleName = Require(
+                mainLoadingBundleName,
+                nameof(mainLoadingBundleName));
             LoadingBundleName = Require(loadingBundleName, nameof(loadingBundleName));
             SettingBundleName = Require(settingBundleName, nameof(settingBundleName));
             LocalizationBundleName = Require(localizationBundleName, nameof(localizationBundleName));
@@ -49,11 +55,11 @@ namespace Novels.Content
         public string Id { get; }
         public string Prefix { get; }
         public string MainCharacter { get; }
+        public string MainLoadingBundleName { get; }
         public string LoadingBundleName { get; }
         public string SettingBundleName { get; }
         public string LocalizationBundleName { get; }
         public IReadOnlyList<EpisodeDefinition> Episodes { get; }
-        public EpisodeDefinition Episode => Episodes[0];
 
         private static string Require(string value, string parameterName)
         {
@@ -67,6 +73,7 @@ namespace Novels.Content
     {
         public EpisodeDefinition(
             string id,
+            string title,
             string storyPath,
             string contentVersion,
             string bubbleBundleName,
@@ -76,6 +83,7 @@ namespace Novels.Content
             EpisodeMediaDefinition media)
         {
             Id = Require(id, nameof(id));
+            Title = Require(title, nameof(title));
             StoryPath = Require(storyPath, nameof(storyPath));
             ContentVersion = Require(contentVersion, nameof(contentVersion));
             BubbleBundleName = Require(bubbleBundleName, nameof(bubbleBundleName));
@@ -86,6 +94,7 @@ namespace Novels.Content
         }
 
         public string Id { get; }
+        public string Title { get; }
         public string StoryPath { get; }
         public string ContentVersion { get; }
         public string BubbleBundleName { get; }

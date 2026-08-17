@@ -9,7 +9,7 @@ namespace Bundles
     internal sealed class MediaResolver
     {
         private readonly Cache.Entity _cache;
-        private readonly StreamingAssetsSource _source;
+        private readonly IContentSource _source;
         private readonly CancellationToken _cancellationToken;
         private readonly Dictionary<string, string> _videos = new(StringComparer.OrdinalIgnoreCase);
         private string _prefix;
@@ -17,7 +17,7 @@ namespace Bundles
 
         internal MediaResolver(
             Cache.Entity cache,
-            StreamingAssetsSource source,
+            IContentSource source,
             CancellationToken cancellationToken)
         {
             _cache = cache;

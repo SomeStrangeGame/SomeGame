@@ -6,26 +6,26 @@ using UnityEngine.Networking;
 
 namespace Bundles
 {
-    internal sealed class StreamingAssetsSource
+    public sealed class StreamingAssetsSource : IContentSource
     {
         private readonly CancellationToken _cancellationToken;
 
-        internal StreamingAssetsSource(CancellationToken cancellationToken)
+        public StreamingAssetsSource(CancellationToken cancellationToken)
         {
             _cancellationToken = cancellationToken;
         }
 
-        internal string GetUrl(string relativePath)
+        public string GetUrl(string relativePath)
         {
             var path = $"{Application.streamingAssetsPath}/{relativePath}";
-#if UNITY_EDITOR_OSX
+#if UNITY_EDITOR_OSX || UNITY_STANDALONE_OSX
             return new Uri(path).AbsoluteUri;
 #else
             return path;
 #endif
         }
 
-        internal async UniTask<byte[]> DownloadBytes(string path)
+        public async UniTask<byte[]> DownloadBytes(string path)
         {
             using (var request = UnityWebRequest.Get(GetUrl(path)))
             {
@@ -34,7 +34,7 @@ namespace Bundles
             }
         }
 
-        internal async UniTask<string> DownloadText(string path)
+        public async UniTask<string> DownloadText(string path)
         {
             using (var request = UnityWebRequest.Get(GetUrl(path)))
             {

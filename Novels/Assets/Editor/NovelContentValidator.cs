@@ -12,14 +12,6 @@ namespace Editor
     internal static class NovelContentValidator
     {
         private const string _menuPath = "Novels/Validate Content";
-        private const string _catalogBundleName = "novels_catalog";
-        private const string _catalogAssetPath =
-            "Assets/RemoteAssets/Catalog/NovelCatalog.asset";
-        private const string _catalogScreenPath =
-            "Assets/RemoteAssets/Catalog/Screen.prefab";
-        private const string _contentBundleName = "novels_content";
-        private const string _contentRoot = "Assets/RemoteAssets/Content";
-
         [MenuItem(_menuPath)]
         private static void ValidateFromMenu()
         {
@@ -75,28 +67,35 @@ namespace Editor
             }
 
             var catalog = AssetDatabase.LoadAssetAtPath<Novels.Catalog.NovelCatalogAsset>(
-                _catalogAssetPath);
+                Novels.Catalog.CatalogAddresses.AssetName);
             if (catalog == null)
             {
-                errors.Add($"Novel catalog does not exist: {_catalogAssetPath}");
+                errors.Add(
+                    $"Novel catalog does not exist: "
+                    + Novels.Catalog.CatalogAddresses.AssetName);
                 return errors;
             }
 
             ValidateBundleAssignment(
-                _catalogAssetPath,
-                _catalogBundleName,
+                Novels.Catalog.CatalogAddresses.AssetName,
+                Novels.Catalog.CatalogAddresses.BundleName,
                 errors);
-            if (AssetDatabase.LoadAssetAtPath<GameObject>(_catalogScreenPath) == null)
-                errors.Add($"Catalog screen prefab does not exist: {_catalogScreenPath}");
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(
+                    Novels.Catalog.CatalogAddresses.ScreenAssetName) == null)
+            {
+                errors.Add(
+                    $"Catalog screen prefab does not exist: "
+                    + Novels.Catalog.CatalogAddresses.ScreenAssetName);
+            }
             else
             {
                 ValidateBundleAssignment(
-                    _catalogScreenPath,
-                    _catalogBundleName,
+                    Novels.Catalog.CatalogAddresses.ScreenAssetName,
+                    Novels.Catalog.CatalogAddresses.BundleName,
                     errors);
             }
 
-            if (string.IsNullOrWhiteSpace(catalog.Title))
+            if (string.IsNullOrWhiteSpace(catalog.Resolve().Title))
                 errors.Add("Novel catalog title is empty.");
             if (catalog.Entries.Count == 0)
                 errors.Add("Novel catalog has no entries.");
@@ -111,23 +110,32 @@ namespace Editor
                 }
                 if (!contentIds.Add(entry.ContentId))
                     errors.Add($"Duplicate catalog content ID: {entry.ContentId}");
-                if (string.IsNullOrWhiteSpace(entry.Title))
+                if (string.IsNullOrWhiteSpace(entry.Resolve().Title))
                     errors.Add($"Catalog entry '{entry.ContentId}' has no title.");
+                if (string.IsNullOrWhiteSpace(entry.ContentBundleName))
+                    errors.Add($"Catalog entry '{entry.ContentId}' has no content bundle.");
+                if (string.IsNullOrWhiteSpace(entry.ContentAssetName))
+                    errors.Add($"Catalog entry '{entry.ContentId}' has no content asset address.");
 
-                var contentPath = $"{_contentRoot}/{entry.ContentId}.asset";
                 var contentAsset = AssetDatabase.LoadAssetAtPath<
-                    Novels.Content.NovelContentAsset>(contentPath);
+                    Novels.Content.NovelContentAsset>(entry.ContentAssetName);
                 if (contentAsset == null)
                 {
-                    errors.Add($"NovelContentAsset does not exist: {contentPath}");
+                    errors.Add(
+                        $"NovelContentAsset does not exist: {entry.ContentAssetName}");
                     continue;
                 }
 
                 ValidateBundleAssignment(
-                    contentPath,
-                    _contentBundleName,
+                    entry.ContentAssetName,
+                    entry.ContentBundleName,
                     errors);
-                ValidateContentAsset(contentAsset, validateBuiltOutput, errors);
+                ValidateContentAsset(
+                    contentAsset,
+                    entry.ContentId,
+                    entry.ContentBundleName,
+                    validateBuiltOutput,
+                    errors);
             }
             return errors;
         }
@@ -151,6 +159,8 @@ namespace Editor
 
         private static void ValidateContentAsset(
             Novels.Content.NovelContentAsset contentAsset,
+            string expectedContentId,
+            string contentBundleName,
             bool validateBuiltOutput,
             ICollection<string> errors)
         {
@@ -167,12 +177,22 @@ namespace Editor
 
             if (contentAsset.AudioMixer == null)
                 errors.Add($"Content asset '{contentAsset.name}' has no AudioMixer.");
+            if (!string.Equals(
+                    definition.Id,
+                    expectedContentId,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                errors.Add(
+                    $"Catalog content ID '{expectedContentId}' does not match "
+                    + $"NovelContentAsset ID '{definition.Id}'.");
+            }
 
             ValidateBundles(
                 new[]
                 {
-                    _catalogBundleName,
-                    _contentBundleName,
+                    Novels.Catalog.CatalogAddresses.BundleName,
+                    contentBundleName,
+                    definition.MainLoadingBundleName,
                     definition.LoadingBundleName,
                     definition.SettingBundleName,
                     definition.LocalizationBundleName,
@@ -327,6 +347,14 @@ namespace Editor
                         "version.txt");
                     if (!File.Exists(versionPath))
                         errors.Add($"Built Android bundle version is missing: {versionPath}");
+                    var manifestPath = Path.Combine(
+                        Application.streamingAssetsPath,
+                        "Remote",
+                        "Android",
+                        bundle,
+                        "manifest.json");
+                    if (!File.Exists(manifestPath))
+                        errors.Add($"Built Android bundle manifest is missing: {manifestPath}");
                 }
             }
         }
