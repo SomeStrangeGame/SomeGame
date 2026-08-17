@@ -32,10 +32,22 @@ namespace Novels.BubbleContracts
 
     public sealed class WardrobePresentation
     {
+        public WardrobePresentation(Action onCompleted)
+        {
+            OnCompleted = onCompleted ?? throw new ArgumentNullException(nameof(onCompleted));
+        }
+
+        public Action OnCompleted { get; }
     }
 
     public sealed class ChoosePresentation
     {
+        public ChoosePresentation(Action onCompleted)
+        {
+            OnCompleted = onCompleted ?? throw new ArgumentNullException(nameof(onCompleted));
+        }
+
+        public Action OnCompleted { get; }
     }
 
     public sealed class BubblePresentation

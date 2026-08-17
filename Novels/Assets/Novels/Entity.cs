@@ -24,10 +24,12 @@ namespace Novels
             internal Camera TargetCamera;
             internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
+            internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
+                PrepareNovelContent;
             internal Func<
                 Content.NovelDefinition,
                 Content.EpisodeDefinition,
-                UniTask> PrepareEpisodeContent;
+                UniTask<Bundles.ContentDeliveryLease>> PrepareEpisodeContent;
         }
 
         private readonly Ctx _ctx;
@@ -52,6 +54,8 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.SelectEpisode));
             if (ctx.PrepareEpisodeContent == null)
                 throw new ArgumentNullException(nameof(ctx.PrepareEpisodeContent));
+            if (ctx.PrepareNovelContent == null)
+                throw new ArgumentNullException(nameof(ctx.PrepareNovelContent));
             if (ctx.TargetCamera == null)
                 throw new ArgumentNullException(nameof(ctx.TargetCamera));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
@@ -59,15 +63,22 @@ namespace Novels
 
         internal async UniTask<EpisodeRunResult> Init()
         {
-            var novelBundles = _ctx.Bundles.CreateScope().AddTo(this);
-            _definition = await LoadContent(novelBundles, _ctx.Content);
+            var novelSession = new NovelSession(_ctx.Bundles.CreateScope()).AddTo(this);
+            novelSession.AttachDelivery(await _ctx.PrepareNovelContent(
+                _ctx.Content.ContentId));
+            _definition = await LoadContent(novelSession.Bundles, _ctx.Content);
             _episode = await _ctx.SelectEpisode(_definition);
-            await _ctx.PrepareEpisodeContent(_definition, _episode);
+            var episodeRuntime = CreateEpisodeRuntime().AddTo(this);
+            episodeRuntime.AttachDelivery(await _ctx.PrepareEpisodeContent(
+                _definition,
+                _episode));
 
             var bootstrap = new NovelBootstrapProcess(
                 new NovelBootstrapProcess.Ctx
                 {
-                    Prepare = () => PrepareApplication(novelBundles),
+                    Prepare = () => PrepareApplication(
+                        novelSession.Bundles,
+                        episodeRuntime),
                     CancellationToken = _ctx.CancellationToken,
                 }).AddTo(this);
 

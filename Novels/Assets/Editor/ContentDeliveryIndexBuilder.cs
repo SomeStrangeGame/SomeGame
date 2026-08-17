@@ -13,13 +13,9 @@ namespace Editor
             var project = ContentProjectIndex.BuildOrThrow("en");
             var owners = new Dictionary<string, HashSet<string>>(
                 StringComparer.OrdinalIgnoreCase);
-            var prefixToContent = new Dictionary<string, string>(
-                StringComparer.OrdinalIgnoreCase);
-
             foreach (var item in project.Entries)
             {
                 var definition = item.Definition;
-                prefixToContent[definition.Prefix] = definition.Id;
                 foreach (var episode in definition.Episodes)
                 {
                     var group = EpisodeGroup(definition.Id, episode.Id);
@@ -36,19 +32,40 @@ namespace Editor
             }
 
             var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var unassigned = new List<string>();
             foreach (var file in ContentFilePolicy.EnumerateFiles())
             {
                 var relative = ContentFilePolicy.GetRelativePath(file);
-                if (owners.TryGetValue(relative, out var groups) && groups.Count == 1)
+                if (!owners.TryGetValue(relative, out var groups) || groups.Count == 0)
+                {
+                    unassigned.Add(relative);
+                    continue;
+                }
+
+                if (groups.Count == 1)
                 {
                     result[relative] = groups.Single();
                     continue;
                 }
-                var segments = relative.Split('/');
-                var prefix = segments.Length > 1 ? segments[1] : string.Empty;
-                result[relative] = prefixToContent.TryGetValue(prefix, out var contentId)
-                    ? SharedGroup(contentId)
-                    : "shared";
+
+                var contentIds = groups
+                    .Select(group => group.Split('/')[0])
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+                if (contentIds.Length != 1)
+                {
+                    throw new InvalidOperationException(
+                        $"Content file '{relative}' is referenced by unrelated stories: "
+                        + string.Join(", ", groups));
+                }
+                result[relative] = SharedGroup(contentIds[0]);
+            }
+
+            if (unassigned.Count > 0)
+            {
+                UnityEngine.Debug.LogWarning(
+                    $"Exclude {unassigned.Count} unassigned content file(s) from release:\n"
+                    + string.Join("\n", unassigned.OrderBy(value => value, StringComparer.Ordinal)));
             }
             return result;
         }
@@ -65,9 +82,19 @@ namespace Editor
             string prefix,
             Novels.Content.EpisodeDefinition episode)
         {
-            var storyName = Path.GetFileNameWithoutExtension(episode.StoryPath);
-            var storyDirectory = $"NovelTexts/{prefix}";
-            yield return $"{storyDirectory}/{episode.StoryPath}";
+            var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
+            var storyFileName = Path.GetFileName(normalizedStoryPath);
+            var storyName = storyFileName.EndsWith(
+                    ".ink.json",
+                    StringComparison.OrdinalIgnoreCase)
+                ? storyFileName.Substring(0, storyFileName.Length - ".ink.json".Length)
+                : Path.GetFileNameWithoutExtension(storyFileName);
+            var relativeDirectory = Path.GetDirectoryName(normalizedStoryPath)
+                ?.Replace('\\', '/');
+            var storyDirectory = string.IsNullOrWhiteSpace(relativeDirectory)
+                ? $"NovelTexts/{prefix}"
+                : $"NovelTexts/{prefix}/{relativeDirectory}";
+            yield return $"NovelTexts/{prefix}/{normalizedStoryPath}";
             yield return $"{storyDirectory}/{storyName}.ink";
             yield return $"{storyDirectory}/{storyName}.json";
             yield return $"{storyDirectory}/{storyName}.ink.json";

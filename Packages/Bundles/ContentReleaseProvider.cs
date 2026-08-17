@@ -32,7 +32,8 @@ namespace Bundles
 
         internal async UniTask<ContentReleaseSnapshot> LoadAsync(
             string clientVersion,
-            int supportedSchemaVersion)
+            int minimumSupportedSchemaVersion,
+            int maximumSupportedSchemaVersion)
         {
             var path = $"Remote/{_platform}/release.json";
             var cachePath = $"Remote/{_platform}/Releases/current.json";
@@ -44,7 +45,8 @@ namespace Bundles
                 ContentReleaseValidator.Validate(
                     release,
                     clientVersion,
-                    supportedSchemaVersion);
+                    minimumSupportedSchemaVersion,
+                    maximumSupportedSchemaVersion);
                 _cache.TextToCache(cachePath, json);
             }
             catch (OperationCanceledException)
@@ -69,7 +71,8 @@ namespace Bundles
                 ContentReleaseValidator.Validate(
                     release,
                     clientVersion,
-                    supportedSchemaVersion);
+                    minimumSupportedSchemaVersion,
+                    maximumSupportedSchemaVersion);
                 _onLog?.Invoke((
                     LogType.Warning,
                     $"Use cached content release '{release.releaseId}'."));

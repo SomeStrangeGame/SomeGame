@@ -1,6 +1,7 @@
 ﻿<Solution>
   <Project Path="Novels.Editor.csproj" />
   <Project Path="Novels.Notification.csproj" />
+  <Project Path="Novels.Audio.csproj" />
   <Project Path="Disposable.csproj" />
   <Project Path="Novels.csproj" />
   <Project Path="Loading.View.csproj" />
@@ -26,7 +27,6 @@
   <Project Path="Novels.Content.csproj" />
   <Project Path="Novels.Bubble.View.csproj" />
   <Project Path="LoadingPriority.csproj" />
-  <Project Path="Novels.Audio.csproj" />
   <Project Path="Setting.View.csproj" />
   <Project Path="Novels.Waiting.csproj" />
   <Project Path="Novels.Character.View.csproj" />

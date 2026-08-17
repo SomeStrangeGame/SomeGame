@@ -1,0 +1,54 @@
+namespace Novels.QueueProcess
+{
+    internal sealed class BubblePresentationRouter
+    {
+        private readonly BubbleQueueRequest _request;
+        private readonly ChoiceSelectionHandler _choices;
+
+        internal BubblePresentationRouter(
+            BubbleQueueRequest request,
+            ChoiceSelectionHandler choices)
+        {
+            _request = request;
+            _choices = choices;
+        }
+
+        internal void Present()
+        {
+            switch (_request.PresentationKind)
+            {
+                case BubbleContracts.BubblePresentationKind.Wardrobe:
+                    _request.SetWardrobeScreen(new BubbleContracts.WardrobePresentation(
+                        _choices.CompleteWithoutChoice));
+                    return;
+
+                case BubbleContracts.BubblePresentationKind.Choose:
+                    _request.SetChooseScreen(new BubbleContracts.ChoosePresentation(
+                        _choices.CompleteWithoutChoice));
+                    return;
+
+                default:
+                    _request.SetBubbleScreen(new BubbleContracts.BubblePresentation(
+                        _request.Name,
+                        _request.SpeakerRole,
+                        _request.Presentation,
+                        new BubbleContracts.BubbleText(GetHeader(), _request.Value),
+                        _choices.CreatePresentations(),
+                        _choices.CompleteWithoutChoice));
+                    return;
+            }
+        }
+
+        private string GetHeader()
+        {
+            if (_request.Presentation == StoryContracts.DialoguePresentation.Disclaimer)
+            {
+                return _request.GetLocalizationValue(
+                    BubbleContracts.BubbleTextKeys.Disclaimer);
+            }
+            if (_request.Presentation == StoryContracts.DialoguePresentation.Hint)
+                return _request.GetLocalizationValue(BubbleContracts.BubbleTextKeys.Hint);
+            return _request.GetLocalizationValue(_request.Name);
+        }
+    }
+}

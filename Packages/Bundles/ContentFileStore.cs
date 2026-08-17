@@ -18,7 +18,19 @@ namespace Bundles
         private readonly long _cacheLimit;
         private readonly CancellationToken _cancellationToken;
         private readonly Action<(LogType type, string message)> _onLog;
-        private readonly Dictionary<string, long> _pinnedFiles = new(
+        private sealed class Pin
+        {
+            internal Pin(long size)
+            {
+                Size = size;
+                Count = 1;
+            }
+
+            internal long Size { get; }
+            internal int Count { get; set; }
+        }
+
+        private readonly Dictionary<string, Pin> _pinnedFiles = new(
             StringComparer.OrdinalIgnoreCase);
         private readonly object _pinnedFilesGate = new();
         private readonly object _pruneGate = new();
@@ -109,7 +121,7 @@ namespace Bundles
             return new Uri(localPath).AbsoluteUri;
         }
 
-        internal void ReserveGroup(
+        internal ContentDeliveryLease ReserveGroup(
             IReadOnlyCollection<ContentFileDescriptor> files,
             long additionalMissingBytes = 0)
         {
@@ -133,21 +145,37 @@ namespace Bundles
             lock (_pinnedFilesGate)
             {
                 foreach (var file in files)
-                    _pinnedFiles[CachePath(release.ReleaseId, file.Path)] = file.Size;
+                {
+                    var path = CachePath(release.ReleaseId, file.Path);
+                    if (_pinnedFiles.TryGetValue(path, out var pin))
+                        pin.Count++;
+                    else
+                        _pinnedFiles[path] = new Pin(file.Size);
+                }
             }
+            var releaseId = release.ReleaseId;
+            return new ContentDeliveryLease(() => ReleaseGroupReservation(
+                releaseId,
+                files));
         }
 
-        internal void ReleaseGroupReservation(
+        private void ReleaseGroupReservation(
+            string releaseId,
             IReadOnlyCollection<ContentFileDescriptor> files)
         {
-            var release = _releases.Current;
-            if (release == null)
-                return;
             lock (_pinnedFilesGate)
             {
                 foreach (var file in files)
-                    _pinnedFiles.Remove(CachePath(release.ReleaseId, file.Path));
+                {
+                    var path = CachePath(releaseId, file.Path);
+                    if (!_pinnedFiles.TryGetValue(path, out var pin))
+                        continue;
+                    pin.Count--;
+                    if (pin.Count <= 0)
+                        _pinnedFiles.Remove(path);
+                }
             }
+            PruneAsync(null).Forget();
         }
 
         internal async UniTask<string> GetText(string path)
@@ -179,10 +207,10 @@ namespace Bundles
             long pinnedBytes;
             lock (_pinnedFilesGate)
             {
-                protectedPaths = _pinnedFiles.Keys
-                    .Append(protectedPath)
-                    .ToArray();
-                pinnedBytes = _pinnedFiles.Values.Sum();
+                protectedPaths = string.IsNullOrEmpty(protectedPath)
+                    ? _pinnedFiles.Keys.ToArray()
+                    : _pinnedFiles.Keys.Append(protectedPath).ToArray();
+                pinnedBytes = _pinnedFiles.Values.Sum(value => value.Size);
             }
             await UniTask.SwitchToThreadPool();
             try

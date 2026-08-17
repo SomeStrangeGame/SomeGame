@@ -10,7 +10,8 @@ namespace Novels
     internal sealed class ApplicationRuntime : BaseDisposable
     {
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
-        private const int _supportedContentSchemaVersion = 4;
+        private const int _minimumSupportedContentSchemaVersion = 4;
+        private const int _maximumSupportedContentSchemaVersion = 4;
 
         internal struct Ctx
         {
@@ -49,7 +50,8 @@ namespace Novels
                 Localization = _localization,
                 Locale = _locale,
                 ClientVersion = _environment.ClientVersion,
-                SupportedSchemaVersion = _supportedContentSchemaVersion,
+                MinimumSupportedSchemaVersion = _minimumSupportedContentSchemaVersion,
+                MaximumSupportedSchemaVersion = _maximumSupportedContentSchemaVersion,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _ctx.OnLog,
             });
@@ -64,7 +66,7 @@ namespace Novels
         {
             using var bootstrap = new Bootstrap.Entity(_environment.CancellationToken)
                 .AddTo(this);
-            var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
+            using var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
             bootstrap.Hide();
             while (!_environment.CancellationToken.IsCancellationRequested)
             {
@@ -78,6 +80,8 @@ namespace Novels
                     TargetCamera = _environment.TargetCamera,
                     SelectEpisode = definition =>
                         _catalogFlow.SelectEpisode(definition, catalog.Screen),
+                    PrepareNovelContent = contentId =>
+                        _contentDeliveryFlow.PrepareNovel(bootstrap, contentId),
                     PrepareEpisodeContent = (definition, episode) =>
                         _contentDeliveryFlow.PrepareEpisode(
                             bootstrap,

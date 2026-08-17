@@ -102,6 +102,7 @@ namespace Novels.StoryQueue
             UniTaskCompletionSource bubbleDone)
         {
             return new QueueProcess.BubbleQueue.SetBubbleQueue(
+                new QueueProcess.BubbleQueueRequest(
                 bubbleDone,
                 _ctx.Localization.GetLocalizationValue,
                 choices,
@@ -118,7 +119,7 @@ namespace Novels.StoryQueue
                 BubbleContracts.BubbleTriggers.Resolve(dialogue.Speaker),
                 _ctx.Bubble.SetBubbleScreen,
                 _ctx.Bubble.SetWardrobeScreen,
-                _ctx.Bubble.SetChooseScreen);
+                _ctx.Bubble.SetChooseScreen));
         }
 
         private StoryContracts.StorySpeakerRole ResolveSpeakerRole(

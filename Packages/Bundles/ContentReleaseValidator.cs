@@ -9,17 +9,27 @@ namespace Bundles
         public static void Validate(
             ContentReleaseDto release,
             string clientVersion,
-            int supportedSchemaVersion)
+            int minimumSupportedSchemaVersion,
+            int maximumSupportedSchemaVersion)
         {
             if (release == null || string.IsNullOrWhiteSpace(release.releaseId))
                 throw new ContentIntegrityException("Content release ID is missing.");
             if (release.contentSchemaVersion <= 0)
                 throw new ContentIntegrityException("Content schema version is invalid.");
-            if (release.contentSchemaVersion > supportedSchemaVersion)
+            if (minimumSupportedSchemaVersion <= 0
+                || maximumSupportedSchemaVersion < minimumSupportedSchemaVersion)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(minimumSupportedSchemaVersion),
+                    "Supported content schema range is invalid.");
+            }
+            if (release.contentSchemaVersion < minimumSupportedSchemaVersion
+                || release.contentSchemaVersion > maximumSupportedSchemaVersion)
             {
                 throw new ContentCompatibilityException(
-                    $"Content schema {release.contentSchemaVersion} requires "
-                    + $"a newer client (supported: {supportedSchemaVersion}).");
+                    $"Content schema {release.contentSchemaVersion} is incompatible "
+                    + $"with this client (supported: {minimumSupportedSchemaVersion}-"
+                    + $"{maximumSupportedSchemaVersion}).");
             }
             if (!Enum.IsDefined(typeof(ContentDeliveryMode), release.deliveryMode))
                 throw new ContentIntegrityException("Content delivery mode is invalid.");

@@ -40,6 +40,7 @@ namespace Editor
                 ContentReleaseValidator.Validate(
                     release,
                     Application.version,
+                    profile.ContentSchemaVersion,
                     profile.ContentSchemaVersion);
                 foreach (var file in release.files ?? Array.Empty<ContentFileEntry>())
                 {

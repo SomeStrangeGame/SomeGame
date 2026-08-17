@@ -47,6 +47,7 @@ namespace Editor
                 Bundles.ContentReleaseValidator.Validate(
                     release,
                     Application.version,
+                    profile.ContentSchemaVersion,
                     profile.ContentSchemaVersion);
             }
             catch (Exception exception)
@@ -97,12 +98,22 @@ namespace Editor
                     .Where(file => file != null)
                     .Select(file => file.path),
                 StringComparer.OrdinalIgnoreCase);
-            foreach (var file in ContentFilePolicy.EnumerateFiles())
+            IReadOnlyDictionary<string, string> deliveryIndex;
+            try
             {
-                var relative = ContentFilePolicy.GetRelativePath(file);
-                if (!releasedFiles.Contains(relative))
-                    errors.Add($"Release does not describe file '{relative}'.");
+                deliveryIndex = ContentDeliveryIndexBuilder.Build();
             }
+            catch (Exception exception)
+            {
+                errors.Add($"Content delivery index is invalid: {exception.Message}");
+                return;
+            }
+            foreach (var relative in deliveryIndex.Keys)
+                if (!releasedFiles.Contains(relative))
+                    errors.Add($"Release does not describe deliverable file '{relative}'.");
+            foreach (var relative in releasedFiles)
+                if (!deliveryIndex.ContainsKey(relative))
+                    errors.Add($"Release describes unassigned file '{relative}'.");
         }
     }
 }

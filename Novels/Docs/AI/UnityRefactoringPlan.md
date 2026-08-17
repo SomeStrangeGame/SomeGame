@@ -18,8 +18,22 @@ The current source of truth supersedes bundle counts and concrete release IDs re
 - The story root owns one bundle; a concrete episode root overrides it with one episode-lifetime bundle. Feature subfolders do not carry AssetBundle labels.
 - TZM_1 currently produces four bundles: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`.
 - Bundle names, definition paths, and delivery groups are derived by `ContentPackageConvention`; episode-scoped asset addresses are exposed by `ContentAddresses`. The former `PathGetter` assembly has been removed.
-- Current Android release: schema 4, Remote mode, ID `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a`, 4 bundles, 115 external files, and the `application`, `TZM_1/shared`, plus `TZM_1/s01e01` delivery groups.
+- Current Android release: schema 4, Remote mode, ID `74a2b7e3706d6afceab3dc0ad76591433c72a56056a103ebfe57f317c093732a`, 4 bundles, 48 external files, and the `application`, `TZM_1/shared`, plus `TZM_1/s01e01` delivery groups.
 - Every delivery group contains both AssetBundles and external files belonging to that lifetime. Unity 6000.3.11f1 import/compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully. Tests and Play Mode were not run.
+
+## Architecture wave completed on 2026-08-17 (explicit delivery ownership)
+
+All seven approved items are complete:
+
+1. External content is included only when statically referenced by an episode. Single-episode files belong to that episode, cross-episode files become story-shared, and unrelated content cannot silently share a file. Unassigned source files remain available as future authoring material but are excluded from release and publication.
+2. Prepared delivery groups return reference-counted `ContentDeliveryLease` instances. Application, story, and episode owners release their reservations deterministically, after which cache pruning can reclaim them.
+3. `NovelSession` is the explicit story-lifetime owner, while `EpisodeRuntime` remains the episode-lifetime owner. Story-shared and episode delivery leases are attached to the matching scope.
+4. Bubble queue construction uses `BubbleQueueRequest`, `ChoiceSelectionHandler`, and `BubblePresentationRouter`. Dialogue, Wardrobe, and Choose presentation paths are explicit; placeholder Wardrobe/Choose screens complete through their background action and no longer risk suspending the queue.
+5. Runtime compatibility accepts an explicit minimum/maximum content-schema range. The current application supports schema 4 exactly, and Editor build/validation uses the same contract.
+6. Story scaffolding is transactional: it refuses collisions, restores the catalog and removes newly created roots on failure, creates a minimal compilable Ink source, and validates the resulting project index before reporting success.
+7. `Audio.Entity` is a facade over `AudioClipLoader`, `AudioMixerGroups`, `LoopAudioChannels`, and `SoundVoicePool`; loading, mixer lookup, looping channels, and bounded sound voices now have separate responsibilities.
+
+The rebuilt Android release contains 4 bundles and 48 referenced external files. Its delivery groups contain 49 episode payloads (599,302,611 bytes), one story-shared payload (164,144 bytes), and two application payloads (10,518 bytes). Sixty-seven unused audio files are retained as future content but excluded from delivery. Unity 6000.3.11f1 compilation, existing-content validation, complete bundle construction, release integrity validation, and publish-artifact construction completed successfully. Tests and Play Mode were not run; UI dimensions were not changed.
 
 ## Architecture wave completed on 2026-08-17 (lifetime and delivery modes)
 

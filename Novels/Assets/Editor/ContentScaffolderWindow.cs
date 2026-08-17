@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
@@ -49,6 +50,10 @@ namespace Editor
 
         private void Create()
         {
+            string createdContentRoot = null;
+            string createdStoryRoot = null;
+            string catalogBackup = null;
+            Novels.Catalog.NovelCatalogAsset catalog = null;
             try
             {
                 var contentId = _contentId.Trim();
@@ -62,7 +67,7 @@ namespace Editor
                         $"Content definition already exists: {definitionPath}");
                 }
 
-                var catalog = AssetDatabase.LoadAssetAtPath<
+                catalog = AssetDatabase.LoadAssetAtPath<
                     Novels.Catalog.NovelCatalogAsset>(
                     Novels.Catalog.CatalogAddresses.AssetName)
                     ?? throw new InvalidOperationException("Novel catalog asset is missing.");
@@ -77,11 +82,26 @@ namespace Editor
 
                 var contentRoot =
                     Novels.ContentAddressing.ContentPackageConvention.ContentRoot(contentId);
+                if (AssetDatabase.IsValidFolder(contentRoot))
+                {
+                    throw new InvalidOperationException(
+                        $"Content root already exists: {contentRoot}");
+                }
                 var episodeRoot =
                     Novels.ContentAddressing.ContentPackageConvention.EpisodeRoot(
                         contentId,
                         episodeId);
+                var storyRoot = $"Assets/StreamingAssets/NovelTexts/{contentId}";
+                if (AssetDatabase.IsValidFolder(storyRoot)
+                    || Directory.Exists(Path.GetFullPath(storyRoot)))
+                {
+                    throw new InvalidOperationException(
+                        $"Story text root already exists: {storyRoot}");
+                }
+
+                catalogBackup = EditorJsonUtility.ToJson(catalog);
                 EnsureFolder($"{contentRoot}/Definition");
+                createdContentRoot = contentRoot;
                 EnsureFolder($"{contentRoot}/Application/Setting");
                 EnsureFolder($"{contentRoot}/Application/Localization");
                 foreach (var feature in new[]
@@ -95,6 +115,11 @@ namespace Editor
                 {
                     EnsureFolder($"{episodeRoot}/{feature}");
                 }
+                EnsureFolder(storyRoot);
+                createdStoryRoot = storyRoot;
+                File.WriteAllText(
+                    Path.GetFullPath($"{storyRoot}/{episodeId}.ink"),
+                    $"// {_storyTitle.Trim()}\n{_episodeTitle.Trim()}\n-> END\n");
 
                 SetBundleLabel(
                     contentRoot,
@@ -113,6 +138,7 @@ namespace Editor
                 AppendCatalogEntry(catalog, contentId);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
+                ContentProjectIndex.BuildOrThrow("en");
                 Selection.activeObject = content;
                 EditorGUIUtility.PingObject(content);
                 Debug.Log(
@@ -120,11 +146,42 @@ namespace Editor
             }
             catch (Exception exception)
             {
+                Rollback(
+                    createdContentRoot,
+                    createdStoryRoot,
+                    catalog,
+                    catalogBackup);
                 Debug.LogException(exception);
                 EditorUtility.DisplayDialog(
                     "Create Novel Story",
                     exception.Message,
                     "Close");
+            }
+        }
+
+        private static void Rollback(
+            string contentRoot,
+            string storyRoot,
+            Novels.Catalog.NovelCatalogAsset catalog,
+            string catalogBackup)
+        {
+            try
+            {
+                if (catalog != null && !string.IsNullOrEmpty(catalogBackup))
+                {
+                    EditorJsonUtility.FromJsonOverwrite(catalogBackup, catalog);
+                    EditorUtility.SetDirty(catalog);
+                }
+                if (!string.IsNullOrEmpty(contentRoot))
+                    AssetDatabase.DeleteAsset(contentRoot);
+                if (!string.IsNullOrEmpty(storyRoot))
+                    AssetDatabase.DeleteAsset(storyRoot);
+                AssetDatabase.SaveAssets();
+                AssetDatabase.Refresh();
+            }
+            catch (Exception rollbackException)
+            {
+                Debug.LogError($"Novel story scaffold rollback failed: {rollbackException}");
             }
         }
 

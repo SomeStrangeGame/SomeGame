@@ -9,18 +9,27 @@ namespace Novels
 {
     internal sealed class CatalogFlow
     {
-        internal sealed class Resources
+        internal sealed class Resources : IDisposable
         {
             internal Resources(
                 Catalog.NovelCatalogAsset catalog,
-                GameObject screen)
+                GameObject screen,
+                Bundles.ContentDeliveryLease deliveryLease)
             {
                 Catalog = catalog;
                 Screen = screen;
+                _deliveryLease = deliveryLease;
             }
+
+            private readonly Bundles.ContentDeliveryLease _deliveryLease;
 
             internal Catalog.NovelCatalogAsset Catalog { get; }
             internal GameObject Screen { get; }
+
+            public void Dispose()
+            {
+                _deliveryLease?.Dispose();
+            }
         }
 
         internal struct Ctx
@@ -30,7 +39,8 @@ namespace Novels
             internal ApplicationLocalization Localization;
             internal string Locale;
             internal string ClientVersion;
-            internal int SupportedSchemaVersion;
+            internal int MinimumSupportedSchemaVersion;
+            internal int MaximumSupportedSchemaVersion;
             internal CancellationToken CancellationToken;
             internal Action<(LogType type, string message)> OnLog;
         }
@@ -63,14 +73,16 @@ namespace Novels
             var retry = _ctx.Localization.Get(ApplicationText.Retry);
             while (true)
             {
+                Bundles.ContentDeliveryLease deliveryLease = null;
                 try
                 {
                     bootstrap.ShowLoading(loading);
                     await _ctx.Bundles.LoadReleaseAsync(
                         _ctx.ClientVersion,
-                        _ctx.SupportedSchemaVersion);
-                    await PrepareApplicationContent(bootstrap, loading);
-                    return await Load();
+                        _ctx.MinimumSupportedSchemaVersion,
+                        _ctx.MaximumSupportedSchemaVersion);
+                    deliveryLease = await PrepareApplicationContent(bootstrap, loading);
+                    return await Load(deliveryLease);
                 }
                 catch (OperationCanceledException)
                     when (_ctx.CancellationToken.IsCancellationRequested)
@@ -81,10 +93,16 @@ namespace Novels
                     exception is Bundles.ContentSourceException
                     || exception is Bundles.ContentIntegrityException)
                 {
+                    deliveryLease?.Dispose();
                     _ctx.OnLog?.Invoke((
                         LogType.Warning,
                         $"Catalog loading failed: {exception}"));
                     await bootstrap.WaitForRetry(failed, retry);
+                }
+                catch
+                {
+                    deliveryLease?.Dispose();
+                    throw;
                 }
             }
         }
@@ -131,7 +149,7 @@ namespace Novels
             return episodes[selected.Id];
         }
 
-        private async UniTask PrepareApplicationContent(
+        private async UniTask<Bundles.ContentDeliveryLease> PrepareApplicationContent(
             Bootstrap.Entity bootstrap,
             string message)
         {
@@ -139,15 +157,16 @@ namespace Novels
                 || !_ctx.Bundles.HasDeliveryGroup(
                     ContentAddressing.ContentPackageConvention.ApplicationDeliveryGroup))
             {
-                return;
+                return null;
             }
-            await _ctx.Bundles.PrepareDeliveryGroup(
+            return await _ctx.Bundles.PrepareDeliveryGroup(
                 ContentAddressing.ContentPackageConvention.ApplicationDeliveryGroup,
                 progress => ShowProgress(bootstrap, message, progress),
                 _ctx.CancellationToken);
         }
 
-        private async UniTask<Resources> Load()
+        private async UniTask<Resources> Load(
+            Bundles.ContentDeliveryLease deliveryLease)
         {
             await _ctx.PriorityLoader.Run(() => _ctx.Bundles
                 .GetAssetBundle(Catalog.CatalogAddresses.BundleName)
@@ -169,7 +188,7 @@ namespace Novels
                     $"Catalog assets could not be loaded from "
                     + $"AssetBundle '{Catalog.CatalogAddresses.BundleName}'.");
             }
-            return new Resources(catalog, screen);
+            return new Resources(catalog, screen, deliveryLease);
         }
 
         private Catalog.Entity CreateSelection(GameObject screen) =>

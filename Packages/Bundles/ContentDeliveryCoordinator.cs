@@ -27,7 +27,7 @@ namespace Bundles
                 : platform;
         }
 
-        internal async UniTask Prepare(
+        internal async UniTask<ContentDeliveryLease> Prepare(
             string groupId,
             Action<ContentDeliveryProgress> onProgress,
             CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ namespace Bundles
             var missingBundleBytes = bundles.Sum(bundle => _bundles.GetMissingBytes(
                 bundle,
                 $"Remote/{_platform}/{bundle.Name}"));
-            _files.ReserveGroup(files, missingBundleBytes);
+            var lease = _files.ReserveGroup(files, missingBundleBytes);
             var itemCount = bundles.Length + files.Length;
             var downloadedBytes = new long[itemCount];
             var completedItems = 0;
@@ -75,10 +75,11 @@ namespace Bundles
                     .Select(_ => DownloadWorker())
                     .ToArray();
                 await UniTask.WhenAll(workers);
+                return lease;
             }
             catch
             {
-                _files.ReleaseGroupReservation(files);
+                lease.Dispose();
                 throw;
             }
 

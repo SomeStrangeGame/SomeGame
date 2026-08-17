@@ -42,13 +42,13 @@ namespace Novels
         }
 
         private async UniTask<NovelStartSession> PrepareApplication(
-            Bundles.Scope novelBundles)
+            Bundles.Scope novelBundles,
+            EpisodeRuntime episodeRuntime)
         {
             var saveSystem = CreateSaveSystem();
             var addresses = new ContentAddressing.ContentAddresses(
                 _definition.Id,
                 _episode.Id);
-            var episodeRuntime = CreateEpisodeRuntime().AddTo(this);
             var episodeBundles = _ctx.Bundles
                 .CreateScope(episodeRuntime.CancellationToken)
                 .AddTo(episodeRuntime.Scope);

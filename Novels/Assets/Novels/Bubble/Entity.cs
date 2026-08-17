@@ -56,7 +56,7 @@ namespace Novels.Bubble
         {
             _screen.SetWardrobeScreen(new View.Screen.WardrobeCtx
             {
-                // set wardrobe ctx here...
+                OnCompleted = presentation.OnCompleted,
             });
         }
 
@@ -64,7 +64,7 @@ namespace Novels.Bubble
         {
             _screen.SetChooseScreen(new View.Screen.ChooseCtx
             {
-                // set wardrobe ctx here...
+                OnCompleted = presentation.OnCompleted,
             });
         }
 

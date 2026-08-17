@@ -152,11 +152,11 @@
 
 ## Testing And Tooling
 
-- Latest release: schema 4, Remote mode, ID `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a`, 4 bundles, 115 external files, and three delivery groups: `application`, `TZM_1/s01e01`, and `TZM_1/shared`.
+- Latest release: schema 4, Remote mode, ID `74a2b7e3706d6afceab3dc0ad76591433c72a56056a103ebfe57f317c093732a`, 4 bundles, 48 referenced external files, and three delivery groups: `application`, `TZM_1/s01e01`, and `TZM_1/shared`. Sixty-seven unassigned audio files remain as future authoring material and are deliberately absent from delivery.
 - `Tools/validate-novels.sh` exposes `validate` and `content` batch commands. `Tools/build-remote-player.sh` builds Android/iOS from an isolated temporary project copy with novel StreamingAssets excluded and injects the required remote HTTP(S) root only into that copy.
-- Unity 6000.3.11f1 isolated batch compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully for schema 4. Tests were not created or run.
+- Unity 6000.3.11f1 isolated batch compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully for schema 4 after the explicit-delivery-ownership wave. The generated Android publish artifact is about 572 MiB. Tests were not created or run.
 
-- The latest Android content release is `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a`: 4 bundles and 115 external files. The complete build-and-validation batch passed authoring, bundle, release, byte-size, and SHA-256 checks.
+- The latest Android content release is `74a2b7e3706d6afceab3dc0ad76591433c72a56056a103ebfe57f317c093732a`: 4 bundles and 48 referenced external files. The complete build-and-validation batch passed authoring, bundle, release, byte-size, and SHA-256 checks.
 - A final isolated Unity batch compile and `NovelContentValidator.ValidateBatch` completed successfully after the explicit-content-contracts wave. Tests were not created or run, and no UI asset or dimension was changed.
 
 - Unity Test Framework is present transitively, but no EditMode or PlayMode tests were found.

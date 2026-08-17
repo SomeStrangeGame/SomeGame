@@ -137,6 +137,7 @@ namespace Editor
             Bundles.ContentReleaseValidator.Validate(
                 release,
                 Application.version,
+                profile.ContentSchemaVersion,
                 profile.ContentSchemaVersion);
             File.WriteAllText(
                 Path.Combine(targetPath, "release.json"),
@@ -157,13 +158,15 @@ namespace Editor
             foreach (var file in ContentFilePolicy.EnumerateFiles())
             {
                 var relative = ContentFilePolicy.GetRelativePath(file);
+                if (!deliveryGroups.TryGetValue(relative, out var deliveryGroup))
+                    continue;
                 var info = new FileInfo(file);
                 result.Add(new Bundles.ContentFileEntry
                 {
                     path = relative,
                     size = info.Length,
                     sha256 = ComputeSha256(file),
-                    deliveryGroup = deliveryGroups[relative],
+                    deliveryGroup = deliveryGroup,
                 });
             }
             return result.OrderBy(file => file.path, StringComparer.Ordinal)

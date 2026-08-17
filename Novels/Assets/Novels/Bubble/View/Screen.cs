@@ -11,12 +11,12 @@ namespace Novels.Bubble.View
     {
         public struct WardrobeCtx
         {
-            
+            public Action OnCompleted;
         }
 
         public struct ChooseCtx
         {
-            
+            public Action OnCompleted;
         }
 
         public struct BubbleCtx
@@ -180,8 +180,7 @@ namespace Novels.Bubble.View
             _wardrobeView.Root.SetActive(true);
             _chooseView.Root.SetActive(false);
             _bubblesView.Root.SetActive(false);
-
-            // set wardrobe screen here...
+            BindBackground(ctx.OnCompleted);
         }
 
         public void SetChooseScreen(ChooseCtx ctx)
@@ -189,8 +188,7 @@ namespace Novels.Bubble.View
             _chooseView.Root.SetActive(true);
             _wardrobeView.Root.SetActive(false);
             _bubblesView.Root.SetActive(false);
-
-            // set choose screen here...
+            BindBackground(ctx.OnCompleted);
         }
 
         public void SetBubbleScreen(BubbleCtx ctx)
@@ -233,8 +231,13 @@ namespace Novels.Bubble.View
                 _buttonPool[index].onClick.RemoveAllListeners();
                 _buttonPool[index].gameObject.SetActive(false);
             }
+            BindBackground(ctx.OnBackgroundClick);
+        }
+
+        private void BindBackground(Action onClick)
+        {
             _bubblesView.BackgroundButton.onClick.RemoveAllListeners();
-            _bubblesView.BackgroundButton.onClick.AddListener(() => ctx.OnBackgroundClick?.Invoke());
+            _bubblesView.BackgroundButton.onClick.AddListener(() => onClick?.Invoke());
         }
     }
 }

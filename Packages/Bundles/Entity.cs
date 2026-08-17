@@ -73,8 +73,12 @@ namespace Bundles
 
         public UniTask<ContentReleaseSnapshot> LoadReleaseAsync(
             string clientVersion,
-            int supportedSchemaVersion) =>
-            _releases.LoadAsync(clientVersion, supportedSchemaVersion);
+            int minimumSupportedSchemaVersion,
+            int maximumSupportedSchemaVersion) =>
+            _releases.LoadAsync(
+                clientVersion,
+                minimumSupportedSchemaVersion,
+                maximumSupportedSchemaVersion);
 
         public ContentDeliveryMode DeliveryMode =>
             (_releases.Current ?? throw new ContentConfigurationException(
@@ -98,7 +102,7 @@ namespace Bundles
                     StringComparison.OrdinalIgnoreCase));
         }
 
-        public UniTask PrepareDeliveryGroup(
+        public UniTask<ContentDeliveryLease> PrepareDeliveryGroup(
             string groupId,
             Action<ContentDeliveryProgress> onProgress,
             CancellationToken cancellationToken) =>
