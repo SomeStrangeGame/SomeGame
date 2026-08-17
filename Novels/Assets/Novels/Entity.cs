@@ -38,6 +38,7 @@ namespace Novels
         private Content.NovelDefinition _definition;
         private Content.EpisodeDefinition _episode;
         private AudioMixer _audioMixer;
+        private Localization.Entity _localization;
         private Save.Entity _saveSystem;
 
         internal Entity(Ctx ctx)

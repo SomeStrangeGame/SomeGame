@@ -1,5 +1,3 @@
-using Cysharp.Threading.Tasks;
-using Disposable;
 using Localization;
 
 namespace Novels
@@ -10,10 +8,9 @@ namespace Novels
         {
             return new Localization.Entity(new Localization.Entity.Ctx
             {
-                Language = LocalizationData.Language.Rus,
+                Locale = _ctx.Locale,
                 LocalizationSO = localizationSO,
-            }).AddTo(this);
+            });
         }
     }
 }
-

@@ -244,6 +244,14 @@
 - Runtime objects follow one lifetime owner: application bootstrap uses its local `using` scope, while `EpisodeRuntime` remains owned by its novel entity instead of also being disposed manually after execution.
 - Isolated Unity 6000.3.11f1 compilation/existing-content validation and the complete Android content build/validation passed without C# errors or warnings. The release still contains 4 bundles and 48 referenced external files. Tests, Play Mode, and a device Player build were not run; no scene, prefab, content asset, or UI dimension changed.
 
+## Architecture wave completed on 2026-08-17 (story localization ownership)
+
+- `LocalizationData.asset` is the single authoring source for localized text inside a selected story. `NovelContentAsset` stores only an episode `titleKey`; catalog title/description remain in the application-owned catalog because they are needed before the story bundle is loaded.
+- Story definition and localization assets are loaded together from the story bundle. One immutable locale snapshot is created per selected story and reused by episode selection, settings, dialogue headers, character names, and wardrobe labels; localization is no longer loaded again during episode preparation.
+- Localization uses normalized string locale codes such as `ru` and `en`, an explicit fallback locale, duplicate-key/duplicate-locale validation, and language-neutral required UI keys. The previous Russian-only enum and hard-coded Russian runtime selection were removed.
+- The story scaffolder creates and initializes the localization asset together with the content definition, while `ContentProjectIndex` rejects missing localization assets, missing required UI entries, and missing episode-title entries before content builds.
+- Generated C# project compilation completed with 0 errors and 0 warnings. Unity's assembly compilation then exposed missing direct `Novels.Editor` references to the localization and bubble-contract assemblies; both asmdef references were added, Unity regenerated its Bee response file, and `Novels.Editor.dll` compiled without C# errors. Batch content validation could not start concurrently because the project was already open. Tests and Play Mode were not run.
+
 ## Evidence Inspected
 
 - `ProjectSettings/{ProjectVersion,ProjectSettings,GraphicsSettings,QualitySettings,EditorBuildSettings}.asset`

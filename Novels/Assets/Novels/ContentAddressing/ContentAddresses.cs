@@ -44,7 +44,5 @@ namespace Novels.ContentAddressing
         public string NotificationPrefab(string assetName) =>
             ContentAddressConvention.NotificationPrefab(ContentId, EpisodeId, assetName);
 
-        public string LocalizationAsset(string assetName) =>
-            ContentAddressConvention.LocalizationAsset(ContentId, assetName);
     }
 }

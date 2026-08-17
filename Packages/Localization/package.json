@@ -8,9 +8,5 @@
     "localization"
   ],
   "category": "SomeGame package",
-  "type": "sample",
-  "dependencies": {
-    "somegame.disposable": "0.0.1",
-    "com.cysharp.unitask": "2.5.10"
-  }
+  "type": "sample"
 }

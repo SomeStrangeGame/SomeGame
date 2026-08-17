@@ -6,6 +6,16 @@ using UnityEngine.Audio;
 
 namespace Novels.Content
 {
+    public static class ContentLocalizationKeys
+    {
+        public static string EpisodeTitle(string episodeId)
+        {
+            if (string.IsNullOrWhiteSpace(episodeId))
+                throw new ArgumentException("Episode ID must not be empty.", nameof(episodeId));
+            return $"episode.{episodeId.Trim()}.title";
+        }
+    }
+
     [CreateAssetMenu(fileName = "NovelContent", menuName = "Novels/Content")]
     public sealed class NovelContentAsset : ScriptableObject
     {
@@ -45,8 +55,7 @@ namespace Novels.Content
         private struct EpisodeEntry
         {
             [SerializeField] private string _id;
-            [SerializeField] private string _title;
-            [SerializeField] private LocalizedTextEntry[] _localizations;
+            [SerializeField] private string _titleKey;
             [SerializeField] private string _storyPath;
             [SerializeField] private string _contentVersion;
             [SerializeField] private string[] _videoIds;
@@ -59,8 +68,10 @@ namespace Novels.Content
 
             internal readonly EpisodeDefinition ToDefinition(
                 string contentId,
-                string locale)
+                Func<string, string> getRequiredLocalization)
             {
+                if (getRequiredLocalization == null)
+                    throw new ArgumentNullException(nameof(getRequiredLocalization));
                 var audioExtensions = new Dictionary<string, string>(
                     StringComparer.OrdinalIgnoreCase);
                 foreach (var entry in _audioExtensions ?? Array.Empty<AudioExtensionEntry>())
@@ -78,7 +89,7 @@ namespace Novels.Content
                 return new EpisodeDefinition(
                     contentId,
                     _id,
-                    LocalizedText.Resolve(_localizations, _title, locale),
+                    getRequiredLocalization(_titleKey),
                     _storyPath,
                     _contentVersion,
                     new EpisodeMediaDefinition(
@@ -93,35 +104,6 @@ namespace Novels.Content
             }
         }
 
-        [Serializable]
-        private struct LocalizedTextEntry
-        {
-            [SerializeField] private string _locale;
-            [SerializeField] private string _value;
-
-            internal readonly string Locale => _locale;
-            internal readonly string Value => _value;
-        }
-
-        private static class LocalizedText
-        {
-            internal static string Resolve(
-                LocalizedTextEntry[] entries,
-                string fallback,
-                string locale)
-            {
-                var values = entries ?? Array.Empty<LocalizedTextEntry>();
-                var found = Locale.LocaleSelector.TryFind(
-                    values,
-                    entry => entry.Locale,
-                    locale,
-                    out var selected);
-                return found && !string.IsNullOrWhiteSpace(selected.Value)
-                    ? selected.Value
-                    : fallback;
-            }
-        }
-
         [SerializeField] private string _id;
         [SerializeField] private string _mainCharacter;
         [SerializeField] private CharacterAssetProfileEntry _characterAssets;
@@ -130,13 +112,17 @@ namespace Novels.Content
 
         public AudioMixer AudioMixer => _audioMixer;
 
-        public NovelDefinition ToDefinition(string locale)
+        public NovelDefinition ToDefinition(Func<string, string> getRequiredLocalization)
         {
+            if (getRequiredLocalization == null)
+                throw new ArgumentNullException(nameof(getRequiredLocalization));
             return new NovelDefinition(
                 _id,
                 _mainCharacter,
                 (_episodes ?? Array.Empty<EpisodeEntry>())
-                    .Select(episode => episode.ToDefinition(_id, locale)),
+                    .Select(episode => episode.ToDefinition(
+                        _id,
+                        getRequiredLocalization)),
                 _characterAssets.ToProfile());
         }
     }

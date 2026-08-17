@@ -26,8 +26,8 @@ namespace Novels.BubbleContracts
 
     public static class BubbleTextKeys
     {
-        public const string Disclaimer = "Дисклеймер";
-        public const string Hint = "Подсказка";
+        public const string Disclaimer = "bubble.disclaimer";
+        public const string Hint = "bubble.hint";
     }
 
     public sealed class WardrobePresentation

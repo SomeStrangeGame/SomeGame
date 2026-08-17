@@ -104,10 +104,38 @@ namespace Editor
                     continue;
                 }
 
+                var localizationPath =
+                    Novels.ContentAddressing.ContentAddressConvention.LocalizationAsset(
+                        catalogEntry.ContentId,
+                        Novels.ContentAddressing.ContentAssetNames.LocalizationData);
+                var localizationData = AssetDatabase.LoadAssetAtPath<
+                    Localization.LocalizationData>(localizationPath);
+                if (localizationData == null)
+                {
+                    errors.Add($"Localization data does not exist: {localizationPath}");
+                    continue;
+                }
+
                 Novels.Content.NovelDefinition definition;
                 try
                 {
-                    definition = asset.ToDefinition(locale);
+                    var localization = new Localization.Entity(
+                        new Localization.Entity.Ctx
+                        {
+                            Locale = locale,
+                            LocalizationSO = localizationData,
+                        });
+                    foreach (var key in new[]
+                             {
+                                 Novels.UiTextKeys.NewGame,
+                                 Novels.UiTextKeys.ContinueGame,
+                                 Novels.BubbleContracts.BubbleTextKeys.Disclaimer,
+                                 Novels.BubbleContracts.BubbleTextKeys.Hint,
+                             })
+                    {
+                        localization.GetRequiredValue(key);
+                    }
+                    definition = asset.ToDefinition(localization.GetRequiredValue);
                 }
                 catch (Exception exception)
                 {

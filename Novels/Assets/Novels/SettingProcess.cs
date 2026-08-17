@@ -23,6 +23,7 @@ namespace Novels
             internal Func<UniTask> ShowLoading;
             internal Func<UniTask> HideLoading;
             internal Func<bool> ContainAnySave;
+            internal string NovelTitle;
             internal Func<string, string> GetLocalizationValue;
             internal CancellationToken CancellationToken;
         }
@@ -43,8 +44,7 @@ namespace Novels
 
             setting.Init();
 
-            setting.SetDescription(
-                _ctx.GetLocalizationValue(UiTextKeys.NovelTitle));
+            setting.SetDescription(_ctx.NovelTitle);
 
             var selection = new UniTaskCompletionSource<SettingSelection>();
             setting.AddOrUpdateButton(
@@ -77,10 +77,9 @@ namespace Novels
         }
     }
 
-    internal static class UiTextKeys
+    public static class UiTextKeys
     {
-        internal const string NovelTitle = "Тайна затерянного мира";
-        internal const string NewGame = "Новая игра";
-        internal const string ContinueGame = "Продолжить";
+        public const string NewGame = "ui.new_game";
+        public const string ContinueGame = "ui.continue_game";
     }
 }

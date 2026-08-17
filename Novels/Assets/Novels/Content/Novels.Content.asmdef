@@ -2,7 +2,6 @@
     "name": "Novels.Content",
     "rootNamespace": "",
     "references": [
-        "GUID:e6783c58a0f94aaeb3544579e4a00101",
         "GUID:3b89f9e6e94d45f2a6cd7001c9720201"
     ],
     "includePlatforms": [],

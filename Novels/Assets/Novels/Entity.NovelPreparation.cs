@@ -77,16 +77,6 @@ namespace Novels
                 episodeRuntime.CancellationToken).Preserve();
             await mainLoading.Show().AttachExternalCancellation(_ctx.CancellationToken);
 
-            var localizationAddress = new Bundles.BundleAssetAddress(
-                _definition.BundleName,
-                addresses.LocalizationAsset(
-                    BootstrapAddresses.LocalizationDataAssetName));
-            LocalizationData localizationData;
-            localizationData = await _priorityLoader.Run(() => novelBundles
-                .GetBundledSO<LocalizationData>(localizationAddress)
-                .AttachExternalCancellation(_ctx.CancellationToken));
-            var localization = CreateLocalization(localizationData);
-
             var settingsAddress = new Bundles.BundleAssetAddress(
                 _definition.BundleName,
                 addresses.SettingPrefab(BootstrapAddresses.ScreenAssetName));
@@ -99,7 +89,8 @@ namespace Novels
                 ShowLoading = mainLoading.Show,
                 HideLoading = mainLoading.Hide,
                 ContainAnySave = () => saveSystem.ContainAnySave,
-                GetLocalizationValue = localization.GetValue,
+                NovelTitle = _ctx.Content.Resolve(_ctx.Locale).Title,
+                GetLocalizationValue = _localization.GetValue,
                 CancellationToken = _ctx.CancellationToken,
             }).AddTo(this);
             var resources = new PreparedNovelResources(
@@ -108,7 +99,7 @@ namespace Novels
                 episodeRuntime,
                 episodeBundles,
                 mainLoading,
-                localization,
+                _localization,
                 episodePreloading);
             var selection = await settingProcess.ShowSettingProcess();
             return new NovelStartSession(
