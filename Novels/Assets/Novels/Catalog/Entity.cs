@@ -44,6 +44,8 @@ namespace Novels.Catalog
                     item.Id,
                     item.Title,
                     item.Description,
+                    item.Status,
+                    item.IsEnabled,
                     () => selection.TrySetResult(item));
             }
 

@@ -80,8 +80,9 @@ namespace Editor
                 Novels.Catalog.CatalogAddresses.AssetName,
                 Novels.Catalog.CatalogAddresses.BundleName,
                 errors);
-            if (AssetDatabase.LoadAssetAtPath<GameObject>(
-                    Novels.Catalog.CatalogAddresses.ScreenAssetName) == null)
+            var catalogScreen = AssetDatabase.LoadAssetAtPath<GameObject>(
+                Novels.Catalog.CatalogAddresses.ScreenAssetName);
+            if (catalogScreen == null)
             {
                 errors.Add(
                     $"Catalog screen prefab does not exist: "
@@ -89,6 +90,7 @@ namespace Editor
             }
             else
             {
+                ValidateCatalogScreen(catalogScreen, errors);
                 ValidateBundleAssignment(
                     Novels.Catalog.CatalogAddresses.ScreenAssetName,
                     Novels.Catalog.CatalogAddresses.BundleName,
@@ -137,7 +139,167 @@ namespace Editor
                     validateBuiltOutput,
                     errors);
             }
+            ValidateBootstrapPrefab(errors);
+            if (validateBuiltOutput)
+                ValidateReleaseManifest(errors);
             return errors;
+        }
+
+        private static void ValidateCatalogScreen(
+            GameObject prefab,
+            ICollection<string> errors)
+        {
+            var screen = prefab.GetComponent<Novels.Catalog.View.Screen>();
+            if (screen == null)
+            {
+                errors.Add("Catalog screen prefab has no Catalog.View.Screen component.");
+                return;
+            }
+
+            var serializedScreen = new SerializedObject(screen);
+            foreach (var propertyName in new[] { "_title", "_cardPrefab" })
+            {
+                if (serializedScreen.FindProperty(propertyName)?.objectReferenceValue == null)
+                    errors.Add($"Catalog screen prefab has no '{propertyName}' reference.");
+            }
+            var card = serializedScreen.FindProperty("_cardPrefab")?.objectReferenceValue
+                as Novels.Catalog.View.Card;
+            if (card != null)
+            {
+                var serializedCard = new SerializedObject(card);
+                foreach (var propertyName in new[]
+                         {
+                             "_title",
+                             "_description",
+                             "_status",
+                             "_button",
+                         })
+                {
+                    if (serializedCard.FindProperty(propertyName)?.objectReferenceValue == null)
+                        errors.Add($"Catalog card prefab has no '{propertyName}' reference.");
+                }
+            }
+            if (prefab.transform.localScale == Vector3.zero)
+                errors.Add("Catalog screen prefab root has zero scale.");
+            var viewport = prefab.transform.Find("Content/Viewport");
+            if (viewport == null || viewport.GetComponent<UnityEngine.UI.RectMask2D>() == null)
+                errors.Add("Catalog screen viewport must use RectMask2D.");
+        }
+
+        private static void ValidateBootstrapPrefab(ICollection<string> errors)
+        {
+            const string path = "Assets/Resources/Novels/BootstrapScreen.prefab";
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null)
+            {
+                errors.Add($"Local bootstrap prefab is missing: {path}");
+                return;
+            }
+
+            var screen = prefab.GetComponent<Novels.Bootstrap.View.Screen>();
+            if (screen == null)
+            {
+                errors.Add($"Local bootstrap prefab has no Screen component: {path}");
+                return;
+            }
+
+            var serializedScreen = new SerializedObject(screen);
+            foreach (var propertyName in new[] { "_message", "_retryLabel", "_retry" })
+            {
+                if (serializedScreen.FindProperty(propertyName)?.objectReferenceValue == null)
+                    errors.Add($"Local bootstrap prefab has no '{propertyName}' reference.");
+            }
+            if (prefab.transform.localScale == Vector3.zero)
+                errors.Add("Local bootstrap prefab root has zero scale.");
+        }
+
+        private static void ValidateReleaseManifest(ICollection<string> errors)
+        {
+            var remoteRoot = Path.Combine(
+                Application.streamingAssetsPath,
+                "Remote",
+                "Android");
+            var path = Path.Combine(remoteRoot, "release.json");
+            if (!File.Exists(path))
+            {
+                errors.Add($"Built Android content release is missing: {path}");
+                return;
+            }
+
+            Bundles.ContentRelease release;
+            try
+            {
+                release = JsonUtility.FromJson<Bundles.ContentRelease>(
+                    File.ReadAllText(path));
+            }
+            catch (Exception exception)
+            {
+                errors.Add($"Content release cannot be parsed: {exception.Message}");
+                return;
+            }
+            if (release == null || string.IsNullOrWhiteSpace(release.releaseId))
+            {
+                errors.Add("Content release ID is empty.");
+                return;
+            }
+            if (release.contentSchemaVersion != 1)
+                errors.Add($"Unexpected content schema: {release.contentSchemaVersion}.");
+
+            foreach (var releaseBundle in release.bundles)
+            {
+                if (releaseBundle == null
+                    || string.IsNullOrWhiteSpace(releaseBundle.name))
+                {
+                    errors.Add("Release contains a bundle without a name.");
+                    continue;
+                }
+                var versionPath = Path.Combine(
+                    remoteRoot,
+                    releaseBundle.name,
+                    "version.txt");
+                if (!File.Exists(versionPath))
+                {
+                    errors.Add(
+                        $"Release bundle is missing: '{releaseBundle.name}'.");
+                }
+                else if (!string.Equals(
+                        File.ReadAllText(versionPath).Trim(),
+                        releaseBundle.version,
+                        StringComparison.Ordinal))
+                {
+                    errors.Add(
+                        $"Release version does not match bundle "
+                        + $"'{releaseBundle.name}'.");
+                }
+            }
+
+            foreach (var directoryName in new[]
+                     {
+                         "NovelTexts",
+                         "NovelsAudio",
+                         "NovelsVideos",
+                     })
+            {
+                var directory = Path.Combine(
+                    Application.streamingAssetsPath,
+                    directoryName);
+                if (!Directory.Exists(directory))
+                    continue;
+                foreach (var file in Directory.GetFiles(
+                             directory,
+                             "*",
+                             SearchOption.AllDirectories))
+                {
+                    if (file.EndsWith(".meta", StringComparison.OrdinalIgnoreCase))
+                        continue;
+                    var relative = file.Substring(
+                            Application.streamingAssetsPath.Length + 1)
+                        .Replace(Path.DirectorySeparatorChar, '/');
+                    if (release.FindFile(relative) == null)
+                        errors.Add($"Release does not describe file '{relative}'.");
+                }
+            }
+
         }
 
         private static void ValidateBundleAssignment(

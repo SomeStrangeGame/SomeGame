@@ -31,87 +31,88 @@ namespace Novels
             return content.ToDefinition();
         }
 
-        private sealed class BootstrapState
+        private sealed class PreparedNovelResources
         {
-            internal Save.Entity SaveSystem;
-            internal PathGetter.Entity PathGetter;
-            internal Bundles.Entity Bundles;
-            internal Bundles.Scope NovelBundles;
-            internal EpisodeRuntime EpisodeRuntime;
-            internal EpisodeScope EpisodeScope;
-            internal Bundles.Scope EpisodeBundles;
-            internal Loading.Entity MainLoading;
-            internal Localization.Entity Localization;
-            internal UniTask<(
-                string storyText,
-                AssetBundle bubble,
-                AssetBundle location,
-                AssetBundle character,
-                AssetBundle notification,
-                AssetBundle loading)> EpisodePreloading;
+            internal PreparedNovelResources(
+                Save.Entity saveSystem,
+                PathGetter.Entity pathGetter,
+                Bundles.Scope novelBundles,
+                EpisodeRuntime episodeRuntime,
+                Bundles.Scope episodeBundles,
+                Loading.Entity mainLoading,
+                Localization.Entity localization,
+                UniTask<string> episodePreloading)
+            {
+                SaveSystem = saveSystem;
+                PathGetter = pathGetter;
+                NovelBundles = novelBundles;
+                EpisodeRuntime = episodeRuntime;
+                EpisodeScope = episodeRuntime.Scope;
+                EpisodeBundles = episodeBundles;
+                MainLoading = mainLoading;
+                Localization = localization;
+                EpisodePreloading = episodePreloading;
+            }
+
+            internal Save.Entity SaveSystem { get; }
+            internal PathGetter.Entity PathGetter { get; }
+            internal Bundles.Scope NovelBundles { get; }
+            internal EpisodeRuntime EpisodeRuntime { get; }
+            internal EpisodeScope EpisodeScope { get; }
+            internal Bundles.Scope EpisodeBundles { get; }
+            internal Loading.Entity MainLoading { get; }
+            internal Localization.Entity Localization { get; }
+            internal UniTask<string> EpisodePreloading { get; }
         }
 
-        private async UniTask<SettingSelection> PrepareApplication(
-            BootstrapState state)
+        private async UniTask<NovelStartSession> PrepareApplication(
+            Bundles.Scope novelBundles)
         {
-            state.SaveSystem = CreateSaveSystem();
-            state.PathGetter = CreatePathGetter();
-            state.EpisodeRuntime = CreateEpisodeRuntime().AddTo(this);
-            state.EpisodeScope = state.EpisodeRuntime.Scope;
-            state.EpisodeBundles = state.Bundles.CreateScope()
-                .AddTo(state.EpisodeScope);
+            var saveSystem = CreateSaveSystem();
+            var pathGetter = CreatePathGetter();
+            var episodeRuntime = CreateEpisodeRuntime().AddTo(this);
+            var episodeBundles = _ctx.Bundles.CreateScope()
+                .AddTo(episodeRuntime.Scope);
 
-            await _priorityLoader.Run(() => state.NovelBundles
+            await _priorityLoader.Run(() => novelBundles
                     .GetAssetBundle(_definition.MainLoadingBundleName)
                     .AttachExternalCancellation(_ctx.CancellationToken));
 
             GameObject mainLoadingScreen;
             mainLoadingScreen = await _priorityLoader.Run(() =>
-                state.NovelBundles.GetBundledPrefab(
+                novelBundles.GetBundledPrefab(
                         _definition.MainLoadingBundleName,
-                        state.PathGetter.GetMainLoadingPrefabAssetName(
+                        pathGetter.GetMainLoadingPrefabAssetName(
                             BootstrapAddresses.ScreenAssetName))
                     .AttachExternalCancellation(_ctx.CancellationToken));
-            state.MainLoading = CreateMainLoading(mainLoadingScreen);
+            var mainLoading = CreateMainLoading(mainLoadingScreen);
 
             var applicationPreloading = UniTask.WhenAll(
-                state.NovelBundles.GetAssetBundle(_definition.SettingBundleName),
-                state.NovelBundles.GetAssetBundle(_definition.LocalizationBundleName));
-            state.EpisodePreloading = UniTask.WhenAll(
-                state.Bundles.GetText(
-                    state.PathGetter.GetNovelTextPath(
-                        _episode.StoryPath)),
-                state.EpisodeBundles.GetAssetBundle(
-                    _episode.BubbleBundleName),
-                state.EpisodeBundles.GetAssetBundle(
-                    _episode.LocationBundleName),
-                state.EpisodeBundles.GetAssetBundle(
-                    _episode.CharacterBundleName),
-                state.EpisodeBundles.GetAssetBundle(
-                    _episode.NotificationBundleName),
-                state.EpisodeBundles.GetAssetBundle(
-                    _definition.LoadingBundleName));
+                novelBundles.GetAssetBundle(_definition.SettingBundleName),
+                novelBundles.GetAssetBundle(_definition.LocalizationBundleName));
+            var episodePreloading = PreloadEpisode(pathGetter, episodeBundles)
+                .Preserve();
 
-            await state.MainLoading.Show()
+            await mainLoading.Show()
                 .AttachExternalCancellation(_ctx.CancellationToken);
 
             await _priorityLoader.Run(() => applicationPreloading
                 .AttachExternalCancellation(_ctx.CancellationToken));
 
             LocalizationData localizationData;
-            localizationData = await _priorityLoader.Run(() => state.NovelBundles
+            localizationData = await _priorityLoader.Run(() => novelBundles
                     .GetBundledSO<LocalizationData>(
                         _definition.LocalizationBundleName,
-                        state.PathGetter.GetLocalizationDataAssetName(
+                        pathGetter.GetLocalizationDataAssetName(
                             BootstrapAddresses.LocalizationDataAssetName))
                     .AttachExternalCancellation(_ctx.CancellationToken));
-            state.Localization = CreateLocalization(localizationData);
+            var localization = CreateLocalization(localizationData);
 
             GameObject settingsScreen;
             settingsScreen = await _priorityLoader.Run(() =>
-                state.NovelBundles.GetBundledPrefab(
+                novelBundles.GetBundledPrefab(
                         _definition.SettingBundleName,
-                        state.PathGetter.GetSettingPrefabAssetName(
+                        pathGetter.GetSettingPrefabAssetName(
                             BootstrapAddresses.ScreenAssetName))
                     .AttachExternalCancellation(_ctx.CancellationToken));
 
@@ -119,16 +120,44 @@ namespace Novels
                 new SettingProcess.Ctx
                 {
                     BundledPrefab = settingsScreen,
-                    ShowLoading = state.MainLoading.Show,
-                    HideLoading = state.MainLoading.Hide,
-                    ContainAnySave = () => state.SaveSystem.ContainAnySave,
-                    GetLocalizationValue = state.Localization.GetValue,
+                    ShowLoading = mainLoading.Show,
+                    HideLoading = mainLoading.Hide,
+                    ContainAnySave = () => saveSystem.ContainAnySave,
+                    GetLocalizationValue = localization.GetValue,
                     CancellationToken = _ctx.CancellationToken,
                 }).AddTo(this);
-            return await settingProcess.ShowSettingProcess();
+            var resources = new PreparedNovelResources(
+                saveSystem,
+                pathGetter,
+                novelBundles,
+                episodeRuntime,
+                episodeBundles,
+                mainLoading,
+                localization,
+                episodePreloading);
+            var selection = await settingProcess.ShowSettingProcess();
+            return new NovelStartSession(
+                selection,
+                saveSystem.Clear,
+                () => RunEpisode(resources));
         }
 
-        private async UniTask RunEpisode(BootstrapState state)
+        private async UniTask<string> PreloadEpisode(
+            PathGetter.Entity pathGetter,
+            Bundles.Scope episodeBundles)
+        {
+            var result = await UniTask.WhenAll(
+                _ctx.Bundles.GetText(
+                    pathGetter.GetNovelTextPath(_episode.StoryPath)),
+                episodeBundles.GetAssetBundle(_episode.BubbleBundleName),
+                episodeBundles.GetAssetBundle(_episode.LocationBundleName),
+                episodeBundles.GetAssetBundle(_episode.CharacterBundleName),
+                episodeBundles.GetAssetBundle(_episode.NotificationBundleName),
+                episodeBundles.GetAssetBundle(_definition.LoadingBundleName));
+            return result.Item1;
+        }
+
+        private async UniTask RunEpisode(PreparedNovelResources state)
         {
             GameObject loadingScreen;
             loadingScreen = await _priorityLoader.Run(() =>
@@ -142,11 +171,9 @@ namespace Novels
             await state.MainLoading.Hide()
                 .AttachExternalCancellation(_ctx.CancellationToken);
 
-            string storyText;
-            var preloaded = await _priorityLoader.Run(() =>
+            var storyText = await _priorityLoader.Run(() =>
                 state.EpisodePreloading
                     .AttachExternalCancellation(_ctx.CancellationToken));
-            storyText = preloaded.storyText;
 
             var storyProcessor = CreateStoryProcessor(state.EpisodeScope, storyText);
             var storyCommands = CreateStoryCommands();

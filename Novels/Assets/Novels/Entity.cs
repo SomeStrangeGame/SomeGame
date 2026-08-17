@@ -19,6 +19,7 @@ namespace Novels
             internal Action<Diagnostics.NovelError> OnError;
             internal Bundles.Entity Bundles;
             internal Catalog.NovelCatalogEntry Content;
+            internal string PersistentDataPath;
             internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
         }
@@ -37,6 +38,10 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.Bundles));
             if (ctx.Content == null)
                 throw new ArgumentNullException(nameof(ctx.Content));
+            if (string.IsNullOrWhiteSpace(ctx.PersistentDataPath))
+                throw new ArgumentException(
+                    "Persistent data path must not be empty.",
+                    nameof(ctx.PersistentDataPath));
             if (ctx.SelectEpisode == null)
                 throw new ArgumentNullException(nameof(ctx.SelectEpisode));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
@@ -44,19 +49,15 @@ namespace Novels
 
         internal async UniTask Init()
         {
-            var state = new BootstrapState();
-            state.Bundles = _ctx.Bundles;
-            state.NovelBundles = state.Bundles.CreateScope().AddTo(this);
-            _definition = await LoadContent(state.NovelBundles, _ctx.Content);
+            var novelBundles = _ctx.Bundles.CreateScope().AddTo(this);
+            _definition = await LoadContent(novelBundles, _ctx.Content);
             _episode = await _ctx.SelectEpisode(_definition);
-            ConfigureMedia(state.Bundles);
+            ConfigureMedia(_ctx.Bundles);
 
             var bootstrap = new NovelBootstrapProcess(
                 new NovelBootstrapProcess.Ctx
                 {
-                    SelectStart = () => PrepareApplication(state),
-                    ClearSave = () => state.SaveSystem.Clear(),
-                    RunEpisode = () => RunEpisode(state),
+                    Prepare = () => PrepareApplication(novelBundles),
                     CancellationToken = _ctx.CancellationToken,
                 }).AddTo(this);
 

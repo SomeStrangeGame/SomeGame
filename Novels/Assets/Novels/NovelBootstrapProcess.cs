@@ -9,9 +9,7 @@ namespace Novels
     {
         internal struct Ctx
         {
-            internal Func<UniTask<SettingSelection>> SelectStart;
-            internal Action ClearSave;
-            internal Func<UniTask> RunEpisode;
+            internal Func<UniTask<NovelStartSession>> Prepare;
             internal CancellationToken CancellationToken;
         }
 
@@ -25,12 +23,29 @@ namespace Novels
         internal async UniTask Run()
         {
             _ctx.CancellationToken.ThrowIfCancellationRequested();
-            var selection = await _ctx.SelectStart();
-            if (selection == SettingSelection.NewGame)
-                _ctx.ClearSave();
+            var session = await _ctx.Prepare();
+            if (session.Selection == SettingSelection.NewGame)
+                session.ClearSave();
 
             _ctx.CancellationToken.ThrowIfCancellationRequested();
-            await _ctx.RunEpisode();
+            await session.RunEpisode();
         }
+    }
+
+    internal readonly struct NovelStartSession
+    {
+        internal NovelStartSession(
+            SettingSelection selection,
+            Action clearSave,
+            Func<UniTask> runEpisode)
+        {
+            Selection = selection;
+            ClearSave = clearSave ?? throw new ArgumentNullException(nameof(clearSave));
+            RunEpisode = runEpisode ?? throw new ArgumentNullException(nameof(runEpisode));
+        }
+
+        internal SettingSelection Selection { get; }
+        internal Action ClearSave { get; }
+        internal Func<UniTask> RunEpisode { get; }
     }
 }

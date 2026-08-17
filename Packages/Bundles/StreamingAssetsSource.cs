@@ -25,15 +25,6 @@ namespace Bundles
 #endif
         }
 
-        public async UniTask<byte[]> DownloadBytes(string path)
-        {
-            using (var request = UnityWebRequest.Get(GetUrl(path)))
-            {
-                await Send(request);
-                return request.downloadHandler.data;
-            }
-        }
-
         public async UniTask<string> DownloadText(string path)
         {
             using (var request = UnityWebRequest.Get(GetUrl(path)))
@@ -43,12 +34,23 @@ namespace Bundles
             }
         }
 
+        public async UniTask DownloadFile(string path, string destinationPath)
+        {
+            using (var request = UnityWebRequest.Get(GetUrl(path)))
+            {
+                request.downloadHandler = new DownloadHandlerFile(
+                    destinationPath,
+                    true);
+                await Send(request);
+            }
+        }
+
         private async UniTask Send(UnityWebRequest request)
         {
             await request.SendWebRequest().WithCancellation(_cancellationToken);
             if (request.result != UnityWebRequest.Result.Success)
             {
-                throw new InvalidOperationException(
+                throw new ContentSourceException(
                     $"Request failed [{request.responseCode}] {request.url}: {request.error}");
             }
         }

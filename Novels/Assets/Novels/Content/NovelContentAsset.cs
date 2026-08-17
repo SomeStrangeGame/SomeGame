@@ -24,6 +24,7 @@ namespace Novels.Content
         {
             [SerializeField] private string _id;
             [SerializeField] private string _title;
+            [SerializeField] private LocalizedTextEntry[] _localizations;
             [SerializeField] private string _storyPath;
             [SerializeField] private string _contentVersion;
             [SerializeField] private string _bubbleBundleName;
@@ -47,7 +48,7 @@ namespace Novels.Content
 
                 return new EpisodeDefinition(
                     _id,
-                    _title,
+                    LocalizedText.Resolve(_localizations, _title),
                     _storyPath,
                     _contentVersion,
                     _bubbleBundleName,
@@ -59,6 +60,44 @@ namespace Novels.Content
                         audioExtensions,
                         _defaultAudioExtension,
                         _silentAudioIds));
+            }
+        }
+
+        [Serializable]
+        private struct LocalizedTextEntry
+        {
+            [SerializeField] private string _locale;
+            [SerializeField] private string _value;
+
+            internal readonly string Locale => _locale;
+            internal readonly string Value => _value;
+        }
+
+        private static class LocalizedText
+        {
+            internal static string Resolve(
+                LocalizedTextEntry[] entries,
+                string fallback)
+            {
+                var locale = System.Globalization.CultureInfo
+                    .CurrentUICulture.TwoLetterISOLanguageName;
+                var values = entries ?? Array.Empty<LocalizedTextEntry>();
+                foreach (var entry in values)
+                {
+                    if (string.Equals(
+                            entry.Locale,
+                            locale,
+                            StringComparison.OrdinalIgnoreCase))
+                    {
+                        return string.IsNullOrWhiteSpace(entry.Value)
+                            ? fallback
+                            : entry.Value;
+                    }
+                }
+                return values.Length > 0
+                    && !string.IsNullOrWhiteSpace(values[0].Value)
+                    ? values[0].Value
+                    : fallback;
             }
         }
 

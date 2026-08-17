@@ -7,13 +7,22 @@ namespace Novels.Bootstrap.View
 {
     public sealed class Screen : MonoBehaviour
     {
-        private Text _message;
-        private Text _retryLabel;
-        private Button _retry;
+        private const string _resourcePath = "Novels/BootstrapScreen";
+        [SerializeField] private Text _message;
+        [SerializeField] private Text _retryLabel;
+        [SerializeField] private Button _retry;
 
         public static Screen Create()
         {
             EnsureEventSystem();
+            var prefab = Resources.Load<Screen>(_resourcePath);
+            if (prefab != null)
+                return Instantiate(prefab);
+            return CreateGenerated();
+        }
+
+        public static Screen CreateGenerated()
+        {
             var root = CreateObject(
                 "BootstrapScreen",
                 typeof(Canvas),
@@ -21,6 +30,7 @@ namespace Novels.Bootstrap.View
                 typeof(GraphicRaycaster),
                 typeof(Screen));
             var canvas = root.GetComponent<Canvas>();
+            root.transform.localScale = Vector3.one;
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 1000;
             var scaler = root.GetComponent<CanvasScaler>();
@@ -69,6 +79,7 @@ namespace Novels.Bootstrap.View
             screen._message = message;
             screen._retry = retryObject.GetComponent<Button>();
             screen._retryLabel = retryLabel;
+            root.transform.localScale = Vector3.one;
             return screen;
         }
 
@@ -91,7 +102,7 @@ namespace Novels.Bootstrap.View
 
         private static void EnsureEventSystem()
         {
-            if (EventSystem.current != null)
+            if (!Application.isPlaying || EventSystem.current != null)
                 return;
             var eventSystem = new GameObject(
                 "BootstrapEventSystem",

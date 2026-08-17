@@ -67,19 +67,59 @@ namespace Editor
                 title.color = new Color32(21, 21, 21, 255);
                 title.gameObject.AddComponent<LayoutElement>().preferredHeight = 100f;
 
+                var viewport = CreateUiObject(
+                    "Viewport",
+                    typeof(Image),
+                    typeof(RectMask2D),
+                    typeof(ScrollRect),
+                    typeof(LayoutElement));
+                viewport.transform.SetParent(content.transform, false);
+                viewport.GetComponent<Image>().color = Color.clear;
+                viewport.GetComponent<LayoutElement>().preferredHeight = 420f;
+
+                var cardList = CreateUiObject(
+                    "Cards",
+                    typeof(VerticalLayoutGroup),
+                    typeof(ContentSizeFitter));
+                cardList.transform.SetParent(viewport.transform, false);
+                var cardListRect = cardList.GetComponent<RectTransform>();
+                cardListRect.anchorMin = new Vector2(0f, 1f);
+                cardListRect.anchorMax = new Vector2(1f, 1f);
+                cardListRect.pivot = new Vector2(0.5f, 1f);
+                cardListRect.offsetMin = Vector2.zero;
+                cardListRect.offsetMax = Vector2.zero;
+                var cardListLayout = cardList.GetComponent<VerticalLayoutGroup>();
+                cardListLayout.spacing = 16f;
+                cardListLayout.childControlWidth = true;
+                cardListLayout.childControlHeight = true;
+                cardListLayout.childForceExpandWidth = true;
+                cardListLayout.childForceExpandHeight = false;
+                cardList.GetComponent<ContentSizeFitter>().verticalFit =
+                    ContentSizeFitter.FitMode.PreferredSize;
+                var scroll = viewport.GetComponent<ScrollRect>();
+                scroll.viewport = viewport.GetComponent<RectTransform>();
+                scroll.content = cardListRect;
+                scroll.horizontal = false;
+                scroll.vertical = true;
+                scroll.movementType = ScrollRect.MovementType.Clamped;
+
                 var cardObject = CreateUiObject(
                     "CardTemplate",
                     typeof(Image),
                     typeof(Button),
                     typeof(LayoutElement),
                     typeof(VerticalLayoutGroup),
+                    typeof(Outline),
                     typeof(Novels.Catalog.View.Card));
-                cardObject.transform.SetParent(content.transform, false);
+                cardObject.transform.SetParent(cardList.transform, false);
                 var buttonImage = cardObject.GetComponent<Image>();
-                buttonImage.color = new Color32(63, 94, 140, 255);
+                buttonImage.color = new Color32(35, 58, 92, 255);
+                var outline = cardObject.GetComponent<Outline>();
+                outline.effectColor = new Color32(205, 220, 242, 255);
+                outline.effectDistance = new Vector2(3f, -3f);
                 var button = cardObject.GetComponent<Button>();
                 button.targetGraphic = buttonImage;
-                cardObject.GetComponent<LayoutElement>().preferredHeight = 120f;
+                cardObject.GetComponent<LayoutElement>().preferredHeight = 150f;
                 var cardLayout = cardObject.GetComponent<VerticalLayoutGroup>();
                 cardLayout.padding = new RectOffset(20, 20, 12, 12);
                 cardLayout.childAlignment = TextAnchor.MiddleCenter;
@@ -97,11 +137,17 @@ namespace Editor
                 cardDescription.alignment = TextAnchor.MiddleCenter;
                 cardDescription.color = Color.white;
                 cardDescription.raycastTarget = false;
+                var cardStatus = CreateText("Status", 16, FontStyle.Italic);
+                cardStatus.transform.SetParent(cardObject.transform, false);
+                cardStatus.alignment = TextAnchor.MiddleCenter;
+                cardStatus.color = new Color32(210, 230, 255, 255);
+                cardStatus.raycastTarget = false;
 
                 var card = new SerializedObject(
                     cardObject.GetComponent<Novels.Catalog.View.Card>());
                 card.FindProperty("_title").objectReferenceValue = cardTitle;
                 card.FindProperty("_description").objectReferenceValue = cardDescription;
+                card.FindProperty("_status").objectReferenceValue = cardStatus;
                 card.FindProperty("_button").objectReferenceValue = button;
                 card.ApplyModifiedPropertiesWithoutUndo();
 
@@ -112,7 +158,9 @@ namespace Editor
                     cardObject.GetComponent<Novels.Catalog.View.Card>();
                 screen.ApplyModifiedPropertiesWithoutUndo();
 
-                PrefabUtility.SaveAsPrefabAsset(root, _prefabPath);
+                var prefab = PrefabUtility.SaveAsPrefabAsset(root, _prefabPath);
+                prefab.transform.localScale = Vector3.one;
+                EditorUtility.SetDirty(prefab.transform);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
             }

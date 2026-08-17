@@ -51,7 +51,7 @@
 - `QueueExecutionContext` carries the novel-session cancellation token. Queue commands are immutable after construction, validate required delegates in their constructors, and cancel user-input waits without leaving the executor suspended.
 - Notifications preserve their non-blocking story behavior through a Notification-owned FIFO dispatcher. The dispatcher serializes presentation, observes cancellation and exceptions, and replaces queue-level fire-and-forget work.
 - `Save.Entity` receives byte-storage operations through delegates and no longer references the Cache assembly. The root `Entity.SaveSystem` factory owns the Cache adapter. Cache owns filesystem path resolution, atomic byte writes, existence checks, and exact-key deletion; filesystem paths are converted to `file://` URLs only at the Bundles video boundary.
-- Save storage writes a versioned binary envelope containing content identity, content version, and the choice payload. Legacy raw-byte saves remain readable and migrate on the next write. Saves belonging to another episode/version are not replayed.
+- Save storage writes and accepts only a versioned binary envelope containing content identity, content version, and the choice payload. Saves in obsolete formats or belonging to another episode/version are not replayed.
 - `StoryProcessor.ReadNext()` exposes typed `Content`, `Choices`, and `Completed` control flow. `NovelProcess` handles completion before parsing and terminates without adding an artificial queue item.
 - Story completion asks `StoryQueue.TryComplete()` for a final batch so commands authored after the last Dialogue are not discarded. No empty batch or artificial command is emitted.
 - `StoryCommand` is a closed polymorphic hierarchy. Every concrete command owns exactly one valid payload; the public parser facade and authored syntax remain unchanged.
@@ -70,6 +70,20 @@
 - `Novels.Bubble.Contracts` defines neutral Dialogue, Wardrobe, and Choose presentations passed through StoryQueue and QueueProcess to Bubble. The composition root does not map Bubble DTOs; `Bubble.Entity` alone converts each neutral contract into its UI-specific View model. Wardrobe and Choose contracts are intentional empty markers for future fields, and their authored trigger literals are centralized in `BubbleTriggers`.
 - Lifetime ownership uses custom `BaseDisposable` and `.AddTo(this)`; async APIs use UniTask.
 - Namespaces follow feature folders. Private fields are `_camelCase`; serialized references are `[SerializeField] private`; braces use Allman style; XML docs and nullable annotations are absent.
+
+## Architecture wave completed on 2026-08-17 (catalog-scale runtime)
+
+- Saves are namespaced as `Saves/{contentId}/{episodeId}/SaveChoice`. The former global `SaveChoice` is intentionally ignored; each story and episode starts with its own save namespace.
+- `ApplicationRuntime` owns a `DisposableSlot<Entity>` for exactly one active novel. Completed novels are removed immediately instead of remaining referenced by the application lifetime stack.
+- Catalog bootstrap retries only transport and integrity failures. Client/content-schema incompatibility and authoring failures escape to the fatal error boundary instead of being presented as network retries.
+- `Remote/{platform}/release.json` atomically pins the catalog, every bundle version/hash, all Ink, audio, and video files, the minimum client version, and the content schema. One release remains fixed for the complete application session, with a cached last-known-good fallback.
+- Bundle loading is deduplicated per bundle/version. Scopes receive reference-counted leases, so a bundle is unloaded only after its last non-persistent consumer is gone.
+- Bundles download to temporary files, are checked with streaming SHA-256, committed atomically, and opened with `AssetBundle.LoadFromFileAsync`; bundle bytes are no longer duplicated through `LoadFromMemoryAsync`.
+- Ink, audio, and video use the same release-aware file cache. Files are integrity-checked, addressed under the release ID, and pruned with a 512 MiB LRU budget.
+- Novel preparation returns immutable `PreparedNovelResources` instead of mutating a partially initialized bootstrap state and stores only a preserved story-text preload task.
+- Application-level UI strings are owned by `ApplicationLocalization`; episode titles have localized authoring entries with the previous `_title` retained as a fallback.
+- The local bootstrap UI is shipped in the player as `Assets/Resources/Novels/BootstrapScreen.prefab`, with code generation retained as a safe fallback. The remote catalog uses a `ScrollRect` and cards with title, description, availability status, and enabled state.
+- The Android content builder now emits the release manifest after staged bundle generation. The Editor validator checks the release, pinned bundle versions, all delivered content-file descriptors, the local bootstrap prefab, and the existing authoring rules.
 
 ## Architecture wave completed on 2026-08-17
 

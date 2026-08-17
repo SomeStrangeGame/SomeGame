@@ -23,6 +23,11 @@ MonoBehaviour:
   _episodes:
   - _id: s01e01
     _title: "\u042D\u043F\u0438\u0437\u043E\u0434 1"
+    _localizations:
+    - _locale: ru
+      _value: "\u042D\u043F\u0438\u0437\u043E\u0434 1"
+    - _locale: en
+      _value: Episode 1
     _storyPath: s01e01.ink.json
     _contentVersion: 1
     _bubbleBundleName: novels_bubble_tzm_1

@@ -12,6 +12,7 @@ namespace Novels
     internal sealed class ApplicationRuntime : BaseDisposable
     {
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
+        private const int _supportedContentSchemaVersion = 1;
 
         internal struct Ctx
         {
@@ -25,7 +26,8 @@ namespace Novels
         private readonly Ctx _ctx;
         private readonly PriorityLoader _priorityLoader;
         private readonly Bundles.Entity _bundles;
-        private Entity _activeNovel;
+        private readonly DisposableSlot<Entity> _activeNovel;
+        private readonly ApplicationLocalization _localization;
 
         internal ApplicationRuntime(Ctx ctx)
         {
@@ -38,7 +40,10 @@ namespace Novels
                     nameof(ctx.PersistentDataPath));
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
+            _localization = new ApplicationLocalization(
+                CultureInfo.CurrentUICulture);
             _bundles = CreateBundles().AddTo(this);
+            _activeNovel = new DisposableSlot<Entity>().AddTo(this);
         }
 
         internal async UniTask Run()
@@ -51,24 +56,25 @@ namespace Novels
             while (!_ctx.CancellationToken.IsCancellationRequested)
             {
                 var content = await SelectContent(catalog.catalog, catalog.screen);
-                using var novel = new Entity(new Entity.Ctx
+                var novel = new Entity(new Entity.Ctx
                 {
                     Bundles = _bundles,
                     Content = content,
+                    PersistentDataPath = _ctx.PersistentDataPath,
                     SelectEpisode = definition =>
                         SelectEpisode(definition, catalog.screen),
                     CancellationToken = _ctx.CancellationToken,
                     OnLog = _ctx.OnLog,
                     OnError = _ctx.OnError,
-                }).AddTo(this);
-                _activeNovel = novel;
+                });
+                _activeNovel.Replace(novel);
                 try
                 {
                     await novel.Init();
                 }
                 finally
                 {
-                    _activeNovel = null;
+                    _activeNovel.Clear(novel);
                 }
             }
         }
@@ -84,6 +90,9 @@ namespace Novels
                 try
                 {
                     bootstrap.ShowLoading(strings.Loading);
+                    await _bundles.LoadReleaseAsync(
+                        Application.version,
+                        _supportedContentSchemaVersion);
                     return await LoadCatalog();
                 }
                 catch (OperationCanceledException)
@@ -91,7 +100,9 @@ namespace Novels
                 {
                     throw;
                 }
-                catch (Exception exception)
+                catch (Exception exception) when (
+                    exception is Bundles.ContentSourceException
+                    || exception is Bundles.ContentIntegrityException)
                 {
                     _ctx.OnLog?.Invoke((
                         LogType.Warning,
@@ -103,7 +114,7 @@ namespace Novels
 
         internal UniTask FlushSaveAsync()
         {
-            return _activeNovel?.FlushSaveAsync() ?? UniTask.CompletedTask;
+            return _activeNovel.Value?.FlushSaveAsync() ?? UniTask.CompletedTask;
         }
 
         private Bundles.Entity CreateBundles()
@@ -162,7 +173,8 @@ namespace Novels
                 return new Catalog.CatalogItem(
                     entry.ContentId,
                     text.Title,
-                    text.Description);
+                    text.Description,
+                    _localization.Get(ApplicationText.ContentAvailable));
             }).ToArray();
             using var selection = new Catalog.Entity(new Catalog.Entity.Ctx
             {
@@ -181,37 +193,25 @@ namespace Novels
             var items = definition.Episodes
                 .Select(episode => new Catalog.CatalogItem(
                     episode.Id,
-                    episode.Title))
+                    episode.Title,
+                    status: _localization.Get(ApplicationText.ContentAvailable)))
                 .ToArray();
             using var selection = new Catalog.Entity(new Catalog.Entity.Ctx
             {
                 BundledPrefab = screen,
                 CancellationToken = _ctx.CancellationToken,
             });
-            var title = string.Equals(
-                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName,
-                "ru",
-                StringComparison.OrdinalIgnoreCase)
-                ? "Выберите эпизод"
-                : "Choose an episode";
+            var title = _localization.Get(ApplicationText.ChooseEpisode);
             var selected = await selection.Select(title, items);
             return episodes[selected.Id];
         }
 
-        private static BootstrapStrings GetBootstrapStrings()
+        private BootstrapStrings GetBootstrapStrings()
         {
-            return string.Equals(
-                CultureInfo.CurrentUICulture.TwoLetterISOLanguageName,
-                "ru",
-                StringComparison.OrdinalIgnoreCase)
-                ? new BootstrapStrings(
-                    "Загрузка каталога историй…",
-                    "Не удалось загрузить каталог. Проверьте подключение.",
-                    "Повторить")
-                : new BootstrapStrings(
-                    "Loading story catalog…",
-                    "Could not load the catalog. Check your connection.",
-                    "Retry");
+            return new BootstrapStrings(
+                _localization.Get(ApplicationText.CatalogLoading),
+                _localization.Get(ApplicationText.CatalogLoadFailed),
+                _localization.Get(ApplicationText.Retry));
         }
 
         private readonly struct BootstrapStrings

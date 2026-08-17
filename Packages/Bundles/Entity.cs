@@ -26,12 +26,25 @@ namespace Bundles
         private readonly Dictionary<string, GameObject> _prefabs = new(StringComparer.OrdinalIgnoreCase);
 
         private readonly Cache.Entity _cache;
-        private readonly Dictionary<string, AssetBundle> _bundles = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, BundleRecord> _bundles = new(
+            StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, Dictionary<string, string>> _assetNames = new(
             StringComparer.OrdinalIgnoreCase);
 
         private readonly IContentSource _source;
         private readonly MediaResolver _media;
+        private ContentRelease _release;
+
+        private const long _contentFileCacheLimit = 512L * 1024L * 1024L;
+
+        private sealed class BundleRecord
+        {
+            internal AssetBundle Bundle;
+            internal UniTask<AssetBundle> Loading;
+            internal bool IsLoading;
+            internal bool Persistent;
+            internal int Leases;
+        }
 
         private Ctx _ctx;
 
@@ -41,7 +54,9 @@ namespace Bundles
             _source = ctx.ContentSource
                 ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
             _cache = new Cache.Entity(ctx.PersistentDataPath).AddTo(this);
-            _media = new MediaResolver(_cache, _source, ctx.CancellationToken);
+            _media = new MediaResolver(
+                ResolveContentFileUrl,
+                ctx.CancellationToken);
         }
 
         protected override void OnDispose()
@@ -57,8 +72,8 @@ namespace Bundles
 
         private void ClearBundles()
         {
-            foreach(var bundle in _bundles)
-                bundle.Value.Unload(false);
+            foreach(var bundle in _bundles.Values)
+                bundle.Bundle?.Unload(false);
             _bundles.Clear();
             _assetNames.Clear();
         }
@@ -137,71 +152,138 @@ namespace Bundles
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
-            var log = (LogType.Warning, "bundle name is empty");
             if (string.IsNullOrEmpty(bundleName)) 
             {
-                _ctx.OnLog.Invoke(log);
+                _ctx.OnLog?.Invoke((LogType.Warning, "bundle name is empty"));
                 _ctx.OnFailure?.Invoke(new BundleFailure(
                     BundleFailureCodes.InvalidBundleName,
                     "Bundle name is empty."));
                 return null;
             }
 
-            var bundlesKey = GetBundleKey(bundleName);
-            if (_bundles.TryGetValue(bundlesKey, out var loadedBundle))
-            {
-                _ctx.OnLog.Invoke((LogType.Log, $"Get bundle {bundleName} from memory"));
-                return loadedBundle;
-            }
+            return await GetOrLoadBundle(bundleName, true);
+        }
 
-            var manifest = await GetBundleManifestAsync(bundleName);
-            var bundlesVersion = manifest.version;
-            var bundlesPath = $"{bundlesKey}/{bundlesVersion}";
-            var cachePath = bundlesPath;
+        internal async UniTask<AssetBundle> AcquireAssetBundle(string bundleName)
+        {
+            var bundle = await GetOrLoadBundle(bundleName, false);
+            var record = _bundles[GetBundleKey(bundleName)];
+            record.Leases++;
+            return bundle;
+        }
+
+        internal AssetBundle GetOwnedAssetBundle(string bundleName)
+        {
+            return GetLoadedBundle(bundleName);
+        }
+
+        private async UniTask<AssetBundle> GetOrLoadBundle(
+            string bundleName,
+            bool persistent)
+        {
+            var bundlesKey = GetBundleKey(bundleName);
+            if (!_bundles.TryGetValue(bundlesKey, out var record))
+            {
+                record = new BundleRecord();
+                _bundles.Add(bundlesKey, record);
+            }
+            record.Persistent |= persistent;
+            if (record.Bundle != null)
+            {
+                _ctx.OnLog?.Invoke((
+                    LogType.Log,
+                    $"Get bundle {bundleName} from memory"));
+                return record.Bundle;
+            }
+            if (!record.IsLoading)
+            {
+                record.IsLoading = true;
+                record.Loading = LoadBundle(bundleName, bundlesKey, record)
+                    .Preserve();
+            }
+            return await record.Loading;
+        }
+
+        private async UniTask<AssetBundle> LoadBundle(
+            string bundleName,
+            string bundlesKey,
+            BundleRecord record)
+        {
+            var log = (LogType.Warning, "bundle is not loaded");
             try
             {
-                VerifyBundle(
-                    bundleName,
-                    manifest,
-                    _cache.ReadBytes(cachePath));
-                var cachedBundle = await _cache
-                    .BundleFromCache(cachePath)
-                    .AttachExternalCancellation(_ctx.CancellationToken);
-                if (cachedBundle == null)
-                    throw new InvalidDataException($"Cached bundle '{cachePath}' is invalid.");
-                _bundles[bundlesKey] = cachedBundle;
-                RegisterAssetNames(bundlesKey, cachedBundle);
+                var manifest = await GetBundleManifestAsync(bundleName);
+                var bundlesVersion = manifest.version;
+                var bundlesPath = $"{bundlesKey}/{bundlesVersion}";
+                var cachePath = bundlesPath;
+                try
+                {
+                    VerifyFile(
+                        bundleName,
+                        manifest.size,
+                        manifest.sha256,
+                        _cache.GetLocalPath(cachePath, false),
+                        manifest.HasIntegrity);
+                    record.Bundle = await _cache
+                        .BundleFromCache(cachePath)
+                        .AttachExternalCancellation(_ctx.CancellationToken);
+                    if (record.Bundle == null)
+                        throw new InvalidDataException(
+                            $"Cached bundle '{cachePath}' is invalid.");
+                    log = (LogType.Log, $"Get local bundle from {cachePath}");
+                }
+                catch (OperationCanceledException)
+                    when (_ctx.CancellationToken.IsCancellationRequested)
+                {
+                    throw;
+                }
+                catch (Exception exception)
+                {
+                    log = (
+                        LogType.Warning,
+                        $"No valid local bundle {bundleName}; download "
+                        + $"{_source.GetUrl(bundlesPath)}. {exception.Message}");
+                    var temporaryPath = _cache.CreateTemporaryPath(cachePath);
+                    try
+                    {
+                        await _source.DownloadFile(bundlesPath, temporaryPath);
+                        _ctx.CancellationToken.ThrowIfCancellationRequested();
+                        VerifyFile(
+                            bundleName,
+                            manifest.size,
+                            manifest.sha256,
+                            temporaryPath,
+                            manifest.HasIntegrity);
+                        _cache.CommitTemporaryFile(temporaryPath, cachePath);
+                    }
+                    finally
+                    {
+                        if (File.Exists(temporaryPath))
+                            File.Delete(temporaryPath);
+                    }
+                    record.Bundle = await _cache
+                        .BundleFromCache(cachePath)
+                        .AttachExternalCancellation(_ctx.CancellationToken);
+                    if (record.Bundle == null)
+                        throw new InvalidDataException(
+                            $"Downloaded bundle '{bundlesPath}' is invalid.");
+                }
+                RegisterAssetNames(bundlesKey, record.Bundle);
                 _cache.PruneDirectory(bundlesKey, bundlesVersion);
-                log = (LogType.Log, $"Get local bundle from {cachePath}");
+                _cache.TextToCache(GetVersionPointerPath(bundleName), bundlesVersion);
+                if (manifest.HasIntegrity)
+                {
+                    _cache.TextToCache(
+                        GetManifestPointerPath(bundleName),
+                        JsonUtility.ToJson(manifest));
+                }
+                _ctx.OnLog?.Invoke(log);
+                return record.Bundle;
             }
-            catch (OperationCanceledException) when (_ctx.CancellationToken.IsCancellationRequested)
+            finally
             {
-                throw;
+                record.IsLoading = false;
             }
-            catch (Exception e)
-            {
-                log = (LogType.Warning, $"No local bundle {bundleName} in {bundlesKey}\nTry load from {_source.GetUrl(bundlesPath)}\n---\n{e}");
-                var data = await _source.DownloadBytes(bundlesPath);
-                _ctx.CancellationToken.ThrowIfCancellationRequested();
-                VerifyBundle(bundleName, manifest, data);
-                var downloadedBundle = await _cache
-                    .BundleToCache(cachePath, data)
-                    .AttachExternalCancellation(_ctx.CancellationToken);
-                if (downloadedBundle == null)
-                    throw new InvalidDataException($"Downloaded bundle '{bundlesPath}' is invalid.");
-                _bundles[bundlesKey] = downloadedBundle;
-                RegisterAssetNames(bundlesKey, downloadedBundle);
-                _cache.PruneDirectory(bundlesKey, bundlesVersion);
-            }
-            _cache.TextToCache(GetVersionPointerPath(bundleName), bundlesVersion);
-            if (manifest.HasIntegrity)
-            {
-                _cache.TextToCache(
-                    GetManifestPointerPath(bundleName),
-                    JsonUtility.ToJson(manifest));
-            }
-            _ctx.OnLog.Invoke(log);
-            return _bundles[bundlesKey];
         }
 
         private string GetBundleKey(string bundleName)
@@ -214,8 +296,13 @@ namespace Bundles
             foreach (var bundleName in bundleNames)
             {
                 var bundleKey = GetBundleKey(bundleName);
-                if (_bundles.Remove(bundleKey, out var bundle) && bundle != null)
-                    bundle.Unload(false);
+                if (!_bundles.TryGetValue(bundleKey, out var record))
+                    continue;
+                record.Leases = Math.Max(0, record.Leases - 1);
+                if (record.Leases > 0 || record.Persistent)
+                    continue;
+                _bundles.Remove(bundleKey);
+                record.Bundle?.Unload(false);
 
                 RemoveAssets(_sprites, bundleKey);
                 RemoveAssets(_scriptableObjects, bundleKey);
@@ -315,6 +402,13 @@ namespace Bundles
         private async UniTask<BundleManifest> GetBundleManifestAsync(
             string bundleName)
         {
+            var releaseEntry = _release?.FindBundle(bundleName);
+            if (releaseEntry != null)
+            {
+                var pinned = releaseEntry.ToManifest();
+                ValidateManifest(bundleName, pinned);
+                return pinned;
+            }
             var path = $"Remote/{GetPlatform()}/{bundleName}/manifest.json";
             try
             {
@@ -376,31 +470,37 @@ namespace Bundles
             }
         }
 
-        private static void VerifyBundle(
-            string bundleName,
-            BundleManifest manifest,
-            byte[] data)
+        private static void VerifyFile(
+            string name,
+            long expectedSize,
+            string expectedSha256,
+            string path,
+            bool verifyIntegrity)
         {
-            if (!manifest.HasIntegrity)
+            if (!File.Exists(path))
+                throw new FileNotFoundException("Cached content file is missing.", path);
+            if (!verifyIntegrity)
                 return;
-            if (data == null || data.LongLength != manifest.size)
+            var file = new FileInfo(path);
+            if (file.Length != expectedSize)
             {
-                throw new InvalidDataException(
-                    $"Bundle '{bundleName}' size mismatch. Expected "
-                    + $"{manifest.size}, got {data?.LongLength ?? 0}.");
+                throw new ContentIntegrityException(
+                    $"Content '{name}' size mismatch. Expected "
+                    + $"{expectedSize}, got {file.Length}.");
             }
 
             using var sha = SHA256.Create();
-            var actual = BitConverter.ToString(sha.ComputeHash(data))
+            using var stream = File.OpenRead(path);
+            var actual = BitConverter.ToString(sha.ComputeHash(stream))
                 .Replace("-", string.Empty)
                 .ToLowerInvariant();
             if (!string.Equals(
                     actual,
-                    manifest.sha256,
+                    expectedSha256,
                     StringComparison.OrdinalIgnoreCase))
             {
-                throw new InvalidDataException(
-                    $"Bundle '{bundleName}' SHA-256 mismatch.");
+                throw new ContentIntegrityException(
+                    $"Content '{name}' SHA-256 mismatch.");
             }
         }
 
@@ -414,30 +514,146 @@ namespace Bundles
             return $"Remote/{GetPlatform()}/BundleManifests/{bundleName}.json";
         }
 
-        public async UniTask<string> GetText(string path)
+        public async UniTask<ContentRelease> LoadReleaseAsync(
+            string clientVersion,
+            int supportedSchemaVersion)
         {
+            var path = $"Remote/{GetPlatform()}/release.json";
+            var cachePath = $"Remote/{GetPlatform()}/Releases/current.json";
+            ContentRelease release;
             try
             {
-                var text = await _source.DownloadText(path);
-                _ctx.CancellationToken.ThrowIfCancellationRequested();
-                _cache.TextToCache(path, text);
-                return text;
+                var json = await _source.DownloadText(path);
+                release = JsonUtility.FromJson<ContentRelease>(json);
+                ValidateRelease(release, clientVersion, supportedSchemaVersion);
+                _cache.TextToCache(cachePath, json);
             }
             catch (OperationCanceledException)
                 when (_ctx.CancellationToken.IsCancellationRequested)
             {
                 throw;
             }
+            catch (ContentCompatibilityException)
+            {
+                throw;
+            }
             catch (Exception exception)
             {
-                if (!_cache.Exists(path))
-                    throw;
+                if (!_cache.Exists(cachePath))
+                    throw new ContentSourceException(
+                        "Content release is unavailable and no cached release exists.",
+                        exception);
+                release = JsonUtility.FromJson<ContentRelease>(
+                    _cache.TextFromCache(cachePath));
+                ValidateRelease(release, clientVersion, supportedSchemaVersion);
                 _ctx.OnLog?.Invoke((
                     LogType.Warning,
-                    $"Use cached text '{path}' because the content source "
-                    + $"is unavailable. {exception.Message}"));
-                return _cache.TextFromCache(path);
+                    $"Use cached content release '{release.releaseId}'."));
             }
+
+            _release = release;
+            return release;
+        }
+
+        private static void ValidateRelease(
+            ContentRelease release,
+            string clientVersion,
+            int supportedSchemaVersion)
+        {
+            if (release == null
+                || string.IsNullOrWhiteSpace(release.releaseId)
+                || release.bundles == null
+                || release.bundles.Length == 0)
+            {
+                throw new ContentIntegrityException(
+                    "Content release manifest is incomplete.");
+            }
+            if (release.contentSchemaVersion > supportedSchemaVersion)
+            {
+                throw new ContentCompatibilityException(
+                    $"Content schema {release.contentSchemaVersion} requires "
+                    + $"a newer client (supported: {supportedSchemaVersion}).");
+            }
+            if (TryParseVersion(release.minimumClientVersion, out var minimum)
+                && TryParseVersion(clientVersion, out var current)
+                && current < minimum)
+            {
+                throw new ContentCompatibilityException(
+                    $"Content requires client {minimum} or newer; current is {current}.");
+            }
+            foreach (var bundle in release.bundles)
+            {
+                if (bundle == null)
+                    throw new ContentIntegrityException(
+                        "Content release contains an empty bundle entry.");
+                ValidateManifest(bundle.name, bundle.ToManifest());
+            }
+        }
+
+        private static bool TryParseVersion(string value, out Version version)
+        {
+            if (Version.TryParse(value, out version))
+                return true;
+            version = null;
+            return false;
+        }
+
+        private async UniTask<string> ResolveContentFileUrl(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return null;
+            var descriptor = _release?.FindFile(path);
+            if (_release != null && descriptor == null)
+            {
+                throw new ContentIntegrityException(
+                    $"File '{path}' is absent from release '{_release.releaseId}'.");
+            }
+            var releaseId = _release?.releaseId ?? "legacy";
+            var cachePath = $"RemoteFiles/{releaseId}/{path}";
+            var localPath = _cache.GetLocalPath(cachePath, false);
+            var verify = descriptor != null;
+            try
+            {
+                VerifyFile(
+                    path,
+                    descriptor?.size ?? 0,
+                    descriptor?.sha256,
+                    localPath,
+                    verify);
+            }
+            catch (Exception)
+            {
+                var temporaryPath = _cache.CreateTemporaryPath(cachePath);
+                try
+                {
+                    await _source.DownloadFile(path, temporaryPath);
+                    _ctx.CancellationToken.ThrowIfCancellationRequested();
+                    VerifyFile(
+                        path,
+                        descriptor?.size ?? 0,
+                        descriptor?.sha256,
+                        temporaryPath,
+                        verify);
+                    _cache.CommitTemporaryFile(temporaryPath, cachePath);
+                }
+                finally
+                {
+                    if (File.Exists(temporaryPath))
+                        File.Delete(temporaryPath);
+                }
+            }
+            _cache.Touch(cachePath);
+            _cache.PruneBySize(
+                "RemoteFiles",
+                _contentFileCacheLimit,
+                cachePath);
+            return new Uri(_cache.GetLocalPath(cachePath, false)).AbsoluteUri;
+        }
+
+        public async UniTask<string> GetText(string path)
+        {
+            var url = await ResolveContentFileUrl(path);
+            return File.ReadAllText(new Uri(url).LocalPath);
         }
 
         private string GetPlatform()
@@ -459,9 +675,10 @@ namespace Bundles
         private AssetBundle GetLoadedBundle(string bundleName)
         {
             var key = GetBundleKey(bundleName);
-            if (!_bundles.TryGetValue(key, out var bundle) || bundle == null)
+            if (!_bundles.TryGetValue(key, out var record)
+                || record.Bundle == null)
                 throw new InvalidOperationException($"AssetBundle '{bundleName}' is not loaded.");
-            return bundle;
+            return record.Bundle;
         }
 
     }

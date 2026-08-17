@@ -44,12 +44,11 @@ namespace Novels.Save
             _save.Clear();
             _initialChoices = Array.Empty<byte>();
             _initialChoicePosition = 0;
-
             try
             {
-                var decoded = SaveDataCodec.Decode(
-                    _ctx.ReadBytes(_ctx.SaveChoiceFileName));
-                if (!decoded.IsLegacy && !MatchesCurrentContent(decoded))
+                var data = _ctx.ReadBytes(_ctx.SaveChoiceFileName);
+                var decoded = SaveDataCodec.Decode(data);
+                if (!MatchesCurrentContent(decoded))
                 {
                     _ctx.OnError?.Invoke(new Diagnostics.NovelError(
                         Diagnostics.NovelErrorCodes.SaveContentMismatch,
@@ -59,12 +58,10 @@ namespace Novels.Save
                 }
 
                 _save = decoded.Choices.ToList();
-                if (decoded.IsLegacy)
-                    _ctx.OnLog((LogType.Log, "Legacy save loaded; it will be migrated on the next write."));
             }
             catch (FileNotFoundException)
             {
-                _ctx.OnLog((LogType.Log, "No save file"));
+                _ctx.OnLog?.Invoke((LogType.Log, "No save file"));
             }
             catch (Exception exception)
             {

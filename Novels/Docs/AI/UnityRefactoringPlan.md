@@ -10,6 +10,23 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-17
 
+## Architecture wave completed on 2026-08-17 (catalog-scale runtime)
+
+The ten follow-up findings are complete:
+
+1. Save storage is namespaced per content and episode. The former global `SaveChoice` is intentionally not migrated.
+2. A reusable `DisposableSlot<T>` owns exactly one replaceable novel runtime without retaining completed sessions.
+3. Catalog retry is limited to typed transport/integrity failures; compatibility and configuration failures remain fatal.
+4. A platform `release.json` pins the complete content snapshot and carries minimum-client and schema compatibility.
+5. Bundle records deduplicate in-flight loads and use reference-counted scope leases.
+6. Bundles download to temporary files, receive streaming integrity checks, and load through `AssetBundle.LoadFromFileAsync`.
+7. Ink, audio, and video share a release-versioned, integrity-checked 512 MiB cache with LRU pruning.
+8. Novel preparation produces immutable prepared resources rather than a partially initialized mutable bootstrap bag.
+9. Application UI localization is centralized; episode titles are localized; the local bootstrap is an editable built-in prefab with a code fallback.
+10. Catalog cards support status/enabled state and live inside a scrollable viewport; the build pipeline emits and validates the atomic release snapshot.
+
+The Android content output was rebuilt and contains ten pinned bundles and 116 external content files. Unity compilation, the existing authoring validator, release validation, and generated integrity metadata completed successfully. Tests were not created or run. The tracked Android keystore was intentionally left unchanged because removal and credential rotation remain a separately authorized release-security operation.
+
 ## Architecture wave completed on 2026-08-17 (catalog and delivery)
 
 The current ten-item refactoring wave is complete:
@@ -67,7 +84,7 @@ or run; Play Mode and device behavior remain unverified.
 The eight follow-up architecture items are complete:
 
 1. `StoryQueue.TryComplete()` flushes commands after the final Dialogue when Ink completes.
-2. Save data uses a versioned content-aware envelope and reads the legacy raw-byte format.
+2. Save data uses a versioned content-aware envelope. Support for the obsolete raw-byte format was subsequently removed together with save migration.
 3. `Novels.Content` defines immutable `NovelDefinition` and `EpisodeDefinition` models; the scene now references the authoring asset directly (the temporary legacy `Data` adapter was removed in the later authoring wave).
 4. `NovelBootstrapProcess` owns application/start-selection/episode workflow while root partial factories still create concrete dependencies.
 5. `Novels.Editor` validates loaded content configuration and protects AssetBundle building with the same validation.

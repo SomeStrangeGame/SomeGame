@@ -23,16 +23,9 @@ namespace Cache
 
         public async UniTask<AssetBundle> BundleFromCache(string path)
         {
-            var rawData = ReadBytes(path);
-            return await AssetBundle.LoadFromMemoryAsync(rawData);
+            return await AssetBundle.LoadFromFileAsync(GetLocalPath(path, false));
         }
 
-        public async UniTask<AssetBundle> BundleToCache(string path, byte[] data)
-        {
-            WriteBytes(path, data);
-            return await BundleFromCache(path);
-        }
-        
         public string TextFromCache(string path)
         {
             return Encoding.UTF8.GetString(ReadBytes(path));
@@ -41,17 +34,17 @@ namespace Cache
         public string TextToCache(string path, string data)
         {
             WriteBytes(path, Encoding.UTF8.GetBytes(data));
-            return TextFromCache(path);
+            return data;
         }
 
         public byte[] ReadBytes(string path)
         {
-            return File.ReadAllBytes(ConvertLocalPath(path));
+            return File.ReadAllBytes(GetLocalPath(path));
         }
 
         public void WriteBytes(string path, byte[] data)
         {
-            var file = ConvertLocalPath(path);
+            var file = GetLocalPath(path);
             var temporaryFile = $"{file}.{Guid.NewGuid():N}.tmp";
 
             try
@@ -71,19 +64,19 @@ namespace Cache
 
         public bool Exists(string path)
         {
-            return File.Exists(ConvertLocalPath(path, false));
+            return File.Exists(GetLocalPath(path, false));
         }
 
         public void Delete(string path)
         {
-            var file = ConvertLocalPath(path, false);
+            var file = GetLocalPath(path, false);
             if (File.Exists(file))
                 File.Delete(file);
         }
 
         public void PruneDirectory(string directoryPath, string keepFileName)
         {
-            var directory = ConvertLocalPath(directoryPath, false);
+            var directory = GetLocalPath(directoryPath, false);
             if (!Directory.Exists(directory))
                 return;
 
@@ -99,27 +92,33 @@ namespace Cache
             }
         }
 
-        public byte[] ByteArrayFromCash(string path)
-        {
-            return ReadBytes(path);
-        }
-
-        public void ByteArrayToCash(byte[] data, string path)
-        {
-            WriteBytes(path, data);
-        }
-
         public string ConvertLocalPath(string path)
         {
-            return ConvertLocalPath(path, true);
+            return GetLocalPath(path);
         }
 
-        private string ConvertLocalPath(string path, bool createDirectory)
+        public string GetLocalPath(string path, bool createDirectory = true)
         {
-            var relativePath = path
-                .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
-                .Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            var result = Path.Combine(_localPath, relativePath);
+            if (string.IsNullOrWhiteSpace(path) || Path.IsPathRooted(path))
+                throw new ArgumentException("Cache path must be relative.", nameof(path));
+            var normalized = path.Replace(
+                Path.AltDirectorySeparatorChar,
+                Path.DirectorySeparatorChar);
+            foreach (var part in normalized.Split(Path.DirectorySeparatorChar))
+            {
+                if (part == ".." || part == ".")
+                    throw new ArgumentException(
+                        "Cache path traversal is not allowed.",
+                        nameof(path));
+            }
+            var root = Path.GetFullPath(_localPath)
+                .TrimEnd(Path.DirectorySeparatorChar)
+                + Path.DirectorySeparatorChar;
+            var result = Path.GetFullPath(Path.Combine(root, normalized));
+            if (!result.StartsWith(root, StringComparison.Ordinal))
+                throw new ArgumentException(
+                    "Cache path escapes the cache root.",
+                    nameof(path));
 
             if (createDirectory)
             {
@@ -129,6 +128,60 @@ namespace Cache
             }
 
             return result;
+        }
+
+        public string CreateTemporaryPath(string finalPath)
+        {
+            var file = GetLocalPath(finalPath);
+            return $"{file}.{Guid.NewGuid():N}.tmp";
+        }
+
+        public void CommitTemporaryFile(string temporaryPath, string finalPath)
+        {
+            var file = GetLocalPath(finalPath);
+            if (File.Exists(file))
+                File.Replace(temporaryPath, file, null);
+            else
+                File.Move(temporaryPath, file);
+        }
+
+        public void Touch(string path)
+        {
+            File.SetLastAccessTimeUtc(GetLocalPath(path, false), DateTime.UtcNow);
+        }
+
+        public void PruneBySize(
+            string directoryPath,
+            long maximumBytes,
+            string protectedPath = null)
+        {
+            var directory = GetLocalPath(directoryPath, false);
+            if (!Directory.Exists(directory) || maximumBytes <= 0)
+                return;
+            var protectedFile = string.IsNullOrWhiteSpace(protectedPath)
+                ? null
+                : GetLocalPath(protectedPath, false);
+            var files = new DirectoryInfo(directory)
+                .GetFiles("*", SearchOption.AllDirectories);
+            long size = 0;
+            foreach (var file in files)
+                size += file.Length;
+            Array.Sort(files, (left, right) =>
+                left.LastAccessTimeUtc.CompareTo(right.LastAccessTimeUtc));
+            foreach (var file in files)
+            {
+                if (size <= maximumBytes)
+                    break;
+                if (string.Equals(
+                        file.FullName,
+                        protectedFile,
+                        StringComparison.Ordinal))
+                {
+                    continue;
+                }
+                size -= file.Length;
+                file.Delete();
+            }
         }
     }
 }

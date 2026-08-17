@@ -14,19 +14,16 @@ namespace Novels.Save
             internal DecodedSave(
                 string contentId,
                 string contentVersion,
-                byte[] choices,
-                bool isLegacy)
+                byte[] choices)
             {
                 ContentId = contentId;
                 ContentVersion = contentVersion;
                 Choices = choices ?? Array.Empty<byte>();
-                IsLegacy = isLegacy;
             }
 
             internal string ContentId { get; }
             internal string ContentVersion { get; }
             internal byte[] Choices { get; }
-            internal bool IsLegacy { get; }
         }
 
         internal static byte[] Encode(
@@ -50,7 +47,7 @@ namespace Novels.Save
         {
             data ??= Array.Empty<byte>();
             if (!HasEnvelope(data))
-                return new DecodedSave(string.Empty, string.Empty, data, true);
+                throw new InvalidDataException("Save envelope signature is invalid.");
 
             try
             {
@@ -71,7 +68,7 @@ namespace Novels.Save
                 if (stream.Position != stream.Length)
                     throw new InvalidDataException("Save contains unexpected trailing data.");
 
-                return new DecodedSave(contentId, contentVersion, choices, false);
+                return new DecodedSave(contentId, contentVersion, choices);
             }
             catch (EndOfStreamException exception)
             {

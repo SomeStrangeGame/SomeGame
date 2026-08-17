@@ -21,6 +21,8 @@ namespace Novels.Catalog.View
             string id,
             string title,
             string description,
+            string status,
+            bool isEnabled,
             Action onClick)
         {
             _cardPrefab.gameObject.SetActive(false);
@@ -30,7 +32,7 @@ namespace Novels.Catalog.View
                 _cards.Add(id, card);
             }
 
-            card.Bind(title, description, onClick);
+            card.Bind(title, description, status, isEnabled, onClick);
             card.gameObject.SetActive(true);
         }
     }

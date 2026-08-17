@@ -19,7 +19,9 @@ namespace Bundles
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
-            var bundle = await _owner.GetAssetBundle(bundleName);
+            if (_bundleNames.Contains(bundleName))
+                return _owner.GetOwnedAssetBundle(bundleName);
+            var bundle = await _owner.AcquireAssetBundle(bundleName);
             _bundleNames.Add(bundleName);
             return bundle;
         }
