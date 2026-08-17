@@ -33,6 +33,7 @@
   <Project Path="Novels.Diagnostics.csproj" />
   <Project Path="CodeStrippingFix.csproj" />
   <Project Path="Setting.csproj" />
+  <Project Path="Novels.UITransitions.csproj" />
   <Project Path="Novels.Notification.View.csproj" />
   <Project Path="Novels.Locale.csproj" />
   <Project Path="Cache.csproj" />

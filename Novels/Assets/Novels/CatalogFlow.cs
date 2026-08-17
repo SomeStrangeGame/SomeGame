@@ -82,7 +82,9 @@ namespace Novels
                         _ctx.MinimumSupportedSchemaVersion,
                         _ctx.MaximumSupportedSchemaVersion);
                     deliveryLease = await PrepareApplicationContent(bootstrap, loading);
-                    return await Load(deliveryLease);
+                    var resources = await Load(deliveryLease);
+                    _ctx.Bundles.ActivateRelease();
+                    return resources;
                 }
                 catch (OperationCanceledException)
                     when (_ctx.CancellationToken.IsCancellationRequested)

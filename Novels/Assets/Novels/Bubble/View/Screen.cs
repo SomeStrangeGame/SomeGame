@@ -140,16 +140,12 @@ namespace Novels.Bubble.View
         {
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
-
-            var timer = _showHideDuration;
-            while (timer >= 0f)
-            {
-                _canvasGroup.alpha = 1f - (timer / _showHideDuration);
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-
-            _canvasGroup.alpha = 1f;
+            await UITransitions.Transition.Fade(
+                _canvasGroup,
+                0f,
+                1f,
+                _showHideDuration,
+                cancellationToken);
         }
 
         public void HideImmediate()
@@ -163,15 +159,12 @@ namespace Novels.Bubble.View
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var timer = _showHideDuration;
-            while (timer >= 0f)
-            {
-                _canvasGroup.alpha = timer / _showHideDuration;
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-
-            _canvasGroup.alpha = 0f;
+            await UITransitions.Transition.Fade(
+                _canvasGroup,
+                1f,
+                0f,
+                _showHideDuration,
+                cancellationToken);
             _canvasGroup.gameObject.SetActive(false);
         }
 

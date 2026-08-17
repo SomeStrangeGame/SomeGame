@@ -72,6 +72,14 @@ namespace Editor
                 throw new InvalidOperationException(
                     "Content schema version 4 or newer is required for grouped bundle payloads.");
             }
+            if (!Novels.ContentAddressing.ContentCompatibility.Supports(
+                    _contentSchemaVersion))
+            {
+                throw new InvalidOperationException(
+                    $"Content schema {_contentSchemaVersion} is not supported by the player "
+                    + $"({Novels.ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion}-"
+                    + $"{Novels.ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion}).");
+            }
             if (_totalBudgetBytes <= 0 || _embeddedBudgetBytes <= 0)
                 throw new InvalidOperationException("Content budgets must be positive.");
             if (_largeWavWarningBytes <= 0)

@@ -74,7 +74,8 @@ namespace Novels.Content
             string title,
             string storyPath,
             string contentVersion,
-            EpisodeMediaDefinition media)
+            EpisodeMediaDefinition media,
+            EpisodeContentDependencies dependencies = null)
         {
             ContentId = Require(contentId, nameof(contentId));
             Id = Require(id, nameof(id));
@@ -85,6 +86,7 @@ namespace Novels.Content
                 ContentId,
                 Id);
             Media = media ?? throw new ArgumentNullException(nameof(media));
+            Dependencies = dependencies ?? EpisodeContentDependencies.Empty;
         }
 
         public string ContentId { get; }
@@ -94,6 +96,7 @@ namespace Novels.Content
         public string ContentVersion { get; }
         public string BundleName { get; }
         public EpisodeMediaDefinition Media { get; }
+        public EpisodeContentDependencies Dependencies { get; }
 
         private static string Require(string value, string parameterName)
         {

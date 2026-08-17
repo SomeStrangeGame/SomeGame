@@ -21,6 +21,20 @@ The current source of truth supersedes bundle counts and concrete release IDs re
 - Current Android release: schema 4, Remote mode, ID `74a2b7e3706d6afceab3dc0ad76591433c72a56056a103ebfe57f317c093732a`, 4 bundles, 48 external files, and the `application`, `TZM_1/shared`, plus `TZM_1/s01e01` delivery groups.
 - Every delivery group contains both AssetBundles and external files belonging to that lifetime. Unity 6000.3.11f1 import/compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully. Tests and Play Mode were not run.
 
+## Architecture wave completed on 2026-08-17 (publication and presentation boundaries)
+
+Seven approved items are complete. Checkpoints were explicitly excluded:
+
+1. `ContentBuildTransaction` wraps the complete Editor publication path: bundle construction, built-output validation, publish-artifact creation, and optional player-seed creation. Existing destinations are restored if any stage fails; successful builds commit only after all targets and artifacts complete.
+2. A downloaded release remains a runtime candidate until the application delivery group and catalog assets load successfully. Only then is it atomically promoted to `current.json`; the last valid active release is retained as `previous.json` for fallback.
+3. `ContentRequestPolicy` centralizes attempts, timeout, and exponential backoff. HTTP defaults to three attempts with a 30-second timeout; local StreamingAssets requests run once. Transport failures expose typed network, timeout, not-found, rate-limit, server, and client categories, and partial downloads are removed after final failure.
+4. `EpisodeContentDependencies` authoritatively declares dynamic audio, background, and speaker references. The common Editor index merges these authored dependencies with statically discoverable Ink references, so delivery and validation no longer depend solely on source scanning.
+5. `ContentCompatibility` is the single schema-support contract shared by runtime and the build profile. Non-Editor builds receive their remote root through a generated `ContentRuntimeConfiguration` Resources asset in the isolated staging project; the scene and `EntryPoint` no longer serialize deployment-specific URLs.
+6. `Novels.UITransitions` is a separate runtime assembly for cancellation-aware fade, movement, and fade-plus-movement animation. Bubble, Character, Location, and Notification views use it without changing prefab dimensions or serialized timing/layout values.
+7. Location presentation is split into `BackgroundPresentationController` for live/immediate sprite/video/cut-scene state and `LocationLayout` for camera/dialogue coordinate calculations. `Location.Entity` and its View remain thin orchestration/presentation boundaries.
+
+Validation used an isolated Unity 6000.3.11f1 project copy. `ValidateExistingContentBatch` passed compilation and existing-release validation. Two complete `BuildAndValidateContentBatch` runs passed bundle construction, release integrity checks, and publish-artifact creation; the final temporary Android release used schema 4 with 4 bundles and 48 external files. Tests and Play Mode were not run. An isolated Android Player build reached the platform build pipeline but was blocked by an environment TLS certificate CN mismatch (`Curl error 60`), so no APK or device-runtime claim is made.
+
 ## Architecture wave completed on 2026-08-17 (explicit delivery ownership)
 
 All seven approved items are complete:

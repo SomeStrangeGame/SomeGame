@@ -11,7 +11,6 @@ namespace Novels
     {
         [SerializeField] private Logs.Entity.ShowLogs _logs;
         [SerializeField] private Camera _targetCamera;
-        [SerializeField] private string _remoteContentBaseUrl;
 
         private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
@@ -62,8 +61,9 @@ namespace Novels
 #if UNITY_EDITOR
             return new Bundles.StreamingAssetsSource(cancellationToken);
 #else
+            var configuration = ContentRuntimeConfiguration.Load();
             return new Bundles.HttpContentSource(
-                _remoteContentBaseUrl,
+                configuration.RemoteContentBaseUrl,
                 cancellationToken);
 #endif
         }

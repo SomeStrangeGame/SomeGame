@@ -11,7 +11,8 @@ namespace Bundles
 
         public HttpContentSource(
             string baseUrl,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            ContentRequestPolicy policy = null)
         {
             if (!Uri.TryCreate(baseUrl, UriKind.Absolute, out var uri)
                 || (uri.Scheme != Uri.UriSchemeHttp
@@ -23,7 +24,9 @@ namespace Bundles
             }
 
             _baseUri = new Uri(uri.AbsoluteUri.TrimEnd('/') + "/");
-            _requests = new ContentRequestRunner(cancellationToken);
+            _requests = new ContentRequestRunner(
+                cancellationToken,
+                policy ?? ContentRequestPolicy.RemoteDefault);
         }
 
         public string GetUrl(string relativePath)

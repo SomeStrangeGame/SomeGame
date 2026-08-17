@@ -34,14 +34,7 @@ namespace Editor
         {
             NovelContentValidator.ValidateOrThrow();
             var profile = NovelContentBuildProfile.Load();
-            var results = AssetBundleBuildPipeline.Build(profile);
-            NovelContentValidator.ValidateBuiltOutputOrThrow();
-            foreach (var result in results)
-            {
-                ContentPublishArtifactBuilder.Build(result, profile);
-                if (profile.DeliveryMode != Bundles.ContentDeliveryMode.Remote)
-                    PlayerContentSeedBuilder.Build(result, profile);
-            }
+            ContentBuildTransaction.Build(profile);
         }
 
         public static void BuildAndroidBundlesBatch()

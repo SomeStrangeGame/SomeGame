@@ -48,6 +48,11 @@
 - `Novels.ContentAddressing` owns `ContentPackageConvention`, `ContentAddressConvention`, and immutable episode-scoped `ContentAddresses`. Bundle names, definition paths, delivery-group IDs, runtime loading, character resolution, and Editor validation share these dependency-free conventions; the former `PathGetter` assembly has been removed.
 - `EntryPoint` captures immutable `ApplicationEnvironment` values and owns the explicit scene Camera reference. Runtime composition receives locale, client version, platform, persistent path, and camera without ambient lookups.
 - `NovelCiValidation.ValidateExistingContentBatch` and `BuildAndValidateContentBatch` provide non-test batch automation for content validation and complete artifact production.
+- `ContentBuildTransaction` makes bundle output, validation, publish artifacts, and optional player seeds one rollback boundary. Runtime releases use candidate/active promotion: a remote manifest becomes active only after application content and catalog assets load successfully.
+- Remote request behavior is defined by `ContentRequestPolicy`; HTTP requests have bounded timeout/retry/backoff and typed failure categories, while Editor StreamingAssets access remains single-attempt local delivery.
+- `EpisodeContentDependencies` supplies explicit audio/background/speaker references for dynamically authored content and is merged with static Ink discovery by the shared Editor index.
+- Player schema support is centralized in `ContentCompatibility`. Deployment URLs are generated into a staging-only `ContentRuntimeConfiguration` Resources asset instead of being serialized into the startup scene.
+- Shared cancellation-aware view animations live in `Novels.UITransitions`. Location background playback/cut-scene behavior lives in `BackgroundPresentationController`, while image/camera/dialogue geometry lives in `LocationLayout`; existing UI dimensions and serialized timing values are unchanged.
 
 - Content invariants are enforced at model boundaries: episode IDs, media IDs, and normalized locale codes must be unique case-insensitively.
 - Bundle assets are addressed by immutable `BundleAssetAddress` values. Required loads fail explicitly, while optional sprite probes use a separate API.
@@ -151,6 +156,8 @@
 - Isolated Unity compilation and `NovelContentValidator.ValidateBatch` completed without errors. Tests were not created or run.
 
 ## Testing And Tooling
+
+- Latest refactoring validation: isolated Unity 6000.3.11f1 compilation and existing-content validation passed; two complete Android content rebuild/validation passes succeeded with schema 4, 4 bundles, and 48 referenced external files. Tests and Play Mode were not run. A staging Android Player build was attempted but failed in the external platform pipeline with `Curl error 60` (certificate CN mismatch), so APK/device behavior remains unverified.
 
 - Latest release: schema 4, Remote mode, ID `74a2b7e3706d6afceab3dc0ad76591433c72a56056a103ebfe57f317c093732a`, 4 bundles, 48 referenced external files, and three delivery groups: `application`, `TZM_1/s01e01`, and `TZM_1/shared`. Sixty-seven unassigned audio files remain as future authoring material and are deliberately absent from delivery.
 - `Tools/validate-novels.sh` exposes `validate` and `content` batch commands. `Tools/build-remote-player.sh` builds Android/iOS from an isolated temporary project copy with novel StreamingAssets excluded and injects the required remote HTTP(S) root only into that copy.

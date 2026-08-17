@@ -10,9 +10,6 @@ namespace Novels
     internal sealed class ApplicationRuntime : BaseDisposable
     {
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
-        private const int _minimumSupportedContentSchemaVersion = 4;
-        private const int _maximumSupportedContentSchemaVersion = 4;
-
         internal struct Ctx
         {
             internal ApplicationEnvironment Environment;
@@ -50,8 +47,10 @@ namespace Novels
                 Localization = _localization,
                 Locale = _locale,
                 ClientVersion = _environment.ClientVersion,
-                MinimumSupportedSchemaVersion = _minimumSupportedContentSchemaVersion,
-                MaximumSupportedSchemaVersion = _maximumSupportedContentSchemaVersion,
+                MinimumSupportedSchemaVersion =
+                    ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion,
+                MaximumSupportedSchemaVersion =
+                    ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _ctx.OnLog,
             });

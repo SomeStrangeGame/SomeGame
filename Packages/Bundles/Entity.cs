@@ -88,6 +88,8 @@ namespace Bundles
             (_releases.Current ?? throw new ContentConfigurationException(
                 "Content release is not loaded.")).ReleaseId;
 
+        public void ActivateRelease() => _releases.ActivateCurrent();
+
         public bool HasDeliveryGroup(string groupId)
         {
             if (string.IsNullOrWhiteSpace(groupId))

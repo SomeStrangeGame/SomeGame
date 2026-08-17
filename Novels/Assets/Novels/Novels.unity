@@ -354,7 +354,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _logs: 255
   _targetCamera: {fileID: 330585545}
-  _remoteContentBaseUrl: ''
 --- !u!1 &1371491167
 GameObject:
   m_ObjectHideFlags: 0

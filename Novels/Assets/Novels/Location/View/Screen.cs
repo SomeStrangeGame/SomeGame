@@ -54,17 +54,14 @@ namespace Novels.Location.View
         [SerializeField] private float _dialogDuration;
 
         [SerializeField] private AnimationCurve _moveCurve;
+        private LocationLayout _layout;
 
         public VideoPlayer VideoPlayer => _video;
+        private LocationLayout Layout => _layout ??= new LocationLayout(_image);
 
         public void SetImage(Sprite sprite)
         {
-            _image.sprite = sprite;
-
-            var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
-            var imageWidth = _image.sprite.texture.width * scaleFactor;
-            _image.rectTransform.offsetMin = new Vector2(((UnityEngine.Screen.width / _image.canvas.scaleFactor) - imageWidth) / 2f, 0f);
-            _image.rectTransform.offsetMax = new Vector2(-((UnityEngine.Screen.width / _image.canvas.scaleFactor) - imageWidth) / 2f, 0f);
+            Layout.SetImage(sprite);
         }
 
         public void ShowImageImmediate()
@@ -79,15 +76,12 @@ namespace Novels.Location.View
             _imageCanvasGroup.alpha = 0f;
             _imageCanvasGroup.gameObject.SetActive(true);
 
-            var timer = _showHideImageDuration;
-            while (timer >= 0f)
-            {
-                _imageCanvasGroup.alpha = 1f - (timer / _showHideImageDuration);
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-
-            _imageCanvasGroup.alpha = 1f;
+            await UITransitions.Transition.Fade(
+                _imageCanvasGroup,
+                0f,
+                1f,
+                _showHideImageDuration,
+                cancellationToken);
         }
 
         public void HideImageImmediate()
@@ -102,15 +96,12 @@ namespace Novels.Location.View
             _imageCanvasGroup.alpha = 1f;
             _imageCanvasGroup.gameObject.SetActive(true);
 
-            var timer = _showHideImageDuration;
-            while (timer >= 0f)
-            {
-                _imageCanvasGroup.alpha = timer / _showHideImageDuration;
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-
-            _imageCanvasGroup.alpha = 0f;
+            await UITransitions.Transition.Fade(
+                _imageCanvasGroup,
+                1f,
+                0f,
+                _showHideImageDuration,
+                cancellationToken);
             _imageCanvasGroup.gameObject.SetActive(false);
         }
 
@@ -132,76 +123,60 @@ namespace Novels.Location.View
 
         public void ResetCamera()
         {
-            _image.transform.localPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
+            _image.transform.localPosition = Layout.Center;
         }
 
         public async UniTask SetCamera(CameraEffect effect, CancellationToken cancellationToken)
         {
-            var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
-            var spriteWidth = _image.sprite.texture.width * scaleFactor;
-            var delta = (spriteWidth - (UnityEngine.Screen.width / _image.canvas.scaleFactor)) * 0.5f;
-            delta -= _dialogOffset;
-            
-            var cameraCurrentPosition = _image.transform.localPosition;
-            var cameraCenterPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
-            var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
-            var cameraRightPosition = cameraCenterPosition + Vector3.left * delta;
+            var positions = Layout.CameraPositions(_dialogOffset);
 
             switch (effect)
             {
                 case CameraEffect.LeftRight:
-                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration, cancellationToken);
-                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration, cancellationToken);
+                    await Move(_image.transform, positions.Current, positions.Left, _cameraDuration, cancellationToken);
+                    await Move(_image.transform, positions.Left, positions.Right, _cameraDuration, cancellationToken);
                     break;
                 case CameraEffect.RightLeft:
-                    await Move(_image.transform, cameraCurrentPosition, cameraRightPosition, _cameraDuration, cancellationToken);
-                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration, cancellationToken);
+                    await Move(_image.transform, positions.Current, positions.Right, _cameraDuration, cancellationToken);
+                    await Move(_image.transform, positions.Right, positions.Left, _cameraDuration, cancellationToken);
                     break;
                 case CameraEffect.ToCenter:
-                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration, cancellationToken);
+                    await Move(_image.transform, positions.Current, positions.Center, _cameraDuration, cancellationToken);
                     break;
                 case CameraEffect.ToLeft:
-                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration, cancellationToken);
+                    await Move(_image.transform, positions.Current, positions.Left, _cameraDuration, cancellationToken);
                     break;
                 case CameraEffect.Shaking:
-                    await Move(_image.transform, cameraCurrentPosition, cameraLeftPosition, _cameraDuration / 10f, cancellationToken);
-                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f, cancellationToken);
-                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f, cancellationToken);
-                    await Move(_image.transform, cameraLeftPosition, cameraRightPosition, _cameraDuration / 10f, cancellationToken);
-                    await Move(_image.transform, cameraRightPosition, cameraLeftPosition, _cameraDuration / 10f, cancellationToken);
-                    await Move(_image.transform, cameraCurrentPosition, cameraCenterPosition, _cameraDuration / 10f, cancellationToken);
+                    await Move(_image.transform, positions.Current, positions.Left, _cameraDuration / 10f, cancellationToken);
+                    await Move(_image.transform, positions.Left, positions.Right, _cameraDuration / 10f, cancellationToken);
+                    await Move(_image.transform, positions.Right, positions.Left, _cameraDuration / 10f, cancellationToken);
+                    await Move(_image.transform, positions.Left, positions.Right, _cameraDuration / 10f, cancellationToken);
+                    await Move(_image.transform, positions.Right, positions.Left, _cameraDuration / 10f, cancellationToken);
+                    await Move(_image.transform, positions.Current, positions.Center, _cameraDuration / 10f, cancellationToken);
                     break;
             }
         }
 
         public void SetCameraImmediate(CameraEffect effect)
         {
-            var scaleFactor = _image.rectTransform.rect.height / _image.sprite.texture.height;
-            var spriteWidth = _image.sprite.texture.width * scaleFactor;
-            var delta = (spriteWidth - (UnityEngine.Screen.width / _image.canvas.scaleFactor)) * 0.5f;
-            delta -= _dialogOffset;
-            
-            var cameraCurrentPosition = _image.transform.localPosition;
-            var cameraCenterPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
-            var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
-            var cameraRightPosition = cameraCenterPosition + Vector3.left * delta;
+            var positions = Layout.CameraPositions(_dialogOffset);
 
             switch (effect)
             {
                 case CameraEffect.LeftRight:
-                    MoveImmediate(_image.transform, cameraRightPosition);
+                    MoveImmediate(_image.transform, positions.Right);
                     break;
                 case CameraEffect.RightLeft:
-                    MoveImmediate(_image.transform, cameraLeftPosition);
+                    MoveImmediate(_image.transform, positions.Left);
                     break;
                 case CameraEffect.ToCenter:
-                    MoveImmediate(_image.transform, cameraCenterPosition);
+                    MoveImmediate(_image.transform, positions.Center);
                     break;
                 case CameraEffect.ToLeft:
-                    MoveImmediate(_image.transform, cameraLeftPosition);
+                    MoveImmediate(_image.transform, positions.Left);
                     break;
                 case CameraEffect.Shaking:
-                    MoveImmediate(_image.transform, cameraCenterPosition);
+                    MoveImmediate(_image.transform, positions.Center);
                     break;
             }
         }
@@ -210,53 +185,33 @@ namespace Novels.Location.View
         {
             if (_image.sprite == null) return;
 
-            var delta = _dialogOffset;
-            var cameraCurrentPosition = _image.transform.localPosition;
-            var cameraCenterPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
-            var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
-            var cameraRightPosition = cameraCenterPosition + Vector3.left * delta;
-
-            var targetPosition = aligment switch
-            {
-                TextAlignment.Left => cameraLeftPosition,
-                TextAlignment.Right => cameraRightPosition,
-                _ => cameraCenterPosition,
-            };
-            await Move(_image.transform, cameraCurrentPosition, targetPosition, _dialogDuration, cancellationToken);
+            var current = _image.transform.localPosition;
+            var target = Layout.DialoguePosition(aligment, _dialogOffset);
+            await Move(_image.transform, current, target, _dialogDuration, cancellationToken);
         }
 
         public void SetDialogueImmediate(TextAlignment aligment)
         {
             if (_image.sprite == null) return;
 
-            var delta = _dialogOffset;
-            var cameraCurrentPosition = _image.transform.localPosition;
-            var cameraCenterPosition = new Vector3((UnityEngine.Screen.width / _image.canvas.scaleFactor) / 2f, 0f, 0f);
-            var cameraLeftPosition = cameraCenterPosition + Vector3.right * delta;
-            var cameraRightPosition = cameraCenterPosition + Vector3.left * delta;
-
-            var targetPosition = aligment switch
-            {
-                TextAlignment.Left => cameraLeftPosition,
-                TextAlignment.Right => cameraRightPosition,
-                _ => cameraCenterPosition,
-            };
-            MoveImmediate(_image.transform, targetPosition);
+            MoveImmediate(
+                _image.transform,
+                Layout.DialoguePosition(aligment, _dialogOffset));
         }
 
-        private async UniTask Move(Transform target, Vector3 from, Vector3 to, float duration, CancellationToken cancellationToken)
-        {
-            if (from == to) return;
-            target.localPosition = from;
-            var timer = duration;
-            while (timer >= 0f)
-            {
-                target.localPosition = Vector3.Lerp(from, to, _moveCurve.Evaluate(1f - (timer / duration)));
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-            target.localPosition = to;
-        }
+        private UniTask Move(
+            Transform target,
+            Vector3 from,
+            Vector3 to,
+            float duration,
+            CancellationToken cancellationToken) =>
+            UITransitions.Transition.Move(
+                target,
+                from,
+                to,
+                duration,
+                _moveCurve,
+                cancellationToken);
 
         private void MoveImmediate(Transform target, Vector3 to)
         {
@@ -275,15 +230,12 @@ namespace Novels.Location.View
             foreach(var effectData in _effects)
                 effectData.EffectRoot.SetActive(effectData.Effect == effect);
 
-            _effectCanvasGroup.alpha = 0f;
-            var timer = _effectDuration;
-            while (timer >= 0f)
-            {
-                _effectCanvasGroup.alpha = 1f - (timer / _effectDuration);
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-            _effectCanvasGroup.alpha = 1f;
+            await UITransitions.Transition.Fade(
+                _effectCanvasGroup,
+                0f,
+                1f,
+                _effectDuration,
+                cancellationToken);
         }
 
         public void SetEffectImmediate(Effect effect)

@@ -11,7 +11,9 @@ namespace Bundles
 
         public StreamingAssetsSource(CancellationToken cancellationToken)
         {
-            _requests = new ContentRequestRunner(cancellationToken);
+            _requests = new ContentRequestRunner(
+                cancellationToken,
+                ContentRequestPolicy.LocalDefault);
         }
 
         public string GetUrl(string relativePath)

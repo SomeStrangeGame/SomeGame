@@ -48,6 +48,9 @@ namespace Editor
             var backgrounds = new List<string>();
             var speakers = new List<string>();
             var errors = new List<string>();
+            audio.AddRange(episode.Dependencies.AudioIds);
+            backgrounds.AddRange(episode.Dependencies.BackgroundIds);
+            speakers.AddRange(episode.Dependencies.SpeakerIds);
             if (!File.Exists(compiledPath))
             {
                 errors.Add($"Compiled Ink story does not exist: {compiledPath}");
@@ -73,7 +76,6 @@ namespace Editor
                     audio.Add(command.Data.AssetName);
                 }
             }
-
             var sourcePath = Path.ChangeExtension(compiledPath, ".ink");
             if (!File.Exists(sourcePath))
                 return new StoryReferenceIndex(audio, backgrounds, speakers, errors);

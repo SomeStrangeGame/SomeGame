@@ -8,14 +8,6 @@ namespace Novels.Location
 {
     public class Entity : BaseDisposable
     {
-        private enum BackgroundPlaybackMode
-        {
-            Live,
-            Immediate,
-        }
-
-        private const int _cutSceneFallbackDelayMilliseconds = 3000;
-
         public struct Ctx
         {
             public GameObject ScreenPrefab;
@@ -30,7 +22,7 @@ namespace Novels.Location
         private readonly Ctx _ctx;
 
         private View.Screen _screen;
-        private VideoPlayback _videoPlayback;
+        private BackgroundPresentationController _backgrounds;
 
         public Entity(Ctx ctx)
         {
@@ -44,128 +36,34 @@ namespace Novels.Location
             _screen.HideImageImmediate();
             _screen.ResetCamera();
             _screen.ResetEffect();
-            _videoPlayback = new VideoPlayback(new VideoPlayback.Ctx
+            var videoPlayback = new VideoPlayback(new VideoPlayback.Ctx
             {
                 VideoPlayer = _screen.VideoPlayer,
                 SetTexture = _screen.SetVideoTexture,
                 CancellationToken = _ctx.CancellationToken,
                 OnError = _ctx.OnError,
             }).AddTo(this);
+            _backgrounds = new BackgroundPresentationController(
+                new BackgroundPresentationController.Ctx
+                {
+                    Screen = _screen,
+                    VideoPlayback = videoPlayback,
+                    TargetCamera = _ctx.TargetCamera,
+                    GetSprite = _ctx.GetSprite,
+                    ResolveVideoUrl = _ctx.ResolveVideoUrl,
+                    CancellationToken = _ctx.CancellationToken,
+                });
         }
 
         public UniTask SetImage(
             string assetName,
             StoryContracts.StoryBackgroundPresentation presentation)
-        {
-            return SetImage(
-                assetName,
-                presentation,
-                BackgroundPlaybackMode.Live,
-                false,
-                presentation.Type == StoryContracts.StoryBackgroundType.CutScene);
-        }
-
-        private async UniTask SetImage(
-            string assetName,
-            StoryContracts.StoryBackgroundPresentation presentation,
-            BackgroundPlaybackMode mode,
-            bool forceNoVideo,
-            bool cutScene)
-        {
-            if (_ctx.TargetCamera == null)
-                throw new InvalidOperationException("Location target Camera is not configured.");
-
-            _ctx.TargetCamera.backgroundColor = presentation.BackgroundColor
-                == StoryContracts.StoryBackgroundColor.White
-                ? Color.white
-                : Color.black;
-
-            if (mode == BackgroundPlaybackMode.Live)
-                await _screen.HideImage(_ctx.CancellationToken);
-            else
-                _screen.HideImageImmediate();
-
-            _screen.ResetCamera();
-            _screen.ResetEffect();
-
-            var sprite = await _ctx.GetSprite(assetName).AttachExternalCancellation(_ctx.CancellationToken);
-            _screen.SetImage(sprite);
-
-            var url = await _ctx.ResolveVideoUrl(assetName);
-            if (!forceNoVideo && HasVideo(url))
-            {
-                var playbackSpeed = mode == BackgroundPlaybackMode.Immediate && cutScene
-                    ? Time.timeScale * 5f
-                    : Time.timeScale;
-                var playbackStatus = await _videoPlayback.Play(new VideoPlaybackRequest(
-                    url,
-                    sprite.texture.width,
-                    sprite.texture.height,
-                    !cutScene,
-                    playbackSpeed));
-                var videoReady = playbackStatus == VideoPlaybackStatus.Ready;
-
-                _screen.SetEnabledImage(!videoReady);
-                _screen.SetEnabledVideo(videoReady);
-                await ShowImage(mode);
-
-                if (cutScene)
-                {
-                    if (videoReady)
-                        playbackStatus = await _videoPlayback.WaitForCompletion();
-
-                    if (playbackStatus == VideoPlaybackStatus.Failed)
-                        await WaitForCutSceneFallback(mode);
-
-                    if (!presentation.KeepFinalVideoFrame)
-                        await SetImage(assetName, presentation, mode, true, false);
-                }
-            }
-            else
-            {
-                _videoPlayback.Stop();
-                _screen.SetEnabledImage(true);
-                _screen.SetEnabledVideo(false);
-                await ShowImage(mode);
-            }
-        }
-
-        private UniTask ShowImage(BackgroundPlaybackMode mode)
-        {
-            if (mode == BackgroundPlaybackMode.Live)
-                return _screen.ShowImage(_ctx.CancellationToken);
-
-            _screen.ShowImageImmediate();
-            return UniTask.CompletedTask;
-        }
-
-        private async UniTask WaitForCutSceneFallback(BackgroundPlaybackMode mode)
-        {
-            if (mode == BackgroundPlaybackMode.Live)
-            {
-                await UniTask.Delay(
-                    _cutSceneFallbackDelayMilliseconds,
-                    cancellationToken: _ctx.CancellationToken);
-            }
-            else
-            {
-                await UniTask.Yield(_ctx.CancellationToken);
-            }
-        }
-
-        private static bool HasVideo(string url) => !string.IsNullOrEmpty(url);
+            => _backgrounds.Set(assetName, presentation);
 
         public UniTask SetImageImmediate(
             string assetName,
             StoryContracts.StoryBackgroundPresentation presentation)
-        {
-            return SetImage(
-                assetName,
-                presentation,
-                BackgroundPlaybackMode.Immediate,
-                false,
-                presentation.Type == StoryContracts.StoryBackgroundType.CutScene);
-        }
+            => _backgrounds.SetImmediate(assetName, presentation);
 
         public async UniTask SetCamera(StoryContracts.StoryCameraAction action)
         {

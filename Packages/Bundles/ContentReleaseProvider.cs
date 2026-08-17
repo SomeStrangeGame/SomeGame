@@ -12,6 +12,7 @@ namespace Bundles
         private readonly string _platform;
         private readonly CancellationToken _cancellationToken;
         private readonly Action<(LogType type, string message)> _onLog;
+        private string _candidateJson;
 
         internal ContentReleaseProvider(
             IContentSource source,
@@ -37,7 +38,9 @@ namespace Bundles
         {
             var path = $"Remote/{_platform}/release.json";
             var cachePath = $"Remote/{_platform}/Releases/current.json";
+            var previousCachePath = $"Remote/{_platform}/Releases/previous.json";
             ContentReleaseDto release;
+            _candidateJson = null;
             try
             {
                 var json = await _source.DownloadText(path);
@@ -47,7 +50,7 @@ namespace Bundles
                     clientVersion,
                     minimumSupportedSchemaVersion,
                     maximumSupportedSchemaVersion);
-                _cache.TextToCache(cachePath, json);
+                _candidateJson = json;
             }
             catch (OperationCanceledException)
                 when (_cancellationToken.IsCancellationRequested)
@@ -60,26 +63,104 @@ namespace Bundles
             }
             catch (Exception exception)
             {
-                if (!_cache.Exists(cachePath))
+                try
                 {
-                    throw new ContentSourceException(
-                        "Content release is unavailable and no cached release exists.",
-                        exception);
+                    release = LoadCached(
+                        cachePath,
+                        clientVersion,
+                        minimumSupportedSchemaVersion,
+                        maximumSupportedSchemaVersion);
                 }
-                release = JsonUtility.FromJson<ContentReleaseDto>(
-                    _cache.TextFromCache(cachePath));
-                ContentReleaseValidator.Validate(
-                    release,
-                    clientVersion,
-                    minimumSupportedSchemaVersion,
-                    maximumSupportedSchemaVersion);
+                catch (Exception currentFailure)
+                {
+                    try
+                    {
+                        release = LoadCached(
+                            previousCachePath,
+                            clientVersion,
+                            minimumSupportedSchemaVersion,
+                            maximumSupportedSchemaVersion);
+                    }
+                    catch (Exception previousFailure)
+                    {
+                        throw new ContentSourceException(
+                            "Content release is unavailable and no valid active release exists.",
+                            new AggregateException(
+                                exception,
+                                currentFailure,
+                                previousFailure));
+                    }
+                }
                 _onLog?.Invoke((
                     LogType.Warning,
-                    $"Use cached content release '{release.releaseId}'."));
+                    $"Use active cached content release '{release.releaseId}'."));
             }
 
             Current = new ContentReleaseSnapshot(release);
             return Current;
+        }
+
+        internal void ActivateCurrent()
+        {
+            if (Current == null)
+                throw new ContentConfigurationException(
+                    "Content release must be loaded before activation.");
+            if (string.IsNullOrEmpty(_candidateJson))
+                return;
+            var cachePath = $"Remote/{_platform}/Releases/current.json";
+            var previousCachePath = $"Remote/{_platform}/Releases/previous.json";
+            if (_cache.Exists(cachePath))
+            {
+                var activeJson = _cache.TextFromCache(cachePath);
+                var active = JsonUtility.FromJson<ContentReleaseDto>(activeJson);
+                if (HasValidFingerprint(active) && !string.Equals(
+                        active.releaseId,
+                        Current.ReleaseId,
+                        StringComparison.Ordinal))
+                {
+                    _cache.TextToCache(previousCachePath, activeJson);
+                }
+            }
+            _cache.TextToCache(cachePath, _candidateJson);
+            _candidateJson = null;
+            _onLog?.Invoke((
+                LogType.Log,
+                $"Activate content release '{Current.ReleaseId}'."));
+        }
+
+        private static bool HasValidFingerprint(ContentReleaseDto release)
+        {
+            if (release == null || string.IsNullOrWhiteSpace(release.releaseId))
+                return false;
+            try
+            {
+                return string.Equals(
+                    release.releaseId,
+                    ContentReleaseFingerprint.Compute(release),
+                    StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        private ContentReleaseDto LoadCached(
+            string cachePath,
+            string clientVersion,
+            int minimumSupportedSchemaVersion,
+            int maximumSupportedSchemaVersion)
+        {
+            if (!_cache.Exists(cachePath))
+                throw new ContentSourceException($"Cached release is missing: {cachePath}");
+            var release = JsonUtility.FromJson<ContentReleaseDto>(
+                _cache.TextFromCache(cachePath));
+            ContentReleaseValidator.Validate(
+                release,
+                clientVersion,
+                minimumSupportedSchemaVersion,
+                maximumSupportedSchemaVersion);
+            return release;
         }
     }
 }

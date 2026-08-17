@@ -127,16 +127,12 @@ namespace Novels.Character.View
             var endPosition  = _canvasGroup.transform.localPosition;
 
             _canvasGroup.transform.localPosition = startPosition;
-            var timer = _showHideImageDuration;
-            while (timer >= 0f)
-            {
-                _canvasGroup.transform.localPosition = Vector3.Lerp(startPosition, endPosition, 1f - (timer / _showHideImageDuration));
-                _canvasGroup.alpha = 1f - (timer / _showHideImageDuration);
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-            _canvasGroup.transform.localPosition = endPosition;
-            _canvasGroup.alpha = 1f;
+            await UITransitions.Transition.FadeAndMove(
+                _canvasGroup,
+                startPosition,
+                endPosition,
+                _showHideImageDuration,
+                cancellationToken);
         }
 
         public void HideImageImmediate()
@@ -154,15 +150,12 @@ namespace Novels.Character.View
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
 
-            var timer = _showHideImageDuration;
-            while (timer >= 0f)
-            {
-                _canvasGroup.alpha = timer / _showHideImageDuration;
-                timer -= Time.deltaTime;
-                await UniTask.Yield(cancellationToken);
-            }
-
-            _canvasGroup.alpha = 0f;
+            await UITransitions.Transition.Fade(
+                _canvasGroup,
+                1f,
+                0f,
+                _showHideImageDuration,
+                cancellationToken);
             _canvasGroup.gameObject.SetActive(false);
         }
 

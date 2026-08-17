@@ -46,17 +46,10 @@ namespace Editor
                 throw new InvalidOperationException("-playerOutput is required.");
 
             AssertRemoteContentExcluded();
-            var scene = EditorSceneManager.OpenScene(
+            EditorSceneManager.OpenScene(
                 "Assets/Novels/Novels.unity",
                 OpenSceneMode.Single);
-            var entryPoint = UnityEngine.Object.FindFirstObjectByType<Novels.EntryPoint>(
-                FindObjectsInactive.Include)
-                ?? throw new InvalidOperationException("EntryPoint is absent from the scene.");
-            var serialized = new SerializedObject(entryPoint);
-            serialized.FindProperty("_remoteContentBaseUrl").stringValue =
-                uri.AbsoluteUri.TrimEnd('/');
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorSceneManager.SaveScene(scene);
+            CreateRuntimeConfiguration(uri.AbsoluteUri.TrimEnd('/'));
 
             var scenes = EditorBuildSettings.scenes
                 .Where(value => value.enabled)
@@ -85,6 +78,40 @@ namespace Editor
                     + $"{report.summary.totalErrors} errors.");
             }
             Debug.Log($"Remote Player build completed: {report.summary.outputPath}");
+        }
+
+        private static void CreateRuntimeConfiguration(string remoteUrl)
+        {
+            if (AssetDatabase.LoadMainAssetAtPath(
+                    Novels.ContentRuntimeConfiguration.AssetPath) != null)
+            {
+                throw new InvalidOperationException(
+                    $"Generated runtime configuration already exists: "
+                    + Novels.ContentRuntimeConfiguration.AssetPath);
+            }
+            EnsureFolder("Assets/Resources/Novels");
+            var configuration = ScriptableObject.CreateInstance<
+                Novels.ContentRuntimeConfiguration>();
+            var serialized = new SerializedObject(configuration);
+            serialized.FindProperty("_remoteContentBaseUrl").stringValue = remoteUrl;
+            serialized.ApplyModifiedPropertiesWithoutUndo();
+            AssetDatabase.CreateAsset(
+                configuration,
+                Novels.ContentRuntimeConfiguration.AssetPath);
+            AssetDatabase.SaveAssets();
+        }
+
+        private static void EnsureFolder(string path)
+        {
+            var segments = path.Split('/');
+            var current = segments[0];
+            for (var index = 1; index < segments.Length; index++)
+            {
+                var next = current + "/" + segments[index];
+                if (!AssetDatabase.IsValidFolder(next))
+                    AssetDatabase.CreateFolder(current, segments[index]);
+                current = next;
+            }
         }
 
         private static string GetArgument(string[] arguments, string name)

@@ -2,12 +2,41 @@ using System;
 
 namespace Bundles
 {
+    public enum ContentSourceFailureKind
+    {
+        Unknown,
+        Network,
+        Timeout,
+        NotFound,
+        RateLimited,
+        Server,
+        Client,
+    }
+
     public sealed class ContentSourceException : Exception
     {
         public ContentSourceException(string message, Exception inner = null)
             : base(message, inner)
         {
         }
+
+        internal ContentSourceException(
+            string message,
+            ContentSourceFailureKind kind,
+            long responseCode = 0,
+            Exception inner = null)
+            : base(message, inner)
+        {
+            Kind = kind;
+            ResponseCode = responseCode;
+        }
+
+        public ContentSourceFailureKind Kind { get; }
+        public long ResponseCode { get; }
+        public bool IsTransient => Kind == ContentSourceFailureKind.Network
+            || Kind == ContentSourceFailureKind.Timeout
+            || Kind == ContentSourceFailureKind.RateLimited
+            || Kind == ContentSourceFailureKind.Server;
     }
 
     public sealed class ContentIntegrityException : Exception

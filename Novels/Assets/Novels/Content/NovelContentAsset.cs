@@ -30,6 +30,9 @@ namespace Novels.Content
             [SerializeField] private string[] _videoIds;
             [SerializeField] private string _defaultAudioExtension;
             [SerializeField] private string[] _silentAudioIds;
+            [SerializeField] private string[] _audioDependencies;
+            [SerializeField] private string[] _backgroundDependencies;
+            [SerializeField] private string[] _speakerDependencies;
             [SerializeField] private AudioExtensionEntry[] _audioExtensions;
 
             internal readonly EpisodeDefinition ToDefinition(
@@ -60,7 +63,11 @@ namespace Novels.Content
                         _videoIds,
                         audioExtensions,
                         _defaultAudioExtension,
-                        _silentAudioIds));
+                        _silentAudioIds),
+                    new EpisodeContentDependencies(
+                        _audioDependencies,
+                        _backgroundDependencies,
+                        _speakerDependencies));
             }
         }
 
