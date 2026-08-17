@@ -64,21 +64,21 @@ namespace Novels.StoryQueue
                 new QueueProcess.IQueue[]
                 {
                     new QueueProcess.CharacterQueue.HideCharacterQueue(
-                        _ctx.CharacterHide,
-                        _ctx.CharacterHideImmediate,
+                        _ctx.Character.CharacterHide,
+                        _ctx.Character.CharacterHideImmediate,
                         isNewCharacter),
                     setBubble,
                 },
                 new QueueProcess.IQueue[]
                 {
                     new QueueProcess.CharacterQueue.SetDialogueQueue(
-                        _ctx.SetDialogue,
-                        _ctx.SetDialogueImmediate,
+                        _ctx.Location.SetDialogue,
+                        _ctx.Location.SetDialogueImmediate,
                         GetDialogueAlignment(role)),
                     new QueueProcess.CharacterQueue.ShowCharacterQueue(
-                        _ctx.CharacterSetImage,
-                        _ctx.CharacterShow,
-                        _ctx.CharacterShowImmediate,
+                        _ctx.Character.CharacterSetImage,
+                        _ctx.Character.CharacterShow,
+                        _ctx.Character.CharacterShowImmediate,
                         isNewCharacter,
                         new StoryContracts.CharacterRenderRequest(
                             name,
@@ -87,11 +87,11 @@ namespace Novels.StoryQueue
                             dialogue.Character)),
                     new QueueProcess.BubbleQueue.ShowBubbleQueue(
                         bubbleDone,
-                        _ctx.BubbleShow,
-                        _ctx.BubbleShowImmediate),
+                        _ctx.Bubble.BubbleShow,
+                        _ctx.Bubble.BubbleShowImmediate),
                     new QueueProcess.BubbleQueue.HideBubbleQueue(
-                        _ctx.BubbleHide,
-                        _ctx.BubbleHideImmediate),
+                        _ctx.Bubble.BubbleHide,
+                        _ctx.Bubble.BubbleHideImmediate),
                 });
         }
 
@@ -103,21 +103,21 @@ namespace Novels.StoryQueue
         {
             return new QueueProcess.BubbleQueue.SetBubbleQueue(
                 bubbleDone,
-                _ctx.GetLocalizationValue,
+                _ctx.Localization.GetLocalizationValue,
                 choices,
-                _ctx.SetMainCharacterView,
-                _ctx.SetMainCharacterClothes,
-                _ctx.SetMainCharacterHair,
-                _ctx.SaveChoice,
-                _ctx.SetChoice,
+                _ctx.Character.SetMainCharacterView,
+                _ctx.Character.SetMainCharacterClothes,
+                _ctx.Character.SetMainCharacterHair,
+                _ctx.Choice.SaveChoice,
+                _ctx.Choice.SetChoice,
                 dialogue.Speaker,
                 dialogue.Text,
                 role,
                 dialogue.Presentation,
                 dialogue.ChoiceActions,
-                _ctx.SetBubbleScreen,
-                _ctx.SetWardrobeScreen,
-                _ctx.SetChooseScreen);
+                _ctx.Bubble.SetBubbleScreen,
+                _ctx.Bubble.SetWardrobeScreen,
+                _ctx.Bubble.SetChooseScreen);
         }
 
         private StoryContracts.StorySpeakerRole ResolveSpeakerRole(
@@ -165,11 +165,11 @@ namespace Novels.StoryQueue
             {
                 new QueueProcess.BubbleQueue.ShowBubbleQueue(
                     bubbleDone,
-                    _ctx.BubbleShow,
-                    _ctx.BubbleShowImmediate),
+                    _ctx.Bubble.BubbleShow,
+                    _ctx.Bubble.BubbleShowImmediate),
                 new QueueProcess.BubbleQueue.HideBubbleQueue(
-                    _ctx.BubbleHide,
-                    _ctx.BubbleHideImmediate),
+                    _ctx.Bubble.BubbleHide,
+                    _ctx.Bubble.BubbleHideImmediate),
             };
         }
     }

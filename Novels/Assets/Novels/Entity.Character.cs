@@ -7,7 +7,7 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private Character.Entity CreateCharacter(GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, string, string, string> GetMainBodyPath, Func<string, string, string, string> GetEmotionPath, Func<string, string, int, string> GetClothesPath, Func<string, string, string, string, string> GetHairPath, Func<string, string, string, string> GetAccessoriesPath)
+        private Character.Entity CreateCharacter(IBaseDisposable owner, GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, string, string, string> GetMainBodyPath, Func<string, string, string, string> GetEmotionPath, Func<string, string, int, string> GetClothesPath, Func<string, string, string, string, string> GetHairPath, Func<string, string, string, string> GetAccessoriesPath)
         {
             var character = new Character.Entity(new Character.Entity.Ctx
             {
@@ -19,7 +19,7 @@ namespace Novels
                 GetHairPath = GetHairPath,
                 GetAccessoriesPath = GetAccessoriesPath,
                 CancellationToken = _ctx.CancellationToken,
-            }).AddTo(this);
+            }).AddTo(owner);
             character.Init();
 
             return character;

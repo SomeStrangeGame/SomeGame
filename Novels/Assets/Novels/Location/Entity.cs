@@ -1,5 +1,4 @@
 using System;
-using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -15,7 +14,6 @@ namespace Novels.Location
             Immediate,
         }
 
-        private const string _noVideo = "None";
         private const int _cutSceneFallbackDelayMilliseconds = 3000;
 
         public struct Ctx
@@ -23,10 +21,11 @@ namespace Novels.Location
             public GameObject ScreenPrefab;
             public Camera TargetCamera;
             public Func<string, UniTask<Sprite>> GetSprite;
-            public Func<string, string> GetVideoURL;
+            public Func<string, UniTask<string>> ResolveVideoUrl;
             public CancellationToken CancellationToken;
 
             public Action<(LogType type, string message)> OnLog;
+            public Action<Diagnostics.NovelError> OnError;
         }
 
         private readonly Ctx _ctx;
@@ -93,7 +92,7 @@ namespace Novels.Location
             var sprite = await _ctx.GetSprite(assetName).AttachExternalCancellation(_ctx.CancellationToken);
             _screen.SetImage(sprite);
 
-            var url = _ctx.GetVideoURL(assetName);
+            var url = await _ctx.ResolveVideoUrl(assetName);
             if (!forceNoVideo && HasVideo(url))
             {
                 var playbackSpeed = mode == BackgroundPlaybackMode.Immediate && cutScene
@@ -155,10 +154,7 @@ namespace Novels.Location
             }
         }
 
-        private static bool HasVideo(string url)
-        {
-            return url.Split("/").Last() != _noVideo;
-        }
+        private static bool HasVideo(string url) => !string.IsNullOrEmpty(url);
 
         public UniTask SetImageImmediate(
             string assetName,
@@ -187,6 +183,7 @@ namespace Novels.Location
             }
 
             _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
+            ReportUnsupportedCameraAction(action);
         }
 
         public UniTask SetCameraImmediate(StoryContracts.StoryCameraAction action)
@@ -204,7 +201,17 @@ namespace Novels.Location
             }
 
             _ctx.OnLog((LogType.Error, $"Camera action [{action}] not implemented"));
+            ReportUnsupportedCameraAction(action);
             return UniTask.CompletedTask;
+        }
+
+        private void ReportUnsupportedCameraAction(
+            StoryContracts.StoryCameraAction action)
+        {
+            _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                Diagnostics.NovelErrorCodes.UnsupportedCameraAction,
+                Diagnostics.NovelErrorSeverity.Recoverable,
+                $"Camera action '{action}' is not implemented."));
         }
 
         private static bool TryGetCameraEffect(

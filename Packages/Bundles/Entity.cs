@@ -6,7 +6,6 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
-using UnityEngine.Networking;
 
 namespace Bundles
 {
@@ -26,15 +25,17 @@ namespace Bundles
         private readonly Cache.Entity _cache;
         private readonly Dictionary<string, AssetBundle> _bundles = new(StringComparer.OrdinalIgnoreCase);
 
-        private readonly Dictionary<string, string> _videos = new(StringComparer.OrdinalIgnoreCase);
-        private readonly Dictionary<string, string> _audio = new(StringComparer.OrdinalIgnoreCase);
+        private readonly StreamingAssetsSource _source;
+        private readonly MediaResolver _media;
 
         private Ctx _ctx;
 
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
-            _cache = new Cache.Entity().AddTo(this);
+            _cache = new Cache.Entity(Application.persistentDataPath).AddTo(this);
+            _source = new StreamingAssetsSource(ctx.CancellationToken);
+            _media = new MediaResolver(ctx.Prefix, _cache, _source, ctx.CancellationToken);
         }
 
         protected override void OnDispose()
@@ -100,11 +101,16 @@ namespace Bundles
             return _prefabs[assetKey];
         }
 
-        public string GetVideoURL(string assetName)
+        public void ConfigureMedia(MediaManifest manifest)
         {
-            if (string.IsNullOrEmpty(assetName)) return "None";
-            return _videos.TryGetValue(assetName, out var url) ? url : "None";
+            _media.Configure(manifest);
         }
+
+        public UniTask<string> ResolveVideoUrl(string assetName) =>
+            _media.ResolveVideoUrl(assetName);
+
+        public UniTask<string> ResolveAudioUrl(string assetName) =>
+            _media.ResolveAudioUrl(assetName);
 
         public async UniTask<AssetBundle> GetAssetBundle(string bundleName)
         {
@@ -133,6 +139,7 @@ namespace Bundles
                 if (cachedBundle == null)
                     throw new InvalidDataException($"Cached bundle '{cachePath}' is invalid.");
                 _bundles[bundlesKey] = cachedBundle;
+                _cache.PruneDirectory(bundlesKey, bundlesVersion);
                 log = (LogType.Log, $"Get local bundle from {cachePath}");
             }
             catch (OperationCanceledException) when (_ctx.CancellationToken.IsCancellationRequested)
@@ -141,8 +148,8 @@ namespace Bundles
             }
             catch (Exception e)
             {
-                log = (LogType.Warning, $"No local bundle {bundleName} in {bundlesKey}\nTry load from {GetRemotePath(bundlesPath)}\n---\n{e}");
-                var data = await DownloadBytes(bundlesPath);
+                log = (LogType.Warning, $"No local bundle {bundleName} in {bundlesKey}\nTry load from {_source.GetUrl(bundlesPath)}\n---\n{e}");
+                var data = await _source.DownloadBytes(bundlesPath);
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
                 var downloadedBundle = await _cache
                     .BundleToCache(cachePath, data)
@@ -150,86 +157,10 @@ namespace Bundles
                 if (downloadedBundle == null)
                     throw new InvalidDataException($"Downloaded bundle '{bundlesPath}' is invalid.");
                 _bundles[bundlesKey] = downloadedBundle;
+                _cache.PruneDirectory(bundlesKey, bundlesVersion);
             }
             _ctx.OnLog.Invoke(log);
             return _bundles[bundlesKey];
-        }
-
-        public async UniTask LoadVideosToDict(string locationBundleName)
-        {
-            var locationBundle = GetLoadedBundle(locationBundleName);
-            var allVideos = locationBundle.GetAllAssetNames()
-                .Where(a => a.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
-                .Select(a => a.Substring(0, a.Length - ".png".Length))
-                .ToArray();
-            List<UniTask> cacheVideoProcesses = new();
-            foreach (var video in allVideos)
-            {
-                cacheVideoProcesses.Add(CacheVideo(video));
-            }
-            await UniTask.WhenAll(cacheVideoProcesses);
-        }
-
-        private async UniTask CacheVideo(string video)
-        {
-            var videoName = video.Split('/').Last();
-
-            var log = (LogType.Warning, $"No video for {video}");
-            var path = $"NovelsVideos/{_ctx.Prefix}/{videoName}.mp4";
-            try
-            {
-                if (!_cache.Exists(path))
-                    throw new FileNotFoundException("Cached video not found.", path);
-
-                _videos[videoName] = ToFileUrl(_cache.ConvertLocalPath(path));
-                log = (LogType.Log, $"Get video local from: {videoName} - {_videos[videoName]}");
-            }
-            catch (OperationCanceledException) when (_ctx.CancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch (Exception cacheException)
-            {
-                try
-                {
-                    var data = await DownloadBytes(path);
-                    _ctx.CancellationToken.ThrowIfCancellationRequested();
-                    _cache.WriteBytes(path, data);
-                    _videos[videoName] = ToFileUrl(_cache.ConvertLocalPath(path));
-                    log = (LogType.Log, $"Load video remote: {videoName} - {_videos[videoName]}");
-                }
-                catch (OperationCanceledException) when (_ctx.CancellationToken.IsCancellationRequested)
-                {
-                    throw;
-                }
-                catch (Exception downloadException)
-                {
-                    log = (
-                        LogType.Warning,
-                        $"No video for {video}\nCache: {cacheException.Message}\nSource: {downloadException.Message}");
-                }
-            }
-            _ctx.OnLog.Invoke(log);
-        }
-
-        private static string ToFileUrl(string path)
-        {
-            return new Uri(path).AbsoluteUri;
-        }
-
-        public void LoadAudioToDict(string audio)
-        {
-            if (string.IsNullOrEmpty(audio)) return;
-
-            var audioName = audio.Split('/').Last();
-            var path = $"NovelsAudio/{_ctx.Prefix}/{audioName}.wav";
-            _audio[audioName] = GetRemotePath(path);
-        }
-
-        public string GetAudioURL(string assetName)
-        {
-            if (string.IsNullOrEmpty(assetName)) return "None";
-            return _audio.TryGetValue(assetName, out var url) ? url : "None";
         }
 
         private string GetBundleKey(string bundleName)
@@ -250,8 +181,7 @@ namespace Bundles
                 RemoveAssets(_prefabs, bundleKey);
             }
 
-            _videos.Clear();
-            _audio.Clear();
+            _media.Clear();
         }
 
         private string GetAssetKey(string bundleName, string assetName)
@@ -274,7 +204,7 @@ namespace Bundles
         private async UniTask<string> GetBundleVersionAsync(string bundleName)
         {
             var path = $"Remote/{GetPlatform()}/{bundleName}/version.txt";
-            var bundlesVersion = (await DownloadText(path)).Trim();
+            var bundlesVersion = (await _source.DownloadText(path)).Trim();
             if (bundlesVersion.Length == 0)
                 throw new InvalidDataException($"Bundle version is empty for '{bundleName}'.");
             return bundlesVersion;
@@ -282,7 +212,7 @@ namespace Bundles
 
         public async UniTask<string> GetText(string path)
         {
-            return await DownloadText(path);
+            return await _source.DownloadText(path);
         }
 
         private string GetPlatform()
@@ -301,15 +231,6 @@ namespace Bundles
 #endif
         }
 
-        private string GetRemotePath(string localPath)
-        {
-            var localResult = $"{Application.streamingAssetsPath}/{localPath}";
-#if UNITY_EDITOR_OSX
-            localResult = new Uri(localResult).AbsoluteUri;
-#endif
-            return localResult;
-        }
-
         private AssetBundle GetLoadedBundle(string bundleName)
         {
             var key = GetBundleKey(bundleName);
@@ -318,32 +239,5 @@ namespace Bundles
             return bundle;
         }
 
-        private async UniTask<byte[]> DownloadBytes(string path)
-        {
-            using (var request = UnityWebRequest.Get(GetRemotePath(path)))
-            {
-                await Send(request);
-                return request.downloadHandler.data;
-            }
-        }
-
-        private async UniTask<string> DownloadText(string path)
-        {
-            using (var request = UnityWebRequest.Get(GetRemotePath(path)))
-            {
-                await Send(request);
-                return request.downloadHandler.text;
-            }
-        }
-
-        private async UniTask Send(UnityWebRequest request)
-        {
-            await request.SendWebRequest().WithCancellation(_ctx.CancellationToken);
-            if (request.result != UnityWebRequest.Result.Success)
-            {
-                throw new InvalidOperationException(
-                    $"Request failed [{request.responseCode}] {request.url}: {request.error}");
-            }
-        }
     }
 }

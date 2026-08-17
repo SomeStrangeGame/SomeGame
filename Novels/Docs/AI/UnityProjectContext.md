@@ -71,6 +71,21 @@
 - Lifetime ownership uses custom `BaseDisposable` and `.AddTo(this)`; async APIs use UniTask.
 - Namespaces follow feature folders. Private fields are `_camelCase`; serialized references are `[SerializeField] private`; braces use Allman style; XML docs and nullable annotations are absent.
 
+## Architecture wave completed on 2026-08-17
+
+- Two unresolved merge-conflict blocks were removed from folder metadata while preserving the existing folder GUIDs.
+- `EpisodeScope` now owns episode-only screens, processors, audio, waits, notifications, and the bundle scope; application services remain owned by the root entity.
+- `PriorityLoader` centralizes temporary background-loading priority changes used during bootstrap.
+- `EpisodeMediaDefinition` declares available video IDs. Videos are resolved and cached only when first shown.
+- `StreamingAssetsSource` and `MediaResolver` were extracted from `Bundles.Entity`; sentinel URLs and eager PNG-to-MP4 probing were removed.
+- Bundle cache directories retain only the active version after a successful load.
+- Content identity/version can be authored through additive scene fields with backward-compatible fallbacks.
+- Save writes use a single coalescing background writer; the versioned envelope and atomic Cache write remain unchanged.
+- Audio reuses one source per channel, streams music/ambient, and keeps a bounded sound-effect cache.
+- StoryQueue delegates are grouped into location, audio, localization, bubble, choice, and character capability ports.
+- Audio and unsupported-camera failures use `NovelError`; shared-package transport logs remain package-neutral.
+- An isolated Unity 6000.3.11f1 import/compile completed without C# errors or warnings. Tests and Play Mode were not run.
+
 ## Testing And Tooling
 
 - Unity Test Framework is present transitively, but no EditMode or PlayMode tests were found.

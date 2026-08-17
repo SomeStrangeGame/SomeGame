@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
+using UnityEngine;
 
 namespace Novels
 {
@@ -9,7 +10,8 @@ namespace Novels
 
         private Save.Entity CreateSaveSystem()
         {
-            var cache = new Cache.Entity().AddTo(this);
+            var cache = new Cache.Entity(Application.persistentDataPath)
+                .AddTo(this);
             var saveSystem = new Save.Entity(new Save.Entity.Ctx
             {
                 SaveChoiceFileName = _saveChoiceFileName,

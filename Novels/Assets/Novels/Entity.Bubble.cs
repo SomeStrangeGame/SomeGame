@@ -6,13 +6,13 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private Bubble.Entity CreateBubble(GameObject bubblePrefab)
+        private Bubble.Entity CreateBubble(IBaseDisposable owner, GameObject bubblePrefab)
         {
             var bubble = new Bubble.Entity(new Bubble.Entity.Ctx
             {
                 BubblePrefab = bubblePrefab,
                 CancellationToken = _ctx.CancellationToken,
-            }).AddTo(this);
+            }).AddTo(owner);
             bubble.Init();
 
             return bubble;

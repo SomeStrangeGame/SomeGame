@@ -47,11 +47,11 @@ namespace Bundles
             return _owner.GetBundledPrefab(bundleName, assetName);
         }
 
-        public UniTask LoadVideosToDict(string locationBundleName)
-        {
-            EnsureOwned(locationBundleName);
-            return _owner.LoadVideosToDict(locationBundleName);
-        }
+        public UniTask<string> ResolveVideoUrl(string assetName) =>
+            _owner.ResolveVideoUrl(assetName);
+
+        public UniTask<string> ResolveAudioUrl(string assetName) =>
+            _owner.ResolveAudioUrl(assetName);
 
         protected override void OnDispose()
         {

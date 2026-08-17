@@ -9,6 +9,18 @@ namespace Cache
 {
     public class Entity : BaseDisposable
     {
+        private readonly string _localPath;
+
+        public Entity(string persistentDataPath)
+        {
+            if (string.IsNullOrWhiteSpace(persistentDataPath))
+                throw new ArgumentException(
+                    "Persistent data path must not be empty.",
+                    nameof(persistentDataPath));
+
+            _localPath = Path.Combine(persistentDataPath, "CachedFiles");
+        }
+
         public async UniTask<AssetBundle> BundleFromCache(string path)
         {
             var rawData = ReadBytes(path);
@@ -69,6 +81,24 @@ namespace Cache
                 File.Delete(file);
         }
 
+        public void PruneDirectory(string directoryPath, string keepFileName)
+        {
+            var directory = ConvertLocalPath(directoryPath, false);
+            if (!Directory.Exists(directory))
+                return;
+
+            foreach (var file in Directory.GetFiles(directory))
+            {
+                if (!string.Equals(
+                        Path.GetFileName(file),
+                        keepFileName,
+                        StringComparison.Ordinal))
+                {
+                    File.Delete(file);
+                }
+            }
+        }
+
         public byte[] ByteArrayFromCash(string path)
         {
             return ReadBytes(path);
@@ -84,12 +114,12 @@ namespace Cache
             return ConvertLocalPath(path, true);
         }
 
-        private static string ConvertLocalPath(string path, bool createDirectory)
+        private string ConvertLocalPath(string path, bool createDirectory)
         {
             var relativePath = path
                 .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)
                 .Replace(Path.AltDirectorySeparatorChar, Path.DirectorySeparatorChar);
-            var result = Path.Combine(GetLocalPath(), relativePath);
+            var result = Path.Combine(_localPath, relativePath);
 
             if (createDirectory)
             {
@@ -99,11 +129,6 @@ namespace Cache
             }
 
             return result;
-        }
-
-        private static string GetLocalPath()
-        {
-            return Path.Combine(Application.persistentDataPath, "CachedFiles");
         }
     }
 }

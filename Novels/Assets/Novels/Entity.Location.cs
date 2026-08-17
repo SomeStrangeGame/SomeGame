@@ -7,18 +7,19 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private Location.Entity CreateLocation(GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, string> getVideoURL)
+        private Location.Entity CreateLocation(IBaseDisposable owner, GameObject screenPrefab, Func<string, UniTask<Sprite>> getSprite, Func<string, UniTask<string>> resolveVideoUrl)
         {
             var location = new Location.Entity(new Location.Entity.Ctx
             {
                 ScreenPrefab = screenPrefab,
                 TargetCamera = Camera.main,
                 GetSprite = getSprite,
-                GetVideoURL = getVideoURL,
+                ResolveVideoUrl = resolveVideoUrl,
                 CancellationToken = _ctx.CancellationToken,
 
                 OnLog = _ctx.OnLog,
-            }).AddTo(this);
+                OnError = _ctx.OnError,
+            }).AddTo(owner);
             location.Init();
 
             return location;

@@ -19,14 +19,14 @@ namespace Novels
             return loading;
         }
 
-        private Loading.Entity CreateLoading(GameObject bundledPrefab)
+        private Loading.Entity CreateLoading(IBaseDisposable owner, GameObject bundledPrefab)
         {
             var loadingCtx = new Loading.Entity.Ctx
             {
                 BundledPrefab = bundledPrefab,
                 CancellationToken = _ctx.CancellationToken,
             };
-            var loading = new Loading.Entity(loadingCtx).AddTo(this);
+            var loading = new Loading.Entity(loadingCtx).AddTo(owner);
             loading.Init();
 
             return loading;

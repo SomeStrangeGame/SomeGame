@@ -16,6 +16,9 @@ namespace Novels
 
         [Space]
         [SerializeField] private string _storyTextPath;
+        [SerializeField] private string _novelId;
+        [SerializeField] private string _episodeId;
+        [SerializeField] private string _contentVersion;
 
         [Space]
         [SerializeField] private string _novelsLoadingBundleName;
@@ -31,6 +34,15 @@ namespace Novels
         internal readonly string Prefix => _prefix;
         internal readonly string MainCharacter => _mainCharacter;
         internal readonly string StoryTextPath => _storyTextPath;
+        internal readonly string NovelId => string.IsNullOrWhiteSpace(_novelId)
+            ? _prefix
+            : _novelId;
+        internal readonly string EpisodeId => string.IsNullOrWhiteSpace(_episodeId)
+            ? _storyTextPath
+            : _episodeId;
+        internal readonly string ContentVersion => string.IsNullOrWhiteSpace(_contentVersion)
+            ? "1"
+            : _contentVersion;
         internal readonly string NovelsLoadingBundleName => _novelsLoadingBundleName;
         internal readonly string NovelsSettingBundleName => _novelsSettingBundleName;
         internal readonly string NovelsBubbleBundleName => _novelsBubbleBundleName;
@@ -57,11 +69,13 @@ namespace Novels
 
         private readonly Ctx _ctx;
         private readonly Content.NovelDefinition _definition;
+        private readonly PriorityLoader _priorityLoader;
 
         internal Entity(Ctx ctx)
         {
             _ctx = ctx;
             _definition = CreateNovelDefinition(ctx.Data);
+            _priorityLoader = new PriorityLoader(_defaultThreadPriority);
             Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
 

@@ -47,7 +47,8 @@ namespace Novels.Content
             string bubbleBundleName,
             string locationBundleName,
             string characterBundleName,
-            string notificationBundleName)
+            string notificationBundleName,
+            EpisodeMediaDefinition media)
         {
             Id = Require(id, nameof(id));
             StoryPath = Require(storyPath, nameof(storyPath));
@@ -56,6 +57,7 @@ namespace Novels.Content
             LocationBundleName = Require(locationBundleName, nameof(locationBundleName));
             CharacterBundleName = Require(characterBundleName, nameof(characterBundleName));
             NotificationBundleName = Require(notificationBundleName, nameof(notificationBundleName));
+            Media = media ?? throw new ArgumentNullException(nameof(media));
         }
 
         public string Id { get; }
@@ -65,6 +67,7 @@ namespace Novels.Content
         public string LocationBundleName { get; }
         public string CharacterBundleName { get; }
         public string NotificationBundleName { get; }
+        public EpisodeMediaDefinition Media { get; }
 
         private static string Require(string value, string parameterName)
         {
@@ -72,5 +75,17 @@ namespace Novels.Content
                 throw new ArgumentException("Content value must not be empty.", parameterName);
             return value;
         }
+    }
+
+    public sealed class EpisodeMediaDefinition
+    {
+        public EpisodeMediaDefinition(string[] videoIds, string[] audioExtensions)
+        {
+            VideoIds = videoIds ?? Array.Empty<string>();
+            AudioExtensions = audioExtensions ?? Array.Empty<string>();
+        }
+
+        public string[] VideoIds { get; }
+        public string[] AudioExtensions { get; }
     }
 }

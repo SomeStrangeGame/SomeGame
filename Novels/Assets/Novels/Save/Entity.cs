@@ -25,12 +25,17 @@ namespace Novels.Save
         private List<byte> _save = new();
         private byte[] _initialChoices = Array.Empty<byte>();
         private int _initialChoicePosition;
+        private readonly SaveWriter _writer;
 
         public bool ContainAnySave => _initialChoices.Length > 0;
 
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
+            _writer = new SaveWriter(
+                ctx.SaveChoiceFileName,
+                ctx.WriteBytes,
+                ReportWriteFailure).AddTo(this);
         }
 
         public void Init()
@@ -82,31 +87,27 @@ namespace Novels.Save
         public void SaveChoice(byte unit = 255)
         {
             _save.Add(unit);
-            try
-            {
-                _ctx.WriteBytes(
-                    _ctx.SaveChoiceFileName,
-                    SaveDataCodec.Encode(
-                        _ctx.ContentId,
-                        _ctx.ContentVersion,
-                        _save.ToArray()));
-            }
-            catch (Exception exception)
-            {
-                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
-                    Diagnostics.NovelErrorCodes.SaveWriteFailed,
-                    Diagnostics.NovelErrorSeverity.Recoverable,
-                    "Failed to write save file. The current session will continue.",
-                    exception: exception));
-            }
+            _writer.Enqueue(SaveDataCodec.Encode(
+                _ctx.ContentId,
+                _ctx.ContentVersion,
+                _save.ToArray()));
         }
 
         public void Clear()
         {
-            _ctx.Delete(_ctx.SaveChoiceFileName);
+            _writer.Reset(() => _ctx.Delete(_ctx.SaveChoiceFileName));
             _save.Clear();
             _initialChoices = Array.Empty<byte>();
             _initialChoicePosition = 0;
+        }
+
+        private void ReportWriteFailure(Exception exception)
+        {
+            _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                Diagnostics.NovelErrorCodes.SaveWriteFailed,
+                Diagnostics.NovelErrorSeverity.Recoverable,
+                "Failed to write save file. The current session will continue.",
+                exception: exception));
         }
 
         private bool MatchesCurrentContent(SaveDataCodec.DecodedSave save)

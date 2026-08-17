@@ -9,13 +9,21 @@ namespace Novels.StoryQueue
         public struct CommandCtx
         {
             public Action<string> ShowNotification;
+            public LocationCommandPort Location;
+            public AudioPort Audio;
+        }
 
+        public struct LocationCommandPort
+        {
             public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImage;
             public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImageImmediate;
             public Func<StoryContracts.StoryCameraAction, UniTask> SetCamera;
             public Func<StoryContracts.StoryCameraAction, UniTask> SetCameraImmediate;
             public Func<float, UniTask> Wait;
+        }
 
+        public struct AudioPort
+        {
             public Func<string, UniTask> PlayMusic;
             public Func<string, UniTask> PlaySound;
             public Func<string, UniTask> PlayAmbient;
@@ -24,12 +32,26 @@ namespace Novels.StoryQueue
         public struct DialogueCtx
         {
             public string MainCharacter;
+            public LocationDialoguePort Location;
+            public LocalizationPort Localization;
+            public BubblePort Bubble;
+            public ChoicePort Choice;
+            public CharacterPort Character;
+        }
 
+        public struct LocationDialoguePort
+        {
             public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogue;
             public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogueImmediate;
+        }
 
+        public struct LocalizationPort
+        {
             public Func<string, string> GetLocalizationValue;
+        }
 
+        public struct BubblePort
+        {
             public Func<UniTask> BubbleShow;
             public Action BubbleShowImmediate;
             public Func<UniTask> BubbleHide;
@@ -37,10 +59,16 @@ namespace Novels.StoryQueue
             public Action<BubbleContracts.BubblePresentation> SetBubbleScreen;
             public Action<BubbleContracts.WardrobePresentation> SetWardrobeScreen;
             public Action<BubbleContracts.ChoosePresentation> SetChooseScreen;
+        }
 
+        public struct ChoicePort
+        {
             public Action<byte> SaveChoice;
             public Action<int> SetChoice;
+        }
 
+        public struct CharacterPort
+        {
             public Action<string> SetMainCharacterView;
             public Action<string> SetMainCharacterClothes;
             public Action<string> SetMainCharacterHair;

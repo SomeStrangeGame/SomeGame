@@ -10,6 +10,20 @@ Project root: `/Users/iantonishin/Fork/SomeGame/Novels`
 
 Last reviewed: 2026-08-15
 
+## Architecture wave completed on 2026-08-17
+
+The second review wave is complete: damaged metadata was repaired; explicit
+lazy media resolution, full episode lifetime ownership, authorable content
+identity/version, coalesced save writes, extracted bundle transport/media
+responsibilities, reusable/streaming audio, grouped StoryQueue capability
+ports, centralized loading priority, and obsolete bundle-cache pruning were
+implemented. Runtime audio and unsupported-camera failures also report through
+`NovelError`; reusable shared packages retain their package-neutral logs.
+
+An isolated Unity 6000.3.11f1 import and C# compilation completed without
+compiler errors or warnings. Per the standing decision, tests were not created
+or run; Play Mode and device behavior remain unverified.
+
 ## Architecture wave completed on 2026-08-15
 
 The eight follow-up architecture items are complete:

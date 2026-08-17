@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -24,42 +25,58 @@ namespace Novels.Audio
 
         public struct Ctx
         {
-            public Func<string, string> GetAudioURL;
-            public Action<string> LoadAudioToDict;
+            public Func<string, UniTask<string>> ResolveAudioUrl;
             public AudioMixer AudioMixer;
             public CancellationToken CancellationToken;
 
             public Action<(LogType type, string message)> OnLog;
+            public Action<Diagnostics.NovelError> OnError;
         }
 
         private readonly Ctx _ctx;
 
-        private readonly Dictionary<Audio, GameObject> _audioObjects;
+        private const int _soundCacheCapacity = 8;
+        private readonly Dictionary<Audio, AudioSource> _audioSources;
+        private readonly Dictionary<string, AudioClip> _soundClips = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Queue<string> _soundClipOrder = new();
 
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
 
-            _audioObjects = new ();
+            _audioSources = new();
         }
         
         public async UniTask PlayAudio(string assetName, Audio type)
         {
             try
             {
-                _ctx.LoadAudioToDict(assetName);
-                var audioURL = _ctx.GetAudioURL(assetName);
-                AudioClip audioClip = null;
-                using (var audioRequest = UnityWebRequestMultimedia.GetAudioClip(audioURL, AudioType.WAV))
-                {
-                    await audioRequest.SendWebRequest().WithCancellation(_ctx.CancellationToken);
-                    if (audioRequest.result != UnityWebRequest.Result.Success)
-                    {
-                        throw new InvalidOperationException(
-                            $"Audio request failed [{audioRequest.responseCode}] {audioURL}: {audioRequest.error}");
-                    }
+                var audioURL = await _ctx.ResolveAudioUrl(assetName);
+                if (string.IsNullOrEmpty(audioURL))
+                    throw new FileNotFoundException($"Audio '{assetName}' is absent from the media manifest.");
 
-                    audioClip = DownloadHandlerAudioClip.GetContent(audioRequest);
+                var audioClip = type == Audio.Sound && _soundClips.TryGetValue(assetName, out var cached)
+                    ? cached
+                    : null;
+                if (audioClip == null)
+                {
+                    using (var audioRequest = UnityWebRequestMultimedia.GetAudioClip(
+                               audioURL,
+                               GetAudioType(audioURL)))
+                    {
+                        var handler = (DownloadHandlerAudioClip)audioRequest.downloadHandler;
+                        handler.streamAudio = type != Audio.Sound;
+                        await audioRequest.SendWebRequest().WithCancellation(_ctx.CancellationToken);
+                        if (audioRequest.result != UnityWebRequest.Result.Success)
+                        {
+                            throw new InvalidOperationException(
+                                $"Audio request failed [{audioRequest.responseCode}] {audioURL}: {audioRequest.error}");
+                        }
+
+                        audioClip = DownloadHandlerAudioClip.GetContent(audioRequest);
+                    }
+                    if (type == Audio.Sound)
+                        CacheSound(assetName, audioClip);
                 }
                 UpdateAudioSource(assetName, audioClip, type);
                 _ctx.OnLog?.Invoke((LogType.Log, $"Play audio {assetName}"));
@@ -72,36 +89,41 @@ namespace Novels.Audio
             {
                 ClearAudio(type);
                 _ctx.OnLog?.Invoke((LogType.Warning, $"Clear audio {type}\n{ex.Message}"));
+                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.AudioPlaybackFailed,
+                    Diagnostics.NovelErrorSeverity.Recoverable,
+                    $"Failed to play audio '{assetName}'.",
+                    exception: ex));
             }
         }
 
         private AudioSource UpdateAudioSource(string assetName, AudioClip audioClip, Audio audioType)
         {
-            if (_audioObjects.TryGetValue(audioType, out var objAudio))
+            if (!_audioSources.TryGetValue(audioType, out var audioSource))
             {
-                GameObject.Destroy(objAudio);
-                _audioObjects.Remove(audioType);
+                var audioObject = new GameObject($"NovelAudio-{audioType}");
+                audioSource = audioObject.AddComponent<AudioSource>();
+                audioSource.playOnAwake = false;
+                _audioSources[audioType] = audioSource;
             }
 
-            var audioObject = new GameObject($"{assetName}-{audioType}");
-            var audioSource = audioObject.AddComponent<AudioSource>();
+            audioSource.Stop();
+            if (audioType != Audio.Sound && audioSource.clip != null)
+                GameObject.Destroy(audioSource.clip);
+            audioSource.name = $"{assetName}-{audioType}";
             audioSource.clip = audioClip;
-            audioSource.playOnAwake = false;
             switch (audioType)
             {
                 case Audio.Music:
                     audioSource.loop = true;
-                    _audioObjects[audioType] = audioObject;
                     audioSource.outputAudioMixerGroup = GetMixerGroup(_musicMixerGroup);
                     break;
                 case Audio.Sound:
                     audioSource.loop = false;
-                    _audioObjects[audioType] = audioObject;
                     audioSource.outputAudioMixerGroup = GetMixerGroup(_soundMixerGroup);
                     break;
                 case Audio.Ambient:
                     audioSource.loop = true;
-                    _audioObjects[audioType] = audioObject;
                     audioSource.outputAudioMixerGroup = GetMixerGroup(_ambientMixerGroup);
                     break;
             }
@@ -124,41 +146,50 @@ namespace Novels.Audio
 
         private void ClearAudio(Audio audioType)
         {
-            switch (audioType)
+            if (_audioSources.TryGetValue(audioType, out var source))
             {
-                case Audio.Music:
-                    if (_audioObjects.TryGetValue(audioType, out var objMusic))
-                    {
-                        GameObject.Destroy(objMusic);
-                        _audioObjects.Remove(audioType);
-                    }
-                    break;
-                case Audio.Sound:
-                    if (_audioObjects.TryGetValue(audioType, out var objSound))
-                    {
-                        GameObject.Destroy(objSound);
-                        _audioObjects.Remove(audioType);
-                    }
-                    break;
-                case Audio.Ambient:
-                    if (_audioObjects.TryGetValue(audioType, out var ambientSource))
-                    {
-                        GameObject.Destroy(ambientSource);
-                        _audioObjects.Remove(audioType);
-                    }
-                    break;
+                source.Stop();
+                source.clip = null;
+            }
+        }
+
+        private static AudioType GetAudioType(string url)
+        {
+            return url.EndsWith(".mp3", StringComparison.OrdinalIgnoreCase)
+                ? AudioType.MPEG
+                : AudioType.WAV;
+        }
+
+        private void CacheSound(string assetName, AudioClip clip)
+        {
+            if (_soundClips.ContainsKey(assetName))
+                return;
+            _soundClips[assetName] = clip;
+            _soundClipOrder.Enqueue(assetName);
+            while (_soundClipOrder.Count > _soundCacheCapacity)
+            {
+                var oldest = _soundClipOrder.Dequeue();
+                if (_soundClips.Remove(oldest, out var removed) && removed != null)
+                    GameObject.Destroy(removed);
             }
         }
 
         protected override void OnDispose()
         {
             base.OnDispose();
-            foreach (var audioObject in _audioObjects.Values)
+            foreach (var audioSource in _audioSources.Values)
             {
-                if (audioObject != null)
-                    GameObject.Destroy(audioObject);
+                if (audioSource != null)
+                    GameObject.Destroy(audioSource.gameObject);
             }
-            _audioObjects.Clear();
+            _audioSources.Clear();
+            foreach (var clip in _soundClips.Values)
+            {
+                if (clip != null)
+                    GameObject.Destroy(clip);
+            }
+            _soundClips.Clear();
+            _soundClipOrder.Clear();
         }
     }
 }

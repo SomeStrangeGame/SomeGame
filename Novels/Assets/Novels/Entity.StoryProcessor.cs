@@ -5,13 +5,12 @@ namespace Novels
 {
     internal partial class Entity
     {
-        private StoryProcessor.Entity CreateStoryProcessor(string storyText)
+        private StoryProcessor.Entity CreateStoryProcessor(IBaseDisposable owner, string storyText)
         {
             return new StoryProcessor.Entity(new StoryProcessor.Entity.Ctx
             {
                 StoryText = storyText,
-            }).AddTo(this);
+            }).AddTo(owner);
         }
     }
 }
-
