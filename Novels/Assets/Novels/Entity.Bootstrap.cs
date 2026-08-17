@@ -8,7 +8,8 @@ namespace Novels
     internal partial class Entity
     {
         private async UniTask<Content.NovelDefinition> LoadContent(
-            Bundles.Entity bundles)
+            Bundles.Entity bundles,
+            string contentId)
         {
             await _priorityLoader.Run(() => bundles
                 .GetAssetBundle(_contentBundleName)
@@ -17,12 +18,12 @@ namespace Novels
             var content = await _priorityLoader.Run(() => bundles
                 .GetBundledSO<Content.NovelContentAsset>(
                     _contentBundleName,
-                    GetContentAssetName(_ctx.ContentId))
+                    GetContentAssetName(contentId))
                 .AttachExternalCancellation(_ctx.CancellationToken));
             if (content == null)
             {
                 throw new System.InvalidOperationException(
-                    $"Content '{_ctx.ContentId}' could not be loaded from "
+                    $"Content '{contentId}' could not be loaded from "
                     + $"AssetBundle '{_contentBundleName}'.");
             }
 

@@ -20,11 +20,13 @@ bundle builds use staging and rollback; compiled Ink/media receive Editor
 validation; infrastructure failures cross package boundaries as neutral typed
 failures and are adapted to `NovelError` at composition.
 
-The scene stores only content ID `TZM_1`. Startup loads
-`Assets/RemoteAssets/Content/TZM_1.asset` from the versioned `novels_content`
-bundle, so the complete novel definition can later be replaced through the
-same remote delivery path as other content. The redundant legacy scene `Data`
-fields have been removed, and the versioned save envelope remains compatible. An isolated Unity
+The scene stores no concrete content ID. Startup loads the versioned
+`novels_catalog` bundle, presents its authored list of stories, and uses the
+selected ID to load `Assets/RemoteAssets/Content/{contentId}.asset` from
+`novels_content`. Both the catalog and complete novel definitions can therefore
+be replaced through the same remote delivery path as other content. The
+redundant legacy scene `Data` fields have been removed, and the versioned save
+envelope remains compatible. An isolated Unity
 6000.3.11f1 compile and batch content validation completed successfully. Tests
 were not created or run, and the destructive AssetBundle build command itself
 was not executed during validation.

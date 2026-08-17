@@ -12,12 +12,16 @@ namespace Novels
     {
         private const string _screenAssetName = "Screen";
         private const string _localizationDataAssetName = "LocalizationData";
+        private const string _catalogBundleName = "novels_catalog";
+        private const string _catalogAssetName =
+            "Assets/RemoteAssets/Catalog/NovelCatalog.asset";
+        private const string _catalogScreenAssetName =
+            "Assets/RemoteAssets/Catalog/Screen.prefab";
         private const string _contentBundleName = "novels_content";
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
 
         internal struct Ctx
         {
-            internal string ContentId;
             internal CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
@@ -32,8 +36,6 @@ namespace Novels
         internal Entity(Ctx ctx)
         {
             _ctx = ctx;
-            if (string.IsNullOrWhiteSpace(ctx.ContentId))
-                throw new ArgumentException("Content ID is required.", nameof(ctx.ContentId));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
             Application.backgroundLoadingPriority = _defaultThreadPriority;
         }
@@ -42,7 +44,9 @@ namespace Novels
         {
             var state = new BootstrapState();
             state.Bundles = CreateBundles();
-            _definition = await LoadContent(state.Bundles);
+            var catalog = await LoadCatalog(state.Bundles);
+            var contentId = await SelectContent(catalog.catalog, catalog.screen);
+            _definition = await LoadContent(state.Bundles, contentId);
             ConfigureMedia(state.Bundles);
 
             var bootstrap = new NovelBootstrapProcess(

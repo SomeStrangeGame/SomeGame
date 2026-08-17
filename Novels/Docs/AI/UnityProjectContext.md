@@ -35,7 +35,7 @@
 - Only enabled build scene: `Assets/Novels/Novels.unity`.
 - Scene `EntryPoint.OnEnable()` initializes UniTask's player loop, caps FPS at 30, constructs `Novels.Entity`, and starts an exception-observing session wrapper.
 - `Entity.Init()` creates `NovelBootstrapProcess`. The bootstrap coordinates application preparation, New Game/Continue selection, episode preparation, and episode execution through delegates; root partial factories remain responsible for concrete object creation.
-- Scene data selects only content ID `TZM_1`. Startup first loads `Assets/RemoteAssets/Content/TZM_1.asset` from `novels_content`; that asset selects prefix `TZM_1`, main character `Salli`, story `s01e01.ink.json`, and the feature bundles.
+- The scene contains no concrete story ID. Startup loads `NovelCatalog.asset` and its selection screen from `novels_catalog`; the selected entry supplies a content ID such as `TZM_1`. The root then loads `Assets/RemoteAssets/Content/{contentId}.asset` from `novels_content`; that asset selects the prefix, main character, episodes, media, and feature bundles.
 - `StoryCommandParser` converts legacy colon-delimited Ink lines into typed commands; `NovelProcess` maps them to queued actions for location/cut-scene, audio, camera, waits, notifications, character presentation, dialogue, and choices.
 
 ## Architecture And Conventions
@@ -61,7 +61,7 @@
 - The shared Bundles package validates UnityWebRequest results, observes session cancellation, uses versioned persistent-cache keys, resolves the active platform rather than a hard-coded Android bundle key, and owns StreamingAssets URL conversion. Audio requests apply the same result validation and no longer send response-only CORS headers.
 - Bundles can create an episode `Scope`. The scope records owned bundle names, uses bundle-qualified asset-cache keys, unloads its bundles with `Unload(false)`, and removes their cached asset references at episode completion/disposal.
 - Runtime parse, save, initialization, and queue-execution failures use `Novels.Diagnostics.NovelError` with Warning, Recoverable, or Fatal severity. Existing feature logs remain available for local diagnostics.
-- `Novels/Validate Content` resolves the EntryPoint content ID through `RemoteAssets/Content`, checks its `novels_content` assignment, compiled Ink path, AudioMixer, feature bundle names, media, and built Android version files. Bundle building validates authoring before staging and validates built output after the atomic swap.
+- `Novels/Validate Content` checks the catalog asset and screen, catalog IDs/titles and uniqueness, every referenced `NovelContentAsset`, bundle assignments, compiled Ink, AudioMixer, media, and built Android version files. Bundle building validates authoring before staging and built output after the atomic swap.
 - Shared `BaseDisposable` is idempotent, marks itself disposed before child teardown, cleans every owned disposable even after an exception, and immediately disposes items added after owner disposal.
 - `Location.VideoPlayback` owns VideoPlayer subscriptions and the active RenderTexture. It prepares video with timeout and session cancellation, releases GPU resources on replacement/disposal, and reports readiness/completion/failure to the unified live/immediate background flow in `Location.Entity`.
 - `Character.Entity` owns per-character appearance state keyed by resolved character identity. It resolves a complete sprite set before touching the View, and `ShowCharacterQueue` rebuilds the same character presentation in live and replay modes while varying only the show animation.
@@ -88,7 +88,8 @@
 
 ## Architecture wave completed on 2026-08-17 (authoring and runtime ownership)
 
-- `NovelContentAsset` is the sole authoring source for novel identity, application bundles, episodes, media, AudioMixer, and content versions. `EntryPoint` stores only `_contentId`; the composition root loads `RemoteAssets/Content/{contentId}.asset` from the application-owned `novels_content` bundle before constructing `NovelDefinition`.
+- `NovelCatalogAsset` is the remote authoring source for available stories and their selection labels. It lives in the application-owned `novels_catalog` bundle together with a generic button-list screen. The selected entry supplies the content ID; `EntryPoint` now contains only logging configuration.
+- `NovelContentAsset` is the authoring source for one novel's identity, application bundles, episodes, media, AudioMixer, and content versions. The composition root loads `RemoteAssets/Content/{contentId}.asset` from `novels_content` after catalog selection and then constructs `NovelDefinition`.
 - `Bundles.Entity` can load bundles before a novel prefix is known. Its media resolver is configured later with the prefix and episode media manifest, after `NovelContentAsset` has loaded. This keeps the local `StreamingAssets` source compatible with its future replacement by a remote server/CDN.
 - `NovelDefinition`, episode collections, video IDs, audio overrides, and silent-audio IDs expose defensive read-only collections.
 - `EpisodeRuntime`, created through the root partial factory, owns the episode scope and guarantees save flushing at episode completion.

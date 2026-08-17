@@ -12,6 +12,11 @@ namespace Editor
     internal static class NovelContentValidator
     {
         private const string _menuPath = "Novels/Validate Content";
+        private const string _catalogBundleName = "novels_catalog";
+        private const string _catalogAssetPath =
+            "Assets/RemoteAssets/Catalog/NovelCatalog.asset";
+        private const string _catalogScreenPath =
+            "Assets/RemoteAssets/Catalog/Screen.prefab";
         private const string _contentBundleName = "novels_content";
         private const string _contentRoot = "Assets/RemoteAssets/Content";
 
@@ -69,37 +74,79 @@ namespace Editor
                 return errors;
             }
 
-            var serializedEntryPoint = new SerializedObject(entryPoint);
-            var contentIdProperty = serializedEntryPoint.FindProperty("_contentId");
-            var contentId = contentIdProperty?.stringValue;
-            if (string.IsNullOrWhiteSpace(contentId))
+            var catalog = AssetDatabase.LoadAssetAtPath<Novels.Catalog.NovelCatalogAsset>(
+                _catalogAssetPath);
+            if (catalog == null)
             {
-                errors.Add("EntryPoint._contentId is empty or cannot be read.");
+                errors.Add($"Novel catalog does not exist: {_catalogAssetPath}");
                 return errors;
             }
 
-            var contentPath = $"{_contentRoot}/{contentId}.asset";
-            var contentAsset = AssetDatabase.LoadAssetAtPath<Novels.Content.NovelContentAsset>(
-                contentPath);
-            if (contentAsset == null)
+            ValidateBundleAssignment(
+                _catalogAssetPath,
+                _catalogBundleName,
+                errors);
+            if (AssetDatabase.LoadAssetAtPath<GameObject>(_catalogScreenPath) == null)
+                errors.Add($"Catalog screen prefab does not exist: {_catalogScreenPath}");
+            else
             {
-                errors.Add($"NovelContentAsset does not exist: {contentPath}");
-                return errors;
+                ValidateBundleAssignment(
+                    _catalogScreenPath,
+                    _catalogBundleName,
+                    errors);
             }
 
-            var assignedBundle = AssetDatabase.GetImplicitAssetBundleName(contentPath);
+            if (string.IsNullOrWhiteSpace(catalog.Title))
+                errors.Add("Novel catalog title is empty.");
+            if (catalog.Entries.Count == 0)
+                errors.Add("Novel catalog has no entries.");
+
+            var contentIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in catalog.Entries)
+            {
+                if (entry == null || string.IsNullOrWhiteSpace(entry.ContentId))
+                {
+                    errors.Add("Novel catalog contains an entry without content ID.");
+                    continue;
+                }
+                if (!contentIds.Add(entry.ContentId))
+                    errors.Add($"Duplicate catalog content ID: {entry.ContentId}");
+                if (string.IsNullOrWhiteSpace(entry.Title))
+                    errors.Add($"Catalog entry '{entry.ContentId}' has no title.");
+
+                var contentPath = $"{_contentRoot}/{entry.ContentId}.asset";
+                var contentAsset = AssetDatabase.LoadAssetAtPath<
+                    Novels.Content.NovelContentAsset>(contentPath);
+                if (contentAsset == null)
+                {
+                    errors.Add($"NovelContentAsset does not exist: {contentPath}");
+                    continue;
+                }
+
+                ValidateBundleAssignment(
+                    contentPath,
+                    _contentBundleName,
+                    errors);
+                ValidateContentAsset(contentAsset, validateBuiltOutput, errors);
+            }
+            return errors;
+        }
+
+        private static void ValidateBundleAssignment(
+            string assetPath,
+            string expectedBundle,
+            ICollection<string> errors)
+        {
+            var assignedBundle = AssetDatabase.GetImplicitAssetBundleName(assetPath);
             if (!string.Equals(
                     assignedBundle,
-                    _contentBundleName,
+                    expectedBundle,
                     StringComparison.OrdinalIgnoreCase))
             {
                 errors.Add(
-                    $"Content asset '{contentPath}' must belong to "
-                    + $"AssetBundle '{_contentBundleName}'.");
+                    $"Asset '{assetPath}' must belong to "
+                    + $"AssetBundle '{expectedBundle}'.");
             }
-
-            ValidateContentAsset(contentAsset, validateBuiltOutput, errors);
-            return errors;
         }
 
         private static void ValidateContentAsset(
@@ -124,6 +171,7 @@ namespace Editor
             ValidateBundles(
                 new[]
                 {
+                    _catalogBundleName,
                     _contentBundleName,
                     definition.LoadingBundleName,
                     definition.SettingBundleName,
