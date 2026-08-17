@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Bundles
 {
-    public sealed class Scope : BaseDisposable
+    public class Scope : BaseDisposable
     {
         private readonly Entity _owner;
         private readonly ContentReleaseSession _session;
@@ -16,7 +16,6 @@ namespace Bundles
             StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, UniTask<AssetBundle>> _bundleLoads = new(
             StringComparer.OrdinalIgnoreCase);
-        private MediaResolver _media;
 
         internal Scope(
             Entity owner,
@@ -39,12 +38,6 @@ namespace Bundles
                 _bundleLoads.Add(bundleName, loading);
             }
             return await loading;
-        }
-
-        public void ConfigureMedia(string prefix, MediaManifest manifest)
-        {
-            EnsureActive();
-            _media = _owner.CreateMediaResolver(_session, prefix, manifest);
         }
 
         public UniTask<Sprite> GetBundledSprite(
@@ -99,12 +92,6 @@ namespace Bundles
             return _owner.GetBundledPrefab(_session, address);
         }
 
-        public UniTask<string> ResolveVideoUrl(string assetName) =>
-            RequireMedia().ResolveVideoUrl(assetName);
-
-        public UniTask<string> ResolveAudioUrl(string assetName) =>
-            RequireMedia().ResolveAudioUrl(assetName);
-
         public string ResolveAssetName(string bundleName, string requestedName)
         {
             EnsureOwned(bundleName);
@@ -116,7 +103,6 @@ namespace Bundles
             _owner.ReleaseBundles(_session, _bundleNames);
             _bundleNames.Clear();
             _bundleLoads.Clear();
-            _media = null;
             base.OnDispose();
         }
 
@@ -140,12 +126,6 @@ namespace Bundles
             }
         }
 
-        private MediaResolver RequireMedia()
-        {
-            return _media ?? throw new InvalidOperationException(
-                "Media resolver is not configured for this scope.");
-        }
-
         private void EnsureOwned(string bundleName)
         {
             EnsureActive();
@@ -156,7 +136,7 @@ namespace Bundles
             }
         }
 
-        private void EnsureActive()
+        protected void EnsureActive()
         {
             if (IsDisposed)
                 throw new ObjectDisposedException(nameof(Scope));

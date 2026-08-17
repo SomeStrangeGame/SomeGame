@@ -9,23 +9,15 @@ namespace Bundles
 {
     internal sealed class ContentFileStore
     {
-        private readonly IContentSource _source;
-        private readonly Cache.Entity _cache;
-        private readonly ContentIntegrityVerifier _integrity;
-        private readonly ContentStoragePlanner _storage;
+        private readonly ContentPayloadMaterializer _materializer;
         private readonly CancellationToken _cancellationToken;
 
         internal ContentFileStore(
-            IContentSource source,
-            Cache.Entity cache,
-            ContentIntegrityVerifier integrity,
-            ContentStoragePlanner storage,
+            ContentPayloadMaterializer materializer,
             CancellationToken cancellationToken)
         {
-            _source = source ?? throw new ArgumentNullException(nameof(source));
-            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
-            _integrity = integrity ?? throw new ArgumentNullException(nameof(integrity));
-            _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            _materializer = materializer
+                ?? throw new ArgumentNullException(nameof(materializer));
             _cancellationToken = cancellationToken;
         }
 
@@ -40,62 +32,21 @@ namespace Bundles
                 return null;
             var descriptor = session.FindFile(path) ?? throw new ContentIntegrityException(
                 $"File '{path}' is absent from release '{session.ReleaseId}'.");
-            var cachePath = ContentStoragePlanner.FilePath(session, path);
-            var localPath = _cache.GetLocalPath(cachePath, false);
-            var downloaded = false;
-            try
-            {
-                await _integrity.VerifyAsync(
-                    path,
-                    descriptor.Size,
-                    descriptor.Sha256,
-                    localPath,
-                    true);
-                onDownloadedBytes?.Invoke(descriptor.Size);
-            }
-            catch (OperationCanceledException)
-                when (_cancellationToken.IsCancellationRequested)
-            {
-                throw;
-            }
-            catch
-            {
-                var temporaryPath = _cache.CreateTemporaryPath(cachePath);
-                try
-                {
-                    await _source.DownloadFile(
-                        path,
-                        temporaryPath,
-                        bytes => onDownloadedBytes?.Invoke(
-                            Math.Min(bytes, descriptor.Size)));
-                    _cancellationToken.ThrowIfCancellationRequested();
-                    await _integrity.VerifyAsync(
-                        path,
-                        descriptor.Size,
-                        descriptor.Sha256,
-                        temporaryPath,
-                        true);
-                    _cache.CommitTemporaryFile(temporaryPath, cachePath);
-                    _integrity.Trust(
-                        localPath,
-                        descriptor.Size,
-                        descriptor.Sha256,
-                        true);
-                    downloaded = true;
-                    onDownloadedBytes?.Invoke(descriptor.Size);
-                }
-                finally
-                {
-                    if (File.Exists(temporaryPath))
-                        File.Delete(temporaryPath);
-                }
-            }
-
-            _cache.Touch(cachePath);
-            if (downloaded)
-                _storage.SchedulePrune(cachePath);
+            var localPath = await _materializer.Materialize(
+                GetPayload(session, descriptor),
+                onDownloadedBytes);
             return new Uri(localPath).AbsoluteUri;
         }
+
+        internal ContentPayloadRequest GetPayload(
+            ContentReleaseSession session,
+            ContentFileDescriptor descriptor) =>
+            new(
+                descriptor.Path,
+                descriptor.Path,
+                ContentStoragePlanner.FilePath(session, descriptor.Path),
+                descriptor.Size,
+                descriptor.Sha256);
 
         internal async UniTask<string> GetText(
             ContentReleaseSession session,

@@ -60,16 +60,15 @@ namespace Bundles
             var lease = await _storage.Reserve(payloads)
                 .AttachExternalCancellation(cancellationToken);
             var itemCount = bundles.Length + files.Length;
-            var downloadedBytes = new long[itemCount];
-            var completedItems = 0;
             var nextItem = -1;
-            var progressGate = new object();
-            onProgress?.Invoke(new ContentDeliveryProgress(
+            var progress = new ContentDeliveryProgressTracker(
                 group.Id,
-                0,
-                itemCount,
-                0,
-                group.Size));
+                bundles.Select(value => value.Size)
+                    .Concat(files.Select(value => value.Size))
+                    .ToArray(),
+                group.Size,
+                onProgress);
+            progress.PublishInitial();
             try
             {
                 var workerCount = Math.Min(_maximumParallelDownloads, itemCount);
@@ -99,7 +98,7 @@ namespace Bundles
                         await _bundles.Prepare(
                                 session,
                                 bundle,
-                                bytes => ReportProgress(index, bytes))
+                                bytes => progress.ReportBytes(index, bytes))
                             .AttachExternalCancellation(cancellationToken);
                     }
                     else
@@ -108,40 +107,12 @@ namespace Bundles
                         await _files.ResolveUrl(
                                 session,
                                 file.Path,
-                                bytes => ReportProgress(index, bytes))
+                                bytes => progress.ReportBytes(index, bytes))
                             .AttachExternalCancellation(cancellationToken);
                     }
-                    lock (progressGate)
-                    {
-                        downloadedBytes[index] = GetSize(index);
-                        completedItems++;
-                        PublishProgress();
-                    }
+                    progress.Complete(index);
                 }
             }
-
-            void ReportProgress(int index, long bytes)
-            {
-                lock (progressGate)
-                {
-                    downloadedBytes[index] = Math.Min(GetSize(index), bytes);
-                    PublishProgress();
-                }
-            }
-
-            void PublishProgress()
-            {
-                onProgress?.Invoke(new ContentDeliveryProgress(
-                    group.Id,
-                    completedItems,
-                    itemCount,
-                    downloadedBytes.Sum(),
-                    group.Size));
-            }
-
-            long GetSize(int index) => index < bundles.Length
-                ? bundles[index].Size
-                : files[index - bundles.Length].Size;
         }
     }
 }

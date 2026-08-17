@@ -129,6 +129,7 @@ namespace Novels
                 Locale = _locale,
                 PersistentDataPath = _environment.PersistentDataPath,
                 TargetCamera = _environment.TargetCamera,
+                RuntimeTuning = _environment.RuntimeTuning,
                 SelectEpisode = definition =>
                     _catalogFlow.SelectEpisode(definition, catalog.Screen),
                 PrepareNovelContent = contentId =>

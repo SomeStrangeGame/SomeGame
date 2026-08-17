@@ -203,6 +203,7 @@ namespace Editor
                 StoryReferenceValidator.Validate(
                     definition.Prefix,
                     definition.MainCharacter,
+                    definition.CharacterAssets,
                     episode,
                     errors);
             }

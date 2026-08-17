@@ -21,6 +21,15 @@ namespace Novels.Content
             string id,
             string mainCharacter,
             IEnumerable<EpisodeDefinition> episodes)
+            : this(id, mainCharacter, episodes, null)
+        {
+        }
+
+        public NovelDefinition(
+            string id,
+            string mainCharacter,
+            IEnumerable<EpisodeDefinition> episodes,
+            CharacterAssetProfile characterAssets)
         {
             Id = Require(id, nameof(id));
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
@@ -28,6 +37,7 @@ namespace Novels.Content
             MainLoadingBundleName =
                 ContentAddressing.ContentPackageConvention.SharedLoadingBundleName;
             BundleName = ContentAddressing.ContentPackageConvention.ContentBundle(Id);
+            CharacterAssets = characterAssets ?? new CharacterAssetProfile();
             var episodeArray = episodes?.ToArray() ?? Array.Empty<EpisodeDefinition>();
             if (episodeArray.Length == 0 || episodeArray.Any(episode => episode == null))
                 throw new ArgumentException("At least one valid episode is required.", nameof(episodes));
@@ -56,6 +66,7 @@ namespace Novels.Content
         public string MainCharacter { get; }
         public string MainLoadingBundleName { get; }
         public string BundleName { get; }
+        public CharacterAssetProfile CharacterAssets { get; }
         public IReadOnlyList<EpisodeDefinition> Episodes { get; }
 
         private static string Require(string value, string parameterName)

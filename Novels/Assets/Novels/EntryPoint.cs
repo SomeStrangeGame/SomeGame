@@ -21,7 +21,8 @@ namespace Novels
             {
                 var playerLoop = PlayerLoop.GetCurrentPlayerLoop();
                 PlayerLoopHelper.Initialize(ref playerLoop);
-                Application.targetFrameRate = 30;
+                var runtimeTuning = NovelRuntimeSettings.Load();
+                Application.targetFrameRate = runtimeTuning.TargetFrameRate;
 
                 _sessionCancellation = new CancellationTokenSource();
                 var environment = new ApplicationEnvironment(
@@ -30,7 +31,8 @@ namespace Novels
                     Application.version,
                     new Locale.LocaleProvider(CultureInfo.CurrentUICulture).Code,
                     Bundles.ContentPlatform.GetCurrent(),
-                    _targetCamera);
+                    _targetCamera,
+                    runtimeTuning);
                 _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
                 {
                     Environment = environment,

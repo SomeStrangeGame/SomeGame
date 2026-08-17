@@ -19,6 +19,7 @@ namespace Editor
             IEnumerable<string> audioIds,
             IEnumerable<string> backgrounds,
             IEnumerable<string> speakers,
+            IEnumerable<Novels.StoryContracts.StoryCameraAction> cameraActions,
             IEnumerable<string> errors)
         {
             AudioIds = Array.AsReadOnly(audioIds.Distinct(
@@ -27,12 +28,14 @@ namespace Editor
                 StringComparer.OrdinalIgnoreCase).ToArray());
             Speakers = Array.AsReadOnly(speakers.Distinct(
                 StringComparer.OrdinalIgnoreCase).ToArray());
+            CameraActions = Array.AsReadOnly(cameraActions.Distinct().ToArray());
             Errors = Array.AsReadOnly(errors.ToArray());
         }
 
         internal IReadOnlyList<string> AudioIds { get; }
         internal IReadOnlyList<string> Backgrounds { get; }
         internal IReadOnlyList<string> Speakers { get; }
+        internal IReadOnlyList<Novels.StoryContracts.StoryCameraAction> CameraActions { get; }
         internal IReadOnlyList<string> Errors { get; }
 
         internal static StoryReferenceIndex Build(
@@ -47,6 +50,7 @@ namespace Editor
             var audio = new List<string>();
             var backgrounds = new List<string>();
             var speakers = new List<string>();
+            var cameraActions = new List<Novels.StoryContracts.StoryCameraAction>();
             var errors = new List<string>();
             audio.AddRange(episode.Dependencies.AudioIds);
             backgrounds.AddRange(episode.Dependencies.BackgroundIds);
@@ -54,7 +58,12 @@ namespace Editor
             if (!File.Exists(compiledPath))
             {
                 errors.Add($"Compiled Ink story does not exist: {compiledPath}");
-                return new StoryReferenceIndex(audio, backgrounds, speakers, errors);
+                return new StoryReferenceIndex(
+                    audio,
+                    backgrounds,
+                    speakers,
+                    cameraActions,
+                    errors);
             }
 
             var parser = new Novels.StoryCommands.Entity();
@@ -75,10 +84,19 @@ namespace Editor
                 {
                     audio.Add(command.Data.AssetName);
                 }
+                else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
+                {
+                    cameraActions.Add(camera.Data.Action);
+                }
             }
             var sourcePath = Path.ChangeExtension(compiledPath, ".ink");
             if (!File.Exists(sourcePath))
-                return new StoryReferenceIndex(audio, backgrounds, speakers, errors);
+                return new StoryReferenceIndex(
+                    audio,
+                    backgrounds,
+                    speakers,
+                    cameraActions,
+                    errors);
 
             var sourceText = File.ReadAllText(sourcePath);
             var variables = _variable.Matches(sourceText)
@@ -102,8 +120,15 @@ namespace Editor
                     && dialogue.Data.Presentation
                         != Novels.StoryContracts.DialoguePresentation.Narrator)
                     speakers.Add(ResolveVariable(dialogue.Data.Speaker, variables));
+                else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
+                    cameraActions.Add(camera.Data.Action);
             }
-            return new StoryReferenceIndex(audio, backgrounds, speakers, errors);
+            return new StoryReferenceIndex(
+                audio,
+                backgrounds,
+                speakers,
+                cameraActions,
+                errors);
         }
 
         private static string ResolveVariable(

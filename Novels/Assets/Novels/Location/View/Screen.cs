@@ -227,9 +227,7 @@ namespace Novels.Location.View
 
         public async UniTask SetEffect(Effect effect, CancellationToken cancellationToken)
         {
-            foreach(var effectData in _effects)
-                effectData.EffectRoot.SetActive(effectData.Effect == effect);
-
+            ActivateEffect(effect);
             await UITransitions.Transition.Fade(
                 _effectCanvasGroup,
                 0f,
@@ -238,12 +236,37 @@ namespace Novels.Location.View
                 cancellationToken);
         }
 
+        public async UniTask FlashEffect(
+            Effect effect,
+            CancellationToken cancellationToken)
+        {
+            ActivateEffect(effect);
+            var halfDuration = _effectDuration / 2f;
+            await UITransitions.Transition.Fade(
+                _effectCanvasGroup,
+                0f,
+                1f,
+                halfDuration,
+                cancellationToken);
+            await UITransitions.Transition.Fade(
+                _effectCanvasGroup,
+                1f,
+                0f,
+                halfDuration,
+                cancellationToken);
+            ResetEffect();
+        }
+
         public void SetEffectImmediate(Effect effect)
+        {
+            ActivateEffect(effect);
+            _effectCanvasGroup.alpha = 1f;
+        }
+
+        private void ActivateEffect(Effect effect)
         {
             foreach(var effectData in _effects)
                 effectData.EffectRoot.SetActive(effectData.Effect == effect);
-
-            _effectCanvasGroup.alpha = 1f;
         }
     }
 }

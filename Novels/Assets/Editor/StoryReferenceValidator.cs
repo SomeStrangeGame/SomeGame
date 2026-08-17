@@ -12,12 +12,18 @@ namespace Editor
         internal static void Validate(
             string prefix,
             string mainCharacter,
+            Novels.Content.CharacterAssetProfile characterAssets,
             Novels.Content.EpisodeDefinition episode,
             ICollection<string> errors)
         {
             var index = StoryReferenceIndex.Build(prefix, episode);
             foreach (var error in index.Errors)
                 errors.Add(error);
+            foreach (var action in index.CameraActions)
+            {
+                if (!Novels.Location.CameraActionCapabilities.IsSupported(action))
+                    errors.Add($"Story camera action is not implemented: {action}");
+            }
             foreach (var audioId in index.AudioIds)
                 ValidateAudio(prefix, episode, audioId, errors);
 
@@ -35,7 +41,11 @@ namespace Editor
                 if (string.Equals(speaker, "Wardrobe", StringComparison.OrdinalIgnoreCase)
                     || string.Equals(speaker, mainCharacter, StringComparison.OrdinalIgnoreCase))
                     continue;
-                var assetPath = CharacterBodyPath(prefix, episode.Id, speaker);
+                var assetPath = CharacterBodyPath(
+                    prefix,
+                    episode.Id,
+                    speaker,
+                    characterAssets.ViewRoot);
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
                     && reported.Add(assetPath))
@@ -81,7 +91,8 @@ namespace Editor
         private static string CharacterBodyPath(
             string prefix,
             string episodeId,
-            string speaker)
+            string speaker,
+            string viewRoot)
         {
             if (string.IsNullOrWhiteSpace(speaker) || speaker.StartsWith("{", StringComparison.Ordinal))
                 return string.Empty;
@@ -89,7 +100,7 @@ namespace Editor
                 prefix,
                 episodeId,
                 speaker,
-                "View");
+                viewRoot);
         }
     }
 }

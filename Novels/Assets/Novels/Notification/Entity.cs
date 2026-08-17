@@ -13,6 +13,7 @@ namespace Novels.Notification
         {
             public GameObject NotificationPrefab;
             public CancellationToken CancellationToken;
+            public TimeSpan DisplayDuration;
             public Action<Diagnostics.NovelError> OnError;
         }
 
@@ -26,6 +27,8 @@ namespace Novels.Notification
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
+            if (ctx.DisplayDuration <= TimeSpan.Zero)
+                throw new ArgumentOutOfRangeException(nameof(ctx.DisplayDuration));
         }
 
         public void Init()
@@ -54,7 +57,7 @@ namespace Novels.Notification
 
                     await _screen.Show(_ctx.CancellationToken);
                     await UniTask.Delay(
-                        TimeSpan.FromSeconds(3),
+                        _ctx.DisplayDuration,
                         cancellationToken: _ctx.CancellationToken);
                     await _screen.Hide(_ctx.CancellationToken);
                 }

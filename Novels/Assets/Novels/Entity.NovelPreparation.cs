@@ -14,7 +14,7 @@ namespace Novels
                 Save.Entity saveSystem,
                 ContentAddressing.ContentAddresses addresses,
                 EpisodeRuntime episodeRuntime,
-                Bundles.Scope episodeBundles,
+                Bundles.MediaScope episodeBundles,
                 Loading.Entity mainLoading,
                 Localization.Entity localization,
                 UniTask<string> episodePreloading)
@@ -35,7 +35,7 @@ namespace Novels
             internal EpisodeScope EpisodeScope { get; }
             internal CancellationToken CancellationToken =>
                 EpisodeRuntime.CancellationToken;
-            internal Bundles.Scope EpisodeBundles { get; }
+            internal Bundles.MediaScope EpisodeBundles { get; }
             internal Loading.Entity MainLoading { get; }
             internal Localization.Entity Localization { get; }
             internal UniTask<string> EpisodePreloading { get; }
@@ -50,9 +50,15 @@ namespace Novels
                 _definition.Id,
                 _episode.Id);
             var episodeBundles = _ctx.Bundles
-                .CreateScope(episodeRuntime.CancellationToken)
+                .CreateMediaScope(
+                    _definition.Prefix,
+                    new Bundles.MediaManifest(
+                        _episode.Media.VideoIds,
+                        _episode.Media.AudioExtensions,
+                        _episode.Media.DefaultAudioExtension,
+                        _episode.Media.SilentAudioIds),
+                    episodeRuntime.CancellationToken)
                 .AddTo(episodeRuntime.Scope);
-            ConfigureMedia(episodeBundles);
 
             await _priorityLoader.Run(() => novelBundles
                 .GetAssetBundle(_definition.MainLoadingBundleName)
@@ -113,7 +119,7 @@ namespace Novels
 
         private async UniTask<string> PreloadEpisode(
             ContentAddressing.ContentAddresses addresses,
-            Bundles.Scope episodeBundles,
+            Bundles.MediaScope episodeBundles,
             CancellationToken cancellationToken)
         {
             var result = await UniTask.WhenAll(

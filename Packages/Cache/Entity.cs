@@ -137,6 +137,24 @@ namespace Cache
             return $"{file}.{Guid.NewGuid():N}.tmp";
         }
 
+        public string CreateTemporaryFile(string directoryPath)
+        {
+            return GetLocalPath(
+                $"{directoryPath}/{Guid.NewGuid():N}.tmp");
+        }
+
+        public void PruneTemporaryFiles(string directoryPath, DateTime olderThanUtc)
+        {
+            var directory = GetLocalPath(directoryPath, false);
+            if (!Directory.Exists(directory))
+                return;
+            foreach (var file in new DirectoryInfo(directory).GetFiles("*.tmp"))
+            {
+                if (file.LastWriteTimeUtc < olderThanUtc)
+                    file.Delete();
+            }
+        }
+
         public void CommitTemporaryFile(string temporaryPath, string finalPath)
         {
             var file = GetLocalPath(finalPath);

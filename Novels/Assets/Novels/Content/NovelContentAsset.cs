@@ -20,6 +20,28 @@ namespace Novels.Content
         }
 
         [Serializable]
+        private struct CharacterAssetProfileEntry
+        {
+            [SerializeField] private string _mainCharacterAssetId;
+            [SerializeField] private string _viewRoot;
+            [SerializeField] private string _childView;
+            [SerializeField] private string _backLayer;
+            [SerializeField] private string _middleLayer;
+            [SerializeField] private string _frontLayer;
+            [SerializeField] private string _defaultHairColor;
+
+            internal readonly CharacterAssetProfile ToProfile() =>
+                new(
+                    _mainCharacterAssetId,
+                    _viewRoot,
+                    _childView,
+                    _backLayer,
+                    _middleLayer,
+                    _frontLayer,
+                    _defaultHairColor);
+        }
+
+        [Serializable]
         private struct EpisodeEntry
         {
             [SerializeField] private string _id;
@@ -102,6 +124,7 @@ namespace Novels.Content
 
         [SerializeField] private string _id;
         [SerializeField] private string _mainCharacter;
+        [SerializeField] private CharacterAssetProfileEntry _characterAssets;
         [SerializeField] private AudioMixer _audioMixer;
         [SerializeField] private EpisodeEntry[] _episodes;
 
@@ -113,7 +136,8 @@ namespace Novels.Content
                 _id,
                 _mainCharacter,
                 (_episodes ?? Array.Empty<EpisodeEntry>())
-                    .Select(episode => episode.ToDefinition(_id, locale)));
+                    .Select(episode => episode.ToDefinition(_id, locale)),
+                _characterAssets.ToProfile());
         }
     }
 }

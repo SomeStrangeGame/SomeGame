@@ -15,6 +15,7 @@ namespace Novels.Location
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, UniTask<string>> ResolveVideoUrl;
             public CancellationToken CancellationToken;
+            public int CutSceneFallbackDelayMilliseconds;
 
             public Action<Diagnostics.NovelError> OnError;
         }
@@ -52,6 +53,8 @@ namespace Novels.Location
                     GetSprite = _ctx.GetSprite,
                     ResolveVideoUrl = _ctx.ResolveVideoUrl,
                     CancellationToken = _ctx.CancellationToken,
+                    CutSceneFallbackDelayMilliseconds =
+                        _ctx.CutSceneFallbackDelayMilliseconds,
                 });
         }
 
@@ -65,40 +68,11 @@ namespace Novels.Location
             StoryContracts.StoryBackgroundPresentation presentation)
             => _backgrounds.SetImmediate(assetName, presentation);
 
-        public async UniTask SetCamera(StoryContracts.StoryCameraAction action)
-        {
-            if (action == StoryContracts.StoryCameraAction.FadeIn)
-            {
-                await _screen.SetEffect(View.Screen.Effect.Dark, _ctx.CancellationToken);
-                return;
-            }
+        public UniTask SetCamera(StoryContracts.StoryCameraAction action) =>
+            ApplyCameraAction(action, false);
 
-            if (TryGetCameraEffect(action, out var effect))
-            {
-                await _screen.SetCamera(effect, _ctx.CancellationToken);
-                return;
-            }
-
-            ReportUnsupportedCameraAction(action);
-        }
-
-        public UniTask SetCameraImmediate(StoryContracts.StoryCameraAction action)
-        {
-            if (action == StoryContracts.StoryCameraAction.FadeIn)
-            {
-                _screen.SetEffectImmediate(View.Screen.Effect.Dark);
-                return UniTask.CompletedTask;
-            }
-
-            if (TryGetCameraEffect(action, out var effect))
-            {
-                _screen.SetCameraImmediate(effect);
-                return UniTask.CompletedTask;
-            }
-
-            ReportUnsupportedCameraAction(action);
-            return UniTask.CompletedTask;
-        }
+        public UniTask SetCameraImmediate(StoryContracts.StoryCameraAction action) =>
+            ApplyCameraAction(action, true);
 
         private void ReportUnsupportedCameraAction(
             StoryContracts.StoryCameraAction action)
@@ -109,35 +83,35 @@ namespace Novels.Location
                 $"Camera action '{action}' is not implemented."));
         }
 
-        private static bool TryGetCameraEffect(
+        private async UniTask ApplyCameraAction(
             StoryContracts.StoryCameraAction action,
-            out View.Screen.CameraEffect effect)
+            bool immediate)
         {
-            switch (action)
+            if (!CameraActionPlan.TryCreate(action, out var plan))
             {
-                case StoryContracts.StoryCameraAction.PanLeftToRight:
-                    effect = View.Screen.CameraEffect.LeftRight;
-                    return true;
-
-                case StoryContracts.StoryCameraAction.PanRightToLeft:
-                    effect = View.Screen.CameraEffect.RightLeft;
-                    return true;
-
-                case StoryContracts.StoryCameraAction.MoveToCenter:
-                    effect = View.Screen.CameraEffect.ToCenter;
-                    return true;
-
-                case StoryContracts.StoryCameraAction.MoveToLeft:
-                    effect = View.Screen.CameraEffect.ToLeft;
-                    return true;
-
-                case StoryContracts.StoryCameraAction.Shake:
-                    effect = View.Screen.CameraEffect.Shaking;
-                    return true;
-
-                default:
-                    effect = default;
-                    return false;
+                ReportUnsupportedCameraAction(action);
+                return;
+            }
+            switch (plan.Presentation)
+            {
+                case CameraActionPresentation.Motion:
+                    if (immediate)
+                        _screen.SetCameraImmediate(plan.Motion);
+                    else
+                        await _screen.SetCamera(plan.Motion, _ctx.CancellationToken);
+                    break;
+                case CameraActionPresentation.PersistentEffect:
+                    if (immediate)
+                        _screen.SetEffectImmediate(plan.Effect);
+                    else
+                        await _screen.SetEffect(plan.Effect, _ctx.CancellationToken);
+                    break;
+                case CameraActionPresentation.TransientEffect:
+                    if (immediate)
+                        _screen.ResetEffect();
+                    else
+                        await _screen.FlashEffect(plan.Effect, _ctx.CancellationToken);
+                    break;
             }
         }
 

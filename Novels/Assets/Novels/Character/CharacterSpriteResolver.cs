@@ -8,15 +8,9 @@ namespace Novels.Character
 {
     internal sealed class CharacterSpriteResolver
     {
-        private const string _mainCharacter = "MainCharacter";
-        private const string _childView = "Child";
-        private const string _backLayer = "Back";
-        private const string _middleLayer = "Middle";
-        private const string _frontLayer = "Front";
-        private const string _defaultHairColor = "Блонд";
-
         private readonly string _contentPrefix;
         private readonly string _episodeId;
+        private readonly Content.CharacterAssetProfile _profile;
         private readonly Func<string, UniTask<Sprite>> _getSprite;
         private readonly CancellationToken _cancellationToken;
         private readonly Dictionary<string, CharacterAppearanceState> _appearanceByCharacter =
@@ -25,6 +19,7 @@ namespace Novels.Character
         internal CharacterSpriteResolver(
             string contentPrefix,
             string episodeId,
+            Content.CharacterAssetProfile profile,
             Func<string, UniTask<Sprite>> getSprite,
             CancellationToken cancellationToken)
         {
@@ -34,13 +29,16 @@ namespace Novels.Character
             if (string.IsNullOrWhiteSpace(episodeId))
                 throw new ArgumentException("Episode ID must not be empty.", nameof(episodeId));
             _episodeId = episodeId;
+            _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _getSprite = getSprite ?? throw new ArgumentNullException(nameof(getSprite));
             _cancellationToken = cancellationToken;
         }
 
-        internal void ClearClothes() => GetAppearance(_mainCharacter).Clothes = null;
+        internal void ClearClothes() =>
+            GetAppearance(_profile.MainCharacterAssetId).Clothes = null;
 
-        internal void ClearHair() => GetAppearance(_mainCharacter).Hair = null;
+        internal void ClearHair() =>
+            GetAppearance(_profile.MainCharacterAssetId).Hair = null;
 
         internal async UniTask<CharacterSpriteSet> Resolve(
             StoryContracts.CharacterRenderRequest request,
@@ -49,13 +47,13 @@ namespace Novels.Character
             string mainCharacterHair)
         {
             var name = request.Name;
-            var view = "View";
+            var view = _profile.ViewRoot;
             var clothes = string.Empty;
             var hair = string.Empty;
             if (request.Role == StoryContracts.StorySpeakerRole.MainCharacter
                 || request.Role == StoryContracts.StorySpeakerRole.Wardrobe)
             {
-                name = _mainCharacter;
+                name = _profile.MainCharacterAssetId;
                 view = mainCharacterView;
                 clothes = mainCharacterClothes;
                 hair = mainCharacterHair;
@@ -96,7 +94,7 @@ namespace Novels.Character
             var sprite = await GetSprite(MainBodyPath(name, view, null));
             if (presentation.IsChild)
             {
-                view = $"{view}/{_childView}";
+                view = $"{view}/{_profile.ChildView}";
                 sprite = await GetSprite(MainBodyPath(name, view, null)) ?? sprite;
             }
             foreach (var candidate in presentation.AssetCandidates)
@@ -116,7 +114,7 @@ namespace Novels.Character
             StoryContracts.CharacterPresentation presentation)
         {
             if (presentation.IsChild)
-                view = $"{view}/{_childView}";
+                view = $"{view}/{_profile.ChildView}";
             foreach (var candidate in presentation.AssetCandidates)
             {
                 var sprite = await GetSprite(EmotionPath(name, view, candidate));
@@ -171,8 +169,8 @@ namespace Novels.Character
             foreach (var candidate in presentation.AssetCandidates)
             {
                 var (backCandidate, frontCandidate) = await UniTask.WhenAll(
-                    GetSprite(HairPath(name, candidate, _backLayer)),
-                    GetSprite(HairPath(name, candidate, _frontLayer)));
+                    GetSprite(HairPath(name, candidate, _profile.BackLayer)),
+                    GetSprite(HairPath(name, candidate, _profile.FrontLayer)));
                 if (backCandidate == null && frontCandidate == null)
                     continue;
                 appearance.Hair = candidate;
@@ -180,8 +178,8 @@ namespace Novels.Character
             }
             var resolved = appearance.Hair ?? hair;
             var (back, front) = await UniTask.WhenAll(
-                GetSprite(HairPath(name, resolved, _backLayer)),
-                GetSprite(HairPath(name, resolved, _frontLayer)));
+                GetSprite(HairPath(name, resolved, _profile.BackLayer)),
+                GetSprite(HairPath(name, resolved, _profile.FrontLayer)));
             return new CharacterHairSprites(back, front);
         }
 
@@ -195,18 +193,18 @@ namespace Novels.Character
             foreach (var candidate in presentation.AssetCandidates)
             {
                 var (backCandidate, middleCandidate, frontCandidate) = await UniTask.WhenAll(
-                    GetSprite(AccessoriesPath(name, candidate, _backLayer)),
-                    GetSprite(AccessoriesPath(name, candidate, _middleLayer)),
-                    GetSprite(AccessoriesPath(name, candidate, _frontLayer)));
+                    GetSprite(AccessoriesPath(name, candidate, _profile.BackLayer)),
+                    GetSprite(AccessoriesPath(name, candidate, _profile.MiddleLayer)),
+                    GetSprite(AccessoriesPath(name, candidate, _profile.FrontLayer)));
                 if (backCandidate == null && middleCandidate == null && frontCandidate == null)
                     continue;
                 appearance.Accessories = candidate;
                 break;
             }
             var (back, middle, front) = await UniTask.WhenAll(
-                GetSprite(AccessoriesPath(name, appearance.Accessories, _backLayer)),
-                GetSprite(AccessoriesPath(name, appearance.Accessories, _middleLayer)),
-                GetSprite(AccessoriesPath(name, appearance.Accessories, _frontLayer)));
+                GetSprite(AccessoriesPath(name, appearance.Accessories, _profile.BackLayer)),
+                GetSprite(AccessoriesPath(name, appearance.Accessories, _profile.MiddleLayer)),
+                GetSprite(AccessoriesPath(name, appearance.Accessories, _profile.FrontLayer)));
             return new CharacterAccessorySprites(back, middle, front);
         }
 
@@ -246,7 +244,7 @@ namespace Novels.Character
                 name,
                 candidate,
                 layer,
-                _defaultHairColor);
+                _profile.DefaultHairColor);
 
         private string AccessoriesPath(string name, string candidate, string layer) =>
             ContentAddressing.ContentAddressConvention.CharacterAccessory(

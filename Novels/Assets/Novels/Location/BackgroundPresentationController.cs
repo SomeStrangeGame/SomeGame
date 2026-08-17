@@ -13,8 +13,6 @@ namespace Novels.Location
             Immediate,
         }
 
-        private const int _cutSceneFallbackDelayMilliseconds = 3000;
-
         internal struct Ctx
         {
             internal View.Screen Screen;
@@ -23,6 +21,7 @@ namespace Novels.Location
             internal Func<string, UniTask<Sprite>> GetSprite;
             internal Func<string, UniTask<string>> ResolveVideoUrl;
             internal CancellationToken CancellationToken;
+            internal int CutSceneFallbackDelayMilliseconds;
         }
 
         private readonly Ctx _ctx;
@@ -40,6 +39,11 @@ namespace Novels.Location
                 throw new ArgumentNullException(nameof(ctx.GetSprite));
             if (ctx.ResolveVideoUrl == null)
                 throw new ArgumentNullException(nameof(ctx.ResolveVideoUrl));
+            if (ctx.CutSceneFallbackDelayMilliseconds <= 0)
+            {
+                throw new ArgumentOutOfRangeException(
+                    nameof(ctx.CutSceneFallbackDelayMilliseconds));
+            }
         }
 
         internal UniTask Set(
@@ -119,7 +123,7 @@ namespace Novels.Location
             if (mode == PlaybackMode.Live)
             {
                 await UniTask.Delay(
-                    _cutSceneFallbackDelayMilliseconds,
+                    _ctx.CutSceneFallbackDelayMilliseconds,
                     cancellationToken: _ctx.CancellationToken);
             }
             else

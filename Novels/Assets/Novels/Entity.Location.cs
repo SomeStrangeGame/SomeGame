@@ -22,6 +22,8 @@ namespace Novels
                 GetSprite = getSprite,
                 ResolveVideoUrl = resolveVideoUrl,
                 CancellationToken = cancellationToken,
+                CutSceneFallbackDelayMilliseconds =
+                    _ctx.RuntimeTuning.CutSceneFallbackDelayMilliseconds,
 
                 OnError = ReportError,
             }).AddTo(owner);

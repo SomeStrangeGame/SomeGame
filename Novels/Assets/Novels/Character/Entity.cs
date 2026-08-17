@@ -13,12 +13,14 @@ namespace Novels.Character
             public GameObject ScreenPrefab;
             public string ContentPrefix;
             public string EpisodeId;
+            public Content.CharacterAssetProfile AssetProfile;
             public Func<string, UniTask<Sprite>> GetSprite;
             public CancellationToken CancellationToken;
         }
 
         private readonly Ctx _ctx;
         private readonly CharacterSpriteResolver _spriteResolver;
+        private readonly Content.CharacterAssetProfile _assetProfile;
         private View.Screen _screen;
         private string _mainCharacterView;
         private string _mainCharacterClothes;
@@ -27,9 +29,12 @@ namespace Novels.Character
         public Entity(Ctx ctx)
         {
             _ctx = ctx;
+            _assetProfile = ctx.AssetProfile
+                ?? throw new ArgumentNullException(nameof(ctx.AssetProfile));
             _spriteResolver = new CharacterSpriteResolver(
                 ctx.ContentPrefix,
                 ctx.EpisodeId,
+                _assetProfile,
                 ctx.GetSprite,
                 ctx.CancellationToken);
         }
@@ -43,7 +48,7 @@ namespace Novels.Character
 
         public void SetMainCharacterView(string view)
         {
-            _mainCharacterView = $"View/{view}";
+            _mainCharacterView = _assetProfile.ViewPath(view);
         }
 
         public void SetMainCharacterClothes(string clothes)

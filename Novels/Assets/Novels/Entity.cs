@@ -22,6 +22,7 @@ namespace Novels
             internal string Locale;
             internal string PersistentDataPath;
             internal Camera TargetCamera;
+            internal NovelRuntimeTuning RuntimeTuning;
             internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>

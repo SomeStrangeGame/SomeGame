@@ -28,6 +28,8 @@ namespace Bundles
     internal sealed class ContentStoragePlanner
     {
         private const string _cacheRoot = "RemoteContent";
+        private const string _stagingRoot = "ContentStaging";
+        private static readonly TimeSpan _stagingLifetime = TimeSpan.FromDays(1);
 
         private sealed class Pin
         {
@@ -79,6 +81,9 @@ namespace Bundles
                 lock (_gate)
                 {
                     _cancellationToken.ThrowIfCancellationRequested();
+                    _cache.PruneTemporaryFiles(
+                        _stagingRoot,
+                        DateTime.UtcNow - _stagingLifetime);
                     var missingBytes = normalized.Sum(GetMissingBytes);
                     var protectedPaths = _pins.Keys
                         .Concat(normalized.Select(value => value.Path))
@@ -173,9 +178,9 @@ namespace Bundles
         private long GetMissingBytes(ContentCachePayload payload)
         {
             var localPath = _cache.GetLocalPath(payload.Path, false);
-            return !File.Exists(localPath) || new FileInfo(localPath).Length != payload.Size
-                ? payload.Size
-                : 0L;
+            if (!File.Exists(localPath))
+                return payload.Size;
+            return Math.Max(0L, payload.Size - new FileInfo(localPath).Length);
         }
 
         private long GetReservedBytes(IEnumerable<ContentCachePayload> additions)

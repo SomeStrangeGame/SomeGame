@@ -42,6 +42,13 @@ namespace Bundles
                     : _defaultContentFileCacheLimit,
                 ctx.CancellationToken,
                 ctx.OnLog);
+            var materializer = new ContentPayloadMaterializer(
+                source,
+                cache,
+                integrity,
+                storage,
+                ctx.CancellationToken,
+                ctx.OnLog);
             _releases = new ContentReleaseProvider(
                 source,
                 cache,
@@ -49,19 +56,13 @@ namespace Bundles
                 ctx.CancellationToken,
                 ctx.OnLog);
             _contentFiles = new ContentFileStore(
-                source,
-                cache,
-                integrity,
-                storage,
+                materializer,
                 ctx.CancellationToken);
             var payloads = new BundlePayloadLoader(
-                source,
                 cache,
-                integrity,
-                storage,
+                materializer,
                 platform,
-                ctx.CancellationToken,
-                ctx.OnLog);
+                ctx.CancellationToken);
             _delivery = new ContentDeliveryCoordinator(
                 _contentFiles,
                 payloads,
@@ -76,6 +77,19 @@ namespace Bundles
 
         public Scope CreateScope(CancellationToken cancellationToken) =>
             new(this, RequireSession(), cancellationToken);
+
+        public MediaScope CreateMediaScope(
+            string prefix,
+            MediaManifest manifest,
+            CancellationToken cancellationToken)
+        {
+            var session = RequireSession();
+            return new MediaScope(
+                this,
+                session,
+                cancellationToken,
+                CreateMediaResolver(session, prefix, manifest));
+        }
 
         public UniTask<ContentReleaseSnapshot> LoadReleaseAsync(
             string clientVersion,

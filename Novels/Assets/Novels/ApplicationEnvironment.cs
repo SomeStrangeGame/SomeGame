@@ -12,7 +12,8 @@ namespace Novels
             string clientVersion,
             string locale,
             string contentPlatform,
-            Camera targetCamera)
+            Camera targetCamera,
+            NovelRuntimeTuning runtimeTuning)
         {
             if (string.IsNullOrWhiteSpace(persistentDataPath))
                 throw new ArgumentException("Persistent data path must not be empty.", nameof(persistentDataPath));
@@ -29,6 +30,7 @@ namespace Novels
             ContentPlatform = contentPlatform;
             TargetCamera = targetCamera
                 ?? throw new ArgumentNullException(nameof(targetCamera));
+            RuntimeTuning = runtimeTuning;
         }
 
         internal CancellationToken CancellationToken { get; }
@@ -37,5 +39,6 @@ namespace Novels
         internal string Locale { get; }
         internal string ContentPlatform { get; }
         internal Camera TargetCamera { get; }
+        internal NovelRuntimeTuning RuntimeTuning { get; }
     }
 }
