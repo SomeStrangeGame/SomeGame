@@ -64,11 +64,11 @@ namespace Editor
             }
         }
 
-        private static IReadOnlyList<string> ValidateLoadedConfiguration(
+        private static ContentValidationReport ValidateLoadedConfiguration(
             bool validateBuiltOutput,
             string remoteBasePath = null)
         {
-            var errors = new List<string>();
+            var errors = new ContentValidationReport();
             var entryPoint = UnityEngine.Object.FindFirstObjectByType<Novels.EntryPoint>(
                 FindObjectsInactive.Include);
             if (entryPoint == null)
@@ -124,6 +124,7 @@ namespace Editor
                 ValidateContentAsset(
                     item.Asset,
                     item.Definition,
+                    item.StoryDependencies,
                     entry.ContentId,
                     errors);
             }
@@ -158,8 +159,9 @@ namespace Editor
         private static void ValidateContentAsset(
             Novels.Content.NovelContentAsset contentAsset,
             Novels.Content.NovelDefinition definition,
+            IReadOnlyDictionary<string, StoryDependencyManifest> storyDependencies,
             string expectedContentId,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             if (contentAsset.AudioMixer == null)
                 errors.Add($"Content asset '{contentAsset.name}' has no AudioMixer.");
@@ -205,6 +207,7 @@ namespace Editor
                     definition.MainCharacter,
                     definition.CharacterAssets,
                     episode,
+                    storyDependencies[episode.Id],
                     errors);
             }
         }

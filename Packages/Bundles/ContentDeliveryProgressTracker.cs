@@ -9,7 +9,7 @@ namespace Bundles
         private readonly long[] _sizes;
         private readonly long[] _downloaded;
         private readonly long _totalBytes;
-        private readonly Action<ContentDeliveryProgress> _onProgress;
+        private readonly ContentProgressReporter<ContentDeliveryProgress> _progress;
         private readonly object _gate = new();
         private long _downloadedBytes;
         private int _completedItems;
@@ -19,17 +19,20 @@ namespace Bundles
             string groupId,
             long[] sizes,
             long totalBytes,
-            Action<ContentDeliveryProgress> onProgress)
+            Action<ContentDeliveryProgress> onProgress,
+            Action<(LogType type, string message)> onLog)
         {
             _groupId = groupId;
             _sizes = sizes ?? throw new ArgumentNullException(nameof(sizes));
             _downloaded = new long[sizes.Length];
             _totalBytes = totalBytes;
-            _onProgress = onProgress;
+            _progress = new ContentProgressReporter<ContentDeliveryProgress>(
+                onProgress,
+                onLog);
         }
 
         internal void PublishInitial() =>
-            _onProgress?.Invoke(CreateSnapshot());
+            _progress.Report(CreateSnapshot());
 
         internal void ReportBytes(int index, long bytes)
         {
@@ -44,7 +47,7 @@ namespace Bundles
                 }
             }
             if (progress.HasValue)
-                _onProgress?.Invoke(progress.Value);
+                _progress.Report(progress.Value);
         }
 
         internal void Complete(int index)
@@ -57,7 +60,7 @@ namespace Bundles
                 _lastPublishedFrame = Time.frameCount;
                 progress = CreateSnapshot();
             }
-            _onProgress?.Invoke(progress);
+            _progress.Report(progress);
         }
 
         private void SetBytes(int index, long bytes)

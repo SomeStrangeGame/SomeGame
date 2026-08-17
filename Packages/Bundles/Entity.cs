@@ -13,13 +13,10 @@ namespace Bundles
             public IContentSource ContentSource;
             public string PersistentDataPath;
             public string Platform;
-            public long ContentFileCacheLimit;
+            public ContentDeliveryOptions DeliveryOptions;
             public CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
         }
-
-        private const long _defaultContentFileCacheLimit =
-            512L * 1024L * 1024L;
 
         private readonly ContentReleaseProvider _releases;
         private readonly ContentFileStore _contentFiles;
@@ -30,16 +27,16 @@ namespace Bundles
         {
             var source = ctx.ContentSource
                 ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
-            var cache = new Cache.Entity(ctx.PersistentDataPath).AddTo(this);
+            var cache = new Cache.Entity(ctx.PersistentDataPath);
+            var options = ctx.DeliveryOptions ?? ContentDeliveryOptions.Default;
             var platform = string.IsNullOrWhiteSpace(ctx.Platform)
                 ? ContentPlatform.GetCurrent()
                 : ctx.Platform;
             var integrity = new ContentIntegrityVerifier(ctx.CancellationToken);
             var storage = new ContentStoragePlanner(
                 cache,
-                ctx.ContentFileCacheLimit > 0
-                    ? ctx.ContentFileCacheLimit
-                    : _defaultContentFileCacheLimit,
+                options.CacheLimitBytes,
+                options.StagingLifetime,
                 ctx.CancellationToken,
                 ctx.OnLog);
             var materializer = new ContentPayloadMaterializer(
@@ -66,7 +63,9 @@ namespace Bundles
             _delivery = new ContentDeliveryCoordinator(
                 _contentFiles,
                 payloads,
-                storage);
+                storage,
+                options.MaximumParallelDownloads,
+                ctx.OnLog);
             _bundles = new BundleStore(payloads, ctx.CancellationToken);
         }
 

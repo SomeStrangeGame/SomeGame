@@ -232,6 +232,18 @@
 - `NovelRuntimeSettings` centralizes target frame rate, notification duration, and cut-scene fallback delay. A Resources asset is optional; absent settings retain the previous 30 FPS, 3-second notification, and 3000 ms fallback values.
 - Unity 6000.3.11f1 isolated compilation, existing-content validation, and the complete Android content build/validation passed without C# errors or warnings. Tests, Play Mode, and a device Player build were not run; no authored UI dimensions or visual assets were changed.
 
+## Architecture wave completed on 2026-08-17 (delivery policy and focused runtime plans)
+
+- Content progress is an observation-only boundary. `ContentProgressReporter<T>` disables a failing observer after its first exception and logs the failure without invalidating, deleting, retrying, or failing an otherwise valid payload.
+- `Cache` is now a pure filesystem assembly with no Unity engine, UniTask, or Disposable dependency. AssetBundle opening belongs to `Bundles.BundlePayloadLoader`; Cache owns only safe relative paths, atomic files, temporary files, and pruning.
+- `ContentDeliveryOptions` is the immutable policy for cache size, parallel download count, staging lifetime, and local/remote request behavior. `NovelRuntimeSettings` supplies compatible defaults and the composition root passes the same options to content sources and `Bundles.Entity`.
+- `BackgroundPresentationPlan` selects static image, looping video, cut-scene, or cut-scene-with-final-frame behavior. `BackgroundPresentationController` no longer combines recursive calls with boolean mode flags and explicitly requires a poster sprite for video sizing.
+- `ContentProjectIndex.Entry` owns one `StoryDependencyManifest` per episode. The shared `StoryDependencyAnalyzer` merges explicit dynamic dependencies with compiled/source Ink discovery, and the same manifest feeds delivery indexing and story-reference validation.
+- Editor validation accumulates `ContentValidationIssue` values with stable codes, severity, asset path, content ID, and episode ID. Existing validators that still emit plain messages are adapted to the generic validation code by `ContentValidationReport`.
+- Character resolution is split between `CharacterAppearanceStore`, `CharacterAssetAddressResolver`, and `CharacterSpriteSetLoader`; `CharacterSpriteResolver` now only maps a render request to those collaborators.
+- Runtime objects follow one lifetime owner: application bootstrap uses its local `using` scope, while `EpisodeRuntime` remains owned by its novel entity instead of also being disposed manually after execution.
+- Isolated Unity 6000.3.11f1 compilation/existing-content validation and the complete Android content build/validation passed without C# errors or warnings. The release still contains 4 bundles and 48 referenced external files. Tests, Play Mode, and a device Player build were not run; no scene, prefab, content asset, or UI dimension changed.
+
 ## Evidence Inspected
 
 - `ProjectSettings/{ProjectVersion,ProjectSettings,GraphicsSettings,QualitySettings,EditorBuildSettings}.asset`

@@ -1,4 +1,3 @@
-using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
 using System;
@@ -11,8 +10,7 @@ namespace Novels
 
         private Save.Entity CreateSaveSystem()
         {
-            var cache = new Cache.Entity(_ctx.PersistentDataPath)
-                .AddTo(this);
+            var cache = new Cache.Entity(_ctx.PersistentDataPath);
             var saveKey = $"Saves/{Uri.EscapeDataString(_definition.Id)}/"
                 + $"{Uri.EscapeDataString(_episode.Id)}/{_saveChoiceFileName}";
             var saveSystem = new Save.Entity(new Save.Entity.Ctx

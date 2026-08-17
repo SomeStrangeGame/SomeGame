@@ -2,13 +2,10 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using Cysharp.Threading.Tasks;
-using Disposable;
-using UnityEngine;
 
 namespace Cache
 {
-    public class Entity : BaseDisposable
+    public sealed class Entity
     {
         private readonly string _localPath;
 
@@ -20,11 +17,6 @@ namespace Cache
                     nameof(persistentDataPath));
 
             _localPath = Path.Combine(persistentDataPath, "CachedFiles");
-        }
-
-        public async UniTask<AssetBundle> BundleFromCache(string path)
-        {
-            return await AssetBundle.LoadFromFileAsync(GetLocalPath(path, false));
         }
 
         public string TextFromCache(string path)

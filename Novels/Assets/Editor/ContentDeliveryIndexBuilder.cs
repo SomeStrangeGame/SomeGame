@@ -19,7 +19,10 @@ namespace Editor
                 foreach (var episode in definition.Episodes)
                 {
                     var group = EpisodeGroup(definition.Id, episode.Id);
-                    foreach (var path in EpisodeFiles(definition.Prefix, episode))
+                    foreach (var path in EpisodeFiles(
+                                 definition.Prefix,
+                                 episode,
+                                 item.StoryDependencies[episode.Id]))
                     {
                         if (!owners.TryGetValue(path, out var groups))
                         {
@@ -80,7 +83,8 @@ namespace Editor
 
         private static IEnumerable<string> EpisodeFiles(
             string prefix,
-            Novels.Content.EpisodeDefinition episode)
+            Novels.Content.EpisodeDefinition episode,
+            StoryDependencyManifest references)
         {
             var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
             var storyFileName = Path.GetFileName(normalizedStoryPath);
@@ -99,7 +103,6 @@ namespace Editor
             yield return $"{storyDirectory}/{storyName}.json";
             yield return $"{storyDirectory}/{storyName}.ink.json";
 
-            var references = StoryReferenceIndex.Build(prefix, episode);
             foreach (var audioId in references.AudioIds)
             {
                 if (episode.Media.SilentAudioIds.Contains(

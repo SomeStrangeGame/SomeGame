@@ -76,6 +76,9 @@ namespace Bundles
             ContentPayloadRequest request,
             Action<long> onDownloadedBytes = null)
         {
+            var progress = new ContentProgressReporter<long>(
+                onDownloadedBytes,
+                _onLog);
             Operation operation;
             var ownsOperation = false;
             lock (_gate)
@@ -83,7 +86,7 @@ namespace Bundles
                 if (!_operations.TryGetValue(request.CachePath, out operation))
                 {
                     operation = new Operation();
-                    operation.Task = MaterializeCore(request, onDownloadedBytes).Preserve();
+                    operation.Task = MaterializeCore(request, progress).Preserve();
                     _operations.Add(request.CachePath, operation);
                     ownsOperation = true;
                 }
@@ -93,7 +96,7 @@ namespace Bundles
             {
                 var path = await operation.Task;
                 if (!ownsOperation)
-                    onDownloadedBytes?.Invoke(request.Size);
+                    progress.Report(request.Size);
                 return path;
             }
             finally
@@ -111,7 +114,7 @@ namespace Bundles
 
         private async UniTask<string> MaterializeCore(
             ContentPayloadRequest request,
-            Action<long> onDownloadedBytes)
+            ContentProgressReporter<long> progress)
         {
             var localPath = _cache.GetLocalPath(request.CachePath, false);
             var downloaded = false;
@@ -123,7 +126,7 @@ namespace Bundles
                     request.Sha256,
                     localPath,
                     true);
-                onDownloadedBytes?.Invoke(request.Size);
+                progress.Report(request.Size);
             }
             catch (OperationCanceledException)
                 when (_cancellationToken.IsCancellationRequested)
@@ -143,8 +146,7 @@ namespace Bundles
                     await _source.DownloadFile(
                         request.SourcePath,
                         temporaryPath,
-                        bytes => onDownloadedBytes?.Invoke(
-                            Math.Min(bytes, request.Size)));
+                        bytes => progress.Report(Math.Min(bytes, request.Size)));
                     _cancellationToken.ThrowIfCancellationRequested();
                     await _integrity.VerifyAsync(
                         request.Name,
@@ -159,7 +161,7 @@ namespace Bundles
                         request.Sha256,
                         true);
                     downloaded = true;
-                    onDownloadedBytes?.Invoke(request.Size);
+                    progress.Report(request.Size);
                 }
                 finally
                 {

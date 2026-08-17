@@ -9,11 +9,13 @@ namespace Bundles
     {
         private readonly ContentRequestRunner _requests;
 
-        public StreamingAssetsSource(CancellationToken cancellationToken)
+        public StreamingAssetsSource(
+            CancellationToken cancellationToken,
+            ContentRequestPolicy policy = null)
         {
             _requests = new ContentRequestRunner(
                 cancellationToken,
-                ContentRequestPolicy.LocalDefault);
+                policy ?? ContentRequestPolicy.LocalDefault);
         }
 
         public string GetUrl(string relativePath)

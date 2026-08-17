@@ -77,10 +77,7 @@
       "version": "file:../../Packages/Cache",
       "depth": 0,
       "source": "local",
-      "dependencies": {
-        "somegame.disposable": "0.0.1",
-        "com.cysharp.unitask": "2.5.10"
-      }
+      "dependencies": {}
     },
     "somegame.code-stripping-fix": {
       "version": "file:../../Packages/CodeStrippingFix",

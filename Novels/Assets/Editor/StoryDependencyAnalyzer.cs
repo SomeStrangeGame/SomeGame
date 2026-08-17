@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace Editor
 {
-    internal sealed class StoryReferenceIndex
+    internal static class StoryDependencyAnalyzer
     {
         private static readonly Regex _compiledString = new(
             "\"\\^(?<text>(?:\\\\.|[^\"\\\\])*)\"");
@@ -15,30 +15,7 @@ namespace Editor
             "^\\s*VAR\\s+(?<name>[^=\\s]+)\\s*=\\s*\"(?<value>[^\"]*)\"",
             RegexOptions.Multiline);
 
-        private StoryReferenceIndex(
-            IEnumerable<string> audioIds,
-            IEnumerable<string> backgrounds,
-            IEnumerable<string> speakers,
-            IEnumerable<Novels.StoryContracts.StoryCameraAction> cameraActions,
-            IEnumerable<string> errors)
-        {
-            AudioIds = Array.AsReadOnly(audioIds.Distinct(
-                StringComparer.OrdinalIgnoreCase).ToArray());
-            Backgrounds = Array.AsReadOnly(backgrounds.Distinct(
-                StringComparer.OrdinalIgnoreCase).ToArray());
-            Speakers = Array.AsReadOnly(speakers.Distinct(
-                StringComparer.OrdinalIgnoreCase).ToArray());
-            CameraActions = Array.AsReadOnly(cameraActions.Distinct().ToArray());
-            Errors = Array.AsReadOnly(errors.ToArray());
-        }
-
-        internal IReadOnlyList<string> AudioIds { get; }
-        internal IReadOnlyList<string> Backgrounds { get; }
-        internal IReadOnlyList<string> Speakers { get; }
-        internal IReadOnlyList<Novels.StoryContracts.StoryCameraAction> CameraActions { get; }
-        internal IReadOnlyList<string> Errors { get; }
-
-        internal static StoryReferenceIndex Build(
+        internal static StoryDependencyManifest Build(
             string prefix,
             Novels.Content.EpisodeDefinition episode)
         {
@@ -47,27 +24,59 @@ namespace Editor
                 "NovelTexts",
                 prefix,
                 episode.StoryPath);
-            var audio = new List<string>();
-            var backgrounds = new List<string>();
-            var speakers = new List<string>();
+            var audio = new List<string>(episode.Dependencies.AudioIds);
+            var backgrounds = new List<string>(episode.Dependencies.BackgroundIds);
+            var speakers = new List<string>(episode.Dependencies.SpeakerIds);
             var cameraActions = new List<Novels.StoryContracts.StoryCameraAction>();
-            var errors = new List<string>();
-            audio.AddRange(episode.Dependencies.AudioIds);
-            backgrounds.AddRange(episode.Dependencies.BackgroundIds);
-            speakers.AddRange(episode.Dependencies.SpeakerIds);
+            var issues = new List<ContentValidationIssue>();
             if (!File.Exists(compiledPath))
             {
-                errors.Add($"Compiled Ink story does not exist: {compiledPath}");
-                return new StoryReferenceIndex(
-                    audio,
-                    backgrounds,
-                    speakers,
-                    cameraActions,
-                    errors);
+                issues.Add(ContentValidationIssue.Error(
+                    ContentValidationCodes.StoryCompiledFileMissing,
+                    $"Compiled Ink story does not exist: {compiledPath}",
+                    compiledPath,
+                    episode.ContentId,
+                    episode.Id));
+                return CreateManifest();
             }
 
             var parser = new Novels.StoryCommands.Entity();
-            var json = File.ReadAllText(compiledPath);
+            AnalyzeCompiledStory(
+                File.ReadAllText(compiledPath),
+                episode,
+                parser,
+                audio,
+                cameraActions,
+                issues);
+
+            var sourcePath = Path.ChangeExtension(compiledPath, ".ink");
+            if (File.Exists(sourcePath))
+            {
+                AnalyzeSourceStory(
+                    sourcePath,
+                    parser,
+                    backgrounds,
+                    speakers,
+                    cameraActions);
+            }
+            return CreateManifest();
+
+            StoryDependencyManifest CreateManifest() => new(
+                audio,
+                backgrounds,
+                speakers,
+                cameraActions,
+                issues);
+        }
+
+        private static void AnalyzeCompiledStory(
+            string json,
+            Novels.Content.EpisodeDefinition episode,
+            Novels.StoryCommands.Entity parser,
+            ICollection<string> audio,
+            ICollection<Novels.StoryContracts.StoryCameraAction> cameraActions,
+            ICollection<ContentValidationIssue> issues)
+        {
             foreach (Match match in _compiledString.Matches(json))
             {
                 var source = Regex.Unescape(match.Groups["text"].Value);
@@ -76,9 +85,13 @@ namespace Editor
                 var result = parser.Parse(source, false);
                 if (!result.IsSuccess)
                 {
-                    errors.Add(
-                        $"Story command [{result.Error.Code}] in '{episode.StoryPath}': "
-                        + $"{result.Error.Message} Source: {source}");
+                    issues.Add(ContentValidationIssue.Error(
+                        result.Error.Code,
+                        $"Story command in '{episode.StoryPath}': "
+                        + $"{result.Error.Message} Source: {source}",
+                        episode.StoryPath,
+                        episode.ContentId,
+                        episode.Id));
                 }
                 else if (result.Command is Novels.StoryCommands.AudioStoryCommand command)
                 {
@@ -89,15 +102,15 @@ namespace Editor
                     cameraActions.Add(camera.Data.Action);
                 }
             }
-            var sourcePath = Path.ChangeExtension(compiledPath, ".ink");
-            if (!File.Exists(sourcePath))
-                return new StoryReferenceIndex(
-                    audio,
-                    backgrounds,
-                    speakers,
-                    cameraActions,
-                    errors);
+        }
 
+        private static void AnalyzeSourceStory(
+            string sourcePath,
+            Novels.StoryCommands.Entity parser,
+            ICollection<string> backgrounds,
+            ICollection<string> speakers,
+            ICollection<Novels.StoryContracts.StoryCameraAction> cameraActions)
+        {
             var sourceText = File.ReadAllText(sourcePath);
             var variables = _variable.Matches(sourceText)
                 .Cast<Match>()
@@ -123,12 +136,6 @@ namespace Editor
                 else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
                     cameraActions.Add(camera.Data.Action);
             }
-            return new StoryReferenceIndex(
-                audio,
-                backgrounds,
-                speakers,
-                cameraActions,
-                errors);
         }
 
         private static string ResolveVariable(

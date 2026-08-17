@@ -49,65 +49,95 @@ namespace Novels.Location
         internal UniTask Set(
             string assetName,
             StoryContracts.StoryBackgroundPresentation presentation) =>
-            Set(assetName, presentation, PlaybackMode.Live, false, IsCutScene(presentation));
+            Set(assetName, presentation, PlaybackMode.Live);
 
         internal UniTask SetImmediate(
             string assetName,
             StoryContracts.StoryBackgroundPresentation presentation) =>
-            Set(assetName, presentation, PlaybackMode.Immediate, false, IsCutScene(presentation));
+            Set(assetName, presentation, PlaybackMode.Immediate);
 
         private async UniTask Set(
             string assetName,
             StoryContracts.StoryBackgroundPresentation presentation,
-            PlaybackMode mode,
-            bool forceNoVideo,
-            bool cutScene)
+            PlaybackMode mode)
         {
             _ctx.TargetCamera.backgroundColor = presentation.BackgroundColor
                 == StoryContracts.StoryBackgroundColor.White
                     ? Color.white
                     : Color.black;
-            if (mode == PlaybackMode.Live)
-                await _ctx.Screen.HideImage(_ctx.CancellationToken);
-            else
-                _ctx.Screen.HideImageImmediate();
+            await Hide(mode);
             _ctx.Screen.ResetCamera();
             _ctx.Screen.ResetEffect();
 
-            var sprite = await _ctx.GetSprite(assetName)
-                .AttachExternalCancellation(_ctx.CancellationToken);
+            var resources = await UniTask.WhenAll(
+                _ctx.GetSprite(assetName)
+                    .AttachExternalCancellation(_ctx.CancellationToken),
+                _ctx.ResolveVideoUrl(assetName)
+                    .AttachExternalCancellation(_ctx.CancellationToken));
+            var sprite = resources.Item1;
+            var url = resources.Item2;
+            var plan = BackgroundPresentationPlan.Create(
+                assetName,
+                presentation,
+                !string.IsNullOrEmpty(url));
             _ctx.Screen.SetImage(sprite);
-            var url = await _ctx.ResolveVideoUrl(assetName);
-            if (!forceNoVideo && !string.IsNullOrEmpty(url))
+            if (!plan.UsesVideo)
             {
-                var playbackStatus = await _ctx.VideoPlayback.Play(
-                    new VideoPlaybackRequest(
-                        url,
-                        sprite.texture.width,
-                        sprite.texture.height,
-                        !cutScene,
-                        mode == PlaybackMode.Immediate && cutScene
-                            ? Time.timeScale * 5f
-                            : Time.timeScale));
-                var videoReady = playbackStatus == VideoPlaybackStatus.Ready;
-                _ctx.Screen.SetEnabledImage(!videoReady);
-                _ctx.Screen.SetEnabledVideo(videoReady);
-                await Show(mode);
-                if (!cutScene)
-                    return;
-                if (videoReady)
-                    playbackStatus = await _ctx.VideoPlayback.WaitForCompletion();
-                if (playbackStatus == VideoPlaybackStatus.Failed)
-                    await WaitForCutSceneFallback(mode);
-                if (!presentation.KeepFinalVideoFrame)
-                    await Set(assetName, presentation, mode, true, false);
+                await ShowStatic(sprite, mode);
                 return;
             }
 
+            if (sprite == null)
+            {
+                throw new InvalidOperationException(
+                    $"Video background '{plan.AssetName}' requires a poster sprite.");
+            }
+            var playbackStatus = await _ctx.VideoPlayback.Play(
+                new VideoPlaybackRequest(
+                    url,
+                    sprite.texture.width,
+                    sprite.texture.height,
+                    !plan.IsCutScene,
+                    mode == PlaybackMode.Immediate && plan.IsCutScene
+                        ? Time.timeScale * 5f
+                        : Time.timeScale));
+            var videoReady = playbackStatus == VideoPlaybackStatus.Ready;
+            _ctx.Screen.SetEnabledImage(!videoReady);
+            _ctx.Screen.SetEnabledVideo(videoReady);
+            await Show(mode);
+            if (!plan.IsCutScene)
+                return;
+            if (videoReady)
+                playbackStatus = await _ctx.VideoPlayback.WaitForCompletion();
+            if (playbackStatus == VideoPlaybackStatus.Failed)
+                await WaitForCutSceneFallback(mode);
+            if (!plan.KeepsFinalVideoFrame)
+                await ReturnToPoster(sprite, mode);
+        }
+
+        private async UniTask ShowStatic(Sprite sprite, PlaybackMode mode)
+        {
             _ctx.VideoPlayback.Stop();
+            _ctx.Screen.SetImage(sprite);
             _ctx.Screen.SetEnabledImage(true);
             _ctx.Screen.SetEnabledVideo(false);
             await Show(mode);
+        }
+
+        private async UniTask ReturnToPoster(Sprite sprite, PlaybackMode mode)
+        {
+            await Hide(mode);
+            _ctx.Screen.ResetCamera();
+            _ctx.Screen.ResetEffect();
+            await ShowStatic(sprite, mode);
+        }
+
+        private UniTask Hide(PlaybackMode mode)
+        {
+            if (mode == PlaybackMode.Live)
+                return _ctx.Screen.HideImage(_ctx.CancellationToken);
+            _ctx.Screen.HideImageImmediate();
+            return UniTask.CompletedTask;
         }
 
         private UniTask Show(PlaybackMode mode)
@@ -131,9 +161,5 @@ namespace Novels.Location
                 await UniTask.Yield(_ctx.CancellationToken);
             }
         }
-
-        private static bool IsCutScene(
-            StoryContracts.StoryBackgroundPresentation presentation) =>
-            presentation.Type == StoryContracts.StoryBackgroundType.CutScene;
     }
 }

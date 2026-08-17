@@ -12,16 +12,21 @@ namespace Editor
             internal Entry(
                 Novels.Catalog.NovelCatalogEntry catalogEntry,
                 Novels.Content.NovelContentAsset asset,
-                Novels.Content.NovelDefinition definition)
+                Novels.Content.NovelDefinition definition,
+                IDictionary<string, StoryDependencyManifest> storyDependencies)
             {
                 CatalogEntry = catalogEntry;
                 Asset = asset;
                 Definition = definition;
+                StoryDependencies = new ReadOnlyDictionary<string, StoryDependencyManifest>(
+                    storyDependencies);
             }
 
             internal Novels.Catalog.NovelCatalogEntry CatalogEntry { get; }
             internal Novels.Content.NovelContentAsset Asset { get; }
             internal Novels.Content.NovelDefinition Definition { get; }
+            internal IReadOnlyDictionary<string, StoryDependencyManifest>
+                StoryDependencies { get; }
         }
 
         private ContentProjectIndex(
@@ -120,7 +125,19 @@ namespace Editor
                     continue;
                 }
 
-                entries.Add(new Entry(catalogEntry, asset, definition));
+                var storyDependencies = new Dictionary<string, StoryDependencyManifest>(
+                    StringComparer.OrdinalIgnoreCase);
+                foreach (var episode in definition.Episodes)
+                {
+                    storyDependencies.Add(
+                        episode.Id,
+                        StoryDependencyAnalyzer.Build(definition.Prefix, episode));
+                }
+                entries.Add(new Entry(
+                    catalogEntry,
+                    asset,
+                    definition,
+                    storyDependencies));
                 AddBundle(
                     groups,
                     definition.BundleName,

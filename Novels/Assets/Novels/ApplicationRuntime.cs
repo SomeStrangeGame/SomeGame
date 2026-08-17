@@ -72,8 +72,7 @@ namespace Novels
 
         internal async UniTask Run()
         {
-            using var bootstrap = new Bootstrap.Entity(_environment.CancellationToken)
-                .AddTo(this);
+            using var bootstrap = new Bootstrap.Entity(_environment.CancellationToken);
             CatalogFlow.Resources catalog = null;
             Catalog.NovelCatalogEntry content = null;
             var state = ApplicationFlowState.LoadingCatalog;
@@ -197,6 +196,7 @@ namespace Novels
                 ContentSource = _ctx.ContentSource,
                 PersistentDataPath = _environment.PersistentDataPath,
                 Platform = _environment.ContentPlatform,
+                DeliveryOptions = _environment.RuntimeTuning.ContentDelivery,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _ctx.OnLog,
             });

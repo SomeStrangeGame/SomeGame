@@ -7,19 +7,26 @@ namespace Bundles
 {
     internal sealed class ContentDeliveryCoordinator
     {
-        private const int _maximumParallelDownloads = 3;
         private readonly ContentFileStore _files;
         private readonly BundlePayloadLoader _bundles;
         private readonly ContentStoragePlanner _storage;
+        private readonly int _maximumParallelDownloads;
+        private readonly Action<(UnityEngine.LogType type, string message)> _onLog;
 
         internal ContentDeliveryCoordinator(
             ContentFileStore files,
             BundlePayloadLoader bundles,
-            ContentStoragePlanner storage)
+            ContentStoragePlanner storage,
+            int maximumParallelDownloads,
+            Action<(UnityEngine.LogType type, string message)> onLog)
         {
             _files = files ?? throw new ArgumentNullException(nameof(files));
             _bundles = bundles ?? throw new ArgumentNullException(nameof(bundles));
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            _maximumParallelDownloads = maximumParallelDownloads > 0
+                ? maximumParallelDownloads
+                : throw new ArgumentOutOfRangeException(nameof(maximumParallelDownloads));
+            _onLog = onLog;
         }
 
         internal async UniTask<ContentDeliveryLease> Prepare(
@@ -67,7 +74,8 @@ namespace Bundles
                     .Concat(files.Select(value => value.Size))
                     .ToArray(),
                 group.Size,
-                onProgress);
+                onProgress,
+                _onLog);
             progress.PublishInitial();
             try
             {

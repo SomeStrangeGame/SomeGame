@@ -29,7 +29,6 @@ namespace Bundles
     {
         private const string _cacheRoot = "RemoteContent";
         private const string _stagingRoot = "ContentStaging";
-        private static readonly TimeSpan _stagingLifetime = TimeSpan.FromDays(1);
 
         private sealed class Pin
         {
@@ -45,6 +44,7 @@ namespace Bundles
 
         private readonly Cache.Entity _cache;
         private readonly long _cacheLimit;
+        private readonly TimeSpan _stagingLifetime;
         private readonly CancellationToken _cancellationToken;
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Dictionary<string, Pin> _pins = new(
@@ -54,6 +54,7 @@ namespace Bundles
         internal ContentStoragePlanner(
             Cache.Entity cache,
             long cacheLimit,
+            TimeSpan stagingLifetime,
             CancellationToken cancellationToken,
             Action<(LogType type, string message)> onLog)
         {
@@ -61,6 +62,9 @@ namespace Bundles
             _cacheLimit = cacheLimit > 0
                 ? cacheLimit
                 : throw new ArgumentOutOfRangeException(nameof(cacheLimit));
+            _stagingLifetime = stagingLifetime > TimeSpan.Zero
+                ? stagingLifetime
+                : throw new ArgumentOutOfRangeException(nameof(stagingLifetime));
             _cancellationToken = cancellationToken;
             _onLog = onLog;
         }

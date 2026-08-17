@@ -36,7 +36,9 @@ namespace Novels
                 _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
                 {
                     Environment = environment,
-                    ContentSource = CreateContentSource(_sessionCancellation.Token),
+                    ContentSource = CreateContentSource(
+                        _sessionCancellation.Token,
+                        runtimeTuning.ContentDelivery),
                     OnLog = data =>
                     {
                         using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
@@ -58,15 +60,19 @@ namespace Novels
         }
 
         private Bundles.IContentSource CreateContentSource(
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            Bundles.ContentDeliveryOptions options)
         {
 #if UNITY_EDITOR
-            return new Bundles.StreamingAssetsSource(cancellationToken);
+            return new Bundles.StreamingAssetsSource(
+                cancellationToken,
+                options.LocalRequestPolicy);
 #else
             var configuration = ContentRuntimeConfiguration.Load();
             return new Bundles.HttpContentSource(
                 configuration.RemoteContentBaseUrl,
-                cancellationToken);
+                cancellationToken,
+                options.RemoteRequestPolicy);
 #endif
         }
 

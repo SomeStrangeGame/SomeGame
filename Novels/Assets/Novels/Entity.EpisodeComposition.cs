@@ -90,14 +90,7 @@ namespace Novels
             state.EpisodeRuntime.Configure(
                 novelProcess.ShowNovelProcess,
                 state.SaveSystem.FlushAsync);
-            try
-            {
-                return await state.EpisodeRuntime.Run();
-            }
-            finally
-            {
-                state.EpisodeRuntime.Dispose();
-            }
+            return await state.EpisodeRuntime.Run();
         }
     }
 }

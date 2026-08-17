@@ -14,15 +14,21 @@ namespace Editor
             string mainCharacter,
             Novels.Content.CharacterAssetProfile characterAssets,
             Novels.Content.EpisodeDefinition episode,
-            ICollection<string> errors)
+            StoryDependencyManifest index,
+            ContentValidationReport errors)
         {
-            var index = StoryReferenceIndex.Build(prefix, episode);
-            foreach (var error in index.Errors)
-                errors.Add(error);
+            foreach (var issue in index.Issues)
+                errors.Add(issue);
             foreach (var action in index.CameraActions)
             {
                 if (!Novels.Location.CameraActionCapabilities.IsSupported(action))
-                    errors.Add($"Story camera action is not implemented: {action}");
+                {
+                    errors.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.StoryCameraUnsupported,
+                        $"Story camera action is not implemented: {action}",
+                        contentId: episode.ContentId,
+                        episodeId: episode.Id));
+                }
             }
             foreach (var audioId in index.AudioIds)
                 ValidateAudio(prefix, episode, audioId, errors);
@@ -34,7 +40,14 @@ namespace Editor
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
                     && reported.Add(assetPath))
-                    errors.Add($"Story background does not exist: {assetPath}");
+                {
+                    errors.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.StoryBackgroundMissing,
+                        $"Story background does not exist: {assetPath}",
+                        assetPath,
+                        episode.ContentId,
+                        episode.Id));
+                }
             }
             foreach (var speaker in index.Speakers)
             {
@@ -49,7 +62,14 @@ namespace Editor
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
                     && reported.Add(assetPath))
-                    errors.Add($"Story character body does not exist: {assetPath}");
+                {
+                    errors.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.StoryCharacterMissing,
+                        $"Story character body does not exist: {assetPath}",
+                        assetPath,
+                        episode.ContentId,
+                        episode.Id));
+                }
             }
         }
 
@@ -57,7 +77,7 @@ namespace Editor
             string prefix,
             Novels.Content.EpisodeDefinition episode,
             string assetName,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             if (episode.Media.SilentAudioIds.Contains(assetName, StringComparer.OrdinalIgnoreCase))
                 return;
@@ -72,7 +92,14 @@ namespace Editor
                 prefix,
                 assetName + (Path.GetExtension(assetName).Length == 0 ? extension : string.Empty));
             if (!File.Exists(path))
-                errors.Add($"Story audio does not exist: {path}");
+            {
+                errors.Add(ContentValidationIssue.Error(
+                    ContentValidationCodes.StoryAudioMissing,
+                    $"Story audio does not exist: {path}",
+                    path,
+                    episode.ContentId,
+                    episode.Id));
+            }
         }
 
         private static string LocationPath(

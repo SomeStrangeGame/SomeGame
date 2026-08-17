@@ -80,8 +80,9 @@ namespace Bundles
 
         private async UniTask<AssetBundle> Open(string cachePath)
         {
-            var bundle = await _cache.BundleFromCache(cachePath)
-                .AttachExternalCancellation(_cancellationToken);
+            var bundle = await AssetBundle.LoadFromFileAsync(
+                    _cache.GetLocalPath(cachePath, false))
+                .ToUniTask(cancellationToken: _cancellationToken);
             if (bundle == null)
             {
                 throw new ContentIntegrityException(
