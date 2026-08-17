@@ -1,5 +1,6 @@
 using System.IO;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
 
 namespace Editor
@@ -26,8 +27,22 @@ namespace Editor
         [MenuItem("Build/All Bundles")]
         private static void BuildAllAssetBundles()
         {
+            BuildAndroidBundles();
+        }
+
+        public static void BuildAndroidBundles()
+        {
             NovelContentValidator.ValidateOrThrow();
             AssetBundleBuildPipeline.Build(BuildTarget.Android);
+            NovelContentValidator.ValidateBuiltOutputOrThrow();
+        }
+
+        public static void BuildAndroidBundlesBatch()
+        {
+            EditorSceneManager.OpenScene(
+                "Assets/Novels/Novels.unity",
+                OpenSceneMode.Single);
+            BuildAndroidBundles();
         }
     }
 }

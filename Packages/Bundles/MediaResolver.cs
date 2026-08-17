@@ -8,27 +8,29 @@ namespace Bundles
 {
     internal sealed class MediaResolver
     {
-        private readonly string _prefix;
         private readonly Cache.Entity _cache;
         private readonly StreamingAssetsSource _source;
         private readonly CancellationToken _cancellationToken;
         private readonly Dictionary<string, string> _videos = new(StringComparer.OrdinalIgnoreCase);
+        private string _prefix;
         private MediaManifest _manifest = new(Array.Empty<string>());
 
         internal MediaResolver(
-            string prefix,
             Cache.Entity cache,
             StreamingAssetsSource source,
             CancellationToken cancellationToken)
         {
-            _prefix = prefix;
             _cache = cache;
             _source = source;
             _cancellationToken = cancellationToken;
         }
 
-        internal void Configure(MediaManifest manifest)
+        internal void Configure(string prefix, MediaManifest manifest)
         {
+            if (string.IsNullOrWhiteSpace(prefix))
+                throw new ArgumentException("Media prefix is required.", nameof(prefix));
+
+            _prefix = prefix;
             _manifest = manifest ?? throw new ArgumentNullException(nameof(manifest));
             _videos.Clear();
         }

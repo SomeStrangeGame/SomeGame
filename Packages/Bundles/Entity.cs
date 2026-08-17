@@ -13,7 +13,6 @@ namespace Bundles
     {
         public struct Ctx
         {
-            public string Prefix;
             public CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
             public Action<BundleFailure> OnFailure;
@@ -38,7 +37,7 @@ namespace Bundles
             _ctx = ctx;
             _cache = new Cache.Entity(Application.persistentDataPath).AddTo(this);
             _source = new StreamingAssetsSource(ctx.CancellationToken);
-            _media = new MediaResolver(ctx.Prefix, _cache, _source, ctx.CancellationToken);
+            _media = new MediaResolver(_cache, _source, ctx.CancellationToken);
         }
 
         protected override void OnDispose()
@@ -121,9 +120,9 @@ namespace Bundles
             return _prefabs[assetKey];
         }
 
-        public void ConfigureMedia(MediaManifest manifest)
+        public void ConfigureMedia(string prefix, MediaManifest manifest)
         {
-            _media.Configure(manifest);
+            _media.Configure(prefix, manifest);
         }
 
         public UniTask<string> ResolveVideoUrl(string assetName) =>

@@ -1,0 +1,33 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.11f1
+CRC: 616707729
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: f709049ab1a153148a6063e4f267f688
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 902c8640814cf55d0da3851636e0056d
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 85b54e934ec7e0c863f6d74f97e1614c
+HashAppended: 0
+ClassTypes:
+- Class: 114
+  Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 241
+  Script: {instanceID: 0}
+- Class: 243
+  Script: {instanceID: 0}
+- Class: 245
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers:
+- AssemblyName: Novels.Content
+  ClassName: Novels.Content.NovelContentAsset/AudioExtensionEntry
+- AssemblyName: Novels.Content
+  ClassName: Novels.Content.NovelContentAsset/EpisodeEntry
+Assets:
+- Assets/RemoteAssets/Content/TZM_1.asset
+Dependencies: []

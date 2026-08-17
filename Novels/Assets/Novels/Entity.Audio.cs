@@ -14,7 +14,7 @@ namespace Novels
             return new Audio.Entity(new Audio.Entity.Ctx
             {
                 ResolveAudioUrl = resolveAudioUrl,
-                AudioMixer = _ctx.Content.AudioMixer,
+                AudioMixer = _audioMixer,
                 CancellationToken = _ctx.CancellationToken,
 
                 OnLog = _ctx.OnLog,

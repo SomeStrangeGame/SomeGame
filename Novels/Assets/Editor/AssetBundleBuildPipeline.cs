@@ -74,7 +74,7 @@ namespace Editor
                 File.WriteAllText(
                     Path.Combine(bundleDirectory, "version.txt"),
                     hash,
-                    Encoding.UTF8);
+                    new UTF8Encoding(false));
             }
         }
 

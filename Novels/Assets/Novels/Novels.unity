@@ -352,7 +352,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e48598c4e9e74c8b97fd78dae12d82d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _content: {fileID: 11400000, guid: 7cf435ba470b40ac914cb1cd4e65cbcf, type: 2}
+  _contentId: TZM_1
   _logs: 255
 --- !u!1 &1371491167
 GameObject:

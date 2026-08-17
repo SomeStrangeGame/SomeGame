@@ -7,6 +7,34 @@ namespace Novels
 {
     internal partial class Entity
     {
+        private async UniTask<Content.NovelDefinition> LoadContent(
+            Bundles.Entity bundles)
+        {
+            await _priorityLoader.Run(() => bundles
+                .GetAssetBundle(_contentBundleName)
+                .AttachExternalCancellation(_ctx.CancellationToken));
+
+            var content = await _priorityLoader.Run(() => bundles
+                .GetBundledSO<Content.NovelContentAsset>(
+                    _contentBundleName,
+                    GetContentAssetName(_ctx.ContentId))
+                .AttachExternalCancellation(_ctx.CancellationToken));
+            if (content == null)
+            {
+                throw new System.InvalidOperationException(
+                    $"Content '{_ctx.ContentId}' could not be loaded from "
+                    + $"AssetBundle '{_contentBundleName}'.");
+            }
+
+            _audioMixer = content.AudioMixer;
+            return content.ToDefinition();
+        }
+
+        private static string GetContentAssetName(string contentId)
+        {
+            return $"Assets/RemoteAssets/Content/{contentId}.asset";
+        }
+
         private sealed class BootstrapState
         {
             internal Save.Entity SaveSystem;
@@ -30,7 +58,6 @@ namespace Novels
         {
             state.SaveSystem = CreateSaveSystem();
             state.PathGetter = CreatePathGetter();
-            state.Bundles = CreateBundles();
             state.EpisodeRuntime = CreateEpisodeRuntime().AddTo(this);
             state.EpisodeScope = state.EpisodeRuntime.Scope;
             state.EpisodeBundles = state.Bundles.CreateScope()

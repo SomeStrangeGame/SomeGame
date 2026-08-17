@@ -12,11 +12,13 @@ namespace Editor
     internal static class NovelContentValidator
     {
         private const string _menuPath = "Novels/Validate Content";
+        private const string _contentBundleName = "novels_content";
+        private const string _contentRoot = "Assets/RemoteAssets/Content";
 
         [MenuItem(_menuPath)]
         private static void ValidateFromMenu()
         {
-            var errors = ValidateLoadedConfiguration();
+            var errors = ValidateLoadedConfiguration(true);
             if (errors.Count == 0)
             {
                 Debug.Log("Novel content validation completed without errors.");
@@ -30,13 +32,23 @@ namespace Editor
         public static void ValidateBatch()
         {
             EditorSceneManager.OpenScene("Assets/Novels/Novels.unity", OpenSceneMode.Single);
-            ValidateOrThrow();
+            ValidateOrThrow(true);
             Debug.Log("Novel content batch validation completed without errors.");
         }
 
         internal static void ValidateOrThrow()
         {
-            var errors = ValidateLoadedConfiguration();
+            ValidateOrThrow(false);
+        }
+
+        internal static void ValidateBuiltOutputOrThrow()
+        {
+            ValidateOrThrow(true);
+        }
+
+        private static void ValidateOrThrow(bool validateBuiltOutput)
+        {
+            var errors = ValidateLoadedConfiguration(validateBuiltOutput);
             if (errors.Count > 0)
             {
                 throw new InvalidOperationException(
@@ -45,7 +57,8 @@ namespace Editor
             }
         }
 
-        private static IReadOnlyList<string> ValidateLoadedConfiguration()
+        private static IReadOnlyList<string> ValidateLoadedConfiguration(
+            bool validateBuiltOutput)
         {
             var errors = new List<string>();
             var entryPoint = UnityEngine.Object.FindFirstObjectByType<Novels.EntryPoint>(
@@ -57,22 +70,41 @@ namespace Editor
             }
 
             var serializedEntryPoint = new SerializedObject(entryPoint);
-            var contentProperty = serializedEntryPoint.FindProperty("_content");
-            if (contentProperty == null)
+            var contentIdProperty = serializedEntryPoint.FindProperty("_contentId");
+            var contentId = contentIdProperty?.stringValue;
+            if (string.IsNullOrWhiteSpace(contentId))
             {
-                errors.Add("EntryPoint._content cannot be read.");
+                errors.Add("EntryPoint._contentId is empty or cannot be read.");
                 return errors;
             }
 
-            if (contentProperty.objectReferenceValue is Novels.Content.NovelContentAsset contentAsset)
-                ValidateContentAsset(contentAsset, errors);
-            else
-                errors.Add("EntryPoint has no NovelContentAsset configured.");
+            var contentPath = $"{_contentRoot}/{contentId}.asset";
+            var contentAsset = AssetDatabase.LoadAssetAtPath<Novels.Content.NovelContentAsset>(
+                contentPath);
+            if (contentAsset == null)
+            {
+                errors.Add($"NovelContentAsset does not exist: {contentPath}");
+                return errors;
+            }
+
+            var assignedBundle = AssetDatabase.GetImplicitAssetBundleName(contentPath);
+            if (!string.Equals(
+                    assignedBundle,
+                    _contentBundleName,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                errors.Add(
+                    $"Content asset '{contentPath}' must belong to "
+                    + $"AssetBundle '{_contentBundleName}'.");
+            }
+
+            ValidateContentAsset(contentAsset, validateBuiltOutput, errors);
             return errors;
         }
 
         private static void ValidateContentAsset(
             Novels.Content.NovelContentAsset contentAsset,
+            bool validateBuiltOutput,
             ICollection<string> errors)
         {
             Novels.Content.NovelDefinition definition;
@@ -92,6 +124,7 @@ namespace Editor
             ValidateBundles(
                 new[]
                 {
+                    _contentBundleName,
                     definition.LoadingBundleName,
                     definition.SettingBundleName,
                     definition.LocalizationBundleName,
@@ -102,6 +135,7 @@ namespace Editor
                     episode.CharacterBundleName,
                     episode.NotificationBundleName,
                 })),
+                validateBuiltOutput,
                 errors);
 
             foreach (var episode in definition.Episodes)
@@ -222,6 +256,7 @@ namespace Editor
 
         private static void ValidateBundles(
             IEnumerable<string> configuredBundles,
+            bool validateBuiltOutput,
             ICollection<string> errors)
         {
             var existingBundles = new HashSet<string>(
@@ -234,14 +269,17 @@ namespace Editor
                 if (!existingBundles.Contains(bundle))
                     errors.Add($"AssetBundle '{bundle}' is not assigned to any asset.");
 
-                var versionPath = Path.Combine(
-                    Application.streamingAssetsPath,
-                    "Remote",
-                    "Android",
-                    bundle,
-                    "version.txt");
-                if (!File.Exists(versionPath))
-                    errors.Add($"Built Android bundle version is missing: {versionPath}");
+                if (validateBuiltOutput)
+                {
+                    var versionPath = Path.Combine(
+                        Application.streamingAssetsPath,
+                        "Remote",
+                        "Android",
+                        bundle,
+                        "version.txt");
+                    if (!File.Exists(versionPath))
+                        errors.Add($"Built Android bundle version is missing: {versionPath}");
+                }
             }
         }
     }

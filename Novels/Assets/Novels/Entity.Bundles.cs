@@ -9,7 +9,6 @@ namespace Novels
         {
             var bundles = new Bundles.Entity(new Bundles.Entity.Ctx
             {
-                Prefix = _definition.Prefix,
                 CancellationToken = _ctx.CancellationToken,
                 OnLog = _ctx.OnLog,
                 OnFailure = failure => _ctx.OnError?.Invoke(
@@ -19,12 +18,18 @@ namespace Novels
                         $"[{failure.Code}] {failure.Message}",
                         exception: failure.Exception)),
             }).AddTo(this);
-            bundles.ConfigureMedia(new Bundles.MediaManifest(
-                _definition.Episode.Media.VideoIds,
-                _definition.Episode.Media.AudioExtensions,
-                _definition.Episode.Media.DefaultAudioExtension,
-                _definition.Episode.Media.SilentAudioIds));
             return bundles;
+        }
+
+        private void ConfigureMedia(Bundles.Entity bundles)
+        {
+            bundles.ConfigureMedia(
+                _definition.Prefix,
+                new Bundles.MediaManifest(
+                    _definition.Episode.Media.VideoIds,
+                    _definition.Episode.Media.AudioExtensions,
+                    _definition.Episode.Media.DefaultAudioExtension,
+                    _definition.Episode.Media.SilentAudioIds));
         }
     }
 }

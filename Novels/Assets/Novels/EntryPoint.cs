@@ -8,7 +8,7 @@ namespace Novels
 {
     public class EntryPoint : MonoBehaviour
     {
-        [SerializeField] private Content.NovelContentAsset _content;
+        [SerializeField] private string _contentId;
         [SerializeField] private Logs.Entity.ShowLogs _logs;
 
         private Entity _entity;
@@ -24,7 +24,7 @@ namespace Novels
             _sessionCancellation = new CancellationTokenSource();
             _entity = new Entity(new Entity.Ctx
             {
-                Content = _content,
+                ContentId = _contentId,
                 CancellationToken = _sessionCancellation.Token,
                 OnLog = data => 
                 {
