@@ -9,6 +9,15 @@ namespace Novels
 {
     internal sealed class ApplicationRuntime : BaseDisposable
     {
+        private enum ApplicationFlowState
+        {
+            LoadingCatalog,
+            SelectingStory,
+            RunningStory,
+            ReturningToCatalog,
+            Completed,
+        }
+
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
         internal struct Ctx
         {
@@ -65,65 +74,108 @@ namespace Novels
         {
             using var bootstrap = new Bootstrap.Entity(_environment.CancellationToken)
                 .AddTo(this);
-            using var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
-            bootstrap.Hide();
-            while (!_environment.CancellationToken.IsCancellationRequested)
+            CatalogFlow.Resources catalog = null;
+            Catalog.NovelCatalogEntry content = null;
+            var state = ApplicationFlowState.LoadingCatalog;
+            try
             {
-                var content = await _catalogFlow.SelectContent(catalog);
-                var novel = new Entity(new Entity.Ctx
+                while (state != ApplicationFlowState.Completed)
                 {
-                    Bundles = _bundles,
-                    Content = content,
-                    Locale = _locale,
-                    PersistentDataPath = _environment.PersistentDataPath,
-                    TargetCamera = _environment.TargetCamera,
-                    SelectEpisode = definition =>
-                        _catalogFlow.SelectEpisode(definition, catalog.Screen),
-                    PrepareNovelContent = contentId =>
-                        _contentDeliveryFlow.PrepareNovel(bootstrap, contentId),
-                    PrepareEpisodeContent = (definition, episode) =>
-                        _contentDeliveryFlow.PrepareEpisode(
-                            bootstrap,
-                            definition,
-                            episode),
-                    CancellationToken = _environment.CancellationToken,
-                    OnLog = _ctx.OnLog,
-                    OnError = _ctx.OnError,
-                });
-                _activeNovel.Replace(novel);
+                    _environment.CancellationToken.ThrowIfCancellationRequested();
+                    switch (state)
+                    {
+                        case ApplicationFlowState.LoadingCatalog:
+                            catalog = await _catalogFlow.LoadWithRetry(bootstrap);
+                            bootstrap.Hide();
+                            state = ApplicationFlowState.SelectingStory;
+                            break;
+
+                        case ApplicationFlowState.SelectingStory:
+                            content = await _catalogFlow.SelectContent(catalog);
+                            state = ApplicationFlowState.RunningStory;
+                            break;
+
+                        case ApplicationFlowState.RunningStory:
+                            state = await RunStory(content, catalog, bootstrap);
+                            break;
+
+                        case ApplicationFlowState.ReturningToCatalog:
+                            bootstrap.Hide();
+                            content = null;
+                            state = ApplicationFlowState.SelectingStory;
+                            break;
+
+                        default:
+                            state = ApplicationFlowState.Completed;
+                            break;
+                    }
+                }
+            }
+            finally
+            {
+                catalog?.Dispose();
+            }
+        }
+
+        private async UniTask<ApplicationFlowState> RunStory(
+            Catalog.NovelCatalogEntry content,
+            CatalogFlow.Resources catalog,
+            Bootstrap.Entity bootstrap)
+        {
+            var novel = new Entity(new Entity.Ctx
+            {
+                Bundles = _bundles,
+                Content = content,
+                Locale = _locale,
+                PersistentDataPath = _environment.PersistentDataPath,
+                TargetCamera = _environment.TargetCamera,
+                SelectEpisode = definition =>
+                    _catalogFlow.SelectEpisode(definition, catalog.Screen),
+                PrepareNovelContent = contentId =>
+                    _contentDeliveryFlow.PrepareNovel(bootstrap, contentId),
+                PrepareEpisodeContent = (definition, episode) =>
+                    _contentDeliveryFlow.PrepareEpisode(
+                        bootstrap,
+                        definition,
+                        episode),
+                CancellationToken = _environment.CancellationToken,
+                OnLog = _ctx.OnLog,
+                OnError = _ctx.OnError,
+            });
+            _activeNovel.Replace(novel);
+            try
+            {
+                EpisodeRunResult result;
                 try
                 {
-                    EpisodeRunResult result;
-                    try
-                    {
-                        result = await novel.Init();
-                    }
-                    catch (Exception exception) when (
-                        exception is Bundles.ContentSourceException
-                        || exception is Bundles.ContentIntegrityException
-                        || exception is Bundles.ContentStorageException
-                        || exception is Bundles.ContentConfigurationException)
-                    {
-                        _ctx.OnError?.Invoke(new Diagnostics.NovelError(
-                            Diagnostics.NovelErrorCodes.ContentPreparationFailed,
-                            Diagnostics.NovelErrorSeverity.Recoverable,
-                            "Story content could not be prepared.",
-                            exception: exception,
-                            context: new Diagnostics.NovelErrorContext(
-                                _bundles.ReleaseId,
-                                content.ContentId,
-                                deliveryMode: _bundles.DeliveryMode.ToString())));
-                        continue;
-                    }
-                    if (result.Status == EpisodeRunStatus.Cancelled)
-                        return;
-                    if (result.Status == EpisodeRunStatus.Failed)
-                        _ctx.OnError?.Invoke(result.Error.Value);
+                    result = await novel.Init();
                 }
-                finally
+                catch (Exception exception) when (
+                    exception is Bundles.ContentSourceException
+                    || exception is Bundles.ContentIntegrityException
+                    || exception is Bundles.ContentStorageException
+                    || exception is Bundles.ContentConfigurationException)
                 {
-                    _activeNovel.Clear(novel);
+                    _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                        Diagnostics.NovelErrorCodes.ContentPreparationFailed,
+                        Diagnostics.NovelErrorSeverity.Recoverable,
+                        "Story content could not be prepared.",
+                        exception: exception,
+                        context: new Diagnostics.NovelErrorContext(
+                            _bundles.ReleaseId,
+                            content.ContentId,
+                            deliveryMode: _bundles.DeliveryMode.ToString())));
+                    return ApplicationFlowState.ReturningToCatalog;
                 }
+                if (result.Status == EpisodeRunStatus.Cancelled)
+                    return ApplicationFlowState.Completed;
+                if (result.Status == EpisodeRunStatus.Failed)
+                    _ctx.OnError?.Invoke(result.Error.Value);
+                return ApplicationFlowState.ReturningToCatalog;
+            }
+            finally
+            {
+                _activeNovel.Clear(novel);
             }
         }
 

@@ -10,6 +10,7 @@ namespace Bundles
     public sealed class Scope : BaseDisposable
     {
         private readonly Entity _owner;
+        private readonly ContentReleaseSession _session;
         private readonly CancellationToken _cancellationToken;
         private readonly HashSet<string> _bundleNames = new(
             StringComparer.OrdinalIgnoreCase);
@@ -17,9 +18,13 @@ namespace Bundles
             StringComparer.OrdinalIgnoreCase);
         private MediaResolver _media;
 
-        internal Scope(Entity owner, CancellationToken cancellationToken)
+        internal Scope(
+            Entity owner,
+            ContentReleaseSession session,
+            CancellationToken cancellationToken)
         {
             _owner = owner ?? throw new ArgumentNullException(nameof(owner));
+            _session = session ?? throw new ArgumentNullException(nameof(session));
             _cancellationToken = cancellationToken;
         }
 
@@ -27,7 +32,7 @@ namespace Bundles
         {
             EnsureActive();
             if (_bundleNames.Contains(bundleName))
-                return _owner.GetOwnedAssetBundle(bundleName);
+                return _owner.GetOwnedAssetBundle(_session, bundleName);
             if (!_bundleLoads.TryGetValue(bundleName, out var loading))
             {
                 loading = Acquire(bundleName).Preserve();
@@ -39,7 +44,7 @@ namespace Bundles
         public void ConfigureMedia(string prefix, MediaManifest manifest)
         {
             EnsureActive();
-            _media = _owner.CreateMediaResolver(prefix, manifest);
+            _media = _owner.CreateMediaResolver(_session, prefix, manifest);
         }
 
         public UniTask<Sprite> GetBundledSprite(
@@ -52,7 +57,7 @@ namespace Bundles
         public UniTask<Sprite> GetBundledSprite(BundleAssetAddress address)
         {
             EnsureOwned(address.BundleName);
-            return _owner.GetBundledSprite(address);
+            return _owner.GetBundledSprite(_session, address);
         }
 
         public UniTask<Sprite> TryGetBundledSprite(
@@ -65,7 +70,7 @@ namespace Bundles
         public UniTask<Sprite> TryGetBundledSprite(BundleAssetAddress address)
         {
             EnsureOwned(address.BundleName);
-            return _owner.TryGetBundledSprite(address);
+            return _owner.TryGetBundledSprite(_session, address);
         }
 
         public UniTask<T> GetBundledSO<T>(string bundleName, string assetName)
@@ -78,7 +83,7 @@ namespace Bundles
             where T : ScriptableObject
         {
             EnsureOwned(address.BundleName);
-            return _owner.GetBundledSO<T>(address);
+            return _owner.GetBundledSO<T>(_session, address);
         }
 
         public UniTask<GameObject> GetBundledPrefab(
@@ -91,7 +96,7 @@ namespace Bundles
         public UniTask<GameObject> GetBundledPrefab(BundleAssetAddress address)
         {
             EnsureOwned(address.BundleName);
-            return _owner.GetBundledPrefab(address);
+            return _owner.GetBundledPrefab(_session, address);
         }
 
         public UniTask<string> ResolveVideoUrl(string assetName) =>
@@ -103,12 +108,12 @@ namespace Bundles
         public string ResolveAssetName(string bundleName, string requestedName)
         {
             EnsureOwned(bundleName);
-            return _owner.ResolveAssetName(bundleName, requestedName);
+            return _owner.ResolveAssetName(_session, bundleName, requestedName);
         }
 
         protected override void OnDispose()
         {
-            _owner.ReleaseBundles(_bundleNames);
+            _owner.ReleaseBundles(_session, _bundleNames);
             _bundleNames.Clear();
             _bundleLoads.Clear();
             _media = null;
@@ -119,10 +124,10 @@ namespace Bundles
         {
             try
             {
-                var bundle = await _owner.AcquireAssetBundle(bundleName);
+                var bundle = await _owner.AcquireAssetBundle(_session, bundleName);
                 if (IsDisposed || _cancellationToken.IsCancellationRequested)
                 {
-                    _owner.ReleaseBundles(new[] { bundleName });
+                    _owner.ReleaseBundles(_session, new[] { bundleName });
                     _cancellationToken.ThrowIfCancellationRequested();
                     throw new ObjectDisposedException(nameof(Scope));
                 }

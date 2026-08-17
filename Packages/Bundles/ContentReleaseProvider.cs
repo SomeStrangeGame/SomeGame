@@ -12,7 +12,7 @@ namespace Bundles
         private readonly string _platform;
         private readonly CancellationToken _cancellationToken;
         private readonly Action<(LogType type, string message)> _onLog;
-        private string _candidateJson;
+        private ContentReleaseSession _activatedSession;
 
         internal ContentReleaseProvider(
             IContentSource source,
@@ -28,10 +28,10 @@ namespace Bundles
             _onLog = onLog;
         }
 
-        internal ContentReleaseSnapshot Current { get; private set; }
+        internal ContentReleaseSession Current { get; private set; }
         internal CancellationToken CancellationToken => _cancellationToken;
 
-        internal async UniTask<ContentReleaseSnapshot> LoadAsync(
+        internal async UniTask<ContentReleaseSession> LoadAsync(
             string clientVersion,
             int minimumSupportedSchemaVersion,
             int maximumSupportedSchemaVersion)
@@ -40,7 +40,7 @@ namespace Bundles
             var cachePath = $"Remote/{_platform}/Releases/current.json";
             var previousCachePath = $"Remote/{_platform}/Releases/previous.json";
             ContentReleaseDto release;
-            _candidateJson = null;
+            string candidateJson = null;
             try
             {
                 var json = await _source.DownloadText(path);
@@ -50,7 +50,7 @@ namespace Bundles
                     clientVersion,
                     minimumSupportedSchemaVersion,
                     maximumSupportedSchemaVersion);
-                _candidateJson = json;
+                candidateJson = json;
             }
             catch (OperationCanceledException)
                 when (_cancellationToken.IsCancellationRequested)
@@ -96,7 +96,9 @@ namespace Bundles
                     $"Use active cached content release '{release.releaseId}'."));
             }
 
-            Current = new ContentReleaseSnapshot(release);
+            Current = new ContentReleaseSession(
+                new ContentReleaseSnapshot(release),
+                candidateJson);
             return Current;
         }
 
@@ -105,7 +107,8 @@ namespace Bundles
             if (Current == null)
                 throw new ContentConfigurationException(
                     "Content release must be loaded before activation.");
-            if (string.IsNullOrEmpty(_candidateJson))
+            if (ReferenceEquals(Current, _activatedSession)
+                || string.IsNullOrEmpty(Current.CandidateJson))
                 return;
             var cachePath = $"Remote/{_platform}/Releases/current.json";
             var previousCachePath = $"Remote/{_platform}/Releases/previous.json";
@@ -121,8 +124,8 @@ namespace Bundles
                     _cache.TextToCache(previousCachePath, activeJson);
                 }
             }
-            _cache.TextToCache(cachePath, _candidateJson);
-            _candidateJson = null;
+            _cache.TextToCache(cachePath, Current.CandidateJson);
+            _activatedSession = Current;
             _onLog?.Invoke((
                 LogType.Log,
                 $"Activate content release '{Current.ReleaseId}'."));

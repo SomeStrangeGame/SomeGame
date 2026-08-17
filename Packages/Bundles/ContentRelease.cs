@@ -89,6 +89,28 @@ namespace Bundles
             path != null && _filesByPath.TryGetValue(path, out var value) ? value : null;
     }
 
+    internal sealed class ContentReleaseSession
+    {
+        internal ContentReleaseSession(
+            ContentReleaseSnapshot release,
+            string candidateJson)
+        {
+            Release = release ?? throw new ArgumentNullException(nameof(release));
+            CandidateJson = candidateJson;
+        }
+
+        internal ContentReleaseSnapshot Release { get; }
+        internal string CandidateJson { get; }
+        internal string ReleaseId => Release.ReleaseId;
+        internal ContentDeliveryMode DeliveryMode => Release.DeliveryMode;
+
+        internal BundleReleaseDescriptor FindBundle(string name) =>
+            Release.FindBundle(name);
+
+        internal ContentFileDescriptor FindFile(string path) =>
+            Release.FindFile(path);
+    }
+
     public sealed class BundleReleaseDescriptor
     {
         internal BundleReleaseDescriptor(BundleReleaseEntry source)

@@ -12,7 +12,8 @@ namespace Editor
     internal static class AssetBundleBuildPipeline
     {
         internal static IReadOnlyList<ContentBuildResult> Build(
-            NovelContentBuildProfile profile)
+            NovelContentBuildProfile profile,
+            string remotePath)
         {
             var targets = profile?.Targets
                 ?? throw new ArgumentNullException(nameof(profile));
@@ -21,53 +22,28 @@ namespace Editor
                 throw new ArgumentException("At least one build target is required.", nameof(targets));
 
             var projectIndex = ContentProjectIndex.BuildOrThrow("en");
-            var remotePath = Path.Combine(Application.streamingAssetsPath, "Remote");
-            var projectPath = Directory.GetParent(Application.dataPath)?.FullName
-                ?? throw new InvalidOperationException("Unity project path cannot be resolved.");
-            var stagingPath = Path.Combine(
-                projectPath,
-                "Library",
-                $"NovelBundleStaging-{Guid.NewGuid():N}");
-            var backupPath = remotePath + ".previous";
-
-            try
+            if (string.IsNullOrWhiteSpace(remotePath))
+                throw new ArgumentException("Remote output path is required.", nameof(remotePath));
+            if (Directory.Exists(remotePath))
+                throw new InvalidOperationException(
+                    $"AssetBundle output path must be empty: {remotePath}");
+            Directory.CreateDirectory(remotePath);
+            var releases = new Dictionary<BuildTarget, string>();
+            foreach (var target in targets)
             {
-                Directory.CreateDirectory(stagingPath);
-                var releases = new Dictionary<BuildTarget, string>();
-                foreach (var target in targets)
-                {
-                    releases[target] = BuildTargetBundles(
-                        target,
-                        Path.Combine(stagingPath, GetPlatformName(target)),
-                        profile,
-                        projectIndex.BundleDeliveryGroups);
-                }
-
-                if (Directory.Exists(backupPath))
-                    Directory.Delete(backupPath, true);
-                if (Directory.Exists(remotePath))
-                    Directory.Move(remotePath, backupPath);
-                Directory.Move(stagingPath, remotePath);
-                if (Directory.Exists(backupPath))
-                    Directory.Delete(backupPath, true);
-
-                AssetDatabase.Refresh();
-                Debug.Log($"AssetBundle build completed: {remotePath}");
-                return targets.Select(target => new ContentBuildResult(
-                        target,
-                        GetPlatformName(target),
-                        releases[target],
-                        Path.Combine(remotePath, GetPlatformName(target))))
-                    .ToArray();
+                releases[target] = BuildTargetBundles(
+                    target,
+                    Path.Combine(remotePath, GetPlatformName(target)),
+                    profile,
+                    projectIndex.BundleDeliveryGroups);
             }
-            catch
-            {
-                if (Directory.Exists(stagingPath))
-                    Directory.Delete(stagingPath, true);
-                if (!Directory.Exists(remotePath) && Directory.Exists(backupPath))
-                    Directory.Move(backupPath, remotePath);
-                throw;
-            }
+            Debug.Log($"AssetBundle workspace build completed: {remotePath}");
+            return targets.Select(target => new ContentBuildResult(
+                    target,
+                    GetPlatformName(target),
+                    releases[target],
+                    Path.Combine(remotePath, GetPlatformName(target))))
+                .ToArray();
         }
 
         private static string BuildTargetBundles(

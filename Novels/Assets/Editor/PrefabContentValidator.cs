@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -63,6 +64,194 @@ namespace Editor
                 errors.Add("Local bootstrap prefab root has zero scale.");
         }
 
+        internal static void ValidateEpisode(
+            string prefix,
+            string episodeId,
+            ICollection<string> errors)
+        {
+            var assetName = Novels.ContentAddressing.ContentAssetNames.Screen;
+            ValidateLoading(
+                Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
+                    prefix,
+                    episodeId,
+                    assetName),
+                errors);
+            ValidateBubble(
+                Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
+                    prefix,
+                    episodeId,
+                    assetName),
+                errors);
+            ValidateCharacter(
+                Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
+                    prefix,
+                    episodeId,
+                    assetName),
+                errors);
+            ValidateLocation(
+                Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
+                    prefix,
+                    episodeId,
+                    assetName),
+                errors);
+            ValidateNotification(
+                Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
+                    prefix,
+                    episodeId,
+                    assetName),
+                errors);
+        }
+
+        private static void ValidateLoading(string path, ICollection<string> errors)
+        {
+            var screen = LoadScreen<Loading.View.Screen>(path, "Loading", errors);
+            if (screen != null)
+            {
+                ValidateReferences(
+                    new SerializedObject(screen),
+                    $"Loading screen prefab '{path}'",
+                    errors,
+                    "_marker",
+                    "_canvasGroup");
+            }
+        }
+
+        private static void ValidateBubble(string path, ICollection<string> errors)
+        {
+            var screen = LoadScreen<Novels.Bubble.View.Screen>(path, "Bubble", errors);
+            if (screen == null)
+                return;
+            var serialized = new SerializedObject(screen);
+            ValidateReferences(
+                serialized,
+                $"Bubble screen prefab '{path}'",
+                errors,
+                "_bubblesView._root",
+                "_bubblesView._buttonPrefab",
+                "_bubblesView._backgroundButton",
+                "_chooseView._root",
+                "_wardrobeView._root",
+                "_canvasGroup");
+            var bubbles = FindProperty(serialized, "_bubblesView._bubbles");
+            if (bubbles == null || !bubbles.isArray || bubbles.arraySize == 0)
+            {
+                errors.Add($"Bubble screen prefab '{path}' has no bubble presentations.");
+                return;
+            }
+            for (var index = 0; index < bubbles.arraySize; index++)
+            {
+                var bubble = bubbles.GetArrayElementAtIndex(index);
+                ValidateReference(
+                    bubble.FindPropertyRelative("_root"),
+                    $"Bubble screen prefab '{path}' bubble {index}",
+                    "_root",
+                    errors);
+                ValidateReference(
+                    bubble.FindPropertyRelative("_header"),
+                    $"Bubble screen prefab '{path}' bubble {index}",
+                    "_header",
+                    errors);
+                ValidateReference(
+                    bubble.FindPropertyRelative("_text"),
+                    $"Bubble screen prefab '{path}' bubble {index}",
+                    "_text",
+                    errors);
+            }
+        }
+
+        private static void ValidateCharacter(string path, ICollection<string> errors)
+        {
+            var screen = LoadScreen<Novels.Character.View.Screen>(
+                path,
+                "Character",
+                errors);
+            if (screen != null)
+            {
+                ValidateReferences(
+                    new SerializedObject(screen),
+                    $"Character screen prefab '{path}'",
+                    errors,
+                    "_canvasGroup",
+                    "_mainBody",
+                    "_clothes",
+                    "_emotion",
+                    "_backHairs",
+                    "_frontHairs",
+                    "_backAccessories",
+                    "_middleAccessories",
+                    "_frontAccessories");
+            }
+        }
+
+        private static void ValidateLocation(string path, ICollection<string> errors)
+        {
+            var screen = LoadScreen<Novels.Location.View.Screen>(path, "Location", errors);
+            if (screen == null)
+                return;
+            var serialized = new SerializedObject(screen);
+            ValidateReferences(
+                serialized,
+                $"Location screen prefab '{path}'",
+                errors,
+                "_imageCanvasGroup",
+                "_image",
+                "_video",
+                "_videoImage",
+                "_effectCanvasGroup");
+            var effects = serialized.FindProperty("_effects");
+            if (effects == null || !effects.isArray || effects.arraySize == 0)
+            {
+                errors.Add($"Location screen prefab '{path}' has no visual effects.");
+                return;
+            }
+            for (var index = 0; index < effects.arraySize; index++)
+            {
+                ValidateReference(
+                    effects.GetArrayElementAtIndex(index)
+                        .FindPropertyRelative("_effectRoot"),
+                    $"Location screen prefab '{path}' effect {index}",
+                    "_effectRoot",
+                    errors);
+            }
+        }
+
+        private static void ValidateNotification(
+            string path,
+            ICollection<string> errors)
+        {
+            var screen = LoadScreen<Novels.Notification.View.Screen>(
+                path,
+                "Notification",
+                errors);
+            if (screen != null)
+            {
+                ValidateReferences(
+                    new SerializedObject(screen),
+                    $"Notification screen prefab '{path}'",
+                    errors,
+                    "_text",
+                    "_canvasGroup");
+            }
+        }
+
+        private static T LoadScreen<T>(
+            string path,
+            string kind,
+            ICollection<string> errors)
+            where T : Component
+        {
+            var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+            if (prefab == null)
+            {
+                errors.Add($"{kind} screen prefab does not exist: {path}");
+                return null;
+            }
+            var screen = prefab.GetComponent<T>();
+            if (screen == null)
+                errors.Add($"{kind} screen prefab '{path}' has no {typeof(T).FullName} component.");
+            return screen;
+        }
+
         private static void ValidateReferences(
             SerializedObject target,
             string owner,
@@ -71,8 +260,36 @@ namespace Editor
         {
             foreach (var propertyName in propertyNames)
             {
-                if (target.FindProperty(propertyName)?.objectReferenceValue == null)
-                    errors.Add($"{owner} has no '{propertyName}' reference.");
+                ValidateReference(
+                    FindProperty(target, propertyName),
+                    owner,
+                    propertyName,
+                    errors);
+            }
+        }
+
+        private static SerializedProperty FindProperty(
+            SerializedObject target,
+            string path)
+        {
+            var segments = path.Split('.');
+            var property = target.FindProperty(segments[0]);
+            for (var index = 1; property != null && index < segments.Length; index++)
+                property = property.FindPropertyRelative(segments[index]);
+            return property;
+        }
+
+        private static void ValidateReference(
+            SerializedProperty property,
+            string owner,
+            string propertyName,
+            ICollection<string> errors)
+        {
+            if (property == null
+                || property.propertyType != SerializedPropertyType.ObjectReference
+                || property.objectReferenceValue == null)
+            {
+                errors.Add($"{owner} has no '{propertyName}' reference.");
             }
         }
     }

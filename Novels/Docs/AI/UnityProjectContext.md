@@ -210,6 +210,17 @@
 - `ContentRequestRunner` centralizes UnityWebRequest execution, cancellation, progress, and transport error normalization for both HTTP and StreamingAssets sources.
 - Android release `4ce17f56cf3a64d1e19eb9597f45e3976651f5bb6eadca83a434f257105d2d3a` contains 119 grouped payloads: 47 episode, 70 story-shared, and 2 application payloads. Unity compilation and complete content build/validation passed without errors or warnings; tests and Play Mode were not run.
 
+## Architecture wave completed on 2026-08-17 (release sessions and build safety)
+
+- Runtime content is pinned to an immutable `ContentReleaseSession`. Every bundle, file, delivery reservation, and episode scope receives the captured session explicitly, so loading a newer manifest cannot redirect work already in progress.
+- Bundle records are keyed by release ID, bundle name, and version. Loading another release discards idle records from the previous release while active leases remain valid until their owners dispose them.
+- `ContentStoragePlanner` owns one release-aware `RemoteContent` cache for bundles and external files. It reserves mixed payloads against one 512 MiB budget, protects leased paths, checks actual free space after cleanup, and performs ordinary LRU pruning away from the Unity main thread.
+- Episode prefabs now have explicit Editor contracts for their required screen component and serialized references. The checks cover Loading, Bubble, Character, Location, and Notification without changing any authored UI dimensions.
+- AssetBundle, publish, and Player-seed outputs are produced in one `Library` workspace and committed as a single transaction. Existing destinations are restored on failure; if rollback itself fails, recovery files are retained and both failures are reported.
+- Remote Android/iOS Player staging is reusable under `Library/RemotePlayerBuild`, preserves its imported `Library`, validates its inputs, excludes local novel content, and retains build logs and the failed staging project for diagnosis.
+- `ApplicationRuntime` expresses catalog loading, story selection, story execution, and return-to-catalog as an explicit state machine while retaining one active novel lifetime slot.
+- An isolated Unity 6000.3.11f1 compile/existing-content validation passed. Two consecutive complete Android content build-and-validation runs also passed, exercising replacement of an existing release. Tests, Play Mode, and a device Player build were not run.
+
 ## Evidence Inspected
 
 - `ProjectSettings/{ProjectVersion,ProjectSettings,GraphicsSettings,QualitySettings,EditorBuildSettings}.asset`

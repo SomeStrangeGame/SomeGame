@@ -10,59 +10,70 @@ namespace Bundles
     {
         private readonly IContentSource _source;
         private readonly Cache.Entity _cache;
-        private readonly ContentReleaseProvider _releases;
         private readonly ContentIntegrityVerifier _integrity;
+        private readonly ContentStoragePlanner _storage;
+        private readonly string _platform;
         private readonly CancellationToken _cancellationToken;
         private readonly Action<(LogType type, string message)> _onLog;
 
         internal BundlePayloadLoader(
             IContentSource source,
             Cache.Entity cache,
-            ContentReleaseProvider releases,
             ContentIntegrityVerifier integrity,
+            ContentStoragePlanner storage,
+            string platform,
             CancellationToken cancellationToken,
             Action<(LogType type, string message)> onLog)
         {
-            _source = source;
-            _cache = cache;
-            _releases = releases;
-            _integrity = integrity;
+            _source = source ?? throw new ArgumentNullException(nameof(source));
+            _cache = cache ?? throw new ArgumentNullException(nameof(cache));
+            _integrity = integrity ?? throw new ArgumentNullException(nameof(integrity));
+            _storage = storage ?? throw new ArgumentNullException(nameof(storage));
+            _platform = string.IsNullOrWhiteSpace(platform)
+                ? throw new ArgumentException("Platform must not be empty.", nameof(platform))
+                : platform;
             _cancellationToken = cancellationToken;
             _onLog = onLog;
         }
 
-        internal async UniTask<AssetBundle> Load(string bundleName, string bundleKey)
+        internal async UniTask<AssetBundle> Load(
+            ContentReleaseSession session,
+            string bundleName)
         {
-            await Prepare(bundleName, bundleKey);
-            var descriptor = (_releases.Current ?? throw new ContentConfigurationException(
-                    "Content release must be loaded before AssetBundles."))
-                .FindBundle(bundleName) ?? throw new ContentIntegrityException(
-                    $"Bundle '{bundleName}' is absent from the active release.");
-            return await Open($"{bundleKey}/{descriptor.Version}");
+            var descriptor = RequireDescriptor(session, bundleName);
+            await Prepare(session, descriptor);
+            return await Open(ContentStoragePlanner.BundlePath(
+                session,
+                _platform,
+                descriptor));
         }
 
         internal async UniTask Prepare(
-            string bundleName,
-            string bundleKey,
+            ContentReleaseSession session,
+            BundleReleaseDescriptor descriptor,
             Action<long> onDownloadedBytes = null)
         {
-            var release = _releases.Current ?? throw new ContentConfigurationException(
-                "Content release must be loaded before AssetBundles.");
-            var descriptor = release.FindBundle(bundleName)
-                ?? throw new ContentIntegrityException(
-                    $"Bundle '{bundleName}' is absent from release '{release.ReleaseId}'.");
-            var sourcePath = $"{bundleKey}/{descriptor.Version}";
-            var localPath = _cache.GetLocalPath(sourcePath, false);
+            if (session == null)
+                throw new ArgumentNullException(nameof(session));
+            if (descriptor == null)
+                throw new ArgumentNullException(nameof(descriptor));
+            var sourcePath = $"Remote/{_platform}/{descriptor.Name}/{descriptor.Version}";
+            var cachePath = ContentStoragePlanner.BundlePath(
+                session,
+                _platform,
+                descriptor);
+            var localPath = _cache.GetLocalPath(cachePath, false);
+            var downloaded = false;
             try
             {
                 await _integrity.VerifyAsync(
-                    bundleName,
+                    descriptor.Name,
                     descriptor.Size,
                     descriptor.Sha256,
                     localPath,
                     true);
                 onDownloadedBytes?.Invoke(descriptor.Size);
-                _onLog?.Invoke((LogType.Log, $"Get local bundle from {sourcePath}"));
+                _onLog?.Invoke((LogType.Log, $"Get local bundle from {cachePath}"));
             }
             catch (OperationCanceledException)
                 when (_cancellationToken.IsCancellationRequested)
@@ -73,9 +84,9 @@ namespace Bundles
             {
                 _onLog?.Invoke((
                     LogType.Warning,
-                    $"Download bundle '{bundleName}' because its cache is invalid: "
+                    $"Download bundle '{descriptor.Name}' because its cache is invalid: "
                     + exception.Message));
-                var temporaryPath = _cache.CreateTemporaryPath(sourcePath);
+                var temporaryPath = _cache.CreateTemporaryPath(cachePath);
                 try
                 {
                     await _source.DownloadFile(
@@ -85,17 +96,18 @@ namespace Bundles
                             Math.Min(bytes, descriptor.Size)));
                     _cancellationToken.ThrowIfCancellationRequested();
                     await _integrity.VerifyAsync(
-                        bundleName,
+                        descriptor.Name,
                         descriptor.Size,
                         descriptor.Sha256,
                         temporaryPath,
                         true);
-                    _cache.CommitTemporaryFile(temporaryPath, sourcePath);
+                    _cache.CommitTemporaryFile(temporaryPath, cachePath);
                     _integrity.Trust(
                         localPath,
                         descriptor.Size,
                         descriptor.Sha256,
                         true);
+                    downloaded = true;
                     onDownloadedBytes?.Invoke(descriptor.Size);
                 }
                 finally
@@ -104,33 +116,36 @@ namespace Bundles
                         File.Delete(temporaryPath);
                 }
             }
-
-            _cache.PruneDirectory(bundleKey, descriptor.Version);
+            _cache.Touch(cachePath);
+            if (downloaded)
+                _storage.SchedulePrune(cachePath);
         }
 
-        internal long GetMissingBytes(
-            BundleReleaseDescriptor descriptor,
-            string bundleKey)
+        internal ContentCachePayload GetCachePayload(
+            ContentReleaseSession session,
+            BundleReleaseDescriptor descriptor) =>
+            new(
+                ContentStoragePlanner.BundlePath(session, _platform, descriptor),
+                descriptor.Size);
+
+        private static BundleReleaseDescriptor RequireDescriptor(
+            ContentReleaseSession session,
+            string bundleName)
         {
-            if (descriptor == null)
-                throw new ArgumentNullException(nameof(descriptor));
-            var localPath = _cache.GetLocalPath(
-                $"{bundleKey}/{descriptor.Version}",
-                false);
-            return !File.Exists(localPath)
-                || new FileInfo(localPath).Length != descriptor.Size
-                    ? descriptor.Size
-                    : 0L;
+            if (session == null)
+                throw new ArgumentNullException(nameof(session));
+            return session.FindBundle(bundleName) ?? throw new ContentIntegrityException(
+                $"Bundle '{bundleName}' is absent from release '{session.ReleaseId}'.");
         }
 
-        private async UniTask<AssetBundle> Open(string sourcePath)
+        private async UniTask<AssetBundle> Open(string cachePath)
         {
-            var bundle = await _cache.BundleFromCache(sourcePath)
+            var bundle = await _cache.BundleFromCache(cachePath)
                 .AttachExternalCancellation(_cancellationToken);
             if (bundle == null)
             {
                 throw new ContentIntegrityException(
-                    $"Bundle payload '{sourcePath}' is invalid.");
+                    $"Bundle payload '{cachePath}' is invalid.");
             }
             return bundle;
         }

@@ -19,7 +19,7 @@ namespace Editor
         internal BuildTarget Target { get; }
         internal string Platform { get; }
         internal string ReleaseId { get; }
-        internal string RemotePath { get; }
+        internal string RemotePath { get; set; }
         internal string PublishPath { get; set; }
         internal string PlayerSeedPath { get; set; }
     }

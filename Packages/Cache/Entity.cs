@@ -196,6 +196,40 @@ namespace Cache
             }
         }
 
+        public long PruneForAvailableSpace(
+            string directoryPath,
+            long requiredAvailableBytes,
+            IEnumerable<string> protectedPaths)
+        {
+            var available = GetAvailableFreeSpace();
+            if (!available.HasValue || available.Value >= requiredAvailableBytes)
+                return 0L;
+            var directory = GetLocalPath(directoryPath, false);
+            if (!Directory.Exists(directory))
+                return 0L;
+            var protectedFiles = new HashSet<string>(StringComparer.Ordinal);
+            foreach (var path in protectedPaths ?? Array.Empty<string>())
+            {
+                if (!string.IsNullOrWhiteSpace(path))
+                    protectedFiles.Add(GetLocalPath(path, false));
+            }
+            var files = new DirectoryInfo(directory)
+                .GetFiles("*", SearchOption.AllDirectories);
+            Array.Sort(files, (left, right) =>
+                left.LastAccessTimeUtc.CompareTo(right.LastAccessTimeUtc));
+            var reclaimed = 0L;
+            foreach (var file in files)
+            {
+                if (available.Value + reclaimed >= requiredAvailableBytes)
+                    break;
+                if (protectedFiles.Contains(file.FullName))
+                    continue;
+                reclaimed += file.Length;
+                file.Delete();
+            }
+            return reclaimed;
+        }
+
         public long? GetAvailableFreeSpace()
         {
             try

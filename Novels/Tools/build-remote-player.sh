@@ -13,25 +13,44 @@ script_dir=${0:A:h}
 project_root=${script_dir:h}
 somegame_root=${project_root:h}
 unity_executable=${UNITY_EXECUTABLE:-/Applications/Unity/Hub/Editor/6000.3.11f1/Unity.app/Contents/MacOS/Unity}
-stage_root=$(mktemp -d "${TMPDIR:-/tmp}/novels-remote-player.XXXXXX")
+build_cache_root=${NOVELS_REMOTE_PLAYER_CACHE_ROOT:-${project_root}/Library/RemotePlayerBuild}
+stage_root=${build_cache_root}/${target}
 stage_project=${stage_root}/SomeGame/Novels
+log_path=${NOVELS_REMOTE_PLAYER_LOG:-${project_root}/Build/Logs/remote-player-${target}.log}
 
-cleanup()
-{
-  if [[ -n ${stage_root} && -d ${stage_root} ]]; then
-    rm -rf -- "${stage_root}"
-  fi
-}
-trap cleanup EXIT INT TERM
+case ${target} in
+  Android|iOS) ;;
+  *)
+    print -u2 "Target must be Android or iOS: ${target}"
+    exit 2
+    ;;
+esac
 
-mkdir -p "${stage_root}/SomeGame/Packages" "${stage_project}"
-rsync -a "${somegame_root}/Packages/" "${stage_root}/SomeGame/Packages/"
+if [[ ${remote_url} != http://* && ${remote_url} != https://* ]]; then
+  print -u2 "Remote content root must be an absolute HTTP(S) URL."
+  exit 2
+fi
+if [[ ! -x ${unity_executable} ]]; then
+  print -u2 "Unity executable is unavailable: ${unity_executable}"
+  exit 3
+fi
+if [[ ! -f ${project_root}/Packages/manifest.json || ! -d ${somegame_root}/Packages ]]; then
+  print -u2 "Unity package sources are incomplete."
+  exit 3
+fi
+
+mkdir -p "${stage_root}/SomeGame/Packages" "${stage_project}" "${log_path:h}"
+rsync -a --delete \
+  "${somegame_root}/Packages/" "${stage_root}/SomeGame/Packages/"
 rsync -a \
+  --delete \
   --exclude Library \
   --exclude Temp \
   --exclude Logs \
   --exclude Build \
   --exclude .utmp \
+  --exclude Assets/RemoteAssets \
+  --exclude Assets/RemoteAssets.meta \
   --exclude Assets/StreamingAssets/NovelTexts \
   --exclude Assets/StreamingAssets/NovelTexts.meta \
   --exclude Assets/StreamingAssets/NovelsAudio \
@@ -42,6 +61,7 @@ rsync -a \
   --exclude Assets/StreamingAssets/Remote.meta \
   "${project_root}/" "${stage_project}/"
 
+set +e
 "${unity_executable}" \
   -batchmode \
   -quit \
@@ -50,4 +70,16 @@ rsync -a \
   -executeMethod Editor.NovelCiValidation.BuildRemotePlayerBatch \
   -remoteContentBaseUrl "${remote_url}" \
   -playerOutput "${output_path}" \
-  -logFile -
+  -logFile "${log_path}"
+status=$?
+set -e
+
+if (( status != 0 )); then
+  print -u2 "Remote Player build failed. Log: ${log_path}"
+  tail -n 200 "${log_path}" >&2 || true
+  exit ${status}
+fi
+
+print "Remote Player build completed: ${output_path}"
+print "Reusable staging project: ${stage_project}"
+print "Build log: ${log_path}"

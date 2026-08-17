@@ -8,34 +8,31 @@ namespace Bundles
     internal sealed class ContentDeliveryCoordinator
     {
         private const int _maximumParallelDownloads = 3;
-        private readonly ContentReleaseProvider _releases;
         private readonly ContentFileStore _files;
         private readonly BundlePayloadLoader _bundles;
-        private readonly string _platform;
+        private readonly ContentStoragePlanner _storage;
 
         internal ContentDeliveryCoordinator(
-            ContentReleaseProvider releases,
             ContentFileStore files,
             BundlePayloadLoader bundles,
-            string platform)
+            ContentStoragePlanner storage)
         {
-            _releases = releases ?? throw new ArgumentNullException(nameof(releases));
             _files = files ?? throw new ArgumentNullException(nameof(files));
             _bundles = bundles ?? throw new ArgumentNullException(nameof(bundles));
-            _platform = string.IsNullOrWhiteSpace(platform)
-                ? throw new ArgumentException("Platform must not be empty.", nameof(platform))
-                : platform;
+            _storage = storage ?? throw new ArgumentNullException(nameof(storage));
         }
 
         internal async UniTask<ContentDeliveryLease> Prepare(
+            ContentReleaseSession session,
             string groupId,
             Action<ContentDeliveryProgress> onProgress,
             CancellationToken cancellationToken)
         {
             if (string.IsNullOrWhiteSpace(groupId))
                 throw new ArgumentException("Delivery group ID must not be empty.", nameof(groupId));
-            var release = _releases.Current ?? throw new ContentConfigurationException(
-                "Content release must be loaded before delivery preparation.");
+            if (session == null)
+                throw new ArgumentNullException(nameof(session));
+            var release = session.Release;
             var group = release.DeliveryGroups.FirstOrDefault(value => string.Equals(
                 value.Id,
                 groupId,
@@ -53,10 +50,15 @@ namespace Bundles
                     group.Id,
                     StringComparison.OrdinalIgnoreCase))
                 .ToArray();
-            var missingBundleBytes = bundles.Sum(bundle => _bundles.GetMissingBytes(
-                bundle,
-                $"Remote/{_platform}/{bundle.Name}"));
-            var lease = _files.ReserveGroup(files, missingBundleBytes);
+            var payloads = files
+                .Select(file => new ContentCachePayload(
+                    ContentStoragePlanner.FilePath(session, file.Path),
+                    file.Size))
+                .Concat(bundles.Select(bundle =>
+                    _bundles.GetCachePayload(session, bundle)))
+                .ToArray();
+            var lease = await _storage.Reserve(payloads)
+                .AttachExternalCancellation(cancellationToken);
             var itemCount = bundles.Length + files.Length;
             var downloadedBytes = new long[itemCount];
             var completedItems = 0;
@@ -95,8 +97,8 @@ namespace Bundles
                     {
                         var bundle = bundles[index];
                         await _bundles.Prepare(
-                                bundle.Name,
-                                $"Remote/{_platform}/{bundle.Name}",
+                                session,
+                                bundle,
                                 bytes => ReportProgress(index, bytes))
                             .AttachExternalCancellation(cancellationToken);
                     }
@@ -104,6 +106,7 @@ namespace Bundles
                     {
                         var file = files[index - bundles.Length];
                         await _files.ResolveUrl(
+                                session,
                                 file.Path,
                                 bytes => ReportProgress(index, bytes))
                             .AttachExternalCancellation(cancellationToken);

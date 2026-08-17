@@ -124,6 +124,12 @@ namespace Editor
 
         private static void AssertRemoteContentExcluded()
         {
+            var remoteAssets = Path.Combine(Application.dataPath, "RemoteAssets");
+            if (Directory.Exists(remoteAssets))
+            {
+                throw new InvalidOperationException(
+                    $"Remote Player staging project still contains '{remoteAssets}'.");
+            }
             foreach (var directory in new[]
                      {
                          "NovelTexts",

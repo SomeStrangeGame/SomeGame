@@ -10,7 +10,8 @@ namespace Editor
     {
         internal static void Validate(
             IEnumerable<string> contentIds,
-            ICollection<string> errors)
+            ICollection<string> errors,
+            string remoteBasePath = null)
         {
             var profile = NovelContentBuildProfile.Load();
             try
@@ -23,17 +24,22 @@ namespace Editor
                 return;
             }
             foreach (var target in profile.Targets)
-                ValidateTarget(target, profile, contentIds, errors);
+                ValidateTarget(target, profile, contentIds, errors, remoteBasePath);
         }
 
         private static void ValidateTarget(
             UnityEditor.BuildTarget target,
             NovelContentBuildProfile profile,
             IEnumerable<string> contentIds,
-            ICollection<string> errors)
+            ICollection<string> errors,
+            string remoteBasePath)
         {
             var platform = AssetBundleBuildPipeline.GetPlatformName(target);
-            var remoteRoot = Path.Combine(Application.streamingAssetsPath, "Remote", platform);
+            var remoteRoot = Path.Combine(
+                string.IsNullOrWhiteSpace(remoteBasePath)
+                    ? Path.Combine(Application.streamingAssetsPath, "Remote")
+                    : remoteBasePath,
+                platform);
             var path = Path.Combine(remoteRoot, "release.json");
             if (!File.Exists(path))
             {

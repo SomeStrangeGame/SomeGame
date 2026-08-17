@@ -11,7 +11,8 @@ namespace Editor
     {
         internal static string Build(
             ContentBuildResult result,
-            NovelContentBuildProfile profile)
+            NovelContentBuildProfile profile,
+            string outputRoot)
         {
             if (string.IsNullOrWhiteSpace(result.PublishPath)
                 || !Directory.Exists(result.PublishPath))
@@ -19,98 +20,71 @@ namespace Editor
                 throw new InvalidOperationException(
                     "Publish artifact must be built before the player content seed.");
             }
-            var projectPath = Directory.GetParent(Application.dataPath)?.FullName
-                ?? throw new InvalidOperationException("Project path cannot be resolved.");
-            var outputRoot = Path.Combine(
-                projectPath,
-                profile.PlayerSeedRoot.Replace('/', Path.DirectorySeparatorChar),
-                result.Platform);
-            var stagingRoot = outputRoot + ".staging";
-            var backupRoot = outputRoot + ".previous";
-            if (Directory.Exists(stagingRoot))
-                Directory.Delete(stagingRoot, true);
-            Directory.CreateDirectory(stagingRoot);
+            if (Directory.Exists(outputRoot))
+                throw new InvalidOperationException($"Player seed workspace is not empty: {outputRoot}");
+            Directory.CreateDirectory(outputRoot);
+            var releaseSource = Path.Combine(result.RemotePath, "release.json");
+            var release = JsonUtility.FromJson<ContentReleaseDto>(
+                File.ReadAllText(releaseSource));
+            var seedRemote = Path.Combine(outputRoot, "Remote", result.Platform);
+            Directory.CreateDirectory(seedRemote);
+            File.Copy(releaseSource, Path.Combine(seedRemote, "release.json"), true);
 
-            try
+            if (profile.DeliveryMode == ContentDeliveryMode.Embedded)
             {
-                var releaseSource = Path.Combine(result.RemotePath, "release.json");
-                var release = JsonUtility.FromJson<ContentReleaseDto>(
-                    File.ReadAllText(releaseSource));
-                var seedRemote = Path.Combine(stagingRoot, "Remote", result.Platform);
-                Directory.CreateDirectory(seedRemote);
-                File.Copy(releaseSource, Path.Combine(seedRemote, "release.json"), true);
-
-                if (profile.DeliveryMode == ContentDeliveryMode.Embedded)
-                {
-                    CopyDirectory(result.PublishPath, stagingRoot);
-                }
-                else if (profile.DeliveryMode == ContentDeliveryMode.Hybrid)
-                {
-                    var embeddedGroups = new HashSet<string>(
-                        profile.EmbeddedDeliveryGroups,
-                        StringComparer.OrdinalIgnoreCase);
-                    var knownGroups = new HashSet<string>(
-                        (release.deliveryGroups ?? Array.Empty<ContentDeliveryGroupEntry>())
-                            .Select(group => group.id),
-                        StringComparer.OrdinalIgnoreCase);
-                    foreach (var group in embeddedGroups)
-                    {
-                        if (!knownGroups.Contains(group))
-                        {
-                            throw new InvalidOperationException(
-                                $"Embedded delivery group '{group}' is absent from release.");
-                        }
-                    }
-                    foreach (var file in release.files ?? Array.Empty<ContentFileEntry>())
-                    {
-                        if (embeddedGroups.Contains(file.deliveryGroup))
-                            CopyContentFile(file.path, stagingRoot);
-                    }
-                    foreach (var bundle in release.bundles ?? Array.Empty<BundleReleaseEntry>())
-                    {
-                        if (embeddedGroups.Contains(bundle.deliveryGroup))
-                        {
-                            CopyBundlePayload(
-                                bundle,
-                                result.RemotePath,
-                                seedRemote);
-                        }
-                    }
-                }
-
-                var size = Directory.GetFiles(stagingRoot, "*", SearchOption.AllDirectories)
-                    .Where(path => !path.EndsWith(".meta", StringComparison.OrdinalIgnoreCase))
-                    .Sum(path => new FileInfo(path).Length);
-                if (size > profile.EmbeddedBudgetBytes)
-                {
-                    var message = $"Player content seed exceeds "
-                        + $"{FormatBytes(profile.EmbeddedBudgetBytes)}: {FormatBytes(size)}.";
-                    if (profile.EnforceEmbeddedBudget)
-                        throw new InvalidOperationException(message);
-                    Debug.LogWarning(message);
-                }
-
-                if (Directory.Exists(backupRoot))
-                    Directory.Delete(backupRoot, true);
-                if (Directory.Exists(outputRoot))
-                    Directory.Move(outputRoot, backupRoot);
-                Directory.Move(stagingRoot, outputRoot);
-                if (Directory.Exists(backupRoot))
-                    Directory.Delete(backupRoot, true);
-                result.PlayerSeedPath = outputRoot;
-                Debug.Log(
-                    $"Novel player content seed ({profile.DeliveryMode}) completed: "
-                    + outputRoot);
-                return outputRoot;
+                CopyDirectory(result.PublishPath, outputRoot);
             }
-            catch
+            else if (profile.DeliveryMode == ContentDeliveryMode.Hybrid)
             {
-                if (Directory.Exists(stagingRoot))
-                    Directory.Delete(stagingRoot, true);
-                if (!Directory.Exists(outputRoot) && Directory.Exists(backupRoot))
-                    Directory.Move(backupRoot, outputRoot);
-                throw;
+                var embeddedGroups = new HashSet<string>(
+                    profile.EmbeddedDeliveryGroups,
+                    StringComparer.OrdinalIgnoreCase);
+                var knownGroups = new HashSet<string>(
+                    (release.deliveryGroups ?? Array.Empty<ContentDeliveryGroupEntry>())
+                        .Select(group => group.id),
+                    StringComparer.OrdinalIgnoreCase);
+                foreach (var group in embeddedGroups)
+                {
+                    if (!knownGroups.Contains(group))
+                    {
+                        throw new InvalidOperationException(
+                            $"Embedded delivery group '{group}' is absent from release.");
+                    }
+                }
+                foreach (var file in release.files ?? Array.Empty<ContentFileEntry>())
+                {
+                    if (embeddedGroups.Contains(file.deliveryGroup))
+                        CopyContentFile(file.path, outputRoot);
+                }
+                foreach (var bundle in release.bundles ?? Array.Empty<BundleReleaseEntry>())
+                {
+                    if (embeddedGroups.Contains(bundle.deliveryGroup))
+                    {
+                        CopyBundlePayload(
+                            bundle,
+                            result.RemotePath,
+                            seedRemote);
+                    }
+                }
             }
+
+            var size = Directory.GetFiles(outputRoot, "*", SearchOption.AllDirectories)
+                .Where(path => !path.EndsWith(".meta", StringComparison.OrdinalIgnoreCase))
+                .Sum(path => new FileInfo(path).Length);
+            if (size > profile.EmbeddedBudgetBytes)
+            {
+                var message = $"Player content seed exceeds "
+                    + $"{FormatBytes(profile.EmbeddedBudgetBytes)}: {FormatBytes(size)}.";
+                if (profile.EnforceEmbeddedBudget)
+                    throw new InvalidOperationException(message);
+                Debug.LogWarning(message);
+            }
+
+            result.PlayerSeedPath = outputRoot;
+            Debug.Log(
+                $"Novel player content seed workspace ({profile.DeliveryMode}) completed: "
+                + outputRoot);
+            return outputRoot;
         }
 
         private static void CopyContentFile(string relativePath, string destinationRoot)

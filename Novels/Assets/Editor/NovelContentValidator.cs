@@ -42,6 +42,17 @@ namespace Editor
             ValidateOrThrow(true);
         }
 
+        internal static void ValidateBuiltOutputOrThrow(string remoteBasePath)
+        {
+            var errors = ValidateLoadedConfiguration(true, remoteBasePath);
+            if (errors.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    "Novel content validation failed:\n- "
+                    + string.Join("\n- ", errors));
+            }
+        }
+
         private static void ValidateOrThrow(bool validateBuiltOutput)
         {
             var errors = ValidateLoadedConfiguration(validateBuiltOutput);
@@ -54,7 +65,8 @@ namespace Editor
         }
 
         private static IReadOnlyList<string> ValidateLoadedConfiguration(
-            bool validateBuiltOutput)
+            bool validateBuiltOutput,
+            string remoteBasePath = null)
         {
             var errors = new List<string>();
             var entryPoint = UnityEngine.Object.FindFirstObjectByType<Novels.EntryPoint>(
@@ -121,7 +133,8 @@ namespace Editor
                     catalog.Entries
                         .Where(entry => entry != null)
                         .Select(entry => entry.ContentId),
-                    errors);
+                    errors,
+                    remoteBasePath);
             return errors;
         }
 
@@ -200,6 +213,7 @@ namespace Editor
             Novels.Content.EpisodeDefinition episode,
             ICollection<string> errors)
         {
+            PrefabContentValidator.ValidateEpisode(prefix, episode.Id, errors);
             foreach (var assetPath in new[]
                      {
                          Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(

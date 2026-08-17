@@ -21,88 +21,118 @@ namespace Bundles
             StringComparer.OrdinalIgnoreCase);
         private readonly BundlePayloadLoader _payloads;
         private readonly BundledAssetCache _assets;
-        private readonly string _platform;
 
         internal BundleStore(
             BundlePayloadLoader payloads,
-            string platform,
             CancellationToken cancellationToken)
         {
             _payloads = payloads ?? throw new ArgumentNullException(nameof(payloads));
-            _platform = platform;
             _assets = new BundledAssetCache(cancellationToken);
         }
 
-        internal UniTask<AssetBundle> GetPersistent(string bundleName) =>
-            GetOrLoad(bundleName, true);
+        internal UniTask<AssetBundle> GetPersistent(
+            ContentReleaseSession session,
+            string bundleName) =>
+            GetOrLoad(session, bundleName, true);
 
-        internal async UniTask<AssetBundle> Acquire(string bundleName)
+        internal async UniTask<AssetBundle> Acquire(
+            ContentReleaseSession session,
+            string bundleName)
         {
-            var bundle = await GetOrLoad(bundleName, false);
-            _records[GetKey(bundleName)].Leases++;
+            var bundle = await GetOrLoad(session, bundleName, false);
+            _records[GetKey(session, bundleName)].Leases++;
             return bundle;
         }
 
-        internal AssetBundle GetOwned(string bundleName) => GetLoaded(bundleName);
+        internal AssetBundle GetOwned(
+            ContentReleaseSession session,
+            string bundleName) =>
+            GetLoaded(session, bundleName);
 
-        internal UniTask<Sprite> GetSprite(string bundleName, string assetName)
+        internal UniTask<Sprite> GetSprite(
+            ContentReleaseSession session,
+            string bundleName,
+            string assetName)
         {
-            var key = GetKey(bundleName);
+            var key = GetKey(session, bundleName);
             return _assets.GetSprite(
                 bundleName,
                 key,
-                GetLoaded(bundleName),
+                GetLoaded(session, bundleName),
                 assetName);
         }
 
-        internal UniTask<Sprite> TryGetSprite(string bundleName, string assetName)
+        internal UniTask<Sprite> TryGetSprite(
+            ContentReleaseSession session,
+            string bundleName,
+            string assetName)
         {
-            var key = GetKey(bundleName);
+            var key = GetKey(session, bundleName);
             return _assets.TryGetSprite(
                 key,
-                GetLoaded(bundleName),
+                GetLoaded(session, bundleName),
                 assetName);
         }
 
         internal UniTask<T> GetScriptableObject<T>(
+            ContentReleaseSession session,
             string bundleName,
             string assetName)
             where T : ScriptableObject
         {
-            var key = GetKey(bundleName);
+            var key = GetKey(session, bundleName);
             return _assets.GetScriptableObject<T>(
                 bundleName,
                 key,
-                GetLoaded(bundleName),
+                GetLoaded(session, bundleName),
                 assetName);
         }
 
-        internal UniTask<GameObject> GetPrefab(string bundleName, string assetName)
+        internal UniTask<GameObject> GetPrefab(
+            ContentReleaseSession session,
+            string bundleName,
+            string assetName)
         {
-            var key = GetKey(bundleName);
+            var key = GetKey(session, bundleName);
             return _assets.GetPrefab(
                 bundleName,
                 key,
-                GetLoaded(bundleName),
+                GetLoaded(session, bundleName),
                 assetName);
         }
 
-        internal string ResolveAssetName(string bundleName, string requestedName) =>
-            _assets.Resolve(GetKey(bundleName), requestedName);
+        internal string ResolveAssetName(
+            ContentReleaseSession session,
+            string bundleName,
+            string requestedName) =>
+            _assets.Resolve(GetKey(session, bundleName), requestedName);
 
-        internal void Release(IEnumerable<string> bundleNames)
+        internal void Release(
+            ContentReleaseSession session,
+            IEnumerable<string> bundleNames)
         {
             foreach (var bundleName in bundleNames)
             {
-                var key = GetKey(bundleName);
+                var key = GetKey(session, bundleName);
                 if (!_records.TryGetValue(key, out var record))
                     continue;
                 record.Leases = Math.Max(0, record.Leases - 1);
                 if (record.Leases > 0 || record.Persistent)
                     continue;
-                _records.Remove(key);
-                record.Bundle?.Unload(false);
-                _assets.Remove(key);
+                Remove(key, record);
+            }
+        }
+
+        internal void Discard(ContentReleaseSession session)
+        {
+            if (session == null)
+                return;
+            foreach (var bundle in session.Release.Bundles)
+            {
+                var key = GetKey(session, bundle.Name);
+                if (!_records.TryGetValue(key, out var record) || record.Leases > 0)
+                    continue;
+                Remove(key, record);
             }
         }
 
@@ -115,12 +145,15 @@ namespace Bundles
         }
 
         private async UniTask<AssetBundle> GetOrLoad(
+            ContentReleaseSession session,
             string bundleName,
             bool persistent)
         {
+            if (session == null)
+                throw new ArgumentNullException(nameof(session));
             if (string.IsNullOrWhiteSpace(bundleName))
                 throw new ContentConfigurationException("Bundle name is empty.");
-            var key = GetKey(bundleName);
+            var key = GetKey(session, bundleName);
             if (!_records.TryGetValue(key, out var record))
             {
                 record = new Record();
@@ -132,19 +165,20 @@ namespace Bundles
             if (!record.IsLoading)
             {
                 record.IsLoading = true;
-                record.Loading = Load(bundleName, key, record).Preserve();
+                record.Loading = Load(session, bundleName, key, record).Preserve();
             }
             return await record.Loading;
         }
 
         private async UniTask<AssetBundle> Load(
+            ContentReleaseSession session,
             string bundleName,
             string bundleKey,
             Record record)
         {
             try
             {
-                record.Bundle = await _payloads.Load(bundleName, bundleKey);
+                record.Bundle = await _payloads.Load(session, bundleName);
                 _assets.Register(bundleKey, record.Bundle);
                 return record.Bundle;
             }
@@ -154,19 +188,36 @@ namespace Bundles
             }
         }
 
-        private AssetBundle GetLoaded(string bundleName)
+        private AssetBundle GetLoaded(
+            ContentReleaseSession session,
+            string bundleName)
         {
-            var key = GetKey(bundleName);
+            var key = GetKey(session, bundleName);
             if (!_records.TryGetValue(key, out var record) || record.Bundle == null)
             {
                 throw new ContentConfigurationException(
-                    $"AssetBundle '{bundleName}' is not loaded.");
+                    $"AssetBundle '{bundleName}' is not loaded for release "
+                    + $"'{session.ReleaseId}'.");
             }
             return record.Bundle;
         }
 
-        private string GetKey(string bundleName) =>
-            $"Remote/{_platform}/{bundleName}";
+        private void Remove(string key, Record record)
+        {
+            _records.Remove(key);
+            record.Bundle?.Unload(false);
+            _assets.Remove(key);
+        }
 
+        private static string GetKey(
+            ContentReleaseSession session,
+            string bundleName)
+        {
+            var descriptor = session.FindBundle(bundleName)
+                ?? throw new ContentIntegrityException(
+                    $"Bundle '{bundleName}' is absent from release "
+                    + $"'{session.ReleaseId}'.");
+            return $"{session.ReleaseId}|{descriptor.Name}|{descriptor.Version}";
+        }
     }
 }
