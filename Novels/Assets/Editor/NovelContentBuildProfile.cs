@@ -16,7 +16,7 @@ namespace Editor
             Bundles.ContentDeliveryMode.Remote;
         [SerializeField] private string[] _embeddedDeliveryGroups = Array.Empty<string>();
         [SerializeField] private string _minimumClientVersion;
-        [SerializeField] private string _publishRoot = "Build/NovelContent";
+        [SerializeField] private string _publishRoot = "Build/NovelContent/ServerRoot";
         [SerializeField] private string _playerSeedRoot = "Build/NovelContentSeed";
         [SerializeField] private long _totalBudgetBytes = 1024L * 1024L * 1024L;
         [SerializeField] private long _embeddedBudgetBytes = 256L * 1024L * 1024L;
@@ -41,7 +41,7 @@ namespace Editor
             ? Application.version
             : _minimumClientVersion;
         internal string PublishRoot => string.IsNullOrWhiteSpace(_publishRoot)
-            ? "Build/NovelContent"
+            ? "Build/NovelContent/ServerRoot"
             : _publishRoot;
         internal string PlayerSeedRoot => string.IsNullOrWhiteSpace(_playerSeedRoot)
             ? "Build/NovelContentSeed"

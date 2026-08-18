@@ -47,9 +47,6 @@ namespace Editor
         internal string PublishRoot { get; }
         internal string PlayerSeedRoot { get; }
 
-        internal string PublishPath(string platform) =>
-            Path.Combine(PublishRoot, platform);
-
         internal string PlayerSeedPath(string platform) =>
             Path.Combine(PlayerSeedRoot, platform);
 
@@ -88,9 +85,7 @@ namespace Editor
                         Application.streamingAssetsPath,
                         "Remote",
                         result.Platform);
-                    result.PublishPath = GetProjectDestination(
-                        profile.PublishRoot,
-                        result.Platform);
+                    result.PublishPath = GetProjectDestination(profile.PublishRoot);
                     result.PlayerSeedPath = profile.DeliveryMode
                         == Bundles.ContentDeliveryMode.Remote
                             ? null
@@ -141,12 +136,10 @@ namespace Editor
             var staged = new List<(string path, string destination)>
             {
                 (RemoteRoot, Path.Combine(Application.streamingAssetsPath, "Remote")),
+                (PublishRoot, GetProjectDestination(profile.PublishRoot)),
             };
             foreach (var result in results)
             {
-                staged.Add((
-                    PublishPath(result.Platform),
-                    GetProjectDestination(profile.PublishRoot, result.Platform)));
                 if (profile.DeliveryMode != Bundles.ContentDeliveryMode.Remote)
                 {
                     staged.Add((
@@ -166,6 +159,11 @@ namespace Editor
                 _projectPath,
                 root.Replace('/', Path.DirectorySeparatorChar),
                 platform);
+
+        private string GetProjectDestination(string root) =>
+            Path.Combine(
+                _projectPath,
+                root.Replace('/', Path.DirectorySeparatorChar));
 
         private void DeleteBackups()
         {

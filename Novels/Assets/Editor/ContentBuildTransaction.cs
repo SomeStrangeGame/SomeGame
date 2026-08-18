@@ -25,7 +25,7 @@ namespace Editor
                     ContentPublishArtifactBuilder.Build(
                         result,
                         profile,
-                        workspace.PublishPath(result.Platform));
+                        workspace.PublishRoot);
                     if (profile.DeliveryMode != Bundles.ContentDeliveryMode.Remote)
                     {
                         PlayerContentSeedBuilder.Build(

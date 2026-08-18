@@ -18,7 +18,7 @@ MonoBehaviour:
   _deliveryMode: 2
   _embeddedDeliveryGroups: []
   _minimumClientVersion: ''
-  _publishRoot: Build/NovelContent
+  _publishRoot: Build/NovelContent/ServerRoot
   _playerSeedRoot: Build/NovelContentSeed
   _totalBudgetBytes: 1073741824
   _embeddedBudgetBytes: 268435456

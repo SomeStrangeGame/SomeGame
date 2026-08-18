@@ -13,13 +13,18 @@ namespace Editor
             string outputRoot)
         {
             var platform = result.Platform;
-            if (Directory.Exists(outputRoot))
-                throw new InvalidOperationException($"Publish workspace is not empty: {outputRoot}");
             Directory.CreateDirectory(outputRoot);
             var remoteSource = result.RemotePath;
+            var remoteDestination = Path.Combine(outputRoot, "Remote", platform);
+            if (Directory.Exists(remoteDestination))
+            {
+                throw new InvalidOperationException(
+                    $"Publish workspace already contains platform '{platform}': "
+                    + remoteDestination);
+            }
             CopyDirectory(
                 remoteSource,
-                Path.Combine(outputRoot, "Remote", platform));
+                remoteDestination);
             var releasePath = Path.Combine(remoteSource, "release.json");
             var release = JsonUtility.FromJson<ContentReleaseDto>(
                 File.ReadAllText(releasePath));
@@ -36,6 +41,8 @@ namespace Editor
                 var destination = Path.Combine(
                     outputRoot,
                     file.path.Replace('/', Path.DirectorySeparatorChar));
+                if (File.Exists(destination))
+                    continue;
                 Directory.CreateDirectory(Path.GetDirectoryName(destination));
                 File.Copy(source, destination, true);
             }

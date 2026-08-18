@@ -119,7 +119,7 @@
 - `ContentReleaseValidator` is shared by runtime, Editor validation, and the build pipeline. It validates schema/client versions, duplicate names and paths, normalized paths, SHA metadata, and delivery-group totals.
 - The Editor `ContentFilePolicy` is the only source of deliverable external-file rules. Hidden files and unsupported extensions (including `.DS_Store`) are excluded from releases and publish artifacts.
 - Release files carry story delivery-group metadata. The build reports total/group/file budgets, warns about oversized payloads and large WAV files, and supports streamed OGG audio at runtime.
-- A successful Android content build now atomically creates a complete ignored deploy artifact under `Build/NovelContent/Android`, containing platform bundles plus every Ink/audio/video file pinned by the release.
+- A successful content build now atomically creates one complete ignored deploy artifact under `Build/NovelContent/ServerRoot`. Common Ink/audio/video files live at its root, while platform-specific releases and bundles live under `Remote/<platform>`; the directory contents map directly to the configured remote server root.
 - Music and ambient clips are destroyed when their channel is cleared, closing the previous orphaned-clip lifetime gap.
 - Generated bootstrap/catalog prefabs share `GeneratedPrefabWriter`, which enforces a non-zero root scale and atomic Unity prefab serialization. Existing UI dimensions, reference resolutions, and layout values remain unchanged by design.
 - `Novels.Locale` owns the session locale and deterministic locale fallback shared by application strings, catalog text, and episode titles.
