@@ -46,6 +46,7 @@ namespace Editor
                 episode,
                 parser,
                 audio,
+                backgrounds,
                 cameraActions,
                 issues);
 
@@ -74,6 +75,7 @@ namespace Editor
             Novels.Content.EpisodeDefinition episode,
             Novels.StoryCommands.Entity parser,
             ICollection<string> audio,
+            ICollection<string> backgrounds,
             ICollection<Novels.StoryContracts.StoryCameraAction> cameraActions,
             ICollection<ContentValidationIssue> issues)
         {
@@ -96,6 +98,10 @@ namespace Editor
                 else if (result.Command is Novels.StoryCommands.AudioStoryCommand command)
                 {
                     audio.Add(command.Data.AssetName);
+                }
+                else if (result.Command is Novels.StoryCommands.BackgroundStoryCommand background)
+                {
+                    backgrounds.Add(background.Data.AssetName);
                 }
                 else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
                 {

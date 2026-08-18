@@ -20,38 +20,6 @@ MonoBehaviour:
     _titleKey: episode.s01e01.title
     _storyPath: s01e01.ink.json
     _contentVersion: 1
-    _videoIds:
-    - alexasroom_water
-    - arrivalInatlantis
-    - atlantisdestroy
-    - bike_water
-    - bikeinmove_water
-    - boat
-    - boatinmove
-    - boatsunset
-    - bridge1_water
-    - immersionatlantis
-    - islandunderwater_water
-    - jellyfish
-    - lightingmeteor
-    - mainhall_water
-    - mainroom
-    - meteor
-    - oldtown_water
-    - philshouse
-    - pier
-    - prohod_dark_water
-    - sandybeach
-    - shark
-    - shark1
-    - sharkeat
-    - tonel_water
-    - tonelwithpath
-    - underwater_water
-    - wardrobe_dark_water
-    - wardrobe_water
-    - whirlpoolnight
-    - window in
     _defaultAudioExtension: .wav
     _silentAudioIds:
     - тишина

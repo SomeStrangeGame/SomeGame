@@ -119,8 +119,8 @@ namespace Editor
                             : episode.Media.DefaultAudioExtension);
                 yield return $"NovelsAudio/{prefix}/{fileName}";
             }
-            foreach (var videoId in episode.Media.VideoIds)
-                yield return $"NovelsVideos/{prefix}/{videoId}.mp4";
+            foreach (var backgroundId in references.Backgrounds)
+                yield return $"NovelsVideos/{prefix}/{backgroundId}.mp4";
         }
     }
 }

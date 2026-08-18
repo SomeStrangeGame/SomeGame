@@ -79,6 +79,7 @@ namespace Bundles
 
         public MediaScope CreateMediaScope(
             string prefix,
+            System.Collections.Generic.IEnumerable<string> videoDeliveryGroups,
             MediaManifest manifest,
             CancellationToken cancellationToken)
         {
@@ -87,7 +88,11 @@ namespace Bundles
                 this,
                 session,
                 cancellationToken,
-                CreateMediaResolver(session, prefix, manifest));
+                CreateMediaResolver(
+                    session,
+                    prefix,
+                    videoDeliveryGroups,
+                    manifest));
         }
 
         public UniTask<ContentReleaseSnapshot> LoadReleaseAsync(
@@ -219,8 +224,14 @@ namespace Bundles
         internal MediaResolver CreateMediaResolver(
             ContentReleaseSession session,
             string prefix,
+            System.Collections.Generic.IEnumerable<string> videoDeliveryGroups,
             MediaManifest manifest) =>
-            new(prefix, manifest, path => _contentFiles.ResolveUrl(session, path));
+            new(
+                session,
+                prefix,
+                videoDeliveryGroups,
+                manifest,
+                path => _contentFiles.ResolveUrl(session, path));
 
         private async UniTask<ContentReleaseSnapshot> LoadRelease(
             string clientVersion,

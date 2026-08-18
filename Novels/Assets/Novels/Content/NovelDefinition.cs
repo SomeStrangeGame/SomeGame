@@ -111,16 +111,10 @@ namespace Novels.Content
     public sealed class EpisodeMediaDefinition
     {
         public EpisodeMediaDefinition(
-            IEnumerable<string> videoIds,
             IDictionary<string, string> audioExtensions = null,
             string defaultAudioExtension = ".wav",
             IEnumerable<string> silentAudioIds = null)
         {
-            var videos = (videoIds ?? Array.Empty<string>())
-                .Where(value => !string.IsNullOrWhiteSpace(value))
-                .Distinct(StringComparer.OrdinalIgnoreCase)
-                .ToArray();
-            VideoIds = Array.AsReadOnly(videos);
             AudioExtensions = new System.Collections.ObjectModel.ReadOnlyDictionary<string, string>(
                 audioExtensions == null
                     ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
@@ -135,7 +129,6 @@ namespace Novels.Content
                     .ToArray());
         }
 
-        public IReadOnlyList<string> VideoIds { get; }
         public IReadOnlyDictionary<string, string> AudioExtensions { get; }
         public string DefaultAudioExtension { get; }
         public IReadOnlyList<string> SilentAudioIds { get; }

@@ -36,7 +36,6 @@ namespace Novels.Content
             [SerializeField] private string _titleKey;
             [SerializeField] private string _storyPath;
             [SerializeField] private string _contentVersion;
-            [SerializeField] private string[] _videoIds;
             [SerializeField] private string _defaultAudioExtension;
             [SerializeField] private string[] _silentAudioIds;
             [SerializeField] private string[] _audioDependencies;
@@ -71,7 +70,6 @@ namespace Novels.Content
                     _storyPath,
                     _contentVersion,
                     new EpisodeMediaDefinition(
-                        _videoIds,
                         audioExtensions,
                         _defaultAudioExtension,
                         _silentAudioIds),

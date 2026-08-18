@@ -241,17 +241,6 @@ namespace Editor
             Novels.Content.EpisodeDefinition episode,
             ICollection<string> errors)
         {
-            foreach (var videoId in episode.Media.VideoIds)
-            {
-                var path = Path.Combine(
-                    Application.streamingAssetsPath,
-                    "NovelsVideos",
-                    prefix,
-                    videoId + ".mp4");
-                if (!File.Exists(path))
-                    errors.Add($"Configured video does not exist: {path}");
-            }
-
             foreach (var audio in episode.Media.AudioExtensions)
             {
                 var path = Path.Combine(

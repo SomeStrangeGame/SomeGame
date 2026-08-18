@@ -52,8 +52,15 @@ namespace Novels
             var episodeBundles = _ctx.Bundles
                 .CreateMediaScope(
                     _definition.Prefix,
+                    new[]
+                    {
+                        ContentAddressing.ContentPackageConvention.EpisodeDeliveryGroup(
+                            _definition.Id,
+                            _episode.Id),
+                        ContentAddressing.ContentPackageConvention.SharedDeliveryGroup(
+                            _definition.Id),
+                    },
                     new Bundles.MediaManifest(
-                        _episode.Media.VideoIds,
                         _episode.Media.AudioExtensions,
                         _episode.Media.DefaultAudioExtension,
                         _episode.Media.SilentAudioIds),

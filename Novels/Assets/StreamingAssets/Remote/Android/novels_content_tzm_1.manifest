@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 4159584725
+CRC: 489732278
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 57e531aafbad57b6b1045b24e2cc6311
+    Hash: e9087ba204810bca3543de62e25057fd
   TypeTreeHash:
     serializedVersion: 2
-    Hash: cf1de2c1eee1062a3845be3966f9baf7
+    Hash: ea798b657ca1cd4c9310fc84ded93b61
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: 21b9fdc57fe41ad2529e8950257b5950
+    Hash: e7d390ad3daf79a5bf3d3f65f7ec4337
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -59,15 +59,13 @@ ClassTypes:
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
 - AssemblyName: Localization
-  ClassName: Localization.LocalizationData/Pair
+  ClassName: Localization.LocalizationData/LocalizedValue
 - AssemblyName: Localization
-  ClassName: Localization.LocalizationData/Pair/Languages
+  ClassName: Localization.LocalizationData/Pair
 - AssemblyName: Novels.Content
   ClassName: Novels.Content.NovelContentAsset/AudioExtensionEntry
 - AssemblyName: Novels.Content
   ClassName: Novels.Content.NovelContentAsset/EpisodeEntry
-- AssemblyName: Novels.Content
-  ClassName: Novels.Content.NovelContentAsset/LocalizedTextEntry
 - AssemblyName: UnityEngine.CoreModule
   ClassName: UnityEngine.Events.PersistentCallGroup
 - AssemblyName: UnityEngine.CoreModule
