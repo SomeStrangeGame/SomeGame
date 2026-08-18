@@ -11,6 +11,14 @@ namespace Editor
         internal static IReadOnlyDictionary<string, string> Build()
         {
             var project = ContentProjectIndex.BuildOrThrow("en");
+            return Build(project);
+        }
+
+        internal static IReadOnlyDictionary<string, string> Build(
+            ContentProjectIndex project)
+        {
+            if (project == null)
+                throw new ArgumentNullException(nameof(project));
             var owners = new Dictionary<string, HashSet<string>>(
                 StringComparer.OrdinalIgnoreCase);
             foreach (var item in project.Entries)

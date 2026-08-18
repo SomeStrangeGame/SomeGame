@@ -1,9 +1,10 @@
 using System;
 using System.IO;
 using System.Text;
-using System.Security.Cryptography;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
@@ -13,7 +14,8 @@ namespace Editor
     {
         internal static IReadOnlyList<ContentBuildResult> Build(
             NovelContentBuildProfile profile,
-            string remotePath)
+            string remotePath,
+            ContentBuildSnapshot snapshot)
         {
             var targets = profile?.Targets
                 ?? throw new ArgumentNullException(nameof(profile));
@@ -21,14 +23,14 @@ namespace Editor
             if (targets == null || targets.Length == 0)
                 throw new ArgumentException("At least one build target is required.", nameof(targets));
 
-            var projectIndex = ContentProjectIndex.BuildOrThrow("en");
+            if (snapshot == null)
+                throw new ArgumentNullException(nameof(snapshot));
             if (string.IsNullOrWhiteSpace(remotePath))
                 throw new ArgumentException("Remote output path is required.", nameof(remotePath));
             if (Directory.Exists(remotePath))
                 throw new InvalidOperationException(
                     $"AssetBundle output path must be empty: {remotePath}");
             Directory.CreateDirectory(remotePath);
-            var releaseFiles = BuildReleaseFiles();
             var releases = new Dictionary<BuildTarget, string>();
             foreach (var target in targets)
             {
@@ -36,8 +38,8 @@ namespace Editor
                     target,
                     Path.Combine(remotePath, GetPlatformName(target)),
                     profile,
-                    projectIndex.BundleDeliveryGroups,
-                    releaseFiles);
+                    snapshot.Project.BundleDeliveryGroups,
+                    snapshot.Files);
             }
             Debug.Log($"AssetBundle workspace build completed: {remotePath}");
             return targets.Select(target => new ContentBuildResult(
@@ -76,7 +78,7 @@ namespace Editor
                         $"Could not calculate CRC for bundle '{bundle}'.");
                 var fileInfo = new FileInfo(sourceFile);
                 var bundleSize = fileInfo.Length;
-                var sha256 = ComputeSha256(sourceFile);
+                var sha256 = ContentHash.ComputeSha256(sourceFile);
 
                 var bundleDirectory = Path.Combine(targetPath, bundle);
                 var temporaryFile = sourceFile + ".built";
@@ -119,7 +121,7 @@ namespace Editor
                 profile.ContentSchemaVersion);
             File.WriteAllText(
                 Path.Combine(targetPath, "release.json"),
-                JsonUtility.ToJson(release, true),
+                Bundles.ContentReleaseCodec.Serialize(release),
                 new UTF8Encoding(false));
             ContentBuildReport.Log(
                 releaseFiles,
@@ -127,44 +129,6 @@ namespace Editor
                 releaseBundles.Sum(bundle => bundle.size),
                 profile);
             return release.releaseId;
-        }
-
-        private static List<Bundles.ContentFileEntry> BuildReleaseFiles()
-        {
-            var result = new List<Bundles.ContentFileEntry>();
-            var deliveryGroups = ContentDeliveryIndexBuilder.Build();
-            foreach (var file in ContentFilePolicy.EnumerateFiles())
-            {
-                var relative = ContentFilePolicy.GetRelativePath(file);
-                if (!deliveryGroups.TryGetValue(relative, out var deliveryGroup))
-                    continue;
-                var info = new FileInfo(file);
-                result.Add(new Bundles.ContentFileEntry
-                {
-                    path = relative,
-                    size = info.Length,
-                    sha256 = ComputeSha256(file),
-                    deliveryGroup = deliveryGroup,
-                });
-            }
-            foreach (var file in result)
-                file.payloadPath = $"Files/{file.sha256}";
-            return result.OrderBy(file => file.path, StringComparer.Ordinal)
-                .ToList();
-        }
-
-        internal static string ComputeSha256(string path)
-        {
-            using var sha = SHA256.Create();
-            using var stream = File.OpenRead(path);
-            return ToHex(sha.ComputeHash(stream));
-        }
-
-        private static string ToHex(byte[] data)
-        {
-            return BitConverter.ToString(data)
-                .Replace("-", string.Empty)
-                .ToLowerInvariant();
         }
 
         internal static string GetPlatformName(BuildTarget target)
@@ -179,6 +143,72 @@ namespace Editor
                 _ => throw new NotSupportedException(
                     $"AssetBundle output is not configured for {target}."),
             };
+        }
+    }
+
+    internal static class ContentHash
+    {
+        internal static string ComputeSha256(string path)
+        {
+            using var sha = SHA256.Create();
+            using var stream = File.OpenRead(path);
+            return ToHex(sha.ComputeHash(stream));
+        }
+
+        internal static string ComputeSha256(byte[] data)
+        {
+            using var sha = SHA256.Create();
+            return ToHex(sha.ComputeHash(data));
+        }
+
+        private static string ToHex(byte[] data) =>
+            BitConverter.ToString(data)
+                .Replace("-", string.Empty)
+                .ToLowerInvariant();
+    }
+
+    internal sealed class ContentBuildSnapshot
+    {
+        private ContentBuildSnapshot(
+            ContentProjectIndex project,
+            IDictionary<string, string> deliveryIndex,
+            IList<Bundles.ContentFileEntry> files)
+        {
+            Project = project ?? throw new ArgumentNullException(nameof(project));
+            DeliveryIndex = new ReadOnlyDictionary<string, string>(deliveryIndex);
+            Files = new ReadOnlyCollection<Bundles.ContentFileEntry>(files);
+        }
+
+        internal ContentProjectIndex Project { get; }
+        internal IReadOnlyDictionary<string, string> DeliveryIndex { get; }
+        internal IReadOnlyList<Bundles.ContentFileEntry> Files { get; }
+
+        internal static ContentBuildSnapshot Create(ContentProjectIndex project)
+        {
+            var deliveryIndex = ContentDeliveryIndexBuilder.Build(project);
+            var files = new List<Bundles.ContentFileEntry>();
+            foreach (var file in ContentFilePolicy.EnumerateFiles())
+            {
+                var relative = ContentFilePolicy.GetRelativePath(file);
+                if (!deliveryIndex.TryGetValue(relative, out var deliveryGroup))
+                    continue;
+                var info = new FileInfo(file);
+                var sha256 = ContentHash.ComputeSha256(file);
+                files.Add(new Bundles.ContentFileEntry
+                {
+                    path = relative,
+                    payloadPath = $"Files/{sha256}",
+                    size = info.Length,
+                    sha256 = sha256,
+                    deliveryGroup = deliveryGroup,
+                });
+            }
+            return new ContentBuildSnapshot(
+                project,
+                new Dictionary<string, string>(
+                    deliveryIndex,
+                    StringComparer.OrdinalIgnoreCase),
+                files.OrderBy(value => value.path, StringComparer.Ordinal).ToList());
         }
     }
 }

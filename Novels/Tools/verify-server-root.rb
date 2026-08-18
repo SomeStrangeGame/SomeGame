@@ -60,13 +60,56 @@ def verify_payload(root, relative_path, expected_size, expected_sha)
   puts "OK #{relative_path} (#{size} bytes)"
 end
 
-release_path = "Remote/#{platform}/release.json"
-release_json = request(URI.parse("#{root}/#{release_path}")) do |response|
-  response.body
+def download_text(root, relative_path)
+  request(URI.parse("#{root}/#{relative_path}")) do |response|
+    response.body
+  end
+end
+
+deployment = JSON.parse(download_text(root, "deployment.json"))
+platforms = deployment["platforms"] || []
+deployment_platform = platforms.find { |value| value["platform"] == platform }
+raise "Deployment does not contain platform #{platform}" if deployment_platform.nil?
+
+deployment_payloads = {}
+(deployment["payloads"] || []).each do |payload|
+  path = payload["path"]
+  metadata = [payload["size"], payload["sha256"], payload["activateLast"] == true]
+  raise "Duplicate deployment payload #{path}" if deployment_payloads.key?(path)
+  deployment_payloads[path] = metadata
+end
+
+canonical = platforms.sort_by { |value| value["platform"] }.map do |value|
+  "P:#{value["platform"]}:#{value["releaseId"]}:#{value["releasePath"]}"
+end
+canonical.concat((deployment["payloads"] || [])
+  .sort_by { |value| [value["activateLast"] == true ? 1 : 0, value["path"]] }
+  .map do |value|
+    active = value["activateLast"] == true ? "True" : "False"
+    "F:#{value["path"]}:#{value["size"]}:#{value["sha256"]}:#{active}"
+  end)
+actual_deployment_id = Digest::SHA256.hexdigest(canonical.join("\n"))
+unless actual_deployment_id.casecmp(deployment["deploymentId"].to_s).zero?
+  raise "Deployment fingerprint mismatch"
+end
+
+release_path = deployment_platform["releasePath"]
+release_metadata = deployment_payloads[release_path]
+raise "Deployment does not describe #{release_path}" if release_metadata.nil?
+raise "Release #{release_path} is not marked activateLast" unless release_metadata[2]
+release_json = download_text(root, release_path)
+release_size = release_json.bytesize
+release_sha = Digest::SHA256.hexdigest(release_json)
+raise "Size mismatch for #{release_path}" unless release_size == release_metadata[0]
+unless release_sha.casecmp(release_metadata[1]).zero?
+  raise "SHA-256 mismatch for #{release_path}"
 end
 release = JSON.parse(release_json)
 raise "Unsupported content schema: #{release["contentSchemaVersion"]}" \
   unless release["contentSchemaVersion"] == 5
+unless release["releaseId"] == deployment_platform["releaseId"]
+  raise "Deployment release ID mismatch for #{platform}"
+end
 
 payloads = {}
 (release["bundles"] || []).each do |bundle|
@@ -85,6 +128,13 @@ end
 
 puts "Release #{release["releaseId"]} (schema #{release["contentSchemaVersion"]})"
 payloads.each do |path, metadata|
+  deployed = deployment_payloads[path]
+  raise "Deployment does not describe #{path}" if deployed.nil?
+  unless deployed[0] == metadata[0] && deployed[1].casecmp(metadata[1]).zero?
+    raise "Deployment metadata differs for #{path}"
+  end
+  raise "Immutable payload is marked activateLast: #{path}" if deployed[2]
   verify_payload(root, path, metadata[0], metadata[1])
 end
-puts "Verified #{payloads.length} payloads for #{platform}."
+puts "Verified deployment #{deployment["deploymentId"]}."
+puts "Verified release and #{payloads.length} payloads for #{platform}."

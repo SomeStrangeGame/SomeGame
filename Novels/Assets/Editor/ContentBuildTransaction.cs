@@ -15,11 +15,16 @@ namespace Editor
             using var workspace = new ContentBuildWorkspace();
             try
             {
+                var project = ContentProjectIndex.BuildOrThrow("en");
+                NovelContentValidator.ValidateOrThrow(project);
+                var snapshot = ContentBuildSnapshot.Create(project);
                 var results = AssetBundleBuildPipeline.Build(
                     profile,
-                    workspace.RemoteRoot);
+                    workspace.RemoteRoot,
+                    snapshot);
                 NovelContentValidator.ValidateBuiltOutputOrThrow(
-                    workspace.RemoteRoot);
+                    workspace.RemoteRoot,
+                    snapshot);
                 ContentPublishArtifactBuilder.Build(
                     results,
                     profile,

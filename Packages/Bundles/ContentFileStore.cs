@@ -27,7 +27,8 @@ namespace Bundles
         internal async UniTask<string> ResolveUrl(
             ContentReleaseSession session,
             string path,
-            Action<long> onDownloadedBytes = null)
+            Action<long> onDownloadedBytes = null,
+            CancellationToken cancellationToken = default)
         {
             if (session == null)
                 throw new ArgumentNullException(nameof(session));
@@ -37,7 +38,8 @@ namespace Bundles
                 $"File '{path}' is absent from release '{session.ReleaseId}'.");
             var localPath = await _materializer.Materialize(
                 GetPayload(session, descriptor),
-                onDownloadedBytes);
+                onDownloadedBytes,
+                cancellationToken);
             return new Uri(localPath).AbsoluteUri;
         }
 
@@ -57,7 +59,10 @@ namespace Bundles
             ContentReleaseSession session,
             string path)
         {
-            var url = await ResolveUrl(session, path);
+            var url = await ResolveUrl(
+                session,
+                path,
+                cancellationToken: _cancellationToken);
             var localPath = new Uri(url).LocalPath;
             string text = null;
             Exception failure = null;

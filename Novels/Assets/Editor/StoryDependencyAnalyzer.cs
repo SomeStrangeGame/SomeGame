@@ -115,8 +115,10 @@ namespace Editor
                     group => group.Key,
                     group => group.Last().Groups["value"].Value,
                     StringComparer.Ordinal);
+            var lineNumber = 0;
             foreach (var rawLine in File.ReadLines(sourcePath))
             {
+                lineNumber++;
                 var line = rawLine.Trim();
                 if (line.Length == 0 || line.StartsWith("//", StringComparison.Ordinal))
                     continue;
@@ -124,7 +126,16 @@ namespace Editor
                     continue;
                 var result = parser.Parse(line, false);
                 if (!result.IsSuccess)
+                {
+                    issues.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.StoryCommandInvalid,
+                        $"Ink command is invalid at line {lineNumber}: "
+                        + $"[{result.Error.Code}] {result.Error.Message} Source: {line}",
+                        sourcePath,
+                        episode.ContentId,
+                        episode.Id));
                     continue;
+                }
                 if (result.Command is Novels.StoryCommands.BackgroundStoryCommand background)
                 {
                     AddResolvedReference(

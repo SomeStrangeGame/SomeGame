@@ -32,7 +32,10 @@ namespace Bundles
             string bundleName)
         {
             var descriptor = RequireDescriptor(session, bundleName);
-            await Prepare(session, descriptor);
+            await Prepare(
+                session,
+                descriptor,
+                cancellationToken: _cancellationToken);
             return await Open(ContentStoragePlanner.BundlePath(
                 session,
                 _platform,
@@ -42,7 +45,8 @@ namespace Bundles
         internal async UniTask Prepare(
             ContentReleaseSession session,
             BundleReleaseDescriptor descriptor,
-            Action<long> onDownloadedBytes = null)
+            Action<long> onDownloadedBytes = null,
+            CancellationToken cancellationToken = default)
         {
             if (session == null)
                 throw new ArgumentNullException(nameof(session));
@@ -50,7 +54,8 @@ namespace Bundles
                 throw new ArgumentNullException(nameof(descriptor));
             await _materializer.Materialize(
                 GetPayload(session, descriptor),
-                onDownloadedBytes);
+                onDownloadedBytes,
+                cancellationToken);
         }
 
         internal ContentCachePayload GetCachePayload(

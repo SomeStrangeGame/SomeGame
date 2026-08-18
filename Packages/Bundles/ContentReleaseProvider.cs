@@ -43,10 +43,9 @@ namespace Bundles
             string candidateJson = null;
             try
             {
-                var json = await _source.DownloadText(path);
-                release = JsonUtility.FromJson<ContentReleaseDto>(json);
-                ContentReleaseValidator.Validate(
-                    release,
+                var json = await _source.DownloadText(path, _cancellationToken);
+                release = ContentReleaseCodec.DeserializeAndValidate(
+                    json,
                     clientVersion,
                     minimumSupportedSchemaVersion,
                     maximumSupportedSchemaVersion);
@@ -115,8 +114,8 @@ namespace Bundles
             if (_cache.Exists(cachePath))
             {
                 var activeJson = _cache.TextFromCache(cachePath);
-                var active = JsonUtility.FromJson<ContentReleaseDto>(activeJson);
-                if (HasValidFingerprint(active) && !string.Equals(
+                if (TryGetFingerprintValidRelease(activeJson, out var active)
+                    && !string.Equals(
                         active.releaseId,
                         Current.ReleaseId,
                         StringComparison.Ordinal))
@@ -148,6 +147,22 @@ namespace Bundles
             }
         }
 
+        private static bool TryGetFingerprintValidRelease(
+            string json,
+            out ContentReleaseDto release)
+        {
+            try
+            {
+                release = ContentReleaseCodec.Deserialize(json);
+                return HasValidFingerprint(release);
+            }
+            catch
+            {
+                release = null;
+                return false;
+            }
+        }
+
         private ContentReleaseDto LoadCached(
             string cachePath,
             string clientVersion,
@@ -156,14 +171,11 @@ namespace Bundles
         {
             if (!_cache.Exists(cachePath))
                 throw new ContentSourceException($"Cached release is missing: {cachePath}");
-            var release = JsonUtility.FromJson<ContentReleaseDto>(
-                _cache.TextFromCache(cachePath));
-            ContentReleaseValidator.Validate(
-                release,
+            return ContentReleaseCodec.DeserializeAndValidate(
+                _cache.TextFromCache(cachePath),
                 clientVersion,
                 minimumSupportedSchemaVersion,
                 maximumSupportedSchemaVersion);
-            return release;
         }
     }
 }

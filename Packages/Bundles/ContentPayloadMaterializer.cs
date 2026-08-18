@@ -43,7 +43,11 @@ namespace Bundles
 
         private sealed class Operation
         {
+            internal CancellationTokenSource Cancellation;
+            internal int Subscribers;
+            internal bool Completed;
             internal UniTask<string> Task;
+            internal readonly Dictionary<int, ContentProgressReporter<long>> Progress = new();
         }
 
         private readonly IContentSource _source;
@@ -55,6 +59,7 @@ namespace Bundles
         private readonly Dictionary<string, Operation> _operations = new(
             StringComparer.OrdinalIgnoreCase);
         private readonly object _gate = new();
+        private int _nextSubscriberId;
 
         internal ContentPayloadMaterializer(
             IContentSource source,
@@ -74,62 +79,114 @@ namespace Bundles
 
         internal async UniTask<string> Materialize(
             ContentPayloadRequest request,
-            Action<long> onDownloadedBytes = null)
+            Action<long> onDownloadedBytes = null,
+            CancellationToken cancellationToken = default)
         {
-            var progress = new ContentProgressReporter<long>(
+            var subscriberProgress = new ContentProgressReporter<long>(
                 onDownloadedBytes,
                 _onLog);
             Operation operation;
-            var ownsOperation = false;
+            int subscriberId;
             lock (_gate)
             {
                 if (!_operations.TryGetValue(request.CachePath, out operation))
                 {
-                    operation = new Operation();
-                    operation.Task = MaterializeCore(request, progress).Preserve();
+                    operation = new Operation
+                    {
+                        Cancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                            _cancellationToken),
+                    };
                     _operations.Add(request.CachePath, operation);
-                    ownsOperation = true;
+                    operation.Task = RunOperation(
+                            operation,
+                            request)
+                        .Preserve();
                 }
+                subscriberId = ++_nextSubscriberId;
+                operation.Progress.Add(subscriberId, subscriberProgress);
+                operation.Subscribers++;
             }
 
             try
             {
-                var path = await operation.Task;
-                if (!ownsOperation)
-                    progress.Report(request.Size);
-                return path;
+                return await operation.Task.AttachExternalCancellation(cancellationToken);
             }
             finally
             {
+                ReleaseSubscriber(operation, subscriberId);
+            }
+        }
+
+        private async UniTask<string> RunOperation(
+            Operation operation,
+            ContentPayloadRequest request)
+        {
+            try
+            {
+                return await MaterializeCore(
+                    request,
+                    bytes => ReportProgress(operation, bytes),
+                    operation.Cancellation.Token);
+            }
+            finally
+            {
+                var disposeCancellation = false;
                 lock (_gate)
                 {
+                    operation.Completed = true;
                     if (_operations.TryGetValue(request.CachePath, out var current)
                         && ReferenceEquals(current, operation))
                     {
                         _operations.Remove(request.CachePath);
                     }
+                    disposeCancellation = operation.Subscribers == 0;
+                }
+                if (disposeCancellation)
+                    operation.Cancellation.Dispose();
+            }
+        }
+
+        private void ReleaseSubscriber(Operation operation, int subscriberId)
+        {
+            var cancel = false;
+            var dispose = false;
+            lock (_gate)
+            {
+                operation.Progress.Remove(subscriberId);
+                operation.Subscribers--;
+                if (operation.Subscribers == 0)
+                {
+                    cancel = !operation.Completed;
+                    dispose = operation.Completed;
                 }
             }
+            if (cancel)
+                operation.Cancellation.Cancel();
+            if (dispose)
+                operation.Cancellation.Dispose();
         }
 
         private async UniTask<string> MaterializeCore(
             ContentPayloadRequest request,
-            ContentProgressReporter<long> progress)
+            Action<long> reportProgress,
+            CancellationToken cancellationToken)
         {
             var localPath = _cache.GetLocalPath(request.CachePath, false);
             var downloaded = false;
             try
             {
+                cancellationToken.ThrowIfCancellationRequested();
                 await _integrity.VerifyAsync(
                     request.Name,
                     request.Size,
                     request.Sha256,
                     localPath,
                     true);
-                progress.Report(request.Size);
+                reportProgress(request.Size);
             }
             catch (OperationCanceledException)
-                when (_cancellationToken.IsCancellationRequested)
+                when (_cancellationToken.IsCancellationRequested
+                    || cancellationToken.IsCancellationRequested)
             {
                 throw;
             }
@@ -146,8 +203,9 @@ namespace Bundles
                     await _source.DownloadFile(
                         request.SourcePath,
                         temporaryPath,
-                        bytes => progress.Report(Math.Min(bytes, request.Size)));
-                    _cancellationToken.ThrowIfCancellationRequested();
+                        bytes => reportProgress(Math.Min(bytes, request.Size)),
+                        cancellationToken);
+                    cancellationToken.ThrowIfCancellationRequested();
                     await _integrity.VerifyAsync(
                         request.Name,
                         request.Size,
@@ -161,7 +219,7 @@ namespace Bundles
                         request.Sha256,
                         true);
                     downloaded = true;
-                    progress.Report(request.Size);
+                    reportProgress(request.Size);
                 }
                 finally
                 {
@@ -174,6 +232,16 @@ namespace Bundles
             if (downloaded)
                 _storage.SchedulePrune(request.CachePath);
             return localPath;
+        }
+
+        private void ReportProgress(Operation operation, long bytes)
+        {
+            ContentProgressReporter<long>[] reporters;
+            lock (_gate)
+                reporters = new List<ContentProgressReporter<long>>(
+                    operation.Progress.Values).ToArray();
+            foreach (var reporter in reporters)
+                reporter.Report(bytes);
         }
     }
 }

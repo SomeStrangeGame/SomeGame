@@ -19,20 +19,25 @@ namespace Bundles
             _policy = policy ?? throw new ArgumentNullException(nameof(policy));
         }
 
-        internal async UniTask<string> DownloadText(string url)
+        internal async UniTask<string> DownloadText(
+            string url,
+            CancellationToken cancellationToken)
         {
+            using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                _cancellationToken,
+                cancellationToken);
             for (var attempt = 1; ; attempt++)
             {
                 using var request = UnityWebRequest.Get(url);
                 try
                 {
-                    await Send(request);
+                    await Send(request, linkedCancellation.Token);
                     return request.downloadHandler.text;
                 }
                 catch (ContentSourceException exception)
                     when (ShouldRetry(exception, attempt))
                 {
-                    await WaitBeforeRetry(attempt);
+                    await WaitBeforeRetry(attempt, linkedCancellation.Token);
                 }
             }
         }
@@ -40,8 +45,12 @@ namespace Bundles
         internal async UniTask DownloadFile(
             string url,
             string destinationPath,
-            Action<long> onDownloadedBytes)
+            Action<long> onDownloadedBytes,
+            CancellationToken cancellationToken)
         {
+            using var linkedCancellation = CancellationTokenSource.CreateLinkedTokenSource(
+                _cancellationToken,
+                cancellationToken);
             for (var attempt = 1; ; attempt++)
             {
                 if (File.Exists(destinationPath))
@@ -50,13 +59,16 @@ namespace Bundles
                 request.downloadHandler = new DownloadHandlerFile(destinationPath, false);
                 try
                 {
-                    await Send(request, onDownloadedBytes);
+                    await Send(
+                        request,
+                        linkedCancellation.Token,
+                        onDownloadedBytes);
                     return;
                 }
                 catch (ContentSourceException exception)
                     when (ShouldRetry(exception, attempt))
                 {
-                    await WaitBeforeRetry(attempt);
+                    await WaitBeforeRetry(attempt, linkedCancellation.Token);
                 }
                 catch
                 {
@@ -69,6 +81,7 @@ namespace Bundles
 
         private async UniTask Send(
             UnityWebRequest request,
+            CancellationToken cancellationToken,
             Action<long> onDownloadedBytes = null)
         {
             if (_policy.TimeoutSeconds > 0)
@@ -76,9 +89,9 @@ namespace Bundles
             var operation = request.SendWebRequest();
             while (!operation.isDone)
             {
-                _cancellationToken.ThrowIfCancellationRequested();
+                cancellationToken.ThrowIfCancellationRequested();
                 onDownloadedBytes?.Invoke((long)request.downloadedBytes);
-                await UniTask.Yield(PlayerLoopTiming.Update, _cancellationToken);
+                await UniTask.Yield(PlayerLoopTiming.Update, cancellationToken);
             }
             if (request.result != UnityWebRequest.Result.Success)
             {
@@ -93,14 +106,16 @@ namespace Bundles
         private bool ShouldRetry(ContentSourceException exception, int attempt) =>
             exception.IsTransient && attempt < _policy.MaximumAttempts;
 
-        private async UniTask WaitBeforeRetry(int failedAttempt)
+        private async UniTask WaitBeforeRetry(
+            int failedAttempt,
+            CancellationToken cancellationToken)
         {
             var delay = _policy.GetRetryDelayMilliseconds(failedAttempt);
             if (delay <= 0)
                 return;
             await UniTask.Delay(
                 delay,
-                cancellationToken: _cancellationToken);
+                cancellationToken: cancellationToken);
         }
 
         private static ContentSourceFailureKind GetFailureKind(UnityWebRequest request)

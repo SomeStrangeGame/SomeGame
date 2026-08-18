@@ -163,4 +163,62 @@ namespace Bundles
         public int PayloadCount { get; }
         public long Size { get; }
     }
+
+    public static class ContentReleaseCodec
+    {
+        public static ContentReleaseDto Deserialize(string json)
+        {
+            if (string.IsNullOrWhiteSpace(json))
+                throw new ContentIntegrityException("Content release JSON is empty.");
+            try
+            {
+                return UnityEngine.JsonUtility.FromJson<ContentReleaseDto>(json)
+                    ?? throw new ContentIntegrityException(
+                        "Content release JSON produced no document.");
+            }
+            catch (ContentIntegrityException)
+            {
+                throw;
+            }
+            catch (Exception exception)
+            {
+                throw new ContentIntegrityException(
+                    "Content release JSON is invalid.",
+                    exception);
+            }
+        }
+
+        public static ContentReleaseDto DeserializeAndValidate(
+            string json,
+            string clientVersion,
+            int minimumSupportedSchemaVersion,
+            int maximumSupportedSchemaVersion)
+        {
+            var release = Deserialize(json);
+            ContentReleaseValidator.Validate(
+                release,
+                clientVersion,
+                minimumSupportedSchemaVersion,
+                maximumSupportedSchemaVersion);
+            return release;
+        }
+
+        public static ContentReleaseSnapshot CreateSnapshot(
+            string json,
+            string clientVersion,
+            int minimumSupportedSchemaVersion,
+            int maximumSupportedSchemaVersion) =>
+            new(DeserializeAndValidate(
+                json,
+                clientVersion,
+                minimumSupportedSchemaVersion,
+                maximumSupportedSchemaVersion));
+
+        public static string Serialize(ContentReleaseDto release, bool prettyPrint = true)
+        {
+            if (release == null)
+                throw new ArgumentNullException(nameof(release));
+            return UnityEngine.JsonUtility.ToJson(release, prettyPrint);
+        }
+    }
 }

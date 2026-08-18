@@ -16,6 +16,7 @@ namespace Editor
         internal const string Generic = "CONTENT_VALIDATION";
         internal const string StoryCompiledFileMissing = "STORY_COMPILED_FILE_MISSING";
         internal const string StorySourceFileMissing = "STORY_SOURCE_FILE_MISSING";
+        internal const string StoryCommandInvalid = "STORY_COMMAND_INVALID";
         internal const string StoryResourceUnresolved = "STORY_RESOURCE_UNRESOLVED";
         internal const string StoryCameraUnsupported = "STORY_CAMERA_UNSUPPORTED";
         internal const string StoryAudioMissing = "STORY_AUDIO_MISSING";

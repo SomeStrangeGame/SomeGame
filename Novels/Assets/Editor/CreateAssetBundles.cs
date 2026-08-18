@@ -32,7 +32,6 @@ namespace Editor
 
         public static void BuildConfiguredBundles()
         {
-            NovelContentValidator.ValidateOrThrow();
             var profile = NovelContentBuildProfile.Load();
             ContentBuildTransaction.Build(profile);
         }

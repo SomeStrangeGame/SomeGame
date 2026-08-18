@@ -106,8 +106,8 @@ namespace Bundles
                         await _bundles.Prepare(
                                 session,
                                 bundle,
-                                bytes => progress.ReportBytes(index, bytes))
-                            .AttachExternalCancellation(cancellationToken);
+                                bytes => progress.ReportBytes(index, bytes),
+                                cancellationToken);
                     }
                     else
                     {
@@ -115,8 +115,8 @@ namespace Bundles
                         await _files.ResolveUrl(
                                 session,
                                 file.Path,
-                                bytes => progress.ReportBytes(index, bytes))
-                            .AttachExternalCancellation(cancellationToken);
+                                bytes => progress.ReportBytes(index, bytes),
+                                cancellationToken);
                     }
                     progress.Complete(index);
                 }

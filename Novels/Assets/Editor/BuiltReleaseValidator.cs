@@ -11,7 +11,8 @@ namespace Editor
         internal static void Validate(
             IEnumerable<string> contentIds,
             ICollection<string> errors,
-            string remoteBasePath = null)
+            string remoteBasePath = null,
+            IReadOnlyDictionary<string, string> deliveryIndex = null)
         {
             var profile = NovelContentBuildProfile.Load();
             try
@@ -24,7 +25,13 @@ namespace Editor
                 return;
             }
             foreach (var target in profile.Targets)
-                ValidateTarget(target, profile, contentIds, errors, remoteBasePath);
+                ValidateTarget(
+                    target,
+                    profile,
+                    contentIds,
+                    errors,
+                    remoteBasePath,
+                    deliveryIndex);
         }
 
         private static void ValidateTarget(
@@ -32,7 +39,8 @@ namespace Editor
             NovelContentBuildProfile profile,
             IEnumerable<string> contentIds,
             ICollection<string> errors,
-            string remoteBasePath)
+            string remoteBasePath,
+            IReadOnlyDictionary<string, string> knownDeliveryIndex)
         {
             var platform = AssetBundleBuildPipeline.GetPlatformName(target);
             var remoteRoot = Path.Combine(
@@ -49,9 +57,8 @@ namespace Editor
             Bundles.ContentReleaseDto release;
             try
             {
-                release = JsonUtility.FromJson<Bundles.ContentReleaseDto>(File.ReadAllText(path));
-                Bundles.ContentReleaseValidator.Validate(
-                    release,
+                release = Bundles.ContentReleaseCodec.DeserializeAndValidate(
+                    File.ReadAllText(path),
                     Application.version,
                     profile.ContentSchemaVersion,
                     profile.ContentSchemaVersion);
@@ -93,7 +100,7 @@ namespace Editor
                     if (info.Length != bundle.size)
                         errors.Add($"Release size does not match bundle '{bundle.name}'.");
                     else if (!string.Equals(
-                                 AssetBundleBuildPipeline.ComputeSha256(payloadPath),
+                                 ContentHash.ComputeSha256(payloadPath),
                                  bundle.sha256,
                                  StringComparison.OrdinalIgnoreCase))
                         errors.Add($"Release SHA-256 does not match bundle '{bundle.name}'.");
@@ -107,7 +114,8 @@ namespace Editor
             IReadOnlyDictionary<string, string> deliveryIndex;
             try
             {
-                deliveryIndex = ContentDeliveryIndexBuilder.Build();
+                deliveryIndex = knownDeliveryIndex
+                    ?? ContentDeliveryIndexBuilder.Build();
             }
             catch (Exception exception)
             {

@@ -273,3 +273,14 @@
 - Duplicate shared payload paths must have identical size and SHA-256 metadata across platform releases; a conflict fails publication instead of accepting last-writer-wins behavior.
 - `ruby Tools/verify-server-root.rb <https-root> <Android|iOS>` performs a read-only post-upload audit of the release and every referenced bundle/file, including HTTP status, size, and SHA-256.
 - Generated C# solution compilation completed with 0 errors and 0 warnings. Tests and Play Mode were not run. The checked-in schema-4 StreamingAssets output must be replaced by the next Unity content build before runtime validation of schema 5.
+
+## Architecture wave completed on 2026-08-18 (authoring, delivery, and deployment transactions)
+
+- Ink authoring validation no longer ignores parser failures. Invalid command lines produce `STORY_COMMAND_INVALID` with the parser code, source file, episode, and one-based line number, preventing a known runtime parse failure from being published.
+- One `ContentBuildSnapshot` owns the project index, delivery ownership, external-file metadata, and hashes for a complete build transaction. Android/iOS construction and built-output validation consume that same snapshot rather than independently rescanning Ink and content files.
+- `Bundles.ContentReleaseCodec` is the sole JSON boundary for release serialization, deserialization, validation, and immutable snapshot creation. Runtime fallback and Editor publishing/validation use the same decoding rules.
+- Deduplicated payload materialization tracks all active consumers. Cancelling one consumer removes only its progress observer; the underlying request is cancelled when the final consumer leaves, while remaining consumers continue sharing one operation.
+- Embedded and Hybrid player seeds are composed from the selected platform release. They include only that platform's bundles and the required content-addressed files, never the other platform subtree from the shared `ServerRoot`.
+- Publication creates `deployment.json` after immutable payloads and platform release files. It fingerprints every platform release and runtime payload and marks `release.json` files as activation-last boundaries.
+- `Tools/verify-server-root.rb` validates the deployment fingerprint, selected release, upload-order flags, sizes, and hashes over HTTP. `Tools/plan-server-root-gc.rb` reports unreachable local server files while retaining current and explicitly supplied previous releases; it never deletes data.
+- Generated C# solution compilation completed with 0 errors and 0 warnings. Both Ruby tools passed syntax validation. Tests, Play Mode, Unity content rebuild, server upload, and device builds were not run.

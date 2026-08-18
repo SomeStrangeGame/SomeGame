@@ -37,6 +37,12 @@ namespace Editor
             ValidateOrThrow(false);
         }
 
+        internal static void ValidateOrThrow(ContentProjectIndex project)
+        {
+            var errors = ValidateLoadedConfiguration(false, project: project);
+            ThrowIfInvalid(errors);
+        }
+
         internal static void ValidateBuiltOutputOrThrow()
         {
             ValidateOrThrow(true);
@@ -45,28 +51,34 @@ namespace Editor
         internal static void ValidateBuiltOutputOrThrow(string remoteBasePath)
         {
             var errors = ValidateLoadedConfiguration(true, remoteBasePath);
-            if (errors.Count > 0)
-            {
-                throw new InvalidOperationException(
-                    "Novel content validation failed:\n- "
-                    + string.Join("\n- ", errors));
-            }
+            ThrowIfInvalid(errors);
+        }
+
+        internal static void ValidateBuiltOutputOrThrow(
+            string remoteBasePath,
+            ContentBuildSnapshot snapshot)
+        {
+            if (snapshot == null)
+                throw new ArgumentNullException(nameof(snapshot));
+            var errors = ValidateLoadedConfiguration(
+                true,
+                remoteBasePath,
+                snapshot.Project,
+                snapshot.DeliveryIndex);
+            ThrowIfInvalid(errors);
         }
 
         private static void ValidateOrThrow(bool validateBuiltOutput)
         {
             var errors = ValidateLoadedConfiguration(validateBuiltOutput);
-            if (errors.Count > 0)
-            {
-                throw new InvalidOperationException(
-                    "Novel content validation failed:\n- "
-                    + string.Join("\n- ", errors));
-            }
+            ThrowIfInvalid(errors);
         }
 
         private static ContentValidationReport ValidateLoadedConfiguration(
             bool validateBuiltOutput,
-            string remoteBasePath = null)
+            string remoteBasePath = null,
+            ContentProjectIndex project = null,
+            IReadOnlyDictionary<string, string> deliveryIndex = null)
         {
             var errors = new ContentValidationReport();
             var entryPoint = UnityEngine.Object.FindFirstObjectByType<Novels.EntryPoint>(
@@ -80,7 +92,8 @@ namespace Editor
             if (entryPointData.FindProperty("_targetCamera")?.objectReferenceValue == null)
                 errors.Add("Novels.EntryPoint has no target Camera reference.");
 
-            ContentProjectIndex.TryBuild("en", errors, out var project);
+            if (project == null)
+                ContentProjectIndex.TryBuild("en", errors, out project);
             if (project == null)
                 return errors;
             var catalog = project.Catalog;
@@ -135,8 +148,19 @@ namespace Editor
                         .Where(entry => entry != null)
                         .Select(entry => entry.ContentId),
                     errors,
-                    remoteBasePath);
+                    remoteBasePath,
+                    deliveryIndex);
             return errors;
+        }
+
+        private static void ThrowIfInvalid(ContentValidationReport errors)
+        {
+            if (errors.Count > 0)
+            {
+                throw new InvalidOperationException(
+                    "Novel content validation failed:\n- "
+                    + string.Join("\n- ", errors));
+            }
         }
 
         private static void ValidateBundleAssignment(

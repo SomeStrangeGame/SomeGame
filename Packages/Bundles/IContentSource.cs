@@ -1,4 +1,5 @@
 using System;
+using System.Threading;
 using Cysharp.Threading.Tasks;
 
 namespace Bundles
@@ -7,10 +8,11 @@ namespace Bundles
     {
         string ResolveFilePayloadPath(string logicalPath, string payloadPath);
         string GetUrl(string relativePath);
-        UniTask<string> DownloadText(string path);
+        UniTask<string> DownloadText(string path, CancellationToken cancellationToken);
         UniTask DownloadFile(
             string path,
             string destinationPath,
-            Action<long> onDownloadedBytes = null);
+            Action<long> onDownloadedBytes,
+            CancellationToken cancellationToken);
     }
 }

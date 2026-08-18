@@ -24,15 +24,21 @@ namespace Editor
                 throw new InvalidOperationException($"Player seed workspace is not empty: {outputRoot}");
             Directory.CreateDirectory(outputRoot);
             var releaseSource = Path.Combine(result.RemotePath, "release.json");
-            var release = JsonUtility.FromJson<ContentReleaseDto>(
-                File.ReadAllText(releaseSource));
+            var release = ContentReleaseCodec.DeserializeAndValidate(
+                File.ReadAllText(releaseSource),
+                Application.version,
+                profile.ContentSchemaVersion,
+                profile.ContentSchemaVersion);
             var seedRemote = Path.Combine(outputRoot, "Remote", result.Platform);
             Directory.CreateDirectory(seedRemote);
             File.Copy(releaseSource, Path.Combine(seedRemote, "release.json"), true);
 
             if (profile.DeliveryMode == ContentDeliveryMode.Embedded)
             {
-                CopyDirectory(result.PublishPath, outputRoot);
+                foreach (var file in release.files ?? Array.Empty<ContentFileEntry>())
+                    CopyContentFile(file.path, file.payloadPath, outputRoot);
+                foreach (var bundle in release.bundles ?? Array.Empty<BundleReleaseEntry>())
+                    CopyBundlePayload(bundle, result.RemotePath, seedRemote);
             }
             else if (profile.DeliveryMode == ContentDeliveryMode.Hybrid)
             {
@@ -115,23 +121,6 @@ namespace Editor
                 throw new FileNotFoundException("Bundle payload is missing.", source);
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             File.Copy(source, destination, true);
-        }
-
-        private static void CopyDirectory(string source, string destination)
-        {
-            if (!Directory.Exists(source))
-                throw new DirectoryNotFoundException(source);
-            Directory.CreateDirectory(destination);
-            foreach (var file in Directory.GetFiles(source, "*", SearchOption.AllDirectories))
-            {
-                if (file.EndsWith(".meta", StringComparison.OrdinalIgnoreCase))
-                    continue;
-                var relative = file.Substring(source.Length)
-                    .TrimStart(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
-                var target = Path.Combine(destination, relative);
-                Directory.CreateDirectory(Path.GetDirectoryName(target));
-                File.Copy(file, target, true);
-            }
         }
 
         private static string FormatBytes(long bytes) =>

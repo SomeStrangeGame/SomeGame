@@ -39,16 +39,20 @@ namespace Bundles
             return new Uri(_baseUri, relativePath.TrimStart('/')).AbsoluteUri;
         }
 
-        public UniTask<string> DownloadText(string path) =>
-            _requests.DownloadText(GetUrl(path));
+        public UniTask<string> DownloadText(
+            string path,
+            CancellationToken cancellationToken) =>
+            _requests.DownloadText(GetUrl(path), cancellationToken);
 
         public UniTask DownloadFile(
             string path,
             string destinationPath,
-            Action<long> onDownloadedBytes = null)
+            Action<long> onDownloadedBytes,
+            CancellationToken cancellationToken)
             => _requests.DownloadFile(
                 GetUrl(path),
                 destinationPath,
-                onDownloadedBytes);
+                onDownloadedBytes,
+                cancellationToken);
     }
 }

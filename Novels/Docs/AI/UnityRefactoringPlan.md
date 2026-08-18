@@ -624,3 +624,15 @@ Before changing code:
 7. `Tools/verify-server-root.rb` verifies an uploaded platform release without mutating the server.
 
 Validation: `Novels.Editor.csproj` compiled with 0 errors and 0 warnings; `git diff --check` passed. Tests and Play Mode were not run. A Unity content rebuild and remote upload verification remain deployment operations, not source-refactoring validation.
+
+## Completed on 2026-08-18: transactional authoring and deployment follow-up
+
+1. Invalid custom Ink commands fail content validation with file and line diagnostics instead of being skipped by dependency analysis.
+2. `ContentBuildSnapshot` is created once per transaction and shared by content indexing, delivery mapping, hashing, both platform builds, and built-output validation.
+3. `ContentReleaseCodec` owns all `release.json` serialization and validated deserialization.
+4. Shared downloads use subscriber-aware cancellation and progress observation; an HTTP request is cancelled when its last consumer leaves.
+5. Embedded/Hybrid seeds are platform-specific and copy only referenced bundles/files.
+6. `deployment.json` records the complete server artifact and activation-last platform release files. The HTTP verifier checks this contract.
+7. The read-only server GC planner reports files unreachable from current and explicitly retained releases.
+
+Validation: generated project compilation completed with 0 errors and 0 warnings; `git diff --check` and Ruby syntax validation passed. Tests and Play Mode were not run. Rebuild content through `Build/All Bundles` before launching schema-5 runtime content.
