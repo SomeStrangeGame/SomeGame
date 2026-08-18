@@ -13,7 +13,7 @@
 
 - Render pipeline: unresolved. Graphics Settings reference an SRP asset and `URPProjectSettings.asset` exists, but no URP package or matching tracked pipeline asset was found.
 - Input: legacy Input Manager (`activeInputHandler: 0`).
-- Primary target: Android; the bundle builder currently only invokes `BuildTarget.Android`.
+- Content targets: Android and iOS are built from the same checked-in profile into one deployable `ServerRoot`.
 - Important dependencies: Ink, UniTask, uGUI, plus local `somegame.*` packages for bundles/cache, disposal, loading, localization, settings, logs, and ScriptableObject data.
 
 ## Structure And Assemblies
@@ -44,13 +44,13 @@
 - Story execution returns `EpisodeRunResult` with `Completed`, `Failed`, or `Cancelled` status. `ApplicationRuntime` decides whether to stop or return to the catalog and is the reporting boundary for fatal execution results.
 - Every external Ink/audio/video resolution requires the active `ContentReleaseSnapshot`; no release-less or `legacy` content-file path remains.
 - `ContentDeliveryCoordinator` can prepare one release delivery group with file/byte progress, cancellation, disk-space validation, integrity verification, and cache pinning. A pinned group raises the effective LRU floor above the default 512 MiB cache limit when necessary.
-- Release schema 4 carries `Embedded`, `Hybrid`, or `Remote` delivery mode and assigns both AssetBundles and external files to delivery groups. The build profile controls mode, embedded groups, publish/player-seed roots, and optional hard budgets; the current checked-in profile uses Remote delivery.
+- Release schema 5 carries `Embedded`, `Hybrid`, or `Remote` delivery mode and assigns both AssetBundles and external files to delivery groups. External files retain stable logical addresses while their immutable server payloads use `Files/{sha256}` paths. The build profile controls mode, embedded groups, publish/player-seed roots, and optional hard budgets; the current checked-in profile uses Remote delivery.
 - `Novels.ContentAddressing` owns `ContentPackageConvention`, `ContentAddressConvention`, and immutable episode-scoped `ContentAddresses`. Bundle names, definition paths, delivery-group IDs, runtime loading, character resolution, and Editor validation share these dependency-free conventions; the former `PathGetter` assembly has been removed.
 - `EntryPoint` captures immutable `ApplicationEnvironment` values and owns the explicit scene Camera reference. Runtime composition receives locale, client version, platform, persistent path, and camera without ambient lookups.
 - `NovelCiValidation.ValidateExistingContentBatch` and `BuildAndValidateContentBatch` provide non-test batch automation for content validation and complete artifact production.
 - `ContentBuildTransaction` makes bundle output, validation, publish artifacts, and optional player seeds one rollback boundary. Runtime releases use candidate/active promotion: a remote manifest becomes active only after application content and catalog assets load successfully.
 - Remote request behavior is defined by `ContentRequestPolicy`; HTTP requests have bounded timeout/retry/backoff and typed failure categories, while Editor StreamingAssets access remains single-attempt local delivery.
-- Ink is the only source of episode audio, background, and speaker dependencies. `StoryDependencyAnalyzer` resolves declared string variables, derives matching video files during content builds, and rejects empty or statically unresolved resource references instead of accepting parallel dependency lists in `NovelContentAsset`.
+- Ink source is the only source of episode audio, background, and speaker dependencies. `StoryDependencyAnalyzer` parses authored command lines, resolves declared string variables, derives matching video files during content builds, and rejects empty or statically unresolved resource references. It no longer scrapes compiler-private Ink JSON strings.
 - `Bundles.MediaFileConvention` owns the fixed `.wav` default-audio and `.mp4` video extensions. Non-default audio formats must include their extension directly in Ink; Editor validation reports missing, mismatched, or ambiguous formats, and no media-extension settings are serialized in `NovelContentAsset`.
 - Player schema support is centralized in `ContentCompatibility`. Deployment URLs are generated into a staging-only `ContentRuntimeConfiguration` Resources asset instead of being serialized into the startup scene.
 - Shared cancellation-aware view animations live in `Novels.UITransitions`. Location background playback/cut-scene behavior lives in `BackgroundPresentationController`, while image/camera/dialogue geometry lives in `LocationLayout`; existing UI dimensions and serialized timing values are unchanged.
@@ -119,7 +119,7 @@
 - `ContentReleaseValidator` is shared by runtime, Editor validation, and the build pipeline. It validates schema/client versions, duplicate names and paths, normalized paths, SHA metadata, and delivery-group totals.
 - The Editor `ContentFilePolicy` is the only source of deliverable external-file rules. Hidden files and unsupported extensions (including `.DS_Store`) are excluded from releases and publish artifacts.
 - Release files carry story delivery-group metadata. The build reports total/group/file budgets, warns about oversized payloads and large WAV files, and supports streamed OGG audio at runtime.
-- A successful content build now atomically creates one complete ignored deploy artifact under `Build/NovelContent/ServerRoot`. Common Ink/audio/video files live at its root, while platform-specific releases and bundles live under `Remote/<platform>`; the directory contents map directly to the configured remote server root.
+- A successful content build now atomically creates one complete ignored deploy artifact under `Build/NovelContent/ServerRoot`. Platform-specific releases and bundles live under `Remote/<platform>`; deduplicated immutable Ink/audio/video payloads live under `Files/{sha256}`. Unity bundle manifests, source Ink, and redundant story JSON names are excluded. The directory contents map directly to the configured remote server root.
 - Music and ambient clips are destroyed when their channel is cleared, closing the previous orphaned-clip lifetime gap.
 - Generated bootstrap/catalog prefabs share `GeneratedPrefabWriter`, which enforces a non-zero root scale and atomic Unity prefab serialization. Existing UI dimensions, reference resolutions, and layout values remain unchanged by design.
 - `Novels.Locale` owns the session locale and deterministic locale fallback shared by application strings, catalog text, and episode titles.
@@ -262,3 +262,14 @@
 - `Assets/Editor/CreateAssetBundles.cs` and repository inventories
 
 <!-- unity-onboarding:generated:end -->
+
+## Architecture wave completed on 2026-08-18 (versioned multi-platform publication)
+
+- Release schema 5 separates stable logical content addresses from physical payload addresses. Every external payload is published once as `Files/{lowercase-sha256}`; Editor delivery still resolves the logical StreamingAssets path, while HTTP delivery resolves the immutable payload path from the release.
+- Runtime and Editor dependency analysis share `StorySpeakerRoleResolver`, including narrator, wardrobe, main-character, and ordinary-character classification.
+- Dependency discovery reads authored `.ink` commands and declared variables only. Compiled `.ink.json` remains the runtime story input and a required build input, but its compiler-private JSON strings are no longer scanned as an authoring API.
+- The configured build targets are Android and iOS. Bundle file hashing is performed once for shared external files, platform releases are generated independently, and both are merged strictly into one atomic `Build/NovelContent/ServerRoot`.
+- `ServerRoot` contains only remotely requested runtime artifacts: `Remote/<platform>/release.json`, referenced versioned bundles, and deduplicated `Files/{sha256}` payloads. Unity manifests, source Ink, and redundant aliases are not published.
+- Duplicate shared payload paths must have identical size and SHA-256 metadata across platform releases; a conflict fails publication instead of accepting last-writer-wins behavior.
+- `ruby Tools/verify-server-root.rb <https-root> <Android|iOS>` performs a read-only post-upload audit of the release and every referenced bundle/file, including HTTP status, size, and SHA-256.
+- Generated C# solution compilation completed with 0 errors and 0 warnings. Tests and Play Mode were not run. The checked-in schema-4 StreamingAssets output must be replaced by the next Unity content build before runtime validation of schema 5.

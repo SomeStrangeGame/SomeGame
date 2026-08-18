@@ -169,8 +169,8 @@ namespace Bundles
             }
         }
 
-        internal static string FilePath(ContentReleaseSession session, string path) =>
-            $"{_cacheRoot}/{session.ReleaseId}/Files/{path}";
+        internal static string FilePath(ContentFileDescriptor descriptor) =>
+            $"{_cacheRoot}/Files/{descriptor.Sha256.ToLowerInvariant()}";
 
         internal static string BundlePath(
             ContentReleaseSession session,

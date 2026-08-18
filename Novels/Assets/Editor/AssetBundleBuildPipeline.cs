@@ -28,6 +28,7 @@ namespace Editor
                 throw new InvalidOperationException(
                     $"AssetBundle output path must be empty: {remotePath}");
             Directory.CreateDirectory(remotePath);
+            var releaseFiles = BuildReleaseFiles();
             var releases = new Dictionary<BuildTarget, string>();
             foreach (var target in targets)
             {
@@ -35,7 +36,8 @@ namespace Editor
                     target,
                     Path.Combine(remotePath, GetPlatformName(target)),
                     profile,
-                    projectIndex.BundleDeliveryGroups);
+                    projectIndex.BundleDeliveryGroups,
+                    releaseFiles);
             }
             Debug.Log($"AssetBundle workspace build completed: {remotePath}");
             return targets.Select(target => new ContentBuildResult(
@@ -50,7 +52,8 @@ namespace Editor
             BuildTarget target,
             string targetPath,
             NovelContentBuildProfile profile,
-            IReadOnlyDictionary<string, string> bundleDeliveryGroups)
+            IReadOnlyDictionary<string, string> bundleDeliveryGroups,
+            IReadOnlyList<Bundles.ContentFileEntry> releaseFiles)
         {
             Directory.CreateDirectory(targetPath);
             var manifest = BuildPipeline.BuildAssetBundles(
@@ -96,7 +99,6 @@ namespace Editor
                 });
             }
 
-            var releaseFiles = BuildReleaseFiles();
             var deliveryGroups = ContentBuildReport.BuildGroups(
                 releaseBundles,
                 releaseFiles);
@@ -145,6 +147,8 @@ namespace Editor
                     deliveryGroup = deliveryGroup,
                 });
             }
+            foreach (var file in result)
+                file.payloadPath = $"Files/{file.sha256}";
             return result.OrderBy(file => file.path, StringComparer.Ordinal)
                 .ToList();
         }

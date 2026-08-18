@@ -32,6 +32,7 @@ namespace Bundles
     public sealed class ContentFileEntry
     {
         public string path;
+        public string payloadPath;
         public long size;
         public string sha256;
         public string deliveryGroup;
@@ -136,12 +137,14 @@ namespace Bundles
         internal ContentFileDescriptor(ContentFileEntry source)
         {
             Path = source.path;
+            PayloadPath = source.payloadPath;
             Size = source.size;
             Sha256 = source.sha256;
             DeliveryGroup = source.deliveryGroup;
         }
 
         public string Path { get; }
+        public string PayloadPath { get; }
         public long Size { get; }
         public string Sha256 { get; }
         public string DeliveryGroup { get; }

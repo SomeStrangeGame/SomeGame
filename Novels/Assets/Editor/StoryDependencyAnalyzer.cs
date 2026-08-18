@@ -32,14 +32,13 @@ namespace Editor
 
     internal static class StoryDependencyAnalyzer
     {
-        private static readonly Regex _compiledString = new(
-            "\"\\^(?<text>(?:\\\\.|[^\"\\\\])*)\"");
         private static readonly Regex _variable = new(
             "^\\s*VAR\\s+(?<name>[^=\\s]+)\\s*=\\s*\"(?<value>[^\"]*)\"",
             RegexOptions.Multiline);
 
         internal static StoryDependencyManifest Build(
             string prefix,
+            string mainCharacter,
             Novels.Content.EpisodeDefinition episode)
         {
             var compiledPath = Path.Combine(
@@ -64,15 +63,6 @@ namespace Editor
             }
 
             var parser = new Novels.StoryCommands.Entity();
-            AnalyzeCompiledStory(
-                File.ReadAllText(compiledPath),
-                episode,
-                parser,
-                audio,
-                backgrounds,
-                cameraActions,
-                issues);
-
             var sourcePath = StoryFileConvention.GetSourcePath(compiledPath);
             if (!File.Exists(sourcePath))
             {
@@ -88,6 +78,7 @@ namespace Editor
                 AnalyzeSourceStory(
                     sourcePath,
                     episode,
+                    mainCharacter,
                     parser,
                     audio,
                     backgrounds,
@@ -105,49 +96,10 @@ namespace Editor
                 issues);
         }
 
-        private static void AnalyzeCompiledStory(
-            string json,
-            Novels.Content.EpisodeDefinition episode,
-            Novels.StoryCommands.Entity parser,
-            ICollection<string> audio,
-            ICollection<string> backgrounds,
-            ICollection<Novels.StoryContracts.StoryCameraAction> cameraActions,
-            ICollection<ContentValidationIssue> issues)
-        {
-            foreach (Match match in _compiledString.Matches(json))
-            {
-                var source = Regex.Unescape(match.Groups["text"].Value);
-                if (!source.Contains(":"))
-                    continue;
-                var result = parser.Parse(source, false);
-                if (!result.IsSuccess)
-                {
-                    issues.Add(ContentValidationIssue.Error(
-                        result.Error.Code,
-                        $"Story command in '{episode.StoryPath}': "
-                        + $"{result.Error.Message} Source: {source}",
-                        episode.StoryPath,
-                        episode.ContentId,
-                        episode.Id));
-                }
-                else if (result.Command is Novels.StoryCommands.AudioStoryCommand command)
-                {
-                    AddStaticReference(command.Data.AssetName, audio);
-                }
-                else if (result.Command is Novels.StoryCommands.BackgroundStoryCommand background)
-                {
-                    AddStaticReference(background.Data.AssetName, backgrounds);
-                }
-                else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
-                {
-                    cameraActions.Add(camera.Data.Action);
-                }
-            }
-        }
-
         private static void AnalyzeSourceStory(
             string sourcePath,
             Novels.Content.EpisodeDefinition episode,
+            string mainCharacter,
             Novels.StoryCommands.Entity parser,
             ICollection<string> audio,
             ICollection<string> backgrounds,
@@ -198,32 +150,44 @@ namespace Editor
                         issues);
                 }
                 else if (result.Command is Novels.StoryCommands.DialogueStoryCommand dialogue
-                    && IsVariableReference(dialogue.Data.Speaker)
-                    && dialogue.Data.Presentation
-                        != Novels.StoryContracts.DialoguePresentation.Narrator)
+                    && IsVariableReference(dialogue.Data.Speaker))
                 {
-                    AddResolvedReference(
-                        "speaker",
-                        dialogue.Data.Speaker,
-                        line,
-                        variables,
-                        speakers,
-                        sourcePath,
-                        episode,
-                        issues);
+                    AddSpeakerReference(dialogue, mainCharacter);
                 }
                 else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
                     cameraActions.Add(camera.Data.Action);
-            }
-        }
 
-        private static void AddStaticReference(
-            string value,
-            ICollection<string> target)
-        {
-            var trimmed = value?.Trim();
-            if (!string.IsNullOrEmpty(trimmed) && !IsVariableReference(trimmed))
-                target.Add(trimmed);
+                void AddSpeakerReference(
+                    Novels.StoryCommands.DialogueStoryCommand command,
+                    string configuredMainCharacter)
+                {
+                    var reference = command.Data.Speaker.Trim();
+                    var key = reference.Substring(1, reference.Length - 2);
+                    if (!variables.TryGetValue(key, out var resolved)
+                        || string.IsNullOrWhiteSpace(resolved))
+                    {
+                        issues.Add(ContentValidationIssue.Error(
+                            ContentValidationCodes.StoryResourceUnresolved,
+                            $"Ink speaker reference cannot be resolved statically. Source: {line}",
+                            sourcePath,
+                            episode.ContentId,
+                            episode.Id));
+                        return;
+                    }
+                    resolved = resolved.Trim();
+                    var role = Novels.StoryContracts.StorySpeakerRoleResolver.Resolve(
+                        resolved,
+                        command.Data.Presentation,
+                        configuredMainCharacter);
+                    if (Novels.StoryContracts.StorySpeakerRoleResolver
+                            .RequiresCharacterAsset(role)
+                        && Novels.BubbleContracts.BubbleTriggers.Resolve(resolved)
+                            == Novels.BubbleContracts.BubblePresentationKind.Dialogue)
+                    {
+                        speakers.Add(resolved);
+                    }
+                }
+            }
         }
 
         private static void AddResolvedReference(

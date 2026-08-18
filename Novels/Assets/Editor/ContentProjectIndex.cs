@@ -159,7 +159,10 @@ namespace Editor
                 {
                     storyDependencies.Add(
                         episode.Id,
-                        StoryDependencyAnalyzer.Build(definition.Prefix, episode));
+                        StoryDependencyAnalyzer.Build(
+                            definition.Prefix,
+                            definition.MainCharacter,
+                            episode));
                 }
                 entries.Add(new Entry(
                     catalogEntry,

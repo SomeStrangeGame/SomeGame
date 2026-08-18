@@ -62,14 +62,38 @@ namespace Bundles
             }
 
             var filePaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var payloadMetadata = new Dictionary<string, (long size, string sha256)>(
+                StringComparer.Ordinal);
             foreach (var file in release.files ?? Array.Empty<ContentFileEntry>())
             {
-                if (file == null || !IsNormalizedRelativePath(file.path))
+                if (file == null
+                    || !IsNormalizedRelativePath(file.path)
+                    || !IsNormalizedRelativePath(file.payloadPath))
                     throw new ContentIntegrityException("Release contains an invalid file path.");
                 if (!filePaths.Add(file.path))
                     throw new ContentIntegrityException($"Duplicate file '{file.path}'.");
                 if (file.size < 0 || !IsSha256(file.sha256))
                     throw new ContentIntegrityException($"File '{file.path}' metadata is invalid.");
+                var expectedPayloadPath = $"Files/{file.sha256.ToLowerInvariant()}";
+                if (!string.Equals(
+                        file.payloadPath,
+                        expectedPayloadPath,
+                        StringComparison.Ordinal))
+                {
+                    throw new ContentIntegrityException(
+                        $"File '{file.path}' payload path must be '{expectedPayloadPath}'.");
+                }
+                if (payloadMetadata.TryGetValue(file.payloadPath, out var existing)
+                    && (existing.size != file.size
+                        || !string.Equals(
+                            existing.sha256,
+                            file.sha256,
+                            StringComparison.OrdinalIgnoreCase)))
+                {
+                    throw new ContentIntegrityException(
+                        $"Payload '{file.payloadPath}' has conflicting metadata.");
+                }
+                payloadMetadata[file.payloadPath] = (file.size, file.sha256);
             }
 
             var groupIds = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

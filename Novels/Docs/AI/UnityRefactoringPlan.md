@@ -18,7 +18,7 @@ The current source of truth supersedes bundle counts and concrete release IDs re
 - The story root owns one bundle; a concrete episode root overrides it with one episode-lifetime bundle. Feature subfolders do not carry AssetBundle labels.
 - TZM_1 currently produces four bundles: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`.
 - Bundle names, definition paths, and delivery groups are derived by `ContentPackageConvention`; episode-scoped asset addresses are exposed by `ContentAddresses`. The former `PathGetter` assembly has been removed.
-- Current Android release: schema 4, Remote mode, ID `74a2b7e3706d6afceab3dc0ad76591433c72a56056a103ebfe57f317c093732a`, 4 bundles, 48 external files, and the `application`, `TZM_1/shared`, plus `TZM_1/s01e01` delivery groups.
+- The checked-in StreamingAssets release is the previous schema-4 Android artifact. The next configured content build replaces it with schema-5 Android and iOS releases and creates a shared deployable `ServerRoot`; until that build is run, the old generated release is intentionally not claimed as current runtime evidence.
 - Every delivery group contains both AssetBundles and external files belonging to that lifetime. Unity 6000.3.11f1 import/compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully. Tests and Play Mode were not run.
 
 ## Architecture wave completed on 2026-08-17 (publication and presentation boundaries)
@@ -612,3 +612,15 @@ Before changing code:
 8. Run static searches and a full C# compilation, but do not create or run tests.
 9. Verify that `Novels.slnx` contains no incidental generated diff.
 10. Update this plan and `UnityProjectContext.md` when an architectural decision changes the documented baseline.
+
+## Completed on 2026-08-18: versioned multi-platform publication
+
+1. External release entries now carry a stable logical `path` and an immutable physical `payloadPath` equal to `Files/{sha256}`. Runtime cache keys are hash-based; local Editor and remote HTTP sources intentionally resolve different physical inputs.
+2. Speaker-role classification is shared between runtime queue construction and Editor dependency analysis.
+3. Editor dependency discovery parses authored Ink commands and variables instead of applying regex extraction to compiled Ink JSON.
+4. The checked-in build profile targets Android and iOS and produces a single atomic `ServerRoot` containing both platform releases.
+5. Shared external descriptors and hashes are generated once. Cross-platform payload merging rejects inconsistent size/hash metadata.
+6. Publication copies only files referenced by releases: release JSON, versioned bundles, and deduplicated hash-addressed external payloads.
+7. `Tools/verify-server-root.rb` verifies an uploaded platform release without mutating the server.
+
+Validation: `Novels.Editor.csproj` compiled with 0 errors and 0 warnings; `git diff --check` passed. Tests and Play Mode were not run. A Unity content rebuild and remote upload verification remain deployment operations, not source-refactoring validation.

@@ -87,16 +87,7 @@ namespace Editor
             StoryDependencyManifest references)
         {
             var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
-            var storyName = StoryFileConvention.GetStoryName(normalizedStoryPath);
-            var relativeDirectory = Path.GetDirectoryName(normalizedStoryPath)
-                ?.Replace('\\', '/');
-            var storyDirectory = string.IsNullOrWhiteSpace(relativeDirectory)
-                ? $"NovelTexts/{prefix}"
-                : $"NovelTexts/{prefix}/{relativeDirectory}";
             yield return $"NovelTexts/{prefix}/{normalizedStoryPath}";
-            yield return $"{storyDirectory}/{storyName}.ink";
-            yield return $"{storyDirectory}/{storyName}.json";
-            yield return $"{storyDirectory}/{storyName}.ink.json";
 
             foreach (var audioId in references.AudioIds)
             {

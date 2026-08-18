@@ -20,12 +20,12 @@ namespace Editor
                     workspace.RemoteRoot);
                 NovelContentValidator.ValidateBuiltOutputOrThrow(
                     workspace.RemoteRoot);
+                ContentPublishArtifactBuilder.Build(
+                    results,
+                    profile,
+                    workspace.PublishRoot);
                 foreach (var result in results)
                 {
-                    ContentPublishArtifactBuilder.Build(
-                        result,
-                        profile,
-                        workspace.PublishRoot);
                     if (profile.DeliveryMode != Bundles.ContentDeliveryMode.Remote)
                     {
                         PlayerContentSeedBuilder.Build(

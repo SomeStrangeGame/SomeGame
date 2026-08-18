@@ -10,8 +10,12 @@ namespace Editor
     {
         internal const string AssetPath = "Assets/Editor/NovelContentBuildProfile.asset";
 
-        [SerializeField] private BuildTarget[] _targets = { BuildTarget.Android };
-        [SerializeField] private int _contentSchemaVersion = 4;
+        [SerializeField] private BuildTarget[] _targets =
+        {
+            BuildTarget.Android,
+            BuildTarget.iOS,
+        };
+        [SerializeField] private int _contentSchemaVersion = 5;
         [SerializeField] private Bundles.ContentDeliveryMode _deliveryMode =
             Bundles.ContentDeliveryMode.Remote;
         [SerializeField] private string[] _embeddedDeliveryGroups = Array.Empty<string>();
@@ -29,7 +33,7 @@ namespace Editor
 
         internal BuildTarget[] Targets =>
             _targets == null || _targets.Length == 0
-                ? new[] { BuildTarget.Android }
+                ? new[] { BuildTarget.Android, BuildTarget.iOS }
                 : (BuildTarget[])_targets.Clone();
         internal int ContentSchemaVersion => _contentSchemaVersion;
         internal Bundles.ContentDeliveryMode DeliveryMode => _deliveryMode;
@@ -67,10 +71,10 @@ namespace Editor
 
         internal void Validate()
         {
-            if (_contentSchemaVersion < 4)
+            if (_contentSchemaVersion < 5)
             {
                 throw new InvalidOperationException(
-                    "Content schema version 4 or newer is required for grouped bundle payloads.");
+                    "Content schema version 5 or newer is required for addressed file payloads.");
             }
             if (!Novels.ContentAddressing.ContentCompatibility.Supports(
                     _contentSchemaVersion))

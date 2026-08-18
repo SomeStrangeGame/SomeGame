@@ -29,6 +29,9 @@ namespace Bundles
                 policy ?? ContentRequestPolicy.RemoteDefault);
         }
 
+        public string ResolveFilePayloadPath(string logicalPath, string payloadPath) =>
+            payloadPath;
+
         public string GetUrl(string relativePath)
         {
             if (string.IsNullOrWhiteSpace(relativePath))

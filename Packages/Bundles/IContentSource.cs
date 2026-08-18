@@ -5,6 +5,7 @@ namespace Bundles
 {
     public interface IContentSource
     {
+        string ResolveFilePayloadPath(string logicalPath, string payloadPath);
         string GetUrl(string relativePath);
         UniTask<string> DownloadText(string path);
         UniTask DownloadFile(

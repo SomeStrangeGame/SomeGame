@@ -27,7 +27,8 @@ namespace Bundles
             lines.AddRange((release.files ?? Array.Empty<ContentFileEntry>())
                 .OrderBy(value => value?.path, StringComparer.Ordinal)
                 .Select(value =>
-                    $"F:{value?.path}:{value?.size}:{value?.sha256}:{value?.deliveryGroup}"));
+                    $"F:{value?.path}:{value?.payloadPath}:{value?.size}:"
+                    + $"{value?.sha256}:{value?.deliveryGroup}"));
             lines.AddRange((release.deliveryGroups ?? Array.Empty<ContentDeliveryGroupEntry>())
                 .OrderBy(value => value?.id, StringComparer.Ordinal)
                 .Select(value => $"G:{value?.id}:{value?.payloadCount}:{value?.size}"));

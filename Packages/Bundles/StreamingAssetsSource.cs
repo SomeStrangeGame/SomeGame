@@ -18,6 +18,9 @@ namespace Bundles
                 policy ?? ContentRequestPolicy.LocalDefault);
         }
 
+        public string ResolveFilePayloadPath(string logicalPath, string payloadPath) =>
+            logicalPath;
+
         public string GetUrl(string relativePath)
         {
             var path = $"{Application.streamingAssetsPath}/{relativePath}";

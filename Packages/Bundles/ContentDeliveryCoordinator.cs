@@ -59,7 +59,7 @@ namespace Bundles
                 .ToArray();
             var payloads = files
                 .Select(file => new ContentCachePayload(
-                    ContentStoragePlanner.FilePath(session, file.Path),
+                    ContentStoragePlanner.FilePath(file),
                     file.Size))
                 .Concat(bundles.Select(bundle =>
                     _bundles.GetCachePayload(session, bundle)))

@@ -124,17 +124,10 @@ namespace Novels.StoryQueue
 
         private StoryContracts.StorySpeakerRole ResolveSpeakerRole(
             StoryCommands.DialogueCommandData dialogue)
-        {
-            if (dialogue.Presentation == StoryContracts.DialoguePresentation.Narrator)
-                return StoryContracts.StorySpeakerRole.Narrator;
-
-            if (dialogue.Presentation == StoryContracts.DialoguePresentation.Wardrobe)
-                return StoryContracts.StorySpeakerRole.Wardrobe;
-
-            return dialogue.Speaker == _ctx.MainCharacter
-                ? StoryContracts.StorySpeakerRole.MainCharacter
-                : StoryContracts.StorySpeakerRole.Character;
-        }
+            => StoryContracts.StorySpeakerRoleResolver.Resolve(
+                dialogue.Speaker,
+                dialogue.Presentation,
+                _ctx.MainCharacter);
 
         private static StoryContracts.StoryCharacterPosition GetCharacterPosition(
             StoryContracts.StorySpeakerRole role)

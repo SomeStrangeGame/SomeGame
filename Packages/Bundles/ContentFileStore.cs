@@ -10,12 +10,15 @@ namespace Bundles
     internal sealed class ContentFileStore
     {
         private readonly ContentPayloadMaterializer _materializer;
+        private readonly IContentSource _source;
         private readonly CancellationToken _cancellationToken;
 
         internal ContentFileStore(
+            IContentSource source,
             ContentPayloadMaterializer materializer,
             CancellationToken cancellationToken)
         {
+            _source = source ?? throw new ArgumentNullException(nameof(source));
             _materializer = materializer
                 ?? throw new ArgumentNullException(nameof(materializer));
             _cancellationToken = cancellationToken;
@@ -43,8 +46,10 @@ namespace Bundles
             ContentFileDescriptor descriptor) =>
             new(
                 descriptor.Path,
-                descriptor.Path,
-                ContentStoragePlanner.FilePath(session, descriptor.Path),
+                _source.ResolveFilePayloadPath(
+                    descriptor.Path,
+                    descriptor.PayloadPath),
+                ContentStoragePlanner.FilePath(descriptor),
                 descriptor.Size,
                 descriptor.Sha256);
 

@@ -26,7 +26,7 @@ namespace Editor
             EditorSceneManager.OpenScene(
                 "Assets/Novels/Novels.unity",
                 OpenSceneMode.Single);
-            CreateAssetBundles.BuildAndroidBundles();
+            CreateAssetBundles.BuildConfiguredBundles();
             Debug.Log("Novel CI content build and validation completed without errors.");
         }
 

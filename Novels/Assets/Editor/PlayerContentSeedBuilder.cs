@@ -54,7 +54,7 @@ namespace Editor
                 foreach (var file in release.files ?? Array.Empty<ContentFileEntry>())
                 {
                     if (embeddedGroups.Contains(file.deliveryGroup))
-                        CopyContentFile(file.path, outputRoot);
+                        CopyContentFile(file.path, file.payloadPath, outputRoot);
                 }
                 foreach (var bundle in release.bundles ?? Array.Empty<BundleReleaseEntry>())
                 {
@@ -87,11 +87,16 @@ namespace Editor
             return outputRoot;
         }
 
-        private static void CopyContentFile(string relativePath, string destinationRoot)
+        private static void CopyContentFile(
+            string relativePath,
+            string payloadPath,
+            string destinationRoot)
         {
             var normalized = relativePath.Replace('/', Path.DirectorySeparatorChar);
             var source = Path.Combine(Application.streamingAssetsPath, normalized);
-            var destination = Path.Combine(destinationRoot, normalized);
+            var destination = Path.Combine(
+                destinationRoot,
+                payloadPath.Replace('/', Path.DirectorySeparatorChar));
             Directory.CreateDirectory(Path.GetDirectoryName(destination));
             File.Copy(source, destination, true);
         }

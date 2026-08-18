@@ -27,22 +27,22 @@ namespace Editor
         [MenuItem("Build/All Bundles")]
         private static void BuildAllAssetBundles()
         {
-            BuildAndroidBundles();
+            BuildConfiguredBundles();
         }
 
-        public static void BuildAndroidBundles()
+        public static void BuildConfiguredBundles()
         {
             NovelContentValidator.ValidateOrThrow();
             var profile = NovelContentBuildProfile.Load();
             ContentBuildTransaction.Build(profile);
         }
 
-        public static void BuildAndroidBundlesBatch()
+        public static void BuildConfiguredBundlesBatch()
         {
             EditorSceneManager.OpenScene(
                 "Assets/Novels/Novels.unity",
                 OpenSceneMode.Single);
-            BuildAndroidBundles();
+            BuildConfiguredBundles();
         }
     }
 }

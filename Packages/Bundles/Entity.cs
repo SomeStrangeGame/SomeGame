@@ -53,6 +53,7 @@ namespace Bundles
                 ctx.CancellationToken,
                 ctx.OnLog);
             _contentFiles = new ContentFileStore(
+                source,
                 materializer,
                 ctx.CancellationToken);
             var payloads = new BundlePayloadLoader(
