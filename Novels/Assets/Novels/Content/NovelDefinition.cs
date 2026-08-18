@@ -76,8 +76,7 @@ namespace Novels.Content
             string title,
             string storyPath,
             string contentVersion,
-            EpisodeMediaDefinition media,
-            EpisodeContentDependencies dependencies = null)
+            EpisodeMediaDefinition media)
         {
             ContentId = Require(contentId, nameof(contentId));
             Id = Require(id, nameof(id));
@@ -88,7 +87,6 @@ namespace Novels.Content
                 ContentId,
                 Id);
             Media = media ?? throw new ArgumentNullException(nameof(media));
-            Dependencies = dependencies ?? EpisodeContentDependencies.Empty;
         }
 
         public string ContentId { get; }
@@ -98,7 +96,6 @@ namespace Novels.Content
         public string ContentVersion { get; }
         public string BundleName { get; }
         public EpisodeMediaDefinition Media { get; }
-        public EpisodeContentDependencies Dependencies { get; }
 
         private static string Require(string value, string parameterName)
         {
@@ -110,18 +107,8 @@ namespace Novels.Content
 
     public sealed class EpisodeMediaDefinition
     {
-        public EpisodeMediaDefinition(
-            IDictionary<string, string> audioExtensions = null,
-            string defaultAudioExtension = ".wav",
-            IEnumerable<string> silentAudioIds = null)
+        public EpisodeMediaDefinition(IEnumerable<string> silentAudioIds = null)
         {
-            AudioExtensions = new System.Collections.ObjectModel.ReadOnlyDictionary<string, string>(
-                audioExtensions == null
-                    ? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
-                    : new Dictionary<string, string>(audioExtensions, StringComparer.OrdinalIgnoreCase));
-            DefaultAudioExtension = string.IsNullOrWhiteSpace(defaultAudioExtension)
-                ? ".wav"
-                : defaultAudioExtension;
             SilentAudioIds = Array.AsReadOnly(
                 (silentAudioIds ?? Array.Empty<string>())
                     .Where(value => !string.IsNullOrWhiteSpace(value))
@@ -129,8 +116,6 @@ namespace Novels.Content
                     .ToArray());
         }
 
-        public IReadOnlyDictionary<string, string> AudioExtensions { get; }
-        public string DefaultAudioExtension { get; }
         public IReadOnlyList<string> SilentAudioIds { get; }
     }
 }

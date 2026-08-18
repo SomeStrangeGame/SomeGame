@@ -83,23 +83,61 @@ namespace Editor
                 return;
             var extension = Path.GetExtension(assetName);
             if (extension.Length == 0)
-                extension = episode.Media.AudioExtensions.TryGetValue(assetName, out var configured)
-                    ? configured
-                    : episode.Media.DefaultAudioExtension;
-            var path = Path.Combine(
+                extension = Bundles.MediaFileConvention.DefaultAudioExtension;
+            var directory = Path.Combine(
                 Application.streamingAssetsPath,
                 "NovelsAudio",
-                prefix,
-                assetName + (Path.GetExtension(assetName).Length == 0 ? extension : string.Empty));
-            if (!File.Exists(path))
+                prefix);
+            var expectedName = assetName
+                + (Path.GetExtension(assetName).Length == 0 ? extension : string.Empty);
+            var path = Path.Combine(directory, expectedName);
+            var available = Directory.Exists(directory)
+                ? Directory.EnumerateFiles(directory)
+                    .Where(file => string.Equals(
+                        Path.GetFileNameWithoutExtension(file),
+                        Path.GetFileNameWithoutExtension(assetName),
+                        StringComparison.OrdinalIgnoreCase))
+                    .ToArray()
+                : Array.Empty<string>();
+            if (available.Any(file => string.Equals(
+                    Path.GetFileName(file),
+                    expectedName,
+                    StringComparison.OrdinalIgnoreCase)))
+                return;
+
+            if (available.Length == 1)
             {
+                var actualName = Path.GetFileName(available[0]);
                 errors.Add(ContentValidationIssue.Error(
-                    ContentValidationCodes.StoryAudioMissing,
-                    $"Story audio does not exist: {path}",
-                    path,
+                    ContentValidationCodes.StoryAudioExtensionMismatch,
+                    $"Ink audio reference '{assetName}' resolves to '{expectedName}', "
+                    + $"but the available file is '{actualName}'. Specify the extension "
+                    + $"explicitly in Ink: '{actualName}'.",
+                    available[0],
                     episode.ContentId,
                     episode.Id));
+                return;
             }
+
+            if (available.Length > 1)
+            {
+                errors.Add(ContentValidationIssue.Error(
+                    ContentValidationCodes.StoryAudioExtensionAmbiguous,
+                    $"Ink audio reference '{assetName}' is ambiguous. Specify one of these "
+                    + $"file names explicitly in Ink: "
+                    + string.Join(", ", available.Select(Path.GetFileName)),
+                    directory,
+                    episode.ContentId,
+                    episode.Id));
+                return;
+            }
+
+            errors.Add(ContentValidationIssue.Error(
+                ContentValidationCodes.StoryAudioMissing,
+                $"Story audio does not exist: {path}",
+                path,
+                episode.ContentId,
+                episode.Id));
         }
 
         private static string LocationPath(

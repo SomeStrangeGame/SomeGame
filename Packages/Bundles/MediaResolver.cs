@@ -44,7 +44,8 @@ namespace Bundles
         {
             if (string.IsNullOrWhiteSpace(assetName))
                 return null;
-            var path = $"NovelsVideos/{_prefix}/{assetName}.mp4";
+            var path = $"NovelsVideos/{_prefix}/{assetName}"
+                + MediaFileConvention.VideoExtension;
             var descriptor = _session.FindFile(path);
             if (descriptor == null
                 || !_videoDeliveryGroups.Contains(descriptor.DeliveryGroup))
@@ -61,7 +62,7 @@ namespace Bundles
 
             var extension = Path.GetExtension(assetName);
             var fileName = extension.Length == 0
-                ? assetName + _manifest.GetAudioExtension(assetName)
+                ? assetName + MediaFileConvention.DefaultAudioExtension
                 : assetName;
             return await _resolveFileUrl($"NovelsAudio/{_prefix}/{fileName}");
         }

@@ -50,7 +50,8 @@
 - `NovelCiValidation.ValidateExistingContentBatch` and `BuildAndValidateContentBatch` provide non-test batch automation for content validation and complete artifact production.
 - `ContentBuildTransaction` makes bundle output, validation, publish artifacts, and optional player seeds one rollback boundary. Runtime releases use candidate/active promotion: a remote manifest becomes active only after application content and catalog assets load successfully.
 - Remote request behavior is defined by `ContentRequestPolicy`; HTTP requests have bounded timeout/retry/backoff and typed failure categories, while Editor StreamingAssets access remains single-attempt local delivery.
-- `EpisodeContentDependencies` supplies explicit audio/background/speaker references for dynamically authored content and is merged with static Ink discovery by the shared Editor index.
+- Ink is the only source of episode audio, background, and speaker dependencies. `StoryDependencyAnalyzer` resolves declared string variables, derives matching video files during content builds, and rejects empty or statically unresolved resource references instead of accepting parallel dependency lists in `NovelContentAsset`.
+- `Bundles.MediaFileConvention` owns the fixed `.wav` default-audio and `.mp4` video extensions. Non-default audio formats must include their extension directly in Ink; Editor validation reports missing, mismatched, or ambiguous formats, and no media-extension settings are serialized in `NovelContentAsset`.
 - Player schema support is centralized in `ContentCompatibility`. Deployment URLs are generated into a staging-only `ContentRuntimeConfiguration` Resources asset instead of being serialized into the startup scene.
 - Shared cancellation-aware view animations live in `Novels.UITransitions`. Location background playback/cut-scene behavior lives in `BackgroundPresentationController`, while image/camera/dialogue geometry lives in `LocationLayout`; existing UI dimensions and serialized timing values are unchanged.
 
@@ -128,7 +129,7 @@
 - Two unresolved merge-conflict blocks were removed from folder metadata while preserving the existing folder GUIDs.
 - `EpisodeScope` now owns episode-only screens, processors, audio, waits, notifications, and the bundle scope; application services remain owned by the root entity.
 - `PriorityLoader` centralizes temporary background-loading priority changes used during bootstrap.
-- `EpisodeMediaDefinition` declares available video IDs. Videos are resolved and cached only when first shown.
+- The active content release declares available video files. Videos are resolved and cached only when first shown.
 - `StreamingAssetsSource` and `MediaResolver` were extracted from `Bundles.Entity`; sentinel URLs and eager PNG-to-MP4 probing were removed.
 - Bundle cache directories retain only the active version after a successful load.
 - Content identity/version can be authored through additive scene fields with backward-compatible fallbacks.
@@ -143,7 +144,7 @@
 - `NovelCatalogAsset` is the remote authoring source for available stories and localized card text. It lives in the application-owned `novels_catalog` bundle together with the `Catalog.View` screen. The selected entry supplies content ID, bundle, and full asset address; `EntryPoint` contains only composition-root configuration.
 - `NovelContentAsset` is the authoring source for one novel's identity, story bundle, episodes, media, AudioMixer, and content versions. A story-level bundle owns its definition and application assets; every episode declares one episode-lifetime bundle. Only catalog and the main loading screen remain in shared bundles.
 - `Bundles.Entity` can load bundles before a novel prefix is known. Its media resolver is configured later with the prefix and episode media manifest, after `NovelContentAsset` has loaded. This keeps the local `StreamingAssets` source compatible with its future replacement by a remote server/CDN.
-- `NovelDefinition`, episode collections, video IDs, audio overrides, and silent-audio IDs expose defensive read-only collections.
+- `NovelDefinition`, episode collections, and silent-audio IDs expose defensive read-only collections.
 - `EpisodeRuntime`, created through the root partial factory, owns the episode scope and guarantees save flushing at episode completion.
 - `SaveWriter` exposes an observable `FlushAsync`; episode completion and application pause wait for pending coalesced writes. Disposal retains the synchronous last-resort flush.
 - Audio uses dedicated loop sources for Music/Ambient and a four-voice Sound pool. Sound clips are not evicted while a voice is using them.
@@ -248,7 +249,7 @@
 
 - `LocalizationData.asset` is the single authoring source for localized text inside a selected story. `NovelContentAsset` stores only an episode `titleKey`; catalog title/description remain in the application-owned catalog because they are needed before the story bundle is loaded.
 - Story definition and localization assets are loaded together from the story bundle. One immutable locale snapshot is created per selected story and reused by episode selection, settings, dialogue headers, character names, and wardrobe labels; localization is no longer loaded again during episode preparation.
-- Episode video IDs are derived during content builds from background references discovered in compiled/source Ink plus explicit dynamic background dependencies. Matching MP4 files enter `release.json`; runtime recognizes video backgrounds from the active release and the episode/shared delivery groups, so `NovelContentAsset` no longer serializes a manual video list.
+- Episode video IDs are derived during content builds from background references discovered in compiled/source Ink, including resolvable declared variables. Matching MP4 files enter `release.json`; runtime recognizes video backgrounds from the active release and the episode/shared delivery groups, so `NovelContentAsset` no longer serializes a manual video list.
 - Localization uses normalized string locale codes such as `ru` and `en`, an explicit fallback locale, duplicate-key/duplicate-locale validation, and language-neutral required UI keys. The previous Russian-only enum and hard-coded Russian runtime selection were removed.
 - The story scaffolder creates and initializes the localization asset together with the content definition, while `ContentProjectIndex` rejects missing localization assets, missing required UI entries, and missing episode-title entries before content builds.
 - Generated C# project compilation completed with 0 errors and 0 warnings. Unity's assembly compilation then exposed missing direct `Novels.Editor` references to the localization and bubble-contract assemblies; both asmdef references were added, Unity regenerated its Bee response file, and `Novels.Editor.dll` compiled without C# errors. Batch content validation could not start concurrently because the project was already open. Tests and Play Mode were not run.

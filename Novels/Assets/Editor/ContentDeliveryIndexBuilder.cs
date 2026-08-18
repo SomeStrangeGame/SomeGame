@@ -87,12 +87,7 @@ namespace Editor
             StoryDependencyManifest references)
         {
             var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
-            var storyFileName = Path.GetFileName(normalizedStoryPath);
-            var storyName = storyFileName.EndsWith(
-                    ".ink.json",
-                    StringComparison.OrdinalIgnoreCase)
-                ? storyFileName.Substring(0, storyFileName.Length - ".ink.json".Length)
-                : Path.GetFileNameWithoutExtension(storyFileName);
+            var storyName = StoryFileConvention.GetStoryName(normalizedStoryPath);
             var relativeDirectory = Path.GetDirectoryName(normalizedStoryPath)
                 ?.Replace('\\', '/');
             var storyDirectory = string.IsNullOrWhiteSpace(relativeDirectory)
@@ -112,15 +107,14 @@ namespace Editor
                 var extension = Path.GetExtension(audioId);
                 var fileName = extension.Length > 0
                     ? audioId
-                    : audioId + (episode.Media.AudioExtensions.TryGetValue(
-                        audioId,
-                        out var configured)
-                            ? configured
-                            : episode.Media.DefaultAudioExtension);
+                    : audioId + Bundles.MediaFileConvention.DefaultAudioExtension;
                 yield return $"NovelsAudio/{prefix}/{fileName}";
             }
             foreach (var backgroundId in references.Backgrounds)
-                yield return $"NovelsVideos/{prefix}/{backgroundId}.mp4";
+            {
+                yield return $"NovelsVideos/{prefix}/{backgroundId}"
+                    + Bundles.MediaFileConvention.VideoExtension;
+            }
         }
     }
 }

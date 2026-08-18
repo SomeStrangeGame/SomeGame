@@ -1,5 +1,5 @@
 {
-    "releaseId": "c505627f70c91bb064e892e195eac4c75ab33177f213c416dd45cefd9d065e25",
+    "releaseId": "3f7dba8b9364a271de023cf12ca61909d5ddc63bf6e17666590bddb8b5eec615",
     "minimumClientVersion": "0.1.0",
     "contentSchemaVersion": 4,
     "deliveryMode": 2,
@@ -14,10 +14,10 @@
         },
         {
             "name": "novels_content_tzm_1",
-            "version": "e9087ba204810bca3543de62e25057fd",
-            "size": 164105,
-            "sha256": "644360d8773022c1825d5cdfbea77c69cf67e533628283ff727ce6803cb383ce",
-            "crc": 489732278,
+            "version": "44ce3a06e81c860bcbb96b7e5e686dc3",
+            "size": 163968,
+            "sha256": "ad01004f4981370bfb923e98c0ec88b710262eb5d97fb1f4ab0e720193cce04a",
+            "crc": 1625602618,
             "deliveryGroup": "TZM_1/shared"
         },
         {
@@ -139,18 +139,174 @@
             "size": 766920,
             "sha256": "e48181e83ec09b48194344b83f77e6c836ffe5ed669d4ed94336430fd5ce74b7",
             "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/alexasroom_water.mp4",
+            "size": 14185216,
+            "sha256": "9a43d36df1a8864ff7e84cdc8a9f394b049b45acaf30308bc2682223d0468d18",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/arrivalInatlantis.mp4",
+            "size": 6499909,
+            "sha256": "823201fbf3552e9704a189cc7b184967ecbafaaed1dcbf7d79f46f98c2b23b81",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/atlantisdestroy.mp4",
+            "size": 5879356,
+            "sha256": "e78e909b5145466d4233a8fa959867a27fdc22e55b28613044c022d1540e837f",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/bike_water.mp4",
+            "size": 4610121,
+            "sha256": "678cc2fcee8c277a999d32fbaaf0d28b84c3ac58a1f76e4d914c8a2f90f2dde8",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/bikeinmove_water.mp4",
+            "size": 5496334,
+            "sha256": "63e36b8f98fd1e68498650aff562e9278197b6a2b3e9f5f171209302aaadbef2",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/boat.mp4",
+            "size": 4905714,
+            "sha256": "41ab8d387be9984ac981bf0b5af9a5bccaa67658c7d658e2df379e4efe8950e7",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/boatinmove.mp4",
+            "size": 4210021,
+            "sha256": "d64904e2fc4e55ee0f0e2649e905c081d7bfe891eb109508eae4a6f8f9d66854",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/boatsunset.mp4",
+            "size": 2371858,
+            "sha256": "d3552b0d299c7aaec084ae99d7d60aeab4ce7b7b8e4eb1251e5efb4c0b5e2331",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/bridge1_water.mp4",
+            "size": 6232780,
+            "sha256": "a46d63820422cdd701e708800dbafa2e1531b7d887b5587a55d769a5ece018cc",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/immersionatlantis.mp4",
+            "size": 11222314,
+            "sha256": "9c7908bdbca714ffa148b9f0ec2c89031e7cbcad1f67d7f89e195c0cccdb766b",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/islandunderwater_water.mp4",
+            "size": 13047232,
+            "sha256": "82634dfb444c4d1c95862a0f4a0a87caf68842df501cb6d04f26553fed724cad",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/lightingmeteor.mp4",
+            "size": 8816823,
+            "sha256": "0d385f6cfbc09e6138dd246a541a51100373544fed696e01c5173a0a87599a3c",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/mainhall_water.mp4",
+            "size": 6418818,
+            "sha256": "99f755ed9531a54468a6a66cb061442a00ce8edce4a6eafacc12c5e454d3e207",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/mainroom.mp4",
+            "size": 1074753,
+            "sha256": "8bd37fd9e8f9819964ba7106755b6bc52be5bcb594449e502a0f598a59954fae",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/meteor.mp4",
+            "size": 8994988,
+            "sha256": "bfa2ec5927218a9b59f55e0c556fa5c18d46089882e05b7b4b81e4652c6b7c41",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/oldtown_water.mp4",
+            "size": 15427354,
+            "sha256": "ee84744c300b7c350335252fa8c29da2bdaed6f5e24f93cdb7abdf7076058e4d",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/pier.mp4",
+            "size": 28898270,
+            "sha256": "372a085d25314f742d2bedb2ee57a739d84c3ce33f1261b342877b36b5a273c6",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/prohod_dark_water.mp4",
+            "size": 6056372,
+            "sha256": "8701eb587386692d875d5912dc048c62e1a9de88d50f1eef2dd91ed6e827c980",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/sandybeach.mp4",
+            "size": 3462484,
+            "sha256": "a76a0b570fe3a18a394d5592e80b2d56eb361378512590dccdd777d06e6010d5",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/shark.mp4",
+            "size": 10441088,
+            "sha256": "d33987c3f5ffee83135df6af3bb96c467e6331909742eb161e4614dac14407e8",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/shark1.mp4",
+            "size": 14345698,
+            "sha256": "c8542ac8b15b76138a20a14d11a3bc5988d46a9708c46d0b7e6753dbb5504b13",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/sharkeat.mp4",
+            "size": 4940369,
+            "sha256": "b9888db2093135a491d39b36b417907c733cac764be4d7b205027fb3ca691eaa",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/tonel_water.mp4",
+            "size": 8019243,
+            "sha256": "03305e327d12e6666321c88f0a8bb31790df6651039832170a27b6990cc85bbe",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/underwater_water.mp4",
+            "size": 4716518,
+            "sha256": "268396c00c4194c8d6c06ee43b45ed80999eaed29d2b67349336b49771576309",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/whirlpoolnight.mp4",
+            "size": 8164738,
+            "sha256": "ef9b0faa486faf6b3a9949b3eb640bb2917761e06fa53acc0fe894e9929185d6",
+            "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelsVideos/TZM_1/window in.mp4",
+            "size": 6149351,
+            "sha256": "239a6bae658d9276e3128844529be4505989d968e26bdfc6c889728c1d941001",
+            "deliveryGroup": "TZM_1/s01e01"
         }
     ],
     "deliveryGroups": [
         {
             "id": "TZM_1/s01e01",
-            "payloadCount": 18,
-            "size": 339171211
+            "payloadCount": 44,
+            "size": 553758933
         },
         {
             "id": "TZM_1/shared",
             "payloadCount": 1,
-            "size": 164105
+            "size": 163968
         },
         {
             "id": "application",

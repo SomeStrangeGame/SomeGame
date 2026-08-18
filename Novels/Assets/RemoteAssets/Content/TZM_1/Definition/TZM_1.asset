@@ -20,11 +20,5 @@ MonoBehaviour:
     _titleKey: episode.s01e01.title
     _storyPath: s01e01.ink.json
     _contentVersion: 1
-    _defaultAudioExtension: .wav
     _silentAudioIds:
     - тишина
-    _audioExtensions:
-    - _assetId: Horror
-      _extension: .mp3
-    - _assetId: основная
-      _extension: .WAV

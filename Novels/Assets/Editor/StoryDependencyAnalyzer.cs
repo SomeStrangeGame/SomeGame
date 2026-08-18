@@ -7,6 +7,29 @@ using UnityEngine;
 
 namespace Editor
 {
+    internal static class StoryFileConvention
+    {
+        private const string _compiledExtension = ".ink.json";
+
+        internal static string GetStoryName(string path)
+        {
+            var fileName = Path.GetFileName(path);
+            return fileName.EndsWith(
+                    _compiledExtension,
+                    StringComparison.OrdinalIgnoreCase)
+                ? fileName.Substring(0, fileName.Length - _compiledExtension.Length)
+                : Path.GetFileNameWithoutExtension(fileName);
+        }
+
+        internal static string GetSourcePath(string compiledPath)
+        {
+            var directory = Path.GetDirectoryName(compiledPath);
+            return Path.Combine(
+                directory ?? string.Empty,
+                GetStoryName(compiledPath) + ".ink");
+        }
+    }
+
     internal static class StoryDependencyAnalyzer
     {
         private static readonly Regex _compiledString = new(
@@ -24,9 +47,9 @@ namespace Editor
                 "NovelTexts",
                 prefix,
                 episode.StoryPath);
-            var audio = new List<string>(episode.Dependencies.AudioIds);
-            var backgrounds = new List<string>(episode.Dependencies.BackgroundIds);
-            var speakers = new List<string>(episode.Dependencies.SpeakerIds);
+            var audio = new List<string>();
+            var backgrounds = new List<string>();
+            var speakers = new List<string>();
             var cameraActions = new List<Novels.StoryContracts.StoryCameraAction>();
             var issues = new List<ContentValidationIssue>();
             if (!File.Exists(compiledPath))
@@ -50,15 +73,27 @@ namespace Editor
                 cameraActions,
                 issues);
 
-            var sourcePath = Path.ChangeExtension(compiledPath, ".ink");
-            if (File.Exists(sourcePath))
+            var sourcePath = StoryFileConvention.GetSourcePath(compiledPath);
+            if (!File.Exists(sourcePath))
+            {
+                issues.Add(ContentValidationIssue.Error(
+                    ContentValidationCodes.StorySourceFileMissing,
+                    $"Ink source story does not exist: {sourcePath}",
+                    sourcePath,
+                    episode.ContentId,
+                    episode.Id));
+            }
+            else
             {
                 AnalyzeSourceStory(
                     sourcePath,
+                    episode,
                     parser,
+                    audio,
                     backgrounds,
                     speakers,
-                    cameraActions);
+                    cameraActions,
+                    issues);
             }
             return CreateManifest();
 
@@ -97,11 +132,11 @@ namespace Editor
                 }
                 else if (result.Command is Novels.StoryCommands.AudioStoryCommand command)
                 {
-                    audio.Add(command.Data.AssetName);
+                    AddStaticReference(command.Data.AssetName, audio);
                 }
                 else if (result.Command is Novels.StoryCommands.BackgroundStoryCommand background)
                 {
-                    backgrounds.Add(background.Data.AssetName);
+                    AddStaticReference(background.Data.AssetName, backgrounds);
                 }
                 else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
                 {
@@ -112,10 +147,13 @@ namespace Editor
 
         private static void AnalyzeSourceStory(
             string sourcePath,
+            Novels.Content.EpisodeDefinition episode,
             Novels.StoryCommands.Entity parser,
+            ICollection<string> audio,
             ICollection<string> backgrounds,
             ICollection<string> speakers,
-            ICollection<Novels.StoryContracts.StoryCameraAction> cameraActions)
+            ICollection<Novels.StoryContracts.StoryCameraAction> cameraActions,
+            ICollection<ContentValidationIssue> issues)
         {
             var sourceText = File.ReadAllText(sourcePath);
             var variables = _variable.Matches(sourceText)
@@ -130,30 +168,107 @@ namespace Editor
                 var line = rawLine.Trim();
                 if (line.Length == 0 || line.StartsWith("//", StringComparison.Ordinal))
                     continue;
+                if (!line.Contains(":"))
+                    continue;
                 var result = parser.Parse(line, false);
                 if (!result.IsSuccess)
                     continue;
                 if (result.Command is Novels.StoryCommands.BackgroundStoryCommand background)
-                    backgrounds.Add(ResolveVariable(background.Data.AssetName, variables));
+                {
+                    AddResolvedReference(
+                        "background",
+                        background.Data.AssetName,
+                        line,
+                        variables,
+                        backgrounds,
+                        sourcePath,
+                        episode,
+                        issues);
+                }
+                else if (result.Command is Novels.StoryCommands.AudioStoryCommand audioCommand)
+                {
+                    AddResolvedReference(
+                        "audio",
+                        audioCommand.Data.AssetName,
+                        line,
+                        variables,
+                        audio,
+                        sourcePath,
+                        episode,
+                        issues);
+                }
                 else if (result.Command is Novels.StoryCommands.DialogueStoryCommand dialogue
+                    && IsVariableReference(dialogue.Data.Speaker)
                     && dialogue.Data.Presentation
                         != Novels.StoryContracts.DialoguePresentation.Narrator)
-                    speakers.Add(ResolveVariable(dialogue.Data.Speaker, variables));
+                {
+                    AddResolvedReference(
+                        "speaker",
+                        dialogue.Data.Speaker,
+                        line,
+                        variables,
+                        speakers,
+                        sourcePath,
+                        episode,
+                        issues);
+                }
                 else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
                     cameraActions.Add(camera.Data.Action);
             }
         }
 
-        private static string ResolveVariable(
+        private static void AddStaticReference(
             string value,
-            IReadOnlyDictionary<string, string> variables)
+            ICollection<string> target)
         {
             var trimmed = value?.Trim();
-            if (trimmed == null || trimmed.Length < 3
-                || trimmed[0] != '{' || trimmed[trimmed.Length - 1] != '}')
-                return trimmed;
-            var key = trimmed.Substring(1, trimmed.Length - 2);
-            return variables.TryGetValue(key, out var resolved) ? resolved : trimmed;
+            if (!string.IsNullOrEmpty(trimmed) && !IsVariableReference(trimmed))
+                target.Add(trimmed);
         }
+
+        private static void AddResolvedReference(
+            string kind,
+            string value,
+            string sourceLine,
+            IReadOnlyDictionary<string, string> variables,
+            ICollection<string> target,
+            string sourcePath,
+            Novels.Content.EpisodeDefinition episode,
+            ICollection<ContentValidationIssue> issues)
+        {
+            var trimmed = value?.Trim();
+            if (!IsVariableReference(trimmed))
+            {
+                if (!string.IsNullOrEmpty(trimmed))
+                {
+                    target.Add(trimmed);
+                    return;
+                }
+                AddUnresolvedIssue();
+                return;
+            }
+
+            var key = trimmed.Substring(1, trimmed.Length - 2);
+            if (variables.TryGetValue(key, out var resolved)
+                && !string.IsNullOrWhiteSpace(resolved))
+            {
+                target.Add(resolved.Trim());
+                return;
+            }
+            AddUnresolvedIssue();
+
+            void AddUnresolvedIssue() => issues.Add(ContentValidationIssue.Error(
+                ContentValidationCodes.StoryResourceUnresolved,
+                $"Ink {kind} reference cannot be resolved statically. Source: {sourceLine}",
+                sourcePath,
+                episode.ContentId,
+                episode.Id));
+        }
+
+        private static bool IsVariableReference(string value) =>
+            value != null
+            && value.Length >= 3
+            && value[0] == '{'
+            && value[value.Length - 1] == '}';
     }
 }

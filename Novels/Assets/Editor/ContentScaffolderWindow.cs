@@ -209,7 +209,6 @@ namespace Editor
                 Novels.Content.ContentLocalizationKeys.EpisodeTitle(episodeId);
             episode.FindPropertyRelative("_storyPath").stringValue = episodeId + ".ink.json";
             episode.FindPropertyRelative("_contentVersion").stringValue = "1";
-            episode.FindPropertyRelative("_defaultAudioExtension").stringValue = ".wav";
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(content);
         }

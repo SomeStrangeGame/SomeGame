@@ -201,7 +201,6 @@ namespace Editor
             foreach (var episode in definition.Episodes)
             {
                 ValidateEpisodeBundleAssignments(definition.Prefix, episode, errors);
-                ValidateMedia(definition.Prefix, episode, errors);
                 StoryReferenceValidator.Validate(
                     definition.Prefix,
                     definition.MainCharacter,
@@ -233,23 +232,6 @@ namespace Editor
                      })
             {
                 ValidateBundleAssignment(assetPath, episode.BundleName, errors);
-            }
-        }
-
-        private static void ValidateMedia(
-            string prefix,
-            Novels.Content.EpisodeDefinition episode,
-            ICollection<string> errors)
-        {
-            foreach (var audio in episode.Media.AudioExtensions)
-            {
-                var path = Path.Combine(
-                    Application.streamingAssetsPath,
-                    "NovelsAudio",
-                    prefix,
-                    audio.Key + audio.Value);
-                if (!File.Exists(path))
-                    errors.Add($"Configured audio override does not exist: {path}");
             }
         }
 

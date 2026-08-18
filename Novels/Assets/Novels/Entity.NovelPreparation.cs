@@ -60,10 +60,7 @@ namespace Novels
                         ContentAddressing.ContentPackageConvention.SharedDeliveryGroup(
                             _definition.Id),
                     },
-                    new Bundles.MediaManifest(
-                        _episode.Media.AudioExtensions,
-                        _episode.Media.DefaultAudioExtension,
-                        _episode.Media.SilentAudioIds),
+                    new Bundles.MediaManifest(_episode.Media.SilentAudioIds),
                     episodeRuntime.CancellationToken)
                 .AddTo(episodeRuntime.Scope);
 
