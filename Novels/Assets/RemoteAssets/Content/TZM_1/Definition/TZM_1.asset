@@ -19,6 +19,6 @@ MonoBehaviour:
   - _id: s01e01
     _titleKey: episode.s01e01.title
     _storyPath: s01e01.ink.json
-    _contentVersion: 1
+    _contentVersion: 2
     _silentAudioIds:
     - тишина

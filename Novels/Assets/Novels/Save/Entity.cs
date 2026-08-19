@@ -112,6 +112,18 @@ namespace Novels.Save
             return _initialDecisions[_initialDecisionPosition++];
         }
 
+        public StoryContracts.StoryDecision[] GetInitialDecisionsSnapshot() =>
+            (StoryContracts.StoryDecision[])_initialDecisions.Clone();
+
+        public void DiscardIncompatibleReplay(string reason)
+        {
+            Clear();
+            _ctx.OnLog?.Invoke((
+                LogType.Warning,
+                $"{reason} The incompatible save was deleted. "
+                + "A new game will be started."));
+        }
+
         public void SaveDecision(StoryContracts.StoryDecision decision)
         {
             _save.Add(decision);
