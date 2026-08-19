@@ -285,6 +285,17 @@ namespace Editor
                     Novels.StoryCommands.DialogueStoryCommand command,
                     StorySourceLine authoredLine)
                 {
+                    if (command.Data.Character.HasUnsupportedTimedChoice)
+                    {
+                        issues.Add(ContentValidationIssue.Warning(
+                            ContentValidationCodes.StoryTimedChoiceUnsupported,
+                            "Timed choice is not implemented and will be ignored at runtime. "
+                            + $"Referenced at {authoredLine.Location}.",
+                            authoredLine.SourcePath,
+                            episode.ContentId,
+                            episode.Id));
+                    }
+
                     if (!IsVariableReference(command.Data.Speaker.Trim()))
                         return;
                     var resolvedSpeakers = Resolve(

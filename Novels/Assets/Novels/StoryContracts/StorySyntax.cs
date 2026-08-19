@@ -21,6 +21,9 @@ namespace Novels.StoryContracts
         public const string PositionLeft = "слева";
         public const string PositionRight = "справа";
         public const string PositionCenter = "по центру";
+        public const string TimedChoicePrefix = "на время";
+        public const string HideCharacter = "невидимка";
+        public const string ShowCharacter = "убрать невидимку";
     }
 
     public static class StoryChoiceActions

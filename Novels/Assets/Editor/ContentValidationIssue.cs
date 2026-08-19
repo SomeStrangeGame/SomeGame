@@ -20,6 +20,8 @@ namespace Editor
         internal const string StorySourceIncludeCycle = "STORY_SOURCE_INCLUDE_CYCLE";
         internal const string StorySourceReadFailed = "STORY_SOURCE_READ_FAILED";
         internal const string StoryCommandInvalid = "STORY_COMMAND_INVALID";
+        internal const string StoryTimedChoiceUnsupported =
+            "STORY_TIMED_CHOICE_UNSUPPORTED";
         internal const string StoryResourceUnresolved = "STORY_RESOURCE_UNRESOLVED";
         internal const string StoryCameraUnsupported = "STORY_CAMERA_UNSUPPORTED";
         internal const string StoryAudioMissing = "STORY_AUDIO_MISSING";
@@ -70,6 +72,20 @@ namespace Editor
             new(
                 code,
                 ContentValidationSeverity.Error,
+                message,
+                assetPath,
+                contentId,
+                episodeId);
+
+        internal static ContentValidationIssue Warning(
+            string code,
+            string message,
+            string assetPath = null,
+            string contentId = null,
+            string episodeId = null) =>
+            new(
+                code,
+                ContentValidationSeverity.Warning,
                 message,
                 assetPath,
                 contentId,

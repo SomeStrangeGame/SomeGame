@@ -1,5 +1,5 @@
 {
-    "releaseId": "eade1f67ca433c371734cc1026a8a9791ddc4dc1853ade2e2d54de96df24403a",
+    "releaseId": "85263f1c173000094a6c40ec9bbd5a9406be10a532bae9b0f4824de44f15d3b2",
     "minimumClientVersion": "0.1.0",
     "contentSchemaVersion": 5,
     "deliveryMode": 2,
@@ -22,10 +22,10 @@
         },
         {
             "name": "novels_episode_tzm_1_s01e01",
-            "version": "72bdcca1df2d19bc0467bdf1c76dda28",
-            "size": 57618366,
-            "sha256": "bd5b3aea6c66ed4056cd81c56e90e1d80f205aac9207a8e566be561c36b6faf4",
-            "crc": 3487297295,
+            "version": "a7d82e3683d77512c066169fca904b60",
+            "size": 57750985,
+            "sha256": "5a57520da2269e458d5433e165c7d40bfe6f0caa5359773a8423d5526fcf29d0",
+            "crc": 3389348744,
             "deliveryGroup": "TZM_1/s01e01"
         },
         {
@@ -330,7 +330,7 @@
         {
             "id": "TZM_1/s01e01",
             "payloadCount": 42,
-            "size": 553546100
+            "size": 553678719
         },
         {
             "id": "TZM_1/shared",

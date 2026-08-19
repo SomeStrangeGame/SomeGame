@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
 namespace Novels.StoryQueue
@@ -20,6 +21,7 @@ namespace Novels.StoryQueue
     internal sealed class DialogueQueueBuilder
     {
         private readonly Entity.DialogueCtx _ctx;
+        private readonly HashSet<string> _hiddenCharacters = new(StringComparer.Ordinal);
 
         private string _lastCharacterId = string.Empty;
 
@@ -60,39 +62,51 @@ namespace Novels.StoryQueue
             if (isNewCharacter)
                 _lastCharacterId = characterName;
 
+            var visibility = dialogue.Character.Visibility;
+            if (visibility == StoryContracts.StoryCharacterVisibilityCommand.Hide)
+                _hiddenCharacters.Add(name);
+            else if (visibility == StoryContracts.StoryCharacterVisibilityCommand.Show)
+                _hiddenCharacters.Remove(name);
+
+            var isHidden = _hiddenCharacters.Contains(name);
+            var shouldHide = isNewCharacter
+                || visibility == StoryContracts.StoryCharacterVisibilityCommand.Hide;
+            var shouldShow = isNewCharacter
+                || visibility == StoryContracts.StoryCharacterVisibilityCommand.Show;
+
+            var afterCommands = new List<QueueProcess.IQueue>
+            {
+                new QueueProcess.CharacterQueue.SetDialogueQueue(
+                    _ctx.Location.SetDialogue,
+                    _ctx.Location.SetDialogueImmediate,
+                    GetDialogueAlignment(role)),
+            };
+            if (!isHidden)
+            {
+                afterCommands.Add(
+                    new QueueProcess.CharacterQueue.ShowCharacterQueue(
+                        _ctx.Character.CharacterSetImage,
+                        _ctx.Character.CharacterShow,
+                        _ctx.Character.CharacterShowImmediate,
+                        shouldShow,
+                        new StoryContracts.CharacterRenderRequest(
+                            name,
+                            role,
+                            position,
+                            dialogue.Character)));
+            }
+            afterCommands.AddRange(CreateBubbleLifecycle(bubbleDone));
+
             return new DialogueQueueBuildResult(
                 new QueueProcess.IQueue[]
                 {
                     new QueueProcess.CharacterQueue.HideCharacterQueue(
                         _ctx.Character.CharacterHide,
                         _ctx.Character.CharacterHideImmediate,
-                        isNewCharacter),
+                        shouldHide),
                     setBubble,
                 },
-                new QueueProcess.IQueue[]
-                {
-                    new QueueProcess.CharacterQueue.SetDialogueQueue(
-                        _ctx.Location.SetDialogue,
-                        _ctx.Location.SetDialogueImmediate,
-                        GetDialogueAlignment(role)),
-                    new QueueProcess.CharacterQueue.ShowCharacterQueue(
-                        _ctx.Character.CharacterSetImage,
-                        _ctx.Character.CharacterShow,
-                        _ctx.Character.CharacterShowImmediate,
-                        isNewCharacter,
-                        new StoryContracts.CharacterRenderRequest(
-                            name,
-                            role,
-                            position,
-                            dialogue.Character)),
-                    new QueueProcess.BubbleQueue.ShowBubbleQueue(
-                        bubbleDone,
-                        _ctx.Bubble.BubbleShow,
-                        _ctx.Bubble.BubbleShowImmediate),
-                    new QueueProcess.BubbleQueue.HideBubbleQueue(
-                        _ctx.Bubble.BubbleHide,
-                        _ctx.Bubble.BubbleHideImmediate),
-                });
+                afterCommands.ToArray());
         }
 
         private QueueProcess.BubbleQueue.SetBubbleQueue CreateSetBubbleQueue(

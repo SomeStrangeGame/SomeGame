@@ -35,18 +35,18 @@ namespace Novels.QueueProcess
         {
             private readonly Func<UniTask> _characterHide;
             private readonly Action _characterHideImmediate;
-            private readonly bool _isNewCharacter;
+            private readonly bool _shouldHide;
 
             public HideCharacterQueue(
                 Func<UniTask> characterHide,
                 Action characterHideImmediate,
-                bool isNewCharacter)
+                bool shouldHide)
             {
                 _characterHide = characterHide
                     ?? throw new ArgumentNullException(nameof(characterHide));
                 _characterHideImmediate = characterHideImmediate
                     ?? throw new ArgumentNullException(nameof(characterHideImmediate));
-                _isNewCharacter = isNewCharacter;
+                _shouldHide = shouldHide;
             }
 
             public async UniTask Run(QueueExecutionContext context)
@@ -58,7 +58,7 @@ namespace Novels.QueueProcess
                     return;
                 }
 
-                if (_isNewCharacter)
+                if (_shouldHide)
                     await _characterHide();
             }
         }
@@ -67,14 +67,14 @@ namespace Novels.QueueProcess
             private readonly Func<StoryContracts.CharacterRenderRequest, UniTask> _characterSetImage;
             private readonly Func<StoryContracts.StoryCharacterPosition, UniTask> _characterShow;
             private readonly Action<StoryContracts.StoryCharacterPosition> _characterShowImmediate;
-            private readonly bool _isNewCharacter;
+            private readonly bool _shouldShow;
             private readonly StoryContracts.CharacterRenderRequest _character;
 
             public ShowCharacterQueue(
                 Func<StoryContracts.CharacterRenderRequest, UniTask> characterSetImage,
                 Func<StoryContracts.StoryCharacterPosition, UniTask> characterShow,
                 Action<StoryContracts.StoryCharacterPosition> characterShowImmediate,
-                bool isNewCharacter,
+                bool shouldShow,
                 StoryContracts.CharacterRenderRequest character)
             {
                 _characterSetImage = characterSetImage
@@ -83,7 +83,7 @@ namespace Novels.QueueProcess
                     ?? throw new ArgumentNullException(nameof(characterShow));
                 _characterShowImmediate = characterShowImmediate
                     ?? throw new ArgumentNullException(nameof(characterShowImmediate));
-                _isNewCharacter = isNewCharacter;
+                _shouldShow = shouldShow;
                 _character = character;
             }
 
@@ -98,7 +98,7 @@ namespace Novels.QueueProcess
                     return;
                 }
 
-                if (_isNewCharacter)
+                if (_shouldShow)
                     await _characterShow(_character.Position);
             }
         }

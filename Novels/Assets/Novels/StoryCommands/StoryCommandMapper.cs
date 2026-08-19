@@ -54,11 +54,17 @@ namespace Novels.StoryCommands
             var assetCandidates = new List<string>(arguments.Length);
             var displayName = ParseDisplayName(speaker, arguments);
             var position = ParseCharacterPosition(arguments);
+            var visibility = ParseCharacterVisibility(arguments);
+            var hasUnsupportedTimedChoice = false;
 
             for (var index = 0; index < arguments.Length; index++)
             {
                 var argument = arguments[index];
-                if (!IsDialogueControlArgument(argument)
+                if (IsUnsupportedTimedChoiceArgument(argument))
+                {
+                    hasUnsupportedTimedChoice = true;
+                }
+                else if (!IsDialogueControlArgument(argument)
                     && !TryParseCharacterPosition(argument, out _)
                     && (index != 0 || string.IsNullOrEmpty(displayName)))
                 {
@@ -74,6 +80,8 @@ namespace Novels.StoryCommands
                 HasArgument(arguments, StoryContracts.StoryArguments.RemoveAccessory),
                 displayName,
                 position,
+                visibility,
+                hasUnsupportedTimedChoice,
                 assetCandidates.ToArray());
         }
 
@@ -128,6 +136,18 @@ namespace Novels.StoryCommands
             }
 
             return true;
+        }
+
+        private static StoryContracts.StoryCharacterVisibilityCommand ParseCharacterVisibility(
+            string[] arguments)
+        {
+            if (HasArgument(arguments, StoryContracts.StoryArguments.HideCharacter))
+                return StoryContracts.StoryCharacterVisibilityCommand.Hide;
+
+            if (HasArgument(arguments, StoryContracts.StoryArguments.ShowCharacter))
+                return StoryContracts.StoryCharacterVisibilityCommand.Show;
+
+            return StoryContracts.StoryCharacterVisibilityCommand.Unchanged;
         }
 
         internal static StoryContracts.StoryBackgroundPresentation ParseBackgroundPresentation(
@@ -188,10 +208,23 @@ namespace Novels.StoryCommands
                 || IsArgument(argument, StoryContracts.StoryArguments.RemoveHair)
                 || IsArgument(argument, StoryContracts.StoryArguments.RemoveHairLegacy)
                 || IsArgument(argument, StoryContracts.StoryArguments.RemoveAccessory)
+                || IsArgument(argument, StoryContracts.StoryArguments.HideCharacter)
+                || IsArgument(argument, StoryContracts.StoryArguments.ShowCharacter)
                 || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectAppearance)
                 || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectClothes)
                 || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectHair)
                 || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectHairLegacy);
+        }
+
+        private static bool IsUnsupportedTimedChoiceArgument(string argument)
+        {
+            if (string.IsNullOrWhiteSpace(argument))
+                return false;
+
+            var prefix = StoryContracts.StoryArguments.TimedChoicePrefix;
+            return argument.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                && (argument.Length == prefix.Length
+                    || char.IsWhiteSpace(argument[prefix.Length]));
         }
 
         private static bool HasArgument(string[] arguments, string expected)

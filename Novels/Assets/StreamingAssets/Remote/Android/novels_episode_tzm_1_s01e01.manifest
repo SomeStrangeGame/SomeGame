@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 3487297295
+CRC: 3389348744
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 72bdcca1df2d19bc0467bdf1c76dda28
+    Hash: a7d82e3683d77512c066169fca904b60
   TypeTreeHash:
     serializedVersion: 2
     Hash: 55c1baf107ad6eadef120b4a6b17f107
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: f26588fde6800c0a4621be1d539c3750
+    Hash: c228623bc09dadd3f559a059834cd940
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -104,44 +104,44 @@ Assets:
   \u0441\u0435\u043A\u0441\u0443\u0430\u043B\u044C\u043D\u043E\u0435 \u0431\u0435\u043B\u044C\u0435\u0308/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0416\u0435\u043C\u0447\u0443\u0433/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0417\u0430\u0436\u043C\u0443\u0440\u0438\u043B\u0441\u044F.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u041D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Child/Main.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u043A\u043E\u0444\u0442\u043E\u0438\u0306/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0438\u043C\u0444\u0430/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Notification/Screen.prefab
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/OldTown_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0438\u043C\u0444\u0430/5.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Meteor.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0434\u0443\u0433\u0430/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0417\u0430
   \u043F\u043B\u0435\u0447\u0430\u043C\u0438/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u041A\u0440\u0438\u043A.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u043A\u0440\u0438\u043A.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u043E\u0440\u0441\u043A\u0430\u044F
   \u0437\u0432\u0435\u0437\u0434\u0430/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0432\u0435\u0308\u0437\u0434\u044B
   \u0441 \u043D\u0435\u0431\u0430/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0421\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0421\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442\u0438\u043A\u0438/\u0427\u0451\u0440\u043D\u044B\u0439.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0438\u043C\u0444\u0430/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/3.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0428\u0435\u0308\u043B\u043A/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442\u0438\u043A\u0438/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/6.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Child/Main.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u043E\u0441\u043A\u043E\u0448\u044C/6.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0412\u0434\u043E\u0445.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0421\u0447\u0430\u0441\u0442\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0432\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/BoatAtNight_Dark.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0421\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043B\u044E\u0447
   \u043A \u0441\u0435\u0440\u0434\u0446\u0443/\u0411\u043B\u043E\u043D\u0434.PNG"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0428\u043B\u0435\u0438\u0306\u0444/4.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Child/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Child/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0425\u0438\u0442\u0440\u0430\u044F
   \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u044B\u0431\u043A\u0430/4.png"
@@ -151,13 +151,13 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0435\u0436\u043D\u043E\u0441\u0442\u044C/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0414\u0438\u0441\u043A\u043E\u0442\u0435\u043A\u0430/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0438\u043B\u0430\u044F/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u041A\u0440\u0438\u043A.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u043A\u0440\u0438\u043A.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0417\u0435\u0444\u0438\u0440/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0443\u0441\u0430\u043B\u043A\u0430/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0412\u0434\u043E\u0445
   (\u0441 \u043F\u0443\u0437\u044B\u0440\u044F\u043C\u0438).png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0412\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0432\u0434\u043E\u0445.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412
   \u0446\u0432\u0435\u0442\u043E\u0447\u0435\u043A/6.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Main.png
@@ -169,10 +169,10 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u0438\u0440\u0435\u043D\u0430/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0435
   \u043F\u043B\u0435\u0447\u0438/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0421\u0447\u0430\u0441\u0442\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Photo_Latin.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0423\u0437\u0435\u043B/6.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0423\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Haron/View/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0443\u0436\u0435\u0432\u043D\u043E\u0435
   \u0431\u0435\u043B\u044C\u0435\u0308/5.png"
@@ -183,7 +183,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0443\u0447\u043E\u043A/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u0430
   \u043C\u043E\u0440\u0441\u043A\u0430\u044F/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u041F\u043E\u0445\u043C\u0435\u043B\u044C\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/AtlantisNoDestroy.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0414\u0435\u043B\u043E\u0432\u0430\u044F/2.png"
@@ -197,47 +197,47 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0423\u043B\u044B\u0431\u043A\u0430.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Atlantis_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u043B\u0435\u0441\u043A/5.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0412\u044B\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0432\u044B\u0434\u043E\u0445.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u043E\u0441\u043A\u043E\u0448\u044C/4.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0417\u0435\u0444\u0438\u0440/5.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Haron/View/Main.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Child/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0417\u0435\u0444\u0438\u0440/5.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Child/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0443\u0447\u043E\u043A/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0423\u0437\u0435\u043B/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0435\u0436\u043D\u043E\u0441\u0442\u044C/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0428\u043B\u0435\u0438\u0306\u0444/2.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u041F\u0435\u0447\u0430\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u043F\u0435\u0447\u0430\u043B\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u0432 \u043A\u043E\u0441\u044B/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u044B\u0431\u043A\u0430/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Taddeus/View/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0432\u044B\u0440\u0435\u0437\u043E\u043C/5.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0417\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0432\u044B\u0440\u0435\u0437\u043E\u043C/7.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0421\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Main.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Vvodovorote_Afro.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0430\u043B\u044C\u0432\u0438\u043D\u043A\u0430/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0431\u0430\u043D\u0442\u0438\u043A\u043E\u043C/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043D\u0438-\u0431\u0438\u043A\u0438\u043D\u0438/4.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/BoatInMove.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421
   \u0447\u0435\u0308\u043B\u043A\u043E\u0438\u0306/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0423\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u041D\u0435\u043B\u043E\u0432\u043A\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Bubble/Sprites/Header.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u0438\u0440\u0435\u043D\u0430/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/AtlantisDestroy.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0438\u043B\u0430\u044F/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0416\u0435\u043C\u0447\u0443\u0433/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0432\u044B\u0440\u0435\u0437\u043E\u043C/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438
@@ -248,9 +248,9 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421
   \u0447\u0435\u0308\u043B\u043A\u043E\u0438\u0306/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0413\u0440\u0443\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u041D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0430/4.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Child/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Child/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0412\u0434\u043E\u0445
   (\u0441 \u043F\u0443\u0437\u044B\u0440\u044F\u043C\u0438).png"
@@ -262,12 +262,12 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0440\u0431\u0438/4.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Casual
   wear/3.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Demetra/View/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Demetra/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421\u0438\u0440\u0435\u043D\u0430/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0430\u0437\u0434\u0435\u043B\u044C\u043D\u044B\u0438\u0306/4.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Summer
   sundress/4.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0421\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421
   \u0447\u0435\u0308\u043B\u043A\u043E\u0438\u0306/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0438\u0441\u0442\u044B\u0438\u0306
@@ -282,21 +282,21 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Screen.prefab
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u043B\u0435\u0441\u043A/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0438\u043B\u0430\u044F/\u0420\u044B\u0436\u0438\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/StatueAtlan.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Demetra/View/Main.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442\u0438\u043A/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0421\u043A\u0435\u043F\u0441\u0438\u0441.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Demetra/View/Emotions/\u0413\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Demetra/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0435
   \u043F\u043B\u0435\u0447\u0438/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Atlan II/View/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/6.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Atlan II/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0423\u0437\u0435\u043B/2.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0417\u0430\u043A\u0440\u044B\u0442\u044B
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0437\u0430\u043A\u0440\u044B\u0442\u044B
   \u0433\u043B\u0430\u0437\u0430.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Bench.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u041D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
@@ -309,12 +309,12 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0410\u0444\u0440\u043E\u043A\u043E\u0441\u0438\u0447\u043A\u0438/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041B\u044E\u0431\u0438\u043C\u043E\u0435
   \u043F\u043B\u0430\u0442\u044C\u0435 \u0414\u044D\u0438\u0306\u043C\u043E\u043D\u0430/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u043E\u0442\u043A\u0430/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0431\u0430\u043D\u0442\u0438\u043A\u043E\u043C/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0430
   \u0432\u0435\u0447\u0435\u0440/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u041D\u0435\u043B\u043E\u0432\u043A\u043E\u0441\u0442\u044C.png"
@@ -330,10 +330,11 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u043E\u0442\u043A\u0430/5.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0423\u0445\u043C\u044B\u043B\u043A\u0430.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Jellyfish.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u041D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Photo_Afro.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Casual
   wear/4.png
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0441\u043A\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Main.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0414\u0435\u043B\u043E\u0432\u0430\u044F/4.png"
@@ -344,7 +345,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u044B\u0438\u0306/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0421\u0442\u0440\u0430\u0445.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/AlexasRoom_Water.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u043C\u043E\u043A\u0440\u044B\u0435
   \u0441 \u043C\u0430\u0441\u043A\u043E\u0438\u0306/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0423\u0437\u0435\u043B/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u0430
@@ -357,8 +358,8 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0417\u0435\u0444\u0438\u0440/2.PNG"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041D\u0438\u0437\u043A\u0438\u0435
   \u043F\u0443\u0447\u043A\u0438/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u041D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u042F\u0437\u044B\u043A.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0432\u0435\u0308\u0437\u0434\u044B
   \u0441 \u043D\u0435\u0431\u0430/\u0411\u043B\u043E\u043D\u0434.png"
@@ -376,7 +377,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0421\u043B\u0451\u0437\u044B.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u044B\u0438\u0306/5.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0430\u043B\u044C\u0432\u0438\u043D\u043A\u0430/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/4.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0430
   \u0432\u0435\u0447\u0435\u0440/4.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Loading/Header.png
@@ -385,7 +386,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0432\u044B\u0440\u0435\u0437\u043E\u043C/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u0438\u0440\u0435\u043D\u0430/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Fashionable
   top/3.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412
@@ -395,7 +396,7 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/PierDamonSunset.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041E\u0431\u043E\u0434\u043E\u043A/\u0420\u044B\u0436\u0438\u0439.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Atlan II/View/Main.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0412\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0432\u0434\u043E\u0445.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u044B\u0431\u043A\u0430/5.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Bath.png
@@ -427,19 +428,19 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442\u0438\u043A\u0438/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0443\u0447\u043E\u043A/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0413\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421\u0438\u0440\u0435\u043D\u0430/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0421\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u043B\u0435\u0441\u043A/2.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Casual
   wear/6.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0414\u0435\u043B\u043E\u0432\u0430\u044F/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Wardrobe_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0416\u0435\u043C\u0447\u0443\u0433/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/5.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0421\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0417\u0435\u0444\u0438\u0440/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0444\u0438\u0441\u043D\u0430\u044F
   \u0448\u0442\u0443\u0447\u043A\u0430/1.png"
@@ -448,11 +449,12 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0414\u0438\u0441\u043A\u043E\u0442\u0435\u043A\u0430/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u043A\u043E\u0444\u0442\u043E\u0438\u0306/2.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u043E\u0447\u043D\u0443\u0448\u043A\u0430/1.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u043D\u043E\u0447\u043D\u0443\u0448\u043A\u0430/1.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0417\u0430
   \u043F\u043B\u0435\u0447\u0430\u043C\u0438/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Lily.png
@@ -462,19 +464,19 @@ Assets:
   \u0432\u0435\u0447\u0435\u0440/1.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Casual
   wear/1.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0412\u044B\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0432\u044B\u0434\u043E\u0445.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u043B\u0443\u0431/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0432\u0435\u0308\u0437\u0434\u044B
   \u0441 \u043D\u0435\u0431\u0430/\u0420\u044B\u0436\u0438\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Haron/View/Emotions/\u0423\u0445\u043C\u044B\u043B\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430
   \u043F\u043B\u0435\u0447\u0430\u043C\u0438/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0430
   \u0437\u0430\u0432\u044F\u0437\u043E\u0447\u043A\u0430\u0445/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u041F\u0435\u0447\u0430\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u043F\u0435\u0447\u0430\u043B\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Charon1.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Notification/LiberationSans-Regular.ttf
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/UnLightingIsland.png
@@ -482,23 +484,23 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Summer
   sundress/3.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/1.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u043C\u043E\u043A\u0440\u044B\u0435
   \u0441 \u043C\u0430\u0441\u043A\u043E\u0438\u0306/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Truba_Euro.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041D\u0438\u0437\u043A\u0438\u0435
   \u043F\u0443\u0447\u043A\u0438/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Barbara/View/Emotions/\u0425\u0438\u0442\u0440\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Barbara/View/Emotions/\u0445\u0438\u0442\u0440\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Haron/View/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u0438\u0432\u043E\u0435
   \u0441\u0435\u043A\u0441\u0443\u0430\u043B\u044C\u043D\u043E\u0435 \u0431\u0435\u043B\u044C\u0435\u0308/2.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0412\u044B\u0434\u043E\u0445.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Barbara/View/Emotions/\u0423\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0432\u044B\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Barbara/View/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0430/5.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u041D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u041D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Fashionable
   top/2.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412
@@ -516,7 +518,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041B\u044E\u0431\u0438\u043C\u043E\u0435
   \u043F\u043B\u0430\u0442\u044C\u0435 \u0414\u044D\u0438\u0306\u043C\u043E\u043D\u0430/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442\u0438\u043A/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u041A\u0440\u0438\u043A.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u043A\u0440\u0438\u043A.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/WhirlpoolDay.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0413\u0440\u0443\u0441\u0442\u043D\u0430\u044F
   \u0443\u043B\u044B\u0431\u043A\u0430.png"
@@ -524,12 +526,12 @@ Assets:
   \u0437\u0430\u043A\u043E\u043B\u043A\u0430/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/PierDamonDay.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041B\u043E\u043A\u043E\u043D\u044B/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0417\u0430\u043A\u0440\u044B\u0442\u044B
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0437\u0430\u043A\u0440\u044B\u0442\u044B
   \u0433\u043B\u0430\u0437\u0430.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0412\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0432\u0434\u043E\u0445.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u042F\u0437\u044B\u043A.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Yacht.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u043C\u043E\u043A\u0440\u044B\u0435
   \u0441 \u043C\u0430\u0441\u043A\u043E\u0438\u0306/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0430/3.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Child/Main.png
@@ -552,7 +554,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0438\u043B\u0430\u044F/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u043E\u0442\u043A\u0430/4.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Child/Main.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u041D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0412\u0434\u043E\u0445
   (\u0441 \u043F\u0443\u0437\u044B\u0440\u044F\u043C\u0438).png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u043E\u0441\u043A\u043E\u0448\u044C/2.png"
@@ -564,8 +566,8 @@ Assets:
   \u043D\u0430 \u0437\u0430\u043F\u0430\u0445/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0417\u0430
   \u043F\u043B\u0435\u0447\u0430\u043C\u0438/\u0420\u044B\u0436\u0438\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u041D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Fashionable
   top/5.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/PhilsHouse.png
@@ -576,23 +578,24 @@ Assets:
   \u0441\u0435\u043A\u0441\u0443\u0430\u043B\u044C\u043D\u043E\u0435 \u0431\u0435\u043B\u044C\u0435\u0308/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0430\u043B\u044C\u0432\u0438\u043D\u043A\u0430/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0410\u0444\u0440\u043E\u043A\u043E\u0441\u0438\u0447\u043A\u0438/\u041A\u0430\u0448\u0442\u0430\u043D.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438
   1/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0432\u044B\u0440\u0435\u0437\u043E\u043C/4.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0410\u043C\u0444\u0438\u0431\u0438\u044F/4.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0430\u043C\u0444\u0438\u0431\u0438\u044F/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0434\u0443\u0433\u0430/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0432\u0435\u0308\u0437\u0434\u044B
   \u0441 \u043D\u0435\u0431\u0430/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u043C\u043E\u043A\u0440\u044B\u0435
   \u0441 \u043C\u0430\u0441\u043A\u043E\u0438\u0306/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0438\u043B\u0430\u044F/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0417\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u043E\u0440\u0441\u043A\u0430\u044F
   \u0437\u0432\u0435\u0437\u0434\u0430/6.png"
@@ -602,7 +605,7 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/DamonsRoom.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0443\u0436\u0435\u0432\u043D\u043E\u0435
   \u0431\u0435\u043B\u044C\u0435\u0308/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0421\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0432\u044B\u0440\u0435\u0437\u043E\u043C/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043D\u0438-\u0431\u0438\u043A\u0438\u043D\u0438/5.png"
@@ -619,7 +622,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0435
   \u043F\u043B\u0435\u0447\u0438/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0410\u0444\u0440\u043E\u043A\u043E\u0441\u0438\u0447\u043A\u0438/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u043C\u043E\u043A\u0440\u044B\u0435
   \u0441 \u043C\u0430\u0441\u043A\u043E\u0438\u0306/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/LightingMeteor.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Bubble/Sprites/Character/Bubble.png
@@ -630,27 +633,27 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Summer
   sundress/1.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0430/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0423\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421
   \u0447\u0435\u0308\u043B\u043A\u043E\u0438\u0306/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0417\u0430\u043A\u0430\u0442\u0438\u043B
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Haron/View/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Accessories/Front/\u041E\u0447\u043A\u0438.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Accessories/Front/\u043E\u0447\u043A\u0438.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421
   \u0447\u0435\u0308\u043B\u043A\u043E\u0438\u0306/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u0430
   \u043C\u043E\u0440\u0441\u043A\u0430\u044F/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/EmbankmentDay.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0410\u043C\u0444\u0438\u0431\u0438\u044F/2.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0430\u043C\u0444\u0438\u0431\u0438\u044F/2.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Wardrobe.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u043E\u0440\u0441\u043A\u0430\u044F
   \u0437\u0432\u0435\u0437\u0434\u0430/2.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0421\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Wardrobe_Dark_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435/\u0427\u0451\u0440\u043D\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0421\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/WhirlpoolNight.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0417\u0435\u0444\u0438\u0440/4.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442/\u0411\u043B\u043E\u043D\u0434.png"
@@ -658,25 +661,26 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0443\u0441\u0430\u043B\u043A\u0430/5.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041B\u044E\u0431\u0438\u043C\u043E\u0435
   \u043F\u043B\u0430\u0442\u044C\u0435 \u0414\u044D\u0438\u0306\u043C\u043E\u043D\u0430/5.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0412\u044B\u0434\u043E\u0445.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u041D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0432\u044B\u0434\u043E\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0430\u043B\u044C\u0432\u0438\u043D\u043A\u0430/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0414\u0435\u043B\u043E\u0432\u0430\u044F/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0440/4.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0441\u043A\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442\u0438\u043A\u0438/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0421\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u0438\u0440\u0435\u043D\u0430/\u041A\u0430\u0448\u0442\u0430\u043D.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Child/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Accessories/Front/\u041C\u0430\u0441\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Child/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Accessories/Front/\u043C\u0430\u0441\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u0438\u0432\u043E\u0435
   \u0441\u0435\u043A\u0441\u0443\u0430\u043B\u044C\u043D\u043E\u0435 \u0431\u0435\u043B\u044C\u0435\u0308/5.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442\u0438\u043A/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0443\u0436\u0435\u0432\u043D\u043E\u0435
   \u0431\u0435\u043B\u044C\u0435\u0308/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0423\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0440\u0431\u0438/6.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0417\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0410\u0444\u0440\u043E\u043A\u043E\u0441\u0438\u0447\u043A\u0438/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442\u0438\u043A\u0438/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Screen.prefab
@@ -686,7 +690,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u0438\u0440\u0435\u043D\u0430/\u0411\u043B\u043E\u043D\u0434.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Vvodovorote_Asia.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/4.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0442\u043A\u0440\u044B\u0442\u044B\u0435
   \u043F\u043B\u0435\u0447\u0438/4.png"
@@ -721,60 +725,61 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0430\u0437\u0434\u0435\u043B\u044C\u043D\u044B\u0438\u0306/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u0438\u0432\u043E\u0435
   \u0441\u0435\u043A\u0441\u0443\u0430\u043B\u044C\u043D\u043E\u0435 \u0431\u0435\u043B\u044C\u0435\u0308/6.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u041F\u0435\u0447\u0430\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u043F\u0435\u0447\u0430\u043B\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041E\u0431\u043E\u0434\u043E\u043A/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u043A\u043E\u0444\u0442\u043E\u0438\u0306/4.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0417\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041B\u043E\u043A\u043E\u043D\u044B/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0443\u0441\u0430\u043B\u043A\u0430/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0443\u0441\u0430\u043B\u043A\u0430/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Haron/View/Emotions/\u0421\u0442\u0440\u0430\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0421\u0447\u0430\u0441\u0442\u044C\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0417\u0430\u043A\u0440\u044B\u0442\u044B
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0437\u0430\u043A\u0440\u044B\u0442\u044B
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0428\u0435\u0308\u043B\u043A/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0440\u0431\u0438/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442\u0438\u043A\u0438/\u0420\u044B\u0436\u0438\u0439.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/AtlantisInGround.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0410\u043C\u0444\u0438\u0431\u0438\u044F/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412
   \u0446\u0432\u0435\u0442\u043E\u0447\u0435\u043A/1.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0430\u043C\u0444\u0438\u0431\u0438\u044F/6.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Barbara/View/Main.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0410\u0444\u0440\u043E\u043A\u043E\u0441\u0438\u0447\u043A\u0438/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421
   \u0447\u0435\u0308\u043B\u043A\u043E\u0438\u0306/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0430\u043B\u044C\u0432\u0438\u043D\u043A\u0430/\u0411\u043B\u043E\u043D\u0434.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Damon1_Euro.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u041D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0441\u043A\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0428\u0435\u0308\u043B\u043A/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0416\u0435\u043C\u0447\u0443\u0436\u043D\u0430\u044F
   \u0437\u0430\u043A\u043E\u043B\u043A\u0430/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043B\u044E\u0447
   \u043A \u0441\u0435\u0440\u0434\u0446\u0443/\u041A\u0430\u0448\u0442\u0430\u043D.PNG"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0421\u0447\u0430\u0441\u0442\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u042E\u0431\u043A\u0430
   \u043D\u0430 \u0437\u0430\u043F\u0430\u0445/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0414\u0435\u043B\u043E\u0432\u0430\u044F/6.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u043A\u043E\u0444\u0442\u043E\u0438\u0306/5.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Vvodovorote_Euro.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Damon1_Latin.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u0432 \u043A\u043E\u0441\u044B/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0417\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442\u0438\u043A\u0438/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Bubble/Sprites/Button.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u041F\u0435\u0447\u0430\u043B\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Casual
   wear/5.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/2.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043B\u044E\u0447
   \u043A \u0441\u0435\u0440\u0434\u0446\u0443/\u0420\u044B\u0436\u0438\u0439.PNG"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0430/2.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412
   \u0446\u0432\u0435\u0442\u043E\u0447\u0435\u043A/2.png"
@@ -785,12 +790,12 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/ImmersionAtlantis.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041B\u043E\u043A\u043E\u043D\u044B/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0423\u0437\u0435\u043B/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0434\u0443\u0433\u0430/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u0432 \u043A\u043E\u0441\u044B/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Wardrobe_Dark.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Child/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Child/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u043E\u0434\u0438/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0416\u0435\u043C\u0447\u0443\u0436\u043D\u0430\u044F
   \u0437\u0430\u043A\u043E\u043B\u043A\u0430/\u0411\u043B\u043E\u043D\u0434.png"
@@ -802,8 +807,8 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0438\u043B\u0430\u044F/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u043B\u0435\u0441\u043A/6.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Notification/Sprites/NotifcationPlaque.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Child/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Child/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u044B\u0438\u0306/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0444\u0438\u0441\u043D\u0430\u044F
   \u0448\u0442\u0443\u0447\u043A\u0430/4.png"
@@ -812,7 +817,7 @@ Assets:
   1/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u043B\u0443\u0431/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0434\u0443\u0433\u0430/\u041A\u0430\u0448\u0442\u0430\u043D.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0410\u043C\u0444\u0438\u0431\u0438\u044F/3.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0430\u043C\u0444\u0438\u0431\u0438\u044F/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041D\u0438\u0437\u043A\u0438\u0435
   \u043F\u0443\u0447\u043A\u0438/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041E\u0431\u043E\u0434\u043E\u043A/\u0427\u0451\u0440\u043D\u044B\u0439.png"
@@ -827,15 +832,15 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0440\u0431\u0438/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0438\u0441\u0442\u044B\u0438\u0306
   \u0442\u043E\u043F/2.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0421\u0442\u0440\u0430\u0445.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Child/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0413\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Child/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/TonelWithPath_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435/\u0420\u044B\u0436\u0438\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0435\u0436\u043D\u043E\u0441\u0442\u044C/5.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0412\u043E\u043B\u043D\u0430/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u043E\u0434\u0438/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0428\u0435\u0308\u043B\u043A/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Vvodovorote_Latin.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u043E\u0441\u043A\u043E\u0448\u044C/3.png"
@@ -843,6 +848,7 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/MainRoom.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Fashionable
   top/4.png
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u043B\u0435\u0441\u043A/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0417\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0412\u0434\u043E\u0445
@@ -852,7 +858,7 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438
   1/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0420\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0444\u0438\u0441\u043D\u0430\u044F
   \u0448\u0442\u0443\u0447\u043A\u0430/5.png"
@@ -862,7 +868,7 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Underwater_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0430
   \u0437\u0430\u0432\u044F\u0437\u043E\u0447\u043A\u0430\u0445/5.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0417\u0430\u043A\u0440\u044B\u0442\u044B
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0437\u0430\u043A\u0440\u044B\u0442\u044B
   \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421\u0438\u0440\u0435\u043D\u0430/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0430\u0437\u0434\u0435\u043B\u044C\u043D\u044B\u0438\u0306/5.png"
@@ -876,28 +882,28 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u044B\u0438\u0306/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0421\u043F\u0438\u0442.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0413\u0440\u0443\u0441\u0442\u044C.png"
-- Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/YachtSunset.png
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0441\u043A\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421
   \u0431\u0430\u043D\u0442\u0438\u043A\u043E\u043C/5.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/YachtSunset.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438/\u0427\u0451\u0440\u043D\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421\u0438\u0440\u0435\u043D\u0430/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Ben/View/Emotions/\u0421
   \u0443\u043B\u044B\u0431\u043A\u043E\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0410\u043C\u0444\u0438\u0431\u0438\u044F/5.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0430\u043C\u0444\u0438\u0431\u0438\u044F/5.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Main.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/SeaGarden2_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0443\u0447\u043E\u043A/\u041A\u0430\u0448\u0442\u0430\u043D.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0424\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0440\u0431\u0438/3.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0428\u043B\u0435\u0438\u0306\u0444/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0421
-  \u0443\u043B\u044B\u0431\u043A\u043E\u0439.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u0432 \u043A\u043E\u0441\u044B/\u0420\u044B\u0436\u0438\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u041F\u0435\u0447\u0430\u043B\u044C.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u043F\u0435\u0447\u0430\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Damon1_Afro.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043D\u0438-\u0431\u0438\u043A\u0438\u043D\u0438/3.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Bubble/LiberationSans-Regular.ttf
@@ -913,7 +919,7 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Temple_Water.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041E\u0444\u0438\u0441\u043D\u0430\u044F
   \u0448\u0442\u0443\u0447\u043A\u0430/3.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u043C\u043E\u043A\u0440\u044B\u0435
   \u0441 \u043C\u0430\u0441\u043A\u043E\u0438\u0306/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Truba_Latin.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041B\u044E\u0431\u0438\u043C\u043E\u0435
@@ -928,27 +934,29 @@ Assets:
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Notification/Sprites/Sticker.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u0431\u043E\u0447\u043A\u0438
   1/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0411\u0430\u043D\u0442/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0443\u0436\u0435\u0432\u043D\u043E\u0435
   \u0431\u0435\u043B\u044C\u0435\u0308/6.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0413\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0416\u0435\u043C\u0447\u0443\u0433/\u041A\u0430\u0448\u0442\u0430\u043D.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u041A\u0440\u0438\u043A.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u043A\u0440\u0438\u043A.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/SharkEat.PNG
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Bubble/Sprites/Character/Point.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u043E\u0442\u043A\u0430/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0432\u0435\u0308\u0437\u0434\u044B
   \u0441 \u043D\u0435\u0431\u0430/\u041A\u0430\u0448\u0442\u0430\u043D.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0423\u043B\u044B\u0431\u043A\u0430.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Child/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Asia/Child/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0430\u0437\u0434\u0435\u043B\u044C\u043D\u044B\u0438\u0306/6.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/EmbankmentNight.png
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Phil/View/Main.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041B\u043E\u043A\u043E\u043D\u044B/\u0420\u043E\u0437\u043E\u0432\u044B\u0439.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/ArrivalInAtlantis.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0421\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Latin/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0430
   \u0437\u0430\u0432\u044F\u0437\u043E\u0447\u043A\u0430\u0445/4.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Atlan II/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Alexa1.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u0430\u0437\u0434\u0435\u043B\u044C\u043D\u044B\u0438\u0306/3.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/EmbankmentEvening.png
@@ -961,7 +969,7 @@ Assets:
   sundress/2.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041C\u0438\u043B\u0430\u0448\u043A\u0430/1.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Bubble/Sprites/NoCharacter/Bubble.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0423\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/AtlantisDestroyUnderwater_Water_Dark.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0416\u0435\u043C\u0447\u0443\u0436\u043D\u0430\u044F
   \u0437\u0430\u043A\u043E\u043B\u043A\u0430/\u0421\u0432\u0435\u0442\u043B\u044B\u0439.png"
@@ -979,7 +987,7 @@ Assets:
   \u043F\u043B\u0435\u0447\u0438/5.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/Casual
   wear/2.png
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0410\u043C\u0444\u0438\u0431\u0438\u044F/1.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0430\u043C\u0444\u0438\u0431\u0438\u044F/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421
   \u0447\u0435\u0308\u043B\u043A\u043E\u0438\u0306/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0421\u043E\u0432\u043C\u0435\u0441\u0442\u043D\u044B\u0438\u0306/3.png"
@@ -992,21 +1000,21 @@ Assets:
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041E\u0431\u043E\u0434\u043E\u043A/\u041A\u0430\u0448\u0442\u0430\u043D.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041D\u0430
   \u0432\u0435\u0447\u0435\u0440/6.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u041D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/5.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Afro/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u043F\u0440\u043E\u0444\u0435\u0441\u0441\u0438\u043E\u043D\u0430\u043B/5.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u0428\u0435\u0308\u043B\u043A/\u0420\u044B\u0436\u0438\u0439.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0421\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Back/\u0421\u0438\u0440\u0435\u043D\u0430/\u0411\u043B\u043E\u043D\u0434.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Truba_Afro.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041E\u0431\u043E\u0434\u043E\u043A/\u0411\u043B\u043E\u043D\u0434.png"
 - Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Location/Locations/Shark.png
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u043B\u0443\u0431/1.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0423\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u0420\u044B\u0431\u043A\u0430/1.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u042E\u0431\u043A\u0430
   \u043D\u0430 \u0437\u0430\u043F\u0430\u0445/6.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B/\u041A\u0430\u0448\u0442\u0430\u043D.png"
-- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0420\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/View/Euro/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/Alexa/View/Emotions/\u041D\u0435\u043B\u043E\u0432\u043A\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/TZM_1/Episodes/s01e01/Character/Characters/MainCharacter/Clothes/\u041A\u0440\u0430\u0441\u0430
   \u043C\u043E\u0440\u0441\u043A\u0430\u044F/5.png"

@@ -15,13 +15,17 @@ namespace Editor
         private static void ValidateFromMenu()
         {
             var errors = ValidateLoadedConfiguration(true);
-            if (errors.Count == 0)
+            LogWarnings(errors);
+            var actualErrors = errors.Issues
+                .Where(issue => issue.Severity == ContentValidationSeverity.Error)
+                .ToArray();
+            if (actualErrors.Length == 0)
             {
                 Debug.Log("Novel content validation completed without errors.");
                 return;
             }
 
-            foreach (var error in errors)
+            foreach (var error in actualErrors)
                 Debug.LogError($"[NovelContent] {error}");
         }
 
@@ -204,11 +208,24 @@ namespace Editor
 
         private static void ThrowIfInvalid(ContentValidationReport errors)
         {
-            if (errors.Count > 0)
+            LogWarnings(errors);
+            var actualErrors = errors.Issues
+                .Where(issue => issue.Severity == ContentValidationSeverity.Error)
+                .ToArray();
+            if (actualErrors.Length > 0)
             {
                 throw new InvalidOperationException(
                     "Novel content validation failed:\n- "
-                    + string.Join("\n- ", errors));
+                    + string.Join("\n- ", actualErrors.Select(issue => issue.ToString())));
+            }
+        }
+
+        private static void LogWarnings(ContentValidationReport report)
+        {
+            foreach (var warning in report.Issues.Where(
+                         issue => issue.Severity == ContentValidationSeverity.Warning))
+            {
+                Debug.LogWarning($"[NovelContent] {warning}");
             }
         }
 
