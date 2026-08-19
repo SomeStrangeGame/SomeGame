@@ -56,6 +56,7 @@ emotion_aliases = {
   "недоверчивость" => ["недоверие"],
   "задумчиво" => ["задумчивость"],
   "закатила глаза" => ["закатить глаза"],
+  "испуг" => ["страх"],
 }.freeze
 
 directories(File.join(source_root, "Внешность".unicode_normalize(:nfd))).each do |view_dir|

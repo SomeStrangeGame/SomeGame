@@ -12,6 +12,10 @@ files and the character content available under `Визуал ЖДМ/Персо�
 - `переодеть` is treated as a temporary dialogue control rather than an asset name.
 - Known display identities can occur in any argument position without becoming
   sprite dependencies.
+- `Звуковое окружение` is accepted as an ambient command and `#...` Ink tags are
+  excluded from dialogue dependency analysis.
+- Safe authored aliases include `испуг` → `страх`, `закатить глаза` → the supplied
+  Ramos expression, and `недовольство` → the supplied angry townswoman expression.
 - Case and Unicode normalization is shared by validation and runtime bundle lookup.
 
 ## Character artwork not supplied

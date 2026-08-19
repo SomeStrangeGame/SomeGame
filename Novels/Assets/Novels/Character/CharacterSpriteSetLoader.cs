@@ -35,10 +35,21 @@ namespace Novels.Character
             var (mainBody, emotion, clothesSprite, hairSprites, accessorySprites) =
                 await UniTask.WhenAll(
                     LoadMainBody(name, view, presentation),
-                    LoadEmotion(name, view, presentation),
+                    LoadEmotion(name, view, presentation, appearance),
                     LoadClothes(name, clothes, presentation, appearance),
                     LoadHair(name, hair, presentation, appearance),
                     LoadAccessories(name, presentation, appearance));
+            if (mainBody == null)
+            {
+                // Incomplete stories may reference a character whose body has not
+                // been delivered yet. Do not render detached overlay layers.
+                return new CharacterSpriteSet(
+                    null,
+                    null,
+                    null,
+                    new CharacterHairSprites(null, null),
+                    new CharacterAccessorySprites(null, null, null));
+            }
             return new CharacterSpriteSet(
                 mainBody,
                 emotion,
@@ -72,17 +83,23 @@ namespace Novels.Character
         private async UniTask<Sprite> LoadEmotion(
             string name,
             string view,
-            StoryContracts.CharacterPresentation presentation)
+            StoryContracts.CharacterPresentation presentation,
+            CharacterAppearanceState appearance)
         {
             if (presentation.IsChild)
                 view = $"{view}/{_profile.ChildView}";
             foreach (var candidate in presentation.AssetCandidates)
             {
                 var sprite = await GetSprite(_addresses.Emotion(name, view, candidate));
-                if (sprite != null)
-                    return sprite;
+                if (sprite == null)
+                    continue;
+                appearance.Emotion = candidate;
+                return sprite;
             }
-            return null;
+
+            // Missing authored variants are tolerated while incomplete stories are
+            // integrated. Keep the last resolvable emotion for this character.
+            return await GetSprite(_addresses.Emotion(name, view, appearance.Emotion));
         }
 
         private async UniTask<Sprite> LoadClothes(

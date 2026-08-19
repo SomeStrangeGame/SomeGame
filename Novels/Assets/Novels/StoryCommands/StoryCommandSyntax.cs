@@ -44,6 +44,7 @@ namespace Novels.StoryCommands
                 ["Звук"] = StoryCommandType.Sound,
                 ["ambient"] = StoryCommandType.Ambient,
                 ["Звуки окружения"] = StoryCommandType.Ambient,
+                ["Звуковое окружение"] = StoryCommandType.Ambient,
                 ["camera"] = StoryCommandType.Camera,
                 ["Камера"] = StoryCommandType.Camera,
                 ["await"] = StoryCommandType.Wait,

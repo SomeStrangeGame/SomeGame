@@ -1,5 +1,5 @@
 {
-    "releaseId": "ed22be3845f9842823cccb49191b8b579f58180c9f75f70e3dbfd4b6c2ddadb8",
+    "releaseId": "4d3a17ac49ea1563303c8d89153ed7ab6c0e069f32c5837a20c7d255f84a23e8",
     "minimumClientVersion": "0.1.0",
     "contentSchemaVersion": 5,
     "deliveryMode": 2,
@@ -22,10 +22,10 @@
         },
         {
             "name": "novels_content_zdm",
-            "version": "5497ab53891d1f2b83b625be39c831b8",
-            "size": 21026284,
-            "sha256": "cafa7987a3718bb918d093341f243eded7cf5f036e9afc9f6c02b40868e9ddee",
-            "crc": 3348620660,
+            "version": "b54adff66b8fd751858956f6bdd892de",
+            "size": 39272771,
+            "sha256": "2e29482f4b7694dcc637bd09e68558b2756d9f6091f5764895a5a9f48b10f995",
+            "crc": 282480759,
             "deliveryGroup": "ZDM/shared"
         },
         {
@@ -485,7 +485,7 @@
         {
             "id": "ZDM/shared",
             "payloadCount": 2,
-            "size": 22362802
+            "size": 40609289
         },
         {
             "id": "application",

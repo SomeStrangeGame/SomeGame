@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 3348620660
+CRC: 282480759
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 5497ab53891d1f2b83b625be39c831b8
+    Hash: b54adff66b8fd751858956f6bdd892de
   TypeTreeHash:
     serializedVersion: 2
     Hash: e932a38c3b7f83c1b9e0e1492ec3d270
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: aca6db19791bcd0c1712df917930df4e
+    Hash: f0263a09abf7551483358b95c7e09a19
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -108,103 +108,80 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.UI.SpriteState
 Assets:
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041F\u043E\u043A\u043E\u0438\u0306/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0412\u043B\u0430\u0441\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u0438\u0446\u0430/1.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Screen.prefab
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041E\u0447\u0430\u0440\u043E\u0432\u0430\u043D\u0438\u0435/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0416\u0440\u0438\u0446\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/ZDM/Application/Setting/Screen.prefab
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0412\u0435\u043B\u0438\u043A\u043E\u043B\u0435\u043F\u0438\u0435/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
-  \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u043E\u043B\u0443\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Character/Screen.prefab
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u0430
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u0440\u044F\u043C\u044B\u0435
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0440\u0430\u0436\u043D\u0438\u043A\u0438/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421
-  \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043B\u0451\u0437\u044B.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421
+  \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0438\u0441\u043F\u0443\u0433.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u041F\u043E\u043B\u044F
   \u0418\u0430\u043B\u0443.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u0434\u0438
-  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/ZDM/Application/Setting/LiberationSans-Regular.ttf
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u041B\u0443\u0447\u0438
   \u0421\u043E\u043B\u043D\u0446\u0430.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0421\u0435\u0445\u043C\u0435\u0442/1.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435
-  \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u0412\u043E\u0434\u044B
-  \u0425\u0430\u043F\u0438.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0413\u043B\u0430\u0434\u043A\u0438\u0435
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u043F\u043E\u0434\u0441\u0432\u0435\u0442\u043A\u0430
+  \u0433\u043B\u0430\u0437.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0421\u0435\u0445\u043C\u0435\u0442/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Notification/Screen.prefab
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041E\u0437\u0430\u0440\u0435\u043D\u0438\u0435/1.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041F\u043E\u0432\u0435\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u0438\u0446\u0430/1.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
-  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Loading/Header.png
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u0432\u0438\u0442\u043A\u0438
-  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u0433\u043B\u0430\u0437\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
   \u0433\u043B\u0430\u0437\u0430.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043B\u0435\u0433\u043A\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
   \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043B\u0451\u0437\u044B.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0431\u043E\u043B\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u043A\u0443\u0434\u0440\u0438 \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043B\u0451\u0437\u044B.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u0421\u0435\u0440\u0434\u0446\u0435
   \u0424\u0430\u0440\u0430\u043E\u043D\u0430.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/NoCharacter/Bubble.png
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421
-  \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041E\u0442\u043A\u0440\u043E\u0432\u0435\u043D\u0438\u0435/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u043F\u043B\u0435\u0442\u0435\u0308\u043D\u043D\u044B\u0435
-  \u043D\u0430\u0431\u043E\u043A \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0440\u0430\u0437\u043C\u044B\u0448\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Main.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041F\u0440\u0430\u0437\u0434\u043D\u0438\u0447\u043D\u043E\u0435
   \u0436\u0440\u0435\u0447\u0435\u0441\u043A\u043E\u0435/1.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u0434\u0438
@@ -213,16 +190,410 @@ Assets:
   \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0440\u0430\u0436\u043D\u0438\u043A\u0438/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0435\u043B\u043A\u0438\u0435
   \u043A\u043E\u0441\u044B \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B
   \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0422\u0435\u0308\u043C\u043D\u0430\u044F
+  \u0444\u0438\u0433\u0443\u0440\u0430/View/Emotions/\u0437\u043B\u043E\u0431\u043D\u044B\u0439
+  \u0441\u043C\u0435\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0441\u043E\u0431\u043B\u0430\u0437\u043D.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0430\u0440\u0448\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0431\u043E\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u043F\u043B\u0435\u0442\u0435\u0308\u043D\u043D\u044B\u0435
+  \u043D\u0430\u0431\u043E\u043A \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u041F\u043E\u0434\u0432\u0435\u0441\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0412\u044B\u0441\u043E\u043A\u0438\u0438\u0306
+  \u0445\u0432\u043E\u0441\u0442 \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C
+  (\u0433\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430).png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u0431\u043E\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u0440\u044F\u043C\u044B\u0435
+  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0412\u043E\u043B\u043D\u044B
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043B\u0435\u0437\u044B.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0430\u0440\u0448\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0422\u0435\u0308\u043C\u043D\u0430\u044F
+  \u0444\u0438\u0433\u0443\u0440\u0430/View/Emotions/\u0443\u0436\u0430\u0441\u043D\u043E\u0435
+  \u043B\u0438\u0446\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041D\u0430\u043A\u0438\u0434\u043A\u0430
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0435\u043B\u043A\u0438\u0435
+  \u043A\u043E\u0441\u044B \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043A\u0440\u0438\u043A.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043A\u0440\u0438\u043A.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0422\u0435\u0308\u043C\u043D\u0430\u044F
+  \u0444\u0438\u0433\u0443\u0440\u0430/View/Emotions/\u0437\u043B\u043E\u0432\u0435\u0449\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0432\u043E\u0438\u043D/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u043E\u043D\u0442\u0430\u0440/View/\u043D\u0430\u043A\u0438\u0434\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043E\u043D.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u043F\u043E\u0441\u0434\u0441\u0432\u0435\u0442\u043A\u0430
+  \u0433\u043B\u0430\u0437.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0438\u0441\u0441\u0430/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041D\u043E\u0447\u043D\u0443\u0448\u043A\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u0430
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0412\u043E\u043B\u043D\u044B
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0412\u044B\u0441\u043E\u043A\u0438\u0438\u0306
+  \u0445\u0432\u043E\u0441\u0442 \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0420\u043E\u0441\u043A\u043E\u0448\u044C/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u041B\u0438\u0441\u0442\u044C\u044F
+  \u041B\u043E\u0442\u043E\u0441\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0438\u0441\u043F\u0443\u0433.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Character/PointMind.png
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u043E\u0438\u043D/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0431\u043E\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0411\u043B\u0430\u0433\u043E\u0441\u043B\u043E\u0432\u0435\u043D\u0438\u0435
+  \u0411\u0430\u0441\u0442\u0435\u0442/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u0438
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043E\u043D.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u043E\u0438\u043D/View/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041D\u0430\u043A\u0438\u0434\u043A\u0430
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Notification/LiberationSans-Regular.ttf
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0438\u0441\u043F\u0443\u0433.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435
+  \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u043F\u043E\u0434\u0441\u0432\u0435\u0442\u043A\u0430
+  \u0433\u043B\u0430\u0437.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0421\u043E\u0440\u043E\u0447\u043A\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0430\u0440\u0448\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u043F\u043B\u0435\u0442\u0435\u0308\u043D\u043D\u044B\u0435
+  \u043D\u0430\u0431\u043E\u043A \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Character/Point.png
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0421\u0442\u0440\u0430\u043D\u043D\u0438\u0446\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/\u0432\u0437\u043B\u043E\u0445\u043C\u0430\u0447\u0435\u043D\u043D\u044B\u0439.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u043F\u0440\u0438\u0437\u0440\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0430\u0440\u0448\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041C\u0430\u0430\u0442/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Button.png
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/\u0410\u043D\u043F\u0443.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421
+  \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0422\u0435\u0308\u043C\u043D\u0430\u044F
+  \u0444\u0438\u0433\u0443\u0440\u0430/View/Emotions/\u043E\u0442\u043A\u0440\u044B\u0442\u0430\u044F
+  \u043F\u0430\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0441\u0442\u0435\u0442/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0412\u043E\u043B\u043D\u044B
+  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Character/Bubble.png
+- Assets/RemoteAssets/Content/ZDM/Definition/ZDM.asset
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/\u041D\u0435\u0437\u043D\u0430\u043A\u043E\u043C\u0435\u0446.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u043E\u0438\u043D/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0412\u043B\u0430\u0441\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u0438\u0446\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0416\u0440\u0438\u0446\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0441\u043E\u043D.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u0430
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u0440\u044F\u043C\u044B\u0435
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0422\u0435\u0308\u043C\u043D\u0430\u044F
+  \u0444\u0438\u0433\u0443\u0440\u0430/View/Emotions/\u0437\u043B\u043E\u0432\u0435\u0449\u0438\u0439
+  \u0441\u043C\u0435\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Screen.prefab
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u0434\u0438
+  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0441\u0432\u0435\u0442\u044F\u0449\u0438\u0435\u0441\u044F
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u043E\u043D\u0442\u0430\u0440/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435
+  \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u0412\u043E\u0434\u044B
+  \u0425\u0430\u043F\u0438.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0413\u043B\u0430\u0434\u043A\u0438\u0435
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u043D\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
+  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u0432\u0438\u0442\u043A\u0438
+  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043B\u0435\u0433\u043A\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043B\u0451\u0437\u044B.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0431\u043E\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0441\u0438\u044F\u044E\u0449\u0438\u0435
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
+  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0430\u0440\u0448\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/NoCharacter/Bubble.png
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421
+  \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0441\u0432\u0435\u0442\u044F\u0449\u0438\u0435\u0441\u044F
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u043E\u0441\u043A\u0430\u043B.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041E\u0442\u043A\u0440\u043E\u0432\u0435\u043D\u0438\u0435/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u043F\u043B\u0435\u0442\u0435\u0308\u043D\u043D\u044B\u0435
+  \u043D\u0430\u0431\u043E\u043A \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0441\u043E\u043D.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0438\u0441\u0441\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u043E\u0438\u043D/View/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u041B\u0451\u0433\u043A\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
@@ -235,186 +606,180 @@ Assets:
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435
   \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u043B\u0435\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0412\u0434\u043E\u0445\u043D\u043E\u0432\u0435\u043D\u0438\u0435/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u043F\u043B\u0435\u0442\u0435\u0308\u043D\u043D\u044B\u0435
-  \u043D\u0430\u0431\u043E\u043A \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Location/Screen.prefab
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u041F\u043E\u0434\u0432\u0435\u0441\u043A\u0430.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u043A\u0440\u0438\u043A.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0431\u043E\u043B\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0412\u044B\u0441\u043E\u043A\u0438\u0438\u0306
-  \u0445\u0432\u043E\u0441\u0442 \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Location/Screen.prefab
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0438\u0441\u0441\u0430/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043E\u043D.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0441\u0435\u0440\u044B\u0435
+  \u0437\u0440\u0430\u0447\u043A\u0438.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0438\u0441\u0441\u0430/View/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0431\u043E\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0412\u044B\u0441\u043E\u043A\u0438\u0438\u0306
   \u0445\u0432\u043E\u0441\u0442 \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Header.png
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u0440\u044F\u043C\u044B\u0435
-  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0422\u0435\u0308\u043C\u043D\u0430\u044F
+  \u0444\u0438\u0433\u0443\u0440\u0430/View/Emotions/\u0437\u043B\u043E\u0431\u043D\u044B\u0439
+  \u043E\u0441\u043A\u0430\u043B.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041F\u0443\u0442\u0435\u0448\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u0438\u0446\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0438\u0441\u0441\u0430/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/\u0416\u0435\u043D\u0449\u0438\u043D\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Main.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0426\u0430\u0440\u0438\u0446\u0430/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0412\u043E\u043B\u043D\u044B
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043B\u0435\u0437\u044B.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0432\u043E\u0438\u043D/View/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0441\u043E\u043D.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0435\u043B\u043A\u0438\u0435
   \u043A\u043E\u0441\u044B \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041D\u0430\u043A\u0438\u0434\u043A\u0430
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/\u0441\u0438\u043B\u0443\u044D\u0442.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u0434\u0438
   \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u0440\u044F\u043C\u044B\u0435
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
   \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0413\u043B\u0430\u0434\u043A\u0438\u0435
   \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
-  \u0433\u043B\u0430\u0437\u0430.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u0435\u043B\u043A\u0438\u0435
-  \u043A\u043E\u0441\u044B \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043A\u0440\u0438\u043A.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043A\u0440\u0438\u043A.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Loading/Background.png
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u043E\u043D\u0442\u0430\u0440/View/\u0432
+  \u043D\u0430\u043A\u0438\u0434\u043A\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u0432\u0438\u0442\u043A\u0438
   \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043E\u043D.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u043A\u0443\u0434\u0440\u0438 \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Main.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043B\u0451\u0437\u044B.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0438\u0441\u043F\u0443\u0433.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
   \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0438\u0441\u0441\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Main.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041D\u043E\u0447\u043D\u0443\u0448\u043A\u0430/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u0430
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0412\u043E\u043B\u043D\u044B
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0431\u043E\u043B\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0418\u0441\u0438\u0434\u0430/1.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0412\u044B\u0441\u043E\u043A\u0438\u0438\u0306
-  \u0445\u0432\u043E\u0441\u0442 \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0420\u043E\u0441\u043A\u043E\u0448\u044C/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u041B\u0438\u0441\u0442\u044C\u044F
-  \u041B\u043E\u0442\u043E\u0441\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442
   \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Notification/Sprites/Sticker.png
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Main.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Character/PointMind.png
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0431\u043E\u043B\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/\u0432\u0437\u043B\u043E\u0445\u043C\u0430\u0447\u0435\u043D\u043D\u044B\u0439.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0411\u043B\u0430\u0433\u043E\u0441\u043B\u043E\u0432\u0435\u043D\u0438\u0435
-  \u0411\u0430\u0441\u0442\u0435\u0442/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u0438
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043E\u043D.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041D\u0430\u043A\u0438\u0434\u043A\u0430
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/\u043C\u0451\u0440\u0442\u0432\u0430\u044F.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+  \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043A\u0440\u0438\u043A.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Notification/LiberationSans-Regular.ttf
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/\u0432\u0437\u043B\u043E\u0445\u043C\u0430\u0447\u0435\u043D\u043D\u044B\u0439.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0422\u0435\u0308\u043C\u043D\u0430\u044F
+  \u0444\u0438\u0433\u0443\u0440\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0417\u0430\u0445\u0440\u0430/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0411\u0435\u0433\u043B\u044F\u043D\u043A\u0430/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
-  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u044B
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+  \u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0441\u0438\u044F\u044E\u0449\u0438\u0435
+  \u0433\u043B\u0430\u0437\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041F\u0440\u044F\u043C\u044B\u0435
-  \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0421\u043E\u0440\u043E\u0447\u043A\u0430/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Character/Point.png
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u043F\u043B\u0435\u0442\u0435\u0308\u043D\u043D\u044B\u0435
-  \u043D\u0430\u0431\u043E\u043A \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Loading/Screen.prefab
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u043E\u0441\u0430
   \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0421\u0442\u0440\u0430\u043D\u043D\u0438\u0446\u0430/1.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0424\u0430\u0440\u0430\u043E\u043D/View/Emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043E\u043D.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0425\u0432\u043E\u0441\u0442
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
@@ -425,75 +790,74 @@ Assets:
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043B\u0451\u0433\u043A\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0420\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
-  \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0444\u043B\u0438\u0440\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u041A\u0443\u0438\u0431\u0438\u043B\u0430/View/Emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u0441\u043E\u043D.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0416\u0440\u0438\u0446\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0442\u043E\u0440\u043E\u0438\u0306
+  \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0430\u0440\u0448\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0440\u0430\u0436\u043D\u0438\u043A/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u043E\u043B\u0443\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041C\u0430\u0430\u0442/1.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041C\u043E\u043A\u0440\u044B\u0435
   \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0411\u0430\u0441\u0442\u0435\u0442/View/Emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u043E\u0438\u043D/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u041A\u0443\u0434\u0440\u0438
   \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421
-  \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Button.png
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0417\u0430\u0432\u0438\u0442\u043A\u0438
   \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Accessories/Middle/\u0421\u043E\u043A\u0440\u043E\u0432\u0438\u0449\u0435
   \u0425\u0430\u0442\u0445\u043E\u0440.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0445\u0438\u0442\u0440\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0410\u043D\u043F\u0443/View/Emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u043A\u0440\u0438\u043A.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u043A\u0443\u0434\u0440\u0438 \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0413\u043E\u043B\u0443\u0431\u043E\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0442\u0440\u0430\u0445.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u041F\u043E\u043B\u0443\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
   \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0421\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
-  \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0416\u0435\u0308\u043B\u0442\u044B\u0438\u0306
+  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0435\u0442/View/Emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0421\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0438\u0306
-  \u043B\u043E\u0442\u043E\u0441/Emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0411\u0430\u0441\u0442\u0435\u0442/1.png"
-- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Front/\u0412\u043E\u043B\u043D\u044B
-  \u0447\u0435\u0308\u0440\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
-- Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/Sprites/Character/Bubble.png
-- Assets/RemoteAssets/Content/ZDM/Definition/ZDM.asset
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0440\u0430\u0436\u043D\u0438\u043A\u0438/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0421\u0442\u0430\u0440\u0448\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0412\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+  \u0436\u0440\u0438\u0446\u0430/View/Main.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0414\u0436\u043E\u0441\u0435\u0440/View/Emotions/\u0441\u043E\u043D.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u0413\u043E\u0441\u043F\u043E\u0436\u0430/1.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/View/\u0420\u043E\u0437\u043E\u0432\u044B\u0438\u0306
   \u043B\u043E\u0442\u043E\u0441/Emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Bubble/LiberationSans-Regular.ttf
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0420\u0430\u043C\u043E\u0441/View/Emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Hairs/Back/\u0413\u043B\u0430\u0434\u043A\u0438\u0435
   \u043C\u0435\u0434\u043D\u044B\u0435/\u0411\u043B\u043E\u043D\u0434.png"
+- "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/\u0413\u043E\u0440/View/Emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
 - "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter/Clothes/\u041D\u0430
   \u043E\u0441\u043E\u0431\u044B\u0438\u0306 \u0441\u043B\u0443\u0447\u0430\u0438\u0306/1.png"
 - Assets/RemoteAssets/Content/ZDM/Shared/Presentation/Notification/Sprites/NotifcationPlaque.png

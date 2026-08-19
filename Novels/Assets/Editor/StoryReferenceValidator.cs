@@ -170,7 +170,9 @@ namespace Editor
                             episode.Id));
                         continue;
                     }
-                    errors.Add(ContentValidationIssue.Error(
+                    // TODO: Restore Error severity when all authored character bodies
+                    // are delivered for every story.
+                    errors.Add(ContentValidationIssue.Warning(
                         ContentValidationCodes.StoryCharacterMissing,
                         $"Story character body does not exist: {assetPath}. "
                         + $"Referenced at {speaker.Location}.",
@@ -263,15 +265,25 @@ namespace Editor
                     ? "Matching assets with different casing: "
                         + string.Join(", ", caseMatches.Select(path => $"'{path}'")) + "."
                     : "No matching body, emotion, clothes, hair, or accessory sprite exists.";
-                errors.Add(ContentValidationIssue.Error(
-                    code,
-                    $"Ink character asset '{reference.Candidate}' for "
+                var message = $"Ink character asset '{reference.Candidate}' for "
                     + $"'{reference.Speaker}' cannot be resolved for: "
                     + string.Join(", ", missingViews)
-                    + $". {detail} Referenced at {reference.Location}.",
-                    reference.SourcePath,
-                    episode.ContentId,
-                    episode.Id));
+                    + $". {detail} Referenced at {reference.Location}.";
+                // TODO: Restore Error severity when all authored character states
+                // are delivered for every story. Casing mistakes remain errors.
+                errors.Add(code == ContentValidationCodes.StoryCharacterAssetMissing
+                    ? ContentValidationIssue.Warning(
+                        code,
+                        message,
+                        reference.SourcePath,
+                        episode.ContentId,
+                        episode.Id)
+                    : ContentValidationIssue.Error(
+                        code,
+                        message,
+                        reference.SourcePath,
+                        episode.ContentId,
+                        episode.Id));
             }
 
             bool IsResolvableSprite(string path)

@@ -4,6 +4,7 @@ namespace Novels.Character
 {
     internal sealed class CharacterAppearanceState
     {
+        internal string Emotion;
         internal string Clothes;
         internal string Hair;
         internal string Accessories;

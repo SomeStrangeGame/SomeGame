@@ -454,6 +454,7 @@ namespace Editor
                 || value[0] == '*'
                 || value[0] == '+'
                 || value[0] == '~'
+                || value[0] == '#'
                 || value[0] == '{'
                 || value[0] == '}'
                 || value.StartsWith("->", StringComparison.Ordinal);
