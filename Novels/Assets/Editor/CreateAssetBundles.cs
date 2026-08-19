@@ -12,8 +12,7 @@ namespace Editor
         {
             var cachePath = Path.Combine(
                 Application.persistentDataPath,
-                "CachedFiles",
-                "Remote");
+                "CachedFiles");
             if (!Directory.Exists(cachePath))
             {
                 Debug.Log($"No cache files in {cachePath}");
@@ -21,8 +20,12 @@ namespace Editor
             }
 
             Directory.Delete(cachePath, true);
-            Debug.Log("Clear cache files done!");
+            Debug.Log($"All novel cache files were deleted from {cachePath}");
         }
+
+        [MenuItem("Build/Clear Cache", true)]
+        private static bool CanClearCache() =>
+            !EditorApplication.isPlayingOrWillChangePlaymode;
 
         [MenuItem("Build/All Bundles")]
         private static void BuildAllAssetBundles()
