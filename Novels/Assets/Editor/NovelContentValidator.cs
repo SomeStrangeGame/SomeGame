@@ -96,8 +96,6 @@ namespace Editor
             if (entryPointData.FindProperty("_targetCamera")?.objectReferenceValue == null)
                 errors.Add("Novels.EntryPoint has no target Camera reference.");
 
-            ValidateApplicationLocalization(errors);
-
             if (project == null)
                 ContentProjectIndex.TryBuild(errors, out project);
             if (project == null)
@@ -125,27 +123,18 @@ namespace Editor
                     errors);
             }
 
-            foreach (var locale in Novels.Locale.LocalePolicy.SupportedLocales)
-            {
-                if (!catalog.TryResolveExact(locale, out var catalogText)
-                    || string.IsNullOrWhiteSpace(catalogText.Title))
-                    errors.Add($"Novel catalog title is empty for locale '{locale}'.");
-            }
+            if (string.IsNullOrWhiteSpace(catalog.Text.Title))
+                errors.Add("Novel catalog title is empty.");
             if (catalog.Entries.Count == 0)
                 errors.Add("Novel catalog has no entries.");
 
             foreach (var item in project.Entries)
             {
                 var entry = item.CatalogEntry;
-                foreach (var locale in Novels.Locale.LocalePolicy.SupportedLocales)
+                if (string.IsNullOrWhiteSpace(entry.Text.Title))
                 {
-                    if (!entry.TryResolveExact(locale, out var entryText)
-                        || string.IsNullOrWhiteSpace(entryText.Title))
-                    {
-                        errors.Add(
-                            $"Catalog entry '{entry.ContentId}' has no title "
-                            + $"for locale '{locale}'.");
-                    }
+                    errors.Add(
+                        $"Catalog entry '{entry.ContentId}' has no title.");
                 }
 
                 ValidateBundleAssignment(
@@ -169,41 +158,6 @@ namespace Editor
                     remoteBasePath,
                     deliveryIndex);
             return errors;
-        }
-
-        private static void ValidateApplicationLocalization(
-            ICollection<string> errors)
-        {
-            var data = AssetDatabase.LoadAssetAtPath<Localization.LocalizationData>(
-                Novels.ApplicationLocalizationContract.AssetPath);
-            if (data == null)
-            {
-                errors.Add(
-                    "Application localization does not exist: "
-                    + Novels.ApplicationLocalizationContract.AssetPath);
-                return;
-            }
-            foreach (var locale in Novels.Locale.LocalePolicy.SupportedLocales)
-            {
-                try
-                {
-                    var localization = new Localization.Entity(
-                        new Localization.Entity.Ctx
-                        {
-                            Locale = locale,
-                            LocalizationSO = data,
-                            RequireExactLocale = true,
-                        });
-                    foreach (var key in Novels.ApplicationLocalizationContract.RequiredKeys)
-                        localization.GetRequiredValue(key);
-                }
-                catch (Exception exception)
-                {
-                    errors.Add(
-                        $"Application localization '{locale}' is invalid: "
-                        + exception.Message);
-                }
-            }
         }
 
         private static void ThrowIfInvalid(ContentValidationReport errors)
@@ -281,13 +235,6 @@ namespace Editor
                     Novels.ContentAddressing.ContentAssetNames.Screen),
                 definition.BundleName,
                 errors);
-            ValidateBundleAssignment(
-                Novels.ContentAddressing.ContentAddressConvention.LocalizationAsset(
-                    definition.Prefix,
-                    Novels.ContentAddressing.ContentAssetNames.LocalizationData),
-                definition.BundleName,
-                errors);
-
             foreach (var episode in definition.Episodes)
             {
                 ValidateEpisodeBundleAssignments(definition.Prefix, episode, errors);

@@ -71,7 +71,6 @@ namespace Novels
                 location,
                 waiting,
                 audio,
-                state.Localization,
                 bubble,
                 state.SaveSystem,
                 character);

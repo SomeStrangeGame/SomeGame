@@ -8,8 +8,8 @@
   <Project Path="Bundles.csproj" />
   <Project Path="Novels.Content.csproj" />
   <Project Path="Novels.Location.csproj" />
-  <Project Path="Logs.csproj" />
   <Project Path="Novels.Character.csproj" />
+  <Project Path="Logs.csproj" />
   <Project Path="Novels.Save.csproj" />
   <Project Path="Localization.csproj" />
   <Project Path="Novels.StoryCommands.csproj" />
@@ -35,7 +35,6 @@
   <Project Path="Setting.csproj" />
   <Project Path="Novels.UITransitions.csproj" />
   <Project Path="Novels.Notification.View.csproj" />
-  <Project Path="Novels.Locale.csproj" />
   <Project Path="Cache.csproj" />
   <Project Path="Novels.Bubble.Contracts.csproj" />
   <Project Path="Loading.csproj" />

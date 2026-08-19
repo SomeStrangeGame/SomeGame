@@ -1,6 +1,5 @@
 using System;
 using System.Threading;
-using System.Globalization;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.LowLevel;
@@ -29,7 +28,6 @@ namespace Novels
                     _sessionCancellation.Token,
                     Application.persistentDataPath,
                     Application.version,
-                    new Locale.LocaleProvider(CultureInfo.CurrentUICulture).Code,
                     Bundles.ContentPlatform.GetCurrent(),
                     _targetCamera,
                     runtimeTuning);

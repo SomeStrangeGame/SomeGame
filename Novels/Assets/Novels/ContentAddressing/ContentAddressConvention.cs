@@ -107,11 +107,6 @@ namespace Novels.ContentAddressing
             string assetName) =>
             Prefab($"{EpisodeRoot(prefix, episodeId)}/Notification", assetName);
 
-        public static string LocalizationAsset(string prefix, string assetName) =>
-            IsMissing(assetName)
-                ? string.Empty
-                : $"{ContentPackageConvention.ContentRoot(prefix)}/Application/Localization/{assetName}.asset";
-
         private static string EpisodeRoot(string prefix, string episodeId) =>
             ContentPackageConvention.EpisodeRoot(prefix, episodeId);
 

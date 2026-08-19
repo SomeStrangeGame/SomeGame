@@ -36,8 +36,6 @@ namespace Novels
         {
             internal Bundles.Entity Bundles;
             internal PriorityLoader PriorityLoader;
-            internal ApplicationLocalization Localization;
-            internal string Locale;
             internal string ClientVersion;
             internal int MinimumSupportedSchemaVersion;
             internal int MaximumSupportedSchemaVersion;
@@ -54,10 +52,6 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.Bundles));
             if (ctx.PriorityLoader == null)
                 throw new ArgumentNullException(nameof(ctx.PriorityLoader));
-            if (ctx.Localization == null)
-                throw new ArgumentNullException(nameof(ctx.Localization));
-            if (string.IsNullOrWhiteSpace(ctx.Locale))
-                throw new ArgumentException("Locale must not be empty.", nameof(ctx.Locale));
             if (string.IsNullOrWhiteSpace(ctx.ClientVersion))
             {
                 throw new ArgumentException(
@@ -68,9 +62,9 @@ namespace Novels
 
         internal async UniTask<Resources> LoadWithRetry(Bootstrap.Entity bootstrap)
         {
-            var loading = _ctx.Localization.Get(ApplicationText.CatalogLoading);
-            var failed = _ctx.Localization.Get(ApplicationText.CatalogLoadFailed);
-            var retry = _ctx.Localization.Get(ApplicationText.Retry);
+            const string loading = ApplicationTexts.CatalogLoading;
+            const string failed = ApplicationTexts.CatalogLoadFailed;
+            const string retry = ApplicationTexts.Retry;
             while (true)
             {
                 Bundles.ContentDeliveryLease deliveryLease = null;
@@ -117,16 +111,16 @@ namespace Novels
                 StringComparer.OrdinalIgnoreCase);
             var items = resources.Catalog.Entries.Select(entry =>
             {
-                var text = entry.Resolve(_ctx.Locale);
+                var text = entry.Text;
                 return new Catalog.CatalogItem(
                     entry.ContentId,
                     text.Title,
                     text.Description,
-                    _ctx.Localization.Get(ApplicationText.ContentAvailable));
+                    ApplicationTexts.ContentAvailable);
             }).ToArray();
             using var selection = CreateSelection(resources.Screen);
             var selected = await selection.Select(
-                resources.Catalog.Resolve(_ctx.Locale).Title,
+                resources.Catalog.Text.Title,
                 items);
             return entries[selected.Id];
         }
@@ -142,11 +136,11 @@ namespace Novels
                 .Select(episode => new Catalog.CatalogItem(
                     episode.Id,
                     episode.Title,
-                    status: _ctx.Localization.Get(ApplicationText.ContentAvailable)))
+                    status: ApplicationTexts.ContentAvailable))
                 .ToArray();
             using var selection = CreateSelection(screen);
             var selected = await selection.Select(
-                _ctx.Localization.Get(ApplicationText.ChooseEpisode),
+                ApplicationTexts.ChooseEpisode,
                 items);
             return episodes[selected.Id];
         }

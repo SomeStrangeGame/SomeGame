@@ -7,7 +7,6 @@ namespace Novels.QueueProcess
     {
         public BubbleQueueRequest(
             UniTaskCompletionSource bubbleDone,
-            Func<string, string> getLocalizationValue,
             StoryContracts.StoryChoice[] choices,
             Action<string> setMainCharacterView,
             Action<string> setMainCharacterClothes,
@@ -25,8 +24,6 @@ namespace Novels.QueueProcess
             Action<BubbleContracts.ChoosePresentation> setChooseScreen)
         {
             BubbleDone = bubbleDone ?? throw new ArgumentNullException(nameof(bubbleDone));
-            GetLocalizationValue = getLocalizationValue
-                ?? throw new ArgumentNullException(nameof(getLocalizationValue));
             Choices = choices ?? Array.Empty<StoryContracts.StoryChoice>();
             SetMainCharacterView = setMainCharacterView
                 ?? throw new ArgumentNullException(nameof(setMainCharacterView));
@@ -51,7 +48,6 @@ namespace Novels.QueueProcess
         }
 
         internal UniTaskCompletionSource BubbleDone { get; }
-        internal Func<string, string> GetLocalizationValue { get; }
         internal StoryContracts.StoryChoice[] Choices { get; }
         internal Action<string> SetMainCharacterView { get; }
         internal Action<string> SetMainCharacterClothes { get; }

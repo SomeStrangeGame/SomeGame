@@ -24,10 +24,10 @@ namespace Novels.BubbleContracts
         Choose,
     }
 
-    public static class BubbleTextKeys
+    public static class BubbleHeaders
     {
-        public const string Disclaimer = "bubble.disclaimer";
-        public const string Hint = "bubble.hint";
+        public const string Disclaimer = "Дисклеймер";
+        public const string Hint = "Подсказка";
     }
 
     public sealed class WardrobePresentation

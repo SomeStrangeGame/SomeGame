@@ -10,7 +10,6 @@ namespace Novels
             CancellationToken cancellationToken,
             string persistentDataPath,
             string clientVersion,
-            string locale,
             string contentPlatform,
             Camera targetCamera,
             NovelRuntimeTuning runtimeTuning)
@@ -19,14 +18,11 @@ namespace Novels
                 throw new ArgumentException("Persistent data path must not be empty.", nameof(persistentDataPath));
             if (string.IsNullOrWhiteSpace(clientVersion))
                 throw new ArgumentException("Client version must not be empty.", nameof(clientVersion));
-            if (string.IsNullOrWhiteSpace(locale))
-                throw new ArgumentException("Locale must not be empty.", nameof(locale));
             if (string.IsNullOrWhiteSpace(contentPlatform))
                 throw new ArgumentException("Content platform must not be empty.", nameof(contentPlatform));
             CancellationToken = cancellationToken;
             PersistentDataPath = persistentDataPath;
             ClientVersion = clientVersion;
-            Locale = locale;
             ContentPlatform = contentPlatform;
             TargetCamera = targetCamera
                 ?? throw new ArgumentNullException(nameof(targetCamera));
@@ -36,7 +32,6 @@ namespace Novels
         internal CancellationToken CancellationToken { get; }
         internal string PersistentDataPath { get; }
         internal string ClientVersion { get; }
-        internal string Locale { get; }
         internal string ContentPlatform { get; }
         internal Camera TargetCamera { get; }
         internal NovelRuntimeTuning RuntimeTuning { get; }

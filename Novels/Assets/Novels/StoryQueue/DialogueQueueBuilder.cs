@@ -118,7 +118,6 @@ namespace Novels.StoryQueue
             return new QueueProcess.BubbleQueue.SetBubbleQueue(
                 new QueueProcess.BubbleQueueRequest(
                 bubbleDone,
-                _ctx.Localization.GetLocalizationValue,
                 choices,
                 _ctx.Character.SetMainCharacterView,
                 _ctx.Character.SetMainCharacterClothes,

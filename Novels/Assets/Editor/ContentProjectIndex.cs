@@ -103,57 +103,17 @@ namespace Editor
                     continue;
                 }
 
-                var localizationPath =
-                    Novels.ContentAddressing.ContentAddressConvention.LocalizationAsset(
-                        catalogEntry.ContentId,
-                        Novels.ContentAddressing.ContentAssetNames.LocalizationData);
-                var localizationData = AssetDatabase.LoadAssetAtPath<
-                    Localization.LocalizationData>(localizationPath);
-                if (localizationData == null)
+                Novels.Content.NovelDefinition definition;
+                try
                 {
-                    errors.Add($"Localization data does not exist: {localizationPath}");
+                    definition = asset.ToDefinition();
+                }
+                catch (Exception exception)
+                {
+                    errors.Add(
+                        $"Content asset '{asset.name}' is invalid: {exception.Message}");
                     continue;
                 }
-
-                Novels.Content.NovelDefinition definition = null;
-                foreach (var locale in Novels.Locale.LocalePolicy.SupportedLocales)
-                {
-                    try
-                    {
-                        var localization = new Localization.Entity(
-                            new Localization.Entity.Ctx
-                            {
-                                Locale = locale,
-                                LocalizationSO = localizationData,
-                                RequireExactLocale = true,
-                            });
-                        foreach (var key in new[]
-                                 {
-                                     Novels.UiTextKeys.NewGame,
-                                     Novels.UiTextKeys.ContinueGame,
-                                     Novels.BubbleContracts.BubbleTextKeys.Disclaimer,
-                                     Novels.BubbleContracts.BubbleTextKeys.Hint,
-                                 })
-                        {
-                            localization.GetRequiredValue(key);
-                        }
-                        var localizedDefinition = asset.ToDefinition(
-                            localization.GetRequiredValue);
-                        if (string.Equals(
-                                locale,
-                                Novels.Locale.LocalePolicy.FallbackLocale,
-                                StringComparison.OrdinalIgnoreCase))
-                            definition = localizedDefinition;
-                    }
-                    catch (Exception exception)
-                    {
-                        errors.Add(
-                            $"Content asset '{asset.name}' localization '{locale}' "
-                            + $"is invalid: {exception.Message}");
-                    }
-                }
-                if (definition == null)
-                    continue;
                 if (!string.Equals(
                         definition.Id,
                         catalogEntry.ContentId,

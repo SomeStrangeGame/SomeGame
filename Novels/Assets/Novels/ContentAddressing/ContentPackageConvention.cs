@@ -6,7 +6,6 @@ namespace Novels.ContentAddressing
     public static class ContentAssetNames
     {
         public const string Screen = "Screen";
-        public const string LocalizationData = "LocalizationData";
     }
 
     public static class ContentPackageConvention

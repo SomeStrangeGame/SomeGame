@@ -103,7 +103,6 @@ namespace Editor
                 EnsureFolder($"{contentRoot}/Definition");
                 createdContentRoot = contentRoot;
                 EnsureFolder($"{contentRoot}/Application/Setting");
-                EnsureFolder($"{contentRoot}/Application/Localization");
                 foreach (var feature in new[]
                          {
                              "Loading",
@@ -135,14 +134,6 @@ namespace Editor
                 AssetDatabase.CreateAsset(content, definitionPath);
                 Undo.RegisterCreatedObjectUndo(content, "Create novel content");
                 ConfigureContent(content, contentId, episodeId);
-                var localization = CreateInstance<Localization.LocalizationData>();
-                var localizationPath =
-                    Novels.ContentAddressing.ContentAddressConvention.LocalizationAsset(
-                        contentId,
-                        Novels.ContentAddressing.ContentAssetNames.LocalizationData);
-                AssetDatabase.CreateAsset(localization, localizationPath);
-                Undo.RegisterCreatedObjectUndo(localization, "Create novel localization");
-                ConfigureLocalization(localization, episodeId);
                 AppendCatalogEntry(catalog, contentId);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
@@ -205,43 +196,11 @@ namespace Editor
             episodes.arraySize = 1;
             var episode = episodes.GetArrayElementAtIndex(0);
             episode.FindPropertyRelative("_id").stringValue = episodeId;
-            episode.FindPropertyRelative("_titleKey").stringValue =
-                Novels.Content.ContentLocalizationKeys.EpisodeTitle(episodeId);
+            episode.FindPropertyRelative("_title").stringValue = _episodeTitle.Trim();
             episode.FindPropertyRelative("_storyPath").stringValue = episodeId + ".ink.json";
             episode.FindPropertyRelative("_contentVersion").stringValue = "1";
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(content);
-        }
-
-        private void ConfigureLocalization(
-            Localization.LocalizationData localization,
-            string episodeId)
-        {
-            var serialized = new SerializedObject(localization);
-            serialized.FindProperty("_fallbackLocale").stringValue = "en";
-            var pairs = serialized.FindProperty("_pairs");
-            var values = new[]
-            {
-                (Novels.Content.ContentLocalizationKeys.EpisodeTitle(episodeId),
-                    _episodeTitle.Trim()),
-                (Novels.UiTextKeys.NewGame, "New game"),
-                (Novels.UiTextKeys.ContinueGame, "Continue"),
-                (Novels.BubbleContracts.BubbleTextKeys.Disclaimer, "Disclaimer"),
-                (Novels.BubbleContracts.BubbleTextKeys.Hint, "Hint"),
-            };
-            pairs.arraySize = values.Length;
-            for (var index = 0; index < values.Length; index++)
-            {
-                var pair = pairs.GetArrayElementAtIndex(index);
-                pair.FindPropertyRelative("_key").stringValue = values[index].Item1;
-                var localizations = pair.FindPropertyRelative("_localizations");
-                localizations.arraySize = 1;
-                var value = localizations.GetArrayElementAtIndex(0);
-                value.FindPropertyRelative("_locale").stringValue = "en";
-                value.FindPropertyRelative("_value").stringValue = values[index].Item2;
-            }
-            serialized.ApplyModifiedPropertiesWithoutUndo();
-            EditorUtility.SetDirty(localization);
         }
 
         private void AppendCatalogEntry(
@@ -255,12 +214,8 @@ namespace Editor
             entries.InsertArrayElementAtIndex(index);
             var entry = entries.GetArrayElementAtIndex(index);
             entry.FindPropertyRelative("_contentId").stringValue = contentId;
-            var localizations = entry.FindPropertyRelative("_localizations");
-            localizations.arraySize = 1;
-            var localization = localizations.GetArrayElementAtIndex(0);
-            localization.FindPropertyRelative("_locale").stringValue = "en";
-            localization.FindPropertyRelative("_title").stringValue = _storyTitle.Trim();
-            localization.FindPropertyRelative("_description").stringValue = string.Empty;
+            entry.FindPropertyRelative("_title").stringValue = _storyTitle.Trim();
+            entry.FindPropertyRelative("_description").stringValue = string.Empty;
             serialized.ApplyModifiedProperties();
             EditorUtility.SetDirty(catalog);
         }

@@ -17,7 +17,7 @@ MonoBehaviour:
   _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
   _episodes:
   - _id: s01e01
-    _titleKey: episode.s01e01.title
+    _title: "\u042D\u043F\u0438\u0437\u043E\u0434 1"
     _storyPath: s01e01.ink.json
     _contentVersion: 2
     _silentAudioIds:

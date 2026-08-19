@@ -7,17 +7,13 @@ namespace Novels
     internal sealed class ContentDeliveryFlow
     {
         private readonly Bundles.Entity _bundles;
-        private readonly ApplicationLocalization _localization;
         private readonly CancellationToken _cancellationToken;
 
         internal ContentDeliveryFlow(
             Bundles.Entity bundles,
-            ApplicationLocalization localization,
             CancellationToken cancellationToken)
         {
             _bundles = bundles ?? throw new ArgumentNullException(nameof(bundles));
-            _localization = localization
-                ?? throw new ArgumentNullException(nameof(localization));
             _cancellationToken = cancellationToken;
         }
 
@@ -51,7 +47,7 @@ namespace Novels
             {
                 return null;
             }
-            var message = _localization.Get(ApplicationText.PreparingContent);
+            const string message = ApplicationTexts.PreparingContent;
             bootstrap.ShowLoading(message);
             try
             {

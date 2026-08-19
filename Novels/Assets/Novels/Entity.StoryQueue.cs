@@ -8,7 +8,6 @@ namespace Novels
             Location.Entity location,
             Waiting.Entity waiting,
             Audio.Entity audio,
-            Localization.Entity localization,
             Bubble.Entity bubble,
             Save.Entity save,
             Character.Entity character)
@@ -42,10 +41,6 @@ namespace Novels
                     {
                         SetDialogue = location.SetDialogue,
                         SetDialogueImmediate = location.SetDialogueImmediate,
-                    },
-                    Localization = new StoryQueue.Entity.LocalizationPort
-                    {
-                        GetLocalizationValue = localization.GetValue,
                     },
                     Bubble = new StoryQueue.Entity.BubblePort
                     {

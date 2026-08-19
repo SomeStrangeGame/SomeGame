@@ -33,7 +33,6 @@ namespace Novels.StoryQueue
         {
             public string MainCharacter;
             public LocationDialoguePort Location;
-            public LocalizationPort Localization;
             public BubblePort Bubble;
             public ChoicePort Choice;
             public CharacterPort Character;
@@ -43,11 +42,6 @@ namespace Novels.StoryQueue
         {
             public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogue;
             public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogueImmediate;
-        }
-
-        public struct LocalizationPort
-        {
-            public Func<string, string> GetLocalizationValue;
         }
 
         public struct BubblePort

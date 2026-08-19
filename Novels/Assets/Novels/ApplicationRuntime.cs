@@ -32,10 +32,8 @@ namespace Novels
         private readonly PriorityLoader _priorityLoader;
         private readonly Bundles.Entity _bundles;
         private readonly DisposableSlot<Entity> _activeNovel;
-        private readonly ApplicationLocalization _localization;
         private readonly CatalogFlow _catalogFlow;
         private readonly ContentDeliveryFlow _contentDeliveryFlow;
-        private readonly string _locale;
 
         internal ApplicationRuntime(Ctx ctx)
         {
@@ -46,15 +44,11 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.ContentSource));
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
-            _locale = _environment.Locale;
-            _localization = new ApplicationLocalization(_locale);
             _bundles = CreateBundles().AddTo(this);
             _catalogFlow = new CatalogFlow(new CatalogFlow.Ctx
             {
                 Bundles = _bundles,
                 PriorityLoader = _priorityLoader,
-                Localization = _localization,
-                Locale = _locale,
                 ClientVersion = _environment.ClientVersion,
                 MinimumSupportedSchemaVersion =
                     ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion,
@@ -65,7 +59,6 @@ namespace Novels
             });
             _contentDeliveryFlow = new ContentDeliveryFlow(
                 _bundles,
-                _localization,
                 _environment.CancellationToken);
             _activeNovel = new DisposableSlot<Entity>().AddTo(this);
         }
@@ -125,7 +118,6 @@ namespace Novels
             {
                 Bundles = _bundles,
                 Content = content,
-                Locale = _locale,
                 PersistentDataPath = _environment.PersistentDataPath,
                 TargetCamera = _environment.TargetCamera,
                 RuntimeTuning = _environment.RuntimeTuning,

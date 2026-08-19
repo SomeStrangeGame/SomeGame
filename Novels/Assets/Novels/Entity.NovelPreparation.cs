@@ -1,6 +1,5 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
-using Localization;
 using System.Threading;
 using UnityEngine;
 
@@ -16,7 +15,6 @@ namespace Novels
                 EpisodeRuntime episodeRuntime,
                 Bundles.MediaScope episodeBundles,
                 Loading.Entity mainLoading,
-                Localization.Entity localization,
                 UniTask<string> episodePreloading)
             {
                 SaveSystem = saveSystem;
@@ -25,7 +23,6 @@ namespace Novels
                 EpisodeScope = episodeRuntime.Scope;
                 EpisodeBundles = episodeBundles;
                 MainLoading = mainLoading;
-                Localization = localization;
                 EpisodePreloading = episodePreloading;
             }
 
@@ -37,7 +34,6 @@ namespace Novels
                 EpisodeRuntime.CancellationToken;
             internal Bundles.MediaScope EpisodeBundles { get; }
             internal Loading.Entity MainLoading { get; }
-            internal Localization.Entity Localization { get; }
             internal UniTask<string> EpisodePreloading { get; }
         }
 
@@ -93,8 +89,7 @@ namespace Novels
                 ShowLoading = mainLoading.Show,
                 HideLoading = mainLoading.Hide,
                 ContainAnySave = () => saveSystem.ContainAnySave,
-                NovelTitle = _ctx.Content.Resolve(_ctx.Locale).Title,
-                GetLocalizationValue = _localization.GetValue,
+                NovelTitle = _ctx.Content.Text.Title,
                 CancellationToken = _ctx.CancellationToken,
             }).AddTo(this);
             var resources = new PreparedNovelResources(
@@ -103,7 +98,6 @@ namespace Novels
                 episodeRuntime,
                 episodeBundles,
                 mainLoading,
-                _localization,
                 episodePreloading);
             var selection = await settingProcess.ShowSettingProcess();
             return new NovelStartSession(

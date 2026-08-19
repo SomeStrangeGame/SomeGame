@@ -43,12 +43,11 @@ namespace Novels.QueueProcess
         {
             if (_request.Presentation == StoryContracts.DialoguePresentation.Disclaimer)
             {
-                return _request.GetLocalizationValue(
-                    BubbleContracts.BubbleTextKeys.Disclaimer);
+                return BubbleContracts.BubbleHeaders.Disclaimer;
             }
             if (_request.Presentation == StoryContracts.DialoguePresentation.Hint)
-                return _request.GetLocalizationValue(BubbleContracts.BubbleTextKeys.Hint);
-            return _request.GetLocalizationValue(_request.Name);
+                return BubbleContracts.BubbleHeaders.Hint;
+            return _request.Name;
         }
     }
 }

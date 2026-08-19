@@ -24,7 +24,6 @@ namespace Novels
             internal Func<UniTask> HideLoading;
             internal Func<bool> ContainAnySave;
             internal string NovelTitle;
-            internal Func<string, string> GetLocalizationValue;
             internal CancellationToken CancellationToken;
         }
 
@@ -49,14 +48,14 @@ namespace Novels
             var selection = new UniTaskCompletionSource<SettingSelection>();
             setting.AddOrUpdateButton(
                 _newGameButtonId,
-                $"<b>{_ctx.GetLocalizationValue(UiTextKeys.NewGame)}</b>",
+                $"<b>{UiTexts.NewGame}</b>",
                 () => selection.TrySetResult(SettingSelection.NewGame));
 
             if (_ctx.ContainAnySave())
             {
                 setting.AddOrUpdateButton(
                     _continueGameButtonId,
-                    $"<b>{_ctx.GetLocalizationValue(UiTextKeys.ContinueGame)}</b>",
+                    $"<b>{UiTexts.ContinueGame}</b>",
                     () => selection.TrySetResult(SettingSelection.ContinueGame));
             }
 
@@ -77,9 +76,9 @@ namespace Novels
         }
     }
 
-    public static class UiTextKeys
+    public static class UiTexts
     {
-        public const string NewGame = "ui.new_game";
-        public const string ContinueGame = "ui.continue_game";
+        public const string NewGame = "Новая игра";
+        public const string ContinueGame = "Продолжить";
     }
 }

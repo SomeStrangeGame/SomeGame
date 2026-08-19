@@ -19,7 +19,6 @@ namespace Novels
             internal Action<Diagnostics.NovelError> OnError;
             internal Bundles.Entity Bundles;
             internal Catalog.NovelCatalogEntry Content;
-            internal string Locale;
             internal string PersistentDataPath;
             internal Camera TargetCamera;
             internal NovelRuntimeTuning RuntimeTuning;
@@ -38,7 +37,6 @@ namespace Novels
         private Content.NovelDefinition _definition;
         private Content.EpisodeDefinition _episode;
         private AudioMixer _audioMixer;
-        private Localization.Entity _localization;
         private Save.Entity _saveSystem;
 
         internal Entity(Ctx ctx)
