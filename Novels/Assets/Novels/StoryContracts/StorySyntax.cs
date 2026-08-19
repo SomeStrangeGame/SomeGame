@@ -18,6 +18,9 @@ namespace Novels.StoryContracts
         public const string RemoveHair = "убрать причёску";
         public const string RemoveHairLegacy = "убрать прическу";
         public const string RemoveAccessory = "убрать аксессуар";
+        public const string PositionLeft = "слева";
+        public const string PositionRight = "справа";
+        public const string PositionCenter = "по центру";
     }
 
     public static class StoryChoiceActions

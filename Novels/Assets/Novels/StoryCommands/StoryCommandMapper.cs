@@ -48,14 +48,22 @@ namespace Novels.StoryCommands
         }
 
         internal static StoryContracts.CharacterPresentation ParseCharacterPresentation(
+            string speaker,
             string[] arguments)
         {
             var assetCandidates = new List<string>(arguments.Length);
+            var displayName = ParseDisplayName(speaker, arguments);
+            var position = ParseCharacterPosition(arguments);
 
-            foreach (var argument in arguments)
+            for (var index = 0; index < arguments.Length; index++)
             {
-                if (!IsDialogueControlArgument(argument))
+                var argument = arguments[index];
+                if (!IsDialogueControlArgument(argument)
+                    && !TryParseCharacterPosition(argument, out _)
+                    && (index != 0 || string.IsNullOrEmpty(displayName)))
+                {
                     assetCandidates.Add(argument);
+                }
             }
 
             return new StoryContracts.CharacterPresentation(
@@ -64,7 +72,62 @@ namespace Novels.StoryCommands
                 HasArgument(arguments, StoryContracts.StoryArguments.RemoveHair)
                     || HasArgument(arguments, StoryContracts.StoryArguments.RemoveHairLegacy),
                 HasArgument(arguments, StoryContracts.StoryArguments.RemoveAccessory),
+                displayName,
+                position,
                 assetCandidates.ToArray());
+        }
+
+        private static string ParseDisplayName(string speaker, string[] arguments)
+        {
+            if (string.IsNullOrEmpty(speaker)
+                || speaker[0] != '{'
+                || arguments.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            var candidate = arguments[0]?.Trim();
+            if (string.IsNullOrEmpty(candidate)
+                || IsDialogueControlArgument(candidate)
+                || TryParseCharacterPosition(candidate, out _)
+                || candidate[0] == '{'
+                || !char.IsUpper(candidate[0]))
+            {
+                return string.Empty;
+            }
+
+            return candidate;
+        }
+
+        private static StoryContracts.StoryCharacterPosition? ParseCharacterPosition(
+            string[] arguments)
+        {
+            foreach (var argument in arguments)
+            {
+                if (TryParseCharacterPosition(argument, out var position))
+                    return position;
+            }
+
+            return null;
+        }
+
+        private static bool TryParseCharacterPosition(
+            string argument,
+            out StoryContracts.StoryCharacterPosition position)
+        {
+            if (IsArgument(argument, StoryContracts.StoryArguments.PositionLeft))
+                position = StoryContracts.StoryCharacterPosition.Left;
+            else if (IsArgument(argument, StoryContracts.StoryArguments.PositionRight))
+                position = StoryContracts.StoryCharacterPosition.Right;
+            else if (IsArgument(argument, StoryContracts.StoryArguments.PositionCenter))
+                position = StoryContracts.StoryCharacterPosition.Center;
+            else
+            {
+                position = default;
+                return false;
+            }
+
+            return true;
         }
 
         internal static StoryContracts.StoryBackgroundPresentation ParseBackgroundPresentation(

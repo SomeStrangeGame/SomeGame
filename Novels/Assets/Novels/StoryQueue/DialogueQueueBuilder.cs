@@ -49,7 +49,7 @@ namespace Novels.StoryQueue
             }
 
             var role = ResolveSpeakerRole(dialogue);
-            var position = GetCharacterPosition(role);
+            var position = dialogue.Character.Position ?? GetCharacterPosition(role);
             var setBubble = CreateSetBubbleQueue(dialogue, role, choices, bubbleDone);
 
             var characterName = name;
@@ -111,7 +111,9 @@ namespace Novels.StoryQueue
                 _ctx.Character.SetMainCharacterHair,
                 _ctx.Choice.SaveDecision,
                 _ctx.Choice.SetChoice,
-                dialogue.Speaker,
+                string.IsNullOrEmpty(dialogue.Character.DisplayName)
+                    ? dialogue.Speaker
+                    : dialogue.Character.DisplayName,
                 dialogue.Text,
                 role,
                 dialogue.Presentation,

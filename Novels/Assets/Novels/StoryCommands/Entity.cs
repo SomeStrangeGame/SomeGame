@@ -34,7 +34,9 @@ namespace Novels.StoryCommands
                         string.Empty,
                         StoryContracts.DialoguePresentation.Character,
                         StoryContracts.StoryChoiceAction.None,
-                        StoryCommandMapper.ParseCharacterPresentation(Array.Empty<string>()))
+                        StoryCommandMapper.ParseCharacterPresentation(
+                            string.Empty,
+                            Array.Empty<string>()))
                     : StoryCommand.CreateEmpty(source);
                 return StoryParseResult.Success(command);
             }
@@ -76,7 +78,7 @@ namespace Novels.StoryCommands
                     value,
                     StoryCommandMapper.ParsePresentation(name, arguments),
                     StoryCommandMapper.ParseChoiceActions(arguments),
-                    StoryCommandMapper.ParseCharacterPresentation(arguments)));
+                    StoryCommandMapper.ParseCharacterPresentation(name, arguments)));
             }
 
             switch (commandType)

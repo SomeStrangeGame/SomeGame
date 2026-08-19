@@ -9,12 +9,16 @@ namespace Novels.StoryContracts
             bool removeClothes,
             bool removeHair,
             bool removeAccessory,
+            string displayName,
+            StoryCharacterPosition? position,
             string[] assetCandidates)
         {
             IsChild = isChild;
             RemoveClothes = removeClothes;
             RemoveHair = removeHair;
             RemoveAccessory = removeAccessory;
+            DisplayName = displayName ?? string.Empty;
+            Position = position;
             AssetCandidates = assetCandidates ?? Array.Empty<string>();
         }
 
@@ -22,6 +26,8 @@ namespace Novels.StoryContracts
         public bool RemoveClothes { get; }
         public bool RemoveHair { get; }
         public bool RemoveAccessory { get; }
+        public string DisplayName { get; }
+        public StoryCharacterPosition? Position { get; }
         public string[] AssetCandidates { get; }
     }
 }

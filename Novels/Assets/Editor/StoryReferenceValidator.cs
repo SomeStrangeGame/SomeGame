@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using UnityEditor;
 using UnityEngine;
 
@@ -9,6 +10,38 @@ namespace Editor
 {
     internal static class StoryReferenceValidator
     {
+        private sealed class AssetPathIndex
+        {
+            private readonly string[] _allPaths;
+            private readonly ILookup<string, string> _paths;
+
+            internal AssetPathIndex(IEnumerable<string> paths)
+            {
+                _allPaths = (paths ?? Array.Empty<string>()).ToArray();
+                _paths = _allPaths.ToLookup(Normalize, StringComparer.OrdinalIgnoreCase);
+            }
+
+            internal IEnumerable<string> AllPaths => _allPaths;
+
+            internal IEnumerable<string> Matching(string expected) =>
+                _paths[Normalize(expected)];
+
+            internal string Exact(string expected) =>
+                Matching(expected).FirstOrDefault(actual => string.Equals(
+                    Normalize(actual),
+                    Normalize(expected),
+                    StringComparison.Ordinal));
+
+            internal static bool EqualsExact(string left, string right) =>
+                string.Equals(
+                    Normalize(left),
+                    Normalize(right),
+                    StringComparison.Ordinal);
+
+            private static string Normalize(string path) =>
+                (path ?? string.Empty).Normalize(NormalizationForm.FormC);
+        }
+
         internal static void Validate(
             string prefix,
             string mainCharacter,
@@ -36,8 +69,7 @@ namespace Editor
                 ValidateAudio(prefix, episode, audio, errors);
 
             var reported = new HashSet<string>(StringComparer.Ordinal);
-            var assetPaths = AssetDatabase.GetAllAssetPaths()
-                .ToLookup(path => path, StringComparer.OrdinalIgnoreCase);
+            var assetPaths = new AssetPathIndex(AssetDatabase.GetAllAssetPaths());
             foreach (var background in DistinctById(index.BackgroundReferences))
             {
                 var assetPath = LocationPath(prefix, episode.Id, background.Id);
@@ -74,13 +106,10 @@ namespace Editor
                 if (string.IsNullOrEmpty(assetPath))
                     continue;
 
-                var matchingPaths = assetPaths[assetPath]
+                var matchingPaths = assetPaths.Matching(assetPath)
                     .Distinct(StringComparer.Ordinal)
                     .ToArray();
-                var exactPath = matchingPaths.FirstOrDefault(path => string.Equals(
-                    path,
-                    assetPath,
-                    StringComparison.Ordinal));
+                var exactPath = assetPaths.Exact(assetPath);
                 if (exactPath == null
                     && matchingPaths.Length == 1
                     && reported.Add(assetPath))
@@ -138,7 +167,7 @@ namespace Editor
             Novels.Content.CharacterAssetProfile profile,
             Novels.Content.EpisodeDefinition episode,
             IEnumerable<StoryCharacterAssetReference> references,
-            ILookup<string, string> assetPaths,
+            AssetPathIndex assetPaths,
             ContentValidationReport errors)
         {
             foreach (var reference in references
@@ -215,12 +244,12 @@ namespace Editor
                     episode.Id));
             }
 
-            bool IsExactSprite(string path) =>
-                assetPaths[path].Any(actual => string.Equals(
-                    actual,
-                    path,
-                    StringComparison.Ordinal))
-                && AssetDatabase.LoadAssetAtPath<Sprite>(path) != null;
+            bool IsExactSprite(string path)
+            {
+                var actual = assetPaths.Exact(path);
+                return actual != null
+                    && AssetDatabase.LoadAssetAtPath<Sprite>(actual) != null;
+            }
         }
 
         private static IEnumerable<string> CharacterViewCandidatePaths(
@@ -297,12 +326,11 @@ namespace Editor
             string character,
             Novels.Content.CharacterAssetProfile profile,
             bool isChild,
-            ILookup<string, string> assetPaths)
+            AssetPathIndex assetPaths)
         {
             var root = $"{Novels.ContentAddressing.ContentPackageConvention.EpisodeRoot(prefix, episodeId)}"
                 + $"/Character/Characters/{character}/{profile.ViewRoot}/";
-            return assetPaths
-                .SelectMany(group => group)
+            return assetPaths.AllPaths
                 .Where(path => path.StartsWith(root, StringComparison.Ordinal))
                 .Select(path => path.Substring(root.Length).Split('/'))
                 .Where(parts => isChild
@@ -320,13 +348,13 @@ namespace Editor
 
         private static void AddCaseMatches(
             IEnumerable<string> expectedPaths,
-            ILookup<string, string> assetPaths,
+            AssetPathIndex assetPaths,
             ISet<string> target)
         {
             foreach (var expected in expectedPaths)
-            foreach (var actual in assetPaths[expected])
+            foreach (var actual in assetPaths.Matching(expected))
             {
-                if (!string.Equals(actual, expected, StringComparison.Ordinal)
+                if (!AssetPathIndex.EqualsExact(actual, expected)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(actual) != null)
                 {
                     target.Add(actual);
