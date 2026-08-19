@@ -44,10 +44,10 @@ namespace Editor
         internal IReadOnlyList<Entry> Entries { get; }
         internal IReadOnlyDictionary<string, string> BundleDeliveryGroups { get; }
 
-        internal static ContentProjectIndex BuildOrThrow(string locale)
+        internal static ContentProjectIndex BuildOrThrow()
         {
             var errors = new List<string>();
-            if (!TryBuild(locale, errors, out var index))
+            if (!TryBuild(errors, out var index))
             {
                 throw new InvalidOperationException(
                     "Content project index is invalid:\n- "
@@ -57,7 +57,6 @@ namespace Editor
         }
 
         internal static bool TryBuild(
-            string locale,
             ICollection<string> errors,
             out ContentProjectIndex index)
         {
@@ -116,32 +115,45 @@ namespace Editor
                     continue;
                 }
 
-                Novels.Content.NovelDefinition definition;
-                try
+                Novels.Content.NovelDefinition definition = null;
+                foreach (var locale in Novels.Locale.LocalePolicy.SupportedLocales)
                 {
-                    var localization = new Localization.Entity(
-                        new Localization.Entity.Ctx
-                        {
-                            Locale = locale,
-                            LocalizationSO = localizationData,
-                        });
-                    foreach (var key in new[]
-                             {
-                                 Novels.UiTextKeys.NewGame,
-                                 Novels.UiTextKeys.ContinueGame,
-                                 Novels.BubbleContracts.BubbleTextKeys.Disclaimer,
-                                 Novels.BubbleContracts.BubbleTextKeys.Hint,
-                             })
+                    try
                     {
-                        localization.GetRequiredValue(key);
+                        var localization = new Localization.Entity(
+                            new Localization.Entity.Ctx
+                            {
+                                Locale = locale,
+                                LocalizationSO = localizationData,
+                                RequireExactLocale = true,
+                            });
+                        foreach (var key in new[]
+                                 {
+                                     Novels.UiTextKeys.NewGame,
+                                     Novels.UiTextKeys.ContinueGame,
+                                     Novels.BubbleContracts.BubbleTextKeys.Disclaimer,
+                                     Novels.BubbleContracts.BubbleTextKeys.Hint,
+                                 })
+                        {
+                            localization.GetRequiredValue(key);
+                        }
+                        var localizedDefinition = asset.ToDefinition(
+                            localization.GetRequiredValue);
+                        if (string.Equals(
+                                locale,
+                                Novels.Locale.LocalePolicy.FallbackLocale,
+                                StringComparison.OrdinalIgnoreCase))
+                            definition = localizedDefinition;
                     }
-                    definition = asset.ToDefinition(localization.GetRequiredValue);
+                    catch (Exception exception)
+                    {
+                        errors.Add(
+                            $"Content asset '{asset.name}' localization '{locale}' "
+                            + $"is invalid: {exception.Message}");
+                    }
                 }
-                catch (Exception exception)
-                {
-                    errors.Add($"Content asset '{asset.name}' is invalid: {exception.Message}");
+                if (definition == null)
                     continue;
-                }
                 if (!string.Equals(
                         definition.Id,
                         catalogEntry.ContentId,

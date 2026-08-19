@@ -15,7 +15,7 @@ namespace Editor
             using var workspace = new ContentBuildWorkspace();
             try
             {
-                var project = ContentProjectIndex.BuildOrThrow("en");
+                var project = ContentProjectIndex.BuildOrThrow();
                 NovelContentValidator.ValidateOrThrow(project);
                 var snapshot = ContentBuildSnapshot.Create(project);
                 var results = AssetBundleBuildPipeline.Build(

@@ -5,7 +5,6 @@ namespace Bundles
 {
     public static class MediaFileConvention
     {
-        public const string DefaultAudioExtension = ".wav";
         public const string VideoExtension = ".mp4";
     }
 

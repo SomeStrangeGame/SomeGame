@@ -2,6 +2,15 @@
 
 <!-- unity-onboarding:generated:start -->
 
+## Architecture wave completed on 2026-08-19
+
+- Ink audio commands contain a bare file name without an extension. Editor validation and delivery indexing require exactly one matching `.wav`, `.mp3`, or `.ogg` file; runtime resolves the physical format from the pinned release and rejects missing or ambiguous matches.
+- `LocalePolicy` owns the `en` fallback and the supported `en`/`ru` locale set. Catalog and story authoring require complete values for every supported locale. Application-level bootstrap/catalog strings live in the built-in `ApplicationLocalizationData.asset`, so they remain available before remote content loads.
+- Editor dependency discovery builds a recursive Ink source graph with `INCLUDE` cycle/missing-file diagnostics. Audio, background, speaker, and camera references retain their source file, line, and authored text through validation.
+- Editor content snapshots use immutable `ContentBuildFile` values and create mutable release DTOs only at the JSON boundary. Numeric client-version parsing is centralized in `Bundles.ClientVersion`.
+- Save format version 2 persists typed `StoryDecision` records (`Advance` or an integer choice ID). The byte sentinel and the 0-254 choice-ID limit were removed. Version-1 saves are intentionally rejected; no migration is provided.
+- Unity 6000.3.11f1 and the affected generated C# projects compiled with 0 errors and 0 warnings. Authoring validation completed without errors; complete built-output validation still requires rebuilding the existing schema-4 Android release and producing the missing iOS release.
+
 ## Project Summary
 
 - Root: `/Users/iantonishin/Fork/SomeGame/Novels`
@@ -51,7 +60,7 @@
 - `ContentBuildTransaction` makes bundle output, validation, publish artifacts, and optional player seeds one rollback boundary. Runtime releases use candidate/active promotion: a remote manifest becomes active only after application content and catalog assets load successfully.
 - Remote request behavior is defined by `ContentRequestPolicy`; HTTP requests have bounded timeout/retry/backoff and typed failure categories, while Editor StreamingAssets access remains single-attempt local delivery.
 - Ink source is the only source of episode audio, background, and speaker dependencies. `StoryDependencyAnalyzer` parses authored command lines, resolves declared string variables, derives matching video files during content builds, and rejects empty or statically unresolved resource references. It no longer scrapes compiler-private Ink JSON strings.
-- `Bundles.MediaFileConvention` owns the fixed `.wav` default-audio and `.mp4` video extensions. Non-default audio formats must include their extension directly in Ink; Editor validation reports missing, mismatched, or ambiguous formats, and no media-extension settings are serialized in `NovelContentAsset`.
+- `Bundles.MediaFileConvention` owns only the fixed `.mp4` video extension. Ink audio references are extensionless names; Editor validation and runtime release lookup require one unambiguous matching audio payload.
 - Player schema support is centralized in `ContentCompatibility`. Deployment URLs are generated into a staging-only `ContentRuntimeConfiguration` Resources asset instead of being serialized into the startup scene.
 - Shared cancellation-aware view animations live in `Novels.UITransitions`. Location background playback/cut-scene behavior lives in `BackgroundPresentationController`, while image/camera/dialogue geometry lives in `LocationLayout`; existing UI dimensions and serialized timing values are unchanged.
 
@@ -67,7 +76,7 @@
 
 - Confirmed manual composition root: a partial `Novels.Entity` wires feature entities using nested `Ctx` structs and delegates; no DI container.
 - Confirmed Entity/View split: disposable plain-C# feature entities drive uGUI `Screen` MonoBehaviours.
-- Confirmed command queue with async and immediate/replay modes; saved choices are persisted as bytes.
+- Confirmed command queue with async and immediate/replay modes; replay input is persisted as typed `StoryDecision` records.
 - Story syntax parsing is isolated in `Novels.StoryCommands`; each command exposes only its specialized payload (`Dialogue`, `Background`, `Audio`, `Notification`, `Camera`, or `Wait`). Dialogue presentation, choice actions, character control arguments, background options, and camera actions are converted from authored strings to typed `StoryContracts` values at this boundary. Free-form character asset candidates remain strings because their resource category is resolved during sprite lookup. `StoryProcessor` converts Ink choices to the neutral `StoryChoice` contract. `StoryQueue` accumulates commands and builds executable queue batches, while `NovelProcess` only receives steps and executes ready batches through delegates.
 - A dialogue may have empty speaker/text when Ink exposes choices without a prompt; character presentation is updated only when the dialogue contains speaker or text content.
 - `StoryQueue.StoryCommandQueueBuilder` maps each non-dialogue story command to one executable queue item. `StoryQueue.DialogueQueueBuilder` owns the last-character state and returns explicit queue items that belong before and after the accumulated commands. It resolves the configured main-character name and typed dialogue presentation into a neutral `StorySpeakerRole` and `StoryCharacterPosition`; `StoryQueue.Entity` is the sole owner of command accumulation and final batch composition. Character, Bubble, and QueueProcess consume the resolved role instead of comparing authored speaker strings.
@@ -76,7 +85,7 @@
 - `QueueExecutionContext` carries the episode-lifetime cancellation token. Queue commands are immutable after construction, validate required delegates in their constructors, and cancel user-input waits without leaving the executor suspended.
 - Notifications preserve their non-blocking story behavior through a Notification-owned FIFO dispatcher. The dispatcher serializes presentation, observes cancellation and exceptions, and replaces queue-level fire-and-forget work.
 - `Save.Entity` receives byte-storage operations through delegates and no longer references the Cache assembly. The root `Entity.SaveSystem` factory owns the Cache adapter. Cache owns filesystem path resolution, atomic byte writes, existence checks, and exact-key deletion; filesystem paths are converted to `file://` URLs only at the Bundles video boundary.
-- Save storage writes and accepts only a versioned binary envelope containing content identity, content version, and the choice payload. Saves in obsolete formats or belonging to another episode/version are not replayed.
+- Save storage writes and accepts only a versioned binary envelope containing content identity, content version, and typed decision records. Saves in obsolete formats or belonging to another episode/version are not replayed.
 - `StoryProcessor.ReadNext()` exposes typed `Content`, `Choices`, and `Completed` control flow. `NovelProcess` handles completion before parsing and terminates without adding an artificial queue item.
 - Story completion asks `StoryQueue.TryComplete()` for a final batch so commands authored after the last Dialogue are not discarded. No empty batch or artificial command is emitted.
 - `StoryCommand` is a closed polymorphic hierarchy. Every concrete command owns exactly one valid payload; the public parser facade and authored syntax remain unchanged.

@@ -71,6 +71,12 @@ namespace Editor
 
         internal void Validate()
         {
+            if (!Bundles.ClientVersion.TryParse(MinimumClientVersion, out _))
+            {
+                throw new InvalidOperationException(
+                    $"Minimum client version '{MinimumClientVersion}' must contain "
+                    + "one to four numeric components.");
+            }
             if (_contentSchemaVersion < 5)
             {
                 throw new InvalidOperationException(

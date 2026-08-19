@@ -12,6 +12,8 @@ namespace Bundles
         private readonly string _prefix;
         private readonly ContentReleaseSession _session;
         private readonly HashSet<string> _videoDeliveryGroups;
+        private readonly IReadOnlyDictionary<string, ContentFileDescriptor> _audioByName;
+        private readonly HashSet<string> _ambiguousAudioNames;
         private readonly MediaManifest _manifest;
 
         internal MediaResolver(
@@ -38,6 +40,7 @@ namespace Bundles
             _manifest = manifest ?? throw new ArgumentNullException(nameof(manifest));
             _resolveFileUrl = resolveFileUrl
                 ?? throw new ArgumentNullException(nameof(resolveFileUrl));
+            (_audioByName, _ambiguousAudioNames) = BuildAudioIndex(session.Release, prefix);
         }
 
         internal async UniTask<string> ResolveVideoUrl(string assetName)
@@ -60,11 +63,55 @@ namespace Bundles
             if (_manifest.IsSilentAudio(assetName))
                 return null;
 
-            var extension = Path.GetExtension(assetName);
-            var fileName = extension.Length == 0
-                ? assetName + MediaFileConvention.DefaultAudioExtension
-                : assetName;
-            return await _resolveFileUrl($"NovelsAudio/{_prefix}/{fileName}");
+            var normalized = assetName.Trim();
+            if (!string.Equals(Path.GetFileName(normalized), normalized, StringComparison.Ordinal)
+                || Path.GetExtension(normalized).Length > 0)
+            {
+                throw new ContentConfigurationException(
+                    $"Audio reference '{assetName}' must contain only a file name "
+                    + "without an extension.");
+            }
+            if (_ambiguousAudioNames.Contains(normalized))
+            {
+                throw new ContentIntegrityException(
+                    $"Audio reference '{normalized}' matches multiple released files.");
+            }
+            if (!_audioByName.TryGetValue(normalized, out var descriptor))
+            {
+                throw new ContentIntegrityException(
+                    $"Audio reference '{normalized}' has no released file.");
+            }
+            return await _resolveFileUrl(descriptor.Path);
+        }
+
+        private static (
+            IReadOnlyDictionary<string, ContentFileDescriptor> files,
+            HashSet<string> ambiguousNames) BuildAudioIndex(
+                ContentReleaseSnapshot release,
+                string prefix)
+        {
+            var directory = $"NovelsAudio/{prefix}/";
+            var files = new Dictionary<string, ContentFileDescriptor>(
+                StringComparer.OrdinalIgnoreCase);
+            var ambiguous = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var file in release.Files)
+            {
+                if (!file.Path.StartsWith(directory, StringComparison.OrdinalIgnoreCase))
+                    continue;
+                var relative = file.Path.Substring(directory.Length);
+                if (relative.Length == 0 || relative.Contains('/'))
+                    continue;
+                var name = Path.GetFileNameWithoutExtension(relative);
+                if (ambiguous.Contains(name))
+                    continue;
+                if (files.Remove(name))
+                {
+                    ambiguous.Add(name);
+                    continue;
+                }
+                files.Add(name, file);
+            }
+            return (files, ambiguous);
         }
     }
 }

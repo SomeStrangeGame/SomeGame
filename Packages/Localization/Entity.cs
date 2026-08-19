@@ -9,6 +9,7 @@ namespace Localization
         {
             public string Locale;
             public LocalizationData LocalizationSO;
+            public bool RequireExactLocale;
         }
 
         private readonly IReadOnlyDictionary<string, string> _values;
@@ -17,7 +18,9 @@ namespace Localization
         {
             if (ctx.LocalizationSO == null)
                 throw new ArgumentNullException(nameof(ctx.LocalizationSO));
-            _values = ctx.LocalizationSO.CreateSnapshot(ctx.Locale);
+            _values = ctx.LocalizationSO.CreateSnapshot(
+                ctx.Locale,
+                ctx.RequireExactLocale);
         }
 
         public string GetValue(string key)

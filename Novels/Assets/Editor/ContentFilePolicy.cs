@@ -67,6 +67,9 @@ namespace Editor
                 : "shared";
         }
 
+        internal static bool IsSupportedAudioFile(string file) =>
+            _extensions["NovelsAudio"].Contains(Path.GetExtension(file));
+
         private static bool IsDeliverable(string file, string rootName)
         {
             var relative = GetRelativePath(file);

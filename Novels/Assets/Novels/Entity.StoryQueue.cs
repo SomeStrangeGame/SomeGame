@@ -59,7 +59,7 @@ namespace Novels
                     },
                     Choice = new StoryQueue.Entity.ChoicePort
                     {
-                        SaveChoice = save.SaveChoice,
+                        SaveDecision = save.SaveDecision,
                         SetChoice = storyProcessor.SetChoice,
                     },
                     Character = new StoryQueue.Entity.CharacterPort

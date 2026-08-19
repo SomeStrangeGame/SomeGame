@@ -109,7 +109,7 @@ namespace Novels.StoryQueue
                 _ctx.Character.SetMainCharacterView,
                 _ctx.Character.SetMainCharacterClothes,
                 _ctx.Character.SetMainCharacterHair,
-                _ctx.Choice.SaveChoice,
+                _ctx.Choice.SaveDecision,
                 _ctx.Choice.SetChoice,
                 dialogue.Speaker,
                 dialogue.Text,

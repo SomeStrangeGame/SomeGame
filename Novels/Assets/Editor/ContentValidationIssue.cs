@@ -16,12 +16,15 @@ namespace Editor
         internal const string Generic = "CONTENT_VALIDATION";
         internal const string StoryCompiledFileMissing = "STORY_COMPILED_FILE_MISSING";
         internal const string StorySourceFileMissing = "STORY_SOURCE_FILE_MISSING";
+        internal const string StorySourceIncludeMissing = "STORY_SOURCE_INCLUDE_MISSING";
+        internal const string StorySourceIncludeCycle = "STORY_SOURCE_INCLUDE_CYCLE";
+        internal const string StorySourceReadFailed = "STORY_SOURCE_READ_FAILED";
         internal const string StoryCommandInvalid = "STORY_COMMAND_INVALID";
         internal const string StoryResourceUnresolved = "STORY_RESOURCE_UNRESOLVED";
         internal const string StoryCameraUnsupported = "STORY_CAMERA_UNSUPPORTED";
         internal const string StoryAudioMissing = "STORY_AUDIO_MISSING";
-        internal const string StoryAudioExtensionMismatch = "STORY_AUDIO_EXTENSION_MISMATCH";
-        internal const string StoryAudioExtensionAmbiguous = "STORY_AUDIO_EXTENSION_AMBIGUOUS";
+        internal const string StoryAudioNameInvalid = "STORY_AUDIO_NAME_INVALID";
+        internal const string StoryAudioFormatAmbiguous = "STORY_AUDIO_FORMAT_AMBIGUOUS";
         internal const string StoryBackgroundMissing = "STORY_BACKGROUND_MISSING";
         internal const string StoryCharacterMissing = "STORY_CHARACTER_MISSING";
     }

@@ -82,7 +82,7 @@ namespace Novels
                 BuildQueue = storyQueue.TryBuild,
                 CompleteQueue = storyQueue.TryComplete,
                 ExecuteQueue = queueExecutor.Run,
-                GetNextSavedChoice = state.SaveSystem.GetNextSavedChoice,
+                GetNextSavedDecision = state.SaveSystem.GetNextSavedDecision,
                 HideLoading = loading.Hide,
                 CancellationToken = cancellationToken,
                 OnError = ReportError,

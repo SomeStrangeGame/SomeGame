@@ -33,20 +33,21 @@ namespace Bundles
             }
             if (!Enum.IsDefined(typeof(ContentDeliveryMode), release.deliveryMode))
                 throw new ContentIntegrityException("Content delivery mode is invalid.");
-            if (!Version.TryParse(release.minimumClientVersion, out var minimum))
+            if (!ClientVersion.TryParse(release.minimumClientVersion, out var minimum))
             {
                 throw new ContentIntegrityException(
                     $"Minimum client version '{release.minimumClientVersion}' is invalid.");
             }
-            if (!Version.TryParse(clientVersion, out var current))
+            if (!ClientVersion.TryParse(clientVersion, out var current))
             {
                 throw new ContentCompatibilityException(
                     $"Current client version '{clientVersion}' is invalid.");
             }
-            if (current < minimum)
+            if (current.CompareTo(minimum) < 0)
             {
                 throw new ContentCompatibilityException(
-                    $"Content requires client {minimum} or newer; current is {current}.");
+                    $"Content requires client {release.minimumClientVersion} or newer; "
+                    + $"current is {clientVersion}.");
             }
             if (release.bundles == null || release.bundles.Length == 0)
                 throw new ContentIntegrityException("Content release has no bundles.");
@@ -210,6 +211,66 @@ namespace Bundles
                     return false;
             }
             return true;
+        }
+    }
+
+    public readonly struct ClientVersion : IComparable<ClientVersion>
+    {
+        private readonly int _major;
+        private readonly int _minor;
+        private readonly int _patch;
+        private readonly int _revision;
+
+        private ClientVersion(int major, int minor, int patch, int revision)
+        {
+            _major = major;
+            _minor = minor;
+            _patch = patch;
+            _revision = revision;
+        }
+
+        public static bool TryParse(string value, out ClientVersion version)
+        {
+            version = default;
+            if (string.IsNullOrWhiteSpace(value)
+                || !string.Equals(value, value.Trim(), StringComparison.Ordinal))
+                return false;
+            var parts = value.Split('.');
+            if (parts.Length < 1 || parts.Length > 4)
+                return false;
+            var numbers = new int[4];
+            for (var index = 0; index < parts.Length; index++)
+            {
+                if (parts[index].Length == 0
+                    || ContainsNonDigit(parts[index])
+                    || !int.TryParse(parts[index], out numbers[index])
+                    || numbers[index] < 0)
+                    return false;
+            }
+            version = new ClientVersion(numbers[0], numbers[1], numbers[2], numbers[3]);
+            return true;
+        }
+
+        private static bool ContainsNonDigit(string value)
+        {
+            foreach (var character in value)
+            {
+                if (character < '0' || character > '9')
+                    return true;
+            }
+            return false;
+        }
+
+        public int CompareTo(ClientVersion other)
+        {
+            var result = _major.CompareTo(other._major);
+            if (result != 0)
+                return result;
+            result = _minor.CompareTo(other._minor);
+            if (result != 0)
+                return result;
+            result = _patch.CompareTo(other._patch);
+            return result != 0 ? result : _revision.CompareTo(other._revision);
         }
     }
 }

@@ -12,16 +12,16 @@ namespace Novels.QueueProcess
     {
         private QueueExecutionContext(
             QueueExecutionMode mode,
-            byte savedChoice,
+            StoryContracts.StoryDecision savedDecision,
             CancellationToken cancellationToken)
         {
             Mode = mode;
-            SavedChoice = savedChoice;
+            SavedDecision = savedDecision;
             CancellationToken = cancellationToken;
         }
 
         public QueueExecutionMode Mode { get; }
-        public byte SavedChoice { get; }
+        public StoryContracts.StoryDecision SavedDecision { get; }
         public CancellationToken CancellationToken { get; }
 
         public static QueueExecutionContext Live(CancellationToken cancellationToken)
@@ -33,12 +33,12 @@ namespace Novels.QueueProcess
         }
 
         public static QueueExecutionContext Replay(
-            byte savedChoice,
+            StoryContracts.StoryDecision savedDecision,
             CancellationToken cancellationToken)
         {
             return new QueueExecutionContext(
                 QueueExecutionMode.Replay,
-                savedChoice,
+                savedDecision,
                 cancellationToken);
         }
     }

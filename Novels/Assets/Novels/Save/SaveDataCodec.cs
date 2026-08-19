@@ -7,29 +7,29 @@ namespace Novels.Save
     internal static class SaveDataCodec
     {
         private static readonly byte[] _magic = { 0x4E, 0x53, 0x56, 0x31 };
-        private const byte _formatVersion = 1;
+        private const byte _formatVersion = 2;
 
         internal readonly struct DecodedSave
         {
             internal DecodedSave(
                 string contentId,
                 string contentVersion,
-                byte[] choices)
+                StoryContracts.StoryDecision[] decisions)
             {
                 ContentId = contentId;
                 ContentVersion = contentVersion;
-                Choices = choices ?? Array.Empty<byte>();
+                Decisions = decisions ?? Array.Empty<StoryContracts.StoryDecision>();
             }
 
             internal string ContentId { get; }
             internal string ContentVersion { get; }
-            internal byte[] Choices { get; }
+            internal StoryContracts.StoryDecision[] Decisions { get; }
         }
 
         internal static byte[] Encode(
             string contentId,
             string contentVersion,
-            byte[] choices)
+            StoryContracts.StoryDecision[] decisions)
         {
             using var stream = new MemoryStream();
             using var writer = new BinaryWriter(stream, Encoding.UTF8);
@@ -37,9 +37,16 @@ namespace Novels.Save
             writer.Write(_formatVersion);
             writer.Write(contentId ?? string.Empty);
             writer.Write(contentVersion ?? string.Empty);
-            writer.Write(choices?.Length ?? 0);
-            if (choices != null)
-                writer.Write(choices);
+            writer.Write(decisions?.Length ?? 0);
+            if (decisions != null)
+            {
+                foreach (var decision in decisions)
+                {
+                    writer.Write(decision.HasChoice ? (byte)1 : (byte)0);
+                    if (decision.HasChoice)
+                        writer.Write(decision.ChoiceId);
+                }
+            }
             return stream.ToArray();
         }
 
@@ -60,15 +67,25 @@ namespace Novels.Save
 
                 var contentId = reader.ReadString();
                 var contentVersion = reader.ReadString();
-                var choiceCount = reader.ReadInt32();
-                if (choiceCount < 0 || choiceCount > stream.Length - stream.Position)
-                    throw new InvalidDataException("Save choice payload length is invalid.");
-
-                var choices = reader.ReadBytes(choiceCount);
+                var decisionCount = reader.ReadInt32();
+                if (decisionCount < 0 || decisionCount > stream.Length - stream.Position)
+                    throw new InvalidDataException("Save decision count is invalid.");
+                var decisions = new StoryContracts.StoryDecision[decisionCount];
+                for (var index = 0; index < decisionCount; index++)
+                {
+                    var kind = reader.ReadByte();
+                    decisions[index] = kind switch
+                    {
+                        0 => StoryContracts.StoryDecision.Advance,
+                        1 => StoryContracts.StoryDecision.Choice(reader.ReadInt32()),
+                        _ => throw new InvalidDataException(
+                            $"Save decision kind '{kind}' is invalid."),
+                    };
+                }
                 if (stream.Position != stream.Length)
                     throw new InvalidDataException("Save contains unexpected trailing data.");
 
-                return new DecodedSave(contentId, contentVersion, choices);
+                return new DecodedSave(contentId, contentVersion, decisions);
             }
             catch (EndOfStreamException exception)
             {

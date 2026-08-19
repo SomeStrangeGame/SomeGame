@@ -8,11 +8,11 @@ namespace Novels.QueueProcess
     {
         public async UniTask Run(
             Queue<IQueue> queue,
-            byte? savedChoice,
+            StoryContracts.StoryDecision? savedDecision,
             CancellationToken cancellationToken)
         {
-            var context = savedChoice.HasValue
-                ? QueueExecutionContext.Replay(savedChoice.Value, cancellationToken)
+            var context = savedDecision.HasValue
+                ? QueueExecutionContext.Replay(savedDecision.Value, cancellationToken)
                 : QueueExecutionContext.Live(cancellationToken);
 
             while (queue.TryDequeue(out var element))

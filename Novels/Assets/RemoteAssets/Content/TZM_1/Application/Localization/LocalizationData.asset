@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c71d6072db3e242f99534b39481bfd4c, type: 3}
   m_Name: LocalizationData
   m_EditorClassIdentifier: 
-  _fallbackLocale: ru
+  _fallbackLocale: en
   _pairs:
   - _key: ...
     _localizations:

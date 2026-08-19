@@ -19,45 +19,48 @@ namespace Editor
         {
             foreach (var issue in index.Issues)
                 errors.Add(issue);
-            foreach (var action in index.CameraActions)
+            foreach (var camera in index.CameraReferences)
             {
-                if (!Novels.Location.CameraActionCapabilities.IsSupported(action))
+                if (!Novels.Location.CameraActionCapabilities.IsSupported(camera.Action))
                 {
                     errors.Add(ContentValidationIssue.Error(
                         ContentValidationCodes.StoryCameraUnsupported,
-                        $"Story camera action is not implemented: {action}",
+                        $"Story camera action is not implemented at {camera.Location}: "
+                        + camera.Action,
+                        camera.SourcePath,
                         contentId: episode.ContentId,
                         episodeId: episode.Id));
                 }
             }
-            foreach (var audioId in index.AudioIds)
-                ValidateAudio(prefix, episode, audioId, errors);
+            foreach (var audio in DistinctById(index.AudioReferences))
+                ValidateAudio(prefix, episode, audio, errors);
 
             var reported = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var background in index.Backgrounds)
+            foreach (var background in DistinctById(index.BackgroundReferences))
             {
-                var assetPath = LocationPath(prefix, episode.Id, background);
+                var assetPath = LocationPath(prefix, episode.Id, background.Id);
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
                     && reported.Add(assetPath))
                 {
                     errors.Add(ContentValidationIssue.Error(
                         ContentValidationCodes.StoryBackgroundMissing,
-                        $"Story background does not exist: {assetPath}",
+                        $"Story background does not exist: {assetPath}. "
+                        + $"Referenced at {background.Location}.",
                         assetPath,
                         episode.ContentId,
                         episode.Id));
                 }
             }
-            foreach (var speaker in index.Speakers)
+            foreach (var speaker in DistinctById(index.SpeakerReferences))
             {
-                if (string.Equals(speaker, "Wardrobe", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(speaker, mainCharacter, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(speaker.Id, "Wardrobe", StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(speaker.Id, mainCharacter, StringComparison.OrdinalIgnoreCase))
                     continue;
                 var assetPath = CharacterBodyPath(
                     prefix,
                     episode.Id,
-                    speaker,
+                    speaker.Id,
                     characterAssets.ViewRoot);
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
@@ -65,7 +68,8 @@ namespace Editor
                 {
                     errors.Add(ContentValidationIssue.Error(
                         ContentValidationCodes.StoryCharacterMissing,
-                        $"Story character body does not exist: {assetPath}",
+                        $"Story character body does not exist: {assetPath}. "
+                        + $"Referenced at {speaker.Location}.",
                         assetPath,
                         episode.ContentId,
                         episode.Id));
@@ -76,57 +80,38 @@ namespace Editor
         private static void ValidateAudio(
             string prefix,
             Novels.Content.EpisodeDefinition episode,
-            string assetName,
+            StoryDependencyReference reference,
             ContentValidationReport errors)
         {
+            var assetName = reference.Id;
+            if (!StoryAudioFileResolver.IsBareFileName(assetName))
+            {
+                errors.Add(ContentValidationIssue.Error(
+                    ContentValidationCodes.StoryAudioNameInvalid,
+                    $"Ink audio reference '{assetName}' must contain only a file name "
+                    + $"without an extension. Referenced at {reference.Location}.",
+                    reference.SourcePath,
+                    episode.ContentId,
+                    episodeId: episode.Id));
+                return;
+            }
             if (episode.Media.SilentAudioIds.Contains(assetName, StringComparer.OrdinalIgnoreCase))
                 return;
-            var extension = Path.GetExtension(assetName);
-            if (extension.Length == 0)
-                extension = Bundles.MediaFileConvention.DefaultAudioExtension;
             var directory = Path.Combine(
                 Application.streamingAssetsPath,
                 "NovelsAudio",
                 prefix);
-            var expectedName = assetName
-                + (Path.GetExtension(assetName).Length == 0 ? extension : string.Empty);
-            var path = Path.Combine(directory, expectedName);
-            var available = Directory.Exists(directory)
-                ? Directory.EnumerateFiles(directory)
-                    .Where(file => string.Equals(
-                        Path.GetFileNameWithoutExtension(file),
-                        Path.GetFileNameWithoutExtension(assetName),
-                        StringComparison.OrdinalIgnoreCase))
-                    .ToArray()
-                : Array.Empty<string>();
-            if (available.Any(file => string.Equals(
-                    Path.GetFileName(file),
-                    expectedName,
-                    StringComparison.OrdinalIgnoreCase)))
-                return;
-
+            var available = StoryAudioFileResolver.FindCandidates(prefix, assetName);
             if (available.Length == 1)
-            {
-                var actualName = Path.GetFileName(available[0]);
-                errors.Add(ContentValidationIssue.Error(
-                    ContentValidationCodes.StoryAudioExtensionMismatch,
-                    $"Ink audio reference '{assetName}' resolves to '{expectedName}', "
-                    + $"but the available file is '{actualName}'. Specify the extension "
-                    + $"explicitly in Ink: '{actualName}'.",
-                    available[0],
-                    episode.ContentId,
-                    episode.Id));
                 return;
-            }
-
             if (available.Length > 1)
             {
                 errors.Add(ContentValidationIssue.Error(
-                    ContentValidationCodes.StoryAudioExtensionAmbiguous,
-                    $"Ink audio reference '{assetName}' is ambiguous. Specify one of these "
-                    + $"file names explicitly in Ink: "
-                    + string.Join(", ", available.Select(Path.GetFileName)),
-                    directory,
+                    ContentValidationCodes.StoryAudioFormatAmbiguous,
+                    $"Ink audio reference '{assetName}' matches multiple formats: "
+                    + string.Join(", ", available.Select(Path.GetFileName))
+                    + $". Referenced at {reference.Location}.",
+                    reference.SourcePath,
                     episode.ContentId,
                     episode.Id));
                 return;
@@ -134,11 +119,18 @@ namespace Editor
 
             errors.Add(ContentValidationIssue.Error(
                 ContentValidationCodes.StoryAudioMissing,
-                $"Story audio does not exist: {path}",
-                path,
+                $"Story audio '{assetName}' does not exist in: {directory}. "
+                + $"Referenced at {reference.Location}.",
+                reference.SourcePath,
                 episode.ContentId,
                 episode.Id));
         }
+
+        private static IEnumerable<StoryDependencyReference> DistinctById(
+            IEnumerable<StoryDependencyReference> references) =>
+            references
+                .GroupBy(reference => reference.Id, StringComparer.OrdinalIgnoreCase)
+                .Select(group => group.First());
 
         private static string LocationPath(
             string prefix,

@@ -4,6 +4,20 @@ using System.Globalization;
 
 namespace Novels.Locale
 {
+    public static class LocalePolicy
+    {
+        public const string FallbackLocale = "en";
+
+        private static readonly IReadOnlyList<string> _supportedLocales =
+            Array.AsReadOnly(new[]
+            {
+                FallbackLocale,
+                "ru",
+            });
+
+        public static IReadOnlyList<string> SupportedLocales => _supportedLocales;
+    }
+
     public sealed class LocaleProvider
     {
         public LocaleProvider(CultureInfo culture)
@@ -15,7 +29,12 @@ namespace Novels.Locale
 
         public static string Normalize(string locale) =>
             string.IsNullOrWhiteSpace(locale)
-                ? "en"
+                ? LocalePolicy.FallbackLocale
+                : locale.Trim().ToLowerInvariant();
+
+        public static string NormalizeRequired(string locale) =>
+            string.IsNullOrWhiteSpace(locale)
+                ? throw new ArgumentException("Locale must not be empty.", nameof(locale))
                 : locale.Trim().ToLowerInvariant();
     }
 
@@ -32,18 +51,24 @@ namespace Novels.Locale
             if (string.IsNullOrWhiteSpace(locale))
                 throw new ArgumentException("Locale must not be empty.", nameof(locale));
             var requested = LocaleProvider.Normalize(locale);
+            var fallbackLocale = LocalePolicy.FallbackLocale;
+            var hasRequested = false;
+            var requestedValue = default(T);
             var hasFallback = false;
             var fallback = default(T);
             var locales = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             foreach (var value in values ?? Array.Empty<T>())
             {
-                var valueLocale = LocaleProvider.Normalize(getLocale(value));
+                var valueLocale = LocaleProvider.NormalizeRequired(getLocale(value));
                 if (!locales.Add(valueLocale))
                 {
                     throw new InvalidOperationException(
                         $"Duplicate localization locale '{valueLocale}'.");
                 }
-                if (!hasFallback)
+                if (string.Equals(
+                        valueLocale,
+                        fallbackLocale,
+                        StringComparison.OrdinalIgnoreCase))
                 {
                     fallback = value;
                     hasFallback = true;
@@ -53,9 +78,14 @@ namespace Novels.Locale
                         requested,
                         StringComparison.OrdinalIgnoreCase))
                 {
-                    selected = value;
-                    return true;
+                    requestedValue = value;
+                    hasRequested = true;
                 }
+            }
+            if (hasRequested)
+            {
+                selected = requestedValue;
+                return true;
             }
             selected = fallback;
             return hasFallback;

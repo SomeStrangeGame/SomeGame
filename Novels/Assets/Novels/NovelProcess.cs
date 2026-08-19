@@ -16,7 +16,7 @@ namespace Novels
             out Queue<QueueProcess.IQueue> queue);
         internal delegate UniTask ExecuteQueueDelegate(
             Queue<QueueProcess.IQueue> queue,
-            byte? savedChoice,
+            StoryContracts.StoryDecision? savedDecision,
             CancellationToken cancellationToken);
 
         internal struct Ctx
@@ -27,7 +27,7 @@ namespace Novels
             internal TryCompleteQueueDelegate CompleteQueue;
             internal ExecuteQueueDelegate ExecuteQueue;
 
-            internal Func<byte?> GetNextSavedChoice;
+            internal Func<StoryContracts.StoryDecision?> GetNextSavedDecision;
             internal Func<UniTask> HideLoading;
             internal CancellationToken CancellationToken;
 
@@ -75,7 +75,7 @@ namespace Novels
                 if (!_ctx.BuildQueue(stepResult.Step, out var queue))
                     continue;
 
-                var result = await TryExecute(queue, _ctx.GetNextSavedChoice());
+                var result = await TryExecute(queue, _ctx.GetNextSavedDecision());
                 if (result.HasValue)
                     return result.Value;
             }
@@ -85,13 +85,13 @@ namespace Novels
 
         private async UniTask<EpisodeRunResult?> TryExecute(
             Queue<QueueProcess.IQueue> queue,
-            byte? savedChoice)
+            StoryContracts.StoryDecision? savedDecision)
         {
             try
             {
                 await _ctx.ExecuteQueue(
                     queue,
-                    savedChoice,
+                    savedDecision,
                     _ctx.CancellationToken);
                 return null;
             }

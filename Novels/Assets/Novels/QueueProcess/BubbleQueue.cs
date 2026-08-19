@@ -23,7 +23,7 @@ namespace Novels.QueueProcess
                 context.CancellationToken.ThrowIfCancellationRequested();
                 if (context.Mode == QueueExecutionMode.Replay)
                 {
-                    _choices.ApplySaved(context.SavedChoice);
+                    _choices.ApplySaved(context.SavedDecision);
                     _request.BubbleDone.TrySetResult();
                     return UniTask.CompletedTask;
                 }

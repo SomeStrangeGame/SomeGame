@@ -1,5 +1,17 @@
 # Unity Refactoring Plan
 
+## Completed on 2026-08-19 — authoring, localization, release, and save contracts
+
+1. Audio references in Ink now use only a file name without an extension. A single matching physical audio format is inferred from authored files during the build and from the pinned release at runtime; zero or multiple matches are validation errors.
+2. `LocalePolicy` centralizes the fallback and supported locales. Application strings moved to a built-in localization asset, while catalog and story localization are checked for every supported locale.
+3. Ink dependency analysis now follows recursive `INCLUDE` directives and reports missing includes and cycles.
+4. Dependency manifests retain source file, line number, and source text for audio, background, speaker, and camera references.
+5. `ContentBuildSnapshot` stores immutable build descriptors and converts them into release DTOs only when serializing a platform release.
+6. Client versions use one numeric `ClientVersion` contract shared by build-profile and runtime release validation.
+7. Save format version 2 stores typed `StoryDecision` records and integer choice IDs. The former `byte.MaxValue` sentinel and byte range restriction were removed without a migration from version 1.
+
+Validation: Unity 6000.3.11f1 compilation and the affected generated C# projects completed with 0 errors and 0 warnings. Current authoring validation passed. Built-output validation correctly remains red because the checked-in Android release still uses schema 4 and no iOS release has been built; regenerating release artifacts is a separate content-build operation. Tests were not created or run.
+
 ## Purpose
 
 This document is the working handoff plan for the next refactoring wave in the
@@ -225,7 +237,7 @@ Keep these constraints unless the user explicitly changes them:
    - `"some wardrobe trigger"`
    - `"some choose trigger"`
 
-10. Preserve the save-file byte format unless a separately approved migration step is introduced.
+10. Preserve save format version 2 unless a separately approved format change is introduced. Version-1 byte saves are intentionally not migrated.
 11. Do not rename `Dialogue`.
 12. A choice set may belong to an empty `Dialogue`; empty speaker and text are valid when choices exist.
 
@@ -248,7 +260,7 @@ Implemented result:
 - Cache keeps filesystem paths as filesystem paths, uses `Path.Combine`, writes through a temporary file, and deletes exact keys.
 - Bundles converts cached video filesystem paths to `file://` URLs at the video boundary.
 - The machine-specific Location URL prefix and the Editor cache-clear URI misuse were removed.
-- The existing raw byte save format was preserved.
+- At this historical step the raw byte format was preserved; it was superseded by typed format version 2 on 2026-08-19.
 
 #### Evidence
 
@@ -278,13 +290,12 @@ own file.
 - Make Save call `cache.Delete(_ctx.SaveChoiceFileName)` instead of deleting a broad directory.
 - Prefer an atomic write strategy: write a temporary file and replace/move it to the final path.
 - Distinguish a missing save from a real read/corruption error instead of swallowing every exception as `"No save file"`.
-- Keep the current raw byte sequence format for backward compatibility.
+- Historical constraint: keep the raw byte sequence. This was superseded by the explicitly approved version-2 format without migration.
 - Review `Assets/Editor/CreateAssetBundles.cs` and `Packages/Bundles` for the same path/URL distinction, but avoid unrelated package rewrites.
 
 #### Behavior that must remain unchanged
 
-- Choice IDs remain bytes.
-- `byte.MaxValue` continues to mean a saved dialogue advance without a choice.
+- Historical behavior: choice IDs were bytes and `byte.MaxValue` meant an advance. Both were superseded by `StoryDecision` in format version 2.
 - New choices are appended to the in-memory current save.
 - The initial replay snapshot does not grow when new choices are made during the same session.
 

@@ -43,6 +43,8 @@ namespace Novels.Catalog
             ContentAddressing.ContentPackageConvention.DefinitionAsset(_contentId);
         public CatalogText Resolve(string locale) =>
             NovelCatalogAsset.Resolve(_localizations, locale);
+        public bool TryResolveExact(string locale, out CatalogText value) =>
+            NovelCatalogAsset.TryResolveExact(_localizations, locale, out value);
     }
 
     [CreateAssetMenu(fileName = "NovelCatalog", menuName = "Novels/Catalog")]
@@ -55,6 +57,8 @@ namespace Novels.Catalog
 
         public CatalogText Resolve(string locale) =>
             Resolve(_localizations, locale);
+        public bool TryResolveExact(string locale, out CatalogText value) =>
+            TryResolveExact(_localizations, locale, out value);
         public IReadOnlyList<NovelCatalogEntry> Entries =>
             _readOnlyEntries ??= Array.AsReadOnly(
                 _entries ?? Array.Empty<NovelCatalogEntry>());
@@ -72,6 +76,36 @@ namespace Novels.Catalog
             return !found || value == null
                 ? new CatalogText(string.Empty, string.Empty)
                 : new CatalogText(value.Title, value.Description);
+        }
+
+        internal static bool TryResolveExact(
+            CatalogLocalization[] localizations,
+            string locale,
+            out CatalogText text)
+        {
+            var requested = Locale.LocaleProvider.Normalize(locale);
+            CatalogLocalization selected = null;
+            var locales = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var value in localizations ?? Array.Empty<CatalogLocalization>())
+            {
+                if (value == null)
+                    continue;
+                var valueLocale = Locale.LocaleProvider.NormalizeRequired(value.Locale);
+                if (!locales.Add(valueLocale))
+                {
+                    throw new InvalidOperationException(
+                        $"Duplicate localization locale '{valueLocale}'.");
+                }
+                if (string.Equals(
+                        valueLocale,
+                        requested,
+                        StringComparison.OrdinalIgnoreCase))
+                    selected = value;
+            }
+            text = selected == null
+                ? new CatalogText(string.Empty, string.Empty)
+                : new CatalogText(selected.Title, selected.Description);
+            return selected != null;
         }
     }
 }

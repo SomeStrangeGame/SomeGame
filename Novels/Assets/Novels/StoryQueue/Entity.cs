@@ -63,7 +63,7 @@ namespace Novels.StoryQueue
 
         public struct ChoicePort
         {
-            public Action<byte> SaveChoice;
+            public Action<StoryContracts.StoryDecision> SaveDecision;
             public Action<int> SetChoice;
         }
 

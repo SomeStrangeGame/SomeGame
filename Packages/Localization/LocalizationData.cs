@@ -25,7 +25,10 @@ namespace Localization
 
             internal string Key => _key;
 
-            internal string Resolve(string locale, string fallbackLocale)
+            internal string Resolve(
+                string locale,
+                string fallbackLocale,
+                bool requireExactLocale)
             {
                 var values = _localizations ?? Array.Empty<LocalizedValue>();
                 var locales = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -64,6 +67,11 @@ namespace Localization
                         $"Localization key '{_key}' has no fallback locale "
                         + $"'{fallbackLocale}'.");
                 }
+                if (requireExactLocale && !hasRequested)
+                {
+                    throw new InvalidOperationException(
+                        $"Localization key '{_key}' has no locale '{locale}'.");
+                }
                 return hasRequested ? requested : fallback;
             }
         }
@@ -71,7 +79,9 @@ namespace Localization
         [SerializeField] private string _fallbackLocale = "en";
         [SerializeField] private Pair[] _pairs;
 
-        internal IReadOnlyDictionary<string, string> CreateSnapshot(string locale)
+        internal IReadOnlyDictionary<string, string> CreateSnapshot(
+            string locale,
+            bool requireExactLocale)
         {
             var requested = Normalize(locale);
             var fallback = Normalize(_fallbackLocale);
@@ -80,7 +90,9 @@ namespace Localization
             {
                 if (string.IsNullOrWhiteSpace(pair.Key))
                     throw new InvalidOperationException("Localization key must not be empty.");
-                if (!result.TryAdd(pair.Key, pair.Resolve(requested, fallback)))
+                if (!result.TryAdd(
+                        pair.Key,
+                        pair.Resolve(requested, fallback, requireExactLocale)))
                     throw new InvalidOperationException(
                         $"Duplicate localization key '{pair.Key}'.");
             }

@@ -55,8 +55,11 @@ namespace Editor
             string targetPath,
             NovelContentBuildProfile profile,
             IReadOnlyDictionary<string, string> bundleDeliveryGroups,
-            IReadOnlyList<Bundles.ContentFileEntry> releaseFiles)
+            IReadOnlyList<ContentBuildFile> buildFiles)
         {
+            var releaseFiles = buildFiles
+                .Select(file => file.ToDto())
+                .ToArray();
             Directory.CreateDirectory(targetPath);
             var manifest = BuildPipeline.BuildAssetBundles(
                 targetPath,
@@ -172,21 +175,21 @@ namespace Editor
         private ContentBuildSnapshot(
             ContentProjectIndex project,
             IDictionary<string, string> deliveryIndex,
-            IList<Bundles.ContentFileEntry> files)
+            IList<ContentBuildFile> files)
         {
             Project = project ?? throw new ArgumentNullException(nameof(project));
             DeliveryIndex = new ReadOnlyDictionary<string, string>(deliveryIndex);
-            Files = new ReadOnlyCollection<Bundles.ContentFileEntry>(files);
+            Files = new ReadOnlyCollection<ContentBuildFile>(files);
         }
 
         internal ContentProjectIndex Project { get; }
         internal IReadOnlyDictionary<string, string> DeliveryIndex { get; }
-        internal IReadOnlyList<Bundles.ContentFileEntry> Files { get; }
+        internal IReadOnlyList<ContentBuildFile> Files { get; }
 
         internal static ContentBuildSnapshot Create(ContentProjectIndex project)
         {
             var deliveryIndex = ContentDeliveryIndexBuilder.Build(project);
-            var files = new List<Bundles.ContentFileEntry>();
+            var files = new List<ContentBuildFile>();
             foreach (var file in ContentFilePolicy.EnumerateFiles())
             {
                 var relative = ContentFilePolicy.GetRelativePath(file);
@@ -194,21 +197,52 @@ namespace Editor
                     continue;
                 var info = new FileInfo(file);
                 var sha256 = ContentHash.ComputeSha256(file);
-                files.Add(new Bundles.ContentFileEntry
-                {
-                    path = relative,
-                    payloadPath = $"Files/{sha256}",
-                    size = info.Length,
-                    sha256 = sha256,
-                    deliveryGroup = deliveryGroup,
-                });
+                files.Add(new ContentBuildFile(
+                    relative,
+                    $"Files/{sha256}",
+                    info.Length,
+                    sha256,
+                    deliveryGroup));
             }
             return new ContentBuildSnapshot(
                 project,
                 new Dictionary<string, string>(
                     deliveryIndex,
                     StringComparer.OrdinalIgnoreCase),
-                files.OrderBy(value => value.path, StringComparer.Ordinal).ToList());
+                files.OrderBy(value => value.Path, StringComparer.Ordinal).ToList());
         }
+    }
+
+    internal readonly struct ContentBuildFile
+    {
+        internal ContentBuildFile(
+            string path,
+            string payloadPath,
+            long size,
+            string sha256,
+            string deliveryGroup)
+        {
+            Path = path ?? throw new ArgumentNullException(nameof(path));
+            PayloadPath = payloadPath ?? throw new ArgumentNullException(nameof(payloadPath));
+            Size = size;
+            Sha256 = sha256 ?? throw new ArgumentNullException(nameof(sha256));
+            DeliveryGroup = deliveryGroup
+                ?? throw new ArgumentNullException(nameof(deliveryGroup));
+        }
+
+        internal string Path { get; }
+        internal string PayloadPath { get; }
+        internal long Size { get; }
+        internal string Sha256 { get; }
+        internal string DeliveryGroup { get; }
+
+        internal Bundles.ContentFileEntry ToDto() => new()
+        {
+            path = Path,
+            payloadPath = PayloadPath,
+            size = Size,
+            sha256 = Sha256,
+            deliveryGroup = DeliveryGroup,
+        };
     }
 }

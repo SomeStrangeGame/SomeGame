@@ -10,7 +10,7 @@ namespace Editor
     {
         internal static IReadOnlyDictionary<string, string> Build()
         {
-            var project = ContentProjectIndex.BuildOrThrow("en");
+            var project = ContentProjectIndex.BuildOrThrow();
             return Build(project);
         }
 
@@ -97,23 +97,77 @@ namespace Editor
             var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
             yield return $"NovelTexts/{prefix}/{normalizedStoryPath}";
 
-            foreach (var audioId in references.AudioIds)
+            foreach (var audioId in references.AudioReferences
+                         .Select(reference => reference.Id)
+                         .Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 if (episode.Media.SilentAudioIds.Contains(
                         audioId,
                         StringComparer.OrdinalIgnoreCase))
                     continue;
-                var extension = Path.GetExtension(audioId);
-                var fileName = extension.Length > 0
-                    ? audioId
-                    : audioId + Bundles.MediaFileConvention.DefaultAudioExtension;
-                yield return $"NovelsAudio/{prefix}/{fileName}";
+                yield return StoryAudioFileResolver.ResolveRelativePath(prefix, audioId);
             }
-            foreach (var backgroundId in references.Backgrounds)
+            foreach (var backgroundId in references.BackgroundReferences
+                         .Select(reference => reference.Id)
+                         .Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 yield return $"NovelsVideos/{prefix}/{backgroundId}"
                     + Bundles.MediaFileConvention.VideoExtension;
             }
+        }
+    }
+
+    internal static class StoryAudioFileResolver
+    {
+        internal static bool IsBareFileName(string audioId)
+        {
+            var value = audioId?.Trim();
+            return !string.IsNullOrEmpty(value)
+                && string.Equals(Path.GetFileName(value), value, StringComparison.Ordinal)
+                && Path.GetExtension(value).Length == 0;
+        }
+
+        internal static string[] FindCandidates(string prefix, string audioId)
+        {
+            if (!IsBareFileName(audioId))
+                return Array.Empty<string>();
+            var directory = Path.Combine(
+                UnityEngine.Application.streamingAssetsPath,
+                "NovelsAudio",
+                prefix);
+            if (!Directory.Exists(directory))
+                return Array.Empty<string>();
+            return Directory.EnumerateFiles(directory, "*", SearchOption.TopDirectoryOnly)
+                .Where(ContentFilePolicy.IsSupportedAudioFile)
+                .Where(file => string.Equals(
+                    Path.GetFileNameWithoutExtension(file),
+                    audioId.Trim(),
+                    StringComparison.OrdinalIgnoreCase))
+                .OrderBy(file => file, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        internal static string ResolveRelativePath(string prefix, string audioId)
+        {
+            if (!IsBareFileName(audioId))
+            {
+                throw new InvalidOperationException(
+                    $"Ink audio reference '{audioId}' must contain only a file name "
+                    + "without an extension.");
+            }
+            var candidates = FindCandidates(prefix, audioId);
+            if (candidates.Length == 0)
+            {
+                throw new InvalidOperationException(
+                    $"Ink audio reference '{audioId}' has no matching file.");
+            }
+            if (candidates.Length > 1)
+            {
+                throw new InvalidOperationException(
+                    $"Ink audio reference '{audioId}' is ambiguous: "
+                    + string.Join(", ", candidates.Select(Path.GetFileName)));
+            }
+            return ContentFilePolicy.GetRelativePath(candidates[0]);
         }
     }
 }

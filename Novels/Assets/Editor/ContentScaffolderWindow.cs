@@ -146,7 +146,7 @@ namespace Editor
                 AppendCatalogEntry(catalog, contentId);
                 AssetDatabase.SaveAssets();
                 AssetDatabase.Refresh();
-                ContentProjectIndex.BuildOrThrow("en");
+                ContentProjectIndex.BuildOrThrow();
                 Selection.activeObject = content;
                 EditorGUIUtility.PingObject(content);
                 Debug.Log(

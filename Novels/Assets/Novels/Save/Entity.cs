@@ -23,12 +23,13 @@ namespace Novels.Save
         }
 
         private readonly Ctx _ctx;
-        private List<byte> _save = new();
-        private byte[] _initialChoices = Array.Empty<byte>();
-        private int _initialChoicePosition;
+        private List<StoryContracts.StoryDecision> _save = new();
+        private StoryContracts.StoryDecision[] _initialDecisions =
+            Array.Empty<StoryContracts.StoryDecision>();
+        private int _initialDecisionPosition;
         private readonly SaveWriter _writer;
 
-        public bool ContainAnySave => _initialChoices.Length > 0;
+        public bool ContainAnySave => _initialDecisions.Length > 0;
 
         public Entity(Ctx ctx)
         {
@@ -42,8 +43,8 @@ namespace Novels.Save
         public void Init()
         {
             _save.Clear();
-            _initialChoices = Array.Empty<byte>();
-            _initialChoicePosition = 0;
+            _initialDecisions = Array.Empty<StoryContracts.StoryDecision>();
+            _initialDecisionPosition = 0;
             try
             {
                 var data = _ctx.ReadBytes(_ctx.SaveChoiceFileName);
@@ -57,7 +58,7 @@ namespace Novels.Save
                     return;
                 }
 
-                _save = decoded.Choices.ToList();
+                _save = decoded.Decisions.ToList();
             }
             catch (FileNotFoundException)
             {
@@ -71,20 +72,20 @@ namespace Novels.Save
                     "Failed to read save file. Replay was skipped.",
                     exception: exception));
             }
-            _initialChoices = _save.ToArray();
+            _initialDecisions = _save.ToArray();
         }
 
-        public byte? GetNextSavedChoice()
+        public StoryContracts.StoryDecision? GetNextSavedDecision()
         {
-            if (_initialChoicePosition >= _initialChoices.Length)
+            if (_initialDecisionPosition >= _initialDecisions.Length)
                 return null;
 
-            return _initialChoices[_initialChoicePosition++];
+            return _initialDecisions[_initialDecisionPosition++];
         }
 
-        public void SaveChoice(byte unit = 255)
+        public void SaveDecision(StoryContracts.StoryDecision decision)
         {
-            _save.Add(unit);
+            _save.Add(decision);
             _writer.Enqueue(SaveDataCodec.Encode(
                 _ctx.ContentId,
                 _ctx.ContentVersion,
@@ -95,8 +96,8 @@ namespace Novels.Save
         {
             _writer.Reset(() => _ctx.Delete(_ctx.SaveChoiceFileName));
             _save.Clear();
-            _initialChoices = Array.Empty<byte>();
-            _initialChoicePosition = 0;
+            _initialDecisions = Array.Empty<StoryContracts.StoryDecision>();
+            _initialDecisionPosition = 0;
         }
 
         public UniTask FlushAsync()

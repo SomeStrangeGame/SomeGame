@@ -12,7 +12,7 @@ namespace Novels.QueueProcess
             Action<string> setMainCharacterView,
             Action<string> setMainCharacterClothes,
             Action<string> setMainCharacterHair,
-            Action<byte> saveChoice,
+            Action<StoryContracts.StoryDecision> saveDecision,
             Action<int> setChoice,
             string name,
             string value,
@@ -34,7 +34,7 @@ namespace Novels.QueueProcess
                 ?? throw new ArgumentNullException(nameof(setMainCharacterClothes));
             SetMainCharacterHair = setMainCharacterHair
                 ?? throw new ArgumentNullException(nameof(setMainCharacterHair));
-            SaveChoice = saveChoice ?? throw new ArgumentNullException(nameof(saveChoice));
+            SaveDecision = saveDecision ?? throw new ArgumentNullException(nameof(saveDecision));
             SetChoice = setChoice ?? throw new ArgumentNullException(nameof(setChoice));
             Name = name ?? string.Empty;
             Value = value ?? string.Empty;
@@ -56,7 +56,7 @@ namespace Novels.QueueProcess
         internal Action<string> SetMainCharacterView { get; }
         internal Action<string> SetMainCharacterClothes { get; }
         internal Action<string> SetMainCharacterHair { get; }
-        internal Action<byte> SaveChoice { get; }
+        internal Action<StoryContracts.StoryDecision> SaveDecision { get; }
         internal Action<int> SetChoice { get; }
         internal string Name { get; }
         internal string Value { get; }
