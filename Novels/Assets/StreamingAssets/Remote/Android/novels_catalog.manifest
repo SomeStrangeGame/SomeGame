@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 2518171495
+CRC: 1944545816
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: a42389e1c8a626a8db1d5dd1f40dfdd9
+    Hash: 54475b7e3522e10e1b418f2315a9256a
   TypeTreeHash:
     serializedVersion: 2
-    Hash: 18759f590352e998bf670868137d31a1
+    Hash: f08d6de0a2138bf9f611dd599716a165
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: abdf8b9193f34b9f838e099f399cb3cc
+    Hash: d71a5bda9a156073d8f4bb225b4e1089
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -60,8 +60,6 @@ ClassTypes:
 - Class: 224
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
-- AssemblyName: Novels.Catalog
-  ClassName: Novels.Catalog.CatalogLocalization
 - AssemblyName: Novels.Catalog
   ClassName: Novels.Catalog.NovelCatalogEntry
 - AssemblyName: UnityEngine.CoreModule

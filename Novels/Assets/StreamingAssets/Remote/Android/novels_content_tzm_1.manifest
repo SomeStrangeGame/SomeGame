@@ -1,16 +1,16 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 3361062189
+CRC: 2151140599
 Hashes:
   AssetFileHash:
     serializedVersion: 2
-    Hash: 1ab6caee7498474922fa066187b9ee19
+    Hash: bcb16266ee64b62907f79ca1a3bfa79c
   TypeTreeHash:
     serializedVersion: 2
-    Hash: f8b9d2b1327160bd46e8f511fc3c47aa
+    Hash: 583159b0545734b36f62cc8cddad8cf6
   IncrementalBuildHash:
     serializedVersion: 2
-    Hash: d2fa22b8b401a9f1cf217a89409bf760
+    Hash: 471678e3de2f6297a9a0b7e82de3637f
 HashAppended: 0
 ClassTypes:
 - Class: 1
@@ -21,8 +21,6 @@ ClassTypes:
   Script: {instanceID: 0}
 - Class: 48
   Script: {instanceID: 0}
-- Class: 114
-  Script: {fileID: 11500000, guid: c71d6072db3e242f99534b39481bfd4c, type: 3}
 - Class: 114
   Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
 - Class: 114
@@ -58,10 +56,6 @@ ClassTypes:
 - Class: 245
   Script: {instanceID: 0}
 SerializeReferenceClassIdentifiers:
-- AssemblyName: Localization
-  ClassName: Localization.LocalizationData/LocalizedValue
-- AssemblyName: Localization
-  ClassName: Localization.LocalizationData/Pair
 - AssemblyName: Novels.Content
   ClassName: Novels.Content.NovelContentAsset/EpisodeEntry
 - AssemblyName: UnityEngine.CoreModule
@@ -84,7 +78,6 @@ SerializeReferenceClassIdentifiers:
   ClassName: UnityEngine.UI.SpriteState
 Assets:
 - Assets/RemoteAssets/Content/TZM_1/Application/Setting/Screen.prefab
-- Assets/RemoteAssets/Content/TZM_1/Application/Localization/LocalizationData.asset
 - Assets/RemoteAssets/Content/TZM_1/Application/Setting/LiberationSans-Regular.ttf
 - Assets/RemoteAssets/Content/TZM_1/Definition/TZM_1.asset
 Dependencies: []

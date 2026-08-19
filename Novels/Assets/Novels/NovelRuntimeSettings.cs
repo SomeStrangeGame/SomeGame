@@ -36,13 +36,15 @@ namespace Novels
     public sealed class NovelRuntimeSettings : ScriptableObject
     {
         private const string _resourcePath = "Novels/NovelRuntimeSettings";
+        private const int _defaultContentCacheLimitMegabytes = 768;
 
         [SerializeField] private int _targetFrameRate = 30;
         [SerializeField] private float _notificationDurationSeconds = 3f;
         [SerializeField] private int _cutSceneFallbackDelayMilliseconds = 3000;
 
         [Header("Content Delivery")]
-        [SerializeField] private int _contentCacheLimitMegabytes = 512;
+        [SerializeField] private int _contentCacheLimitMegabytes =
+            _defaultContentCacheLimitMegabytes;
         [SerializeField] private int _maximumParallelDownloads = 3;
         [SerializeField] private int _stagingLifetimeHours = 24;
         [SerializeField] private int _remoteMaximumAttempts = 3;
@@ -58,8 +60,20 @@ namespace Novels
                     30,
                     3f,
                     3000,
-                    Bundles.ContentDeliveryOptions.Default)
+                    CreateDefaultContentDeliveryOptions())
                 : settings.CreateTuning();
+        }
+
+        private static Bundles.ContentDeliveryOptions
+            CreateDefaultContentDeliveryOptions()
+        {
+            var defaults = Bundles.ContentDeliveryOptions.Default;
+            return new Bundles.ContentDeliveryOptions(
+                _defaultContentCacheLimitMegabytes * 1024L * 1024L,
+                defaults.MaximumParallelDownloads,
+                defaults.StagingLifetime,
+                defaults.RemoteRequestPolicy,
+                defaults.LocalRequestPolicy);
         }
 
         private NovelRuntimeTuning CreateTuning() =>
@@ -74,7 +88,7 @@ namespace Novels
             var defaults = Bundles.ContentDeliveryOptions.Default;
             var cacheMegabytes = _contentCacheLimitMegabytes > 0
                 ? _contentCacheLimitMegabytes
-                : (int)(defaults.CacheLimitBytes / (1024L * 1024L));
+                : _defaultContentCacheLimitMegabytes;
             var parallelDownloads = _maximumParallelDownloads > 0
                 ? _maximumParallelDownloads
                 : defaults.MaximumParallelDownloads;
