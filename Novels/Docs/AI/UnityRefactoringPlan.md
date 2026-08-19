@@ -636,3 +636,10 @@ Validation: `Novels.Editor.csproj` compiled with 0 errors and 0 warnings; `git d
 7. The read-only server GC planner reports files unreachable from current and explicitly retained releases.
 
 Validation: generated project compilation completed with 0 errors and 0 warnings; `git diff --check` and Ruby syntax validation passed. Tests and Play Mode were not run. Rebuild content through `Build/All Bundles` before launching schema-5 runtime content.
+
+## Completed on 2026-08-19: one-command release orchestration
+
+- `Tools/release-novel-content.sh` composes content build/validation, local artifact checks, ordered rsync upload, exact deployment verification, and optional Android/iOS Player builds.
+- Local-only behavior is the default. Upload requires explicit configuration or `--upload-target`; Player builds require explicit flags.
+- Remote verification accepts the expected local deployment ID, preventing successful validation of an older deployment that happens to be internally consistent.
+- Machine-specific values belong in ignored `Tools/release-content.env`; the tracked `.example` contains no credentials.

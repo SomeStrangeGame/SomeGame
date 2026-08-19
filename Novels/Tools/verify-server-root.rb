@@ -5,13 +5,14 @@ require "json"
 require "net/http"
 require "uri"
 
-if ARGV.length != 2
-  warn "Usage: ruby Tools/verify-server-root.rb <https://content-root> <Android|iOS>"
+if ARGV.length < 2 || ARGV.length > 3
+  warn "Usage: ruby Tools/verify-server-root.rb <https://content-root> <Android|iOS> [deployment-id]"
   exit 2
 end
 
 root = ARGV[0].sub(%r{/+\z}, "")
 platform = ARGV[1]
+expected_deployment_id = ARGV[2]
 unless root.start_with?("http://", "https://")
   warn "Content root must be an absolute HTTP(S) URL."
   exit 2
@@ -91,6 +92,10 @@ canonical.concat((deployment["payloads"] || [])
 actual_deployment_id = Digest::SHA256.hexdigest(canonical.join("\n"))
 unless actual_deployment_id.casecmp(deployment["deploymentId"].to_s).zero?
   raise "Deployment fingerprint mismatch"
+end
+if expected_deployment_id \
+    && !expected_deployment_id.casecmp(deployment["deploymentId"].to_s).zero?
+  raise "Remote deployment does not match local deployment #{expected_deployment_id}"
 end
 
 release_path = deployment_platform["releasePath"]

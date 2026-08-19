@@ -284,3 +284,10 @@
 - Publication creates `deployment.json` after immutable payloads and platform release files. It fingerprints every platform release and runtime payload and marks `release.json` files as activation-last boundaries.
 - `Tools/verify-server-root.rb` validates the deployment fingerprint, selected release, upload-order flags, sizes, and hashes over HTTP. `Tools/plan-server-root-gc.rb` reports unreachable local server files while retaining current and explicitly supplied previous releases; it never deletes data.
 - Generated C# solution compilation completed with 0 errors and 0 warnings. Both Ruby tools passed syntax validation. Tests, Play Mode, Unity content rebuild, server upload, and device builds were not run.
+
+## Release orchestration added on 2026-08-19
+
+- `Tools/release-novel-content.sh` is the single executable entry point for the content-release workflow. With no arguments it builds and validates Android/iOS content locally; upload and Player builds remain explicit opt-ins.
+- The script validates the generated `ServerRoot`, extracts its deployment ID, uploads immutable files and bundles before activation manifests, verifies both remote platforms against that exact local deployment, and can then build Android and/or iOS Players.
+- `Tools/release-content.env.example` documents machine/server configuration. The personal `Tools/release-content.env` is ignored by Git, and upload remains disabled by default even when a destination is configured.
+- The upload adapter is intentionally limited to `rsync`; the destination root must already exist. Other hosting providers should be added as explicit adapters rather than embedding provider-specific credentials in the script.
