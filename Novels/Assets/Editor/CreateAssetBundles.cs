@@ -7,7 +7,7 @@ namespace Editor
 {
     public static class CreateAssetBundles
     {
-        [MenuItem("Build/Clear Cache")]
+        [MenuItem("Novels/Content/Clear Cache")]
         private static void ClearCache()
         {
             var cachePath = Path.Combine(
@@ -23,11 +23,11 @@ namespace Editor
             Debug.Log($"All novel cache files were deleted from {cachePath}");
         }
 
-        [MenuItem("Build/Clear Cache", true)]
+        [MenuItem("Novels/Content/Clear Cache", true)]
         private static bool CanClearCache() =>
             !EditorApplication.isPlayingOrWillChangePlaymode;
 
-        [MenuItem("Build/All Bundles")]
+        [MenuItem("Novels/Content/Build All Bundles")]
         private static void BuildAllAssetBundles()
         {
             BuildConfiguredBundles();

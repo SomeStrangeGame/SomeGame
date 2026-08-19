@@ -15,7 +15,7 @@ namespace Editor
             Debug.Log($"Catalog screen prefab generated: {_prefabPath}");
         }
 
-        [MenuItem("Novels/Rebuild Catalog Screen")]
+        [MenuItem("Novels/UI/Rebuild Catalog Screen")]
         private static void Build()
         {
             var root = CreateUiObject(

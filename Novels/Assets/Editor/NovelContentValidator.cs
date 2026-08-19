@@ -10,7 +10,7 @@ namespace Editor
 {
     internal static class NovelContentValidator
     {
-        private const string _menuPath = "Novels/Validate Content";
+        private const string _menuPath = "Novels/Content/Validate";
         [MenuItem(_menuPath)]
         private static void ValidateFromMenu()
         {

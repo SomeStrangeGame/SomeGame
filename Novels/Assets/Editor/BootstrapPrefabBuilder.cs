@@ -14,7 +14,7 @@ namespace Editor
             Debug.Log($"Local bootstrap prefab generated: {_path}");
         }
 
-        [MenuItem("Novels/Rebuild Local Bootstrap Screen")]
+        [MenuItem("Novels/UI/Rebuild Bootstrap Screen")]
         private static void Build()
         {
             var screen = Novels.Bootstrap.View.Screen.CreateGenerated();
