@@ -15,6 +15,8 @@ namespace Novels.Content
             [SerializeField] private string _title;
             [SerializeField] private string _storyPath;
             [SerializeField] private string _contentVersion;
+            [SerializeField] private string _endMarker;
+            [SerializeField] private string _sourcePath;
             [SerializeField] private string[] _silentAudioIds;
 
             internal readonly EpisodeDefinition ToDefinition(string contentId)
@@ -25,7 +27,9 @@ namespace Novels.Content
                     _title,
                     _storyPath,
                     _contentVersion,
-                    new EpisodeMediaDefinition(_silentAudioIds));
+                    new EpisodeMediaDefinition(_silentAudioIds),
+                    _endMarker,
+                    _sourcePath);
             }
         }
 

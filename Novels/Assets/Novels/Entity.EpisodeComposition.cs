@@ -1,3 +1,4 @@
+using System;
 using Cysharp.Threading.Tasks;
 using Disposable;
 using UnityEngine;
@@ -11,7 +12,8 @@ namespace Novels
             var cancellationToken = state.CancellationToken;
             var storyText = await _priorityLoader.Run(() => state.EpisodePreloading
                 .AttachExternalCancellation(cancellationToken));
-            ValidateSavedReplay(state.SaveSystem, storyText);
+            var initialState = _progress.GetEntryState(_episode);
+            ValidateSavedReplay(state.SaveSystem, storyText, initialState);
             var assets = await new EpisodeAssetLoader(new EpisodeAssetLoader.Ctx
             {
                 Bundles = state.EpisodeBundles,
@@ -27,7 +29,10 @@ namespace Novels
             await loading.Show().AttachExternalCancellation(cancellationToken);
             await state.MainLoading.Hide().AttachExternalCancellation(cancellationToken);
 
-            var storyProcessor = CreateStoryProcessor(state.EpisodeScope, storyText);
+            var storyProcessor = CreateStoryProcessor(
+                state.EpisodeScope,
+                storyText,
+                initialState);
             var storyCommands = CreateStoryCommands();
 
             var bubble = CreateBubble(
@@ -78,6 +83,8 @@ namespace Novels
             var novelProcess = new NovelProcess(new NovelProcess.Ctx
             {
                 ReadNext = storyProcessor.ReadNext,
+                ExportStoryState = storyProcessor.ExportState,
+                IsEpisodeEnd = source => IsEpisodeEnd(source, _episode.EndMarker),
                 ParseStep = storyCommands.ParseStep,
                 BuildQueue = storyQueue.TryBuild,
                 CompleteQueue = storyQueue.TryComplete,
@@ -93,11 +100,14 @@ namespace Novels
             return await state.EpisodeRuntime.Run();
         }
 
-        private static void ValidateSavedReplay(Save.Entity saveSystem, string storyText)
+        private static void ValidateSavedReplay(
+            Save.Entity saveSystem,
+            string storyText,
+            string initialState)
         {
             var decisions = saveSystem.GetInitialDecisionsSnapshot();
             if (decisions.Length == 0
-                || TryValidateReplay(storyText, decisions, out var reason))
+                || TryValidateReplay(storyText, initialState, decisions, out var reason))
             {
                 return;
             }
@@ -107,11 +117,16 @@ namespace Novels
 
         private static bool TryValidateReplay(
             string storyText,
+            string initialState,
             StoryContracts.StoryDecision[] decisions,
             out string reason)
         {
             using var story = new StoryProcessor.Entity(
-                new StoryProcessor.Entity.Ctx { StoryText = storyText });
+                new StoryProcessor.Entity.Ctx
+                {
+                    StoryText = storyText,
+                    InitialState = initialState,
+                });
             var parser = new StoryCommands.Entity();
 
             for (var decisionIndex = 0; decisionIndex < decisions.Length; decisionIndex++)
@@ -189,6 +204,15 @@ namespace Novels
                     return true;
             }
             return false;
+        }
+
+        private static bool IsEpisodeEnd(string source, string marker)
+        {
+            if (string.IsNullOrWhiteSpace(marker))
+                return false;
+            return (source ?? string.Empty).TrimStart().StartsWith(
+                marker,
+                StringComparison.OrdinalIgnoreCase);
         }
     }
 }

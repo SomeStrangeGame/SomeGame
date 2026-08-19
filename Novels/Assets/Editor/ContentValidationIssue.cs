@@ -19,6 +19,8 @@ namespace Editor
         internal const string StorySourceIncludeMissing = "STORY_SOURCE_INCLUDE_MISSING";
         internal const string StorySourceIncludeCycle = "STORY_SOURCE_INCLUDE_CYCLE";
         internal const string StorySourceReadFailed = "STORY_SOURCE_READ_FAILED";
+        internal const string StoryEpisodeBoundaryMissing =
+            "STORY_EPISODE_BOUNDARY_MISSING";
         internal const string StoryCommandInvalid = "STORY_COMMAND_INVALID";
         internal const string StoryTimedChoiceUnsupported =
             "STORY_TIMED_CHOICE_UNSUPPORTED";

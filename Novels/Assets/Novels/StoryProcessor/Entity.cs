@@ -1,3 +1,4 @@
+using System;
 using Disposable;
 using Ink.Runtime;
 
@@ -8,6 +9,7 @@ namespace Novels.StoryProcessor
         public struct Ctx
         {
             public string StoryText;
+            public string InitialState;
         }
 
         private readonly Ctx _ctx;
@@ -19,7 +21,11 @@ namespace Novels.StoryProcessor
             _ctx = ctx;
 
             _story = new Story(_ctx.StoryText);
+            if (!string.IsNullOrWhiteSpace(_ctx.InitialState))
+                _story.state.LoadJson(_ctx.InitialState);
         }
+
+        public string ExportState() => _story.state.ToJson();
 
         public StoryReadResult ReadNext()
         {

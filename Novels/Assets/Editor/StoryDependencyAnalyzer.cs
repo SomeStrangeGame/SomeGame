@@ -176,7 +176,13 @@ namespace Editor
                 return CreateManifest();
             }
 
-            var sourcePath = StoryFileConvention.GetSourcePath(compiledPath);
+            var sourcePath = string.IsNullOrWhiteSpace(episode.SourcePath)
+                ? StoryFileConvention.GetSourcePath(compiledPath)
+                : Path.Combine(
+                    Application.streamingAssetsPath,
+                    "NovelTexts",
+                    prefix,
+                    episode.SourcePath);
             var source = StorySourceGraph.Load(sourcePath, episode, issues);
             if (source.Lines.Count > 0)
             {

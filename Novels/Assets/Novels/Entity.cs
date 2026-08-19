@@ -38,6 +38,7 @@ namespace Novels
         private Content.EpisodeDefinition _episode;
         private AudioMixer _audioMixer;
         private Save.Entity _saveSystem;
+        private NovelProgress _progress;
 
         internal Entity(Ctx ctx)
         {
@@ -67,7 +68,16 @@ namespace Novels
             novelSession.AttachDelivery(await _ctx.PrepareNovelContent(
                 _ctx.Content.ContentId));
             _definition = await LoadContent(novelSession.Bundles, _ctx.Content);
-            _episode = await _ctx.SelectEpisode(_definition);
+            _progress = new NovelProgress(
+                _definition,
+                _ctx.PersistentDataPath,
+                _ctx.OnLog);
+            var playableDefinition = new Content.NovelDefinition(
+                _definition.Id,
+                _definition.MainCharacter,
+                _progress.PlayableEpisodes);
+            _episode = await _ctx.SelectEpisode(playableDefinition);
+            _progress.Begin(_episode);
             var episodeRuntime = CreateEpisodeRuntime().AddTo(this);
             episodeRuntime.AttachDelivery(await _ctx.PrepareEpisodeContent(
                 _definition,
@@ -83,6 +93,8 @@ namespace Novels
                 }).AddTo(this);
 
             var result = await bootstrap.Run();
+            if (result.Status == EpisodeRunStatus.Completed)
+                _progress.Complete(_episode, result.ContinuationState);
             return result.Status == EpisodeRunStatus.Failed && result.Error.HasValue
                 ? EpisodeRunResult.Failed(WithContext(result.Error.Value))
                 : result;

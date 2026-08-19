@@ -1,5 +1,5 @@
 {
-    "releaseId": "a3050b24847ad1fb1869e1003b5b7571c679a0e71dd1acbc39ce6f43192d786b",
+    "releaseId": "0afe8420848c60384eea832518884d085955ebb946421ddac5e4c1cbc6f75090",
     "minimumClientVersion": "0.1.0",
     "contentSchemaVersion": 5,
     "deliveryMode": 2,
@@ -14,10 +14,10 @@
         },
         {
             "name": "novels_content_tzm_1",
-            "version": "bcb16266ee64b62907f79ca1a3bfa79c",
-            "size": 163106,
-            "sha256": "a4280e5ec46f0e1ccfab807c2b40bae16c8d8911346a39110a0c8fe14c4c8631",
-            "crc": 2151140599,
+            "version": "f58381405091663fa14a21cd479fe9d8",
+            "size": 163177,
+            "sha256": "c98b33de641a5cf267c2a6aac0372ce8b4cc9dfe5d39e0364089c611d05944bf",
+            "crc": 1634783509,
             "deliveryGroup": "TZM_1/shared"
         },
         {
@@ -335,7 +335,7 @@
         {
             "id": "TZM_1/shared",
             "payloadCount": 1,
-            "size": 163106
+            "size": 163177
         },
         {
             "id": "application",

@@ -235,6 +235,7 @@ namespace Editor
                     Novels.ContentAddressing.ContentAssetNames.Screen),
                 definition.BundleName,
                 errors);
+            ValidateSharedStoryBoundaries(definition, errors);
             foreach (var episode in definition.Episodes)
             {
                 ValidateEpisodeBundleAssignments(definition.Prefix, episode, errors);
@@ -245,6 +246,32 @@ namespace Editor
                     episode,
                     storyDependencies[episode.Id],
                     errors);
+            }
+        }
+
+        private static void ValidateSharedStoryBoundaries(
+            Novels.Content.NovelDefinition definition,
+            ContentValidationReport errors)
+        {
+            foreach (var sharedStory in definition.Episodes
+                         .GroupBy(
+                             episode => episode.StoryPath,
+                             StringComparer.OrdinalIgnoreCase)
+                         .Where(group => group.Count() > 1))
+            {
+                var episodes = sharedStory.ToArray();
+                for (var index = 0; index < episodes.Length - 1; index++)
+                {
+                    var episode = episodes[index];
+                    if (!string.IsNullOrWhiteSpace(episode.EndMarker))
+                        continue;
+                    errors.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.StoryEpisodeBoundaryMissing,
+                        $"Episode '{episode.Id}' shares Ink story "
+                        + $"'{episode.StoryPath}' with later episodes but has no end marker.",
+                        contentId: definition.Id,
+                        episodeId: episode.Id));
+                }
             }
         }
 

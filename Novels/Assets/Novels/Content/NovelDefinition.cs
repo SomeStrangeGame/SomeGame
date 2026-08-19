@@ -76,13 +76,19 @@ namespace Novels.Content
             string title,
             string storyPath,
             string contentVersion,
-            EpisodeMediaDefinition media)
+            EpisodeMediaDefinition media,
+            string endMarker = null,
+            string sourcePath = null)
         {
             ContentId = Require(contentId, nameof(contentId));
             Id = Require(id, nameof(id));
             Title = Require(title, nameof(title));
             StoryPath = Require(storyPath, nameof(storyPath));
             ContentVersion = Require(contentVersion, nameof(contentVersion));
+            EndMarker = endMarker?.Trim() ?? string.Empty;
+            SourcePath = string.IsNullOrWhiteSpace(sourcePath)
+                ? string.Empty
+                : sourcePath.Trim();
             BundleName = ContentAddressing.ContentPackageConvention.EpisodeBundle(
                 ContentId,
                 Id);
@@ -94,6 +100,8 @@ namespace Novels.Content
         public string Title { get; }
         public string StoryPath { get; }
         public string ContentVersion { get; }
+        public string EndMarker { get; }
+        public string SourcePath { get; }
         public string BundleName { get; }
         public EpisodeMediaDefinition Media { get; }
 

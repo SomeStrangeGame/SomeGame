@@ -22,6 +22,8 @@ namespace Novels
         internal struct Ctx
         {
             internal Func<StoryProcessor.StoryReadResult> ReadNext;
+            internal Func<string> ExportStoryState;
+            internal Func<string, bool> IsEpisodeEnd;
             internal Func<string, StoryContracts.StoryChoice[], StoryCommands.StoryStepResult> ParseStep;
             internal TryBuildQueueDelegate BuildQueue;
             internal TryCompleteQueueDelegate CompleteQueue;
@@ -78,6 +80,9 @@ namespace Novels
                 var result = await TryExecute(queue, _ctx.GetNextSavedDecision());
                 if (result.HasValue)
                     return result.Value;
+
+                if (_ctx.IsEpisodeEnd?.Invoke(readResult.Source) == true)
+                    return EpisodeRunResult.Completed(_ctx.ExportStoryState());
             }
 
             return EpisodeRunResult.Cancelled();

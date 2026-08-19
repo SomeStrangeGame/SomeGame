@@ -198,6 +198,7 @@ namespace Editor
             episode.FindPropertyRelative("_id").stringValue = episodeId;
             episode.FindPropertyRelative("_title").stringValue = _episodeTitle.Trim();
             episode.FindPropertyRelative("_storyPath").stringValue = episodeId + ".ink.json";
+            episode.FindPropertyRelative("_sourcePath").stringValue = episodeId + ".ink";
             episode.FindPropertyRelative("_contentVersion").stringValue = "1";
             serialized.ApplyModifiedPropertiesWithoutUndo();
             EditorUtility.SetDirty(content);
