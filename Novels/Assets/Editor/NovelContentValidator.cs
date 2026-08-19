@@ -188,6 +188,13 @@ namespace Editor
             string expectedBundle,
             ICollection<string> errors)
         {
+            if (string.IsNullOrWhiteSpace(assetPath)
+                || AssetDatabase.LoadMainAssetAtPath(assetPath) == null)
+            {
+                errors.Add($"Required bundled asset does not exist: {assetPath}.");
+                return;
+            }
+
             var assignedBundle = AssetDatabase.GetImplicitAssetBundleName(assetPath);
             if (!string.Equals(
                     assignedBundle,
@@ -281,21 +288,42 @@ namespace Editor
             ICollection<string> errors)
         {
             PrefabContentValidator.ValidateEpisode(prefix, episode.Id, errors);
-            foreach (var assetPath in new[]
+            foreach (var paths in new[]
                      {
-                         Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
-                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
-                         Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
-                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
-                         Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
-                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
-                         Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
-                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
-                         Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
-                             prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                         (
+                             episode: Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                             shared: Novels.ContentAddressing.ContentAddressConvention.SharedLoadingPrefab(
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                         (
+                             episode: Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                             shared: Novels.ContentAddressing.ContentAddressConvention.SharedBubblePrefab(
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                         (
+                             episode: Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                             shared: Novels.ContentAddressing.ContentAddressConvention.SharedLocationPrefab(
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                         (
+                             episode: Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                             shared: Novels.ContentAddressing.ContentAddressConvention.SharedCharacterPrefab(
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                         (
+                             episode: Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                             shared: Novels.ContentAddressing.ContentAddressConvention.SharedNotificationPrefab(
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
                      })
             {
-                ValidateBundleAssignment(assetPath, episode.BundleName, errors);
+                if (AssetDatabase.LoadMainAssetAtPath(paths.episode) != null)
+                    ValidateBundleAssignment(paths.episode, episode.BundleName, errors);
+                else
+                    ValidateBundleAssignment(
+                        paths.shared,
+                        Novels.ContentAddressing.ContentPackageConvention.ContentBundle(prefix),
+                        errors);
             }
         }
 

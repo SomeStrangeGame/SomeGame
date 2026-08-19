@@ -50,6 +50,9 @@ namespace Novels.Location
                 case StoryContracts.StoryCameraAction.MoveToLeft:
                     plan = MotionPlan(View.Screen.CameraEffect.ToLeft);
                     return true;
+                case StoryContracts.StoryCameraAction.MoveToRight:
+                    plan = MotionPlan(View.Screen.CameraEffect.ToRight);
+                    return true;
                 case StoryContracts.StoryCameraAction.Shake:
                     plan = MotionPlan(View.Screen.CameraEffect.Shaking);
                     return true;

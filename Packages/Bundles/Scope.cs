@@ -92,6 +92,12 @@ namespace Bundles
             return _owner.GetBundledPrefab(_session, address);
         }
 
+        public UniTask<GameObject> TryGetBundledPrefab(BundleAssetAddress address)
+        {
+            EnsureOwned(address.BundleName);
+            return _owner.TryGetBundledPrefab(_session, address);
+        }
+
         public string ResolveAssetName(string bundleName, string requestedName)
         {
             EnsureOwned(bundleName);

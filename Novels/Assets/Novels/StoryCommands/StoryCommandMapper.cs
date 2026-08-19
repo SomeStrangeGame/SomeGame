@@ -15,10 +15,11 @@ namespace Novels.StoryCommands
             if (HasArgument(arguments, StoryContracts.StoryArguments.Hint))
                 return StoryContracts.DialoguePresentation.Hint;
 
-            if (HasArgument(arguments, StoryContracts.StoryArguments.Thoughts))
+            if (HasArgument(arguments, StoryContracts.StoryArguments.Thoughts)
+                || HasPrefixedArgument(arguments, StoryContracts.StoryArguments.Thoughts))
                 return StoryContracts.DialoguePresentation.Thoughts;
 
-            if (speaker == StoryContracts.StorySpeakers.Narrator)
+            if (StoryContracts.StorySpeakers.IsNarrator(speaker))
                 return StoryContracts.DialoguePresentation.Narrator;
 
             if (speaker == StoryContracts.StorySpeakers.Wardrobe)
@@ -32,14 +33,24 @@ namespace Novels.StoryCommands
         {
             var result = StoryContracts.StoryChoiceAction.None;
 
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectAppearance))
+            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectAppearance)
+                || HasArgument(
+                    arguments,
+                    StoryContracts.StoryChoiceActions.SelectAppearanceFormal))
                 result |= StoryContracts.StoryChoiceAction.SelectAppearance;
 
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectClothes))
+            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectClothes)
+                || HasArgument(
+                    arguments,
+                    StoryContracts.StoryChoiceActions.SelectClothesFormal))
                 result |= StoryContracts.StoryChoiceAction.SelectClothes;
 
             if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHair)
-                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHairLegacy))
+                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHairLegacy)
+                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHairFormal)
+                || HasArgument(
+                    arguments,
+                    StoryContracts.StoryChoiceActions.SelectHairFormalLegacy))
             {
                 result |= StoryContracts.StoryChoiceAction.SelectHair;
             }
@@ -52,7 +63,7 @@ namespace Novels.StoryCommands
             string[] arguments)
         {
             var assetCandidates = new List<string>(arguments.Length);
-            var displayName = ParseDisplayName(speaker, arguments);
+            var displayName = ParseDisplayName(speaker, arguments, out var displayNameIndex);
             var position = ParseCharacterPosition(arguments);
             var visibility = ParseCharacterVisibility(arguments);
             var hasUnsupportedTimedChoice = false;
@@ -60,6 +71,16 @@ namespace Novels.StoryCommands
             for (var index = 0; index < arguments.Length; index++)
             {
                 var argument = arguments[index];
+                if (index == displayNameIndex)
+                    continue;
+                if (TryStripPrefix(
+                        argument,
+                        StoryContracts.StoryArguments.Thoughts,
+                        out var prefixedCandidate))
+                {
+                    assetCandidates.Add(prefixedCandidate);
+                    continue;
+                }
                 if (IsUnsupportedTimedChoiceArgument(argument))
                 {
                     hasUnsupportedTimedChoice = true;
@@ -85,26 +106,32 @@ namespace Novels.StoryCommands
                 assetCandidates.ToArray());
         }
 
-        private static string ParseDisplayName(string speaker, string[] arguments)
+        private static string ParseDisplayName(
+            string speaker,
+            string[] arguments,
+            out int displayNameIndex)
         {
-            if (string.IsNullOrEmpty(speaker)
-                || speaker[0] != '{'
-                || arguments.Length == 0)
+            displayNameIndex = -1;
+            if (string.IsNullOrEmpty(speaker) || arguments.Length == 0)
             {
                 return string.Empty;
             }
 
-            var candidate = arguments[0]?.Trim();
-            if (string.IsNullOrEmpty(candidate)
-                || IsDialogueControlArgument(candidate)
-                || TryParseCharacterPosition(candidate, out _)
-                || candidate[0] == '{'
-                || !char.IsUpper(candidate[0]))
+            for (var index = 0; index < arguments.Length; index++)
             {
-                return string.Empty;
+                var candidate = arguments[index]?.Trim();
+                if (string.IsNullOrEmpty(candidate)
+                    || IsDialogueControlArgument(candidate)
+                    || TryParseCharacterPosition(candidate, out _)
+                    || candidate[0] == '{'
+                    || !StoryContracts.StoryDisplayNames.IsKnown(candidate))
+                {
+                    continue;
+                }
+                displayNameIndex = index;
+                return candidate;
             }
-
-            return candidate;
+            return string.Empty;
         }
 
         private static StoryContracts.StoryCharacterPosition? ParseCharacterPosition(
@@ -144,7 +171,10 @@ namespace Novels.StoryCommands
             if (HasArgument(arguments, StoryContracts.StoryArguments.HideCharacter))
                 return StoryContracts.StoryCharacterVisibilityCommand.Hide;
 
-            if (HasArgument(arguments, StoryContracts.StoryArguments.ShowCharacter))
+            if (HasArgument(arguments, StoryContracts.StoryArguments.ShowCharacter)
+                || HasArgument(
+                    arguments,
+                    StoryContracts.StoryArguments.ShowCharacterLegacy))
                 return StoryContracts.StoryCharacterVisibilityCommand.Show;
 
             return StoryContracts.StoryCharacterVisibilityCommand.Unchanged;
@@ -158,6 +188,9 @@ namespace Novels.StoryCommands
                 ? StoryContracts.StoryBackgroundType.CutScene
                 : StoryContracts.StoryBackgroundType.Location;
             var color = HasArgument(arguments, StoryContracts.StoryArguments.WhiteBackground)
+                || HasArgument(
+                    arguments,
+                    StoryContracts.StoryArguments.WhiteBackgroundRussian)
                 ? StoryContracts.StoryBackgroundColor.White
                 : StoryContracts.StoryBackgroundColor.Black;
             var keepFinalVideoFrame = type == StoryContracts.StoryBackgroundType.CutScene
@@ -169,11 +202,25 @@ namespace Novels.StoryCommands
                 keepFinalVideoFrame);
         }
 
+        internal static string NormalizeResourceValue(string value)
+        {
+            value ??= string.Empty;
+            var comment = value.IndexOf(
+                StoryContracts.StorySyntaxTokens.InlineComment,
+                StringComparison.Ordinal);
+            if (comment >= 0)
+                value = value.Substring(0, comment);
+            return value.Trim();
+        }
+
         internal static bool TryParseCameraAction(
             string value,
             out StoryContracts.StoryCameraAction action)
         {
+            value = NormalizeCameraAction(value);
             if (IsArgument(value, StoryContracts.StoryCameraActions.FadeIn))
+                action = StoryContracts.StoryCameraAction.FadeIn;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.FadeInRussian))
                 action = StoryContracts.StoryCameraAction.FadeIn;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.LeftRight))
                 action = StoryContracts.StoryCameraAction.PanLeftToRight;
@@ -183,12 +230,36 @@ namespace Novels.StoryCommands
                 action = StoryContracts.StoryCameraAction.MoveToCenter;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.ToLeft))
                 action = StoryContracts.StoryCameraAction.MoveToLeft;
+            else if (IsArgument(value, StoryContracts.StoryArguments.PositionLeft))
+                action = StoryContracts.StoryCameraAction.MoveToLeft;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToRight))
+                action = StoryContracts.StoryCameraAction.MoveToRight;
+            else if (IsArgument(
+                         value,
+                         StoryContracts.StoryCameraActions.MoveToRightRussian))
+                action = StoryContracts.StoryCameraAction.MoveToRight;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.Shaking))
                 action = StoryContracts.StoryCameraAction.Shake;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.ShakingRussian)
+                || IsArgument(
+                    value,
+                    StoryContracts.StoryCameraActions.ShakingScreenRussian))
+            {
+                action = StoryContracts.StoryCameraAction.Shake;
+            }
             else if (IsArgument(value, StoryContracts.StoryCameraActions.Injury))
+                action = StoryContracts.StoryCameraAction.Injury;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.InjuryRussian))
                 action = StoryContracts.StoryCameraAction.Injury;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.Splashes))
                 action = StoryContracts.StoryCameraAction.Splashes;
+            else if (IsArgument(
+                         value,
+                         StoryContracts.StoryCameraActions.WhiteFlashRussian)
+                || IsArgument(value, StoryContracts.StoryCameraActions.FlashRussian))
+            {
+                action = StoryContracts.StoryCameraAction.Splashes;
+            }
             else
             {
                 action = default;
@@ -196,6 +267,11 @@ namespace Novels.StoryCommands
             }
 
             return true;
+        }
+
+        private static string NormalizeCameraAction(string value)
+        {
+            return NormalizeResourceValue(value).TrimEnd('.').TrimEnd();
         }
 
         private static bool IsDialogueControlArgument(string argument)
@@ -210,6 +286,8 @@ namespace Novels.StoryCommands
                 || IsArgument(argument, StoryContracts.StoryArguments.RemoveAccessory)
                 || IsArgument(argument, StoryContracts.StoryArguments.HideCharacter)
                 || IsArgument(argument, StoryContracts.StoryArguments.ShowCharacter)
+                || IsArgument(argument, StoryContracts.StoryArguments.ShowCharacterLegacy)
+                || IsArgument(argument, StoryContracts.StoryArguments.ChangeClothes)
                 || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectAppearance)
                 || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectClothes)
                 || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectHair)
@@ -238,6 +316,33 @@ namespace Novels.StoryCommands
             return false;
         }
 
+        private static bool HasPrefixedArgument(string[] arguments, string prefix)
+        {
+            foreach (var argument in arguments)
+            {
+                if (TryStripPrefix(argument, prefix, out _))
+                    return true;
+            }
+            return false;
+        }
+
+        private static bool TryStripPrefix(
+            string argument,
+            string prefix,
+            out string remainder)
+        {
+            remainder = string.Empty;
+            if (string.IsNullOrWhiteSpace(argument)
+                || !argument.StartsWith(prefix, StringComparison.OrdinalIgnoreCase)
+                || argument.Length == prefix.Length
+                || !char.IsWhiteSpace(argument[prefix.Length]))
+            {
+                return false;
+            }
+            remainder = argument.Substring(prefix.Length).Trim();
+            return remainder.Length > 0;
+        }
+
         private static bool IsArgument(string argument, string expected)
         {
             return string.Equals(
@@ -245,5 +350,6 @@ namespace Novels.StoryCommands
                 expected,
                 StringComparison.OrdinalIgnoreCase);
         }
+
     }
 }

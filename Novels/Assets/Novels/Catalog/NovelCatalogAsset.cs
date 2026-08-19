@@ -23,8 +23,10 @@ namespace Novels.Catalog
         [SerializeField] private string _contentId;
         [SerializeField] private string _title;
         [SerializeField] private string _description;
+        [SerializeField] private bool _disabled;
 
         public string ContentId => _contentId;
+        public bool IsEnabled => !_disabled;
         public string ContentBundleName =>
             ContentAddressing.ContentPackageConvention.ContentBundle(_contentId);
         public string ContentAssetName =>

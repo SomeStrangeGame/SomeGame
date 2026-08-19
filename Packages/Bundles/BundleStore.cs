@@ -101,6 +101,18 @@ namespace Bundles
                 assetName);
         }
 
+        internal UniTask<GameObject> TryGetPrefab(
+            ContentReleaseSession session,
+            string bundleName,
+            string assetName)
+        {
+            var key = GetKey(session, bundleName);
+            return _assets.TryGetPrefab(
+                key,
+                GetLoaded(session, bundleName),
+                assetName);
+        }
+
         internal string ResolveAssetName(
             ContentReleaseSession session,
             string bundleName,

@@ -71,36 +71,48 @@ namespace Editor
         {
             var assetName = Novels.ContentAddressing.ContentAssetNames.Screen;
             ValidateLoading(
-                Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
-                    prefix,
-                    episodeId,
-                    assetName),
+                ResolvePresentationPath(
+                    Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
+                        prefix, episodeId, assetName),
+                    Novels.ContentAddressing.ContentAddressConvention.SharedLoadingPrefab(
+                        prefix, assetName)),
                 errors);
             ValidateBubble(
-                Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
-                    prefix,
-                    episodeId,
-                    assetName),
+                ResolvePresentationPath(
+                    Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
+                        prefix, episodeId, assetName),
+                    Novels.ContentAddressing.ContentAddressConvention.SharedBubblePrefab(
+                        prefix, assetName)),
                 errors);
             ValidateCharacter(
-                Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
-                    prefix,
-                    episodeId,
-                    assetName),
+                ResolvePresentationPath(
+                    Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
+                        prefix, episodeId, assetName),
+                    Novels.ContentAddressing.ContentAddressConvention.SharedCharacterPrefab(
+                        prefix, assetName)),
                 errors);
             ValidateLocation(
-                Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
-                    prefix,
-                    episodeId,
-                    assetName),
+                ResolvePresentationPath(
+                    Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
+                        prefix, episodeId, assetName),
+                    Novels.ContentAddressing.ContentAddressConvention.SharedLocationPrefab(
+                        prefix, assetName)),
                 errors);
             ValidateNotification(
-                Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
-                    prefix,
-                    episodeId,
-                    assetName),
+                ResolvePresentationPath(
+                    Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
+                        prefix, episodeId, assetName),
+                    Novels.ContentAddressing.ContentAddressConvention.SharedNotificationPrefab(
+                        prefix, assetName)),
                 errors);
         }
+
+        private static string ResolvePresentationPath(
+            string episodePath,
+            string sharedPath) =>
+            AssetDatabase.LoadMainAssetAtPath(episodePath) != null
+                ? episodePath
+                : sharedPath;
 
         private static void ValidateLoading(string path, ICollection<string> errors)
         {

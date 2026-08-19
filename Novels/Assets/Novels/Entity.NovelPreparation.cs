@@ -13,6 +13,7 @@ namespace Novels
                 Save.Entity saveSystem,
                 ContentAddressing.ContentAddresses addresses,
                 EpisodeRuntime episodeRuntime,
+                Bundles.Scope novelBundles,
                 Bundles.MediaScope episodeBundles,
                 Loading.Entity mainLoading,
                 UniTask<string> episodePreloading)
@@ -21,6 +22,7 @@ namespace Novels
                 Addresses = addresses;
                 EpisodeRuntime = episodeRuntime;
                 EpisodeScope = episodeRuntime.Scope;
+                NovelBundles = novelBundles;
                 EpisodeBundles = episodeBundles;
                 MainLoading = mainLoading;
                 EpisodePreloading = episodePreloading;
@@ -32,6 +34,7 @@ namespace Novels
             internal EpisodeScope EpisodeScope { get; }
             internal CancellationToken CancellationToken =>
                 EpisodeRuntime.CancellationToken;
+            internal Bundles.Scope NovelBundles { get; }
             internal Bundles.MediaScope EpisodeBundles { get; }
             internal Loading.Entity MainLoading { get; }
             internal UniTask<string> EpisodePreloading { get; }
@@ -96,6 +99,7 @@ namespace Novels
                 saveSystem,
                 addresses,
                 episodeRuntime,
+                novelBundles,
                 episodeBundles,
                 mainLoading,
                 episodePreloading);

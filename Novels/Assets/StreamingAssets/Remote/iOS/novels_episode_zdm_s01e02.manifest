@@ -1,0 +1,48 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.11f1
+CRC: 884232280
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 59b245be157d33fcbac33646686218dc
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: bc9f87c7e64ff656997db0f2b2a91703
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: baca518a101059a26ad99f033b903f62
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0427\u0443\u0434\u043E\u0432\u0438\u0449\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0417\u0430\u043B
+  \u0432 \u0434\u043E\u043C\u0435 \u041A\u0443\u0438\u0431\u0438\u043B\u044B.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0420\u044B\u043D\u043E\u043A.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u041E\u0431\u0432\u0435\u0442\u0448\u0430\u043B\u044B\u0439
+  \u0434\u043E\u043C.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0411\u0443\u0431\u0430\u0441\u0442\u0438\u0441.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0411\u0435\u0434\u043D\u044B\u0439
+  \u043A\u0432\u0430\u0440\u0442\u0430\u043B.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u041F\u043E\u0434\u0437\u0435\u043C\u0435\u043B\u044C\u0435.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0410\u043D\u043F\u0443.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u041B\u0430\u0432\u043A\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u041F\u043E\u0434\u0437\u0435\u043C\u0435\u043B\u044C\u0435
+  \u043E\u0433\u043E\u043D\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0421\u043F\u0430\u043B\u044C\u043D\u044F
+  \u0432 \u0434\u043E\u043C\u0435 \u041A\u0443\u0438\u0431\u0438\u043B\u044B.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u041B\u0435\u0441\u0442\u043D\u0438\u0446\u044B
+  \u0445\u0440\u0430\u043C\u0430.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u041E\u0431\u0432\u0435\u0442\u0448\u0430\u043B\u044B\u0439
+  \u0434\u043E\u043C \u043E\u0442\u043A\u0440\u044B\u0442\u0430\u044F \u0434\u0432\u0435\u0440\u044C.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u041A\u043E\u0440\u0438\u0434\u043E\u0440
+  \u0445\u0440\u0430\u043C\u0430 \u0411\u0430\u0441\u0442\u0435\u0442.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0422\u043E\u0440\u0433\u043E\u0432\u0430\u044F
+  \u043B\u0430\u0432\u043A\u0430 \u0441 \u043E\u0434\u0435\u0436\u0434\u043E\u0439.png"
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s01e02/Location/Locations/\u0417\u0430\u043B
+  \u0432 \u0434\u043E\u043C\u0435 \u041A\u0443\u0438\u0431\u0438\u043B\u044B \u0448\u043A\u0430\u0444.png"
+Dependencies: []

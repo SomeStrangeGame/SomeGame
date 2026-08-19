@@ -1,6 +1,6 @@
 ManifestFileVersion: 0
 UnityVersion: 6000.3.11f1
-CRC: 3709732474
+CRC: 3587751138
 HashAppended: 0
 AssetBundleManifest:
   AssetBundleInfos:
@@ -15,4 +15,37 @@ AssetBundleManifest:
       Dependencies: {}
     Info_3:
       Name: novels_episode_tzm_1_s01e01
+      Dependencies: {}
+    Info_4:
+      Name: novels_episode_zdm_s01e04
+      Dependencies: {}
+    Info_5:
+      Name: novels_episode_zdm_s01e07
+      Dependencies: {}
+    Info_6:
+      Name: novels_episode_zdm_s02e01
+      Dependencies: {}
+    Info_7:
+      Name: novels_episode_zdm_s01e08
+      Dependencies: {}
+    Info_8:
+      Name: novels_episode_zdm_s01e01
+      Dependencies: {}
+    Info_9:
+      Name: novels_episode_zdm_s01e06
+      Dependencies: {}
+    Info_10:
+      Name: novels_content_zdm
+      Dependencies: {}
+    Info_11:
+      Name: novels_episode_zdm_s01e02
+      Dependencies: {}
+    Info_12:
+      Name: novels_episode_zdm_s01e05
+      Dependencies: {}
+    Info_13:
+      Name: novels_episode_zdm_s01e03
+      Dependencies: {}
+    Info_14:
+      Name: novels_episode_zdm_s01e09
       Dependencies: {}

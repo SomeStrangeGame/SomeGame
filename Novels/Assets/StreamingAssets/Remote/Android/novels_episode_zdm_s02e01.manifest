@@ -1,0 +1,23 @@
+ManifestFileVersion: 0
+UnityVersion: 6000.3.11f1
+CRC: 3182073207
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 8929b434e4fdd90daeab0bab055d8d65
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: bc9f87c7e64ff656997db0f2b2a91703
+  IncrementalBuildHash:
+    serializedVersion: 2
+    Hash: 4e70a4ec4376337f2f33e6ea8a3e2e95
+HashAppended: 0
+ClassTypes:
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+SerializeReferenceClassIdentifiers: []
+Assets:
+- "Assets/RemoteAssets/Content/ZDM/Episodes/s02e01/Location/Locations/\u0417\u0430\u0445\u0440\u0430.png"
+Dependencies: []

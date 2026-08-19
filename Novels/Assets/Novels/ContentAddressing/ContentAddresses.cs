@@ -26,14 +26,23 @@ namespace Novels.ContentAddressing
         public string LoadingPrefab(string assetName) =>
             ContentAddressConvention.LoadingPrefab(ContentId, EpisodeId, assetName);
 
+        public string SharedLoadingPrefab(string assetName) =>
+            ContentAddressConvention.SharedLoadingPrefab(ContentId, assetName);
+
         public string SettingPrefab(string assetName) =>
             ContentAddressConvention.SettingPrefab(ContentId, assetName);
 
         public string BubblePrefab(string assetName) =>
             ContentAddressConvention.BubblePrefab(ContentId, EpisodeId, assetName);
 
+        public string SharedBubblePrefab(string assetName) =>
+            ContentAddressConvention.SharedBubblePrefab(ContentId, assetName);
+
         public string LocationPrefab(string assetName) =>
             ContentAddressConvention.LocationPrefab(ContentId, EpisodeId, assetName);
+
+        public string SharedLocationPrefab(string assetName) =>
+            ContentAddressConvention.SharedLocationPrefab(ContentId, assetName);
 
         public string LocationImage(string assetName) =>
             ContentAddressConvention.LocationImage(ContentId, EpisodeId, assetName);
@@ -41,8 +50,14 @@ namespace Novels.ContentAddressing
         public string CharacterPrefab(string assetName) =>
             ContentAddressConvention.CharacterPrefab(ContentId, EpisodeId, assetName);
 
+        public string SharedCharacterPrefab(string assetName) =>
+            ContentAddressConvention.SharedCharacterPrefab(ContentId, assetName);
+
         public string NotificationPrefab(string assetName) =>
             ContentAddressConvention.NotificationPrefab(ContentId, EpisodeId, assetName);
+
+        public string SharedNotificationPrefab(string assetName) =>
+            ContentAddressConvention.SharedNotificationPrefab(ContentId, assetName);
 
     }
 }

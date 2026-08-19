@@ -69,6 +69,12 @@ namespace Novels.Location
             _ctx.Screen.ResetCamera();
             _ctx.Screen.ResetEffect();
 
+            if (StoryContracts.StoryBackgroundAssets.IsSolidBlack(assetName))
+            {
+                await ShowSolidColor(mode);
+                return;
+            }
+
             var resources = await UniTask.WhenAll(
                 _ctx.GetSprite(assetName)
                     .AttachExternalCancellation(_ctx.CancellationToken),
@@ -76,6 +82,13 @@ namespace Novels.Location
                     .AttachExternalCancellation(_ctx.CancellationToken));
             var sprite = resources.Item1;
             var url = resources.Item2;
+            if (sprite == null)
+            {
+                // TODO: Remove this fallback when missing story backgrounds become build errors again.
+                _ctx.TargetCamera.backgroundColor = Color.black;
+                await ShowSolidColor(mode);
+                return;
+            }
             var plan = BackgroundPresentationPlan.Create(
                 assetName,
                 presentation,
@@ -87,11 +100,6 @@ namespace Novels.Location
                 return;
             }
 
-            if (sprite == null)
-            {
-                throw new InvalidOperationException(
-                    $"Video background '{plan.AssetName}' requires a poster sprite.");
-            }
             var playbackStatus = await _ctx.VideoPlayback.Play(
                 new VideoPlaybackRequest(
                     url,
@@ -120,6 +128,15 @@ namespace Novels.Location
             _ctx.VideoPlayback.Stop();
             _ctx.Screen.SetImage(sprite);
             _ctx.Screen.SetEnabledImage(true);
+            _ctx.Screen.SetEnabledVideo(false);
+            await Show(mode);
+        }
+
+        private async UniTask ShowSolidColor(PlaybackMode mode)
+        {
+            _ctx.VideoPlayback.Stop();
+            _ctx.Screen.SetImage(null);
+            _ctx.Screen.SetEnabledImage(false);
             _ctx.Screen.SetEnabledVideo(false);
             await Show(mode);
         }

@@ -72,12 +72,18 @@ namespace Editor
             var assetPaths = new AssetPathIndex(AssetDatabase.GetAllAssetPaths());
             foreach (var background in DistinctById(index.BackgroundReferences))
             {
+                if (Novels.StoryContracts.StoryBackgroundAssets
+                    .IsSolidBlack(background.Id))
+                {
+                    continue;
+                }
                 var assetPath = LocationPath(prefix, episode.Id, background.Id);
                 if (!string.IsNullOrEmpty(assetPath)
                     && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
                     && reported.Add(assetPath))
                 {
-                    errors.Add(ContentValidationIssue.Error(
+                    // TODO: Restore Error severity when all authored story backgrounds are delivered.
+                    errors.Add(ContentValidationIssue.Warning(
                         ContentValidationCodes.StoryBackgroundMissing,
                         $"Story background does not exist: {assetPath}. "
                         + $"Referenced at {background.Location}.",
@@ -106,10 +112,14 @@ namespace Editor
                 if (string.IsNullOrEmpty(assetPath))
                     continue;
 
-                var matchingPaths = assetPaths.Matching(assetPath)
+                var possiblePaths = WithSharedCharacterPath(prefix, assetPath).ToArray();
+                var matchingPaths = possiblePaths
+                    .SelectMany(assetPaths.Matching)
                     .Distinct(StringComparer.Ordinal)
                     .ToArray();
-                var exactPath = assetPaths.Exact(assetPath);
+                var exactPath = possiblePaths
+                    .Select(assetPaths.Exact)
+                    .FirstOrDefault(path => path != null);
                 if (exactPath == null
                     && matchingPaths.Length == 1
                     && reported.Add(assetPath))
@@ -144,6 +154,22 @@ namespace Editor
                     : AssetDatabase.LoadAssetAtPath<Sprite>(exactPath);
                 if (sprite == null && reported.Add(assetPath))
                 {
+                    var importer = exactPath == null
+                        ? null
+                        : AssetImporter.GetAtPath(exactPath) as TextureImporter;
+                    if (importer != null
+                        && (importer.textureType != TextureImporterType.Sprite
+                            || importer.spriteImportMode == SpriteImportMode.None))
+                    {
+                        errors.Add(ContentValidationIssue.Error(
+                            ContentValidationCodes.StoryCharacterTextureImportInvalid,
+                            $"Story character image is not imported as a single Sprite: "
+                            + $"{exactPath}. Referenced at {speaker.Location}.",
+                            exactPath,
+                            episode.ContentId,
+                            episode.Id));
+                        continue;
+                    }
                     errors.Add(ContentValidationIssue.Error(
                         ContentValidationCodes.StoryCharacterMissing,
                         $"Story character body does not exist: {assetPath}. "
@@ -186,8 +212,10 @@ namespace Editor
                     episode.Id,
                     characterName,
                     reference.Candidate,
-                    profile).ToArray();
-                if (sharedPaths.Any(IsExactSprite))
+                    profile)
+                    .SelectMany(path => WithSharedCharacterPath(prefix, path))
+                    .ToArray();
+                if (sharedPaths.Any(IsResolvableSprite))
                     continue;
 
                 var views = reference.Role
@@ -216,8 +244,10 @@ namespace Editor
                         episode.Id,
                         characterName,
                         view,
-                        reference.Candidate).ToArray();
-                    if (viewPaths.Any(IsExactSprite))
+                        reference.Candidate)
+                        .SelectMany(path => WithSharedCharacterPath(prefix, path))
+                        .ToArray();
+                    if (viewPaths.Any(IsResolvableSprite))
                         continue;
                     missingViews.Add(view);
                     AddCaseMatches(sharedPaths.Concat(viewPaths), assetPaths, caseMatches);
@@ -244,11 +274,10 @@ namespace Editor
                     episode.Id));
             }
 
-            bool IsExactSprite(string path)
+            bool IsResolvableSprite(string path)
             {
-                var actual = assetPaths.Exact(path);
-                return actual != null
-                    && AssetDatabase.LoadAssetAtPath<Sprite>(actual) != null;
+                return assetPaths.Matching(path)
+                    .Any(actual => AssetDatabase.LoadAssetAtPath<Sprite>(actual) != null);
             }
         }
 
@@ -328,11 +357,18 @@ namespace Editor
             bool isChild,
             AssetPathIndex assetPaths)
         {
-            var root = $"{Novels.ContentAddressing.ContentPackageConvention.EpisodeRoot(prefix, episodeId)}"
+            var episodeRoot = $"{Novels.ContentAddressing.ContentPackageConvention.EpisodeRoot(prefix, episodeId)}"
                 + $"/Character/Characters/{character}/{profile.ViewRoot}/";
+            var sharedRoot = $"{Novels.ContentAddressing.ContentPackageConvention.ContentRoot(prefix)}"
+                + $"/Shared/Character/Characters/{character}/{profile.ViewRoot}/";
             return assetPaths.AllPaths
-                .Where(path => path.StartsWith(root, StringComparison.Ordinal))
-                .Select(path => path.Substring(root.Length).Split('/'))
+                .Select(path => path.StartsWith(episodeRoot, StringComparison.Ordinal)
+                    ? path.Substring(episodeRoot.Length)
+                    : path.StartsWith(sharedRoot, StringComparison.Ordinal)
+                        ? path.Substring(sharedRoot.Length)
+                        : null)
+                .Where(path => path != null)
+                .Select(path => path.Split('/'))
                 .Where(parts => isChild
                     ? parts.Length == 3
                         && parts[1] == profile.ChildView
@@ -344,6 +380,17 @@ namespace Editor
                 .Distinct(StringComparer.Ordinal)
                 .OrderBy(value => value, StringComparer.Ordinal)
                 .ToArray();
+        }
+
+        private static IEnumerable<string> WithSharedCharacterPath(
+            string prefix,
+            string episodePath)
+        {
+            yield return episodePath;
+            var sharedPath = Novels.ContentAddressing.ContentAddressConvention
+                .SharedCharacterAsset(prefix, episodePath);
+            if (!string.IsNullOrEmpty(sharedPath))
+                yield return sharedPath;
         }
 
         private static void AddCaseMatches(
@@ -402,7 +449,7 @@ namespace Editor
                 return;
             }
 
-            errors.Add(ContentValidationIssue.Error(
+            errors.Add(ContentValidationIssue.Warning(
                 ContentValidationCodes.StoryAudioMissing,
                 $"Story audio '{assetName}' does not exist in: {directory}. "
                 + $"Referenced at {reference.Location}.",

@@ -105,12 +105,16 @@ namespace Editor
                         audioId,
                         StringComparer.OrdinalIgnoreCase))
                     continue;
+                if (StoryAudioFileResolver.FindCandidates(prefix, audioId).Length == 0)
+                    continue;
                 yield return StoryAudioFileResolver.ResolveRelativePath(prefix, audioId);
             }
             foreach (var backgroundId in references.BackgroundReferences
                          .Select(reference => reference.Id)
                          .Distinct(StringComparer.OrdinalIgnoreCase))
             {
+                if (Novels.StoryContracts.StoryBackgroundAssets.IsSolidBlack(backgroundId))
+                    continue;
                 yield return $"NovelsVideos/{prefix}/{backgroundId}"
                     + Bundles.MediaFileConvention.VideoExtension;
             }

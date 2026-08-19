@@ -21,7 +21,8 @@ namespace Novels.Location.View
             RightLeft,
             ToCenter,
             ToLeft,
-            Shaking
+            Shaking,
+            ToRight
         }
 
         [Serializable]
@@ -146,6 +147,9 @@ namespace Novels.Location.View
                 case CameraEffect.ToLeft:
                     await Move(_image.transform, positions.Current, positions.Left, _cameraDuration, cancellationToken);
                     break;
+                case CameraEffect.ToRight:
+                    await Move(_image.transform, positions.Current, positions.Right, _cameraDuration, cancellationToken);
+                    break;
                 case CameraEffect.Shaking:
                     await Move(_image.transform, positions.Current, positions.Left, _cameraDuration / 10f, cancellationToken);
                     await Move(_image.transform, positions.Left, positions.Right, _cameraDuration / 10f, cancellationToken);
@@ -174,6 +178,9 @@ namespace Novels.Location.View
                     break;
                 case CameraEffect.ToLeft:
                     MoveImmediate(_image.transform, positions.Left);
+                    break;
+                case CameraEffect.ToRight:
+                    MoveImmediate(_image.transform, positions.Right);
                     break;
                 case CameraEffect.Shaking:
                     MoveImmediate(_image.transform, positions.Center);

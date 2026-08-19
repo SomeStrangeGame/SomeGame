@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Novels.StoryCommands
 {
@@ -19,17 +20,57 @@ namespace Novels.StoryCommands
             "stats",
         };
 
+        internal static readonly HashSet<string> DialogueOnlyNames = new(
+            StringComparer.OrdinalIgnoreCase)
+        {
+            "Гардероб",
+            "Выбор предмета",
+            "КОНЕЦ СЕРИИ",
+        };
+
         internal static readonly IReadOnlyDictionary<string, StoryCommandType> CommandTypes =
             new Dictionary<string, StoryCommandType>(StringComparer.OrdinalIgnoreCase)
             {
                 ["notification"] = StoryCommandType.Notification,
+                ["Уведомление"] = StoryCommandType.Notification,
+                ["Уведомления"] = StoryCommandType.Notification,
                 ["location"] = StoryCommandType.Location,
+                ["Локация"] = StoryCommandType.Location,
                 ["cut-scene"] = StoryCommandType.CutScene,
+                ["Кат-сцена"] = StoryCommandType.CutScene,
                 ["music"] = StoryCommandType.Music,
+                ["Музыка"] = StoryCommandType.Music,
                 ["sound"] = StoryCommandType.Sound,
+                ["Звук"] = StoryCommandType.Sound,
                 ["ambient"] = StoryCommandType.Ambient,
+                ["Звуки окружения"] = StoryCommandType.Ambient,
                 ["camera"] = StoryCommandType.Camera,
+                ["Камера"] = StoryCommandType.Camera,
                 ["await"] = StoryCommandType.Wait,
+                ["Ожидание"] = StoryCommandType.Wait,
             };
+
+        internal static bool TrySplitMissingSeparator(
+            string source,
+            out string command,
+            out string value)
+        {
+            foreach (var candidate in CommandTypes.Keys
+                         .OrderByDescending(name => name.Length))
+            {
+                if (!source.StartsWith(candidate, StringComparison.OrdinalIgnoreCase)
+                    || source.Length == candidate.Length
+                    || !char.IsWhiteSpace(source[candidate.Length]))
+                {
+                    continue;
+                }
+                command = candidate;
+                value = source.Substring(candidate.Length).Trim();
+                return true;
+            }
+            command = string.Empty;
+            value = string.Empty;
+            return false;
+        }
     }
 }

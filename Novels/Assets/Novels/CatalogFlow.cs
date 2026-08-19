@@ -106,10 +106,15 @@ namespace Novels
         internal async UniTask<Catalog.NovelCatalogEntry> SelectContent(
             Resources resources)
         {
-            var entries = resources.Catalog.Entries.ToDictionary(
+            var availableEntries = resources.Catalog.Entries
+                .Where(entry => entry.IsEnabled)
+                .ToArray();
+            if (availableEntries.Length == 0)
+                throw new InvalidOperationException("Novel catalog has no enabled stories.");
+            var entries = availableEntries.ToDictionary(
                 entry => entry.ContentId,
                 StringComparer.OrdinalIgnoreCase);
-            var items = resources.Catalog.Entries.Select(entry =>
+            var items = availableEntries.Select(entry =>
             {
                 var text = entry.Text;
                 return new Catalog.CatalogItem(

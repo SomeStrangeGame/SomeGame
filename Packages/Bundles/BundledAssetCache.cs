@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -28,7 +29,7 @@ namespace Bundles
         {
             var names = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
             foreach (var assetName in bundle.GetAllAssetNames())
-                names[assetName] = assetName;
+                names[NormalizeAssetName(assetName)] = assetName;
             _assetNames[bundleKey] = names;
         }
 
@@ -36,7 +37,7 @@ namespace Bundles
         {
             if (string.IsNullOrWhiteSpace(requestedName)
                 || !_assetNames.TryGetValue(bundleKey, out var names)
-                || !names.TryGetValue(requestedName, out var actualName))
+                || !names.TryGetValue(NormalizeAssetName(requestedName), out var actualName))
             {
                 return null;
             }
@@ -115,6 +116,25 @@ namespace Bundles
             return prefab;
         }
 
+        internal async UniTask<GameObject> TryGetPrefab(
+            string bundleKey,
+            AssetBundle bundle,
+            string requestedName)
+        {
+            var assetName = Resolve(bundleKey, requestedName);
+            if (assetName == null)
+                return null;
+
+            var key = GetKey(bundleKey, assetName);
+            if (!_prefabs.TryGetValue(key, out var prefab))
+            {
+                prefab = await bundle.LoadAssetAsync<GameObject>(assetName)
+                    .WithCancellation(_cancellationToken) as GameObject;
+                _prefabs[key] = prefab;
+            }
+            return prefab;
+        }
+
         internal void Remove(string bundleKey)
         {
             Remove(_sprites, bundleKey);
@@ -147,6 +167,9 @@ namespace Bundles
 
         private static string GetKey(string bundleKey, string assetName) =>
             $"{bundleKey}|{assetName}";
+
+        private static string NormalizeAssetName(string value) =>
+            value.Normalize(NormalizationForm.FormC);
 
         private static void Remove<T>(IDictionary<string, T> assets, string bundleKey)
         {

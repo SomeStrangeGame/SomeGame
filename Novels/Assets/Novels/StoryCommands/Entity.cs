@@ -44,12 +44,21 @@ namespace Novels.StoryCommands
             var separatorIndex = StorySyntaxTokenizer.IndexOfUnescaped(
                 normalizedSource,
                 ':');
-            var prefix = separatorIndex < 0
-                ? normalizedSource
-                : normalizedSource.Substring(0, separatorIndex).Trim();
-            var value = separatorIndex < 0
-                ? normalizedSource
-                : normalizedSource.Substring(separatorIndex + 1).Trim();
+            string prefix;
+            string value;
+            if (separatorIndex >= 0)
+            {
+                prefix = normalizedSource.Substring(0, separatorIndex).Trim();
+                value = normalizedSource.Substring(separatorIndex + 1).Trim();
+            }
+            else if (!StoryCommandSyntax.TrySplitMissingSeparator(
+                         normalizedSource,
+                         out prefix,
+                         out value))
+            {
+                prefix = normalizedSource;
+                value = normalizedSource;
+            }
 
             var prefixResult = StoryPrefixParser.Parse(prefix, source);
             if (!prefixResult.IsSuccess)
@@ -67,7 +76,24 @@ namespace Novels.StoryCommands
             if (StoryCommandSyntax.MetadataNames.Contains(name))
                 return StoryParseResult.Success(StoryCommand.CreateMetadata(source));
 
-            if (name.IndexOf(StoryCommandSyntax.Keyboard, StringComparison.OrdinalIgnoreCase) >= 0)
+            if (StoryCommandSyntax.DialogueOnlyNames.Contains(name))
+            {
+                var text = value;
+                if (separatorIndex < 0 || string.IsNullOrWhiteSpace(text))
+                    text = arguments.Length == 0 ? string.Empty : arguments[0];
+                return StoryParseResult.Success(StoryCommand.CreateDialogue(
+                    source,
+                    name,
+                    text,
+                    StoryContracts.DialoguePresentation.Narrator,
+                    StoryCommandMapper.ParseChoiceActions(arguments),
+                    StoryCommandMapper.ParseCharacterPresentation(
+                        string.Empty,
+                        Array.Empty<string>())));
+            }
+
+            if (name.IndexOf(StoryCommandSyntax.Keyboard, StringComparison.OrdinalIgnoreCase) >= 0
+                || name.IndexOf("Клавиатура", StringComparison.OrdinalIgnoreCase) >= 0)
                 return StoryParseResult.Success(StoryCommand.CreateKeyboard(source));
 
             if (!StoryCommandSyntax.CommandTypes.TryGetValue(name, out var commandType))
@@ -91,13 +117,16 @@ namespace Novels.StoryCommands
                     return StoryParseResult.Success(StoryCommand.CreateBackground(
                         commandType,
                         source,
-                        value,
+                        StoryCommandMapper.NormalizeResourceValue(value),
                         StoryCommandMapper.ParseBackgroundPresentation(commandType, arguments)));
 
                 case StoryCommandType.Music:
                 case StoryCommandType.Sound:
                 case StoryCommandType.Ambient:
-                    return StoryParseResult.Success(StoryCommand.CreateAudio(commandType, source, value));
+                    return StoryParseResult.Success(StoryCommand.CreateAudio(
+                        commandType,
+                        source,
+                        StoryCommandMapper.NormalizeResourceValue(value)));
 
                 case StoryCommandType.Camera:
                     if (!StoryCommandMapper.TryParseCameraAction(value, out var cameraAction))

@@ -17,9 +17,11 @@ namespace Novels
             var assets = await new EpisodeAssetLoader(new EpisodeAssetLoader.Ctx
             {
                 Bundles = state.EpisodeBundles,
+                SharedBundles = state.NovelBundles,
                 PriorityLoader = _priorityLoader,
                 Addresses = state.Addresses,
                 BundleName = _episode.BundleName,
+                SharedBundleName = _definition.BundleName,
                 CancellationToken = cancellationToken,
             }).Load();
             var loading = CreateLoading(
@@ -44,7 +46,7 @@ namespace Novels
                 state.EpisodeScope,
                 assets.Location,
                 assetName => _priorityLoader.Run(() => state.EpisodeBundles
-                    .GetBundledSprite(new Bundles.BundleAssetAddress(
+                    .TryGetBundledSprite(new Bundles.BundleAssetAddress(
                         _episode.BundleName,
                         state.Addresses.LocationImage(assetName)))
                     .AttachExternalCancellation(cancellationToken)),
@@ -54,11 +56,7 @@ namespace Novels
             var character = CreateCharacter(
                 state.EpisodeScope,
                 assets.Character,
-                assetName => _priorityLoader.Run(() => state.EpisodeBundles
-                    .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                        _episode.BundleName,
-                        assetName))
-                    .AttachExternalCancellation(cancellationToken)),
+                assetName => GetCharacterSprite(state, assetName),
                 cancellationToken);
 
             var notification = CreateNotification(
@@ -98,6 +96,30 @@ namespace Novels
                 novelProcess.ShowNovelProcess,
                 state.SaveSystem.FlushAsync);
             return await state.EpisodeRuntime.Run();
+        }
+
+        private async UniTask<Sprite> GetCharacterSprite(
+            PreparedNovelResources state,
+            string episodeAssetPath)
+        {
+            var cancellationToken = state.CancellationToken;
+            var sprite = await _priorityLoader.Run(() => state.EpisodeBundles
+                .TryGetBundledSprite(new Bundles.BundleAssetAddress(
+                    _episode.BundleName,
+                    episodeAssetPath))
+                .AttachExternalCancellation(cancellationToken));
+            if (sprite != null)
+                return sprite;
+
+            var sharedAssetPath = ContentAddressing.ContentAddressConvention
+                .SharedCharacterAsset(_definition.Prefix, episodeAssetPath);
+            return string.IsNullOrEmpty(sharedAssetPath)
+                ? null
+                : await _priorityLoader.Run(() => state.NovelBundles
+                    .TryGetBundledSprite(new Bundles.BundleAssetAddress(
+                        _definition.BundleName,
+                        sharedAssetPath))
+                    .AttachExternalCancellation(cancellationToken));
         }
 
         private static void ValidateSavedReplay(

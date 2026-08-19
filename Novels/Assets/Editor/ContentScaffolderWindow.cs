@@ -217,6 +217,7 @@ namespace Editor
             entry.FindPropertyRelative("_contentId").stringValue = contentId;
             entry.FindPropertyRelative("_title").stringValue = _storyTitle.Trim();
             entry.FindPropertyRelative("_description").stringValue = string.Empty;
+            entry.FindPropertyRelative("_disabled").boolValue = true;
             serialized.ApplyModifiedProperties();
             EditorUtility.SetDirty(catalog);
         }

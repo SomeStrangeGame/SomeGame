@@ -77,10 +77,7 @@ namespace Bundles
                     $"Audio reference '{normalized}' matches multiple released files.");
             }
             if (!_audioByName.TryGetValue(normalized, out var descriptor))
-            {
-                throw new ContentIntegrityException(
-                    $"Audio reference '{normalized}' has no released file.");
-            }
+                return null;
             return await _resolveFileUrl(descriptor.Path);
         }
 

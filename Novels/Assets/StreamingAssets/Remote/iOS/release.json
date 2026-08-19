@@ -1,15 +1,15 @@
 {
-    "releaseId": "d652066ea20f9306db389f6613d5ca1b1aa6b7001e8fc13ff5c29e187a19ac21",
+    "releaseId": "719e5417451b30fcb7bc8ce374803d0b0493be7595daa87d9684b0072392679b",
     "minimumClientVersion": "0.1.0",
     "contentSchemaVersion": 5,
     "deliveryMode": 2,
     "bundles": [
         {
             "name": "novels_catalog",
-            "version": "99cd5a86a4eba50ea22e730042dfb9a2",
-            "size": 6830,
-            "sha256": "3c9a94bcfb1208303250720918b0a7ee9828f49b3a229bbacaf4b6db9a88577e",
-            "crc": 836797639,
+            "version": "1325379a6c19fdf7f25435b05583fb88",
+            "size": 6866,
+            "sha256": "1f31724e3180fa45d3beea5c24ee3d5023fe198ffa78419571322a2998f43d02",
+            "crc": 1251395443,
             "deliveryGroup": "application"
         },
         {
@@ -21,12 +21,100 @@
             "deliveryGroup": "TZM_1/shared"
         },
         {
+            "name": "novels_content_zdm",
+            "version": "9ba881cfc89942e7605172f62286e7c1",
+            "size": 21029268,
+            "sha256": "0f83d45b0da3d0a8980f63899e1ac2935617322a1cd980275326538c5731e13a",
+            "crc": 1596270069,
+            "deliveryGroup": "ZDM/shared"
+        },
+        {
             "name": "novels_episode_tzm_1_s01e01",
             "version": "48dc3b78db36a0b85b1132273e3b2629",
             "size": 57750985,
             "sha256": "c632ed59bed117bfc1a7f188283decb1fd7e765a7ac6d8faf109adc1bd98786d",
             "crc": 545188901,
             "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "name": "novels_episode_zdm_s01e01",
+            "version": "cedf5d2c6440d004a9c16b083005c874",
+            "size": 11393231,
+            "sha256": "d6d786669c3329511936a76ceefe275d3e79c31743c4b1ea9ad47b123372ee78",
+            "crc": 1916473482,
+            "deliveryGroup": "ZDM/s01e01"
+        },
+        {
+            "name": "novels_episode_zdm_s01e02",
+            "version": "59b245be157d33fcbac33646686218dc",
+            "size": 17309578,
+            "sha256": "4180b0072176dbf9ba7ec95b7725539cced6b728625bed0a16770da8d20fb546",
+            "crc": 884232280,
+            "deliveryGroup": "ZDM/s01e02"
+        },
+        {
+            "name": "novels_episode_zdm_s01e03",
+            "version": "d6b177cb689ae9a4d01946bf71d52628",
+            "size": 6529704,
+            "sha256": "426015e33092af4f8dbe90dc7cd4a6fd1d10858241720afab7241da3994061b7",
+            "crc": 2166835803,
+            "deliveryGroup": "ZDM/s01e03"
+        },
+        {
+            "name": "novels_episode_zdm_s01e04",
+            "version": "c5701f19383f95fca254b6ede052a6a3",
+            "size": 9266206,
+            "sha256": "eb56a93a07519e072c9de3e9b2ae07437ad3ee3dffa7d0ffdcd492999781e12d",
+            "crc": 3492338946,
+            "deliveryGroup": "ZDM/s01e04"
+        },
+        {
+            "name": "novels_episode_zdm_s01e05",
+            "version": "771d1dfc09895cb0fc1af209510f5c6b",
+            "size": 14495418,
+            "sha256": "763079ed2066255ee6565258e55f0e17532a4e9ec384224920eabcad553a6f5f",
+            "crc": 451176756,
+            "deliveryGroup": "ZDM/s01e05"
+        },
+        {
+            "name": "novels_episode_zdm_s01e06",
+            "version": "3b1d0328e82c10b6c6ce0b2dfafd5a3d",
+            "size": 8870746,
+            "sha256": "4fd774749995aadda6989a0a9308435e99b3aba89d271ceb1eb2e2bcc17353fe",
+            "crc": 1348855816,
+            "deliveryGroup": "ZDM/s01e06"
+        },
+        {
+            "name": "novels_episode_zdm_s01e07",
+            "version": "3f661be7218e240c5b82088585c14d9d",
+            "size": 2360635,
+            "sha256": "7b99c5e4c941bcce250270184f09d0528a3767dacc45498848a2bbea8c627c72",
+            "crc": 1559261336,
+            "deliveryGroup": "ZDM/s01e07"
+        },
+        {
+            "name": "novels_episode_zdm_s01e08",
+            "version": "90ba1f306a301aa424897da03c9d782e",
+            "size": 1252459,
+            "sha256": "f959ae3268f8cee62a241617a5ed12eabbcac9089cf89c8d9afcc8d934a5b4b8",
+            "crc": 3323139277,
+            "deliveryGroup": "ZDM/s01e08"
+        },
+        {
+            "name": "novels_episode_zdm_s01e09",
+            "version": "d3153bc7373a522d932c9ceb0c8bff1d",
+            "size": 3928967,
+            "sha256": "5ff63df446a82c81a92b660abe147c369a1068edcff2b43948c4b48751641f1e",
+            "crc": 2327007220,
+            "deliveryGroup": "ZDM/s01e09"
+        },
+        {
+            "name": "novels_episode_zdm_s02e01",
+            "version": "11e59839b85fdcd97343003438534d5b",
+            "size": 929155,
+            "sha256": "9092dfbb3a35c4dfb2a8ab04d11379d4195841d2c069d3a2054f358460ac0df9",
+            "crc": 1253160281,
+            "deliveryGroup": "ZDM/s02e01"
         },
         {
             "name": "novels_loading_shared",
@@ -44,6 +132,13 @@
             "size": 120368,
             "sha256": "6287aa1cc434c7f2ba4707f05b23d1a28cc036b1ef0c5a1df9d4909368d2bde8",
             "deliveryGroup": "TZM_1/s01e01"
+        },
+        {
+            "path": "NovelTexts/ZDM/ZDM.ink.json",
+            "payloadPath": "Files/c93587b5ee5ad2239ee57e7e080d7cad7b6d7b20ab2cd55d82aaf78519dee5fb",
+            "size": 1336518,
+            "sha256": "c93587b5ee5ad2239ee57e7e080d7cad7b6d7b20ab2cd55d82aaf78519dee5fb",
+            "deliveryGroup": "ZDM/shared"
         },
         {
             "path": "NovelsAudio/TZM_1/будильник бена.wav",
@@ -338,9 +433,64 @@
             "size": 163177
         },
         {
+            "id": "ZDM/s01e01",
+            "payloadCount": 1,
+            "size": 11393231
+        },
+        {
+            "id": "ZDM/s01e02",
+            "payloadCount": 1,
+            "size": 17309578
+        },
+        {
+            "id": "ZDM/s01e03",
+            "payloadCount": 1,
+            "size": 6529704
+        },
+        {
+            "id": "ZDM/s01e04",
+            "payloadCount": 1,
+            "size": 9266206
+        },
+        {
+            "id": "ZDM/s01e05",
+            "payloadCount": 1,
+            "size": 14495418
+        },
+        {
+            "id": "ZDM/s01e06",
+            "payloadCount": 1,
+            "size": 8870746
+        },
+        {
+            "id": "ZDM/s01e07",
+            "payloadCount": 1,
+            "size": 2360635
+        },
+        {
+            "id": "ZDM/s01e08",
+            "payloadCount": 1,
+            "size": 1252459
+        },
+        {
+            "id": "ZDM/s01e09",
+            "payloadCount": 1,
+            "size": 3928967
+        },
+        {
+            "id": "ZDM/s02e01",
+            "payloadCount": 1,
+            "size": 929155
+        },
+        {
+            "id": "ZDM/shared",
+            "payloadCount": 2,
+            "size": 22365786
+        },
+        {
             "id": "application",
             "payloadCount": 2,
-            "size": 10386
+            "size": 10422
         }
     ]
 }

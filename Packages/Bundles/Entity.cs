@@ -171,6 +171,9 @@ namespace Bundles
         public UniTask<GameObject> GetBundledPrefab(BundleAssetAddress address) =>
             GetBundledPrefab(RequireSession(), address);
 
+        public UniTask<GameObject> TryGetBundledPrefab(BundleAssetAddress address) =>
+            TryGetBundledPrefab(RequireSession(), address);
+
         public string ResolveAssetName(string bundleName, string requestedName) =>
             ResolveAssetName(RequireSession(), bundleName, requestedName);
 
@@ -215,6 +218,11 @@ namespace Bundles
             ContentReleaseSession session,
             BundleAssetAddress address) =>
             _bundles.GetPrefab(session, address.BundleName, address.AssetName);
+
+        internal UniTask<GameObject> TryGetBundledPrefab(
+            ContentReleaseSession session,
+            BundleAssetAddress address) =>
+            _bundles.TryGetPrefab(session, address.BundleName, address.AssetName);
 
         internal string ResolveAssetName(
             ContentReleaseSession session,

@@ -7,10 +7,7 @@ namespace Novels.StoryContracts
             DialoguePresentation presentation,
             string mainCharacter)
         {
-            if (string.Equals(
-                    speaker,
-                    StorySpeakers.Narrator,
-                    System.StringComparison.Ordinal)
+            if (StorySpeakers.IsNarrator(speaker)
                 || presentation == DialoguePresentation.Narrator)
             {
                 return StorySpeakerRole.Narrator;

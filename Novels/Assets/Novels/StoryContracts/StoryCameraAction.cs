@@ -10,5 +10,6 @@ namespace Novels.StoryContracts
         Shake,
         Injury,
         Splashes,
+        MoveToRight,
     }
 }

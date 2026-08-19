@@ -233,9 +233,17 @@ namespace Editor
                         .ToArray(),
                     StringComparer.Ordinal);
 
+            var storyBodyStarted = false;
             foreach (var sourceLine in source.Lines)
             {
                 var line = sourceLine.Text.Trim();
+                if (line.StartsWith("===", StringComparison.Ordinal))
+                {
+                    storyBodyStarted = true;
+                    continue;
+                }
+                if (!storyBodyStarted || IsInkControlLine(line))
+                    continue;
                 if (line.Length == 0 || line.StartsWith("//", StringComparison.Ordinal))
                     continue;
                 if (!line.Contains(":"))
@@ -302,8 +310,6 @@ namespace Editor
                             episode.Id));
                     }
 
-                    if (!IsVariableReference(command.Data.Speaker.Trim()))
-                        return;
                     var resolvedSpeakers = Resolve(
                         command.Data.Speaker,
                         variables,
@@ -397,6 +403,9 @@ namespace Editor
             Novels.Content.EpisodeDefinition episode,
             ICollection<ContentValidationIssue> issues)
         {
+            if (kind == StoryDependencyKind.Audio && string.IsNullOrWhiteSpace(value))
+                return;
+
             var resolvedValues = Resolve(value, variables, sourceLine);
             if (resolvedValues.Count == 0)
             {
@@ -436,5 +445,18 @@ namespace Editor
             && value.Length >= 3
             && value[0] == '{'
             && value[value.Length - 1] == '}';
+
+        private static bool IsInkControlLine(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return false;
+            return value[0] == '-'
+                || value[0] == '*'
+                || value[0] == '+'
+                || value[0] == '~'
+                || value[0] == '{'
+                || value[0] == '}'
+                || value.StartsWith("->", StringComparison.Ordinal);
+        }
     }
 }
