@@ -29,6 +29,9 @@ namespace Editor
         internal const string StoryCharacterMissing = "STORY_CHARACTER_MISSING";
         internal const string StoryCharacterCaseMismatch = "STORY_CHARACTER_CASE_MISMATCH";
         internal const string StoryCharacterCaseAmbiguous = "STORY_CHARACTER_CASE_AMBIGUOUS";
+        internal const string StoryCharacterAssetMissing = "STORY_CHARACTER_ASSET_MISSING";
+        internal const string StoryCharacterAssetCaseMismatch =
+            "STORY_CHARACTER_ASSET_CASE_MISMATCH";
     }
 
     internal readonly struct ContentValidationIssue

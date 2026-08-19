@@ -124,6 +124,214 @@ namespace Editor
                         episode.Id));
                 }
             }
+            ValidateCharacterAssets(
+                prefix,
+                characterAssets,
+                episode,
+                index.CharacterAssetReferences,
+                assetPaths,
+                errors);
+        }
+
+        private static void ValidateCharacterAssets(
+            string prefix,
+            Novels.Content.CharacterAssetProfile profile,
+            Novels.Content.EpisodeDefinition episode,
+            IEnumerable<StoryCharacterAssetReference> references,
+            ILookup<string, string> assetPaths,
+            ContentValidationReport errors)
+        {
+            foreach (var reference in references
+                         .GroupBy(
+                             value => $"{value.Role}\0{value.Speaker}\0"
+                                 + $"{value.IsChild}\0{value.Candidate}",
+                             StringComparer.Ordinal)
+                         .Select(group => group.First()))
+            {
+                var characterName = reference.Role
+                    == Novels.StoryContracts.StorySpeakerRole.MainCharacter
+                        ? profile.MainCharacterAssetId
+                        : reference.Speaker;
+                var sharedPaths = CharacterSharedCandidatePaths(
+                    prefix,
+                    episode.Id,
+                    characterName,
+                    reference.Candidate,
+                    profile).ToArray();
+                if (sharedPaths.Any(IsExactSprite))
+                    continue;
+
+                var views = reference.Role
+                    == Novels.StoryContracts.StorySpeakerRole.MainCharacter
+                        ? MainCharacterViews(
+                            prefix,
+                            episode.Id,
+                            characterName,
+                            profile,
+                            reference.IsChild,
+                            assetPaths)
+                        : new[]
+                        {
+                            reference.IsChild
+                                ? $"{profile.ViewRoot}/{profile.ChildView}"
+                                : profile.ViewRoot,
+                        };
+                if (views.Length == 0)
+                    views = new[] { profile.ViewRoot };
+                var missingViews = new List<string>();
+                var caseMatches = new HashSet<string>(StringComparer.Ordinal);
+                foreach (var view in views)
+                {
+                    var viewPaths = CharacterViewCandidatePaths(
+                        prefix,
+                        episode.Id,
+                        characterName,
+                        view,
+                        reference.Candidate).ToArray();
+                    if (viewPaths.Any(IsExactSprite))
+                        continue;
+                    missingViews.Add(view);
+                    AddCaseMatches(sharedPaths.Concat(viewPaths), assetPaths, caseMatches);
+                }
+                if (missingViews.Count == 0)
+                    continue;
+
+                AddCaseMatches(sharedPaths, assetPaths, caseMatches);
+                var code = caseMatches.Count > 0
+                    ? ContentValidationCodes.StoryCharacterAssetCaseMismatch
+                    : ContentValidationCodes.StoryCharacterAssetMissing;
+                var detail = caseMatches.Count > 0
+                    ? "Matching assets with different casing: "
+                        + string.Join(", ", caseMatches.Select(path => $"'{path}'")) + "."
+                    : "No matching body, emotion, clothes, hair, or accessory sprite exists.";
+                errors.Add(ContentValidationIssue.Error(
+                    code,
+                    $"Ink character asset '{reference.Candidate}' for "
+                    + $"'{reference.Speaker}' cannot be resolved for: "
+                    + string.Join(", ", missingViews)
+                    + $". {detail} Referenced at {reference.Location}.",
+                    reference.SourcePath,
+                    episode.ContentId,
+                    episode.Id));
+            }
+
+            bool IsExactSprite(string path) =>
+                assetPaths[path].Any(actual => string.Equals(
+                    actual,
+                    path,
+                    StringComparison.Ordinal))
+                && AssetDatabase.LoadAssetAtPath<Sprite>(path) != null;
+        }
+
+        private static IEnumerable<string> CharacterViewCandidatePaths(
+            string prefix,
+            string episodeId,
+            string character,
+            string view,
+            string candidate)
+        {
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterMainBody(
+                prefix,
+                episodeId,
+                character,
+                view,
+                candidate);
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterEmotion(
+                prefix,
+                episodeId,
+                character,
+                view,
+                candidate);
+        }
+
+        private static IEnumerable<string> CharacterSharedCandidatePaths(
+            string prefix,
+            string episodeId,
+            string character,
+            string candidate,
+            Novels.Content.CharacterAssetProfile profile)
+        {
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterClothes(
+                prefix,
+                episodeId,
+                character,
+                candidate,
+                1);
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterHair(
+                prefix,
+                episodeId,
+                character,
+                candidate,
+                profile.BackLayer,
+                profile.DefaultHairColor);
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterHair(
+                prefix,
+                episodeId,
+                character,
+                candidate,
+                profile.FrontLayer,
+                profile.DefaultHairColor);
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterAccessory(
+                prefix,
+                episodeId,
+                character,
+                candidate,
+                profile.BackLayer);
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterAccessory(
+                prefix,
+                episodeId,
+                character,
+                candidate,
+                profile.MiddleLayer);
+            yield return Novels.ContentAddressing.ContentAddressConvention.CharacterAccessory(
+                prefix,
+                episodeId,
+                character,
+                candidate,
+                profile.FrontLayer);
+        }
+
+        private static string[] MainCharacterViews(
+            string prefix,
+            string episodeId,
+            string character,
+            Novels.Content.CharacterAssetProfile profile,
+            bool isChild,
+            ILookup<string, string> assetPaths)
+        {
+            var root = $"{Novels.ContentAddressing.ContentPackageConvention.EpisodeRoot(prefix, episodeId)}"
+                + $"/Character/Characters/{character}/{profile.ViewRoot}/";
+            return assetPaths
+                .SelectMany(group => group)
+                .Where(path => path.StartsWith(root, StringComparison.Ordinal))
+                .Select(path => path.Substring(root.Length).Split('/'))
+                .Where(parts => isChild
+                    ? parts.Length == 3
+                        && parts[1] == profile.ChildView
+                        && parts[2] == "Main.png"
+                    : parts.Length == 2 && parts[1] == "Main.png")
+                .Select(parts => isChild
+                    ? $"{profile.ViewRoot}/{parts[0]}/{profile.ChildView}"
+                    : $"{profile.ViewRoot}/{parts[0]}")
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(value => value, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        private static void AddCaseMatches(
+            IEnumerable<string> expectedPaths,
+            ILookup<string, string> assetPaths,
+            ISet<string> target)
+        {
+            foreach (var expected in expectedPaths)
+            foreach (var actual in assetPaths[expected])
+            {
+                if (!string.Equals(actual, expected, StringComparison.Ordinal)
+                    && AssetDatabase.LoadAssetAtPath<Sprite>(actual) != null)
+                {
+                    target.Add(actual);
+                }
+            }
         }
 
         private static void ValidateAudio(

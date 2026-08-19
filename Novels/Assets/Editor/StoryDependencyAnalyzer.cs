@@ -135,9 +135,21 @@ namespace Editor
 
     internal static class StoryDependencyAnalyzer
     {
-        private static readonly Regex _variable = new(
-            "^\\s*VAR\\s+(?<name>[^=\\s]+)\\s*=\\s*\"(?<value>[^\"]*)\"",
+        private static readonly Regex _variableValue = new(
+            "^\\s*(?:VAR\\s+|~\\s*)(?<name>[^=\\s]+)\\s*=\\s*\"(?<value>[^\"]*)\"",
             RegexOptions.None);
+
+        private readonly struct ResolvedStoryValue
+        {
+            internal ResolvedStoryValue(string value, StorySourceLine sourceLine)
+            {
+                Value = value ?? string.Empty;
+                SourceLine = sourceLine;
+            }
+
+            internal string Value { get; }
+            internal StorySourceLine SourceLine { get; }
+        }
 
         internal static StoryDependencyManifest Build(
             string prefix,
@@ -151,6 +163,7 @@ namespace Editor
                 episode.StoryPath);
             var dependencies = new List<StoryDependencyReference>();
             var cameras = new List<StoryCameraReference>();
+            var characterAssets = new List<StoryCharacterAssetReference>();
             var issues = new List<ContentValidationIssue>();
             if (!File.Exists(compiledPath))
             {
@@ -174,6 +187,7 @@ namespace Editor
                     new Novels.StoryCommands.Entity(),
                     dependencies,
                     cameras,
+                    characterAssets,
                     issues);
             }
             return CreateManifest();
@@ -181,6 +195,7 @@ namespace Editor
             StoryDependencyManifest CreateManifest() => new(
                 dependencies,
                 cameras,
+                characterAssets,
                 issues);
         }
 
@@ -191,17 +206,25 @@ namespace Editor
             Novels.StoryCommands.Entity parser,
             ICollection<StoryDependencyReference> dependencies,
             ICollection<StoryCameraReference> cameras,
+            ICollection<StoryCharacterAssetReference> characterAssets,
             ICollection<ContentValidationIssue> issues)
         {
             var variables = source.Lines
-                .Select(line => (line, match: _variable.Match(line.Text)))
+                .Select(line => (line, match: _variableValue.Match(line.Text)))
                 .Where(value => value.match.Success)
                 .GroupBy(
                     value => value.match.Groups["name"].Value,
                     StringComparer.Ordinal)
                 .ToDictionary(
                     group => group.Key,
-                    group => group.Last().match.Groups["value"].Value,
+                    group => group
+                        .Select(value => new ResolvedStoryValue(
+                            value.match.Groups["value"].Value.Trim(),
+                            value.line))
+                        .Where(value => value.Value.Length > 0)
+                        .GroupBy(value => value.Value, StringComparer.Ordinal)
+                        .Select(values => values.First())
+                        .ToArray(),
                     StringComparer.Ordinal);
 
             foreach (var sourceLine in source.Lines)
@@ -245,10 +268,9 @@ namespace Editor
                         episode,
                         issues);
                 }
-                else if (result.Command is Novels.StoryCommands.DialogueStoryCommand dialogue
-                    && IsVariableReference(dialogue.Data.Speaker))
+                else if (result.Command is Novels.StoryCommands.DialogueStoryCommand dialogue)
                 {
-                    AddSpeakerReference(dialogue, sourceLine);
+                    AddDialogueReferences(dialogue, sourceLine);
                 }
                 else if (result.Command is Novels.StoryCommands.CameraStoryCommand camera)
                 {
@@ -259,65 +281,107 @@ namespace Editor
                         sourceLine.Text));
                 }
 
-                void AddSpeakerReference(
+                void AddDialogueReferences(
                     Novels.StoryCommands.DialogueStoryCommand command,
                     StorySourceLine authoredLine)
                 {
-                    var reference = command.Data.Speaker.Trim();
-                    var key = reference.Substring(1, reference.Length - 2);
-                    if (!variables.TryGetValue(key, out var resolved)
-                        || string.IsNullOrWhiteSpace(resolved))
+                    if (!IsVariableReference(command.Data.Speaker.Trim()))
+                        return;
+                    var resolvedSpeakers = Resolve(
+                        command.Data.Speaker,
+                        variables,
+                        authoredLine);
+                    if (resolvedSpeakers.Count == 0)
                     {
                         AddUnresolvedIssue("speaker", authoredLine, episode, issues);
                         return;
                     }
-                    resolved = resolved.Trim();
-                    var role = Novels.StoryContracts.StorySpeakerRoleResolver.Resolve(
-                        resolved,
-                        command.Data.Presentation,
-                        mainCharacter);
-                    if (Novels.StoryContracts.StorySpeakerRoleResolver
-                            .RequiresCharacterAsset(role)
-                        && Novels.BubbleContracts.BubbleTriggers.Resolve(resolved)
-                            == Novels.BubbleContracts.BubblePresentationKind.Dialogue)
+                    foreach (var resolvedSpeaker in resolvedSpeakers)
                     {
-                        dependencies.Add(new StoryDependencyReference(
-                            StoryDependencyKind.Speaker,
-                            resolved,
-                            authoredLine.SourcePath,
-                            authoredLine.LineNumber,
-                            authoredLine.Text));
+                        var role = Novels.StoryContracts.StorySpeakerRoleResolver.Resolve(
+                            resolvedSpeaker.Value,
+                            command.Data.Presentation,
+                            mainCharacter);
+                        if (Novels.StoryContracts.StorySpeakerRoleResolver
+                                .RequiresCharacterAsset(role)
+                            && Novels.BubbleContracts.BubbleTriggers.Resolve(
+                                resolvedSpeaker.Value)
+                                == Novels.BubbleContracts.BubblePresentationKind.Dialogue)
+                        {
+                            dependencies.Add(new StoryDependencyReference(
+                                StoryDependencyKind.Speaker,
+                                resolvedSpeaker.Value,
+                                resolvedSpeaker.SourceLine.SourcePath,
+                                resolvedSpeaker.SourceLine.LineNumber,
+                                resolvedSpeaker.SourceLine.Text));
+                        }
+                        if (role != Novels.StoryContracts.StorySpeakerRole.Character
+                            && role != Novels.StoryContracts.StorySpeakerRole.MainCharacter)
+                        {
+                            continue;
+                        }
+                        foreach (var candidate in command.Data.Character.AssetCandidates)
+                        {
+                            var resolvedCandidates = Resolve(
+                                candidate,
+                                variables,
+                                authoredLine);
+                            if (resolvedCandidates.Count == 0)
+                            {
+                                AddUnresolvedIssue(
+                                    "character asset",
+                                    authoredLine,
+                                    episode,
+                                    issues);
+                                continue;
+                            }
+                            foreach (var resolvedCandidate in resolvedCandidates)
+                            {
+                                characterAssets.Add(new StoryCharacterAssetReference(
+                                    resolvedSpeaker.Value,
+                                    role,
+                                    resolvedCandidate.Value,
+                                    command.Data.Character.IsChild,
+                                    resolvedCandidate.SourceLine.SourcePath,
+                                    resolvedCandidate.SourceLine.LineNumber,
+                                    resolvedCandidate.SourceLine.Text));
+                            }
+                        }
                     }
                 }
             }
+        }
+
+        private static IReadOnlyList<ResolvedStoryValue> Resolve(
+            string value,
+            IReadOnlyDictionary<string, ResolvedStoryValue[]> variables,
+            StorySourceLine sourceLine)
+        {
+            var resolved = value?.Trim();
+            if (!IsVariableReference(resolved))
+            {
+                return string.IsNullOrWhiteSpace(resolved)
+                    ? Array.Empty<ResolvedStoryValue>()
+                    : new[] { new ResolvedStoryValue(resolved, sourceLine) };
+            }
+
+            var key = resolved.Substring(1, resolved.Length - 2);
+            return variables.TryGetValue(key, out var values)
+                ? values
+                : Array.Empty<ResolvedStoryValue>();
         }
 
         private static void AddResolvedReference(
             StoryDependencyKind kind,
             string value,
             StorySourceLine sourceLine,
-            IReadOnlyDictionary<string, string> variables,
+            IReadOnlyDictionary<string, ResolvedStoryValue[]> variables,
             ICollection<StoryDependencyReference> target,
             Novels.Content.EpisodeDefinition episode,
             ICollection<ContentValidationIssue> issues)
         {
-            var resolved = value?.Trim();
-            if (IsVariableReference(resolved))
-            {
-                var key = resolved.Substring(1, resolved.Length - 2);
-                if (!variables.TryGetValue(key, out resolved)
-                    || string.IsNullOrWhiteSpace(resolved))
-                {
-                    AddUnresolvedIssue(
-                        kind.ToString().ToLowerInvariant(),
-                        sourceLine,
-                        episode,
-                        issues);
-                    return;
-                }
-                resolved = resolved.Trim();
-            }
-            if (string.IsNullOrEmpty(resolved))
+            var resolvedValues = Resolve(value, variables, sourceLine);
+            if (resolvedValues.Count == 0)
             {
                 AddUnresolvedIssue(
                     kind.ToString().ToLowerInvariant(),
@@ -326,12 +390,15 @@ namespace Editor
                     issues);
                 return;
             }
-            target.Add(new StoryDependencyReference(
-                kind,
-                resolved,
-                sourceLine.SourcePath,
-                sourceLine.LineNumber,
-                sourceLine.Text));
+            foreach (var resolved in resolvedValues)
+            {
+                target.Add(new StoryDependencyReference(
+                    kind,
+                    resolved.Value,
+                    resolved.SourceLine.SourcePath,
+                    resolved.SourceLine.LineNumber,
+                    resolved.SourceLine.Text));
+            }
         }
 
         private static void AddUnresolvedIssue(
