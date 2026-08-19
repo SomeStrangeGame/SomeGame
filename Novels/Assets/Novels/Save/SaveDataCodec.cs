@@ -4,6 +4,17 @@ using System.Text;
 
 namespace Novels.Save
 {
+    internal sealed class UnsupportedSaveFormatException : Exception
+    {
+        internal UnsupportedSaveFormatException(byte version)
+            : base($"Unsupported save format version '{version}'.")
+        {
+            Version = version;
+        }
+
+        internal byte Version { get; }
+    }
+
     internal static class SaveDataCodec
     {
         private static readonly byte[] _magic = { 0x4E, 0x53, 0x56, 0x31 };
@@ -63,7 +74,7 @@ namespace Novels.Save
                 reader.ReadBytes(_magic.Length);
                 var version = reader.ReadByte();
                 if (version != _formatVersion)
-                    throw new InvalidDataException($"Unsupported save format version '{version}'.");
+                    throw new UnsupportedSaveFormatException(version);
 
                 var contentId = reader.ReadString();
                 var contentVersion = reader.ReadString();

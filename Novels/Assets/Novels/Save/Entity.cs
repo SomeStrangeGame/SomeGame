@@ -51,10 +51,10 @@ namespace Novels.Save
                 var decoded = SaveDataCodec.Decode(data);
                 if (!MatchesCurrentContent(decoded))
                 {
-                    _ctx.OnError?.Invoke(new Diagnostics.NovelError(
-                        Diagnostics.NovelErrorCodes.SaveContentMismatch,
-                        Diagnostics.NovelErrorSeverity.Warning,
-                        $"Save content '{decoded.ContentId}@{decoded.ContentVersion}' does not match current content '{_ctx.ContentId}@{_ctx.ContentVersion}'. Replay was skipped."));
+                    DiscardIncompatibleSave(
+                        $"Save content '{decoded.ContentId}@{decoded.ContentVersion}' "
+                        + $"does not match current content "
+                        + $"'{_ctx.ContentId}@{_ctx.ContentVersion}'.");
                     return;
                 }
 
@@ -63,6 +63,12 @@ namespace Novels.Save
             catch (FileNotFoundException)
             {
                 _ctx.OnLog?.Invoke((LogType.Log, "No save file"));
+            }
+            catch (UnsupportedSaveFormatException exception)
+            {
+                DiscardIncompatibleSave(
+                    $"Save format version '{exception.Version}' is not supported.",
+                    exception);
             }
             catch (Exception exception)
             {
@@ -73,6 +79,29 @@ namespace Novels.Save
                     exception: exception));
             }
             _initialDecisions = _save.ToArray();
+        }
+
+        private void DiscardIncompatibleSave(string reason, Exception cause = null)
+        {
+            try
+            {
+                _ctx.Delete(_ctx.SaveChoiceFileName);
+                _ctx.OnLog?.Invoke((
+                    LogType.Warning,
+                    $"{reason} The incompatible save was deleted. "
+                    + "A new game will be started."));
+            }
+            catch (Exception deleteException)
+            {
+                var exception = cause == null
+                    ? deleteException
+                    : new AggregateException(cause, deleteException);
+                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.SaveReadFailed,
+                    Diagnostics.NovelErrorSeverity.Recoverable,
+                    "Failed to delete an incompatible save file.",
+                    exception: exception));
+            }
         }
 
         public StoryContracts.StoryDecision? GetNextSavedDecision()

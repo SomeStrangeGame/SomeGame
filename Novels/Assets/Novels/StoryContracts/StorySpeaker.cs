@@ -10,7 +10,7 @@ namespace Novels.StoryContracts
             if (string.Equals(
                     speaker,
                     StorySpeakers.Narrator,
-                    System.StringComparison.OrdinalIgnoreCase)
+                    System.StringComparison.Ordinal)
                 || presentation == DialoguePresentation.Narrator)
             {
                 return StorySpeakerRole.Narrator;
@@ -18,7 +18,7 @@ namespace Novels.StoryContracts
             if (string.Equals(
                     speaker,
                     StorySpeakers.Wardrobe,
-                    System.StringComparison.OrdinalIgnoreCase)
+                    System.StringComparison.Ordinal)
                 || presentation == DialoguePresentation.Wardrobe)
             {
                 return StorySpeakerRole.Wardrobe;
@@ -26,7 +26,7 @@ namespace Novels.StoryContracts
             return string.Equals(
                     speaker,
                     mainCharacter,
-                    System.StringComparison.OrdinalIgnoreCase)
+                    System.StringComparison.Ordinal)
                 ? StorySpeakerRole.MainCharacter
                 : StorySpeakerRole.Character;
         }

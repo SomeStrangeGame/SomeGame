@@ -35,7 +35,9 @@ namespace Editor
             foreach (var audio in DistinctById(index.AudioReferences))
                 ValidateAudio(prefix, episode, audio, errors);
 
-            var reported = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var reported = new HashSet<string>(StringComparer.Ordinal);
+            var assetPaths = AssetDatabase.GetAllAssetPaths()
+                .ToLookup(path => path, StringComparer.OrdinalIgnoreCase);
             foreach (var background in DistinctById(index.BackgroundReferences))
             {
                 var assetPath = LocationPath(prefix, episode.Id, background.Id);
@@ -52,19 +54,66 @@ namespace Editor
                         episode.Id));
                 }
             }
-            foreach (var speaker in DistinctById(index.SpeakerReferences))
+            ValidateSpeakerCaseAmbiguity(episode, index.SpeakerReferences, errors);
+            foreach (var speaker in DistinctByExactId(index.SpeakerReferences))
             {
-                if (string.Equals(speaker.Id, "Wardrobe", StringComparison.OrdinalIgnoreCase)
-                    || string.Equals(speaker.Id, mainCharacter, StringComparison.OrdinalIgnoreCase))
+                var role = Novels.StoryContracts.StorySpeakerRoleResolver.Resolve(
+                    speaker.Id,
+                    Novels.StoryContracts.DialoguePresentation.Character,
+                    mainCharacter);
+                if (!Novels.StoryContracts.StorySpeakerRoleResolver
+                        .RequiresCharacterAsset(role))
+                {
                     continue;
+                }
                 var assetPath = CharacterBodyPath(
                     prefix,
                     episode.Id,
                     speaker.Id,
                     characterAssets.ViewRoot);
-                if (!string.IsNullOrEmpty(assetPath)
-                    && AssetDatabase.LoadAssetAtPath<Sprite>(assetPath) == null
+                if (string.IsNullOrEmpty(assetPath))
+                    continue;
+
+                var matchingPaths = assetPaths[assetPath]
+                    .Distinct(StringComparer.Ordinal)
+                    .ToArray();
+                var exactPath = matchingPaths.FirstOrDefault(path => string.Equals(
+                    path,
+                    assetPath,
+                    StringComparison.Ordinal));
+                if (exactPath == null
+                    && matchingPaths.Length == 1
                     && reported.Add(assetPath))
+                {
+                    errors.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.StoryCharacterCaseMismatch,
+                        $"Ink character '{speaker.Id}' does not match the asset path casing. "
+                        + $"Expected exactly: {matchingPaths[0]}. "
+                        + $"Referenced at {speaker.Location}.",
+                        assetPath,
+                        episode.ContentId,
+                        episode.Id));
+                    continue;
+                }
+                if (exactPath == null
+                    && matchingPaths.Length > 1
+                    && reported.Add(assetPath))
+                {
+                    errors.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.StoryCharacterCaseAmbiguous,
+                        $"Character asset path '{assetPath}' is ambiguous because these paths "
+                        + "differ only by casing: "
+                        + string.Join(", ", matchingPaths.Select(path => $"'{path}'"))
+                        + $". Referenced at {speaker.Location}.",
+                        assetPath,
+                        episode.ContentId,
+                        episode.Id));
+                    continue;
+                }
+                var sprite = exactPath == null
+                    ? null
+                    : AssetDatabase.LoadAssetAtPath<Sprite>(exactPath);
+                if (sprite == null && reported.Add(assetPath))
                 {
                     errors.Add(ContentValidationIssue.Error(
                         ContentValidationCodes.StoryCharacterMissing,
@@ -131,6 +180,41 @@ namespace Editor
             references
                 .GroupBy(reference => reference.Id, StringComparer.OrdinalIgnoreCase)
                 .Select(group => group.First());
+
+        private static IEnumerable<StoryDependencyReference> DistinctByExactId(
+            IEnumerable<StoryDependencyReference> references) =>
+            references
+                .GroupBy(reference => reference.Id, StringComparer.Ordinal)
+                .Select(group => group.First());
+
+        private static void ValidateSpeakerCaseAmbiguity(
+            Novels.Content.EpisodeDefinition episode,
+            IEnumerable<StoryDependencyReference> references,
+            ContentValidationReport errors)
+        {
+            foreach (var group in references.GroupBy(
+                         reference => reference.Id,
+                         StringComparer.OrdinalIgnoreCase))
+            {
+                var variants = group
+                    .Select(reference => reference.Id)
+                    .Distinct(StringComparer.Ordinal)
+                    .ToArray();
+                if (variants.Length < 2)
+                    continue;
+
+                errors.Add(ContentValidationIssue.Error(
+                    ContentValidationCodes.StoryCharacterCaseAmbiguous,
+                    "Ink refers to one character with different casing: "
+                    + string.Join(", ", variants.Select(value => $"'{value}'"))
+                    + ". Character names and asset paths must match exactly. "
+                    + "References: "
+                    + string.Join(", ", group.Select(reference => reference.Location)),
+                    group.First().SourcePath,
+                    episode.ContentId,
+                    episode.Id));
+            }
+        }
 
         private static string LocationPath(
             string prefix,

@@ -38,7 +38,7 @@ namespace Novels.ContentAddressing
             IsMissing(assetName)
                 ? string.Empty
                 : $"{EpisodeRoot(prefix, episodeId)}/Location/Locations/"
-                    + $"{NormalizeAssetName(assetName)}.png";
+                    + $"{assetName}.png";
 
         public static string CharacterPrefab(
             string prefix,
@@ -112,12 +112,6 @@ namespace Novels.ContentAddressing
                 ? string.Empty
                 : $"{ContentPackageConvention.ContentRoot(prefix)}/Application/Localization/{assetName}.asset";
 
-        public static string NormalizeAssetName(string value) =>
-            IsMissing(value)
-                ? string.Empty
-                : char.ToUpperInvariant(value[0])
-                    + value.Substring(1).ToLowerInvariant();
-
         private static string EpisodeRoot(string prefix, string episodeId) =>
             ContentPackageConvention.EpisodeRoot(prefix, episodeId);
 
@@ -133,7 +127,7 @@ namespace Novels.ContentAddressing
             Func<string, string> build) =>
             IsMissing(name) || IsMissing(candidate)
                 ? string.Empty
-                : build(NormalizeAssetName(candidate));
+                : build(candidate);
 
         private static bool IsMissing(string value) => string.IsNullOrEmpty(value);
     }
