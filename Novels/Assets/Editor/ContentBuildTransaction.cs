@@ -17,6 +17,7 @@ namespace Editor
             {
                 var project = ContentProjectIndex.BuildOrThrow();
                 NovelContentValidator.ValidateOrThrow(project);
+                StorySourceMapBuilder.Build(project);
                 var snapshot = ContentBuildSnapshot.Create(project);
                 var results = AssetBundleBuildPipeline.Build(
                     profile,

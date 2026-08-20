@@ -20,6 +20,9 @@ namespace Novels.ContentAddressing
         public string NovelText(string path) =>
             ContentAddressConvention.NovelText(ContentId, path);
 
+        public string NovelSourceMap(string path) =>
+            ContentAddressConvention.NovelSourceMap(ContentId, path);
+
         public string MainLoadingPrefab(string assetName) =>
             ContentAddressConvention.MainLoadingPrefab(assetName);
 

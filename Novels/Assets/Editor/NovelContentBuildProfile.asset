@@ -29,23 +29,28 @@ MonoBehaviour:
   _largeWavWarningBytes: 16777216
   _enforceLargeWavPolicy: 1
   _allowedLargeWavPaths:
-  - NovelsAudio/TZM_1/Cheating.wav
-  - NovelsAudio/TZM_1/Club Music.wav
-  - NovelsAudio/TZM_1/Street classical.wav
-  - NovelsAudio/TZM_1/Street fun.wav
-  - NovelsAudio/TZM_1/Women battle.wav
-  - NovelsAudio/TZM_1/bazaar_ZDM.wav
-  - NovelsAudio/TZM_1/danger_ZDM.wav
-  - NovelsAudio/TZM_1/drama_ZDM.wav
-  - NovelsAudio/TZM_1/eastern_ZDM.wav
-  - NovelsAudio/TZM_1/hor_theme_ZDM.wav
-  - NovelsAudio/TZM_1/intrigue_ZDM.wav
-  - NovelsAudio/TZM_1/joser_theme_ZDM.wav
-  - NovelsAudio/TZM_1/none2.wav
-  - NovelsAudio/TZM_1/oppressive_ZDM.wav
-  - NovelsAudio/TZM_1/seth_theme_ZDM.wav
-  - NovelsAudio/TZM_1/загадочная.wav
-  - NovelsAudio/TZM_1/основная.WAV
-  - NovelsAudio/TZM_1/позитивная.wav
-  - NovelsAudio/TZM_1/романтичная.wav
-  - NovelsAudio/TZM_1/спокойная.wav
+  - NovelsAudio/tzm_1/cheating.wav
+  - NovelsAudio/tzm_1/club music.wav
+  - NovelsAudio/tzm_1/street classical.wav
+  - NovelsAudio/tzm_1/street fun.wav
+  - NovelsAudio/tzm_1/women battle.wav
+  - NovelsAudio/tzm_1/bazaar_zdm.wav
+  - NovelsAudio/tzm_1/danger_zdm.wav
+  - NovelsAudio/tzm_1/drama_zdm.wav
+  - NovelsAudio/tzm_1/eastern_zdm.wav
+  - NovelsAudio/tzm_1/hor_theme_zdm.wav
+  - NovelsAudio/tzm_1/intrigue_zdm.wav
+  - NovelsAudio/tzm_1/joser_theme_zdm.wav
+  - NovelsAudio/tzm_1/none2.wav
+  - NovelsAudio/tzm_1/oppressive_zdm.wav
+  - NovelsAudio/tzm_1/seth_theme_zdm.wav
+  - NovelsAudio/tzm_1/загадочная.wav
+  - NovelsAudio/tzm_1/основная.wav
+  - NovelsAudio/tzm_1/позитивная.wav
+  - NovelsAudio/tzm_1/романтичная.wav
+  - NovelsAudio/tzm_1/спокойная.wav
+  - NovelsAudio/tzm/загадочная.wav
+  - NovelsAudio/tzm/основная.wav
+  - NovelsAudio/tzm/позитивная.wav
+  - NovelsAudio/tzm/романтичная.wav
+  - NovelsAudio/tzm/спокойная.wav

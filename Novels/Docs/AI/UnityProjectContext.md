@@ -44,7 +44,7 @@
 - Only enabled build scene: `Assets/Novels/Novels.unity`.
 - Scene `EntryPoint.OnEnable()` initializes UniTask's player loop, caps FPS at 30, creates the concrete `IContentSource`, captures `Application.persistentDataPath` on the main thread, constructs `ApplicationRuntime`, and starts an exception-observing session wrapper.
 - `ApplicationRuntime` owns the shared bundle service, local bootstrap/retry UI, remote catalog, story selection, and the currently active novel runtime. `Entity.Init()` owns one selected story and creates `NovelBootstrapProcess`, which coordinates application preparation, New Game/Continue selection, episode preparation, and episode execution through delegates.
-- The scene contains no concrete story ID. Startup loads `NovelCatalog.asset` and its selection screen from `novels_catalog`; `Catalog.Entity/View` presents localized cards and returns a selected catalog entry. The entry supplies the story bundle and definition address, currently `novels_content_tzm_1` and `Assets/RemoteAssets/Content/TZM_1/Definition/TZM_1.asset`. The loaded definition then presents an explicit episode selection; each episode supplies one episode-lifetime bundle.
+- The scene contains no concrete story ID. Startup loads `NovelCatalog.asset` and its selection screen from `novels_catalog`; `Catalog.Entity/View` presents cards and returns a selected catalog entry. The entry supplies the story bundle and definition address, currently `novels_content_tzm_1` and `Assets/RemoteAssets/Content/tzm_1/Definition/tzm_1.asset`. The loaded definition then presents an explicit episode selection; each episode supplies one episode-lifetime bundle.
 - `StoryCommandParser` converts legacy colon-delimited Ink lines into typed commands; `NovelProcess` maps them to queued actions for location/cut-scene, audio, camera, waits, notifications, character presentation, dialogue, and choices.
 
 ## Architecture And Conventions
@@ -201,8 +201,8 @@
 
 ## Architecture wave completed on 2026-08-17 (story content hierarchy)
 
-- All TZM_1 authoring assets now live under `Assets/RemoteAssets/Content/TZM_1`: `Definition`, story-level `Application`, and episode-level `Episodes/s01e01` subtrees make lifetime ownership visible in the filesystem.
-- AssetBundle labels are assigned only at ownership boundaries. `Content/TZM_1` produces `novels_content_tzm_1`; `Content/TZM_1/Episodes/s01e01` overrides its parent with `novels_episode_tzm_1_s01e01`. Descendant folders no longer carry feature-specific labels.
+- All TZM_1 authoring assets now live under `Assets/RemoteAssets/Content/tzm_1`: `Definition`, story-level `Application`, and episode-level `Episodes/s01e01` subtrees make lifetime ownership visible in the filesystem.
+- AssetBundle labels are assigned only at ownership boundaries. `Content/tzm_1` produces `novels_content_tzm_1`; `Content/tzm_1/Episodes/s01e01` overrides its parent with `novels_episode_tzm_1_s01e01`. Descendant folders no longer carry feature-specific labels.
 - `NovelDefinition` carries one story bundle name and `EpisodeDefinition` carries one episode bundle name. Setting and localization load from the story bundle; loading, bubble, character, location, and notification assets load from the episode bundle.
 - `ContentAddressConvention` is the single source for the new content-rooted addresses. `ContentAddresses`, character sprite resolution, catalog indexing, and Editor reference validation use the same convention and include the episode ID where required.
 - The bundle topology was reduced from ten bundles to four: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`. External Ink/audio/video delivery groups remain unchanged.

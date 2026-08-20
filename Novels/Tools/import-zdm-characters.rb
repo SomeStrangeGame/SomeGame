@@ -88,7 +88,7 @@ end)
 project_root = File.expand_path(ARGV.fetch(1, File.join(__dir__, "..")))
 target_root = File.join(
   project_root,
-  "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters"
+  "Assets/RemoteAssets/Content/zdm/Shared/Character/Characters"
 )
 
 abort "Source directory does not exist: #{source_root}" unless Dir.exist?(source_root)
@@ -118,7 +118,7 @@ SOURCE_CHARACTERS.each do |target_name, definition|
 
   body = source_entry(source_character, definition.fetch(:body))
   abort "Character body does not exist: #{definition.fetch(:body)}" unless body
-  view_root = File.join(target_root, target_name, "View")
+  view_root = File.join(target_root, normalized(target_name).downcase, "View")
   copy(body, File.join(view_root, "Main.png"), copied)
   Array(definition[:aliases]).each do |name|
     copy(body, File.join(view_root, "#{name}.png"), copied)

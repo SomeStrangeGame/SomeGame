@@ -25,6 +25,7 @@ namespace Novels
             internal Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
             internal Bundles.IContentSource ContentSource;
+            internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
         private readonly Ctx _ctx;
@@ -133,6 +134,7 @@ namespace Novels
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _ctx.OnLog,
                 OnError = _ctx.OnError,
+                OnStorySourceChanged = _ctx.OnStorySourceChanged,
             });
             _activeNovel.Replace(novel);
             try
@@ -167,6 +169,7 @@ namespace Novels
             }
             finally
             {
+                _ctx.OnStorySourceChanged?.Invoke(default);
                 _activeNovel.Clear(novel);
             }
         }

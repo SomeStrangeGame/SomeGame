@@ -10,7 +10,7 @@ project_root = File.expand_path(ARGV.fetch(1, File.join(__dir__, "..")))
 source_root = File.expand_path(source_root)
 target_root = File.join(
   project_root,
-  "Assets/RemoteAssets/Content/ZDM/Shared/Character/Characters/MainCharacter"
+  "Assets/RemoteAssets/Content/zdm/Shared/Character/Characters/maincharacter"
 )
 
 abort "Source directory does not exist: #{source_root}" unless Dir.exist?(source_root)

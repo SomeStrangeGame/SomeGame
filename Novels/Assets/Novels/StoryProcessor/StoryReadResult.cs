@@ -12,15 +12,18 @@ namespace Novels.StoryProcessor
         public readonly StoryReadStatus Status;
         public readonly string Source;
         public readonly StoryContracts.StoryChoice[] Choices;
+        public readonly StorySourceLocation SourceLocation;
 
         public StoryReadResult(
             StoryReadStatus status,
             string source,
-            StoryContracts.StoryChoice[] choices)
+            StoryContracts.StoryChoice[] choices,
+            StorySourceLocation sourceLocation = default)
         {
             Status = status;
             Source = source;
             Choices = choices;
+            SourceLocation = sourceLocation;
         }
     }
 }

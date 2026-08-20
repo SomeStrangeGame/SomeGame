@@ -224,9 +224,15 @@ namespace Novels.StoryCommands
                 action = StoryContracts.StoryCameraAction.FadeIn;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.LeftRight))
                 action = StoryContracts.StoryCameraAction.PanLeftToRight;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.LeftRightRussian))
+                action = StoryContracts.StoryCameraAction.PanLeftToRight;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.RightLeft))
                 action = StoryContracts.StoryCameraAction.PanRightToLeft;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.RightLeftRussian))
+                action = StoryContracts.StoryCameraAction.PanRightToLeft;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.ToCenter))
+                action = StoryContracts.StoryCameraAction.MoveToCenter;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToCenterRussian))
                 action = StoryContracts.StoryCameraAction.MoveToCenter;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.ToLeft))
                 action = StoryContracts.StoryCameraAction.MoveToLeft;
@@ -237,6 +243,8 @@ namespace Novels.StoryCommands
             else if (IsArgument(
                          value,
                          StoryContracts.StoryCameraActions.MoveToRightRussian))
+                action = StoryContracts.StoryCameraAction.MoveToRight;
+            else if (IsArgument(value, StoryContracts.StoryArguments.PositionRight))
                 action = StoryContracts.StoryCameraAction.MoveToRight;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.Shaking))
                 action = StoryContracts.StoryCameraAction.Shake;
@@ -253,6 +261,11 @@ namespace Novels.StoryCommands
                 action = StoryContracts.StoryCameraAction.Injury;
             else if (IsArgument(value, StoryContracts.StoryCameraActions.Splashes))
                 action = StoryContracts.StoryCameraAction.Splashes;
+            else if (IsArgument(value, StoryContracts.StoryCameraActions.SplashesRussian)
+                || IsArgument(value, StoryContracts.StoryCameraActions.WavesRussian))
+            {
+                action = StoryContracts.StoryCameraAction.Splashes;
+            }
             else if (IsArgument(
                          value,
                          StoryContracts.StoryCameraActions.WhiteFlashRussian)

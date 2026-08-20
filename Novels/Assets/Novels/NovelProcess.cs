@@ -34,6 +34,7 @@ namespace Novels
             internal CancellationToken CancellationToken;
 
             internal Action<Diagnostics.NovelError> OnError;
+            internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
         private Ctx _ctx;
@@ -52,6 +53,7 @@ namespace Novels
                 await UniTask.Yield(_ctx.CancellationToken);
 
                 var readResult = _ctx.ReadNext();
+                _ctx.OnStorySourceChanged?.Invoke(readResult.SourceLocation);
                 if (readResult.Status == StoryProcessor.StoryReadStatus.Completed)
                 {
                     if (_ctx.CompleteQueue(out var finalQueue))

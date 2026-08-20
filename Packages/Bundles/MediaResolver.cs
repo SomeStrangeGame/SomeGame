@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using Cysharp.Threading.Tasks;
 
 namespace Bundles
@@ -26,7 +27,7 @@ namespace Bundles
             _session = session ?? throw new ArgumentNullException(nameof(session));
             if (string.IsNullOrWhiteSpace(prefix))
                 throw new ArgumentException("Media prefix is required.", nameof(prefix));
-            _prefix = prefix;
+            _prefix = Canonicalize(prefix);
             _videoDeliveryGroups = new HashSet<string>(
                 (videoDeliveryGroups ?? Array.Empty<string>())
                     .Where(value => !string.IsNullOrWhiteSpace(value)),
@@ -40,14 +41,16 @@ namespace Bundles
             _manifest = manifest ?? throw new ArgumentNullException(nameof(manifest));
             _resolveFileUrl = resolveFileUrl
                 ?? throw new ArgumentNullException(nameof(resolveFileUrl));
-            (_audioByName, _ambiguousAudioNames) = BuildAudioIndex(session.Release, prefix);
+            (_audioByName, _ambiguousAudioNames) = BuildAudioIndex(
+                session.Release,
+                _prefix);
         }
 
         internal async UniTask<string> ResolveVideoUrl(string assetName)
         {
             if (string.IsNullOrWhiteSpace(assetName))
                 return null;
-            var path = $"NovelsVideos/{_prefix}/{assetName}"
+            var path = $"NovelsVideos/{_prefix}/{Canonicalize(assetName)}"
                 + MediaFileConvention.VideoExtension;
             var descriptor = _session.FindFile(path);
             if (descriptor == null
@@ -63,7 +66,7 @@ namespace Bundles
             if (_manifest.IsSilentAudio(assetName))
                 return null;
 
-            var normalized = assetName.Trim();
+            var normalized = Canonicalize(assetName);
             if (!string.Equals(Path.GetFileName(normalized), normalized, StringComparison.Ordinal)
                 || Path.GetExtension(normalized).Length > 0)
             {
@@ -110,5 +113,11 @@ namespace Bundles
             }
             return (files, ambiguous);
         }
+
+        private static string Canonicalize(string value) =>
+            (value ?? string.Empty)
+                .Normalize(NormalizationForm.FormC)
+                .Trim()
+                .ToLowerInvariant();
     }
 }

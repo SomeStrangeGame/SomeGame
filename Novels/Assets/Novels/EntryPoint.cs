@@ -13,6 +13,7 @@ namespace Novels
 
         private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
+        private StorySourceOverlay _storySourceOverlay;
 
         private void OnEnable()
         {
@@ -22,6 +23,8 @@ namespace Novels
                 PlayerLoopHelper.Initialize(ref playerLoop);
                 var runtimeTuning = NovelRuntimeSettings.Load();
                 Application.targetFrameRate = runtimeTuning.TargetFrameRate;
+                _storySourceOverlay = GetComponent<StorySourceOverlay>()
+                    ?? gameObject.AddComponent<StorySourceOverlay>();
 
                 _sessionCancellation = new CancellationTokenSource();
                 var environment = new ApplicationEnvironment(
@@ -43,6 +46,7 @@ namespace Novels
                             logs.Log("[Novels]", data);
                     },
                     OnError = ReportError,
+                    OnStorySourceChanged = _storySourceOverlay.Show,
                 });
                 Run(_runtime, _sessionCancellation.Token).Forget();
             }
@@ -117,6 +121,7 @@ namespace Novels
                 _sessionCancellation?.Dispose();
                 _sessionCancellation = null;
                 _runtime = null;
+                _storySourceOverlay?.Show(default);
             }
         }
 

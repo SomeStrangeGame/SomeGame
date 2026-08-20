@@ -72,7 +72,7 @@ namespace Novels.ContentAddressing
                         parameterName);
                 }
             }
-            return result;
+            return result.ToLowerInvariant();
         }
     }
 }

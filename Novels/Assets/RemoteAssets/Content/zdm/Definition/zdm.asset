@@ -1,0 +1,95 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: zdm
+  m_EditorClassIdentifier: 
+  _id: zdm
+  _mainCharacter: "\u041D\u0443\u0440"
+  _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
+  _episodes:
+  - _id: s01e01
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 1"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e01.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e02
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 2"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e02.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e03
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 3"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e03.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e04
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 4"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e04.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e05
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 5"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e05.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e06
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 6"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e06.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e07
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 7"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e07.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e08
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 8"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMs01e08.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e09
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 9"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMS01e09.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s01e10
+    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 10"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+    _sourcePath: ZDMS01e10.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+  - _id: s02e01
+    _title: "\u0421\u0435\u0437\u043E\u043D 2, \u044D\u043F\u0438\u0437\u043E\u0434 1"
+    _storyPath: ZDM.ink.json
+    _contentVersion: 1
+    _endMarker: ""
+    _sourcePath: ZDMS02e01.ink
+    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]

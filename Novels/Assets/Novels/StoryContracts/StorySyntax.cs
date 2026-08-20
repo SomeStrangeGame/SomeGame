@@ -90,10 +90,15 @@ namespace Novels.StoryContracts
         public const string Injury = "injury";
         public const string Splashes = "splashes";
         public const string FadeInRussian = "Затемнение";
+        public const string LeftRightRussian = "слева направо";
+        public const string RightLeftRussian = "справа налево";
+        public const string ToCenterRussian = "сместить в центр";
         public const string MoveToRightRussian = "сместить вправо";
         public const string ShakingRussian = "Тряска";
         public const string ShakingScreenRussian = "Тряска экрана";
         public const string InjuryRussian = "Ранение";
+        public const string SplashesRussian = "брызги";
+        public const string WavesRussian = "волны";
         public const string WhiteFlashRussian = "Белая вспышка";
         public const string FlashRussian = "Вспышка";
     }

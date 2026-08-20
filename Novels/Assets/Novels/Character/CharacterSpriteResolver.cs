@@ -56,6 +56,7 @@ namespace Novels.Character
                 hair = mainCharacterHair;
             }
             name ??= string.Empty;
+            name = ContentAddressing.TechnicalAssetIdConvention.Canonicalize(name);
             return _sprites.Load(
                 name,
                 view,

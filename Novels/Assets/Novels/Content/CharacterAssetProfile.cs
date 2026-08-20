@@ -8,13 +8,13 @@ namespace Novels.Content
 
         public static CharacterAssetProfile Default { get; } = new();
 
-        public string MainCharacterAssetId => "MainCharacter";
+        public string MainCharacterAssetId => "maincharacter";
         public string ViewRoot => "View";
         public string ChildView => "Child";
         public string BackLayer => "Back";
         public string MiddleLayer => "Middle";
         public string FrontLayer => "Front";
-        public string DefaultHairColor => "Блонд";
+        public string DefaultHairColor => "блонд";
 
         public string ViewPath(string view) =>
             string.IsNullOrWhiteSpace(view) ? ViewRoot : $"{ViewRoot}/{view}";

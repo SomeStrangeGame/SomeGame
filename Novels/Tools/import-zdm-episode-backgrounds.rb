@@ -2,7 +2,7 @@
 
 require "fileutils"
 
-CONTENT_ID = "ZDM"
+CONTENT_ID = "zdm"
 EPISODES_SEGMENT = "Episodes"
 STORY_CONTENT_ROOT = "Assets/StreamingAssets/NovelTexts"
 REMOTE_CONTENT_ROOT = "Assets/RemoteAssets/Content"

@@ -186,8 +186,22 @@ namespace Editor
             var source = StorySourceGraph.Load(sourcePath, episode, issues);
             if (source.Lines.Count > 0)
             {
+                var variableSource = source;
+                var rootSourcePath = StoryFileConvention.GetSourcePath(compiledPath);
+                if (!string.Equals(
+                        Path.GetFullPath(sourcePath),
+                        Path.GetFullPath(rootSourcePath),
+                        StringComparison.OrdinalIgnoreCase)
+                    && File.Exists(rootSourcePath))
+                {
+                    variableSource = StorySourceGraph.Load(
+                        rootSourcePath,
+                        episode,
+                        new List<ContentValidationIssue>());
+                }
                 AnalyzeSourceStory(
                     source,
+                    variableSource,
                     episode,
                     mainCharacter,
                     new Novels.StoryCommands.Entity(),
@@ -207,6 +221,7 @@ namespace Editor
 
         private static void AnalyzeSourceStory(
             StorySourceGraph source,
+            StorySourceGraph variableSource,
             Novels.Content.EpisodeDefinition episode,
             string mainCharacter,
             Novels.StoryCommands.Entity parser,
@@ -215,7 +230,7 @@ namespace Editor
             ICollection<StoryCharacterAssetReference> characterAssets,
             ICollection<ContentValidationIssue> issues)
         {
-            var variables = source.Lines
+            var variables = variableSource.Lines
                 .Select(line => (line, match: _variableValue.Match(line.Text)))
                 .Where(value => value.match.Success)
                 .GroupBy(

@@ -95,7 +95,11 @@ namespace Editor
             StoryDependencyManifest references)
         {
             var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
-            yield return $"NovelTexts/{prefix}/{normalizedStoryPath}";
+            var canonicalPrefix = Novels.ContentAddressing.TechnicalAssetIdConvention
+                .Canonicalize(prefix);
+            yield return $"NovelTexts/{canonicalPrefix}/{normalizedStoryPath}";
+            yield return $"NovelTexts/{canonicalPrefix}/{normalizedStoryPath}"
+                + StorySourceMapBuilder.FileSuffix;
 
             foreach (var audioId in references.AudioReferences
                          .Select(reference => reference.Id)
@@ -115,7 +119,9 @@ namespace Editor
             {
                 if (Novels.StoryContracts.StoryBackgroundAssets.IsSolidBlack(backgroundId))
                     continue;
-                yield return $"NovelsVideos/{prefix}/{backgroundId}"
+                var canonicalBackground = Novels.ContentAddressing.TechnicalAssetIdConvention
+                    .Canonicalize(backgroundId);
+                yield return $"NovelsVideos/{canonicalPrefix}/{canonicalBackground}"
                     + Bundles.MediaFileConvention.VideoExtension;
             }
         }
