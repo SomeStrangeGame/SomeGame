@@ -5,7 +5,7 @@ namespace Novels.ContentAddressing
 {
     public static class ContentAssetNames
     {
-        public const string Screen = "Screen";
+        public const string Screen = "screen";
     }
 
     public static class ContentPackageConvention
@@ -17,15 +17,15 @@ namespace Novels.ContentAddressing
         private const string _remoteAssetsRoot = "Assets/RemoteAssets";
 
         public static string ContentRoot(string contentId) =>
-            $"{_remoteAssetsRoot}/Content/{RequireId(contentId, nameof(contentId))}";
+            $"{_remoteAssetsRoot}/content/{RequireId(contentId, nameof(contentId))}";
 
         public static string EpisodeRoot(string contentId, string episodeId) =>
-            $"{ContentRoot(contentId)}/Episodes/{RequireId(episodeId, nameof(episodeId))}";
+            $"{ContentRoot(contentId)}/episodes/{RequireId(episodeId, nameof(episodeId))}";
 
         public static string DefinitionAsset(string contentId)
         {
             var id = RequireId(contentId, nameof(contentId));
-            return $"{ContentRoot(id)}/Definition/{id}.asset";
+            return $"{ContentRoot(id)}/definition/{id}.asset";
         }
 
         public static string ContentBundle(string contentId) =>

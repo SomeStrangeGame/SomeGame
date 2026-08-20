@@ -10,13 +10,19 @@ content_filter = if (index = ARGV.index("--id"))
                    abort "--id requires a value" if canonical_argument.nil?
                    canonical_argument.unicode_normalize(:nfc).strip.downcase
                  end
-content_root = File.join(project_root, "Assets/RemoteAssets/Content")
 streaming_root = File.join(project_root, "Assets/StreamingAssets")
 $planned_moves = []
 
 def canonical(value)
   value.unicode_normalize(:nfc).strip.downcase
 end
+
+remote_assets_root = File.join(project_root, "Assets/RemoteAssets")
+content_root_name = Dir.children(remote_assets_root).find do |name|
+  !name.end_with?(".meta") && canonical(name) == "content"
+end
+abort "Remote content root does not exist" if content_root_name.nil?
+content_root = File.join(remote_assets_root, content_root_name)
 
 def collision_groups(directory, entries)
   entries.group_by { |entry| canonical(File.basename(entry)) }
@@ -81,8 +87,12 @@ content_directories.select! do |path|
   content_filter.nil? || canonical(File.basename(path)) == content_filter
 end
 
-streaming_directories = %w[NovelTexts NovelsAudio NovelsVideos].flat_map do |kind|
-  root = File.join(streaming_root, kind)
+streaming_directories = %w[noveltexts novelsaudio novelsvideos].flat_map do |kind|
+  root_name = Dir.children(streaming_root).find do |name|
+    !name.end_with?(".meta") && canonical(name) == kind
+  end
+  next [] if root_name.nil?
+  root = File.join(streaming_root, root_name)
   next [] unless Dir.exist?(root)
   Dir.children(root)
     .reject { |name| name.end_with?(".meta") }
@@ -100,43 +110,26 @@ directories_to_check.concat(
   content_directories.flat_map { |root| Dir.glob(File.join(root, "**", "*")) }
     .select { |path| File.directory?(path) }
 )
+directories_to_check.concat(
+  streaming_directories.flat_map { |root| Dir.glob(File.join(root, "**", "*")) }
+    .select { |path| File.directory?(path) }
+)
 assert_no_collisions!(directories_to_check)
 
-# Dynamic character path segments. Unity schema folders deliberately keep their casing.
-content_directories.each do |root|
-  Dir.glob(File.join(root, "{Shared,Episodes/**}/Character/Characters")).each do |characters|
-    rename_children(characters)
-    Dir.children(characters).reject { |name| name.end_with?(".meta") }.each do |character|
-      character_root = File.join(characters, character)
-      next unless File.directory?(character_root)
-
-      view_root = File.join(character_root, "View")
-      rename_children(view_root, fixed: %w[Child Emotions Main.png])
-      Dir.glob(File.join(view_root, "**", "Emotions")).each { |path| rename_children(path) }
-      rename_children(File.join(character_root, "Clothes"))
-      Dir.glob(File.join(character_root, "Hairs", "{Back,Front}")).each do |layer|
-        rename_children(layer)
-        Dir.children(layer).reject { |name| name.end_with?(".meta") }.each do |style|
-          rename_children(File.join(layer, style))
-        end
-      end
-      Dir.glob(File.join(character_root, "Accessories", "{Back,Middle,Front}"))
-        .each { |layer| rename_children(layer) }
-    end
+def rename_tree(directory)
+  return unless Dir.exist?(directory)
+  Dir.children(directory).sort.each do |name|
+    next if name.end_with?(".meta")
+    child = File.join(directory, name)
+    rename_tree(child) if File.directory?(child)
   end
-
-  Dir.glob(File.join(root, "Episodes", "*", "Location", "Locations"))
-    .each { |locations| rename_children(locations) }
-
-  definition_root = File.join(root, "Definition")
-  rename_children(definition_root)
+  rename_children(directory)
 end
 
-# Media names are technical IDs. Ink source/compiled story filenames stay authored.
-streaming_directories.each do |root|
-  parent = File.basename(File.dirname(root))
-  rename_children(root) unless parent == "NovelTexts"
-end
+# Everything below a content/media namespace is a technical address. Player-facing
+# text remains authored in Ink and is not derived from these file-system names.
+content_directories.each { |root| rename_tree(root) }
+streaming_directories.each { |root| rename_tree(root) }
 
 # Content and media namespaces are technical IDs.
 content_directories.each do |root|
@@ -145,6 +138,19 @@ end
 streaming_directories.each do |root|
   move_with_meta(root, File.join(File.dirname(root), canonical(File.basename(root))))
 end
+streaming_directories.map { |root| File.dirname(root) }.uniq.each do |root|
+  move_with_meta(root, File.join(File.dirname(root), canonical(File.basename(root))))
+end
+%w[catalog loading].each do |name|
+  actual_name = Dir.children(remote_assets_root).find do |entry|
+    !entry.end_with?(".meta") && canonical(entry) == name
+  end
+  next if actual_name.nil?
+  root = File.join(remote_assets_root, actual_name)
+  rename_tree(root)
+  move_with_meta(root, File.join(remote_assets_root, name))
+end
+move_with_meta(content_root, File.join(remote_assets_root, "content"))
 
 if $check_only
   puts "Dry run: #{$planned_moves.length} paths would be renamed."

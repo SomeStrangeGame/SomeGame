@@ -91,7 +91,7 @@ namespace Editor
                     Novels.ContentAddressing.ContentPackageConvention.EpisodeRoot(
                         contentId,
                         episodeId);
-                var storyRoot = $"Assets/StreamingAssets/NovelTexts/{contentId}";
+                var storyRoot = $"Assets/StreamingAssets/noveltexts/{contentId}";
                 if (AssetDatabase.IsValidFolder(storyRoot)
                     || Directory.Exists(Path.GetFullPath(storyRoot)))
                 {
@@ -100,16 +100,16 @@ namespace Editor
                 }
 
                 catalogBackup = EditorJsonUtility.ToJson(catalog);
-                EnsureFolder($"{contentRoot}/Definition");
+                EnsureFolder($"{contentRoot}/definition");
                 createdContentRoot = contentRoot;
-                EnsureFolder($"{contentRoot}/Application/Setting");
+                EnsureFolder($"{contentRoot}/application/setting");
                 foreach (var feature in new[]
                          {
-                             "Loading",
-                             "Bubble",
-                             "Character",
-                             "Location",
-                             "Notification",
+                             "loading",
+                             "bubble",
+                             "character",
+                             "location",
+                             "notification",
                          })
                 {
                     EnsureFolder($"{episodeRoot}/{feature}");

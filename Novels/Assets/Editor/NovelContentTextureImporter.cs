@@ -5,9 +5,9 @@ namespace Editor
 {
     internal sealed class NovelContentTextureImporter : AssetPostprocessor
     {
-        private const string _contentRoot = "Assets/RemoteAssets/Content/";
-        private const string _locationSegment = "/Location/Locations/";
-        private const string _characterSegment = "/Character/Characters/";
+        private const string _contentRoot = "Assets/RemoteAssets/content/";
+        private const string _locationSegment = "/location/locations/";
+        private const string _characterSegment = "/character/characters/";
 
         public override uint GetVersion() => 2;
 

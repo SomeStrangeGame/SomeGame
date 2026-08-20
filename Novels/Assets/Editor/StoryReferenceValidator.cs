@@ -370,9 +370,9 @@ namespace Editor
             AssetPathIndex assetPaths)
         {
             var episodeRoot = $"{Novels.ContentAddressing.ContentPackageConvention.EpisodeRoot(prefix, episodeId)}"
-                + $"/Character/Characters/{character}/{profile.ViewRoot}/";
+                + $"/character/characters/{character}/{profile.ViewRoot}/";
             var sharedRoot = $"{Novels.ContentAddressing.ContentPackageConvention.ContentRoot(prefix)}"
-                + $"/Shared/Character/Characters/{character}/{profile.ViewRoot}/";
+                + $"/shared/character/characters/{character}/{profile.ViewRoot}/";
             return assetPaths.AllPaths
                 .Select(path => path.StartsWith(episodeRoot, StringComparison.Ordinal)
                     ? path.Substring(episodeRoot.Length)
@@ -384,8 +384,8 @@ namespace Editor
                 .Where(parts => isChild
                     ? parts.Length == 3
                         && parts[1] == profile.ChildView
-                        && parts[2] == "Main.png"
-                    : parts.Length == 2 && parts[1] == "Main.png")
+                        && parts[2] == "main.png"
+                    : parts.Length == 2 && parts[1] == "main.png")
                 .Select(parts => isChild
                     ? $"{profile.ViewRoot}/{parts[0]}/{profile.ChildView}"
                     : $"{profile.ViewRoot}/{parts[0]}")
@@ -443,7 +443,7 @@ namespace Editor
                 return;
             var directory = Path.Combine(
                 Application.streamingAssetsPath,
-                "NovelsAudio",
+                "novelsaudio",
                 prefix);
             var available = StoryAudioFileResolver.FindCandidates(prefix, assetName);
             if (available.Length == 1)

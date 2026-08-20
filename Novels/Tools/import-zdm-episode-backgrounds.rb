@@ -3,9 +3,9 @@
 require "fileutils"
 
 CONTENT_ID = "zdm"
-EPISODES_SEGMENT = "Episodes"
-STORY_CONTENT_ROOT = "Assets/StreamingAssets/NovelTexts"
-REMOTE_CONTENT_ROOT = "Assets/RemoteAssets/Content"
+EPISODES_SEGMENT = "episodes"
+STORY_CONTENT_ROOT = "Assets/StreamingAssets/noveltexts"
+REMOTE_CONTENT_ROOT = "Assets/RemoteAssets/content"
 INLINE_COMMENT = "//"
 VARIABLE_PREFIX = "{"
 CUT_SCENE_COMMANDS = ["Кат-сцена", "cut-scene"].freeze
@@ -14,7 +14,7 @@ SOURCE_CUT_SCENES_SEGMENT = "/Кат-сцены/"
 SOURCE_STATIC_SEGMENT = "/Статичные/"
 PREFERRED_CUT_SCENE_SEGMENT = "/Голубой лотос/"
 FALLBACK_CUT_SCENE_SEGMENT = "/Без ГГ/"
-TARGET_LOCATION_SEGMENTS = ["Location", "Locations"].freeze
+TARGET_LOCATION_SEGMENTS = ["location", "locations"].freeze
 BUILT_IN_BACKGROUNDS = ["Темнота", "Чёрный экран"].freeze
 STORY_BACKGROUND_PATTERN =
   /^\s*(Локация|Кат-сцена|location|cut-scene)(?:\s*\([^)]*\))?\s*:\s*(.+?)\s*$/i

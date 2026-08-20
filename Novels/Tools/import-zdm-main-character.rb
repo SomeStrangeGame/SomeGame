@@ -10,7 +10,7 @@ project_root = File.expand_path(ARGV.fetch(1, File.join(__dir__, "..")))
 source_root = File.expand_path(source_root)
 target_root = File.join(
   project_root,
-  "Assets/RemoteAssets/Content/zdm/Shared/Character/Characters/maincharacter"
+  "Assets/RemoteAssets/content/zdm/shared/character/characters/maincharacter"
 )
 
 abort "Source directory does not exist: #{source_root}" unless Dir.exist?(source_root)
@@ -63,7 +63,7 @@ directories(File.join(source_root, "Внешность".unicode_normalize(:nfd))
   view = normalized(File.basename(view_dir)).downcase
   body = image_files(view_dir).first
   if body
-    copy_asset(body, File.join(target_root, "View", view, "Main.png"), copied)
+    copy_asset(body, File.join(target_root, "view", view, "main.png"), copied)
   else
     warnings << "Missing body for appearance '#{view}'"
   end
@@ -80,18 +80,18 @@ directories(File.join(source_root, "Внешность".unicode_normalize(:nfd))
     emotion = normalized(File.basename(source, ".*")).tr("_", " ").downcase
     copy_asset(
       source,
-      File.join(target_root, "View", view, "Emotions", "#{emotion}.png"),
+      File.join(target_root, "view", view, "emotions", "#{emotion}.png"),
       copied
     )
   end
   emotion_aliases.each do |target, candidates|
     source = candidates
-      .map { |name| File.join(target_root, "View", view, "Emotions", "#{name}.png") }
+      .map { |name| File.join(target_root, "view", view, "emotions", "#{name}.png") }
       .find { |path| File.file?(path) }
     if source
       copy_asset(
         source,
-        File.join(target_root, "View", view, "Emotions", "#{target}.png"),
+        File.join(target_root, "view", view, "emotions", "#{target}.png"),
         copied
       )
     else
@@ -104,7 +104,7 @@ directories(File.join(source_root, "Одежда")).each do |clothes_dir|
   name = normalized(File.basename(clothes_dir)).downcase
   source = image_files(clothes_dir).find { |path| File.basename(path, ".*") == "1" }
   if source
-    copy_asset(source, File.join(target_root, "Clothes", name, "1.png"), copied)
+    copy_asset(source, File.join(target_root, "clothes", name, "1.png"), copied)
   else
     warnings << "Missing color 1 for clothes '#{name}'"
   end
@@ -116,8 +116,8 @@ hair_color_suffixes = {
   "Каштан" => "каштановые",
 }.freeze
 hair_layers = {
-  "Назад" => "Back",
-  "Вперёд" => "Front",
+  "Назад" => "back",
+  "Вперёд" => "front",
 }.freeze
 hair_root = File.join(source_root, "Причёски".unicode_normalize(:nfd))
 directories(hair_root).each do |layer_dir|
@@ -140,7 +140,7 @@ directories(hair_root).each do |layer_dir|
       choice_name = "#{style} #{suffix}".downcase
       copy_asset(
         source,
-        File.join(target_root, "Hairs", target_layer, choice_name, "блонд.png"),
+        File.join(target_root, "hairs", target_layer, choice_name, "блонд.png"),
         copied
       )
     end
@@ -148,9 +148,9 @@ directories(hair_root).each do |layer_dir|
 end
 
 accessory_layers = {
-  "0 (За ГГ)" => "Back",
-  "5 (По середине)" => "Middle",
-  "7 (Перед ГГ)" => "Front",
+  "0 (За ГГ)" => "back",
+  "5 (По середине)" => "middle",
+  "7 (Перед ГГ)" => "front",
 }.freeze
 accessories_root = File.join(source_root, "Аксессуары")
 directories(accessories_root).each do |layer_dir|
@@ -169,7 +169,7 @@ directories(accessories_root).each do |layer_dir|
     if source
       copy_asset(
         source,
-        File.join(target_root, "Accessories", target_layer, "#{name}.png"),
+        File.join(target_root, "accessories", target_layer, "#{name}.png"),
         copied
       )
     else

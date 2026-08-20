@@ -97,8 +97,8 @@ namespace Editor
             var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
             var canonicalPrefix = Novels.ContentAddressing.TechnicalAssetIdConvention
                 .Canonicalize(prefix);
-            yield return $"NovelTexts/{canonicalPrefix}/{normalizedStoryPath}";
-            yield return $"NovelTexts/{canonicalPrefix}/{normalizedStoryPath}"
+            yield return $"noveltexts/{canonicalPrefix}/{normalizedStoryPath}";
+            yield return $"noveltexts/{canonicalPrefix}/{normalizedStoryPath}"
                 + StorySourceMapBuilder.FileSuffix;
 
             foreach (var audioId in references.AudioReferences
@@ -121,7 +121,7 @@ namespace Editor
                     continue;
                 var canonicalBackground = Novels.ContentAddressing.TechnicalAssetIdConvention
                     .Canonicalize(backgroundId);
-                yield return $"NovelsVideos/{canonicalPrefix}/{canonicalBackground}"
+                yield return $"novelsvideos/{canonicalPrefix}/{canonicalBackground}"
                     + Bundles.MediaFileConvention.VideoExtension;
             }
         }
@@ -143,7 +143,7 @@ namespace Editor
                 return Array.Empty<string>();
             var directory = Path.Combine(
                 UnityEngine.Application.streamingAssetsPath,
-                "NovelsAudio",
+                "novelsaudio",
                 prefix);
             if (!Directory.Exists(directory))
                 return Array.Empty<string>();

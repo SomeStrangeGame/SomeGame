@@ -24,43 +24,43 @@ namespace Novels.ContentAddressing
         public static string NovelText(string prefix, string path) =>
             IsMissing(path)
                 ? string.Empty
-                : $"NovelTexts/{TechnicalAssetIdConvention.Canonicalize(prefix)}/{path}";
+                : $"noveltexts/{TechnicalAssetIdConvention.Canonicalize(prefix)}/{path}";
 
         public static string NovelSourceMap(string prefix, string path) =>
             NovelText(prefix, path) + ".source-map.json";
 
         public static string MainLoadingPrefab(string assetName) =>
-            Prefab("Assets/RemoteAssets/Loading", assetName);
+            Prefab("Assets/RemoteAssets/loading", assetName);
 
         public static string LoadingPrefab(
             string prefix,
             string episodeId,
             string assetName) =>
-            Prefab($"{EpisodeRoot(prefix, episodeId)}/Loading", assetName);
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/loading", assetName);
 
         public static string SharedLoadingPrefab(string prefix, string assetName) =>
-            SharedPresentationPrefab(prefix, "Loading", assetName);
+            SharedPresentationPrefab(prefix, "loading", assetName);
 
         public static string SettingPrefab(string prefix, string assetName) =>
-            Prefab($"{ContentPackageConvention.ContentRoot(prefix)}/Application/Setting", assetName);
+            Prefab($"{ContentPackageConvention.ContentRoot(prefix)}/application/setting", assetName);
 
         public static string BubblePrefab(
             string prefix,
             string episodeId,
             string assetName) =>
-            Prefab($"{EpisodeRoot(prefix, episodeId)}/Bubble", assetName);
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/bubble", assetName);
 
         public static string SharedBubblePrefab(string prefix, string assetName) =>
-            SharedPresentationPrefab(prefix, "Bubble", assetName);
+            SharedPresentationPrefab(prefix, "bubble", assetName);
 
         public static string LocationPrefab(
             string prefix,
             string episodeId,
             string assetName) =>
-            Prefab($"{EpisodeRoot(prefix, episodeId)}/Location", assetName);
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/location", assetName);
 
         public static string SharedLocationPrefab(string prefix, string assetName) =>
-            SharedPresentationPrefab(prefix, "Location", assetName);
+            SharedPresentationPrefab(prefix, "location", assetName);
 
         public static string LocationImage(
             string prefix,
@@ -68,17 +68,17 @@ namespace Novels.ContentAddressing
             string assetName) =>
             IsMissing(assetName)
                 ? string.Empty
-                : $"{EpisodeRoot(prefix, episodeId)}/Location/Locations/"
+                : $"{EpisodeRoot(prefix, episodeId)}/location/locations/"
                     + $"{TechnicalAssetIdConvention.Canonicalize(assetName)}.png";
 
         public static string CharacterPrefab(
             string prefix,
             string episodeId,
             string assetName) =>
-            Prefab($"{EpisodeRoot(prefix, episodeId)}/Character", assetName);
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/character", assetName);
 
         public static string SharedCharacterPrefab(string prefix, string assetName) =>
-            SharedPresentationPrefab(prefix, "Character", assetName);
+            SharedPresentationPrefab(prefix, "character", assetName);
 
         public static string CharacterMainBody(
             string prefix,
@@ -101,7 +101,7 @@ namespace Novels.ContentAddressing
                 name,
                 candidate,
                 value => $"{CharacterRoot(prefix, episodeId)}/{Canonical(name)}/{NormalizeView(view)}"
-                    + $"/Emotions/{CharacterAssetNameConvention.NormalizeSelector(value)}.png");
+                    + $"/emotions/{CharacterAssetNameConvention.NormalizeSelector(value)}.png");
 
         public static string CharacterClothes(
             string prefix,
@@ -112,7 +112,7 @@ namespace Novels.ContentAddressing
             NamedCharacterPath(
                 name,
                 candidate,
-                value => $"{CharacterRoot(prefix, episodeId)}/{Canonical(name)}/Clothes/"
+                value => $"{CharacterRoot(prefix, episodeId)}/{Canonical(name)}/clothes/"
                     + $"{CharacterAssetNameConvention.NormalizeSelector(value)}/{index}.png");
 
         public static string CharacterHair(
@@ -125,7 +125,7 @@ namespace Novels.ContentAddressing
             NamedCharacterPath(
                 name,
                 candidate,
-                value => $"{CharacterRoot(prefix, episodeId)}/{Canonical(name)}/Hairs/{layer}/"
+                value => $"{CharacterRoot(prefix, episodeId)}/{Canonical(name)}/hairs/{Canonical(layer)}/"
                     + $"{CharacterAssetNameConvention.NormalizeSelector(value)}/"
                     + $"{CharacterAssetNameConvention.NormalizeSelector(color)}.png");
 
@@ -138,26 +138,26 @@ namespace Novels.ContentAddressing
             NamedCharacterPath(
                 name,
                 candidate,
-                value => $"{CharacterRoot(prefix, episodeId)}/{Canonical(name)}/Accessories/{layer}/"
+                value => $"{CharacterRoot(prefix, episodeId)}/{Canonical(name)}/accessories/{Canonical(layer)}/"
                     + $"{CharacterAssetNameConvention.NormalizeSelector(value)}.png");
 
         public static string SharedCharacterAsset(string prefix, string episodeAssetPath)
         {
-            var episodeCharacters = $"{ContentPackageConvention.ContentRoot(prefix)}/Episodes/";
+            var episodeCharacters = $"{ContentPackageConvention.ContentRoot(prefix)}/episodes/";
             if (IsMissing(episodeAssetPath)
                 || !episodeAssetPath.StartsWith(episodeCharacters, StringComparison.Ordinal))
             {
                 return string.Empty;
             }
 
-            var characterMarker = "/Character/Characters/";
+            var characterMarker = "/character/characters/";
             var markerIndex = episodeAssetPath.IndexOf(
                 characterMarker,
                 episodeCharacters.Length,
                 StringComparison.Ordinal);
             return markerIndex < 0
                 ? string.Empty
-                : $"{ContentPackageConvention.ContentRoot(prefix)}/Shared"
+                : $"{ContentPackageConvention.ContentRoot(prefix)}/shared"
                     + episodeAssetPath.Substring(markerIndex);
         }
 
@@ -165,20 +165,20 @@ namespace Novels.ContentAddressing
             string prefix,
             string episodeId,
             string assetName) =>
-            Prefab($"{EpisodeRoot(prefix, episodeId)}/Notification", assetName);
+            Prefab($"{EpisodeRoot(prefix, episodeId)}/notification", assetName);
 
         public static string SharedNotificationPrefab(string prefix, string assetName) =>
-            SharedPresentationPrefab(prefix, "Notification", assetName);
+            SharedPresentationPrefab(prefix, "notification", assetName);
 
         private static string EpisodeRoot(string prefix, string episodeId) =>
             ContentPackageConvention.EpisodeRoot(prefix, episodeId);
 
         private static string CharacterRoot(string prefix, string episodeId) =>
-            $"{EpisodeRoot(prefix, episodeId)}/Character/Characters";
+            $"{EpisodeRoot(prefix, episodeId)}/character/characters";
 
         private static string NormalizeSelector(string value, string fallback) =>
             string.IsNullOrWhiteSpace(value)
-                ? fallback
+                ? Canonical(fallback)
                 : CharacterAssetNameConvention.NormalizeSelector(value);
 
         private static string NormalizeView(string value)
@@ -186,8 +186,7 @@ namespace Novels.ContentAddressing
             if (string.IsNullOrWhiteSpace(value))
                 return string.Empty;
             var parts = value.Split('/');
-            // The first segment is the fixed Unity schema folder (View).
-            for (var index = 1; index < parts.Length; index++)
+            for (var index = 0; index < parts.Length; index++)
                 parts[index] = CharacterAssetNameConvention.NormalizeSelector(parts[index]);
             return string.Join("/", parts);
         }
@@ -200,7 +199,7 @@ namespace Novels.ContentAddressing
             string feature,
             string assetName) =>
             Prefab(
-                $"{ContentPackageConvention.ContentRoot(prefix)}/Shared/Presentation/{feature}",
+                $"{ContentPackageConvention.ContentRoot(prefix)}/shared/presentation/{feature}",
                 assetName);
 
         private static string Prefab(string root, string assetName) =>

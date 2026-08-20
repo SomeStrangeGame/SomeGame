@@ -67,7 +67,7 @@ namespace Editor
             }
             foreach (var file in files.Where(file =>
                          file.path.StartsWith(
-                             "NovelsAudio/",
+                             "novelsaudio/",
                              System.StringComparison.OrdinalIgnoreCase)
                          && file.path.EndsWith(
                              ".wav",

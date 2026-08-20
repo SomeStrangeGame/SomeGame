@@ -158,7 +158,7 @@ namespace Editor
         {
             var compiledPath = Path.Combine(
                 Application.streamingAssetsPath,
-                "NovelTexts",
+                "noveltexts",
                 prefix,
                 episode.StoryPath);
             var dependencies = new List<StoryDependencyReference>();
@@ -180,7 +180,7 @@ namespace Editor
                 ? StoryFileConvention.GetSourcePath(compiledPath)
                 : Path.Combine(
                     Application.streamingAssetsPath,
-                    "NovelTexts",
+                    "noveltexts",
                     prefix,
                     episode.SourcePath);
             var source = StorySourceGraph.Load(sourcePath, episode, issues);

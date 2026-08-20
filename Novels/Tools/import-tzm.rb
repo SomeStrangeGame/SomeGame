@@ -28,9 +28,9 @@ end)
 project_root = File.expand_path(ARGV.fetch(1, File.join(__dir__, "..")))
 visual_root = File.join(source_root, "Визуал ТЗМ")
 ink_root = File.join(source_root, "ink")
-content_root = File.join(project_root, "Assets/RemoteAssets/Content", CONTENT_ID)
-story_root = File.join(project_root, "Assets/StreamingAssets/NovelTexts", CONTENT_ID)
-video_root = File.join(project_root, "Assets/StreamingAssets/NovelsVideos", CONTENT_ID)
+content_root = File.join(project_root, "Assets/RemoteAssets/content", CONTENT_ID)
+story_root = File.join(project_root, "Assets/StreamingAssets/noveltexts", CONTENT_ID)
+video_root = File.join(project_root, "Assets/StreamingAssets/novelsvideos", CONTENT_ID)
 
 abort "TZM source does not exist: #{source_root}" unless Dir.exist?(source_root)
 abort "TZM visual source does not exist: #{visual_root}" unless Dir.exist?(visual_root)
@@ -183,9 +183,9 @@ end
 # Reuse only presentation implementation, not TZM_1 story identity or content.
 legacy_episode = File.join(
   project_root,
-  "Assets/RemoteAssets/Content/tzm_1/Episodes/s01e01"
+  "Assets/RemoteAssets/content/tzm_1/episodes/s01e01"
 )
-presentation_root = File.join(content_root, "Shared/Presentation")
+presentation_root = File.join(content_root, "shared/presentation")
 %w[Loading Notification Character Location Bubble].each do |feature|
   clone_unity_tree(
     File.join(legacy_episode, feature),
@@ -193,13 +193,13 @@ presentation_root = File.join(content_root, "Shared/Presentation")
   )
 end
 clone_unity_tree(
-  File.join(project_root, "Assets/RemoteAssets/Content/tzm_1/Application"),
-  File.join(content_root, "Application")
+  File.join(project_root, "Assets/RemoteAssets/content/tzm_1/application"),
+  File.join(content_root, "application")
 )
 
 # Main character.
 main_source = File.join(visual_root, "Персонажи", "ГГ")
-main_target = File.join(content_root, "Shared/Character/Characters/maincharacter")
+main_target = File.join(content_root, "shared/character/characters/maincharacter")
 appearance_root = File.join(main_source, "Внешность")
 SOURCE_VIEW_NAMES.each do |source_name, target_name|
   source_view = directories(appearance_root)
@@ -210,7 +210,7 @@ SOURCE_VIEW_NAMES.each do |source_name, target_name|
   end
   body = direct_images(source_view).first
   if body
-    copy_file(body, File.join(main_target, "View", key(target_name), "Main.png"), copied)
+    copy_file(body, File.join(main_target, "view", key(target_name), "main.png"), copied)
   else
     warnings << "Missing main-character body: #{source_name}"
   end
@@ -220,7 +220,7 @@ SOURCE_VIEW_NAMES.each do |source_name, target_name|
     name = key(File.basename(source, ".*"))
     copy_file(
       source,
-      File.join(main_target, "View", key(target_name), "Emotions", "#{name}.png"),
+      File.join(main_target, "view", key(target_name), "emotions", "#{name}.png"),
       copied
     )
   end
@@ -234,7 +234,7 @@ SOURCE_VIEW_NAMES.each do |source_name, target_name|
   child_body = direct_images(child_view).first
   copy_file(
     child_body,
-    File.join(main_target, "View", key(target_name), "Child", "Main.png"),
+    File.join(main_target, "view", key(target_name), "child", "main.png"),
     copied
   ) if child_body
   child_emotions = directories(child_view)
@@ -243,7 +243,7 @@ SOURCE_VIEW_NAMES.each do |source_name, target_name|
     name = key(File.basename(source, ".*"))
     copy_file(
       source,
-      File.join(main_target, "View", key(target_name), "Child", "Emotions", "#{name}.png"),
+      File.join(main_target, "view", key(target_name), "child", "emotions", "#{name}.png"),
       copied
     )
   end
@@ -256,7 +256,7 @@ directories(clothes_root).each do |environment|
     next unless source
 
     name = key(File.basename(clothes))
-    copy_file(source, File.join(main_target, "Clothes", name, "1.png"), copied)
+    copy_file(source, File.join(main_target, "clothes", name, "1.png"), copied)
   end
 end
 
@@ -264,7 +264,7 @@ hair_root = directories(main_source)
   .find { |path| key(File.basename(path)) == key("Причёски") }
 directories(hair_root).each do |environment|
   directories(environment).each do |layer|
-    layer_name = key(File.basename(layer)).include?("назад") ? "Back" : "Front"
+    layer_name = key(File.basename(layer)).include?("назад") ? "back" : "front"
     directories(layer).each do |style|
       source = direct_images(style)
         .find { |path| key(File.basename(path, ".*")) == key("Блонд") }
@@ -274,7 +274,7 @@ directories(hair_root).each do |environment|
         source,
         File.join(
           main_target,
-          "Hairs",
+          "hairs",
           layer_name,
           key(File.basename(style)),
           "блонд.png"
@@ -289,15 +289,15 @@ accessory_root = File.join(main_source, "Аксессуары")
 directories(accessory_root).each do |layer|
   layer_key = key(File.basename(layer))
   target_layer = if layer_key.start_with?("0")
-                   "Back"
+                   "back"
                  elsif layer_key.start_with?("5")
-                   "Middle"
+                   "middle"
                  else
-                   "Front"
+                   "front"
                  end
   direct_images(layer).each do |source|
     name = key(File.basename(source, ".*"))
-    copy_file(source, File.join(main_target, "Accessories", target_layer, "#{name}.png"), copied)
+    copy_file(source, File.join(main_target, "accessories", target_layer, "#{name}.png"), copied)
   end
   directories(layer).each do |accessory|
     source = image_files(accessory).find { |path| File.basename(path, ".*") == "1" }
@@ -305,7 +305,7 @@ directories(accessory_root).each do |layer|
     next unless source
 
     name = key(File.basename(accessory))
-    copy_file(source, File.join(main_target, "Accessories", target_layer, "#{name}.png"), copied)
+    copy_file(source, File.join(main_target, "accessories", target_layer, "#{name}.png"), copied)
   end
 end
 
@@ -317,7 +317,7 @@ directories(characters_root).each do |character_source|
   next if source_name == "ГГ"
 
   character_name = CHARACTER_NAMES.fetch(source_name, source_name)
-  target = File.join(content_root, "Shared/Character/Characters", key(character_name))
+  target = File.join(content_root, "shared/character/characters", key(character_name))
   all = image_files(character_source)
   body_candidates = all.reject do |path|
     path.split(File::SEPARATOR).any? do |segment|
@@ -334,7 +334,7 @@ directories(characters_root).each do |character_source|
   end
   body ||= body_candidates.first
   if body
-    copy_file(body, File.join(target, "View", "Main.png"), copied)
+    copy_file(body, File.join(target, "view", "main.png"), copied)
   else
     warnings << "Missing body candidate for character: #{character_name}"
   end
@@ -346,17 +346,17 @@ directories(characters_root).each do |character_source|
     if relative_segments.any? { |segment| key(segment) == key("Эмоции") }
       copy_file(
         source,
-        File.join(target, "View", "Emotions", "#{key(basename)}.png"),
+        File.join(target, "view", "emotions", "#{key(basename)}.png"),
         copied
       )
     elsif relative_segments.any? { |segment| key(segment) == key("Одежда") }
       copy_file(
         source,
-        File.join(target, "Clothes", key(basename), "1.png"),
+        File.join(target, "clothes", key(basename), "1.png"),
         copied
       )
     elsif source != body
-      copy_file(source, File.join(target, "View", "#{key(basename)}.png"), copied)
+      copy_file(source, File.join(target, "view", "#{key(basename)}.png"), copied)
     end
   end
 
@@ -370,7 +370,7 @@ directories(characters_root).each do |character_source|
 
     copy_file(
       variant_body,
-      File.join(target, "View", "#{key(File.basename(variant))}.png"),
+      File.join(target, "view", "#{key(File.basename(variant))}.png"),
       copied
     )
   end
@@ -408,7 +408,7 @@ EPISODES.each do |episode|
     end
     copy_file(
       source,
-      File.join(content_root, "Episodes", episode, "Location", "Locations", "#{key(name)}.png"),
+      File.join(content_root, "episodes", episode, "location", "locations", "#{key(name)}.png"),
       copied
     )
   end
@@ -456,7 +456,7 @@ EPISODES.each_with_index do |episode, index|
   ENTRY
   definition << entry.lines.map { |line| "  #{line}" }.join
 end
-definition_path = File.join(content_root, "Definition", "tzm.asset")
+definition_path = File.join(content_root, "definition", "tzm.asset")
 write_text(definition_path, definition)
 write_text(
   "#{definition_path}.meta",
@@ -474,7 +474,7 @@ write_text(
 
 bundle_names = { "." => "novels_content_tzm" }
 EPISODES.each do |episode|
-  bundle_names[File.join("Episodes", episode)] = "novels_episode_tzm_#{episode}"
+  bundle_names[File.join("episodes", episode)] = "novels_episode_tzm_#{episode}"
 end
 ensure_folder_metas(content_root, bundle_names)
 ensure_folder_metas(story_root)

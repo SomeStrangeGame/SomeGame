@@ -5,8 +5,8 @@ namespace Novels.Catalog
         public const string BundleName =
             ContentAddressing.ContentPackageConvention.CatalogBundleName;
         public const string AssetName =
-            "Assets/RemoteAssets/Catalog/NovelCatalog.asset";
+            "Assets/RemoteAssets/catalog/novelcatalog.asset";
         public const string ScreenAssetName =
-            "Assets/RemoteAssets/Catalog/Screen.prefab";
+            "Assets/RemoteAssets/catalog/screen.prefab";
     }
 }

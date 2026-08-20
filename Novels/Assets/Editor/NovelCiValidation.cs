@@ -132,9 +132,9 @@ namespace Editor
             }
             foreach (var directory in new[]
                      {
-                         "NovelTexts",
-                         "NovelsAudio",
-                         "NovelsVideos",
+                         "noveltexts",
+                         "novelsaudio",
+                         "novelsvideos",
                          "Remote",
                      })
             {

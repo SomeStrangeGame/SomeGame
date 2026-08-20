@@ -88,7 +88,7 @@ end)
 project_root = File.expand_path(ARGV.fetch(1, File.join(__dir__, "..")))
 target_root = File.join(
   project_root,
-  "Assets/RemoteAssets/Content/zdm/Shared/Character/Characters"
+  "Assets/RemoteAssets/content/zdm/shared/character/characters"
 )
 
 abort "Source directory does not exist: #{source_root}" unless Dir.exist?(source_root)
@@ -118,8 +118,8 @@ SOURCE_CHARACTERS.each do |target_name, definition|
 
   body = source_entry(source_character, definition.fetch(:body))
   abort "Character body does not exist: #{definition.fetch(:body)}" unless body
-  view_root = File.join(target_root, normalized(target_name).downcase, "View")
-  copy(body, File.join(view_root, "Main.png"), copied)
+  view_root = File.join(target_root, normalized(target_name).downcase, "view")
+  copy(body, File.join(view_root, "main.png"), copied)
   Array(definition[:aliases]).each do |name|
     copy(body, File.join(view_root, "#{name}.png"), copied)
   end
@@ -149,11 +149,11 @@ SOURCE_CHARACTERS.each do |target_name, definition|
     emotion = normalized(File.basename(source, ".*"))
       .tr("_", " ")
       .downcase
-    copy(source, File.join(view_root, "Emotions", "#{emotion}.png"), copied)
+    copy(source, File.join(view_root, "emotions", "#{emotion}.png"), copied)
   end
   EMOTION_ALIASES.fetch(target_name, {}).each do |target, source_name|
-    source = File.join(view_root, "Emotions", "#{source_name}.png")
-    copy(source, File.join(view_root, "Emotions", "#{target}.png"), copied)
+    source = File.join(view_root, "emotions", "#{source_name}.png")
+    copy(source, File.join(view_root, "emotions", "#{target}.png"), copied)
   end
 end
 

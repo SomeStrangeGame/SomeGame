@@ -51,12 +51,12 @@ rsync -a \
   --exclude .utmp \
   --exclude Assets/RemoteAssets \
   --exclude Assets/RemoteAssets.meta \
-  --exclude Assets/StreamingAssets/NovelTexts \
-  --exclude Assets/StreamingAssets/NovelTexts.meta \
-  --exclude Assets/StreamingAssets/NovelsAudio \
-  --exclude Assets/StreamingAssets/NovelsAudio.meta \
-  --exclude Assets/StreamingAssets/NovelsVideos \
-  --exclude Assets/StreamingAssets/NovelsVideos.meta \
+  --exclude Assets/StreamingAssets/noveltexts \
+  --exclude Assets/StreamingAssets/noveltexts.meta \
+  --exclude Assets/StreamingAssets/novelsaudio \
+  --exclude Assets/StreamingAssets/novelsaudio.meta \
+  --exclude Assets/StreamingAssets/novelsvideos \
+  --exclude Assets/StreamingAssets/novelsvideos.meta \
   --exclude Assets/StreamingAssets/Remote \
   --exclude Assets/StreamingAssets/Remote.meta \
   "${project_root}/" "${stage_project}/"

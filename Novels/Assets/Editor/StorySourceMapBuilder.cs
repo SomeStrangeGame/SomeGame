@@ -21,7 +21,7 @@ namespace Editor
                 {
                     var compiledPath = IOPath.Combine(
                         UnityEngine.Application.streamingAssetsPath,
-                        "NovelTexts",
+                        "noveltexts",
                         item.Definition.Prefix,
                         episode.StoryPath);
                     if (!generated.Add(compiledPath))

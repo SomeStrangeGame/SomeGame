@@ -96,10 +96,10 @@ project_root = File.expand_path(ARGV.fetch(1, File.join(__dir__, "..")))
 ink_root = File.join(source_root, "ink")
 legacy_content = File.join(
   project_root,
-  "Assets/RemoteAssets/Content/tzm_1/Episodes/s01e01/Location/Locations"
+  "Assets/RemoteAssets/content/tzm_1/episodes/s01e01/location/locations"
 )
 source_visuals = File.join(source_root, "Визуал ТЗМ")
-target_content = File.join(project_root, "Assets/RemoteAssets/Content/tzm/Episodes")
+target_content = File.join(project_root, "Assets/RemoteAssets/content/tzm/episodes")
 
 def ensure_folder_meta(directory, bundle_name = nil)
   FileUtils.mkdir_p(directory)
@@ -186,8 +186,8 @@ EPISODES.each do |episode|
     destination = File.join(
       target_content,
       episode,
-      "Location",
-      "Locations",
+      "location",
+      "locations",
       "#{key(name)}.png"
     )
     next if File.exist?(destination) && alias_entry.nil?
@@ -198,10 +198,10 @@ EPISODES.each do |episode|
   end
 end
 
-legacy_audio = File.join(project_root, "Assets/StreamingAssets/NovelsAudio/tzm_1")
-target_audio = File.join(project_root, "Assets/StreamingAssets/NovelsAudio/tzm")
-legacy_video = File.join(project_root, "Assets/StreamingAssets/NovelsVideos/tzm_1")
-target_video = File.join(project_root, "Assets/StreamingAssets/NovelsVideos/tzm")
+legacy_audio = File.join(project_root, "Assets/StreamingAssets/novelsaudio/tzm_1")
+target_audio = File.join(project_root, "Assets/StreamingAssets/novelsaudio/tzm")
+legacy_video = File.join(project_root, "Assets/StreamingAssets/novelsvideos/tzm_1")
+target_video = File.join(project_root, "Assets/StreamingAssets/novelsvideos/tzm")
 copied_audio = %w[.wav .mp3 .ogg].sum do |extension|
   copy_tree_files(legacy_audio, target_audio, extension)
 end

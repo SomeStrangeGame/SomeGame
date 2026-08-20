@@ -50,7 +50,7 @@ namespace Bundles
         {
             if (string.IsNullOrWhiteSpace(assetName))
                 return null;
-            var path = $"NovelsVideos/{_prefix}/{Canonicalize(assetName)}"
+            var path = $"novelsvideos/{_prefix}/{Canonicalize(assetName)}"
                 + MediaFileConvention.VideoExtension;
             var descriptor = _session.FindFile(path);
             if (descriptor == null
@@ -90,7 +90,7 @@ namespace Bundles
                 ContentReleaseSnapshot release,
                 string prefix)
         {
-            var directory = $"NovelsAudio/{prefix}/";
+            var directory = $"novelsaudio/{prefix}/";
             var files = new Dictionary<string, ContentFileDescriptor>(
                 StringComparer.OrdinalIgnoreCase);
             var ambiguous = new HashSet<string>(StringComparer.OrdinalIgnoreCase);

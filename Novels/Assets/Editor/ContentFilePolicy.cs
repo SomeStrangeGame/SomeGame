@@ -10,26 +10,26 @@ namespace Editor
     {
         internal static readonly string[] RootDirectories =
         {
-            "NovelTexts",
-            "NovelsAudio",
-            "NovelsVideos",
+            "noveltexts",
+            "novelsaudio",
+            "novelsvideos",
         };
 
         private static readonly IReadOnlyDictionary<string, HashSet<string>> _extensions =
             new Dictionary<string, HashSet<string>>(StringComparer.OrdinalIgnoreCase)
             {
-                ["NovelTexts"] = new(StringComparer.OrdinalIgnoreCase)
+                ["noveltexts"] = new(StringComparer.OrdinalIgnoreCase)
                 {
                     ".ink",
                     ".json",
                 },
-                ["NovelsAudio"] = new(StringComparer.OrdinalIgnoreCase)
+                ["novelsaudio"] = new(StringComparer.OrdinalIgnoreCase)
                 {
                     ".wav",
                     ".mp3",
                     ".ogg",
                 },
-                ["NovelsVideos"] = new(StringComparer.OrdinalIgnoreCase)
+                ["novelsvideos"] = new(StringComparer.OrdinalIgnoreCase)
                 {
                     ".mp4",
                 },
@@ -68,7 +68,7 @@ namespace Editor
         }
 
         internal static bool IsSupportedAudioFile(string file) =>
-            _extensions["NovelsAudio"].Contains(Path.GetExtension(file));
+            _extensions["novelsaudio"].Contains(Path.GetExtension(file));
 
         private static bool IsDeliverable(string file, string rootName)
         {
