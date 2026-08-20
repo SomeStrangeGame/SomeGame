@@ -94,10 +94,6 @@ source_root = File.expand_path(ARGV.fetch(0) do
 end)
 project_root = File.expand_path(ARGV.fetch(1, File.join(__dir__, "..")))
 ink_root = File.join(source_root, "ink")
-legacy_content = File.join(
-  project_root,
-  "Assets/RemoteAssets/content/tzm_1/episodes/s01e01/location/locations"
-)
 source_visuals = File.join(source_root, "Визуал ТЗМ")
 target_content = File.join(project_root, "Assets/RemoteAssets/content/tzm/episodes")
 
@@ -133,26 +129,7 @@ def images(root)
     .select { |path| File.file?(path) && File.extname(path).casecmp?(".png") }
 end
 
-def copy_tree_files(source_root, target_root, extension)
-  return 0 unless Dir.exist?(source_root)
-
-  copied = 0
-  Dir.glob(File.join(source_root, "**", "*#{extension}"), File::FNM_CASEFOLD)
-    .sort.each do |source|
-      next unless File.file?(source)
-
-      extension = File.extname(source).downcase
-      basename = key(File.basename(source, ".*"))
-      destination = File.join(target_root, "#{basename}#{extension}")
-      FileUtils.mkdir_p(File.dirname(destination))
-      FileUtils.cp(source, destination)
-      copied += 1
-    end
-  copied
-end
-
 resource_roots = [
-  legacy_content,
   File.join(source_visuals, "Locations"),
   File.join(source_visuals, "Cut-Scenes")
 ]
@@ -198,14 +175,10 @@ EPISODES.each do |episode|
   end
 end
 
-legacy_audio = File.join(project_root, "Assets/StreamingAssets/novelsaudio/tzm_1")
 target_audio = File.join(project_root, "Assets/StreamingAssets/novelsaudio/tzm")
-legacy_video = File.join(project_root, "Assets/StreamingAssets/novelsvideos/tzm_1")
 target_video = File.join(project_root, "Assets/StreamingAssets/novelsvideos/tzm")
-copied_audio = %w[.wav .mp3 .ogg].sum do |extension|
-  copy_tree_files(legacy_audio, target_audio, extension)
-end
-copied_video = copy_tree_files(legacy_video, target_video, ".mp4")
+copied_audio = 0
+copied_video = 0
 
 video_roots = [
   File.join(source_visuals, "Locations", "Videos"),

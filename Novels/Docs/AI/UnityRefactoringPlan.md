@@ -28,7 +28,7 @@ The current source of truth supersedes bundle counts and concrete release IDs re
 
 - Story assets are grouped under `Assets/RemoteAssets/Content/{contentId}` with `Definition`, `Application`, and `Episodes/{episodeId}` ownership boundaries.
 - The story root owns one bundle; a concrete episode root overrides it with one episode-lifetime bundle. Feature subfolders do not carry AssetBundle labels.
-- TZM_1 currently produces four bundles: `novels_catalog`, `novels_content_tzm_1`, `novels_episode_tzm_1_s01e01`, and `novels_loading_shared`.
+- Active content consists of the full `tzm` and `zdm` packages. The obsolete test package `tzm_1` and its catalog entry have been removed; each active story produces one content bundle plus one bundle per episode, alongside `novels_catalog` and `novels_loading_shared`.
 - Bundle names, definition paths, and delivery groups are derived by `ContentPackageConvention`; episode-scoped asset addresses are exposed by `ContentAddresses`. The former `PathGetter` assembly has been removed.
 - The checked-in StreamingAssets release is the previous schema-4 Android artifact. The next configured content build replaces it with schema-5 Android and iOS releases and creates a shared deployable `ServerRoot`; until that build is run, the old generated release is intentionally not claimed as current runtime evidence.
 - Every delivery group contains both AssetBundles and external files belonging to that lifetime. Unity 6000.3.11f1 import/compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully. Tests and Play Mode were not run.

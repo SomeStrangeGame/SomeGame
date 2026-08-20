@@ -44,7 +44,7 @@
 - Only enabled build scene: `Assets/Novels/Novels.unity`.
 - Scene `EntryPoint.OnEnable()` initializes UniTask's player loop, caps FPS at 30, creates the concrete `IContentSource`, captures `Application.persistentDataPath` on the main thread, constructs `ApplicationRuntime`, and starts an exception-observing session wrapper.
 - `ApplicationRuntime` owns the shared bundle service, local bootstrap/retry UI, remote catalog, story selection, and the currently active novel runtime. `Entity.Init()` owns one selected story and creates `NovelBootstrapProcess`, which coordinates application preparation, New Game/Continue selection, episode preparation, and episode execution through delegates.
-- The scene contains no concrete story ID. Startup loads `novelcatalog.asset` and its selection screen from `novels_catalog`; `Catalog.Entity/View` presents cards and returns a selected catalog entry. The entry supplies the story bundle and definition address, currently `novels_content_tzm_1` and `Assets/RemoteAssets/content/tzm_1/definition/tzm_1.asset`. The loaded definition then presents an explicit episode selection; each episode supplies one episode-lifetime bundle.
+- The scene contains no concrete story ID. Startup loads `novelcatalog.asset` and its selection screen from `novels_catalog`; `Catalog.Entity/View` presents the active `tzm` and `zdm` entries. Bundle and definition addresses are derived from the selected content ID. The loaded definition then presents an explicit episode selection; each episode supplies one episode-lifetime bundle.
 - `StoryCommandParser` converts legacy colon-delimited Ink lines into typed commands; `NovelProcess` maps them to queued actions for location/cut-scene, audio, camera, waits, notifications, character presentation, dialogue, and choices.
 
 ## Architecture And Conventions
@@ -169,7 +169,7 @@
 
 - Latest refactoring validation: isolated Unity 6000.3.11f1 compilation and existing-content validation passed; two complete Android content rebuild/validation passes succeeded with schema 4, 4 bundles, and 48 referenced external files. Tests and Play Mode were not run. A staging Android Player build was attempted but failed in the external platform pipeline with `Curl error 60` (certificate CN mismatch), so APK/device behavior remains unverified.
 
-- Latest release: schema 4, Remote mode, ID `74a2b7e3706d6afceab3dc0ad76591433c72a56056a103ebfe57f317c093732a`, 4 bundles, 48 referenced external files, and three delivery groups: `application`, `TZM_1/s01e01`, and `TZM_1/shared`. Sixty-seven unassigned audio files remain as future authoring material and are deliberately absent from delivery.
+- The checked-in generated release must be rebuilt after removing the obsolete `tzm_1` package; until then its bundle list is stale and is not current runtime evidence.
 - `Tools/validate-novels.sh` exposes `validate` and `content` batch commands. `Tools/build-remote-player.sh` builds Android/iOS from an isolated temporary project copy with novel StreamingAssets excluded and injects the required remote HTTP(S) root only into that copy.
 - Unity 6000.3.11f1 isolated batch compilation and `NovelCiValidation.BuildAndValidateContentBatch` completed successfully for schema 4 after the explicit-delivery-ownership wave. The generated Android publish artifact is about 572 MiB. Tests were not created or run.
 
@@ -197,7 +197,7 @@
 - `StoryReferenceIndex` is the common extraction pass for compiled/source Ink validation and episode delivery indexing.
 - `NovelErrorContext` adds release, content, episode, and delivery-mode identity at the composition boundary.
 - Pause and quit use a bounded synchronous save flush; ordinary episode completion retains the asynchronous flush path. EntryPoint and EpisodeRuntime cleanup now complete after partial initialization/disposal failures.
-- Large WAV files above the profile threshold fail the content build unless converted to OGG or listed explicitly. Existing TZM_1 WAVs are documented exceptions; newly added large WAVs fail by default.
+- Large WAV files above the profile threshold fail the content build unless converted to OGG or listed explicitly. The obsolete `tzm_1` exceptions have been removed; newly added large WAVs fail by default.
 
 ## Architecture wave completed on 2026-08-17 (story content hierarchy)
 
