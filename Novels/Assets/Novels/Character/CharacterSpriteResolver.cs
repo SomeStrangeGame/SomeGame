@@ -16,6 +16,7 @@ namespace Novels.Character
             string episodeId,
             Content.CharacterAssetProfile profile,
             Func<string, UniTask<Sprite>> getSprite,
+            Sprite missingCharacter,
             CancellationToken cancellationToken)
         {
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
@@ -28,6 +29,7 @@ namespace Novels.Character
                 profile,
                 addresses,
                 getSprite,
+                missingCharacter,
                 cancellationToken);
         }
 

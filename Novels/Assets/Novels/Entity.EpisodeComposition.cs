@@ -23,6 +23,7 @@ namespace Novels
                 Addresses = state.Addresses,
                 BundleName = _episode.BundleName,
                 SharedBundleName = _definition.BundleName,
+                Fallbacks = _ctx.FallbackAssets,
                 CancellationToken = cancellationToken,
             }).Load();
             var loading = CreateLoading(
@@ -53,12 +54,14 @@ namespace Novels
                         state.Addresses.LocationImage(assetName)))
                     .AttachExternalCancellation(cancellationToken)),
                 state.EpisodeBundles.ResolveVideoUrl,
+                _ctx.FallbackAssets.Background,
                 cancellationToken);
 
             var character = CreateCharacter(
                 state.EpisodeScope,
                 assets.Character,
                 assetName => GetCharacterSprite(state, assetName),
+                _ctx.FallbackAssets.Character,
                 cancellationToken);
 
             var notification = CreateNotification(

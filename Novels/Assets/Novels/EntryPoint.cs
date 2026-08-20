@@ -10,6 +10,13 @@ namespace Novels
     {
         [SerializeField] private Logs.Entity.ShowLogs _logs;
         [SerializeField] private Camera _targetCamera;
+        [SerializeField] private Sprite _missingBackground;
+        [SerializeField] private Sprite _missingCharacter;
+        [SerializeField] private GameObject _fallbackLoading;
+        [SerializeField] private GameObject _fallbackBubble;
+        [SerializeField] private GameObject _fallbackLocation;
+        [SerializeField] private GameObject _fallbackCharacter;
+        [SerializeField] private GameObject _fallbackNotification;
 
         private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
@@ -33,6 +40,14 @@ namespace Novels
                     Application.version,
                     Bundles.ContentPlatform.GetCurrent(),
                     _targetCamera,
+                    new FallbackAssets(
+                        _missingBackground,
+                        _missingCharacter,
+                        _fallbackLoading,
+                        _fallbackBubble,
+                        _fallbackLocation,
+                        _fallbackCharacter,
+                        _fallbackNotification),
                     runtimeTuning);
                 _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
                 {

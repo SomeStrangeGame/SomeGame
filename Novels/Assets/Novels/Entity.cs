@@ -22,6 +22,7 @@ namespace Novels
             internal Catalog.NovelCatalogEntry Content;
             internal string PersistentDataPath;
             internal Camera TargetCamera;
+            internal FallbackAssets FallbackAssets;
             internal NovelRuntimeTuning RuntimeTuning;
             internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
@@ -60,6 +61,8 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.PrepareNovelContent));
             if (ctx.TargetCamera == null)
                 throw new ArgumentNullException(nameof(ctx.TargetCamera));
+            if (ctx.FallbackAssets == null)
+                throw new ArgumentNullException(nameof(ctx.FallbackAssets));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
         }
 

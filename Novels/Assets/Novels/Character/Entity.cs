@@ -15,6 +15,7 @@ namespace Novels.Character
             public string EpisodeId;
             public Content.CharacterAssetProfile AssetProfile;
             public Func<string, UniTask<Sprite>> GetSprite;
+            public Sprite MissingCharacter;
             public CancellationToken CancellationToken;
         }
 
@@ -36,6 +37,7 @@ namespace Novels.Character
                 ctx.EpisodeId,
                 _assetProfile,
                 ctx.GetSprite,
+                ctx.MissingCharacter,
                 ctx.CancellationToken);
         }
 

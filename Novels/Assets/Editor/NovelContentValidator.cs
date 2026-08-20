@@ -97,6 +97,22 @@ namespace Editor
             var entryPointData = new SerializedObject(entryPoint);
             if (entryPointData.FindProperty("_targetCamera")?.objectReferenceValue == null)
                 errors.Add("Novels.EntryPoint has no target Camera reference.");
+            if (entryPointData.FindProperty("_missingBackground")?.objectReferenceValue == null)
+                errors.Add("Novels.EntryPoint has no missing-background fallback reference.");
+            if (entryPointData.FindProperty("_missingCharacter")?.objectReferenceValue == null)
+                errors.Add("Novels.EntryPoint has no missing-character fallback reference.");
+            foreach (var (propertyName, label) in new[]
+                     {
+                         ("_fallbackLoading", "loading"),
+                         ("_fallbackBubble", "bubble"),
+                         ("_fallbackLocation", "location"),
+                         ("_fallbackCharacter", "character"),
+                         ("_fallbackNotification", "notification"),
+                     })
+            {
+                if (entryPointData.FindProperty(propertyName)?.objectReferenceValue == null)
+                    errors.Add($"Novels.EntryPoint has no {label} fallback prefab reference.");
+            }
 
             if (project == null)
                 ContentProjectIndex.TryBuild(errors, out project);
@@ -151,6 +167,7 @@ namespace Editor
                     errors);
             }
             PrefabContentValidator.ValidateBootstrap(errors);
+            PrefabContentValidator.ValidateFallbackEpisode(errors);
             if (validateBuiltOutput)
                 BuiltReleaseValidator.Validate(
                     catalog.Entries
@@ -290,7 +307,7 @@ namespace Editor
         private static void ValidateEpisodeBundleAssignments(
             string prefix,
             Novels.Content.EpisodeDefinition episode,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             PrefabContentValidator.ValidateEpisode(prefix, episode.Id, errors);
             foreach (var paths in new[]
@@ -324,7 +341,7 @@ namespace Editor
             {
                 if (AssetDatabase.LoadMainAssetAtPath(paths.episode) != null)
                     ValidateBundleAssignment(paths.episode, episode.BundleName, errors);
-                else
+                else if (AssetDatabase.LoadMainAssetAtPath(paths.shared) != null)
                     ValidateBundleAssignment(
                         paths.shared,
                         Novels.ContentAddressing.ContentPackageConvention.ContentBundle(prefix),

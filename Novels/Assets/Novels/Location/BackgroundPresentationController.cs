@@ -20,6 +20,7 @@ namespace Novels.Location
             internal Camera TargetCamera;
             internal Func<string, UniTask<Sprite>> GetSprite;
             internal Func<string, UniTask<string>> ResolveVideoUrl;
+            internal Sprite MissingBackground;
             internal CancellationToken CancellationToken;
             internal int CutSceneFallbackDelayMilliseconds;
         }
@@ -39,6 +40,8 @@ namespace Novels.Location
                 throw new ArgumentNullException(nameof(ctx.GetSprite));
             if (ctx.ResolveVideoUrl == null)
                 throw new ArgumentNullException(nameof(ctx.ResolveVideoUrl));
+            if (ctx.MissingBackground == null)
+                throw new ArgumentNullException(nameof(ctx.MissingBackground));
             if (ctx.CutSceneFallbackDelayMilliseconds <= 0)
             {
                 throw new ArgumentOutOfRangeException(
@@ -84,9 +87,7 @@ namespace Novels.Location
             var url = resources.Item2;
             if (sprite == null)
             {
-                // TODO: Remove this fallback when missing story backgrounds become build errors again.
-                _ctx.TargetCamera.backgroundColor = Color.black;
-                await ShowSolidColor(mode);
+                await ShowStatic(_ctx.MissingBackground, mode);
                 return;
             }
             var plan = BackgroundPresentationPlan.Create(

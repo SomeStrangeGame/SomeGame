@@ -38,6 +38,7 @@ namespace Novels
             internal ContentAddressing.ContentAddresses Addresses;
             internal string BundleName;
             internal string SharedBundleName;
+            internal FallbackAssets Fallbacks;
             internal CancellationToken CancellationToken;
         }
 
@@ -60,6 +61,8 @@ namespace Novels
                 throw new ArgumentException(
                     "Shared bundle name must not be empty.",
                     nameof(ctx.SharedBundleName));
+            if (ctx.Fallbacks == null)
+                throw new ArgumentNullException(nameof(ctx.Fallbacks));
         }
 
         internal async UniTask<EpisodeAssetSet> Load()
@@ -67,21 +70,26 @@ namespace Novels
             var assetName = ContentAddressing.ContentAssetNames.Screen;
             var (loading, bubble, location, character, notification) =
                 await UniTask.WhenAll(
-                LoadPrefab(
-                    _ctx.Addresses.LoadingPrefab(assetName),
-                    _ctx.Addresses.SharedLoadingPrefab(assetName)),
-                LoadPrefab(
-                    _ctx.Addresses.BubblePrefab(assetName),
-                    _ctx.Addresses.SharedBubblePrefab(assetName)),
-                LoadPrefab(
-                    _ctx.Addresses.LocationPrefab(assetName),
-                    _ctx.Addresses.SharedLocationPrefab(assetName)),
-                LoadPrefab(
-                    _ctx.Addresses.CharacterPrefab(assetName),
-                    _ctx.Addresses.SharedCharacterPrefab(assetName)),
-                LoadPrefab(
-                    _ctx.Addresses.NotificationPrefab(assetName),
-                    _ctx.Addresses.SharedNotificationPrefab(assetName)));
+                    LoadPrefab(
+                        _ctx.Addresses.LoadingPrefab(assetName),
+                        _ctx.Addresses.SharedLoadingPrefab(assetName),
+                        _ctx.Fallbacks.Loading),
+                    LoadPrefab(
+                        _ctx.Addresses.BubblePrefab(assetName),
+                        _ctx.Addresses.SharedBubblePrefab(assetName),
+                        _ctx.Fallbacks.Bubble),
+                    LoadPrefab(
+                        _ctx.Addresses.LocationPrefab(assetName),
+                        _ctx.Addresses.SharedLocationPrefab(assetName),
+                        _ctx.Fallbacks.Location),
+                    LoadPrefab(
+                        _ctx.Addresses.CharacterPrefab(assetName),
+                        _ctx.Addresses.SharedCharacterPrefab(assetName),
+                        _ctx.Fallbacks.CharacterScreen),
+                    LoadPrefab(
+                        _ctx.Addresses.NotificationPrefab(assetName),
+                        _ctx.Addresses.SharedNotificationPrefab(assetName),
+                        _ctx.Fallbacks.Notification));
             return new EpisodeAssetSet(
                 loading,
                 bubble,
@@ -92,7 +100,8 @@ namespace Novels
 
         private async UniTask<GameObject> LoadPrefab(
             string episodeAssetName,
-            string sharedAssetName)
+            string sharedAssetName,
+            GameObject fallback)
         {
             var episodeAddress = new Bundles.BundleAssetAddress(
                 _ctx.BundleName,
@@ -106,9 +115,10 @@ namespace Novels
             var sharedAddress = new Bundles.BundleAssetAddress(
                 _ctx.SharedBundleName,
                 sharedAssetName);
-            return await _ctx.PriorityLoader.Run(() => _ctx.SharedBundles
-                .GetBundledPrefab(sharedAddress)
+            var shared = await _ctx.PriorityLoader.Run(() => _ctx.SharedBundles
+                .TryGetBundledPrefab(sharedAddress)
                 .AttachExternalCancellation(_ctx.CancellationToken));
+            return shared != null ? shared : fallback;
         }
     }
 }

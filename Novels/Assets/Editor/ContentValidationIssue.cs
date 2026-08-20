@@ -39,6 +39,7 @@ namespace Editor
         internal const string StoryCharacterAssetMissing = "STORY_CHARACTER_ASSET_MISSING";
         internal const string StoryCharacterAssetCaseMismatch =
             "STORY_CHARACTER_ASSET_CASE_MISMATCH";
+        internal const string EpisodeUiPrefabMissing = "EPISODE_UI_PREFAB_MISSING";
     }
 
     internal readonly struct ContentValidationIssue

@@ -354,6 +354,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _logs: 255
   _targetCamera: {fileID: 330585545}
+  _missingBackground: {fileID: 21300000, guid: 621ac610a1204d48aea925430b4b3de5, type: 3}
+  _missingCharacter: {fileID: 21300000, guid: 6e95ef6c5687426c939909b1649aa33f, type: 3}
+  _fallbackLoading: {fileID: 3712146450823894313, guid: a657268b104b46deacda9f4186d3a1c3, type: 3}
+  _fallbackBubble: {fileID: 3712146450823894313, guid: 5961f300e58d45ea874bca7ef881d98a, type: 3}
+  _fallbackLocation: {fileID: 3712146450823894313, guid: f2868174f1d942898fcc6126dc634c33, type: 3}
+  _fallbackCharacter: {fileID: 3712146450823894313, guid: c15d55316c184828acd77eaaa73bd2c9, type: 3}
+  _fallbackNotification: {fileID: 3712146450823894313, guid: 67094f021815469e9650d0ee62955e38, type: 3}
 --- !u!1 &1371491167
 GameObject:
   m_ObjectHideFlags: 0

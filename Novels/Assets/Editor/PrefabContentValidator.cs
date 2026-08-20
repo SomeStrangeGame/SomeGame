@@ -67,7 +67,7 @@ namespace Editor
         internal static void ValidateEpisode(
             string prefix,
             string episodeId,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             var assetName = Novels.ContentAddressing.ContentAssetNames.Screen;
             ValidateLoading(
@@ -75,47 +75,93 @@ namespace Editor
                     Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
                         prefix, episodeId, assetName),
                     Novels.ContentAddressing.ContentAddressConvention.SharedLoadingPrefab(
-                        prefix, assetName)),
+                        prefix, assetName),
+                    "Loading",
+                    prefix,
+                    episodeId,
+                    errors),
                 errors);
             ValidateBubble(
                 ResolvePresentationPath(
                     Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
                         prefix, episodeId, assetName),
                     Novels.ContentAddressing.ContentAddressConvention.SharedBubblePrefab(
-                        prefix, assetName)),
+                        prefix, assetName),
+                    "Bubble",
+                    prefix,
+                    episodeId,
+                    errors),
                 errors);
             ValidateCharacter(
                 ResolvePresentationPath(
                     Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
                         prefix, episodeId, assetName),
                     Novels.ContentAddressing.ContentAddressConvention.SharedCharacterPrefab(
-                        prefix, assetName)),
+                        prefix, assetName),
+                    "Character",
+                    prefix,
+                    episodeId,
+                    errors),
                 errors);
             ValidateLocation(
                 ResolvePresentationPath(
                     Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
                         prefix, episodeId, assetName),
                     Novels.ContentAddressing.ContentAddressConvention.SharedLocationPrefab(
-                        prefix, assetName)),
+                        prefix, assetName),
+                    "Location",
+                    prefix,
+                    episodeId,
+                    errors),
                 errors);
             ValidateNotification(
                 ResolvePresentationPath(
                     Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
                         prefix, episodeId, assetName),
                     Novels.ContentAddressing.ContentAddressConvention.SharedNotificationPrefab(
-                        prefix, assetName)),
+                        prefix, assetName),
+                    "Notification",
+                    prefix,
+                    episodeId,
+                    errors),
                 errors);
+        }
+
+        internal static void ValidateFallbackEpisode(ICollection<string> errors)
+        {
+            const string root = "Assets/Novels/Fallbacks/EpisodeUI";
+            ValidateLoading($"{root}/loading/screen.prefab", errors);
+            ValidateBubble($"{root}/bubble/screen.prefab", errors);
+            ValidateCharacter($"{root}/character/screen.prefab", errors);
+            ValidateLocation($"{root}/location/screen.prefab", errors);
+            ValidateNotification($"{root}/notification/screen.prefab", errors);
         }
 
         private static string ResolvePresentationPath(
             string episodePath,
-            string sharedPath) =>
-            AssetDatabase.LoadMainAssetAtPath(episodePath) != null
-                ? episodePath
-                : sharedPath;
+            string sharedPath,
+            string kind,
+            string contentId,
+            string episodeId,
+            ContentValidationReport report)
+        {
+            if (AssetDatabase.LoadMainAssetAtPath(episodePath) != null)
+                return episodePath;
+            if (AssetDatabase.LoadMainAssetAtPath(sharedPath) != null)
+                return sharedPath;
+            report.Add(ContentValidationIssue.Warning(
+                ContentValidationCodes.EpisodeUiPrefabMissing,
+                $"{kind} screen prefab is absent from both episode and shared content. "
+                + "The built-in fallback prefab will be used.",
+                contentId: contentId,
+                episodeId: episodeId));
+            return null;
+        }
 
         private static void ValidateLoading(string path, ICollection<string> errors)
         {
+            if (string.IsNullOrEmpty(path))
+                return;
             var screen = LoadScreen<Loading.View.Screen>(path, "Loading", errors);
             if (screen != null)
             {
@@ -130,6 +176,8 @@ namespace Editor
 
         private static void ValidateBubble(string path, ICollection<string> errors)
         {
+            if (string.IsNullOrEmpty(path))
+                return;
             var screen = LoadScreen<Novels.Bubble.View.Screen>(path, "Bubble", errors);
             if (screen == null)
                 return;
@@ -173,6 +221,8 @@ namespace Editor
 
         private static void ValidateCharacter(string path, ICollection<string> errors)
         {
+            if (string.IsNullOrEmpty(path))
+                return;
             var screen = LoadScreen<Novels.Character.View.Screen>(
                 path,
                 "Character",
@@ -197,6 +247,8 @@ namespace Editor
 
         private static void ValidateLocation(string path, ICollection<string> errors)
         {
+            if (string.IsNullOrEmpty(path))
+                return;
             var screen = LoadScreen<Novels.Location.View.Screen>(path, "Location", errors);
             if (screen == null)
                 return;
@@ -231,6 +283,8 @@ namespace Editor
             string path,
             ICollection<string> errors)
         {
+            if (string.IsNullOrEmpty(path))
+                return;
             var screen = LoadScreen<Novels.Notification.View.Screen>(
                 path,
                 "Notification",

@@ -13,6 +13,7 @@ namespace Novels
             GameObject screenPrefab,
             Func<string, UniTask<Sprite>> getSprite,
             Func<string, UniTask<string>> resolveVideoUrl,
+            Sprite missingBackground,
             CancellationToken cancellationToken)
         {
             var location = new Location.Entity(new Location.Entity.Ctx
@@ -21,6 +22,7 @@ namespace Novels
                 TargetCamera = _ctx.TargetCamera,
                 GetSprite = getSprite,
                 ResolveVideoUrl = resolveVideoUrl,
+                MissingBackground = missingBackground,
                 CancellationToken = cancellationToken,
                 CutSceneFallbackDelayMilliseconds =
                     _ctx.RuntimeTuning.CutSceneFallbackDelayMilliseconds,

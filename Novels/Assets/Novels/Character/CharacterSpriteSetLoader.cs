@@ -10,17 +10,21 @@ namespace Novels.Character
         private readonly Content.CharacterAssetProfile _profile;
         private readonly CharacterAssetAddressResolver _addresses;
         private readonly Func<string, UniTask<Sprite>> _getSprite;
+        private readonly Sprite _missingCharacter;
         private readonly CancellationToken _cancellationToken;
 
         internal CharacterSpriteSetLoader(
             Content.CharacterAssetProfile profile,
             CharacterAssetAddressResolver addresses,
             Func<string, UniTask<Sprite>> getSprite,
+            Sprite missingCharacter,
             CancellationToken cancellationToken)
         {
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _addresses = addresses ?? throw new ArgumentNullException(nameof(addresses));
             _getSprite = getSprite ?? throw new ArgumentNullException(nameof(getSprite));
+            _missingCharacter = missingCharacter
+                ?? throw new ArgumentNullException(nameof(missingCharacter));
             _cancellationToken = cancellationToken;
         }
 
@@ -39,12 +43,21 @@ namespace Novels.Character
                     LoadClothes(name, clothes, presentation, appearance),
                     LoadHair(name, hair, presentation, appearance),
                     LoadAccessories(name, presentation, appearance));
-            if (mainBody == null)
+            if (await RequiresFallback(
+                    name,
+                    view,
+                    clothes,
+                    hair,
+                    presentation,
+                    appearance,
+                    mainBody,
+                    emotion,
+                    clothesSprite,
+                    hairSprites,
+                    accessorySprites))
             {
-                // Incomplete stories may reference a character whose body has not
-                // been delivered yet. Do not render detached overlay layers.
                 return new CharacterSpriteSet(
-                    null,
+                    _missingCharacter,
                     null,
                     null,
                     new CharacterHairSprites(null, null),
@@ -56,6 +69,103 @@ namespace Novels.Character
                 clothesSprite,
                 hairSprites,
                 accessorySprites);
+        }
+
+        private async UniTask<bool> RequiresFallback(
+            string name,
+            string view,
+            string clothes,
+            string hair,
+            StoryContracts.CharacterPresentation presentation,
+            CharacterAppearanceState appearance,
+            Sprite mainBody,
+            Sprite emotion,
+            Sprite clothesSprite,
+            CharacterHairSprites hairSprites,
+            CharacterAccessorySprites accessorySprites)
+        {
+            if (mainBody == null)
+                return true;
+            if (!string.IsNullOrWhiteSpace(appearance.Emotion) && emotion == null)
+                return true;
+            if (!presentation.IsChild
+                && !presentation.RemoveClothes
+                && !string.IsNullOrWhiteSpace(appearance.Clothes ?? clothes)
+                && clothesSprite == null)
+            {
+                return true;
+            }
+            if (!presentation.IsChild
+                && !presentation.RemoveHair
+                && !string.IsNullOrWhiteSpace(appearance.Hair ?? hair)
+                && hairSprites.Back == null
+                && hairSprites.Front == null)
+            {
+                return true;
+            }
+            if (!presentation.IsChild
+                && !presentation.RemoveAccessory
+                && !string.IsNullOrWhiteSpace(appearance.Accessories)
+                && accessorySprites.Back == null
+                && accessorySprites.Middle == null
+                && accessorySprites.Front == null)
+            {
+                return true;
+            }
+
+            foreach (var candidate in presentation.AssetCandidates)
+            {
+                if (!await ResolvesCandidate(
+                        name,
+                        view,
+                        candidate,
+                        presentation.IsChild))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private async UniTask<bool> ResolvesCandidate(
+            string name,
+            string view,
+            string candidate,
+            bool isChild)
+        {
+            if (isChild)
+                view = $"{view}/{_profile.ChildView}";
+            var requests = new System.Collections.Generic.List<UniTask<Sprite>>
+            {
+                GetSprite(_addresses.MainBody(name, view, candidate)),
+                GetSprite(_addresses.Emotion(name, view, candidate)),
+            };
+            if (!isChild)
+            {
+                requests.Add(GetSprite(_addresses.Clothes(name, candidate, 1)));
+                requests.Add(GetSprite(_addresses.Hair(
+                    name,
+                    candidate,
+                    _profile.BackLayer)));
+                requests.Add(GetSprite(_addresses.Hair(
+                    name,
+                    candidate,
+                    _profile.FrontLayer)));
+                requests.Add(GetSprite(_addresses.Accessory(
+                    name,
+                    candidate,
+                    _profile.BackLayer)));
+                requests.Add(GetSprite(_addresses.Accessory(
+                    name,
+                    candidate,
+                    _profile.MiddleLayer)));
+                requests.Add(GetSprite(_addresses.Accessory(
+                    name,
+                    candidate,
+                    _profile.FrontLayer)));
+            }
+            var sprites = await UniTask.WhenAll(requests);
+            return Array.Exists(sprites, sprite => sprite != null);
         }
 
         private async UniTask<Sprite> LoadMainBody(

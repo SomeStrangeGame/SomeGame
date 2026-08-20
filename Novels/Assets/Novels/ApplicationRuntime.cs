@@ -121,6 +121,7 @@ namespace Novels
                 Content = content,
                 PersistentDataPath = _environment.PersistentDataPath,
                 TargetCamera = _environment.TargetCamera,
+                FallbackAssets = _environment.FallbackAssets,
                 RuntimeTuning = _environment.RuntimeTuning,
                 SelectEpisode = definition =>
                     _catalogFlow.SelectEpisode(definition, catalog.Screen),

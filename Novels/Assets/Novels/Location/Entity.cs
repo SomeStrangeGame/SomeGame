@@ -14,6 +14,7 @@ namespace Novels.Location
             public Camera TargetCamera;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, UniTask<string>> ResolveVideoUrl;
+            public Sprite MissingBackground;
             public CancellationToken CancellationToken;
             public int CutSceneFallbackDelayMilliseconds;
 
@@ -52,6 +53,7 @@ namespace Novels.Location
                     TargetCamera = _ctx.TargetCamera,
                     GetSprite = _ctx.GetSprite,
                     ResolveVideoUrl = _ctx.ResolveVideoUrl,
+                    MissingBackground = _ctx.MissingBackground,
                     CancellationToken = _ctx.CancellationToken,
                     CutSceneFallbackDelayMilliseconds =
                         _ctx.CutSceneFallbackDelayMilliseconds,
