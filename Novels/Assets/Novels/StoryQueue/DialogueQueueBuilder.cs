@@ -33,7 +33,8 @@ namespace Novels.StoryQueue
         internal DialogueQueueBuildResult Build(
             StoryCommands.DialogueCommandData dialogue,
             StoryContracts.StoryChoice[] choices,
-            UniTaskCompletionSource bubbleDone)
+            UniTaskCompletionSource bubbleDone,
+            bool hasPendingCommands)
         {
             var name = dialogue.Speaker;
             if (string.IsNullOrEmpty(dialogue.Speaker) && string.IsNullOrEmpty(dialogue.Text))
@@ -73,15 +74,21 @@ namespace Novels.StoryQueue
                 || visibility == StoryContracts.StoryCharacterVisibilityCommand.Hide;
             var shouldShow = isNewCharacter
                 || visibility == StoryContracts.StoryCharacterVisibilityCommand.Show;
+            var hideBeforePendingCommands = shouldHide && hasPendingCommands;
+            var hideDuringDialogueTransition = shouldHide && !hasPendingCommands;
 
             var afterCommands = new List<QueueProcess.IQueue>
             {
                 new QueueProcess.CharacterQueue.SetDialogueQueue(
                     _ctx.Location.SetDialogue,
                     _ctx.Location.SetDialogueImmediate,
-                    GetDialogueAlignment(role)),
+                    _ctx.Character.CharacterHide,
+                    _ctx.Character.CharacterHideImmediate,
+                    GetDialogueAlignment(role),
+                    hideDuringDialogueTransition),
             };
-            if (!isHidden)
+            if (!isHidden
+                && StoryContracts.StorySpeakerRoleResolver.ShowsCharacter(role))
             {
                 afterCommands.Add(
                     new QueueProcess.CharacterQueue.ShowCharacterQueue(
@@ -97,15 +104,19 @@ namespace Novels.StoryQueue
             }
             afterCommands.AddRange(CreateBubbleLifecycle(bubbleDone));
 
-            return new DialogueQueueBuildResult(
-                new QueueProcess.IQueue[]
-                {
+            var beforeCommands = new List<QueueProcess.IQueue>();
+            if (hideBeforePendingCommands)
+            {
+                beforeCommands.Add(
                     new QueueProcess.CharacterQueue.HideCharacterQueue(
                         _ctx.Character.CharacterHide,
                         _ctx.Character.CharacterHideImmediate,
-                        shouldHide),
-                    setBubble,
-                },
+                        shouldHide: true));
+            }
+
+            beforeCommands.Add(setBubble);
+            return new DialogueQueueBuildResult(
+                beforeCommands.ToArray(),
                 afterCommands.ToArray());
         }
 

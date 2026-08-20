@@ -9,28 +9,53 @@ namespace Novels.QueueProcess
         {
             private readonly Func<StoryContracts.StoryDialogueAlignment, UniTask> _setDialogue;
             private readonly Func<StoryContracts.StoryDialogueAlignment, UniTask> _setDialogueImmediate;
+            private readonly Func<UniTask> _characterHide;
+            private readonly Action _characterHideImmediate;
             private readonly StoryContracts.StoryDialogueAlignment _alignment;
+            private readonly bool _shouldHideCharacter;
 
             public SetDialogueQueue(
                 Func<StoryContracts.StoryDialogueAlignment, UniTask> setDialogue,
                 Func<StoryContracts.StoryDialogueAlignment, UniTask> setDialogueImmediate,
-                StoryContracts.StoryDialogueAlignment alignment)
+                Func<UniTask> characterHide,
+                Action characterHideImmediate,
+                StoryContracts.StoryDialogueAlignment alignment,
+                bool shouldHideCharacter)
             {
                 _setDialogue = setDialogue ?? throw new ArgumentNullException(nameof(setDialogue));
                 _setDialogueImmediate = setDialogueImmediate
                     ?? throw new ArgumentNullException(nameof(setDialogueImmediate));
+                _characterHide = characterHide
+                    ?? throw new ArgumentNullException(nameof(characterHide));
+                _characterHideImmediate = characterHideImmediate
+                    ?? throw new ArgumentNullException(nameof(characterHideImmediate));
                 _alignment = alignment;
+                _shouldHideCharacter = shouldHideCharacter;
             }
 
             public async UniTask Run(QueueExecutionContext context)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
                 if (context.Mode == QueueExecutionMode.Replay)
+                {
+                    if (_shouldHideCharacter)
+                        _characterHideImmediate();
                     await _setDialogueImmediate(_alignment);
-                else
+                    return;
+                }
+
+                if (!_shouldHideCharacter)
+                {
                     await _setDialogue(_alignment);
+                    return;
+                }
+
+                await UniTask.WhenAll(
+                    _characterHide(),
+                    _setDialogue(_alignment));
             }
         }
+
         public readonly struct HideCharacterQueue : IQueue
         {
             private readonly Func<UniTask> _characterHide;
@@ -52,16 +77,19 @@ namespace Novels.QueueProcess
             public async UniTask Run(QueueExecutionContext context)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
+                if (!_shouldHide)
+                    return;
+
                 if (context.Mode == QueueExecutionMode.Replay)
                 {
                     _characterHideImmediate();
                     return;
                 }
 
-                if (_shouldHide)
-                    await _characterHide();
+                await _characterHide();
             }
         }
+
         public readonly struct ShowCharacterQueue : IQueue
         {
             private readonly Func<StoryContracts.CharacterRenderRequest, UniTask> _characterSetImage;

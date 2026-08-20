@@ -7,18 +7,15 @@ namespace Novels.StoryContracts
             DialoguePresentation presentation,
             string mainCharacter)
         {
+            if (StorySpeakers.IsWardrobe(speaker)
+                || presentation == DialoguePresentation.Wardrobe)
+            {
+                return StorySpeakerRole.Wardrobe;
+            }
             if (StorySpeakers.IsNarrator(speaker)
                 || presentation == DialoguePresentation.Narrator)
             {
                 return StorySpeakerRole.Narrator;
-            }
-            if (string.Equals(
-                    speaker,
-                    StorySpeakers.Wardrobe,
-                    System.StringComparison.Ordinal)
-                || presentation == DialoguePresentation.Wardrobe)
-            {
-                return StorySpeakerRole.Wardrobe;
             }
             return string.Equals(
                     speaker,
@@ -30,6 +27,9 @@ namespace Novels.StoryContracts
 
         public static bool RequiresCharacterAsset(StorySpeakerRole role) =>
             role == StorySpeakerRole.Character;
+
+        public static bool ShowsCharacter(StorySpeakerRole role) =>
+            role != StorySpeakerRole.Narrator;
     }
 
     public enum StorySpeakerRole

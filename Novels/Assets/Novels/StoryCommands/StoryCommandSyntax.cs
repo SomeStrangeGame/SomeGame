@@ -14,16 +14,21 @@ namespace Novels.StoryCommands
         internal static readonly HashSet<string> MetadataNames = new(StringComparer.OrdinalIgnoreCase)
         {
             "title",
+            "Название",
             "series",
+            "Серия",
             "genres",
+            "Жанры",
             "annotation",
+            "Аннотация",
             "stats",
+            "Статы",
         };
 
         internal static readonly HashSet<string> DialogueOnlyNames = new(
             StringComparer.OrdinalIgnoreCase)
         {
-            "Гардероб",
+            StoryContracts.StorySpeakers.WardrobeRussian,
             "Выбор предмета",
             "КОНЕЦ СЕРИИ",
         };

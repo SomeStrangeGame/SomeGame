@@ -107,7 +107,8 @@ namespace Novels.StoryQueue
             var dialogueQueue = _dialogueQueueBuilder.Build(
                 dialogueCommand.Data,
                 step.Choices,
-                bubbleDone);
+                bubbleDone,
+                _pendingQueue.Count > 0);
 
             queue = new Queue<QueueProcess.IQueue>();
             EnqueueRange(queue, dialogueQueue.BeforeCommands);

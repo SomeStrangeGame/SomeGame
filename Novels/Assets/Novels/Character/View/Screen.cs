@@ -147,12 +147,16 @@ namespace Novels.Character.View
         {
             ClearImagesIfNeed();
 
-            _canvasGroup.alpha = 1f;
-            _canvasGroup.gameObject.SetActive(true);
+            if (!_canvasGroup.gameObject.activeSelf || _canvasGroup.alpha <= 0f)
+            {
+                _canvasGroup.alpha = 0f;
+                _canvasGroup.gameObject.SetActive(false);
+                return;
+            }
 
             await UITransitions.Transition.Fade(
                 _canvasGroup,
-                1f,
+                _canvasGroup.alpha,
                 0f,
                 _showHideImageDuration,
                 cancellationToken);

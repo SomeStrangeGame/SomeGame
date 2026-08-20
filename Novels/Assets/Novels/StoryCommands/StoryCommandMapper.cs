@@ -22,7 +22,7 @@ namespace Novels.StoryCommands
             if (StoryContracts.StorySpeakers.IsNarrator(speaker))
                 return StoryContracts.DialoguePresentation.Narrator;
 
-            if (speaker == StoryContracts.StorySpeakers.Wardrobe)
+            if (StoryContracts.StorySpeakers.IsWardrobe(speaker))
                 return StoryContracts.DialoguePresentation.Wardrobe;
 
             return StoryContracts.DialoguePresentation.Character;
