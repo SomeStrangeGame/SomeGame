@@ -15,7 +15,7 @@ namespace Editor
         private static void ValidateFromMenu()
         {
             var errors = ValidateLoadedConfiguration(true);
-            LogWarnings(errors);
+            LogWarnings(errors, "Full");
             var actualErrors = errors.Issues
                 .Where(issue => issue.Severity == ContentValidationSeverity.Error)
                 .ToArray();
@@ -25,8 +25,10 @@ namespace Editor
                 return;
             }
 
-            foreach (var error in actualErrors)
-                Debug.LogError($"[NovelContent] {error}");
+            Debug.LogError(ContentValidationReportFormatter.Format(
+                errors,
+                ContentValidationSeverity.Error,
+                "Full"));
         }
 
         public static void ValidateBatch()
@@ -44,7 +46,7 @@ namespace Editor
         internal static void ValidateOrThrow(ContentProjectIndex project)
         {
             var errors = ValidateLoadedConfiguration(false, project: project);
-            ThrowIfInvalid(errors);
+            ThrowIfInvalid(errors, "Source");
         }
 
         internal static void ValidateBuiltOutputOrThrow()
@@ -55,7 +57,7 @@ namespace Editor
         internal static void ValidateBuiltOutputOrThrow(string remoteBasePath)
         {
             var errors = ValidateLoadedConfiguration(true, remoteBasePath);
-            ThrowIfInvalid(errors);
+            ThrowIfInvalid(errors, "BuiltOutput");
         }
 
         internal static void ValidateBuiltOutputOrThrow(
@@ -69,13 +71,13 @@ namespace Editor
                 remoteBasePath,
                 snapshot.Project,
                 snapshot.DeliveryIndex);
-            ThrowIfInvalid(errors);
+            ThrowIfInvalid(errors, "BuiltOutput");
         }
 
         private static void ValidateOrThrow(bool validateBuiltOutput)
         {
             var errors = ValidateLoadedConfiguration(validateBuiltOutput);
-            ThrowIfInvalid(errors);
+            ThrowIfInvalid(errors, validateBuiltOutput ? "Full" : "Source");
         }
 
         private static ContentValidationReport ValidateLoadedConfiguration(
@@ -160,27 +162,30 @@ namespace Editor
             return errors;
         }
 
-        private static void ThrowIfInvalid(ContentValidationReport errors)
+        private static void ThrowIfInvalid(ContentValidationReport errors, string phase)
         {
-            LogWarnings(errors);
+            LogWarnings(errors, phase);
             var actualErrors = errors.Issues
                 .Where(issue => issue.Severity == ContentValidationSeverity.Error)
                 .ToArray();
             if (actualErrors.Length > 0)
             {
                 throw new InvalidOperationException(
-                    "Novel content validation failed:\n- "
-                    + string.Join("\n- ", actualErrors.Select(issue => issue.ToString())));
+                    ContentValidationReportFormatter.Format(
+                        errors,
+                        ContentValidationSeverity.Error,
+                        phase));
             }
         }
 
-        private static void LogWarnings(ContentValidationReport report)
+        private static void LogWarnings(ContentValidationReport report, string phase)
         {
-            foreach (var warning in report.Issues.Where(
-                         issue => issue.Severity == ContentValidationSeverity.Warning))
-            {
-                Debug.LogWarning($"[NovelContent] {warning}");
-            }
+            var message = ContentValidationReportFormatter.Format(
+                report,
+                ContentValidationSeverity.Warning,
+                phase);
+            if (!string.IsNullOrEmpty(message))
+                Debug.LogWarning(message);
         }
 
         private static void ValidateBundleAssignment(

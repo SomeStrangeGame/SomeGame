@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
 namespace Editor
 {
@@ -157,5 +158,99 @@ namespace Editor
             _issues.Select(issue => issue.ToString()).GetEnumerator();
 
         IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    }
+
+    internal static class ContentValidationReportFormatter
+    {
+        internal static string Format(
+            ContentValidationReport report,
+            ContentValidationSeverity severity,
+            string phase)
+        {
+            var issues = report.Issues
+                .Where(issue => issue.Severity == severity)
+                .ToArray();
+            if (issues.Length == 0)
+                return string.Empty;
+
+            var title = severity == ContentValidationSeverity.Warning
+                ? "warnings"
+                : "errors";
+            var result = new StringBuilder()
+                .Append("[NovelContent] [")
+                .Append(phase)
+                .Append("] Validation ")
+                .Append(title)
+                .Append(" (")
+                .Append(issues.Length)
+                .AppendLine("):");
+
+            foreach (var contextGroup in issues
+                         .GroupBy(
+                             issue => (issue.ContentId, issue.EpisodeId),
+                             ContentValidationContextComparer.Instance)
+                         .OrderBy(group => group.Key.ContentId, StringComparer.Ordinal)
+                         .ThenBy(group => group.Key.EpisodeId, StringComparer.Ordinal))
+            {
+                result.AppendLine();
+                result.AppendLine(FormatContext(
+                    contextGroup.Key.ContentId,
+                    contextGroup.Key.EpisodeId));
+
+                foreach (var codeGroup in contextGroup
+                             .GroupBy(issue => issue.Code, StringComparer.Ordinal)
+                             .OrderBy(group => group.Key, StringComparer.Ordinal))
+                {
+                    var messages = codeGroup
+                        .GroupBy(issue => issue.Message, StringComparer.Ordinal)
+                        .Select(group => (Message: group.Key, Count: group.Count()))
+                        .OrderBy(item => item.Message, StringComparer.Ordinal)
+                        .ToArray();
+                    result.Append("  ")
+                        .Append(codeGroup.Key)
+                        .Append(" (")
+                        .Append(codeGroup.Count())
+                        .AppendLine("):");
+                    foreach (var message in messages)
+                    {
+                        result.Append("  - ").Append(message.Message);
+                        if (message.Count > 1)
+                            result.Append(" (repeated ").Append(message.Count).Append(" times)");
+                        result.AppendLine();
+                    }
+                }
+            }
+            return result.ToString().TrimEnd();
+        }
+
+        private static string FormatContext(string contentId, string episodeId)
+        {
+            if (string.IsNullOrWhiteSpace(contentId))
+                return "General";
+            return string.IsNullOrWhiteSpace(episodeId)
+                ? contentId
+                : $"{contentId}/{episodeId}";
+        }
+
+        private sealed class ContentValidationContextComparer
+            : IEqualityComparer<(string ContentId, string EpisodeId)>
+        {
+            internal static readonly ContentValidationContextComparer Instance = new();
+
+            public bool Equals(
+                (string ContentId, string EpisodeId) left,
+                (string ContentId, string EpisodeId) right) =>
+                string.Equals(left.ContentId, right.ContentId, StringComparison.Ordinal)
+                && string.Equals(left.EpisodeId, right.EpisodeId, StringComparison.Ordinal);
+
+            public int GetHashCode((string ContentId, string EpisodeId) value)
+            {
+                unchecked
+                {
+                    return ((value.ContentId?.GetHashCode() ?? 0) * 397)
+                        ^ (value.EpisodeId?.GetHashCode() ?? 0);
+                }
+            }
+        }
     }
 }

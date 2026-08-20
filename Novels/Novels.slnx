@@ -1,6 +1,5 @@
 ﻿<Solution>
   <Project Path="Novels.csproj" />
-  <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Editor.csproj" />
   <Project Path="Novels.Notification.csproj" />
   <Project Path="Novels.Audio.csproj" />
@@ -12,6 +11,7 @@
   <Project Path="Novels.Character.csproj" />
   <Project Path="Logs.csproj" />
   <Project Path="Novels.Save.csproj" />
+  <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Localization.csproj" />
   <Project Path="Novels.StoryCommands.csproj" />
   <Project Path="Novels.StoryContracts.csproj" />
