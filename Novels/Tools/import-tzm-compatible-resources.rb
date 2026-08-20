@@ -214,18 +214,23 @@ video_roots = [
 video_index = video_roots.flat_map do |root|
   Dir.exist?(root) ? Dir.glob(File.join(root, "*.mp4"), File::FNM_CASEFOLD) : []
 end.group_by { |path| key(File.basename(path, ".*")) }
-[LOCATION_ALIAS_INDEX, CUT_SCENE_ALIAS_INDEX].each do |aliases|
-aliases.each_value do |logical_name, technical_name|
-  source = video_index.fetch(key(technical_name), []).first
-  next unless source
+[
+  [LOCATION_ALIAS_INDEX, false],
+  [CUT_SCENE_ALIAS_INDEX, true]
+].each do |aliases, overwrite_existing|
+  aliases.each_value do |logical_name, technical_name|
+    source = video_index.fetch(key(technical_name), []).first
+    next unless source
 
-  destination = File.join(target_video, "#{key(logical_name)}.mp4")
-  next if File.exist?(destination)
+    destination = File.join(target_video, "#{key(logical_name)}.mp4")
+    # A location and a cut-scene may intentionally share their Ink name.
+    # In that case the playable cut-scene must win over a looping location video.
+    next if File.exist?(destination) && !overwrite_existing
 
-  FileUtils.mkdir_p(target_video)
-  FileUtils.cp(source, destination)
-  copied_video += 1
-end
+    FileUtils.mkdir_p(target_video)
+    FileUtils.cp(source, destination)
+    copied_video += 1
+  end
 end
 
 puts "Imported #{copied_backgrounds} compatible TZM backgrounds."

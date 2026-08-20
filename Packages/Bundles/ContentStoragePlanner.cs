@@ -169,8 +169,11 @@ namespace Bundles
             }
         }
 
-        internal static string FilePath(ContentFileDescriptor descriptor) =>
-            $"{_cacheRoot}/Files/{descriptor.Sha256.ToLowerInvariant()}";
+        internal static string FilePath(ContentFileDescriptor descriptor)
+        {
+            var extension = Path.GetExtension(descriptor.Path).ToLowerInvariant();
+            return $"{_cacheRoot}/Files/{descriptor.Sha256.ToLowerInvariant()}{extension}";
+        }
 
         internal static string BundlePath(
             ContentReleaseSession session,
