@@ -1,0 +1,67 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: tzm
+  m_EditorClassIdentifier:
+  _id: tzm
+  _mainCharacter: Салли
+  _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
+  _episodes:
+  - _id: s01e01
+    _title: Сезон 1, эпизод 1
+    _storyPath: TZM.ink.json
+    _contentVersion: 1
+    _endMarker: КОНЕЦ СЕРИИ
+    _sourcePath: s01e01.ink
+    _silentAudioIds: [тишина]
+  - _id: s01e02
+    _title: Сезон 1, эпизод 2
+    _storyPath: TZM.ink.json
+    _contentVersion: 1
+    _endMarker: КОНЕЦ СЕРИИ
+    _sourcePath: s01e02.ink
+    _silentAudioIds: [тишина]
+  - _id: s01e03
+    _title: Сезон 1, эпизод 3
+    _storyPath: TZM.ink.json
+    _contentVersion: 1
+    _endMarker: КОНЕЦ СЕРИИ
+    _sourcePath: s01e03.ink
+    _silentAudioIds: [тишина]
+  - _id: s01e04
+    _title: Сезон 1, эпизод 4
+    _storyPath: TZM.ink.json
+    _contentVersion: 1
+    _endMarker: КОНЕЦ СЕРИИ
+    _sourcePath: s01e04.ink
+    _silentAudioIds: [тишина]
+  - _id: s01e05
+    _title: Сезон 1, эпизод 5
+    _storyPath: TZM.ink.json
+    _contentVersion: 1
+    _endMarker: КОНЕЦ СЕРИИ
+    _sourcePath: s01e05.ink
+    _silentAudioIds: [тишина]
+  - _id: s01e06
+    _title: Сезон 1, эпизод 6
+    _storyPath: TZM.ink.json
+    _contentVersion: 1
+    _endMarker: КОНЕЦ СЕРИИ
+    _sourcePath: s01e06.ink
+    _silentAudioIds: [тишина]
+  - _id: s01e07
+    _title: Сезон 1, эпизод 7
+    _storyPath: TZM.ink.json
+    _contentVersion: 1
+    _endMarker: 
+    _sourcePath: s01e07.ink
+    _silentAudioIds: [тишина]
