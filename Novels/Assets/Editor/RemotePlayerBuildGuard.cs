@@ -10,11 +10,11 @@ namespace Editor
 
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (!NovelCiValidation.IsRemotePlayerBuild)
+            if (!NovelCiValidation.IsAuthorizedPlayerBuild)
             {
                 throw new BuildFailedException(
-                    "Novel Player builds must use Tools/build-remote-player.sh so "
-                    + "StreamingAssets content is excluded and the remote URL is injected.");
+                    "Novel Player builds must use Tools/build-remote-player.sh or "
+                    + "Tools/build-embedded-test-player.sh.");
             }
         }
     }

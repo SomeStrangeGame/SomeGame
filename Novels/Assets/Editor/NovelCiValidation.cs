@@ -11,6 +11,9 @@ namespace Editor
     public static class NovelCiValidation
     {
         internal static bool IsRemotePlayerBuild { get; private set; }
+        internal static bool IsEmbeddedTestPlayerBuild { get; private set; }
+        internal static bool IsAuthorizedPlayerBuild =>
+            IsRemotePlayerBuild || IsEmbeddedTestPlayerBuild;
         public static void ValidateExistingContentBatch()
         {
             EditorSceneManager.OpenScene(
@@ -78,6 +81,64 @@ namespace Editor
                     + $"{report.summary.totalErrors} errors.");
             }
             Debug.Log($"Remote Player build completed: {report.summary.outputPath}");
+        }
+
+        public static void BuildEmbeddedTestPlayerBatch()
+        {
+            var arguments = Environment.GetCommandLineArgs();
+            var output = GetArgument(arguments, "-playerOutput");
+            if (string.IsNullOrWhiteSpace(output))
+                throw new InvalidOperationException("-playerOutput is required.");
+
+            var platform = AssetBundleBuildPipeline.GetPlatformName(
+                EditorUserBuildSettings.activeBuildTarget);
+            var releasePath = Path.Combine(
+                Application.streamingAssetsPath,
+                "Remote",
+                platform,
+                "release.json");
+            if (!File.Exists(releasePath))
+            {
+                throw new FileNotFoundException(
+                    "Embedded test Player content release is missing.",
+                    releasePath);
+            }
+
+            EditorSceneManager.OpenScene(
+                "Assets/Novels/Novels.unity",
+                OpenSceneMode.Single);
+            var scenes = EditorBuildSettings.scenes
+                .Where(value => value.enabled)
+                .Select(value => value.path)
+                .ToArray();
+            BuildReport report;
+            IsEmbeddedTestPlayerBuild = true;
+            var useCustomKeystore = PlayerSettings.Android.useCustomKeystore;
+            try
+            {
+                PlayerSettings.Android.useCustomKeystore = false;
+                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = scenes,
+                    locationPathName = Path.GetFullPath(output),
+                    target = EditorUserBuildSettings.activeBuildTarget,
+                    options = BuildOptions.Development,
+                    extraScriptingDefines = new[] { "NOVELS_EMBEDDED_TEST_PLAYER" },
+                });
+            }
+            finally
+            {
+                PlayerSettings.Android.useCustomKeystore = useCustomKeystore;
+                IsEmbeddedTestPlayerBuild = false;
+            }
+            if (report.summary.result != BuildResult.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    $"Embedded test Player build failed: {report.summary.result}, "
+                    + $"{report.summary.totalErrors} errors.");
+            }
+            Debug.Log(
+                $"Embedded test Player build completed: {report.summary.outputPath}");
         }
 
         private static void CreateRuntimeConfiguration(string remoteUrl)

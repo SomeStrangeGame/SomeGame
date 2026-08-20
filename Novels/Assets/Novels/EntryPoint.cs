@@ -80,7 +80,7 @@ namespace Novels
             CancellationToken cancellationToken,
             Bundles.ContentDeliveryOptions options)
         {
-#if UNITY_EDITOR
+#if UNITY_EDITOR || NOVELS_EMBEDDED_TEST_PLAYER
             return new Bundles.StreamingAssetsSource(
                 cancellationToken,
                 options.LocalRequestPolicy);
