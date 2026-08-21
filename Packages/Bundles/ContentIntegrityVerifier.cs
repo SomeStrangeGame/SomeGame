@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Runtime.ExceptionServices;
-using System.Security.Cryptography;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 
@@ -88,10 +87,7 @@ namespace Bundles
                     + $"{expectedSize}, got {file.Length}.");
             }
 
-            using var sha = SHA256.Create();
-            using var stream = File.OpenRead(path);
-            var actual = BitConverter.ToString(sha.ComputeHash(stream))
-                .Replace("-", string.Empty);
+            var actual = ContentHash.ComputeSha256(path);
             if (!string.Equals(
                     actual,
                     expectedSha256,

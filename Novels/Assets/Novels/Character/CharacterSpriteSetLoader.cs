@@ -8,14 +8,14 @@ namespace Novels.Character
     internal sealed class CharacterSpriteSetLoader
     {
         private readonly Content.CharacterAssetProfile _profile;
-        private readonly CharacterAssetAddressResolver _addresses;
+        private readonly ContentAddressing.ContentAddresses _addresses;
         private readonly Func<string, UniTask<Sprite>> _getSprite;
         private readonly Sprite _missingCharacter;
         private readonly CancellationToken _cancellationToken;
 
         internal CharacterSpriteSetLoader(
             Content.CharacterAssetProfile profile,
-            CharacterAssetAddressResolver addresses,
+            ContentAddressing.ContentAddresses addresses,
             Func<string, UniTask<Sprite>> getSprite,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
@@ -81,33 +81,33 @@ namespace Novels.Character
             var name = _profile.MainCharacterAssetId;
             if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
             {
-                return await GetSprite(_addresses.MainBody(
+                return await GetSprite(_addresses.CharacterMainBody(
                     name,
                     _profile.ViewPath(value),
                     null)) ?? _missingCharacter;
             }
             if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
-                return await GetSprite(_addresses.Clothes(name, value, 1))
+                return await GetSprite(_addresses.CharacterClothes(name, value, 1))
                     ?? _missingCharacter;
             if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
             {
                 var front = await GetSprite(
-                    _addresses.Hair(name, value, _profile.FrontLayer));
+                    Hair(name, value, _profile.FrontLayer));
                 var back = await GetSprite(
-                    _addresses.Hair(name, value, _profile.BackLayer));
+                    Hair(name, value, _profile.BackLayer));
                 return front ?? back ?? _missingCharacter;
             }
             if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
             {
                 var middle = await GetSprite(
-                    _addresses.Accessory(name, value, _profile.MiddleLayer));
+                    _addresses.CharacterAccessory(name, value, _profile.MiddleLayer));
                 var front = await GetSprite(
-                    _addresses.Accessory(name, value, _profile.FrontLayer));
+                    _addresses.CharacterAccessory(name, value, _profile.FrontLayer));
                 var back = await GetSprite(
-                    _addresses.Accessory(name, value, _profile.BackLayer));
+                    _addresses.CharacterAccessory(name, value, _profile.BackLayer));
                 return middle ?? front ?? back ?? _missingCharacter;
             }
-            return await GetSprite(_addresses.MainBody(name, mainCharacterView, null))
+            return await GetSprite(_addresses.CharacterMainBody(name, mainCharacterView, null))
                 ?? _missingCharacter;
         }
 
@@ -128,30 +128,20 @@ namespace Novels.Character
             if (mainBody == null)
                 return true;
             if (!presentation.IsChild
-                && !string.IsNullOrWhiteSpace(appearance.Emotion)
-                && emotion == null)
-                return true;
-            if (!presentation.IsChild
-                && !presentation.RemoveClothes
-                && !string.IsNullOrWhiteSpace(appearance.Clothes ?? clothes)
-                && clothesSprite == null)
-            {
-                return true;
-            }
-            if (!presentation.IsChild
-                && !presentation.RemoveHair
-                && !string.IsNullOrWhiteSpace(appearance.Hair ?? hair)
-                && hairSprites.Back == null
-                && hairSprites.Front == null)
-            {
-                return true;
-            }
-            if (!presentation.IsChild
-                && !presentation.RemoveAccessory
-                && !string.IsNullOrWhiteSpace(appearance.Accessories ?? accessory)
-                && accessorySprites.Back == null
-                && accessorySprites.Middle == null
-                && accessorySprites.Front == null)
+                && (Missing(appearance.Emotion, emotion)
+                    || !presentation.RemoveClothes
+                    && Missing(appearance.Clothes ?? clothes, clothesSprite)
+                    || !presentation.RemoveHair
+                    && Missing(
+                        appearance.Hair ?? hair,
+                        hairSprites.Back,
+                        hairSprites.Front)
+                    || !presentation.RemoveAccessory
+                    && Missing(
+                        appearance.Accessories ?? accessory,
+                        accessorySprites.Back,
+                        accessorySprites.Middle,
+                        accessorySprites.Front)))
             {
                 return true;
             }
@@ -170,6 +160,10 @@ namespace Novels.Character
             return false;
         }
 
+        private static bool Missing(string selection, params Sprite[] sprites) =>
+            !string.IsNullOrWhiteSpace(selection)
+            && Array.TrueForAll(sprites, sprite => sprite == null);
+
         private async UniTask<bool> ResolvesCandidate(
             string name,
             string view,
@@ -180,29 +174,29 @@ namespace Novels.Character
                 view = $"{view}/{_profile.ChildView}";
             var requests = new System.Collections.Generic.List<UniTask<Sprite>>
             {
-                GetSprite(_addresses.MainBody(name, view, candidate)),
-                GetSprite(_addresses.Emotion(name, view, candidate)),
+                GetSprite(_addresses.CharacterMainBody(name, view, candidate)),
+                GetSprite(_addresses.CharacterEmotion(name, view, candidate)),
             };
             if (!isChild)
             {
-                requests.Add(GetSprite(_addresses.Clothes(name, candidate, 1)));
-                requests.Add(GetSprite(_addresses.Hair(
+                requests.Add(GetSprite(_addresses.CharacterClothes(name, candidate, 1)));
+                requests.Add(GetSprite(Hair(
                     name,
                     candidate,
                     _profile.BackLayer)));
-                requests.Add(GetSprite(_addresses.Hair(
+                requests.Add(GetSprite(Hair(
                     name,
                     candidate,
                     _profile.FrontLayer)));
-                requests.Add(GetSprite(_addresses.Accessory(
+                requests.Add(GetSprite(_addresses.CharacterAccessory(
                     name,
                     candidate,
                     _profile.BackLayer)));
-                requests.Add(GetSprite(_addresses.Accessory(
+                requests.Add(GetSprite(_addresses.CharacterAccessory(
                     name,
                     candidate,
                     _profile.MiddleLayer)));
-                requests.Add(GetSprite(_addresses.Accessory(
+                requests.Add(GetSprite(_addresses.CharacterAccessory(
                     name,
                     candidate,
                     _profile.FrontLayer)));
@@ -216,16 +210,16 @@ namespace Novels.Character
             string view,
             StoryContracts.CharacterPresentation presentation)
         {
-            var sprite = await GetSprite(_addresses.MainBody(name, view, null));
+            var sprite = await GetSprite(_addresses.CharacterMainBody(name, view, null));
             if (presentation.IsChild)
             {
                 view = $"{view}/{_profile.ChildView}";
-                sprite = await GetSprite(_addresses.MainBody(name, view, null)) ?? sprite;
+                sprite = await GetSprite(_addresses.CharacterMainBody(name, view, null)) ?? sprite;
             }
             foreach (var candidate in presentation.AssetCandidates)
             {
                 var candidateSprite = await GetSprite(
-                    _addresses.MainBody(name, view, candidate));
+                    _addresses.CharacterMainBody(name, view, candidate));
                 if (candidateSprite == null)
                     continue;
                 return candidateSprite;
@@ -246,7 +240,7 @@ namespace Novels.Character
                 view = $"{view}/{_profile.ChildView}";
             foreach (var candidate in presentation.AssetCandidates)
             {
-                var sprite = await GetSprite(_addresses.Emotion(name, view, candidate));
+                var sprite = await GetSprite(_addresses.CharacterEmotion(name, view, candidate));
                 if (sprite == null)
                     continue;
                 if (!presentation.IsChild)
@@ -256,7 +250,7 @@ namespace Novels.Character
 
             // Adult appearance state must not leak into the child asset tree.
             // Missing authored adult variants keep the last resolvable emotion.
-            return await GetSprite(_addresses.Emotion(name, view, inheritedEmotion));
+            return await GetSprite(_addresses.CharacterEmotion(name, view, inheritedEmotion));
         }
 
         private async UniTask<Sprite> LoadClothes(
@@ -277,14 +271,14 @@ namespace Novels.Character
             }
             foreach (var candidate in presentation.AssetCandidates)
             {
-                var sprite = await GetSprite(_addresses.Clothes(name, candidate, index));
+                var sprite = await GetSprite(_addresses.CharacterClothes(name, candidate, index));
                 if (sprite == null)
                     continue;
                 appearance.Clothes = candidate;
-                break;
+                return sprite;
             }
             return await GetSprite(
-                _addresses.Clothes(name, appearance.Clothes ?? clothes, index));
+                _addresses.CharacterClothes(name, appearance.Clothes ?? clothes, index));
         }
 
         private async UniTask<CharacterHairSprites> LoadHair(
@@ -305,12 +299,12 @@ namespace Novels.Character
             foreach (var candidate in presentation.AssetCandidates)
             {
                 var (backCandidate, frontCandidate) = await UniTask.WhenAll(
-                    GetSprite(_addresses.Hair(name, candidate, _profile.BackLayer)),
-                    GetSprite(_addresses.Hair(name, candidate, _profile.FrontLayer)));
+                    GetSprite(Hair(name, candidate, _profile.BackLayer)),
+                    GetSprite(Hair(name, candidate, _profile.FrontLayer)));
                 if (backCandidate == null && frontCandidate == null)
                     continue;
                 appearance.Hair = candidate;
-                break;
+                return new CharacterHairSprites(backCandidate, frontCandidate);
             }
             var resolved = presentation.IsChild
                 ? null
@@ -319,8 +313,8 @@ namespace Novels.Character
                         ? _profile.DefaultHairStyle
                         : hair);
             var (back, front) = await UniTask.WhenAll(
-                GetSprite(_addresses.Hair(name, resolved, _profile.BackLayer)),
-                GetSprite(_addresses.Hair(name, resolved, _profile.FrontLayer)));
+                GetSprite(Hair(name, resolved, _profile.BackLayer)),
+                GetSprite(Hair(name, resolved, _profile.FrontLayer)));
             return new CharacterHairSprites(back, front);
         }
 
@@ -336,29 +330,36 @@ namespace Novels.Character
             {
                 var (backCandidate, middleCandidate, frontCandidate) =
                     await UniTask.WhenAll(
-                        GetSprite(_addresses.Accessory(
+                        GetSprite(_addresses.CharacterAccessory(
                             name, candidate, _profile.BackLayer)),
-                        GetSprite(_addresses.Accessory(
+                        GetSprite(_addresses.CharacterAccessory(
                             name, candidate, _profile.MiddleLayer)),
-                        GetSprite(_addresses.Accessory(
+                        GetSprite(_addresses.CharacterAccessory(
                             name, candidate, _profile.FrontLayer)));
                 if (backCandidate == null
                     && middleCandidate == null
                     && frontCandidate == null)
                     continue;
                 appearance.Accessories = candidate;
-                break;
+                return new CharacterAccessorySprites(
+                    backCandidate,
+                    middleCandidate,
+                    frontCandidate);
             }
             var resolved = appearance.Accessories ?? accessory;
             var (back, middle, front) = await UniTask.WhenAll(
-                GetSprite(_addresses.Accessory(
+                GetSprite(_addresses.CharacterAccessory(
                     name, resolved, _profile.BackLayer)),
-                GetSprite(_addresses.Accessory(
+                GetSprite(_addresses.CharacterAccessory(
                     name, resolved, _profile.MiddleLayer)),
-                GetSprite(_addresses.Accessory(
+                GetSprite(_addresses.CharacterAccessory(
                     name, resolved, _profile.FrontLayer)));
             return new CharacterAccessorySprites(back, middle, front);
         }
+
+        private string Hair(string name, string candidate, string layer) =>
+            _addresses.CharacterHair(
+                name, candidate, layer, _profile.DefaultHairColor);
 
         private UniTask<Sprite> GetSprite(string path) =>
             string.IsNullOrWhiteSpace(path)

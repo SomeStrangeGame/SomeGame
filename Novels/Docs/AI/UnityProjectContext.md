@@ -2,6 +2,18 @@
 
 <!-- unity-onboarding:generated:start -->
 
+## Simplification wave completed on 2026-08-21
+
+- The redundant `Novels.Waiting` feature, factory, and assembly were removed. StoryQueue now receives the episode token and performs the same scaled-time wait directly.
+- `Novels.UITransitions` moved to the reusable `somegame.ui-transitions` package with its assembly GUID preserved.
+- Ink reading, source mapping, typed story contracts, and command parsing moved together to the independent `somegame.novel-ink` package. Existing assembly GUIDs, namespaces, and runtime APIs remain unchanged.
+- Unused `somegame.localization` and `somegame.sodata` dependencies were removed from this project; their source packages remain available to other projects.
+- Character address forwarding was removed. Runtime now uses the same `ContentAddresses`/`ContentAddressConvention` boundary as Editor validation, and repeated resolved sprite probes no longer reload the same asset.
+- Dialogue composition uses a named tuple instead of a one-use result DTO and one shared role-to-layout rule. Camera syntax is a data table instead of a long conditional chain.
+- Validation reports no longer pretend to be mutable string collections. Validators receive the concrete typed report directly.
+- SHA-256 calculation is owned by `Bundles.ContentHash`, and reusable deployment-manifest construction lives in the editor-only `Bundles.Editor` assembly.
+- Generated-solution runtime and Editor compilation completed with 0 errors and 0 warnings. Tests and AssetBundle builds were not run.
+
 ## Architecture wave completed on 2026-08-19
 
 - Ink audio commands contain a bare file name without an extension. Editor validation and delivery indexing require exactly one matching `.wav`, `.mp3`, or `.ogg` file; runtime resolves the physical format from the pinned release and rejects missing or ambiguous matches.
@@ -28,7 +40,7 @@
 ## Structure And Assemblies
 
 - `Assets/Novels`: runtime composition, feature/domain assemblies, views, and the only scene.
-- `Assets/Novels/StoryCommands`: typed story-command model and legacy Ink-line parser.
+- `../../Packages/NovelInk`: typed story contracts, command parser, Ink reader, and source-map support. The package preserves the established `Novels.Story*` namespaces.
 - `Assets/RemoteAssets`: bundled authoring content. Every technical address below this root is canonical lowercase. Application-owned assets are grouped under `content/{contentId}/application`, episode-owned assets under `content/{contentId}/episodes/{episodeId}`, definitions under `content/{contentId}/definition`, while `catalog` and `loading` remain top-level shared bundles.
 - `Assets/StreamingAssets`: Ink JSON, audio/video, and built remote bundle payloads.
 - `Assets/Editor/CreateAssetBundles.cs`: manual Android AssetBundle builder/cache clearer.
@@ -37,7 +49,7 @@
 - `Novels.Content`: immutable `NovelDefinition` and `EpisodeDefinition` configuration independent of scene serialization.
 - `Novels.Diagnostics`: neutral error code, severity, source, and exception contracts.
 - `Novels.Editor`: editor-only validation of loaded novel configuration and Android bundle output.
-- Feature assemblies: `StoryCommands`, `StoryProcessor`, `StoryQueue`, `QueueProcess`, `Bubble`, `Character`, `Location`, `Notification`, `Audio`, `Waiting`, and `Save`, with separate View assemblies where applicable. `StoryContracts` owns the shared vocabulary consumed by story-driven features.
+- Feature assemblies: package-owned `StoryContracts`, `StoryCommands`, and `StoryProcessor`, plus project-owned `StoryQueue`, `QueueProcess`, `Bubble`, `Character`, `Location`, `Notification`, `Audio`, and `Save`, with separate View assemblies where applicable.
 
 ## Scenes And Startup
 
@@ -62,7 +74,7 @@
 - Ink source is the only source of episode audio, background, and speaker dependencies. `StoryDependencyAnalyzer` parses authored command lines, resolves declared string variables, derives matching video files during content builds, and rejects empty or statically unresolved resource references. It no longer scrapes compiler-private Ink JSON strings.
 - `Bundles.MediaFileConvention` owns only the fixed `.mp4` video extension. Ink audio references are extensionless names; Editor validation and runtime release lookup require one unambiguous matching audio payload.
 - Player schema support is centralized in `ContentCompatibility`. Deployment URLs are generated into a staging-only `ContentRuntimeConfiguration` Resources asset instead of being serialized into the startup scene.
-- Shared cancellation-aware view animations live in `Novels.UITransitions`. Location background playback/cut-scene behavior lives in `BackgroundPresentationController`, while image/camera/dialogue geometry lives in `LocationLayout`; existing UI dimensions and serialized timing values are unchanged.
+- Shared cancellation-aware view animations live in the `somegame.ui-transitions` package. Location background playback/cut-scene behavior lives in `BackgroundPresentationController`, while image/camera/dialogue geometry lives in `LocationLayout`; existing UI dimensions and serialized timing/layout values are unchanged.
 
 - Content invariants are enforced at model boundaries: episode IDs, media IDs, and normalized locale codes must be unique case-insensitively.
 - Bundle assets are addressed by immutable `BundleAssetAddress` values. Required loads fail explicitly, while optional sprite probes use a separate API.

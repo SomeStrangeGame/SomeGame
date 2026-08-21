@@ -3,7 +3,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace Novels.UITransitions
+namespace UITransitions
 {
     public static class Transition
     {

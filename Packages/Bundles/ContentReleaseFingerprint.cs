@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Text;
 
 namespace Bundles
@@ -32,11 +31,8 @@ namespace Bundles
             lines.AddRange((release.deliveryGroups ?? Array.Empty<ContentDeliveryGroupEntry>())
                 .OrderBy(value => value?.id, StringComparer.Ordinal)
                 .Select(value => $"G:{value?.id}:{value?.payloadCount}:{value?.size}"));
-            using var sha = SHA256.Create();
-            return ToHex(sha.ComputeHash(Encoding.UTF8.GetBytes(string.Join("\n", lines))));
+            return ContentHash.ComputeSha256(
+                Encoding.UTF8.GetBytes(string.Join("\n", lines)));
         }
-
-        private static string ToHex(byte[] data) =>
-            BitConverter.ToString(data).Replace("-", string.Empty).ToLowerInvariant();
     }
 }

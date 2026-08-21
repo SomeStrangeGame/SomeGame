@@ -74,7 +74,6 @@ namespace Novels
                 state.EpisodeScope,
                 assets.Notification,
                 cancellationToken);
-            var waiting = CreateWaiting(state.EpisodeScope, cancellationToken);
             var audio = CreateAudio(
                 state.EpisodeScope,
                 state.EpisodeBundles.ResolveAudioUrl,
@@ -83,7 +82,7 @@ namespace Novels
                 storyProcessor,
                 notification,
                 location,
-                waiting,
+                cancellationToken,
                 audio,
                 bubble,
                 wardrobe,

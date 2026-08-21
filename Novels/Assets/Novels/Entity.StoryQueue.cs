@@ -1,3 +1,7 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using UnityEngine;
+
 namespace Novels
 {
     internal partial class Entity
@@ -6,7 +10,7 @@ namespace Novels
             StoryProcessor.Entity storyProcessor,
             Notification.Entity notification,
             Location.Entity location,
-            Waiting.Entity waiting,
+            CancellationToken cancellationToken,
             Audio.Entity audio,
             Bubble.Entity bubble,
             Wardrobe.Entity wardrobe,
@@ -26,7 +30,7 @@ namespace Novels
                         SetImageImmediate = location.SetImageImmediate,
                         SetCamera = location.SetCamera,
                         SetCameraImmediate = location.SetCameraImmediate,
-                        Wait = waiting.Await,
+                        Wait = seconds => Wait(seconds, cancellationToken),
                     },
                     Audio = new StoryQueue.Entity.AudioPort
                     {
@@ -91,6 +95,17 @@ namespace Novels
                     },
                 },
             });
+        }
+
+        private static async UniTask Wait(
+            float seconds,
+            CancellationToken cancellationToken)
+        {
+            while (seconds > 0f)
+            {
+                await UniTask.Yield(cancellationToken);
+                seconds -= Time.deltaTime;
+            }
         }
     }
 }

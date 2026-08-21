@@ -208,7 +208,7 @@ namespace Editor
         private static void ValidateBundleAssignment(
             string assetPath,
             string expectedBundle,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             if (string.IsNullOrWhiteSpace(assetPath)
                 || AssetDatabase.LoadMainAssetAtPath(assetPath) == null)
@@ -351,7 +351,7 @@ namespace Editor
 
         private static void ValidateBundles(
             IEnumerable<string> configuredBundles,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             var existingBundles = new HashSet<string>(
                 AssetDatabase.GetAllAssetBundleNames(),

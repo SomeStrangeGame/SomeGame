@@ -36,34 +36,34 @@ namespace Novels.StoryCommands
         {
             var result = StoryContracts.StoryChoiceAction.None;
 
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectAppearance)
-                || HasArgument(
+            if (HasAnyArgument(
                     arguments,
+                    StoryContracts.StoryChoiceActions.SelectAppearance,
                     StoryContracts.StoryChoiceActions.SelectAppearanceFormal))
                 result |= StoryContracts.StoryChoiceAction.SelectAppearance;
 
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectClothes)
-                || HasArgument(
+            if (HasAnyArgument(
                     arguments,
-                    StoryContracts.StoryChoiceActions.SelectClothesFormal)
-                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectSwimsuit)
-                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectSwimsuitFormal)
-                || HasArgument(arguments, StoryContracts.StoryChoiceActions.ConfirmClothes))
+                    StoryContracts.StoryChoiceActions.SelectClothes,
+                    StoryContracts.StoryChoiceActions.SelectClothesFormal,
+                    StoryContracts.StoryChoiceActions.SelectSwimsuit,
+                    StoryContracts.StoryChoiceActions.SelectSwimsuitFormal,
+                    StoryContracts.StoryChoiceActions.ConfirmClothes))
                 result |= StoryContracts.StoryChoiceAction.SelectClothes;
 
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHair)
-                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHairLegacy)
-                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHairFormal)
-                || HasArgument(
+            if (HasAnyArgument(
                     arguments,
+                    StoryContracts.StoryChoiceActions.SelectHair,
+                    StoryContracts.StoryChoiceActions.SelectHairLegacy,
+                    StoryContracts.StoryChoiceActions.SelectHairFormal,
                     StoryContracts.StoryChoiceActions.SelectHairFormalLegacy))
             {
                 result |= StoryContracts.StoryChoiceAction.SelectHair;
             }
 
-            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectAccessory)
-                || HasArgument(
+            if (HasAnyArgument(
                     arguments,
+                    StoryContracts.StoryChoiceActions.SelectAccessory,
                     StoryContracts.StoryChoiceActions.SelectAccessoryFormal))
             {
                 result |= StoryContracts.StoryChoiceAction.SelectAccessory;
@@ -244,69 +244,9 @@ namespace Novels.StoryCommands
             string value,
             out StoryContracts.StoryCameraAction action)
         {
-            value = NormalizeCameraAction(value);
-            if (IsArgument(value, StoryContracts.StoryCameraActions.FadeIn))
-                action = StoryContracts.StoryCameraAction.FadeIn;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.FadeInRussian))
-                action = StoryContracts.StoryCameraAction.FadeIn;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.LeftRight))
-                action = StoryContracts.StoryCameraAction.PanLeftToRight;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.LeftRightRussian))
-                action = StoryContracts.StoryCameraAction.PanLeftToRight;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.RightLeft))
-                action = StoryContracts.StoryCameraAction.PanRightToLeft;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.RightLeftRussian))
-                action = StoryContracts.StoryCameraAction.PanRightToLeft;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToCenter))
-                action = StoryContracts.StoryCameraAction.MoveToCenter;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToCenterRussian))
-                action = StoryContracts.StoryCameraAction.MoveToCenter;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToLeft))
-                action = StoryContracts.StoryCameraAction.MoveToLeft;
-            else if (IsArgument(value, StoryContracts.StoryArguments.PositionLeft))
-                action = StoryContracts.StoryCameraAction.MoveToLeft;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.ToRight))
-                action = StoryContracts.StoryCameraAction.MoveToRight;
-            else if (IsArgument(
-                         value,
-                         StoryContracts.StoryCameraActions.MoveToRightRussian))
-                action = StoryContracts.StoryCameraAction.MoveToRight;
-            else if (IsArgument(value, StoryContracts.StoryArguments.PositionRight))
-                action = StoryContracts.StoryCameraAction.MoveToRight;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.Shaking))
-                action = StoryContracts.StoryCameraAction.Shake;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.ShakingRussian)
-                || IsArgument(
-                    value,
-                    StoryContracts.StoryCameraActions.ShakingScreenRussian))
-            {
-                action = StoryContracts.StoryCameraAction.Shake;
-            }
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.Injury))
-                action = StoryContracts.StoryCameraAction.Injury;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.InjuryRussian))
-                action = StoryContracts.StoryCameraAction.Injury;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.Splashes))
-                action = StoryContracts.StoryCameraAction.Splashes;
-            else if (IsArgument(value, StoryContracts.StoryCameraActions.SplashesRussian)
-                || IsArgument(value, StoryContracts.StoryCameraActions.WavesRussian))
-            {
-                action = StoryContracts.StoryCameraAction.Splashes;
-            }
-            else if (IsArgument(
-                         value,
-                         StoryContracts.StoryCameraActions.WhiteFlashRussian)
-                || IsArgument(value, StoryContracts.StoryCameraActions.FlashRussian))
-            {
-                action = StoryContracts.StoryCameraAction.Splashes;
-            }
-            else
-            {
-                action = default;
-                return false;
-            }
-
-            return true;
+            return StoryCommandSyntax.CameraActions.TryGetValue(
+                NormalizeCameraAction(value),
+                out action);
         }
 
         private static string NormalizeCameraAction(string value)
@@ -353,6 +293,14 @@ namespace Novels.StoryCommands
                     return true;
             }
 
+            return false;
+        }
+
+        private static bool HasAnyArgument(string[] arguments, params string[] expected)
+        {
+            foreach (var value in expected)
+                if (HasArgument(arguments, value))
+                    return true;
             return false;
         }
 

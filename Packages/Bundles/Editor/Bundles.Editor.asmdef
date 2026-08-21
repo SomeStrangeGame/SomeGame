@@ -1,10 +1,10 @@
 {
-    "name": "Novels.UITransitions",
+    "name": "Bundles.Editor",
     "rootNamespace": "",
     "references": [
-        "GUID:f51ebe6a0ceec4240a699833d6309b23"
+        "GUID:e2cbfeb45c46b40aaa8387f79db2b162"
     ],
-    "includePlatforms": [],
+    "includePlatforms": ["Editor"],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

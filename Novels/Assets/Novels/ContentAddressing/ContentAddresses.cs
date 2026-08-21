@@ -62,6 +62,30 @@ namespace Novels.ContentAddressing
         public string SharedCharacterPrefab(string assetName) =>
             ContentAddressConvention.SharedCharacterPrefab(ContentId, assetName);
 
+        public string CharacterMainBody(string name, string view, string candidate) =>
+            ContentAddressConvention.CharacterMainBody(
+                ContentId, EpisodeId, name, view, candidate);
+
+        public string CharacterEmotion(string name, string view, string candidate) =>
+            ContentAddressConvention.CharacterEmotion(
+                ContentId, EpisodeId, name, view, candidate);
+
+        public string CharacterClothes(string name, string candidate, int index) =>
+            ContentAddressConvention.CharacterClothes(
+                ContentId, EpisodeId, name, candidate, index);
+
+        public string CharacterHair(
+            string name,
+            string candidate,
+            string layer,
+            string color) =>
+            ContentAddressConvention.CharacterHair(
+                ContentId, EpisodeId, name, candidate, layer, color);
+
+        public string CharacterAccessory(string name, string candidate, string layer) =>
+            ContentAddressConvention.CharacterAccessory(
+                ContentId, EpisodeId, name, candidate, layer);
+
         public string NotificationPrefab(string assetName) =>
             ContentAddressConvention.NotificationPrefab(ContentId, EpisodeId, assetName);
 

@@ -56,6 +56,35 @@ namespace Novels.StoryCommands
                 ["Ожидание"] = StoryCommandType.Wait,
             };
 
+        internal static readonly IReadOnlyDictionary<string, StoryContracts.StoryCameraAction>
+            CameraActions = new Dictionary<string, StoryContracts.StoryCameraAction>(
+                StringComparer.OrdinalIgnoreCase)
+            {
+                [StoryContracts.StoryCameraActions.FadeIn] = StoryContracts.StoryCameraAction.FadeIn,
+                [StoryContracts.StoryCameraActions.FadeInRussian] = StoryContracts.StoryCameraAction.FadeIn,
+                [StoryContracts.StoryCameraActions.LeftRight] = StoryContracts.StoryCameraAction.PanLeftToRight,
+                [StoryContracts.StoryCameraActions.LeftRightRussian] = StoryContracts.StoryCameraAction.PanLeftToRight,
+                [StoryContracts.StoryCameraActions.RightLeft] = StoryContracts.StoryCameraAction.PanRightToLeft,
+                [StoryContracts.StoryCameraActions.RightLeftRussian] = StoryContracts.StoryCameraAction.PanRightToLeft,
+                [StoryContracts.StoryCameraActions.ToCenter] = StoryContracts.StoryCameraAction.MoveToCenter,
+                [StoryContracts.StoryCameraActions.ToCenterRussian] = StoryContracts.StoryCameraAction.MoveToCenter,
+                [StoryContracts.StoryCameraActions.ToLeft] = StoryContracts.StoryCameraAction.MoveToLeft,
+                [StoryContracts.StoryArguments.PositionLeft] = StoryContracts.StoryCameraAction.MoveToLeft,
+                [StoryContracts.StoryCameraActions.ToRight] = StoryContracts.StoryCameraAction.MoveToRight,
+                [StoryContracts.StoryCameraActions.MoveToRightRussian] = StoryContracts.StoryCameraAction.MoveToRight,
+                [StoryContracts.StoryArguments.PositionRight] = StoryContracts.StoryCameraAction.MoveToRight,
+                [StoryContracts.StoryCameraActions.Shaking] = StoryContracts.StoryCameraAction.Shake,
+                [StoryContracts.StoryCameraActions.ShakingRussian] = StoryContracts.StoryCameraAction.Shake,
+                [StoryContracts.StoryCameraActions.ShakingScreenRussian] = StoryContracts.StoryCameraAction.Shake,
+                [StoryContracts.StoryCameraActions.Injury] = StoryContracts.StoryCameraAction.Injury,
+                [StoryContracts.StoryCameraActions.InjuryRussian] = StoryContracts.StoryCameraAction.Injury,
+                [StoryContracts.StoryCameraActions.Splashes] = StoryContracts.StoryCameraAction.Splashes,
+                [StoryContracts.StoryCameraActions.SplashesRussian] = StoryContracts.StoryCameraAction.Splashes,
+                [StoryContracts.StoryCameraActions.WavesRussian] = StoryContracts.StoryCameraAction.Splashes,
+                [StoryContracts.StoryCameraActions.WhiteFlashRussian] = StoryContracts.StoryCameraAction.Splashes,
+                [StoryContracts.StoryCameraActions.FlashRussian] = StoryContracts.StoryCameraAction.Splashes,
+            };
+
         internal static bool TrySplitMissingSeparator(
             string source,
             out string command,

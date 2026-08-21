@@ -10,7 +10,7 @@ namespace Editor
     {
         internal static void Validate(
             IEnumerable<string> contentIds,
-            ICollection<string> errors,
+            ContentValidationReport errors,
             string remoteBasePath = null,
             IReadOnlyDictionary<string, string> deliveryIndex = null)
         {
@@ -38,7 +38,7 @@ namespace Editor
             UnityEditor.BuildTarget target,
             NovelContentBuildProfile profile,
             IEnumerable<string> contentIds,
-            ICollection<string> errors,
+            ContentValidationReport errors,
             string remoteBasePath,
             IReadOnlyDictionary<string, string> knownDeliveryIndex)
         {
@@ -100,7 +100,7 @@ namespace Editor
                     if (info.Length != bundle.size)
                         errors.Add($"Release size does not match bundle '{bundle.name}'.");
                     else if (!string.Equals(
-                                 ContentHash.ComputeSha256(payloadPath),
+                                 Bundles.ContentHash.ComputeSha256(payloadPath),
                                  bundle.sha256,
                                  StringComparison.OrdinalIgnoreCase))
                         errors.Add($"Release SHA-256 does not match bundle '{bundle.name}'.");

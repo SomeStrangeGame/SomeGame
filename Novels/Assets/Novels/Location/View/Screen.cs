@@ -77,7 +77,7 @@ namespace Novels.Location.View
             _imageCanvasGroup.alpha = 0f;
             _imageCanvasGroup.gameObject.SetActive(true);
 
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _imageCanvasGroup,
                 0f,
                 1f,
@@ -97,7 +97,7 @@ namespace Novels.Location.View
             _imageCanvasGroup.alpha = 1f;
             _imageCanvasGroup.gameObject.SetActive(true);
 
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _imageCanvasGroup,
                 1f,
                 0f,
@@ -212,7 +212,7 @@ namespace Novels.Location.View
             Vector3 to,
             float duration,
             CancellationToken cancellationToken) =>
-            UITransitions.Transition.Move(
+            global::UITransitions.Transition.Move(
                 target,
                 from,
                 to,
@@ -235,7 +235,7 @@ namespace Novels.Location.View
         public async UniTask SetEffect(Effect effect, CancellationToken cancellationToken)
         {
             ActivateEffect(effect);
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _effectCanvasGroup,
                 0f,
                 1f,
@@ -249,13 +249,13 @@ namespace Novels.Location.View
         {
             ActivateEffect(effect);
             var halfDuration = _effectDuration / 2f;
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _effectCanvasGroup,
                 0f,
                 1f,
                 halfDuration,
                 cancellationToken);
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _effectCanvasGroup,
                 1f,
                 0f,

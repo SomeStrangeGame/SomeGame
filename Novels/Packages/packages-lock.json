@@ -106,18 +106,22 @@
       "source": "local",
       "dependencies": {}
     },
-    "somegame.localization": {
-      "version": "file:../../Packages/Localization",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "somegame.logs": {
       "version": "file:../../Packages/Logs",
       "depth": 0,
       "source": "local",
       "dependencies": {
         "somegame.disposable": "0.0.1"
+      }
+    },
+    "somegame.novel-ink": {
+      "version": "file:../../Packages/NovelInk",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10",
+        "com.inkle.ink-unity-integration": "1.2.0"
       }
     },
     "somegame.setting": {
@@ -129,12 +133,12 @@
         "com.cysharp.unitask": "2.5.10"
       }
     },
-    "somegame.sodata": {
-      "version": "file:../../Packages/SOData",
+    "somegame.ui-transitions": {
+      "version": "file:../../Packages/UITransitions",
       "depth": 0,
       "source": "local",
       "dependencies": {
-        "somegame.disposable": "0.0.1"
+        "com.cysharp.unitask": "2.5.10"
       }
     },
     "com.unity.modules.adaptiveperformance": {

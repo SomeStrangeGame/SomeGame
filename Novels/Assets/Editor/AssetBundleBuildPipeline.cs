@@ -4,7 +4,6 @@ using System.Text;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
-using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 
@@ -81,7 +80,7 @@ namespace Editor
                         $"Could not calculate CRC for bundle '{bundle}'.");
                 var fileInfo = new FileInfo(sourceFile);
                 var bundleSize = fileInfo.Length;
-                var sha256 = ContentHash.ComputeSha256(sourceFile);
+                var sha256 = Bundles.ContentHash.ComputeSha256(sourceFile);
 
                 var bundleDirectory = Path.Combine(targetPath, bundle);
                 var temporaryFile = sourceFile + ".built";
@@ -149,27 +148,6 @@ namespace Editor
         }
     }
 
-    internal static class ContentHash
-    {
-        internal static string ComputeSha256(string path)
-        {
-            using var sha = SHA256.Create();
-            using var stream = File.OpenRead(path);
-            return ToHex(sha.ComputeHash(stream));
-        }
-
-        internal static string ComputeSha256(byte[] data)
-        {
-            using var sha = SHA256.Create();
-            return ToHex(sha.ComputeHash(data));
-        }
-
-        private static string ToHex(byte[] data) =>
-            BitConverter.ToString(data)
-                .Replace("-", string.Empty)
-                .ToLowerInvariant();
-    }
-
     internal sealed class ContentBuildSnapshot
     {
         private ContentBuildSnapshot(
@@ -196,7 +174,7 @@ namespace Editor
                 if (!deliveryIndex.TryGetValue(relative, out var deliveryGroup))
                     continue;
                 var info = new FileInfo(file);
-                var sha256 = ContentHash.ComputeSha256(file);
+                var sha256 = Bundles.ContentHash.ComputeSha256(file);
                 files.Add(new ContentBuildFile(
                     relative,
                     $"Files/{sha256}",

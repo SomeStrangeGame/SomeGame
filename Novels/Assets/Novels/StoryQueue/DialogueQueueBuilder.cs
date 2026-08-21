@@ -4,20 +4,6 @@ using Cysharp.Threading.Tasks;
 
 namespace Novels.StoryQueue
 {
-    internal readonly struct DialogueQueueBuildResult
-    {
-        internal DialogueQueueBuildResult(
-            QueueProcess.IQueue[] beforeCommands,
-            QueueProcess.IQueue[] afterCommands)
-        {
-            BeforeCommands = beforeCommands;
-            AfterCommands = afterCommands;
-        }
-
-        internal QueueProcess.IQueue[] BeforeCommands { get; }
-        internal QueueProcess.IQueue[] AfterCommands { get; }
-    }
-
     internal sealed class DialogueQueueBuilder
     {
         private readonly Entity.DialogueCtx _ctx;
@@ -30,7 +16,9 @@ namespace Novels.StoryQueue
             _ctx = ctx;
         }
 
-        internal DialogueQueueBuildResult Build(
+        internal (
+            QueueProcess.IQueue[] BeforeCommands,
+            QueueProcess.IQueue[] AfterCommands) Build(
             StoryCommands.DialogueCommandData dialogue,
             StoryContracts.StoryChoice[] choices,
             UniTaskCompletionSource bubbleDone,
@@ -39,7 +27,7 @@ namespace Novels.StoryQueue
             var name = dialogue.Speaker;
             if (string.IsNullOrEmpty(dialogue.Speaker) && string.IsNullOrEmpty(dialogue.Text))
             {
-                return new DialogueQueueBuildResult(
+                return (
                     new QueueProcess.IQueue[]
                     {
                         CreateSetBubbleQueue(
@@ -54,7 +42,8 @@ namespace Novels.StoryQueue
             }
 
             var role = ResolveSpeakerRole(dialogue);
-            var position = dialogue.Character.Position ?? GetCharacterPosition(role);
+            var layout = GetDialogueLayout(role);
+            var position = dialogue.Character.Position ?? layout.Position;
             var setBubble = CreateSetBubbleQueue(dialogue, role, choices, bubbleDone);
 
             var characterName = name;
@@ -86,7 +75,7 @@ namespace Novels.StoryQueue
                     _ctx.Location.SetDialogueImmediate,
                     _ctx.Character.CharacterHide,
                     _ctx.Character.CharacterHideImmediate,
-                    GetDialogueAlignment(role),
+                    layout.Alignment,
                     hideDuringDialogueTransition),
             };
             if (!isHidden
@@ -119,7 +108,7 @@ namespace Novels.StoryQueue
             }
 
             beforeCommands.Add(setBubble);
-            return new DialogueQueueBuildResult(
+            return (
                 beforeCommands.ToArray(),
                 afterCommands.ToArray());
         }
@@ -174,29 +163,24 @@ namespace Novels.StoryQueue
                 dialogue.Presentation,
                 _ctx.MainCharacter);
 
-        private static StoryContracts.StoryCharacterPosition GetCharacterPosition(
+        private static (
+            StoryContracts.StoryCharacterPosition Position,
+            StoryContracts.StoryDialogueAlignment Alignment) GetDialogueLayout(
             StoryContracts.StorySpeakerRole role)
         {
             return role switch
             {
-                StoryContracts.StorySpeakerRole.MainCharacter => StoryContracts.StoryCharacterPosition.Left,
-                StoryContracts.StorySpeakerRole.Wardrobe => StoryContracts.StoryCharacterPosition.Center,
-                StoryContracts.StorySpeakerRole.Choose => StoryContracts.StoryCharacterPosition.Center,
-                StoryContracts.StorySpeakerRole.Narrator => StoryContracts.StoryCharacterPosition.Center,
-                _ => StoryContracts.StoryCharacterPosition.Right,
-            };
-        }
-
-        private static StoryContracts.StoryDialogueAlignment GetDialogueAlignment(
-            StoryContracts.StorySpeakerRole role)
-        {
-            return role switch
-            {
-                StoryContracts.StorySpeakerRole.MainCharacter => StoryContracts.StoryDialogueAlignment.Left,
-                StoryContracts.StorySpeakerRole.Wardrobe => StoryContracts.StoryDialogueAlignment.Center,
-                StoryContracts.StorySpeakerRole.Choose => StoryContracts.StoryDialogueAlignment.Center,
-                StoryContracts.StorySpeakerRole.Narrator => StoryContracts.StoryDialogueAlignment.Center,
-                _ => StoryContracts.StoryDialogueAlignment.Right,
+                StoryContracts.StorySpeakerRole.MainCharacter => (
+                    StoryContracts.StoryCharacterPosition.Left,
+                    StoryContracts.StoryDialogueAlignment.Left),
+                StoryContracts.StorySpeakerRole.Wardrobe
+                    or StoryContracts.StorySpeakerRole.Choose
+                    or StoryContracts.StorySpeakerRole.Narrator => (
+                        StoryContracts.StoryCharacterPosition.Center,
+                        StoryContracts.StoryDialogueAlignment.Center),
+                _ => (
+                    StoryContracts.StoryCharacterPosition.Right,
+                    StoryContracts.StoryDialogueAlignment.Right),
             };
         }
 
@@ -204,33 +188,34 @@ namespace Novels.StoryQueue
             BubbleContracts.BubblePresentationKind kind,
             UniTaskCompletionSource bubbleDone)
         {
-            var show = _ctx.Bubble.BubbleShow;
-            var showImmediate = _ctx.Bubble.BubbleShowImmediate;
-            var hide = _ctx.Bubble.BubbleHide;
-            var hideImmediate = _ctx.Bubble.BubbleHideImmediate;
-            if (kind == BubbleContracts.BubblePresentationKind.Wardrobe)
+            (Func<UniTask> Show, Action ShowImmediate, Func<UniTask> Hide,
+                Action HideImmediate) lifecycle = kind switch
             {
-                show = _ctx.Wardrobe.Show;
-                showImmediate = _ctx.Wardrobe.ShowImmediate;
-                hide = _ctx.Wardrobe.Hide;
-                hideImmediate = _ctx.Wardrobe.HideImmediate;
-            }
-            else if (kind == BubbleContracts.BubblePresentationKind.Choose)
-            {
-                show = _ctx.Choose.Show;
-                showImmediate = _ctx.Choose.ShowImmediate;
-                hide = _ctx.Choose.Hide;
-                hideImmediate = _ctx.Choose.HideImmediate;
-            }
+                BubbleContracts.BubblePresentationKind.Wardrobe => (
+                    _ctx.Wardrobe.Show,
+                    _ctx.Wardrobe.ShowImmediate,
+                    _ctx.Wardrobe.Hide,
+                    _ctx.Wardrobe.HideImmediate),
+                BubbleContracts.BubblePresentationKind.Choose => (
+                    _ctx.Choose.Show,
+                    _ctx.Choose.ShowImmediate,
+                    _ctx.Choose.Hide,
+                    _ctx.Choose.HideImmediate),
+                _ => (
+                    _ctx.Bubble.BubbleShow,
+                    _ctx.Bubble.BubbleShowImmediate,
+                    _ctx.Bubble.BubbleHide,
+                    _ctx.Bubble.BubbleHideImmediate),
+            };
             return new QueueProcess.IQueue[]
             {
                 new QueueProcess.BubbleQueue.ShowBubbleQueue(
                     bubbleDone,
-                    show,
-                    showImmediate),
+                    lifecycle.Show,
+                    lifecycle.ShowImmediate),
                 new QueueProcess.BubbleQueue.HideBubbleQueue(
-                    hide,
-                    hideImmediate),
+                    lifecycle.Hide,
+                    lifecycle.HideImmediate),
             };
         }
     }

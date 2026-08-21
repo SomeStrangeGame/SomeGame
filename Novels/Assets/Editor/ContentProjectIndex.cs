@@ -46,18 +46,18 @@ namespace Editor
 
         internal static ContentProjectIndex BuildOrThrow()
         {
-            var errors = new List<string>();
+            var errors = new ContentValidationReport();
             if (!TryBuild(errors, out var index))
             {
                 throw new InvalidOperationException(
                     "Content project index is invalid:\n- "
-                    + string.Join("\n- ", errors));
+                    + string.Join("\n- ", errors.Issues));
             }
             return index;
         }
 
         internal static bool TryBuild(
-            ICollection<string> errors,
+            ContentValidationReport errors,
             out ContentProjectIndex index)
         {
             var catalog = AssetDatabase.LoadAssetAtPath<Novels.Catalog.NovelCatalogAsset>(
@@ -167,7 +167,7 @@ namespace Editor
             IDictionary<string, string> groups,
             string bundleName,
             string groupId,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             if (groups.TryGetValue(bundleName, out var existing)
                 && !string.Equals(existing, groupId, StringComparison.OrdinalIgnoreCase))

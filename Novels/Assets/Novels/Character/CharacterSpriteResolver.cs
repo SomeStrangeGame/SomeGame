@@ -21,13 +21,9 @@ namespace Novels.Character
         {
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _appearances = new CharacterAppearanceStore();
-            var addresses = new CharacterAssetAddressResolver(
-                contentPrefix,
-                episodeId,
-                profile);
             _sprites = new CharacterSpriteSetLoader(
                 profile,
-                addresses,
+                new ContentAddressing.ContentAddresses(contentPrefix, episodeId),
                 getSprite,
                 missingCharacter,
                 cancellationToken);

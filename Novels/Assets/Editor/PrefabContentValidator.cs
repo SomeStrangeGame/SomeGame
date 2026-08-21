@@ -8,7 +8,7 @@ namespace Editor
 {
     internal static class PrefabContentValidator
     {
-        internal static void ValidateCatalog(GameObject prefab, ICollection<string> errors)
+        internal static void ValidateCatalog(GameObject prefab, ContentValidationReport errors)
         {
             var screen = prefab.GetComponent<Novels.Catalog.View.Screen>();
             if (screen == null)
@@ -38,7 +38,7 @@ namespace Editor
                 errors.Add("Catalog screen viewport must use RectMask2D.");
         }
 
-        internal static void ValidateBootstrap(ICollection<string> errors)
+        internal static void ValidateBootstrap(ContentValidationReport errors)
         {
             const string path = "Assets/Resources/Novels/BootstrapScreen.prefab";
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
@@ -127,7 +127,7 @@ namespace Editor
                 errors);
         }
 
-        internal static void ValidateFallbackEpisode(ICollection<string> errors)
+        internal static void ValidateFallbackEpisode(ContentValidationReport errors)
         {
             const string root = "Assets/Novels/Fallbacks/EpisodeUI";
             ValidateLoading($"{root}/loading/screen.prefab", errors);
@@ -158,7 +158,7 @@ namespace Editor
             return null;
         }
 
-        private static void ValidateLoading(string path, ICollection<string> errors)
+        private static void ValidateLoading(string path, ContentValidationReport errors)
         {
             if (string.IsNullOrEmpty(path))
                 return;
@@ -174,7 +174,7 @@ namespace Editor
             }
         }
 
-        private static void ValidateBubble(string path, ICollection<string> errors)
+        private static void ValidateBubble(string path, ContentValidationReport errors)
         {
             if (string.IsNullOrEmpty(path))
                 return;
@@ -217,7 +217,7 @@ namespace Editor
             }
         }
 
-        private static void ValidateCharacter(string path, ICollection<string> errors)
+        private static void ValidateCharacter(string path, ContentValidationReport errors)
         {
             if (string.IsNullOrEmpty(path))
                 return;
@@ -243,7 +243,7 @@ namespace Editor
             }
         }
 
-        private static void ValidateLocation(string path, ICollection<string> errors)
+        private static void ValidateLocation(string path, ContentValidationReport errors)
         {
             if (string.IsNullOrEmpty(path))
                 return;
@@ -279,7 +279,7 @@ namespace Editor
 
         private static void ValidateNotification(
             string path,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             if (string.IsNullOrEmpty(path))
                 return;
@@ -301,7 +301,7 @@ namespace Editor
         private static T LoadScreen<T>(
             string path,
             string kind,
-            ICollection<string> errors)
+            ContentValidationReport errors)
             where T : Component
         {
             var prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
@@ -319,7 +319,7 @@ namespace Editor
         private static void ValidateReferences(
             SerializedObject target,
             string owner,
-            ICollection<string> errors,
+            ContentValidationReport errors,
             params string[] propertyNames)
         {
             foreach (var propertyName in propertyNames)
@@ -347,7 +347,7 @@ namespace Editor
             SerializedProperty property,
             string owner,
             string propertyName,
-            ICollection<string> errors)
+            ContentValidationReport errors)
         {
             if (property == null
                 || property.propertyType != SerializedPropertyType.ObjectReference

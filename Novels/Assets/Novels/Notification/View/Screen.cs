@@ -22,7 +22,7 @@ namespace Novels.Notification.View
             _canvasGroup.alpha = 0f;
             _canvasGroup.gameObject.SetActive(true);
 
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _canvasGroup,
                 0f,
                 1f,
@@ -41,7 +41,7 @@ namespace Novels.Notification.View
             _canvasGroup.alpha = 1f;
             _canvasGroup.gameObject.SetActive(true);
 
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _canvasGroup,
                 1f,
                 0f,

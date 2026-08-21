@@ -127,7 +127,7 @@ namespace Novels.Character.View
             var endPosition  = _canvasGroup.transform.localPosition;
 
             _canvasGroup.transform.localPosition = startPosition;
-            await UITransitions.Transition.FadeAndMove(
+            await global::UITransitions.Transition.FadeAndMove(
                 _canvasGroup,
                 startPosition,
                 endPosition,
@@ -154,7 +154,7 @@ namespace Novels.Character.View
                 return;
             }
 
-            await UITransitions.Transition.Fade(
+            await global::UITransitions.Transition.Fade(
                 _canvasGroup,
                 _canvasGroup.alpha,
                 0f,

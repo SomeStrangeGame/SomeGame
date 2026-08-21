@@ -1,0 +1,16 @@
+{
+  "name": "somegame.ui-transitions",
+  "displayName": "UI Transitions",
+  "version": "0.0.1",
+  "unity": "2023.1",
+  "description": "Cancellation-aware uGUI transitions.",
+  "keywords": [
+    "ui",
+    "transitions"
+  ],
+  "category": "SomeGame package",
+  "type": "sample",
+  "dependencies": {
+    "com.cysharp.unitask": "2.5.10"
+  }
+}
