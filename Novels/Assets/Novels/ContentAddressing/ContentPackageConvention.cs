@@ -41,6 +41,9 @@ namespace Novels.ContentAddressing
             $"{RequireId(contentId, nameof(contentId))}/"
             + RequireId(episodeId, nameof(episodeId));
 
+        public static string ContentPayload(string sha256) =>
+            $"Files/{RequireId(sha256, nameof(sha256))}.bin";
+
         private static string BundleToken(string value)
         {
             var source = RequireId(value, nameof(value));

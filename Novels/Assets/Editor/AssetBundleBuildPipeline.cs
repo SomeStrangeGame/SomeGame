@@ -177,7 +177,7 @@ namespace Editor
                 var sha256 = Bundles.ContentHash.ComputeSha256(file);
                 files.Add(new ContentBuildFile(
                     relative,
-                    $"Files/{sha256}",
+                    Novels.ContentAddressing.ContentPackageConvention.ContentPayload(sha256),
                     info.Length,
                     sha256,
                     deliveryGroup));

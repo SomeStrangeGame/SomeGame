@@ -1,14 +1,15 @@
 #!/bin/zsh
 set -euo pipefail
 
-if (( $# < 3 )); then
-  print -u2 "Usage: $0 <Android|iOS> <https://content-root> <output-path>"
+if (( $# < 3 || $# > 4 )); then
+  print -u2 "Usage: $0 <Android|iOS> <https://content-root> <output-path> [--development]"
   exit 2
 fi
 
 target=$1
 remote_url=$2
 output_path=${3:A}
+development_argument=${4:-}
 script_dir=${0:A:h}
 project_root=${script_dir:h}
 somegame_root=${project_root:h}
@@ -25,6 +26,10 @@ case ${target} in
     exit 2
     ;;
 esac
+if [[ -n ${development_argument} && ${development_argument} != --development ]]; then
+  print -u2 "Unknown option: ${development_argument}"
+  exit 2
+fi
 
 if [[ ${remote_url} != http://* && ${remote_url} != https://* ]]; then
   print -u2 "Remote content root must be an absolute HTTP(S) URL."
@@ -70,14 +75,15 @@ set +e
   -executeMethod Editor.NovelCiValidation.BuildRemotePlayerBatch \
   -remoteContentBaseUrl "${remote_url}" \
   -playerOutput "${output_path}" \
+  ${development_argument:+-developmentBuild} \
   -logFile "${log_path}"
-status=$?
+build_status=$?
 set -e
 
-if (( status != 0 )); then
+if (( build_status != 0 )); then
   print -u2 "Remote Player build failed. Log: ${log_path}"
   tail -n 200 "${log_path}" >&2 || true
-  exit ${status}
+  exit ${build_status}
 fi
 
 print "Remote Player build completed: ${output_path}"

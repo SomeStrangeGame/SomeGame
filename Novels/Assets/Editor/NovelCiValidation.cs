@@ -38,6 +38,7 @@ namespace Editor
             var arguments = Environment.GetCommandLineArgs();
             var remoteUrl = GetArgument(arguments, "-remoteContentBaseUrl");
             var output = GetArgument(arguments, "-playerOutput");
+            var isDevelopmentBuild = arguments.Contains("-developmentBuild");
             if (!Uri.TryCreate(remoteUrl, UriKind.Absolute, out var uri)
                 || (uri.Scheme != Uri.UriSchemeHttp
                     && uri.Scheme != Uri.UriSchemeHttps))
@@ -60,18 +61,30 @@ namespace Editor
                 .ToArray();
             BuildReport report;
             IsRemotePlayerBuild = true;
+            var useCustomKeystore = PlayerSettings.Android.useCustomKeystore;
+            var stripEngineCode = PlayerSettings.stripEngineCode;
             try
             {
+                if (isDevelopmentBuild && EditorUserBuildSettings.activeBuildTarget
+                    == BuildTarget.Android)
+                {
+                    PlayerSettings.Android.useCustomKeystore = false;
+                    PlayerSettings.stripEngineCode = false;
+                }
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
                     scenes = scenes,
                     locationPathName = Path.GetFullPath(output),
                     target = EditorUserBuildSettings.activeBuildTarget,
-                    options = BuildOptions.None,
+                    options = isDevelopmentBuild
+                        ? BuildOptions.Development
+                        : BuildOptions.None,
                 });
             }
             finally
             {
+                PlayerSettings.stripEngineCode = stripEngineCode;
+                PlayerSettings.Android.useCustomKeystore = useCustomKeystore;
                 IsRemotePlayerBuild = false;
             }
             if (report.summary.result != BuildResult.Succeeded)

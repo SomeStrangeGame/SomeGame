@@ -75,7 +75,8 @@ namespace Bundles
                     throw new ContentIntegrityException($"Duplicate file '{file.path}'.");
                 if (file.size < 0 || !IsSha256(file.sha256))
                     throw new ContentIntegrityException($"File '{file.path}' metadata is invalid.");
-                var expectedPayloadPath = $"Files/{file.sha256.ToLowerInvariant()}";
+                var expectedPayloadPath =
+                    $"Files/{file.sha256.ToLowerInvariant()}.bin";
                 if (!string.Equals(
                         file.payloadPath,
                         expectedPayloadPath,

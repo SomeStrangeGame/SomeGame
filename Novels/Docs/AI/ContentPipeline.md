@@ -36,7 +36,7 @@ Tools/release-novel-content.sh --local-only
 ```text
 ServerRoot/
   deployment.json
-  Files/<sha256>
+  Files/<sha256>.bin
   Remote/Android/release.json
   Remote/Android/<bundles>
   Remote/iOS/release.json
@@ -58,6 +58,13 @@ Remote Player:
 ```bash
 Tools/build-remote-player.sh Android https://example.test/content Build/Players/Novels.apk
 Tools/build-remote-player.sh iOS https://example.test/content Build/Players/iOS
+```
+
+Remote Android development APK с debug-подписью и номером текущей строки Ink:
+
+```bash
+Tools/build-remote-player.sh Android https://example.test/content \
+  Build/Players/Novels-dev.apk --development
 ```
 
 Editor всегда читает `StreamingAssets`. Обычный Player требует HTTP(S) root. Embedded test Player создаётся отдельным скриптом и не меняет рабочий проект.
