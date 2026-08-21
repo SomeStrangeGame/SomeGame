@@ -36,9 +36,12 @@ namespace Novels.Wardrobe.View
 
         private readonly List<Image> _cardBackgrounds = new();
         private readonly List<RectTransform> _cardRects = new();
+        private readonly List<Image> _cardThumbnails = new();
+        private readonly List<int> _cardOptionIndices = new();
         private CanvasGroup _canvasGroup;
         private RectTransform _content;
         private RectTransform _viewport;
+        private ScrollRect _scroll;
         private Text _title;
         private Text _selection;
         private Button _confirm;
@@ -46,6 +49,8 @@ namespace Novels.Wardrobe.View
         private CarouselPresentation _presentation;
         private int _selectedIndex = -1;
         private int _presentationVersion;
+        private int _initialSlot;
+        private bool _needsCentering;
 
         public void Init()
         {
@@ -90,14 +95,14 @@ namespace Novels.Wardrobe.View
             fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
             fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
-            var scroll = viewport.gameObject.AddComponent<ScrollRect>();
-            scroll.viewport = viewport.rectTransform;
-            scroll.content = _content;
-            scroll.horizontal = true;
-            scroll.vertical = false;
-            scroll.movementType = ScrollRect.MovementType.Elastic;
-            scroll.scrollSensitivity = 40f;
-            scroll.onValueChanged.AddListener(_ => SelectClosestCard());
+            _scroll = viewport.gameObject.AddComponent<ScrollRect>();
+            _scroll.viewport = viewport.rectTransform;
+            _scroll.content = _content;
+            _scroll.horizontal = true;
+            _scroll.vertical = false;
+            _scroll.movementType = ScrollRect.MovementType.Unrestricted;
+            _scroll.scrollSensitivity = 40f;
+            _scroll.onValueChanged.AddListener(_ => SelectClosestCard());
 
             _selection = CreateText("Selection", panel.transform, 34, TextAnchor.MiddleCenter);
             SetRect(_selection.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f),
@@ -119,17 +124,38 @@ namespace Novels.Wardrobe.View
             _confirmLabel.text = presentation.ConfirmationText;
             _confirm.interactable = presentation.Options.Length > 0;
 
+            var copies = presentation.Options.Length > 1 ? 3 : 1;
+            for (var copy = 0; copy < copies; copy++)
+            {
+                for (var index = 0; index < presentation.Options.Length; index++)
+                    CreateCard(index, presentation.Options[index]);
+            }
+
             for (var index = 0; index < presentation.Options.Length; index++)
-                CreateCard(index, presentation.Options[index]);
+            {
+                var option = presentation.Options[index];
+                LoadThumbnail(index, option.Id, _presentationVersion).Forget();
+            }
 
             if (presentation.Options.Length > 0)
-                Select(0);
+            {
+                _initialSlot = copies == 1 ? 0 : presentation.Options.Length;
+                _needsCentering = true;
+                SelectOption(0);
+            }
         }
 
         public void ShowImmediate()
         {
-            _canvasGroup.alpha = 1f;
             gameObject.SetActive(true);
+            if (_needsCentering)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(_content);
+                Canvas.ForceUpdateCanvases();
+                CenterCard(_initialSlot);
+                _needsCentering = false;
+            }
+            _canvasGroup.alpha = 1f;
         }
 
         public void HideImmediate()
@@ -140,7 +166,7 @@ namespace Novels.Wardrobe.View
             gameObject.SetActive(false);
         }
 
-        private void CreateCard(int index, CarouselOption option)
+        private void CreateCard(int optionIndex, CarouselOption option)
         {
             var card = CreateButton($"Option_{option.Id}", _content, CardColor, out var label);
             var rect = card.GetComponent<RectTransform>();
@@ -160,27 +186,36 @@ namespace Novels.Wardrobe.View
             SetRect(thumbnail.rectTransform, Vector2.zero, Vector2.one,
                 new Vector2(12f, 72f), new Vector2(-12f, -12f));
 
-            var capturedIndex = index;
-            card.onClick.AddListener(() => Select(capturedIndex));
+            var capturedIndex = optionIndex;
+            card.onClick.AddListener(() => SelectOption(capturedIndex));
             _cardBackgrounds.Add(card.GetComponent<Image>());
             _cardRects.Add(rect);
-            LoadThumbnail(index, option.Id, thumbnail, _presentationVersion).Forget();
+            _cardThumbnails.Add(thumbnail);
+            _cardOptionIndices.Add(optionIndex);
         }
 
-        private async UniTaskVoid LoadThumbnail(int index, int id, Image target, int version)
+        private async UniTaskVoid LoadThumbnail(int optionIndex, int id, int version)
         {
             try
             {
                 var sprite = await _presentation.LoadThumbnail(id);
-                if (version == _presentationVersion && target != null)
-                    target.sprite = sprite;
+                if (version != _presentationVersion)
+                    return;
+                for (var index = 0; index < _cardThumbnails.Count; index++)
+                {
+                    if (_cardOptionIndices[index] == optionIndex
+                        && _cardThumbnails[index] != null)
+                    {
+                        _cardThumbnails[index].sprite = sprite;
+                    }
+                }
             }
             catch (OperationCanceledException)
             {
             }
         }
 
-        private void Select(int index)
+        private void SelectOption(int index)
         {
             if (_presentation == null || index < 0 || index >= _presentation.Options.Length)
                 return;
@@ -188,7 +223,10 @@ namespace Novels.Wardrobe.View
                 return;
             _selectedIndex = index;
             for (var cardIndex = 0; cardIndex < _cardBackgrounds.Count; cardIndex++)
-                _cardBackgrounds[cardIndex].color = cardIndex == index ? SelectedColor : CardColor;
+            {
+                _cardBackgrounds[cardIndex].color =
+                    _cardOptionIndices[cardIndex] == index ? SelectedColor : CardColor;
+            }
             var option = _presentation.Options[index];
             _selection.text = option.Text;
             _presentation.Preview(option.Id).Forget();
@@ -211,8 +249,16 @@ namespace Novels.Wardrobe.View
             _selectedIndex = -1;
             _cardBackgrounds.Clear();
             _cardRects.Clear();
+            _cardThumbnails.Clear();
+            _cardOptionIndices.Clear();
+            _scroll.velocity = Vector2.zero;
+            _needsCentering = false;
             for (var index = _content.childCount - 1; index >= 0; index--)
-                Destroy(_content.GetChild(index).gameObject);
+            {
+                var child = _content.GetChild(index).gameObject;
+                child.SetActive(false);
+                Destroy(child);
+            }
         }
 
         private void SelectClosestCard()
@@ -232,7 +278,45 @@ namespace Novels.Wardrobe.View
                 closestDistance = distance;
                 closestIndex = index;
             }
-            Select(closestIndex);
+            SelectOption(_cardOptionIndices[closestIndex]);
+            WrapCarousel(closestIndex);
+        }
+
+        private void WrapCarousel(int closestSlot)
+        {
+            var optionCount = _presentation?.Options.Length ?? 0;
+            if (optionCount <= 1)
+                return;
+            if (closestSlot < optionCount)
+            {
+                ShiftContent(-GetCycleWidth(optionCount));
+            }
+            else if (closestSlot >= optionCount * 2)
+            {
+                ShiftContent(GetCycleWidth(optionCount));
+            }
+        }
+
+        private float GetCycleWidth(int optionCount)
+        {
+            var first = _cardRects[0];
+            var nextCycle = _cardRects[optionCount];
+            return nextCycle.anchoredPosition.x - first.anchoredPosition.x;
+        }
+
+        private void ShiftContent(float offset)
+        {
+            var position = _content.anchoredPosition;
+            position.x += offset;
+            _content.anchoredPosition = position;
+        }
+
+        private void CenterCard(int slot)
+        {
+            var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(
+                _viewport,
+                _cardRects[slot]);
+            ShiftContent(-bounds.center.x);
         }
 
         private static Button CreateButton(

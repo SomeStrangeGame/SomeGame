@@ -189,8 +189,6 @@ namespace Editor
                 "_bubblesView._root",
                 "_bubblesView._buttonPrefab",
                 "_bubblesView._backgroundButton",
-                "_chooseView._root",
-                "_wardrobeView._root",
                 "_canvasGroup");
             var bubbles = FindProperty(serialized, "_bubblesView._bubbles");
             if (bubbles == null || !bubbles.isArray || bubbles.arraySize == 0)

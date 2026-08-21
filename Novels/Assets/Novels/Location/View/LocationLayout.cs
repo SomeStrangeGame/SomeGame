@@ -45,16 +45,16 @@ namespace Novels.Location.View
         {
             if (_image.sprite == null)
                 throw new InvalidOperationException("Location image is not configured.");
-            var scaleFactor = _image.rectTransform.rect.height
-                / _image.sprite.texture.height;
-            var spriteWidth = _image.sprite.texture.width * scaleFactor;
-            var delta = (spriteWidth - ScreenWidth) * 0.5f - edgeInset;
+            var delta = Mathf.Max(0f, AvailableHorizontalTravel - edgeInset);
             return PositionsForDelta(delta);
         }
 
         internal Vector3 DialoguePosition(TextAlignment alignment, float offset)
         {
-            var positions = PositionsForDelta(offset);
+            if (_image.sprite == null)
+                throw new InvalidOperationException("Location image is not configured.");
+            var positions = PositionsForDelta(
+                Mathf.Min(offset, AvailableHorizontalTravel));
             return alignment switch
             {
                 TextAlignment.Left => positions.Left,
@@ -75,5 +75,16 @@ namespace Novels.Location.View
 
         private float ScreenWidth =>
             UnityEngine.Screen.width / _image.canvas.scaleFactor;
+
+        private float AvailableHorizontalTravel
+        {
+            get
+            {
+                var scaleFactor = _image.rectTransform.rect.height
+                    / _image.sprite.texture.height;
+                var spriteWidth = _image.sprite.texture.width * scaleFactor;
+                return Mathf.Max(0f, (spriteWidth - ScreenWidth) * 0.5f);
+            }
+        }
     }
 }

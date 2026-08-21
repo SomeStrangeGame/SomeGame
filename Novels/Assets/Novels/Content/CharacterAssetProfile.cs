@@ -15,6 +15,7 @@ namespace Novels.Content
         public string MiddleLayer => "middle";
         public string FrontLayer => "front";
         public string DefaultHairColor => "блонд";
+        public string DefaultHairStyle => "распущенные";
 
         public string ViewPath(string view) =>
             string.IsNullOrWhiteSpace(view) ? ViewRoot : $"{ViewRoot}/{view}";

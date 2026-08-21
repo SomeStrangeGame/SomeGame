@@ -312,7 +312,12 @@ namespace Novels.Character
                 appearance.Hair = candidate;
                 break;
             }
-            var resolved = appearance.Hair ?? hair;
+            var resolved = presentation.IsChild
+                ? null
+                : appearance.Hair
+                    ?? (string.IsNullOrWhiteSpace(hair)
+                        ? _profile.DefaultHairStyle
+                        : hair);
             var (back, front) = await UniTask.WhenAll(
                 GetSprite(_addresses.Hair(name, resolved, _profile.BackLayer)),
                 GetSprite(_addresses.Hair(name, resolved, _profile.FrontLayer)));
