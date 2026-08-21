@@ -312,29 +312,29 @@ namespace Editor
                      {
                          (
                              episode: Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
-                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen),
                              shared: Novels.ContentAddressing.ContentAddressConvention.SharedLoadingPrefab(
-                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen)),
                          (
                              episode: Novels.ContentAddressing.ContentAddressConvention.BubblePrefab(
-                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen),
                              shared: Novels.ContentAddressing.ContentAddressConvention.SharedBubblePrefab(
-                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen)),
                          (
                              episode: Novels.ContentAddressing.ContentAddressConvention.LocationPrefab(
-                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen),
                              shared: Novels.ContentAddressing.ContentAddressConvention.SharedLocationPrefab(
-                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen)),
                          (
                              episode: Novels.ContentAddressing.ContentAddressConvention.CharacterPrefab(
-                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen),
                              shared: Novels.ContentAddressing.ContentAddressConvention.SharedCharacterPrefab(
-                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen)),
                          (
                              episode: Novels.ContentAddressing.ContentAddressConvention.NotificationPrefab(
-                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.Screen),
+                                 prefix, episode.Id, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen),
                              shared: Novels.ContentAddressing.ContentAddressConvention.SharedNotificationPrefab(
-                                 prefix, Novels.ContentAddressing.ContentAssetNames.Screen)),
+                                 prefix, Novels.ContentAddressing.ContentAssetNames.EpisodeScreen)),
                      })
             {
                 if (AssetDatabase.LoadMainAssetAtPath(paths.episode) != null)

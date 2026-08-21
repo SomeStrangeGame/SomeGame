@@ -67,7 +67,7 @@ namespace Novels
 
         internal async UniTask<EpisodeAssetSet> Load()
         {
-            var assetName = ContentAddressing.ContentAssetNames.Screen;
+            var assetName = ContentAddressing.ContentAssetNames.EpisodeScreen;
             var (loading, bubble, location, character, notification) =
                 await UniTask.WhenAll(
                     LoadPrefab(

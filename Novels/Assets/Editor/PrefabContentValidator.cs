@@ -69,7 +69,7 @@ namespace Editor
             string episodeId,
             ContentValidationReport errors)
         {
-            var assetName = Novels.ContentAddressing.ContentAssetNames.Screen;
+            var assetName = Novels.ContentAddressing.ContentAssetNames.EpisodeScreen;
             ValidateLoading(
                 ResolvePresentationPath(
                     Novels.ContentAddressing.ContentAddressConvention.LoadingPrefab(
@@ -130,11 +130,12 @@ namespace Editor
         internal static void ValidateFallbackEpisode(ContentValidationReport errors)
         {
             const string root = "Assets/Novels/Fallbacks/EpisodeUI";
-            ValidateLoading($"{root}/loading/screen.prefab", errors);
-            ValidateBubble($"{root}/bubble/screen.prefab", errors);
-            ValidateCharacter($"{root}/character/screen.prefab", errors);
-            ValidateLocation($"{root}/location/screen.prefab", errors);
-            ValidateNotification($"{root}/notification/screen.prefab", errors);
+            var assetName = Novels.ContentAddressing.ContentAssetNames.EpisodeScreen;
+            ValidateLoading($"{root}/loading/{assetName}.prefab", errors);
+            ValidateBubble($"{root}/bubble/{assetName}.prefab", errors);
+            ValidateCharacter($"{root}/character/{assetName}.prefab", errors);
+            ValidateLocation($"{root}/location/{assetName}.prefab", errors);
+            ValidateNotification($"{root}/notification/{assetName}.prefab", errors);
         }
 
         private static string ResolvePresentationPath(

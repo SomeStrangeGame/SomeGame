@@ -6,6 +6,7 @@ namespace Novels.ContentAddressing
     public static class ContentAssetNames
     {
         public const string Screen = "screen";
+        public const string EpisodeScreen = "screen-variant";
     }
 
     public static class ContentPackageConvention

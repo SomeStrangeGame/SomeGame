@@ -356,11 +356,11 @@ MonoBehaviour:
   _targetCamera: {fileID: 330585545}
   _missingBackground: {fileID: 21300000, guid: 621ac610a1204d48aea925430b4b3de5, type: 3}
   _missingCharacter: {fileID: 21300000, guid: 6e95ef6c5687426c939909b1649aa33f, type: 3}
-  _fallbackLoading: {fileID: 3712146450823894313, guid: a657268b104b46deacda9f4186d3a1c3, type: 3}
-  _fallbackBubble: {fileID: 3712146450823894313, guid: 5961f300e58d45ea874bca7ef881d98a, type: 3}
-  _fallbackLocation: {fileID: 3712146450823894313, guid: f2868174f1d942898fcc6126dc634c33, type: 3}
-  _fallbackCharacter: {fileID: 3712146450823894313, guid: c15d55316c184828acd77eaaa73bd2c9, type: 3}
-  _fallbackNotification: {fileID: 3712146450823894313, guid: 67094f021815469e9650d0ee62955e38, type: 3}
+  _fallbackLoading: {fileID: 5409107741591515597, guid: 355ef8307ed59470194f757c009dc90c, type: 3}
+  _fallbackBubble: {fileID: 78405242723852823, guid: 503babe37817e4a9d9d99964a6a299aa, type: 3}
+  _fallbackLocation: {fileID: 9001975096329965555, guid: be81cec141d6d46ecb2f11e66634105a, type: 3}
+  _fallbackCharacter: {fileID: 8502446724069655982, guid: ec9593597848345e48d6b54d9b9c0dbd, type: 3}
+  _fallbackNotification: {fileID: 4162418590130858810, guid: 48d8e65d6f0cc47e0ae010d03faa18d9, type: 3}
 --- !u!1 &1371491167
 GameObject:
   m_ObjectHideFlags: 0
