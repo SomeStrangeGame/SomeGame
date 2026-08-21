@@ -18,17 +18,19 @@ namespace Novels.StoryQueue
                 case StoryCommands.EmptyStoryCommand:
                 case StoryCommands.MetadataStoryCommand:
                 case StoryCommands.KeyboardStoryCommand:
-                    return new StoryExecution.NoOpOperation();
+                    return StoryExecution.DelegateStoryOperation.Empty();
 
                 case StoryCommands.NotificationStoryCommand notification:
-                    return new StoryExecution.NotificationOperation(
-                        _ctx.ShowNotification,
-                        notification.Data.Text);
+                    return new StoryExecution.DelegateStoryOperation(context =>
+                    {
+                        if (context.Mode == StoryExecution.QueueExecutionMode.Live)
+                            _ctx.ShowNotification(notification.Data.Text);
+                        return Cysharp.Threading.Tasks.UniTask.CompletedTask;
+                    });
 
                 case StoryCommands.BackgroundStoryCommand background:
                     return new StoryExecution.BackgroundOperation.SetBackgroundQueue(
                         _ctx.Location.SetImage,
-                        _ctx.Location.SetImageImmediate,
                         background.Data.AssetName,
                         background.Data.Presentation);
 
@@ -38,20 +40,19 @@ namespace Novels.StoryQueue
                         : audio.Type == StoryCommands.StoryCommandType.Sound
                             ? _ctx.Audio.PlaySound
                             : _ctx.Audio.PlayAmbient;
-                    return new StoryExecution.PlayAudioOperation(
-                        playAudio,
-                        audio.Data.AssetName);
+                    return new StoryExecution.DelegateStoryOperation(
+                        _ => playAudio(audio.Data.AssetName));
 
                 case StoryCommands.CameraStoryCommand camera:
                     return new StoryExecution.BackgroundOperation.CameraQueue(
                         _ctx.Location.SetCamera,
-                        _ctx.Location.SetCameraImmediate,
                         camera.Data.Action);
 
                 case StoryCommands.WaitStoryCommand wait:
-                    return new StoryExecution.WaitOperation(
-                        _ctx.Location.Wait,
-                        wait.Data.Duration);
+                    return new StoryExecution.DelegateStoryOperation(context =>
+                        context.Mode == StoryExecution.QueueExecutionMode.Live
+                            ? _ctx.Location.Wait(wait.Data.Duration)
+                            : Cysharp.Threading.Tasks.UniTask.CompletedTask);
 
                 default:
                     throw new ArgumentOutOfRangeException(

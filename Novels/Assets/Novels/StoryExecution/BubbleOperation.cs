@@ -35,52 +35,38 @@ namespace Novels.StoryExecution
         public readonly struct ShowBubbleQueue : IStoryOperation
         {
             private readonly UniTaskCompletionSource _bubbleDone;
-            private readonly Func<UniTask> _bubbleShow;
-            private readonly Action _bubbleShowImmediate;
+            private readonly Func<StoryContracts.PresentationMode, UniTask> _show;
 
             public ShowBubbleQueue(
                 UniTaskCompletionSource bubbleDone,
-                Func<UniTask> bubbleShow,
-                Action bubbleShowImmediate)
+                Func<StoryContracts.PresentationMode, UniTask> show)
             {
                 _bubbleDone = bubbleDone ?? throw new ArgumentNullException(nameof(bubbleDone));
-                _bubbleShow = bubbleShow ?? throw new ArgumentNullException(nameof(bubbleShow));
-                _bubbleShowImmediate = bubbleShowImmediate
-                    ?? throw new ArgumentNullException(nameof(bubbleShowImmediate));
+                _show = show ?? throw new ArgumentNullException(nameof(show));
             }
 
             public async UniTask Run(StoryExecutionContext context)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
-                if (context.Mode == QueueExecutionMode.Replay)
-                    _bubbleShowImmediate();
-                else
-                    await _bubbleShow();
+                await _show(context.PresentationMode);
 
                 await _bubbleDone.Task.AttachExternalCancellation(context.CancellationToken);
             }
         }
         public readonly struct HideBubbleQueue : IStoryOperation
         {
-            private readonly Func<UniTask> _bubbleHide;
-            private readonly Action _bubbleHideImmediate;
+            private readonly Func<StoryContracts.PresentationMode, UniTask> _hide;
 
             public HideBubbleQueue(
-                Func<UniTask> bubbleHide,
-                Action bubbleHideImmediate)
+                Func<StoryContracts.PresentationMode, UniTask> hide)
             {
-                _bubbleHide = bubbleHide ?? throw new ArgumentNullException(nameof(bubbleHide));
-                _bubbleHideImmediate = bubbleHideImmediate
-                    ?? throw new ArgumentNullException(nameof(bubbleHideImmediate));
+                _hide = hide ?? throw new ArgumentNullException(nameof(hide));
             }
 
             public async UniTask Run(StoryExecutionContext context)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
-                if (context.Mode == QueueExecutionMode.Replay)
-                    _bubbleHideImmediate();
-                else
-                    await _bubbleHide();
+                await _hide(context.PresentationMode);
             }
         }
     }

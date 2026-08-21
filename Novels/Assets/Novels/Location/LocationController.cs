@@ -62,19 +62,14 @@ namespace Novels.Location
 
         public UniTask SetImage(
             string assetName,
-            StoryContracts.StoryBackgroundPresentation presentation)
-            => _backgrounds.Set(assetName, presentation);
+            StoryContracts.StoryBackgroundPresentation presentation,
+            StoryContracts.PresentationMode mode)
+            => _backgrounds.Set(assetName, presentation, mode);
 
-        public UniTask SetImageImmediate(
-            string assetName,
-            StoryContracts.StoryBackgroundPresentation presentation)
-            => _backgrounds.SetImmediate(assetName, presentation);
-
-        public UniTask SetCamera(StoryContracts.StoryCameraAction action) =>
-            ApplyCameraAction(action, false);
-
-        public UniTask SetCameraImmediate(StoryContracts.StoryCameraAction action) =>
-            ApplyCameraAction(action, true);
+        public UniTask SetCamera(
+            StoryContracts.StoryCameraAction action,
+            StoryContracts.PresentationMode mode) =>
+            ApplyCameraAction(action, mode);
 
         private void ReportUnsupportedCameraAction(
             StoryContracts.StoryCameraAction action)
@@ -87,7 +82,7 @@ namespace Novels.Location
 
         private async UniTask ApplyCameraAction(
             StoryContracts.StoryCameraAction action,
-            bool immediate)
+            StoryContracts.PresentationMode mode)
         {
             if (!CameraActionPlan.TryCreate(action, out var plan))
             {
@@ -97,19 +92,19 @@ namespace Novels.Location
             switch (plan.Presentation)
             {
                 case CameraActionPresentation.Motion:
-                    if (immediate)
+                    if (mode == StoryContracts.PresentationMode.Immediate)
                         _screen.SetCameraImmediate(plan.Motion);
                     else
                         await _screen.SetCamera(plan.Motion, _ctx.CancellationToken);
                     break;
                 case CameraActionPresentation.PersistentEffect:
-                    if (immediate)
+                    if (mode == StoryContracts.PresentationMode.Immediate)
                         _screen.SetEffectImmediate(plan.Effect);
                     else
                         await _screen.SetEffect(plan.Effect, _ctx.CancellationToken);
                     break;
                 case CameraActionPresentation.TransientEffect:
-                    if (immediate)
+                    if (mode == StoryContracts.PresentationMode.Immediate)
                         _screen.ResetEffect();
                     else
                         await _screen.FlashEffect(plan.Effect, _ctx.CancellationToken);
@@ -117,15 +112,14 @@ namespace Novels.Location
             }
         }
 
-        public async UniTask SetDialogue(StoryContracts.StoryDialogueAlignment alignment)
+        public async UniTask SetDialogue(
+            StoryContracts.StoryDialogueAlignment alignment,
+            StoryContracts.PresentationMode mode)
         {
-            await _screen.SetDialogue(ToViewAlignment(alignment), _ctx.CancellationToken);
-        }
-
-        public UniTask SetDialogueImmediate(StoryContracts.StoryDialogueAlignment alignment)
-        {
-            _screen.SetDialogueImmediate(ToViewAlignment(alignment));
-            return UniTask.CompletedTask;
+            if (mode == StoryContracts.PresentationMode.Animated)
+                await _screen.SetDialogue(ToViewAlignment(alignment), _ctx.CancellationToken);
+            else
+                _screen.SetDialogueImmediate(ToViewAlignment(alignment));
         }
 
         private static TextAlignment ToViewAlignment(

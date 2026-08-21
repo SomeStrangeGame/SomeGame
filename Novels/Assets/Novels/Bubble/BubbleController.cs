@@ -32,24 +32,20 @@ namespace Novels.Bubble
             _screen.HideImmediate();
         }
 
-        public async UniTask Show()
+        public UniTask Show(StoryContracts.PresentationMode mode)
         {
-            await _screen.Show(_ctx.CancellationToken);
-        }
-
-        public void ShowImmediate()
-        {
+            if (mode == StoryContracts.PresentationMode.Animated)
+                return _screen.Show(_ctx.CancellationToken);
             _screen.ShowImmediate();
+            return UniTask.CompletedTask;
         }
 
-        public async UniTask Hide()
+        public UniTask Hide(StoryContracts.PresentationMode mode)
         {
-            await _screen.Hide(_ctx.CancellationToken);
-        }
-
-        public void HideImmediate()
-        {
+            if (mode == StoryContracts.PresentationMode.Animated)
+                return _screen.Hide(_ctx.CancellationToken);
             _screen.HideImmediate();
+            return UniTask.CompletedTask;
         }
 
         public void SetBubbleScreen(BubbleContracts.BubblePresentation presentation)

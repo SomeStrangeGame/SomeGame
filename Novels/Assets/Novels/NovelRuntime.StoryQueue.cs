@@ -1,11 +1,26 @@
 using System.Threading;
 using Cysharp.Threading.Tasks;
+using Disposable;
 using UnityEngine;
 
 namespace Novels
 {
     internal partial class NovelRuntime
     {
+        private static StoryProcessor.Entity CreateStoryProcessor(
+            IBaseDisposable owner,
+            string storyText,
+            string initialState,
+            string sourceMapText)
+        {
+            return new StoryProcessor.Entity(new StoryProcessor.Entity.Ctx
+            {
+                StoryText = storyText,
+                InitialState = initialState,
+                SourceMapText = sourceMapText,
+            }).AddTo(owner);
+        }
+
         private StoryQueue.StoryQueueBuilder CreateStoryQueue(
             StoryProcessor.Entity storyProcessor,
             Notification.NotificationController notification,
@@ -27,9 +42,7 @@ namespace Novels
                     Location = new StoryQueue.StoryQueueBuilder.LocationCommandPort
                     {
                         SetImage = location.SetImage,
-                        SetImageImmediate = location.SetImageImmediate,
                         SetCamera = location.SetCamera,
-                        SetCameraImmediate = location.SetCameraImmediate,
                         Wait = seconds => Wait(seconds, cancellationToken),
                     },
                     Audio = new StoryQueue.StoryQueueBuilder.AudioPort
@@ -47,30 +60,23 @@ namespace Novels
                     Location = new StoryQueue.StoryQueueBuilder.LocationDialoguePort
                     {
                         SetDialogue = location.SetDialogue,
-                        SetDialogueImmediate = location.SetDialogueImmediate,
                     },
                     Bubble = new StoryQueue.StoryQueueBuilder.BubblePort
                     {
-                        BubbleShow = bubble.Show,
-                        BubbleShowImmediate = bubble.ShowImmediate,
-                        BubbleHide = bubble.Hide,
-                        BubbleHideImmediate = bubble.HideImmediate,
+                        Show = bubble.Show,
+                        Hide = bubble.Hide,
                         SetBubbleScreen = bubble.SetBubbleScreen,
                     },
                     Wardrobe = new StoryQueue.StoryQueueBuilder.WardrobePort
                     {
                         Show = wardrobe.Show,
-                        ShowImmediate = wardrobe.ShowImmediate,
                         Hide = wardrobe.Hide,
-                        HideImmediate = wardrobe.HideImmediate,
                         SetScreen = wardrobe.SetScreen,
                     },
                     Choose = new StoryQueue.StoryQueueBuilder.ChoosePort
                     {
                         Show = choose.Show,
-                        ShowImmediate = choose.ShowImmediate,
                         Hide = choose.Hide,
-                        HideImmediate = choose.HideImmediate,
                         LoadThumbnail = loadChooseThumbnail,
                         SetScreen = choose.SetScreen,
                     },
@@ -88,9 +94,7 @@ namespace Novels
                         LoadWardrobeThumbnail = character.LoadWardrobeThumbnail,
                         PreviewWardrobeChoice = character.PreviewWardrobeChoice,
                         CharacterHide = character.Hide,
-                        CharacterHideImmediate = character.HideImmediate,
                         CharacterShow = character.Show,
-                        CharacterShowImmediate = character.ShowImmediate,
                         CharacterSetImage = character.SetImage,
                     },
                 },

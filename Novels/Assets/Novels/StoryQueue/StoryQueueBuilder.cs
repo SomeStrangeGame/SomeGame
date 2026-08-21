@@ -15,10 +15,10 @@ namespace Novels.StoryQueue
 
         public struct LocationCommandPort
         {
-            public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImage;
-            public Func<string, StoryContracts.StoryBackgroundPresentation, UniTask> SetImageImmediate;
-            public Func<StoryContracts.StoryCameraAction, UniTask> SetCamera;
-            public Func<StoryContracts.StoryCameraAction, UniTask> SetCameraImmediate;
+            public Func<string, StoryContracts.StoryBackgroundPresentation,
+                StoryContracts.PresentationMode, UniTask> SetImage;
+            public Func<StoryContracts.StoryCameraAction,
+                StoryContracts.PresentationMode, UniTask> SetCamera;
             public Func<float, UniTask> Wait;
         }
 
@@ -42,34 +42,28 @@ namespace Novels.StoryQueue
 
         public struct LocationDialoguePort
         {
-            public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogue;
-            public Func<StoryContracts.StoryDialogueAlignment, UniTask> SetDialogueImmediate;
+            public Func<StoryContracts.StoryDialogueAlignment,
+                StoryContracts.PresentationMode, UniTask> SetDialogue;
         }
 
         public struct BubblePort
         {
-            public Func<UniTask> BubbleShow;
-            public Action BubbleShowImmediate;
-            public Func<UniTask> BubbleHide;
-            public Action BubbleHideImmediate;
+            public Func<StoryContracts.PresentationMode, UniTask> Show;
+            public Func<StoryContracts.PresentationMode, UniTask> Hide;
             public Action<BubbleContracts.BubblePresentation> SetBubbleScreen;
         }
 
         public struct WardrobePort
         {
-            public Func<UniTask> Show;
-            public Action ShowImmediate;
-            public Func<UniTask> Hide;
-            public Action HideImmediate;
+            public Func<StoryContracts.PresentationMode, UniTask> Show;
+            public Func<StoryContracts.PresentationMode, UniTask> Hide;
             public Action<WardrobeContracts.WardrobePresentation> SetScreen;
         }
 
         public struct ChoosePort
         {
-            public Func<UniTask> Show;
-            public Action ShowImmediate;
-            public Func<UniTask> Hide;
-            public Action HideImmediate;
+            public Func<StoryContracts.PresentationMode, UniTask> Show;
+            public Func<StoryContracts.PresentationMode, UniTask> Hide;
             public Func<string, UniTask<UnityEngine.Sprite>> LoadThumbnail;
             public Action<ChooseContracts.ChoosePresentation> SetScreen;
         }
@@ -88,10 +82,9 @@ namespace Novels.StoryQueue
             public Action<string> SetMainCharacterAccessory;
             public Func<StoryContracts.StoryChoiceAction, string, UniTask<UnityEngine.Sprite>> LoadWardrobeThumbnail;
             public Func<StoryContracts.StoryChoiceAction, string, UniTask> PreviewWardrobeChoice;
-            public Func<UniTask> CharacterHide;
-            public Action CharacterHideImmediate;
-            public Func<StoryContracts.StoryCharacterPosition, UniTask> CharacterShow;
-            public Action<StoryContracts.StoryCharacterPosition> CharacterShowImmediate;
+            public Func<StoryContracts.PresentationMode, UniTask> CharacterHide;
+            public Func<StoryContracts.StoryCharacterPosition,
+                StoryContracts.PresentationMode, UniTask> CharacterShow;
             public Func<StoryContracts.CharacterRenderRequest, UniTask> CharacterSetImage;
         }
 

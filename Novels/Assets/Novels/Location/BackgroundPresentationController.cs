@@ -7,12 +7,6 @@ namespace Novels.Location
 {
     internal sealed class BackgroundPresentationController
     {
-        private enum PlaybackMode
-        {
-            Live,
-            Immediate,
-        }
-
         internal struct Dependencies
         {
             internal View.LocationScreen Screen;
@@ -49,20 +43,10 @@ namespace Novels.Location
             }
         }
 
-        internal UniTask Set(
-            string assetName,
-            StoryContracts.StoryBackgroundPresentation presentation) =>
-            Set(assetName, presentation, PlaybackMode.Live);
-
-        internal UniTask SetImmediate(
-            string assetName,
-            StoryContracts.StoryBackgroundPresentation presentation) =>
-            Set(assetName, presentation, PlaybackMode.Immediate);
-
-        private async UniTask Set(
+        internal async UniTask Set(
             string assetName,
             StoryContracts.StoryBackgroundPresentation presentation,
-            PlaybackMode mode)
+            StoryContracts.PresentationMode mode)
         {
             _ctx.TargetCamera.backgroundColor = presentation.BackgroundColor
                 == StoryContracts.StoryBackgroundColor.White
@@ -107,7 +91,7 @@ namespace Novels.Location
                     sprite.texture.width,
                     sprite.texture.height,
                     !plan.IsCutScene,
-                    mode == PlaybackMode.Immediate && plan.IsCutScene
+                    mode == StoryContracts.PresentationMode.Immediate && plan.IsCutScene
                         ? Time.timeScale * 5f
                         : Time.timeScale));
             var videoReady = playbackStatus == VideoPlaybackStatus.Ready;
@@ -124,7 +108,9 @@ namespace Novels.Location
                 await ReturnToPoster(sprite, mode);
         }
 
-        private async UniTask ShowStatic(Sprite sprite, PlaybackMode mode)
+        private async UniTask ShowStatic(
+            Sprite sprite,
+            StoryContracts.PresentationMode mode)
         {
             _ctx.VideoPlayback.Stop();
             _ctx.Screen.SetImage(sprite);
@@ -133,7 +119,7 @@ namespace Novels.Location
             await Show(mode);
         }
 
-        private async UniTask ShowSolidColor(PlaybackMode mode)
+        private async UniTask ShowSolidColor(StoryContracts.PresentationMode mode)
         {
             _ctx.VideoPlayback.Stop();
             _ctx.Screen.SetImage(null);
@@ -142,7 +128,9 @@ namespace Novels.Location
             await Show(mode);
         }
 
-        private async UniTask ReturnToPoster(Sprite sprite, PlaybackMode mode)
+        private async UniTask ReturnToPoster(
+            Sprite sprite,
+            StoryContracts.PresentationMode mode)
         {
             await Hide(mode);
             _ctx.Screen.ResetCamera();
@@ -150,25 +138,26 @@ namespace Novels.Location
             await ShowStatic(sprite, mode);
         }
 
-        private UniTask Hide(PlaybackMode mode)
+        private UniTask Hide(StoryContracts.PresentationMode mode)
         {
-            if (mode == PlaybackMode.Live)
+            if (mode == StoryContracts.PresentationMode.Animated)
                 return _ctx.Screen.HideImage(_ctx.CancellationToken);
             _ctx.Screen.HideImageImmediate();
             return UniTask.CompletedTask;
         }
 
-        private UniTask Show(PlaybackMode mode)
+        private UniTask Show(StoryContracts.PresentationMode mode)
         {
-            if (mode == PlaybackMode.Live)
+            if (mode == StoryContracts.PresentationMode.Animated)
                 return _ctx.Screen.ShowImage(_ctx.CancellationToken);
             _ctx.Screen.ShowImageImmediate();
             return UniTask.CompletedTask;
         }
 
-        private async UniTask WaitForCutSceneFallback(PlaybackMode mode)
+        private async UniTask WaitForCutSceneFallback(
+            StoryContracts.PresentationMode mode)
         {
-            if (mode == PlaybackMode.Live)
+            if (mode == StoryContracts.PresentationMode.Animated)
             {
                 await UniTask.Delay(
                     _ctx.CutSceneFallbackDelayMilliseconds,

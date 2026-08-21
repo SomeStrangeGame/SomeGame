@@ -45,8 +45,10 @@ EntryPoint
 3. `StoryQueueBuilder` накапливает команды до готовой реплики.
 4. Команды становятся `IStoryOperation`: фон, персонаж, звук, ожидание, bubble или notification.
 5. `StoryOperationExecutor` выполняет операции последовательно.
-6. Решение игрока записывается `SaveSystem`; replay использует те же операции в immediate-режиме.
+6. Решение игрока записывается `SaveSystem`; replay использует те же операции с `PresentationMode.Immediate`.
+
+Композиция `NovelRuntime` сгруппирована по трём областям: `Content` загружает definition и сохранение, `Presentation` создаёт UI и медиа-фичи, `StoryQueue` связывает процессор истории с операциями.
 
 ## Сборки
 
-Один asmdef соответствует самостоятельной фиче или реальной границе зависимостей. Маленькие View-файлы Bootstrap, Catalog и Notification входят в сборку своей фичи. `Choose` и `Wardrobe` сохраняют отдельные runtime, View и contract assemblies, собственные экраны и собственные View-модели, поскольку будут развиваться независимо.
+Один asmdef соответствует самостоятельной фиче или реальной границе зависимостей. Маленькие View-файлы Bootstrap, Catalog и Notification входят в сборку своей фичи. `Choose` и `Wardrobe` сохраняют отдельные runtime, View и contract assemblies и собственные экраны, поскольку будут развиваться независимо. Каждый экран принимает контракт своей фичи напрямую, без промежуточной View-модели.

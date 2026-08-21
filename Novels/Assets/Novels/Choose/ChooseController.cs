@@ -30,40 +30,22 @@ namespace Novels.Choose
 
         public void SetScreen(ChooseContracts.ChoosePresentation presentation)
         {
-            var options = new View.CarouselOption[presentation.Options.Length];
-            for (var index = 0; index < options.Length; index++)
-            {
-                var option = presentation.Options[index];
-                options[index] = new View.CarouselOption(option.Id, option.Text);
-            }
-            _screen.SetPresentation(new View.CarouselPresentation
-            {
-                Title = presentation.Title,
-                ConfirmationText = presentation.ConfirmationText,
-                Options = options,
-                LoadThumbnail = presentation.LoadThumbnail,
-                Preview = _ => UniTask.CompletedTask,
-                Confirm = presentation.Confirm,
-            });
+            _screen.SetPresentation(presentation);
         }
 
-        public UniTask Show()
+        public UniTask Show(StoryContracts.PresentationMode mode)
         {
             _ctx.CancellationToken.ThrowIfCancellationRequested();
             _screen.ShowImmediate();
             return UniTask.CompletedTask;
         }
 
-        public void ShowImmediate() => _screen.ShowImmediate();
-
-        public UniTask Hide()
+        public UniTask Hide(StoryContracts.PresentationMode mode)
         {
             _ctx.CancellationToken.ThrowIfCancellationRequested();
             _screen.HideImmediate();
             return UniTask.CompletedTask;
         }
-
-        public void HideImmediate() => _screen.HideImmediate();
 
         protected override void OnDispose()
         {

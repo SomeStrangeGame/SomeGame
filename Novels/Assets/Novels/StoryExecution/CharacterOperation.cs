@@ -7,28 +7,22 @@ namespace Novels.StoryExecution
     {
         public readonly struct SetDialogueQueue : IStoryOperation
         {
-            private readonly Func<StoryContracts.StoryDialogueAlignment, UniTask> _setDialogue;
-            private readonly Func<StoryContracts.StoryDialogueAlignment, UniTask> _setDialogueImmediate;
-            private readonly Func<UniTask> _characterHide;
-            private readonly Action _characterHideImmediate;
+            private readonly Func<StoryContracts.StoryDialogueAlignment,
+                StoryContracts.PresentationMode, UniTask> _setDialogue;
+            private readonly Func<StoryContracts.PresentationMode, UniTask> _characterHide;
             private readonly StoryContracts.StoryDialogueAlignment _alignment;
             private readonly bool _shouldHideCharacter;
 
             public SetDialogueQueue(
-                Func<StoryContracts.StoryDialogueAlignment, UniTask> setDialogue,
-                Func<StoryContracts.StoryDialogueAlignment, UniTask> setDialogueImmediate,
-                Func<UniTask> characterHide,
-                Action characterHideImmediate,
+                Func<StoryContracts.StoryDialogueAlignment,
+                    StoryContracts.PresentationMode, UniTask> setDialogue,
+                Func<StoryContracts.PresentationMode, UniTask> characterHide,
                 StoryContracts.StoryDialogueAlignment alignment,
                 bool shouldHideCharacter)
             {
                 _setDialogue = setDialogue ?? throw new ArgumentNullException(nameof(setDialogue));
-                _setDialogueImmediate = setDialogueImmediate
-                    ?? throw new ArgumentNullException(nameof(setDialogueImmediate));
                 _characterHide = characterHide
                     ?? throw new ArgumentNullException(nameof(characterHide));
-                _characterHideImmediate = characterHideImmediate
-                    ?? throw new ArgumentNullException(nameof(characterHideImmediate));
                 _alignment = alignment;
                 _shouldHideCharacter = shouldHideCharacter;
             }
@@ -36,41 +30,28 @@ namespace Novels.StoryExecution
             public async UniTask Run(StoryExecutionContext context)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
-                if (context.Mode == QueueExecutionMode.Replay)
-                {
-                    if (_shouldHideCharacter)
-                        _characterHideImmediate();
-                    await _setDialogueImmediate(_alignment);
-                    return;
-                }
-
                 if (!_shouldHideCharacter)
                 {
-                    await _setDialogue(_alignment);
+                    await _setDialogue(_alignment, context.PresentationMode);
                     return;
                 }
-
                 await UniTask.WhenAll(
-                    _characterHide(),
-                    _setDialogue(_alignment));
+                    _characterHide(context.PresentationMode),
+                    _setDialogue(_alignment, context.PresentationMode));
             }
         }
 
         public readonly struct HideCharacterQueue : IStoryOperation
         {
-            private readonly Func<UniTask> _characterHide;
-            private readonly Action _characterHideImmediate;
+            private readonly Func<StoryContracts.PresentationMode, UniTask> _characterHide;
             private readonly bool _shouldHide;
 
             public HideCharacterQueue(
-                Func<UniTask> characterHide,
-                Action characterHideImmediate,
+                Func<StoryContracts.PresentationMode, UniTask> characterHide,
                 bool shouldHide)
             {
                 _characterHide = characterHide
                     ?? throw new ArgumentNullException(nameof(characterHide));
-                _characterHideImmediate = characterHideImmediate
-                    ?? throw new ArgumentNullException(nameof(characterHideImmediate));
                 _shouldHide = shouldHide;
             }
 
@@ -80,28 +61,22 @@ namespace Novels.StoryExecution
                 if (!_shouldHide)
                     return;
 
-                if (context.Mode == QueueExecutionMode.Replay)
-                {
-                    _characterHideImmediate();
-                    return;
-                }
-
-                await _characterHide();
+                await _characterHide(context.PresentationMode);
             }
         }
 
         public readonly struct ShowCharacterQueue : IStoryOperation
         {
             private readonly Func<StoryContracts.CharacterRenderRequest, UniTask> _characterSetImage;
-            private readonly Func<StoryContracts.StoryCharacterPosition, UniTask> _characterShow;
-            private readonly Action<StoryContracts.StoryCharacterPosition> _characterShowImmediate;
+            private readonly Func<StoryContracts.StoryCharacterPosition,
+                StoryContracts.PresentationMode, UniTask> _characterShow;
             private readonly bool _shouldShow;
             private readonly StoryContracts.CharacterRenderRequest _character;
 
             public ShowCharacterQueue(
                 Func<StoryContracts.CharacterRenderRequest, UniTask> characterSetImage,
-                Func<StoryContracts.StoryCharacterPosition, UniTask> characterShow,
-                Action<StoryContracts.StoryCharacterPosition> characterShowImmediate,
+                Func<StoryContracts.StoryCharacterPosition,
+                    StoryContracts.PresentationMode, UniTask> characterShow,
                 bool shouldShow,
                 StoryContracts.CharacterRenderRequest character)
             {
@@ -109,8 +84,6 @@ namespace Novels.StoryExecution
                     ?? throw new ArgumentNullException(nameof(characterSetImage));
                 _characterShow = characterShow
                     ?? throw new ArgumentNullException(nameof(characterShow));
-                _characterShowImmediate = characterShowImmediate
-                    ?? throw new ArgumentNullException(nameof(characterShowImmediate));
                 _shouldShow = shouldShow;
                 _character = character;
             }
@@ -119,15 +92,8 @@ namespace Novels.StoryExecution
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
                 await _characterSetImage(_character);
-
-                if (context.Mode == QueueExecutionMode.Replay)
-                {
-                    _characterShowImmediate(_character.Position);
-                    return;
-                }
-
-                if (_shouldShow)
-                    await _characterShow(_character.Position);
+                if (_shouldShow || context.Mode == QueueExecutionMode.Replay)
+                    await _characterShow(_character.Position, context.PresentationMode);
             }
         }
     }

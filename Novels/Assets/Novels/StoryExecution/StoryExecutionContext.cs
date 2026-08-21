@@ -23,6 +23,10 @@ namespace Novels.StoryExecution
         public QueueExecutionMode Mode { get; }
         public StoryContracts.StoryDecision SavedDecision { get; }
         public CancellationToken CancellationToken { get; }
+        public StoryContracts.PresentationMode PresentationMode =>
+            Mode == QueueExecutionMode.Replay
+                ? StoryContracts.PresentationMode.Immediate
+                : StoryContracts.PresentationMode.Animated;
 
         public static StoryExecutionContext Live(CancellationToken cancellationToken)
         {

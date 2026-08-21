@@ -6,28 +6,6 @@ using UnityEngine.UI;
 
 namespace Novels.Choose.View
 {
-    public readonly struct CarouselOption
-    {
-        public CarouselOption(int id, string text)
-        {
-            Id = id;
-            Text = text ?? string.Empty;
-        }
-
-        public int Id { get; }
-        public string Text { get; }
-    }
-
-    public sealed class CarouselPresentation
-    {
-        public string Title;
-        public string ConfirmationText;
-        public CarouselOption[] Options;
-        public Func<int, UniTask<Sprite>> LoadThumbnail;
-        public Func<int, UniTask> Preview;
-        public Action<int> Confirm;
-    }
-
     public class ChooseScreen : MonoBehaviour
     {
         private static readonly Color PanelColor = new(0.12f, 0.14f, 0.17f, 0.96f);
@@ -46,7 +24,7 @@ namespace Novels.Choose.View
         private Text _selection;
         private Button _confirm;
         private Text _confirmLabel;
-        private CarouselPresentation _presentation;
+        private ChooseContracts.ChoosePresentation _presentation;
         private int _selectedIndex = -1;
         private int _presentationVersion;
         private int _initialSlot;
@@ -115,7 +93,7 @@ namespace Novels.Choose.View
             HideImmediate();
         }
 
-        public void SetPresentation(CarouselPresentation presentation)
+        public void SetPresentation(ChooseContracts.ChoosePresentation presentation)
         {
             _presentation = presentation ?? throw new ArgumentNullException(nameof(presentation));
             _presentationVersion++;
@@ -166,7 +144,7 @@ namespace Novels.Choose.View
             gameObject.SetActive(false);
         }
 
-        private void CreateCard(int optionIndex, CarouselOption option)
+        private void CreateCard(int optionIndex, ChooseContracts.ChooseOption option)
         {
             var card = CreateButton($"Option_{option.Id}", _content, CardColor, out var label);
             var rect = card.GetComponent<RectTransform>();
@@ -229,7 +207,6 @@ namespace Novels.Choose.View
             }
             var option = _presentation.Options[index];
             _selection.text = option.Text;
-            _presentation.Preview(option.Id).Forget();
         }
 
         private void Confirm()

@@ -114,15 +114,23 @@ namespace Novels.Character
                 Apply(sprites);
         }
 
-        public UniTask Show(StoryContracts.StoryCharacterPosition position) =>
-            _screen.ShowImage(ToViewPosition(position), _ctx.CancellationToken);
-
-        public void ShowImmediate(StoryContracts.StoryCharacterPosition position) =>
+        public UniTask Show(
+            StoryContracts.StoryCharacterPosition position,
+            StoryContracts.PresentationMode mode)
+        {
+            if (mode == StoryContracts.PresentationMode.Animated)
+                return _screen.ShowImage(ToViewPosition(position), _ctx.CancellationToken);
             _screen.ShowImageImmediate(ToViewPosition(position));
+            return UniTask.CompletedTask;
+        }
 
-        public UniTask Hide() => _screen.HideImage(_ctx.CancellationToken);
-
-        public void HideImmediate() => _screen.HideImageImmediate();
+        public UniTask Hide(StoryContracts.PresentationMode mode)
+        {
+            if (mode == StoryContracts.PresentationMode.Animated)
+                return _screen.HideImage(_ctx.CancellationToken);
+            _screen.HideImageImmediate();
+            return UniTask.CompletedTask;
+        }
 
         private static bool? ToViewPosition(StoryContracts.StoryCharacterPosition position)
         {

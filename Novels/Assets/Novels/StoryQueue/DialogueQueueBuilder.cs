@@ -72,9 +72,7 @@ namespace Novels.StoryQueue
             {
                 new StoryExecution.CharacterOperation.SetDialogueQueue(
                     _ctx.Location.SetDialogue,
-                    _ctx.Location.SetDialogueImmediate,
                     _ctx.Character.CharacterHide,
-                    _ctx.Character.CharacterHideImmediate,
                     layout.Alignment,
                     hideDuringDialogueTransition),
             };
@@ -85,7 +83,6 @@ namespace Novels.StoryQueue
                     new StoryExecution.CharacterOperation.ShowCharacterQueue(
                         _ctx.Character.CharacterSetImage,
                         _ctx.Character.CharacterShow,
-                        _ctx.Character.CharacterShowImmediate,
                         shouldShow,
                         new StoryContracts.CharacterRenderRequest(
                             name,
@@ -103,7 +100,6 @@ namespace Novels.StoryQueue
                 beforeCommands.Add(
                     new StoryExecution.CharacterOperation.HideCharacterQueue(
                         _ctx.Character.CharacterHide,
-                        _ctx.Character.CharacterHideImmediate,
                         shouldHide: true));
             }
 
@@ -188,34 +184,26 @@ namespace Novels.StoryQueue
             BubbleContracts.BubblePresentationKind kind,
             UniTaskCompletionSource bubbleDone)
         {
-            (Func<UniTask> Show, Action ShowImmediate, Func<UniTask> Hide,
-                Action HideImmediate) lifecycle = kind switch
+            (Func<StoryContracts.PresentationMode, UniTask> Show,
+                Func<StoryContracts.PresentationMode, UniTask> Hide) lifecycle = kind switch
             {
                 BubbleContracts.BubblePresentationKind.Wardrobe => (
                     _ctx.Wardrobe.Show,
-                    _ctx.Wardrobe.ShowImmediate,
-                    _ctx.Wardrobe.Hide,
-                    _ctx.Wardrobe.HideImmediate),
+                    _ctx.Wardrobe.Hide),
                 BubbleContracts.BubblePresentationKind.Choose => (
                     _ctx.Choose.Show,
-                    _ctx.Choose.ShowImmediate,
-                    _ctx.Choose.Hide,
-                    _ctx.Choose.HideImmediate),
+                    _ctx.Choose.Hide),
                 _ => (
-                    _ctx.Bubble.BubbleShow,
-                    _ctx.Bubble.BubbleShowImmediate,
-                    _ctx.Bubble.BubbleHide,
-                    _ctx.Bubble.BubbleHideImmediate),
+                    _ctx.Bubble.Show,
+                    _ctx.Bubble.Hide),
             };
             return new StoryExecution.IStoryOperation[]
             {
                 new StoryExecution.BubbleOperation.ShowBubbleQueue(
                     bubbleDone,
-                    lifecycle.Show,
-                    lifecycle.ShowImmediate),
+                    lifecycle.Show),
                 new StoryExecution.BubbleOperation.HideBubbleQueue(
-                    lifecycle.Hide,
-                    lifecycle.HideImmediate),
+                    lifecycle.Hide),
             };
         }
     }

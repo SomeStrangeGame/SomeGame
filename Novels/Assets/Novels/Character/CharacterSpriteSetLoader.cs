@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace Novels.Character
         private readonly Func<string, UniTask<Sprite>> _getSprite;
         private readonly Sprite _missingCharacter;
         private readonly CancellationToken _cancellationToken;
+        private readonly Dictionary<string, Sprite> _loadedSprites =
+            new(StringComparer.Ordinal);
 
         internal CharacterSpriteSetLoader(
             Content.CharacterAssetProfile profile,
@@ -44,6 +47,12 @@ namespace Novels.Character
                     LoadClothes(name, clothes, presentation, appearance),
                     LoadHair(name, hair, presentation, appearance),
                     LoadAccessories(name, accessory, presentation, appearance));
+            var sprites = new CharacterSpriteSet(
+                mainBody,
+                emotion,
+                clothesSprite,
+                hairSprites,
+                accessorySprites);
             if (await RequiresFallback(
                     name,
                     view,
@@ -52,25 +61,9 @@ namespace Novels.Character
                     accessory,
                     presentation,
                     appearance,
-                    mainBody,
-                    emotion,
-                    clothesSprite,
-                    hairSprites,
-                    accessorySprites))
-            {
-                return new CharacterSpriteSet(
-                    _missingCharacter,
-                    null,
-                    null,
-                    new CharacterHairSprites(null, null),
-                    new CharacterAccessorySprites(null, null, null));
-            }
-            return new CharacterSpriteSet(
-                mainBody,
-                emotion,
-                clothesSprite,
-                hairSprites,
-                accessorySprites);
+                    sprites))
+                return MissingCharacter();
+            return sprites;
         }
 
         internal async UniTask<Sprite> LoadWardrobeThumbnail(
@@ -119,29 +112,25 @@ namespace Novels.Character
             string accessory,
             StoryContracts.CharacterPresentation presentation,
             CharacterAppearanceState appearance,
-            Sprite mainBody,
-            Sprite emotion,
-            Sprite clothesSprite,
-            CharacterHairSprites hairSprites,
-            CharacterAccessorySprites accessorySprites)
+            CharacterSpriteSet sprites)
         {
-            if (mainBody == null)
+            if (sprites.MainBody == null)
                 return true;
             if (!presentation.IsChild
-                && (Missing(appearance.Emotion, emotion)
+                && (Missing(appearance.Emotion, sprites.Emotion)
                     || !presentation.RemoveClothes
-                    && Missing(appearance.Clothes ?? clothes, clothesSprite)
+                    && Missing(appearance.Clothes ?? clothes, sprites.Clothes)
                     || !presentation.RemoveHair
                     && Missing(
                         appearance.Hair ?? hair,
-                        hairSprites.Back,
-                        hairSprites.Front)
+                        sprites.Hair.Back,
+                        sprites.Hair.Front)
                     || !presentation.RemoveAccessory
                     && Missing(
                         appearance.Accessories ?? accessory,
-                        accessorySprites.Back,
-                        accessorySprites.Middle,
-                        accessorySprites.Front)))
+                        sprites.Accessories.Back,
+                        sprites.Accessories.Middle,
+                        sprites.Accessories.Front)))
             {
                 return true;
             }
@@ -361,9 +350,23 @@ namespace Novels.Character
             _addresses.CharacterHair(
                 name, candidate, layer, _profile.DefaultHairColor);
 
-        private UniTask<Sprite> GetSprite(string path) =>
-            string.IsNullOrWhiteSpace(path)
-                ? UniTask.FromResult<Sprite>(null)
-                : _getSprite(path).AttachExternalCancellation(_cancellationToken);
+        private CharacterSpriteSet MissingCharacter() => new(
+            _missingCharacter,
+            null,
+            null,
+            new CharacterHairSprites(null, null),
+            new CharacterAccessorySprites(null, null, null));
+
+        private async UniTask<Sprite> GetSprite(string path)
+        {
+            if (string.IsNullOrWhiteSpace(path))
+                return null;
+            if (_loadedSprites.TryGetValue(path, out var sprite))
+                return sprite;
+            sprite = await _getSprite(path)
+                .AttachExternalCancellation(_cancellationToken);
+            _loadedSprites[path] = sprite;
+            return sprite;
+        }
     }
 }
