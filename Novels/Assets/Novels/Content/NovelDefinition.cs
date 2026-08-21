@@ -6,21 +6,26 @@ namespace Novels.Content
 {
     public sealed class NovelDefinition
     {
+        private readonly IReadOnlyDictionary<string, string> _videoAliases;
+
         public NovelDefinition(
             string id,
             string mainCharacter,
-            EpisodeDefinition episode)
+            EpisodeDefinition episode,
+            IEnumerable<VideoAliasDefinition> videoAliases = null)
             : this(
                 id,
                 mainCharacter,
-                new[] { episode })
+                new[] { episode },
+                videoAliases)
         {
         }
 
         public NovelDefinition(
             string id,
             string mainCharacter,
-            IEnumerable<EpisodeDefinition> episodes)
+            IEnumerable<EpisodeDefinition> episodes,
+            IEnumerable<VideoAliasDefinition> videoAliases = null)
         {
             Id = Require(id, nameof(id));
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
@@ -50,6 +55,15 @@ namespace Novels.Content
                 }
             }
             Episodes = Array.AsReadOnly(episodeArray);
+            var aliases = (videoAliases ?? Array.Empty<VideoAliasDefinition>()).ToArray();
+            if (aliases.Any(alias => alias == null))
+            {
+                throw new ArgumentException(
+                    "Video aliases must not contain null values.",
+                    nameof(videoAliases));
+            }
+            VideoAliases = Array.AsReadOnly(aliases);
+            _videoAliases = BuildVideoAliases(aliases);
         }
 
         public string Id { get; }
@@ -59,6 +73,37 @@ namespace Novels.Content
         public string BundleName { get; }
         public CharacterAssetProfile CharacterAssets { get; }
         public IReadOnlyList<EpisodeDefinition> Episodes { get; }
+        public IReadOnlyList<VideoAliasDefinition> VideoAliases { get; }
+
+        public string ResolveVideoId(string value)
+        {
+            var result = ContentAddressing.TechnicalAssetIdConvention.Canonicalize(value);
+            while (_videoAliases.TryGetValue(result, out var target))
+                result = target;
+            return result;
+        }
+
+        private static IReadOnlyDictionary<string, string> BuildVideoAliases(
+            IEnumerable<VideoAliasDefinition> aliases)
+        {
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var alias in aliases)
+            {
+                if (!result.TryAdd(alias.Alias, alias.Target))
+                    throw new ArgumentException($"Duplicate video alias '{alias.Alias}'.");
+            }
+            foreach (var alias in result.Keys)
+            {
+                var visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var current = alias;
+                while (result.TryGetValue(current, out current))
+                {
+                    if (!visited.Add(current))
+                        throw new ArgumentException($"Video alias cycle contains '{current}'.");
+                }
+            }
+            return result;
+        }
 
         private static string Require(string value, string parameterName)
         {

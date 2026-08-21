@@ -30,6 +30,8 @@ namespace Editor
         internal const string StoryAudioNameInvalid = "STORY_AUDIO_NAME_INVALID";
         internal const string StoryAudioFormatAmbiguous = "STORY_AUDIO_FORMAT_AMBIGUOUS";
         internal const string StoryBackgroundMissing = "STORY_BACKGROUND_MISSING";
+        internal const string VideoAliasTargetMissing = "VIDEO_ALIAS_TARGET_MISSING";
+        internal const string VideoAliasUnused = "VIDEO_ALIAS_UNUSED";
         internal const string StoryCharacterMissing = "STORY_CHARACTER_MISSING";
         internal const string StoryCharacterTextureImportInvalid =
             "STORY_CHARACTER_TEXTURE_IMPORT_INVALID";

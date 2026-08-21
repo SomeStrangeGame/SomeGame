@@ -65,3 +65,14 @@ MonoBehaviour:
     _endMarker: 
     _sourcePath: s01e07.ink
     _silentAudioIds: [тишина]
+  _videoAliases:
+  - _alias: вода
+    _target: под водой
+  - _alias: морской сад чуть повыше
+    _target: морской сад чуть выше
+  - _alias: причал с катерами
+    _target: причал
+  - _alias: метеорит засветился
+    _target: светящийся метеорит
+  - _alias: яхта в движении
+    _target: яхта день

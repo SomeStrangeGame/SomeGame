@@ -28,7 +28,7 @@ namespace Editor
                 {
                     var group = EpisodeGroup(definition.Id, episode.Id);
                     foreach (var path in EpisodeFiles(
-                                 definition.Prefix,
+                                 definition,
                                  episode,
                                  item.StoryDependencies[episode.Id]))
                     {
@@ -90,10 +90,11 @@ namespace Editor
             Novels.ContentAddressing.ContentPackageConvention.SharedDeliveryGroup(contentId);
 
         private static IEnumerable<string> EpisodeFiles(
-            string prefix,
+            Novels.Content.NovelDefinition definition,
             Novels.Content.EpisodeDefinition episode,
             StoryDependencyManifest references)
         {
+            var prefix = definition.Prefix;
             var normalizedStoryPath = episode.StoryPath.Replace('\\', '/');
             var canonicalPrefix = Novels.ContentAddressing.TechnicalAssetIdConvention
                 .Canonicalize(prefix);
@@ -119,8 +120,7 @@ namespace Editor
             {
                 if (Novels.StoryContracts.StoryBackgroundAssets.IsSolidBlack(backgroundId))
                     continue;
-                var canonicalBackground = Novels.ContentAddressing.TechnicalAssetIdConvention
-                    .Canonicalize(backgroundId);
+                var canonicalBackground = definition.ResolveVideoId(backgroundId);
                 yield return $"novelsvideos/{canonicalPrefix}/{canonicalBackground}"
                     + Bundles.MediaFileConvention.VideoExtension;
             }

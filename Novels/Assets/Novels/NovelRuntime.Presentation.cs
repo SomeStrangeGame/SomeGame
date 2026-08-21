@@ -40,7 +40,8 @@ namespace Novels
                             _episode.BundleName,
                             state.Addresses.LocationImage(assetName)))
                         .AttachExternalCancellation(cancellationToken)),
-                    state.EpisodeBundles.ResolveVideoUrl,
+                    assetName => state.EpisodeBundles.ResolveVideoUrl(
+                        _definition.ResolveVideoId(assetName)),
                     _ctx.FallbackAssets.Background,
                     cancellationToken),
                 Notification = CreateNotification(

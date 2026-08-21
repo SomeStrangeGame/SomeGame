@@ -33,10 +33,21 @@ namespace Novels.Content
             }
         }
 
+        [Serializable]
+        private struct VideoAliasEntry
+        {
+            [SerializeField] private string _alias;
+            [SerializeField] private string _target;
+
+            internal readonly VideoAliasDefinition ToDefinition() =>
+                new(_alias, _target);
+        }
+
         [SerializeField] private string _id;
         [SerializeField] private string _mainCharacter;
         [SerializeField] private AudioMixer _audioMixer;
         [SerializeField] private EpisodeEntry[] _episodes;
+        [SerializeField] private VideoAliasEntry[] _videoAliases;
 
         public AudioMixer AudioMixer => _audioMixer;
 
@@ -46,7 +57,9 @@ namespace Novels.Content
                 _id,
                 _mainCharacter,
                 (_episodes ?? Array.Empty<EpisodeEntry>())
-                    .Select(episode => episode.ToDefinition(_id)));
+                    .Select(episode => episode.ToDefinition(_id)),
+                (_videoAliases ?? Array.Empty<VideoAliasEntry>())
+                    .Select(alias => alias.ToDefinition()));
         }
     }
 }

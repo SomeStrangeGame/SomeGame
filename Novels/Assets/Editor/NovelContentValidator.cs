@@ -263,6 +263,7 @@ namespace Editor
                 definition.BundleName,
                 errors);
             ValidateSharedStoryBoundaries(definition, errors);
+            ValidateVideoAliases(definition, storyDependencies, errors);
             foreach (var episode in definition.Episodes)
             {
                 ValidateEpisodeBundleAssignments(definition.Prefix, episode, errors);
@@ -273,6 +274,45 @@ namespace Editor
                     episode,
                     storyDependencies[episode.Id],
                     errors);
+            }
+        }
+
+        private static void ValidateVideoAliases(
+            Novels.Content.NovelDefinition definition,
+            IReadOnlyDictionary<string, StoryDependencyManifest> storyDependencies,
+            ContentValidationReport errors)
+        {
+            var referenced = new HashSet<string>(
+                storyDependencies.Values
+                    .SelectMany(value => value.BackgroundReferences)
+                    .Select(value => Novels.ContentAddressing.TechnicalAssetIdConvention
+                        .Canonicalize(value.Id)),
+                StringComparer.OrdinalIgnoreCase);
+            foreach (var alias in definition.VideoAliases)
+            {
+                var target = definition.ResolveVideoId(alias.Alias);
+                var targetPath = Path.Combine(
+                    Application.streamingAssetsPath,
+                    "novelsvideos",
+                    Novels.ContentAddressing.TechnicalAssetIdConvention.Canonicalize(
+                        definition.Prefix),
+                    target + Bundles.MediaFileConvention.VideoExtension);
+                if (!File.Exists(targetPath))
+                {
+                    errors.Add(ContentValidationIssue.Error(
+                        ContentValidationCodes.VideoAliasTargetMissing,
+                        $"Video alias '{alias.Alias}' points to missing video "
+                        + $"'{target}'.",
+                        targetPath,
+                        definition.Id));
+                }
+                if (!referenced.Contains(alias.Alias))
+                {
+                    errors.Add(ContentValidationIssue.Warning(
+                        ContentValidationCodes.VideoAliasUnused,
+                        $"Video alias '{alias.Alias}' is not referenced by Ink.",
+                        contentId: definition.Id));
+                }
             }
         }
 
