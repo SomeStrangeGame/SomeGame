@@ -18,8 +18,7 @@ namespace Novels.QueueProcess
             switch (_request.PresentationKind)
             {
                 case BubbleContracts.BubblePresentationKind.Wardrobe:
-                    _request.SetWardrobeScreen(new BubbleContracts.WardrobePresentation(
-                        _choices.CompleteWithoutChoice));
+                    _request.SetWardrobeScreen(_choices.CreateWardrobePresentation());
                     return;
 
                 case BubbleContracts.BubblePresentationKind.Choose:

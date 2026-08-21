@@ -33,6 +33,7 @@ namespace Novels.Character
             string view,
             string clothes,
             string hair,
+            string accessory,
             StoryContracts.CharacterPresentation presentation,
             CharacterAppearanceState appearance)
         {
@@ -42,12 +43,13 @@ namespace Novels.Character
                     LoadEmotion(name, view, presentation, appearance),
                     LoadClothes(name, clothes, presentation, appearance),
                     LoadHair(name, hair, presentation, appearance),
-                    LoadAccessories(name, presentation, appearance));
+                    LoadAccessories(name, accessory, presentation, appearance));
             if (await RequiresFallback(
                     name,
                     view,
                     clothes,
                     hair,
+                    accessory,
                     presentation,
                     appearance,
                     mainBody,
@@ -71,11 +73,50 @@ namespace Novels.Character
                 accessorySprites);
         }
 
+        internal async UniTask<Sprite> LoadWardrobeThumbnail(
+            StoryContracts.StoryChoiceAction actions,
+            string value,
+            string mainCharacterView)
+        {
+            var name = _profile.MainCharacterAssetId;
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+            {
+                return await GetSprite(_addresses.MainBody(
+                    name,
+                    _profile.ViewPath(value),
+                    null)) ?? _missingCharacter;
+            }
+            if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                return await GetSprite(_addresses.Clothes(name, value, 1))
+                    ?? _missingCharacter;
+            if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+            {
+                var front = await GetSprite(
+                    _addresses.Hair(name, value, _profile.FrontLayer));
+                var back = await GetSprite(
+                    _addresses.Hair(name, value, _profile.BackLayer));
+                return front ?? back ?? _missingCharacter;
+            }
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+            {
+                var middle = await GetSprite(
+                    _addresses.Accessory(name, value, _profile.MiddleLayer));
+                var front = await GetSprite(
+                    _addresses.Accessory(name, value, _profile.FrontLayer));
+                var back = await GetSprite(
+                    _addresses.Accessory(name, value, _profile.BackLayer));
+                return middle ?? front ?? back ?? _missingCharacter;
+            }
+            return await GetSprite(_addresses.MainBody(name, mainCharacterView, null))
+                ?? _missingCharacter;
+        }
+
         private async UniTask<bool> RequiresFallback(
             string name,
             string view,
             string clothes,
             string hair,
+            string accessory,
             StoryContracts.CharacterPresentation presentation,
             CharacterAppearanceState appearance,
             Sprite mainBody,
@@ -107,7 +148,7 @@ namespace Novels.Character
             }
             if (!presentation.IsChild
                 && !presentation.RemoveAccessory
-                && !string.IsNullOrWhiteSpace(appearance.Accessories)
+                && !string.IsNullOrWhiteSpace(appearance.Accessories ?? accessory)
                 && accessorySprites.Back == null
                 && accessorySprites.Middle == null
                 && accessorySprites.Front == null)
@@ -280,6 +321,7 @@ namespace Novels.Character
 
         private async UniTask<CharacterAccessorySprites> LoadAccessories(
             string name,
+            string accessory,
             StoryContracts.CharacterPresentation presentation,
             CharacterAppearanceState appearance)
         {
@@ -302,13 +344,14 @@ namespace Novels.Character
                 appearance.Accessories = candidate;
                 break;
             }
+            var resolved = appearance.Accessories ?? accessory;
             var (back, middle, front) = await UniTask.WhenAll(
                 GetSprite(_addresses.Accessory(
-                    name, appearance.Accessories, _profile.BackLayer)),
+                    name, resolved, _profile.BackLayer)),
                 GetSprite(_addresses.Accessory(
-                    name, appearance.Accessories, _profile.MiddleLayer)),
+                    name, resolved, _profile.MiddleLayer)),
                 GetSprite(_addresses.Accessory(
-                    name, appearance.Accessories, _profile.FrontLayer)));
+                    name, resolved, _profile.FrontLayer)));
             return new CharacterAccessorySprites(back, middle, front);
         }
 

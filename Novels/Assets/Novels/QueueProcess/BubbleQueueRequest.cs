@@ -11,16 +11,20 @@ namespace Novels.QueueProcess
             Action<string> setMainCharacterView,
             Action<string> setMainCharacterClothes,
             Action<string> setMainCharacterHair,
+            Action<string> setMainCharacterAccessory,
+            Func<StoryContracts.StoryChoiceAction, string, UniTask<UnityEngine.Sprite>> loadWardrobeThumbnail,
+            Func<StoryContracts.StoryChoiceAction, string, UniTask> previewWardrobeChoice,
             Action<StoryContracts.StoryDecision> saveDecision,
             Action<int> setChoice,
             string name,
             string value,
+            string choiceConfirmationText,
             StoryContracts.StorySpeakerRole speakerRole,
             StoryContracts.DialoguePresentation presentation,
             StoryContracts.StoryChoiceAction choiceActions,
             BubbleContracts.BubblePresentationKind presentationKind,
             Action<BubbleContracts.BubblePresentation> setBubbleScreen,
-            Action<BubbleContracts.WardrobePresentation> setWardrobeScreen,
+            Action<WardrobeContracts.WardrobePresentation> setWardrobeScreen,
             Action<BubbleContracts.ChoosePresentation> setChooseScreen)
         {
             BubbleDone = bubbleDone ?? throw new ArgumentNullException(nameof(bubbleDone));
@@ -31,10 +35,17 @@ namespace Novels.QueueProcess
                 ?? throw new ArgumentNullException(nameof(setMainCharacterClothes));
             SetMainCharacterHair = setMainCharacterHair
                 ?? throw new ArgumentNullException(nameof(setMainCharacterHair));
+            SetMainCharacterAccessory = setMainCharacterAccessory
+                ?? throw new ArgumentNullException(nameof(setMainCharacterAccessory));
+            LoadWardrobeThumbnail = loadWardrobeThumbnail
+                ?? throw new ArgumentNullException(nameof(loadWardrobeThumbnail));
+            PreviewWardrobeChoice = previewWardrobeChoice
+                ?? throw new ArgumentNullException(nameof(previewWardrobeChoice));
             SaveDecision = saveDecision ?? throw new ArgumentNullException(nameof(saveDecision));
             SetChoice = setChoice ?? throw new ArgumentNullException(nameof(setChoice));
             Name = name ?? string.Empty;
             Value = value ?? string.Empty;
+            ChoiceConfirmationText = choiceConfirmationText ?? string.Empty;
             SpeakerRole = speakerRole;
             Presentation = presentation;
             ChoiceActions = choiceActions;
@@ -52,16 +63,20 @@ namespace Novels.QueueProcess
         internal Action<string> SetMainCharacterView { get; }
         internal Action<string> SetMainCharacterClothes { get; }
         internal Action<string> SetMainCharacterHair { get; }
+        internal Action<string> SetMainCharacterAccessory { get; }
+        internal Func<StoryContracts.StoryChoiceAction, string, UniTask<UnityEngine.Sprite>> LoadWardrobeThumbnail { get; }
+        internal Func<StoryContracts.StoryChoiceAction, string, UniTask> PreviewWardrobeChoice { get; }
         internal Action<StoryContracts.StoryDecision> SaveDecision { get; }
         internal Action<int> SetChoice { get; }
         internal string Name { get; }
         internal string Value { get; }
+        internal string ChoiceConfirmationText { get; }
         internal StoryContracts.StorySpeakerRole SpeakerRole { get; }
         internal StoryContracts.DialoguePresentation Presentation { get; }
         internal StoryContracts.StoryChoiceAction ChoiceActions { get; }
         internal BubbleContracts.BubblePresentationKind PresentationKind { get; }
         internal Action<BubbleContracts.BubblePresentation> SetBubbleScreen { get; }
-        internal Action<BubbleContracts.WardrobePresentation> SetWardrobeScreen { get; }
+        internal Action<WardrobeContracts.WardrobePresentation> SetWardrobeScreen { get; }
         internal Action<BubbleContracts.ChoosePresentation> SetChooseScreen { get; }
     }
 }

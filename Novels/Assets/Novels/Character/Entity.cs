@@ -26,6 +26,9 @@ namespace Novels.Character
         private string _mainCharacterView;
         private string _mainCharacterClothes;
         private string _mainCharacterHair;
+        private string _mainCharacterAccessory;
+        private StoryContracts.CharacterRenderRequest _lastRenderRequest;
+        private int _wardrobePreviewVersion;
 
         public Entity(Ctx ctx)
         {
@@ -65,13 +68,50 @@ namespace Novels.Character
             _spriteResolver.ClearHair();
         }
 
+        public void SetMainCharacterAccessory(string accessory)
+        {
+            _mainCharacterAccessory = accessory;
+            _spriteResolver.ClearAccessories();
+        }
+
         public async UniTask SetImage(StoryContracts.CharacterRenderRequest request)
         {
+            _wardrobePreviewVersion++;
+            _lastRenderRequest = request;
             Apply(await _spriteResolver.Resolve(
                 request,
                 _mainCharacterView,
                 _mainCharacterClothes,
-                _mainCharacterHair));
+                _mainCharacterHair,
+                _mainCharacterAccessory));
+        }
+
+        public UniTask<Sprite> LoadWardrobeThumbnail(
+            StoryContracts.StoryChoiceAction actions,
+            string value) =>
+            _spriteResolver.LoadWardrobeThumbnail(
+                actions,
+                value,
+                _mainCharacterView);
+
+        public async UniTask PreviewWardrobeChoice(
+            StoryContracts.StoryChoiceAction actions,
+            string value)
+        {
+            ApplyWardrobeChoice(actions, value);
+            var request = _lastRenderRequest;
+            if (request == null)
+                return;
+
+            var version = ++_wardrobePreviewVersion;
+            var sprites = await _spriteResolver.Resolve(
+                request,
+                _mainCharacterView,
+                _mainCharacterClothes,
+                _mainCharacterHair,
+                _mainCharacterAccessory);
+            if (version == _wardrobePreviewVersion)
+                Apply(sprites);
         }
 
         public UniTask Show(StoryContracts.StoryCharacterPosition position) =>
@@ -92,6 +132,20 @@ namespace Novels.Character
                 StoryContracts.StoryCharacterPosition.Right => false,
                 _ => null,
             };
+        }
+
+        private void ApplyWardrobeChoice(
+            StoryContracts.StoryChoiceAction actions,
+            string value)
+        {
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+                SetMainCharacterView(value);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                SetMainCharacterClothes(value);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                SetMainCharacterHair(value);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                SetMainCharacterAccessory(value);
         }
 
         private void Apply(CharacterSpriteSet sprites)

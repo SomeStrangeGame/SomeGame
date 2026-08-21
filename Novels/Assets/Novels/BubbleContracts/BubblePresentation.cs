@@ -4,13 +4,10 @@ namespace Novels.BubbleContracts
 {
     public static class BubbleTriggers
     {
-        public const string Wardrobe = "some wardrobe trigger";
         public const string Choose = "some choose trigger";
 
         public static BubblePresentationKind Resolve(string value)
         {
-            if (string.Equals(value, Wardrobe, StringComparison.Ordinal))
-                return BubblePresentationKind.Wardrobe;
             if (string.Equals(value, Choose, StringComparison.Ordinal))
                 return BubblePresentationKind.Choose;
             return BubblePresentationKind.Dialogue;
@@ -28,16 +25,6 @@ namespace Novels.BubbleContracts
     {
         public const string Disclaimer = "Дисклеймер";
         public const string Hint = "Подсказка";
-    }
-
-    public sealed class WardrobePresentation
-    {
-        public WardrobePresentation(Action onCompleted)
-        {
-            OnCompleted = onCompleted ?? throw new ArgumentNullException(nameof(onCompleted));
-        }
-
-        public Action OnCompleted { get; }
     }
 
     public sealed class ChoosePresentation

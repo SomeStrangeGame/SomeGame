@@ -76,10 +76,15 @@ namespace Novels.StoryContracts
         public const string SelectAppearanceFormal = "Выберите внешность";
         public const string SelectClothes = "Выбери одежду";
         public const string SelectClothesFormal = "Выберите одежду";
+        public const string SelectSwimsuit = "Выбери купальник";
+        public const string SelectSwimsuitFormal = "Выберите купальник";
+        public const string ConfirmClothes = "Вы выбрали...?";
         public const string SelectHair = "Выбери причёску";
         public const string SelectHairLegacy = "Выбери прическу";
         public const string SelectHairFormal = "Выберите причёску";
         public const string SelectHairFormalLegacy = "Выберите прическу";
+        public const string SelectAccessory = "Выбери украшение";
+        public const string SelectAccessoryFormal = "Выберите украшение";
     }
 
     public static class StoryCameraActions

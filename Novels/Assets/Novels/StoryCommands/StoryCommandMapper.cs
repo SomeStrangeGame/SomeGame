@@ -42,7 +42,10 @@ namespace Novels.StoryCommands
             if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectClothes)
                 || HasArgument(
                     arguments,
-                    StoryContracts.StoryChoiceActions.SelectClothesFormal))
+                    StoryContracts.StoryChoiceActions.SelectClothesFormal)
+                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectSwimsuit)
+                || HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectSwimsuitFormal)
+                || HasArgument(arguments, StoryContracts.StoryChoiceActions.ConfirmClothes))
                 result |= StoryContracts.StoryChoiceAction.SelectClothes;
 
             if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectHair)
@@ -55,7 +58,23 @@ namespace Novels.StoryCommands
                 result |= StoryContracts.StoryChoiceAction.SelectHair;
             }
 
+            if (HasArgument(arguments, StoryContracts.StoryChoiceActions.SelectAccessory)
+                || HasArgument(
+                    arguments,
+                    StoryContracts.StoryChoiceActions.SelectAccessoryFormal))
+            {
+                result |= StoryContracts.StoryChoiceAction.SelectAccessory;
+            }
+
             return result;
+        }
+
+        internal static string ParseChoiceConfirmation(string speaker, string[] arguments)
+        {
+            return StoryContracts.StorySpeakers.IsWardrobe(speaker)
+                && arguments.Length > 1
+                ? arguments[1]?.Trim() ?? string.Empty
+                : string.Empty;
         }
 
         internal static StoryContracts.CharacterPresentation ParseCharacterPresentation(
@@ -71,6 +90,8 @@ namespace Novels.StoryCommands
             for (var index = 0; index < arguments.Length; index++)
             {
                 var argument = arguments[index];
+                if (StoryContracts.StorySpeakers.IsWardrobe(speaker) && index < 2)
+                    continue;
                 if (index == displayNameIndex)
                     continue;
                 if (TryStripPrefix(

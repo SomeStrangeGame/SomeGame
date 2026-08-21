@@ -21,5 +21,7 @@ namespace Novels.Character
         internal void ClearClothes(string identity) => Get(identity).Clothes = null;
 
         internal void ClearHair(string identity) => Get(identity).Hair = null;
+
+        internal void ClearAccessories(string identity) => Get(identity).Accessories = null;
     }
 }

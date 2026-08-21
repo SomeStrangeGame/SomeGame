@@ -50,6 +50,7 @@ namespace Novels.StoryCommands
             string text,
             StoryContracts.DialoguePresentation presentation,
             StoryContracts.StoryChoiceAction choiceActions,
+            string choiceConfirmationText,
             StoryContracts.CharacterPresentation character)
         {
             return new DialogueStoryCommand(
@@ -59,6 +60,7 @@ namespace Novels.StoryCommands
                     text,
                     presentation,
                     choiceActions,
+                    choiceConfirmationText,
                     character));
         }
 

@@ -9,6 +9,7 @@ namespace Novels
             Waiting.Entity waiting,
             Audio.Entity audio,
             Bubble.Entity bubble,
+            Wardrobe.Entity wardrobe,
             Save.Entity save,
             Character.Entity character)
         {
@@ -49,8 +50,15 @@ namespace Novels
                         BubbleHide = bubble.Hide,
                         BubbleHideImmediate = bubble.HideImmediate,
                         SetBubbleScreen = bubble.SetBubbleScreen,
-                        SetWardrobeScreen = bubble.SetWardrobeScreen,
                         SetChooseScreen = bubble.SetChooseScreen,
+                    },
+                    Wardrobe = new StoryQueue.Entity.WardrobePort
+                    {
+                        Show = wardrobe.Show,
+                        ShowImmediate = wardrobe.ShowImmediate,
+                        Hide = wardrobe.Hide,
+                        HideImmediate = wardrobe.HideImmediate,
+                        SetScreen = wardrobe.SetScreen,
                     },
                     Choice = new StoryQueue.Entity.ChoicePort
                     {
@@ -62,6 +70,9 @@ namespace Novels
                         SetMainCharacterView = character.SetMainCharacterView,
                         SetMainCharacterClothes = character.SetMainCharacterClothes,
                         SetMainCharacterHair = character.SetMainCharacterHair,
+                        SetMainCharacterAccessory = character.SetMainCharacterAccessory,
+                        LoadWardrobeThumbnail = character.LoadWardrobeThumbnail,
+                        PreviewWardrobeChoice = character.PreviewWardrobeChoice,
                         CharacterHide = character.Hide,
                         CharacterHideImmediate = character.HideImmediate,
                         CharacterShow = character.Show,

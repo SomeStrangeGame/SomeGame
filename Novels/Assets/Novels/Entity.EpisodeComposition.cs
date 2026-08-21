@@ -44,6 +44,9 @@ namespace Novels
                 state.EpisodeScope,
                 assets.Bubble,
                 cancellationToken);
+            var wardrobe = CreateWardrobe(
+                state.EpisodeScope,
+                cancellationToken);
 
             var location = CreateLocation(
                 state.EpisodeScope,
@@ -80,6 +83,7 @@ namespace Novels
                 waiting,
                 audio,
                 bubble,
+                wardrobe,
                 state.SaveSystem,
                 character);
             var queueExecutor = CreateQueueExecutor();

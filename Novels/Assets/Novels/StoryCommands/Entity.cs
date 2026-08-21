@@ -34,6 +34,7 @@ namespace Novels.StoryCommands
                         string.Empty,
                         StoryContracts.DialoguePresentation.Character,
                         StoryContracts.StoryChoiceAction.None,
+                        string.Empty,
                         StoryCommandMapper.ParseCharacterPresentation(
                             string.Empty,
                             Array.Empty<string>()))
@@ -87,6 +88,7 @@ namespace Novels.StoryCommands
                     text,
                     StoryContracts.DialoguePresentation.Narrator,
                     StoryCommandMapper.ParseChoiceActions(arguments),
+                    string.Empty,
                     StoryCommandMapper.ParseCharacterPresentation(
                         string.Empty,
                         Array.Empty<string>())));
@@ -104,6 +106,7 @@ namespace Novels.StoryCommands
                     value,
                     StoryCommandMapper.ParsePresentation(name, arguments),
                     StoryCommandMapper.ParseChoiceActions(arguments),
+                    StoryCommandMapper.ParseChoiceConfirmation(name, arguments),
                     StoryCommandMapper.ParseCharacterPresentation(name, arguments)));
             }
 

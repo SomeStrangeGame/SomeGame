@@ -48,7 +48,9 @@ namespace Novels.StoryQueue
                             choices,
                             bubbleDone),
                     },
-                    CreateBubbleLifecycle(bubbleDone));
+                    CreatePresentationLifecycle(
+                        BubbleContracts.BubblePresentationKind.Dialogue,
+                        bubbleDone));
             }
 
             var role = ResolveSpeakerRole(dialogue);
@@ -102,7 +104,9 @@ namespace Novels.StoryQueue
                             position,
                             dialogue.Character)));
             }
-            afterCommands.AddRange(CreateBubbleLifecycle(bubbleDone));
+            afterCommands.AddRange(CreatePresentationLifecycle(
+                ResolvePresentationKind(dialogue),
+                bubbleDone));
 
             var beforeCommands = new List<QueueProcess.IQueue>();
             if (hideBeforePendingCommands)
@@ -133,19 +137,31 @@ namespace Novels.StoryQueue
                 _ctx.Character.SetMainCharacterView,
                 _ctx.Character.SetMainCharacterClothes,
                 _ctx.Character.SetMainCharacterHair,
+                _ctx.Character.SetMainCharacterAccessory,
+                _ctx.Character.LoadWardrobeThumbnail,
+                _ctx.Character.PreviewWardrobeChoice,
                 _ctx.Choice.SaveDecision,
                 _ctx.Choice.SetChoice,
                 string.IsNullOrEmpty(dialogue.Character.DisplayName)
                     ? dialogue.Speaker
                     : dialogue.Character.DisplayName,
                 dialogue.Text,
+                dialogue.ChoiceConfirmationText,
                 role,
                 dialogue.Presentation,
                 dialogue.ChoiceActions,
-                BubbleContracts.BubbleTriggers.Resolve(dialogue.Speaker),
+                ResolvePresentationKind(dialogue),
                 _ctx.Bubble.SetBubbleScreen,
-                _ctx.Bubble.SetWardrobeScreen,
+                _ctx.Wardrobe.SetScreen,
                 _ctx.Bubble.SetChooseScreen));
+        }
+
+        private static BubbleContracts.BubblePresentationKind ResolvePresentationKind(
+            StoryCommands.DialogueCommandData dialogue)
+        {
+            if (dialogue.Presentation == StoryContracts.DialoguePresentation.Wardrobe)
+                return BubbleContracts.BubblePresentationKind.Wardrobe;
+            return BubbleContracts.BubbleTriggers.Resolve(dialogue.Speaker);
         }
 
         private StoryContracts.StorySpeakerRole ResolveSpeakerRole(
@@ -179,18 +195,31 @@ namespace Novels.StoryQueue
             };
         }
 
-        private QueueProcess.IQueue[] CreateBubbleLifecycle(
+        private QueueProcess.IQueue[] CreatePresentationLifecycle(
+            BubbleContracts.BubblePresentationKind kind,
             UniTaskCompletionSource bubbleDone)
         {
+            var show = kind == BubbleContracts.BubblePresentationKind.Wardrobe
+                ? _ctx.Wardrobe.Show
+                : _ctx.Bubble.BubbleShow;
+            var showImmediate = kind == BubbleContracts.BubblePresentationKind.Wardrobe
+                ? _ctx.Wardrobe.ShowImmediate
+                : _ctx.Bubble.BubbleShowImmediate;
+            var hide = kind == BubbleContracts.BubblePresentationKind.Wardrobe
+                ? _ctx.Wardrobe.Hide
+                : _ctx.Bubble.BubbleHide;
+            var hideImmediate = kind == BubbleContracts.BubblePresentationKind.Wardrobe
+                ? _ctx.Wardrobe.HideImmediate
+                : _ctx.Bubble.BubbleHideImmediate;
             return new QueueProcess.IQueue[]
             {
                 new QueueProcess.BubbleQueue.ShowBubbleQueue(
                     bubbleDone,
-                    _ctx.Bubble.BubbleShow,
-                    _ctx.Bubble.BubbleShowImmediate),
+                    show,
+                    showImmediate),
                 new QueueProcess.BubbleQueue.HideBubbleQueue(
-                    _ctx.Bubble.BubbleHide,
-                    _ctx.Bubble.BubbleHideImmediate),
+                    hide,
+                    hideImmediate),
             };
         }
     }

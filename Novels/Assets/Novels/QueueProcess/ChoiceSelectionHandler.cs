@@ -20,6 +20,44 @@ namespace Novels.QueueProcess
                 id => Select(choice, id))).ToArray();
         }
 
+        internal WardrobeContracts.WardrobePresentation CreateWardrobePresentation()
+        {
+            var options = _request.Choices.Select(choice =>
+                new WardrobeContracts.WardrobeOption(choice.Id, choice.Text)).ToArray();
+            return new WardrobeContracts.WardrobePresentation(
+                GetWardrobeTitle(),
+                _request.ChoiceConfirmationText,
+                options,
+                id =>
+                {
+                    var choice = GetChoice(id);
+                    return _request.LoadWardrobeThumbnail(_request.ChoiceActions, choice.Text);
+                },
+                id =>
+                {
+                    var choice = GetChoice(id);
+                    return _request.PreviewWardrobeChoice(_request.ChoiceActions, choice.Text);
+                },
+                id =>
+                {
+                    var choice = GetChoice(id);
+                    Select(choice, id);
+                });
+        }
+
+        private string GetWardrobeTitle()
+        {
+            if (!string.IsNullOrWhiteSpace(_request.Value))
+                return _request.Value;
+            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+                return WardrobeContracts.WardrobeLabels.Appearance;
+            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                return WardrobeContracts.WardrobeLabels.Hair;
+            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                return WardrobeContracts.WardrobeLabels.Accessory;
+            return WardrobeContracts.WardrobeLabels.Clothes;
+        }
+
         internal void ApplySaved(StoryContracts.StoryDecision decision)
         {
             if (!decision.HasChoice)
@@ -51,9 +89,14 @@ namespace Novels.QueueProcess
                 _request.SetMainCharacterClothes(choice.Text);
             if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
                 _request.SetMainCharacterHair(choice.Text);
+            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                _request.SetMainCharacterAccessory(choice.Text);
         }
 
         private StoryContracts.StoryChoice GetSavedChoice(int choiceId)
+            => GetChoice(choiceId);
+
+        private StoryContracts.StoryChoice GetChoice(int choiceId)
         {
             foreach (var choice in _request.Choices)
             {
@@ -61,7 +104,7 @@ namespace Novels.QueueProcess
                     return choice;
             }
             throw new InvalidOperationException(
-                $"Saved choice '{choiceId}' is not available in the current dialogue.");
+                $"Choice '{choiceId}' is not available in the current dialogue.");
         }
 
     }

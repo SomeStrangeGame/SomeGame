@@ -19,5 +19,6 @@ namespace Novels.StoryContracts
         SelectAppearance = 1 << 0,
         SelectClothes = 1 << 1,
         SelectHair = 1 << 2,
+        SelectAccessory = 1 << 3,
     }
 }

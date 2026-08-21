@@ -39,16 +39,21 @@ namespace Novels.Character
         internal void ClearHair() =>
             _appearances.ClearHair(_profile.MainCharacterAssetId);
 
+        internal void ClearAccessories() =>
+            _appearances.ClearAccessories(_profile.MainCharacterAssetId);
+
         internal UniTask<CharacterSpriteSet> Resolve(
             StoryContracts.CharacterRenderRequest request,
             string mainCharacterView,
             string mainCharacterClothes,
-            string mainCharacterHair)
+            string mainCharacterHair,
+            string mainCharacterAccessory)
         {
             var name = request.Name;
             var view = _profile.ViewRoot;
             var clothes = string.Empty;
             var hair = string.Empty;
+            var accessory = string.Empty;
             if (request.Role == StoryContracts.StorySpeakerRole.MainCharacter
                 || request.Role == StoryContracts.StorySpeakerRole.Wardrobe)
             {
@@ -56,6 +61,7 @@ namespace Novels.Character
                 view = mainCharacterView;
                 clothes = mainCharacterClothes;
                 hair = mainCharacterHair;
+                accessory = mainCharacterAccessory;
             }
             name ??= string.Empty;
             name = ContentAddressing.TechnicalAssetIdConvention.Canonicalize(name);
@@ -64,8 +70,15 @@ namespace Novels.Character
                 view,
                 clothes,
                 hair,
+                accessory,
                 request.Presentation,
                 _appearances.Get(name));
         }
+
+        internal UniTask<Sprite> LoadWardrobeThumbnail(
+            StoryContracts.StoryChoiceAction actions,
+            string value,
+            string mainCharacterView) =>
+            _sprites.LoadWardrobeThumbnail(actions, value, mainCharacterView);
     }
 }

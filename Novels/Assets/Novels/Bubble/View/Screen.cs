@@ -9,11 +9,6 @@ namespace Novels.Bubble.View
 {
     public class Screen : MonoBehaviour
     {
-        public struct WardrobeCtx
-        {
-            public Action OnCompleted;
-        }
-
         public struct ChooseCtx
         {
             public Action OnCompleted;
@@ -113,17 +108,8 @@ namespace Novels.Bubble.View
             public readonly GameObject Root => _root;
         }
 
-        [Serializable]
-        private struct Wardrobe
-        {
-            [SerializeField] private GameObject _root;
-
-            public readonly GameObject Root => _root;
-        }
-
         [SerializeField] private Bubbles _bubblesView;
         [SerializeField] private Choose _chooseView;
-        [SerializeField] private Wardrobe _wardrobeView;
 
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -168,18 +154,9 @@ namespace Novels.Bubble.View
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public void SetWardrobeScreen(WardrobeCtx ctx)
-        {
-            _wardrobeView.Root.SetActive(true);
-            _chooseView.Root.SetActive(false);
-            _bubblesView.Root.SetActive(false);
-            BindBackground(ctx.OnCompleted);
-        }
-
         public void SetChooseScreen(ChooseCtx ctx)
         {
             _chooseView.Root.SetActive(true);
-            _wardrobeView.Root.SetActive(false);
             _bubblesView.Root.SetActive(false);
             BindBackground(ctx.OnCompleted);
         }
@@ -188,7 +165,6 @@ namespace Novels.Bubble.View
         {
             _bubblesView.Root.SetActive(true);
             _chooseView.Root.SetActive(false);
-            _wardrobeView.Root.SetActive(false);
 
             foreach (var bubble in _bubblesView.BubblesPopUp)
             {

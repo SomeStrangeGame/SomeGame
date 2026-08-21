@@ -7,12 +7,14 @@ namespace Novels.StoryCommands
             string text,
             StoryContracts.DialoguePresentation presentation,
             StoryContracts.StoryChoiceAction choiceActions,
+            string choiceConfirmationText,
             StoryContracts.CharacterPresentation character)
         {
             Speaker = speaker ?? string.Empty;
             Text = text ?? string.Empty;
             Presentation = presentation;
             ChoiceActions = choiceActions;
+            ChoiceConfirmationText = choiceConfirmationText ?? string.Empty;
             Character = character;
         }
 
@@ -20,6 +22,7 @@ namespace Novels.StoryCommands
         public string Text { get; }
         public StoryContracts.DialoguePresentation Presentation { get; }
         public StoryContracts.StoryChoiceAction ChoiceActions { get; }
+        public string ChoiceConfirmationText { get; }
         public StoryContracts.CharacterPresentation Character { get; }
     }
 
