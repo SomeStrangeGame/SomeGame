@@ -47,6 +47,9 @@ namespace Novels
             var wardrobe = CreateWardrobe(
                 state.EpisodeScope,
                 cancellationToken);
+            var choose = CreateChoose(
+                state.EpisodeScope,
+                cancellationToken);
 
             var location = CreateLocation(
                 state.EpisodeScope,
@@ -84,6 +87,8 @@ namespace Novels
                 audio,
                 bubble,
                 wardrobe,
+                choose,
+                assetName => GetChooseSprite(state, assetName),
                 state.SaveSystem,
                 character);
             var queueExecutor = CreateQueueExecutor();

@@ -14,6 +14,7 @@ namespace Novels.QueueProcess
             Action<string> setMainCharacterAccessory,
             Func<StoryContracts.StoryChoiceAction, string, UniTask<UnityEngine.Sprite>> loadWardrobeThumbnail,
             Func<StoryContracts.StoryChoiceAction, string, UniTask> previewWardrobeChoice,
+            Func<string, UniTask<UnityEngine.Sprite>> loadChooseThumbnail,
             Action<StoryContracts.StoryDecision> saveDecision,
             Action<int> setChoice,
             string name,
@@ -25,7 +26,7 @@ namespace Novels.QueueProcess
             BubbleContracts.BubblePresentationKind presentationKind,
             Action<BubbleContracts.BubblePresentation> setBubbleScreen,
             Action<WardrobeContracts.WardrobePresentation> setWardrobeScreen,
-            Action<BubbleContracts.ChoosePresentation> setChooseScreen)
+            Action<ChooseContracts.ChoosePresentation> setChooseScreen)
         {
             BubbleDone = bubbleDone ?? throw new ArgumentNullException(nameof(bubbleDone));
             Choices = choices ?? Array.Empty<StoryContracts.StoryChoice>();
@@ -41,6 +42,8 @@ namespace Novels.QueueProcess
                 ?? throw new ArgumentNullException(nameof(loadWardrobeThumbnail));
             PreviewWardrobeChoice = previewWardrobeChoice
                 ?? throw new ArgumentNullException(nameof(previewWardrobeChoice));
+            LoadChooseThumbnail = loadChooseThumbnail
+                ?? throw new ArgumentNullException(nameof(loadChooseThumbnail));
             SaveDecision = saveDecision ?? throw new ArgumentNullException(nameof(saveDecision));
             SetChoice = setChoice ?? throw new ArgumentNullException(nameof(setChoice));
             Name = name ?? string.Empty;
@@ -66,6 +69,7 @@ namespace Novels.QueueProcess
         internal Action<string> SetMainCharacterAccessory { get; }
         internal Func<StoryContracts.StoryChoiceAction, string, UniTask<UnityEngine.Sprite>> LoadWardrobeThumbnail { get; }
         internal Func<StoryContracts.StoryChoiceAction, string, UniTask> PreviewWardrobeChoice { get; }
+        internal Func<string, UniTask<UnityEngine.Sprite>> LoadChooseThumbnail { get; }
         internal Action<StoryContracts.StoryDecision> SaveDecision { get; }
         internal Action<int> SetChoice { get; }
         internal string Name { get; }
@@ -77,6 +81,6 @@ namespace Novels.QueueProcess
         internal BubbleContracts.BubblePresentationKind PresentationKind { get; }
         internal Action<BubbleContracts.BubblePresentation> SetBubbleScreen { get; }
         internal Action<WardrobeContracts.WardrobePresentation> SetWardrobeScreen { get; }
-        internal Action<BubbleContracts.ChoosePresentation> SetChooseScreen { get; }
+        internal Action<ChooseContracts.ChoosePresentation> SetChooseScreen { get; }
     }
 }

@@ -9,6 +9,8 @@ namespace Novels.StoryContracts
     {
         public const string Wardrobe = "Wardrobe";
         public const string WardrobeRussian = "Гардероб";
+        public const string Choose = "Choose";
+        public const string ChooseRussian = "Выбор предмета";
         public const string Narrator = "...";
         public const string NarratorLegacy = "..";
         public const string EpisodeDescription = "Описание";
@@ -20,6 +22,9 @@ namespace Novels.StoryContracts
 
         public static bool IsWardrobe(string value) =>
             value == Wardrobe || value == WardrobeRussian;
+
+        public static bool IsChoose(string value) =>
+            value == Choose || value == ChooseRussian;
     }
 
     public static class StoryDisplayNames

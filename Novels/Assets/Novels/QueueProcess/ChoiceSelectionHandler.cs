@@ -45,6 +45,22 @@ namespace Novels.QueueProcess
                 });
         }
 
+        internal ChooseContracts.ChoosePresentation CreateChoosePresentation()
+        {
+            var options = _request.Choices.Select(choice =>
+                new ChooseContracts.ChooseOption(choice.Id, choice.Text)).ToArray();
+            return new ChooseContracts.ChoosePresentation(
+                _request.Value,
+                _request.ChoiceConfirmationText,
+                options,
+                id => _request.LoadChooseThumbnail(GetChoice(id).Text),
+                id =>
+                {
+                    var choice = GetChoice(id);
+                    Select(choice, id);
+                });
+        }
+
         private string GetWardrobeTitle()
         {
             if (!string.IsNullOrWhiteSpace(_request.Value))

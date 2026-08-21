@@ -9,11 +9,6 @@ namespace Novels.Bubble.View
 {
     public class Screen : MonoBehaviour
     {
-        public struct ChooseCtx
-        {
-            public Action OnCompleted;
-        }
-
         public struct BubbleCtx
         {
             public enum BubbleType
@@ -100,16 +95,7 @@ namespace Novels.Bubble.View
             public readonly Button BackgroundButton => _backgroundButton;
         }
 
-        [Serializable]
-        private struct Choose
-        {
-            [SerializeField] private GameObject _root;
-
-            public readonly GameObject Root => _root;
-        }
-
         [SerializeField] private Bubbles _bubblesView;
-        [SerializeField] private Choose _chooseView;
 
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -154,17 +140,9 @@ namespace Novels.Bubble.View
             _canvasGroup.gameObject.SetActive(false);
         }
 
-        public void SetChooseScreen(ChooseCtx ctx)
-        {
-            _chooseView.Root.SetActive(true);
-            _bubblesView.Root.SetActive(false);
-            BindBackground(ctx.OnCompleted);
-        }
-
         public void SetBubbleScreen(BubbleCtx ctx)
         {
             _bubblesView.Root.SetActive(true);
-            _chooseView.Root.SetActive(false);
 
             foreach (var bubble in _bubblesView.BubblesPopUp)
             {

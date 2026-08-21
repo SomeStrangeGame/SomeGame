@@ -82,6 +82,18 @@ namespace Novels.StoryCommands
                 var text = value;
                 if (separatorIndex < 0 || string.IsNullOrWhiteSpace(text))
                     text = arguments.Length == 0 ? string.Empty : arguments[0];
+                if (StoryContracts.StorySpeakers.IsWardrobe(name)
+                    || StoryContracts.StorySpeakers.IsChoose(name))
+                {
+                    return StoryParseResult.Success(StoryCommand.CreateDialogue(
+                        source,
+                        name,
+                        text,
+                        StoryCommandMapper.ParsePresentation(name, arguments),
+                        StoryCommandMapper.ParseChoiceActions(arguments),
+                        StoryCommandMapper.ParseChoiceConfirmation(name, arguments),
+                        StoryCommandMapper.ParseCharacterPresentation(name, arguments)));
+                }
                 return StoryParseResult.Success(StoryCommand.CreateDialogue(
                     source,
                     name,
@@ -100,10 +112,18 @@ namespace Novels.StoryCommands
 
             if (!StoryCommandSyntax.CommandTypes.TryGetValue(name, out var commandType))
             {
+                var dialogueText = value;
+                if (string.IsNullOrWhiteSpace(dialogueText)
+                    && (StoryContracts.StorySpeakers.IsWardrobe(name)
+                        || StoryContracts.StorySpeakers.IsChoose(name))
+                    && arguments.Length > 0)
+                {
+                    dialogueText = arguments[0];
+                }
                 return StoryParseResult.Success(StoryCommand.CreateDialogue(
                     source,
                     name,
-                    value,
+                    dialogueText,
                     StoryCommandMapper.ParsePresentation(name, arguments),
                     StoryCommandMapper.ParseChoiceActions(arguments),
                     StoryCommandMapper.ParseChoiceConfirmation(name, arguments),

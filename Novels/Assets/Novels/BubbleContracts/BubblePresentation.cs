@@ -2,18 +2,6 @@ using System;
 
 namespace Novels.BubbleContracts
 {
-    public static class BubbleTriggers
-    {
-        public const string Choose = "some choose trigger";
-
-        public static BubblePresentationKind Resolve(string value)
-        {
-            if (string.Equals(value, Choose, StringComparison.Ordinal))
-                return BubblePresentationKind.Choose;
-            return BubblePresentationKind.Dialogue;
-        }
-    }
-
     public enum BubblePresentationKind
     {
         Dialogue,
@@ -25,16 +13,6 @@ namespace Novels.BubbleContracts
     {
         public const string Disclaimer = "Дисклеймер";
         public const string Hint = "Подсказка";
-    }
-
-    public sealed class ChoosePresentation
-    {
-        public ChoosePresentation(Action onCompleted)
-        {
-            OnCompleted = onCompleted ?? throw new ArgumentNullException(nameof(onCompleted));
-        }
-
-        public Action OnCompleted { get; }
     }
 
     public sealed class BubblePresentation

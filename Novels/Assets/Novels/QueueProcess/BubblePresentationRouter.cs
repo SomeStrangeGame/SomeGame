@@ -22,8 +22,7 @@ namespace Novels.QueueProcess
                     return;
 
                 case BubbleContracts.BubblePresentationKind.Choose:
-                    _request.SetChooseScreen(new BubbleContracts.ChoosePresentation(
-                        _choices.CompleteWithoutChoice));
+                    _request.SetChooseScreen(_choices.CreateChoosePresentation());
                     return;
 
                 default:

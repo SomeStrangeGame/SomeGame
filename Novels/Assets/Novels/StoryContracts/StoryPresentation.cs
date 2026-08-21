@@ -7,6 +7,7 @@ namespace Novels.StoryContracts
         Character,
         Narrator,
         Wardrobe,
+        Choose,
         Disclaimer,
         Hint,
         Thoughts,

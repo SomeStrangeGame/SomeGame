@@ -41,6 +41,12 @@ namespace Novels.ContentAddressing
         public string SharedBubblePrefab(string assetName) =>
             ContentAddressConvention.SharedBubblePrefab(ContentId, assetName);
 
+        public string ChooseItem(string assetName) =>
+            ContentAddressConvention.ChooseItem(ContentId, EpisodeId, assetName);
+
+        public string SharedChooseItem(string assetName) =>
+            ContentAddressConvention.SharedChooseItem(ContentId, assetName);
+
         public string LocationPrefab(string assetName) =>
             ContentAddressConvention.LocationPrefab(ContentId, EpisodeId, assetName);
 

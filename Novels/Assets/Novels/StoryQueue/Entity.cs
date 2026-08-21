@@ -35,6 +35,7 @@ namespace Novels.StoryQueue
             public LocationDialoguePort Location;
             public BubblePort Bubble;
             public WardrobePort Wardrobe;
+            public ChoosePort Choose;
             public ChoicePort Choice;
             public CharacterPort Character;
         }
@@ -52,7 +53,6 @@ namespace Novels.StoryQueue
             public Func<UniTask> BubbleHide;
             public Action BubbleHideImmediate;
             public Action<BubbleContracts.BubblePresentation> SetBubbleScreen;
-            public Action<BubbleContracts.ChoosePresentation> SetChooseScreen;
         }
 
         public struct WardrobePort
@@ -62,6 +62,16 @@ namespace Novels.StoryQueue
             public Func<UniTask> Hide;
             public Action HideImmediate;
             public Action<WardrobeContracts.WardrobePresentation> SetScreen;
+        }
+
+        public struct ChoosePort
+        {
+            public Func<UniTask> Show;
+            public Action ShowImmediate;
+            public Func<UniTask> Hide;
+            public Action HideImmediate;
+            public Func<string, UniTask<UnityEngine.Sprite>> LoadThumbnail;
+            public Action<ChooseContracts.ChoosePresentation> SetScreen;
         }
 
         public struct ChoicePort

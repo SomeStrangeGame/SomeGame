@@ -25,6 +25,9 @@ namespace Novels.StoryCommands
             if (StoryContracts.StorySpeakers.IsWardrobe(speaker))
                 return StoryContracts.DialoguePresentation.Wardrobe;
 
+            if (StoryContracts.StorySpeakers.IsChoose(speaker))
+                return StoryContracts.DialoguePresentation.Choose;
+
             return StoryContracts.DialoguePresentation.Character;
         }
 
@@ -71,7 +74,8 @@ namespace Novels.StoryCommands
 
         internal static string ParseChoiceConfirmation(string speaker, string[] arguments)
         {
-            return StoryContracts.StorySpeakers.IsWardrobe(speaker)
+            return (StoryContracts.StorySpeakers.IsWardrobe(speaker)
+                    || StoryContracts.StorySpeakers.IsChoose(speaker))
                 && arguments.Length > 1
                 ? arguments[1]?.Trim() ?? string.Empty
                 : string.Empty;
@@ -90,7 +94,9 @@ namespace Novels.StoryCommands
             for (var index = 0; index < arguments.Length; index++)
             {
                 var argument = arguments[index];
-                if (StoryContracts.StorySpeakers.IsWardrobe(speaker) && index < 2)
+                if ((StoryContracts.StorySpeakers.IsWardrobe(speaker)
+                        || StoryContracts.StorySpeakers.IsChoose(speaker))
+                    && index < 2)
                     continue;
                 if (index == displayNameIndex)
                     continue;

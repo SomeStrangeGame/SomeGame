@@ -341,10 +341,7 @@ namespace Editor
                             command.Data.Presentation,
                             mainCharacter);
                         if (Novels.StoryContracts.StorySpeakerRoleResolver
-                                .RequiresCharacterAsset(role)
-                            && Novels.BubbleContracts.BubbleTriggers.Resolve(
-                                resolvedSpeaker.Value)
-                                == Novels.BubbleContracts.BubblePresentationKind.Dialogue)
+                                .RequiresCharacterAsset(role))
                         {
                             dependencies.Add(new StoryDependencyReference(
                                 StoryDependencyKind.Speaker,

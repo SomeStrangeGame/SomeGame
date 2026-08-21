@@ -29,7 +29,7 @@ namespace Novels.StoryCommands
             StringComparer.OrdinalIgnoreCase)
         {
             StoryContracts.StorySpeakers.WardrobeRussian,
-            "Выбор предмета",
+            StoryContracts.StorySpeakers.ChooseRussian,
             "КОНЕЦ СЕРИИ",
         };
 

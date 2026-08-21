@@ -52,14 +52,6 @@ namespace Novels.Bubble
             _screen.HideImmediate();
         }
 
-        public void SetChooseScreen(BubbleContracts.ChoosePresentation presentation)
-        {
-            _screen.SetChooseScreen(new View.Screen.ChooseCtx
-            {
-                OnCompleted = presentation.OnCompleted,
-            });
-        }
-
         public void SetBubbleScreen(BubbleContracts.BubblePresentation presentation)
         {
             View.Screen.BubbleCtx.BubbleType bubbleType;

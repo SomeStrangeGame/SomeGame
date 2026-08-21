@@ -1,0 +1,16 @@
+{
+    "name": "Novels.Choose.View",
+    "rootNamespace": "",
+    "references": [
+        "GUID:6a9e2c1b8d4f5071a2b3c4d5e6f70819"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

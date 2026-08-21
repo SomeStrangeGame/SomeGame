@@ -30,7 +30,21 @@ namespace Novels.Wardrobe
 
         public void SetScreen(WardrobeContracts.WardrobePresentation presentation)
         {
-            _screen.SetPresentation(presentation);
+            var options = new View.CarouselOption[presentation.Options.Length];
+            for (var index = 0; index < options.Length; index++)
+            {
+                var option = presentation.Options[index];
+                options[index] = new View.CarouselOption(option.Id, option.Text);
+            }
+            _screen.SetPresentation(new View.CarouselPresentation
+            {
+                Title = presentation.Title,
+                ConfirmationText = presentation.ConfirmationText,
+                Options = options,
+                LoadThumbnail = presentation.LoadThumbnail,
+                Preview = presentation.Preview,
+                Confirm = presentation.Confirm,
+            });
         }
 
         public UniTask Show()

@@ -10,6 +10,8 @@ namespace Novels
             Audio.Entity audio,
             Bubble.Entity bubble,
             Wardrobe.Entity wardrobe,
+            Choose.Entity choose,
+            System.Func<string, Cysharp.Threading.Tasks.UniTask<UnityEngine.Sprite>> loadChooseThumbnail,
             Save.Entity save,
             Character.Entity character)
         {
@@ -50,7 +52,6 @@ namespace Novels
                         BubbleHide = bubble.Hide,
                         BubbleHideImmediate = bubble.HideImmediate,
                         SetBubbleScreen = bubble.SetBubbleScreen,
-                        SetChooseScreen = bubble.SetChooseScreen,
                     },
                     Wardrobe = new StoryQueue.Entity.WardrobePort
                     {
@@ -59,6 +60,15 @@ namespace Novels
                         Hide = wardrobe.Hide,
                         HideImmediate = wardrobe.HideImmediate,
                         SetScreen = wardrobe.SetScreen,
+                    },
+                    Choose = new StoryQueue.Entity.ChoosePort
+                    {
+                        Show = choose.Show,
+                        ShowImmediate = choose.ShowImmediate,
+                        Hide = choose.Hide,
+                        HideImmediate = choose.HideImmediate,
+                        LoadThumbnail = loadChooseThumbnail,
+                        SetScreen = choose.SetScreen,
                     },
                     Choice = new StoryQueue.Entity.ChoicePort
                     {

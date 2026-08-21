@@ -12,6 +12,11 @@ namespace Novels.StoryContracts
             {
                 return StorySpeakerRole.Wardrobe;
             }
+            if (StorySpeakers.IsChoose(speaker)
+                || presentation == DialoguePresentation.Choose)
+            {
+                return StorySpeakerRole.Choose;
+            }
             if (StorySpeakers.IsNarrator(speaker)
                 || presentation == DialoguePresentation.Narrator)
             {
@@ -29,7 +34,7 @@ namespace Novels.StoryContracts
             role == StorySpeakerRole.Character;
 
         public static bool ShowsCharacter(StorySpeakerRole role) =>
-            role != StorySpeakerRole.Narrator;
+            role != StorySpeakerRole.Narrator && role != StorySpeakerRole.Choose;
     }
 
     public enum StorySpeakerRole
@@ -38,6 +43,7 @@ namespace Novels.StoryContracts
         Character,
         Narrator,
         Wardrobe,
+        Choose,
     }
 
     public enum StoryCharacterPosition

@@ -53,6 +53,21 @@ namespace Novels.ContentAddressing
         public static string SharedBubblePrefab(string prefix, string assetName) =>
             SharedPresentationPrefab(prefix, "bubble", assetName);
 
+        public static string ChooseItem(
+            string prefix,
+            string episodeId,
+            string assetName) =>
+            IsMissing(assetName)
+                ? string.Empty
+                : $"{EpisodeRoot(prefix, episodeId)}/choose/items/"
+                    + $"{TechnicalAssetIdConvention.Canonicalize(assetName)}.png";
+
+        public static string SharedChooseItem(string prefix, string assetName) =>
+            IsMissing(assetName)
+                ? string.Empty
+                : $"{ContentPackageConvention.ContentRoot(prefix)}/shared/choose/items/"
+                    + $"{TechnicalAssetIdConvention.Canonicalize(assetName)}.png";
+
         public static string LocationPrefab(
             string prefix,
             string episodeId,
