@@ -13,36 +13,48 @@ namespace Novels.Choose
             public CancellationToken CancellationToken;
         }
 
-        private readonly Dependencies _ctx;
-        private View.ChooseScreen _screen;
+        private readonly Dependencies _dependencies;
+        private OptionSelection.OptionListScreen _screen;
 
-        public ChooseController(Dependencies ctx)
+        public ChooseController(Dependencies dependencies)
         {
-            _ctx = ctx;
+            _dependencies = dependencies;
         }
 
         public void Init()
         {
             var screenObject = new GameObject("ChooseScreen");
-            _screen = screenObject.AddComponent<View.ChooseScreen>();
+            _screen = screenObject.AddComponent<OptionSelection.OptionListScreen>();
             _screen.Init();
         }
 
         public void SetScreen(ChooseContracts.ChoosePresentation presentation)
         {
-            _screen.SetPresentation(presentation);
+            var items = new OptionSelection.OptionListItem[presentation.Options.Length];
+            for (var index = 0; index < items.Length; index++)
+            {
+                var option = presentation.Options[index];
+                items[index] = new OptionSelection.OptionListItem(option.Id, option.Text);
+            }
+            _screen.SetPresentation(new OptionSelection.OptionListPresentation(
+                presentation.Title,
+                presentation.ConfirmationText,
+                items,
+                presentation.LoadThumbnail,
+                null,
+                presentation.Confirm));
         }
 
         public UniTask Show(StoryContracts.PresentationMode mode)
         {
-            _ctx.CancellationToken.ThrowIfCancellationRequested();
+            _dependencies.CancellationToken.ThrowIfCancellationRequested();
             _screen.ShowImmediate();
             return UniTask.CompletedTask;
         }
 
         public UniTask Hide(StoryContracts.PresentationMode mode)
         {
-            _ctx.CancellationToken.ThrowIfCancellationRequested();
+            _dependencies.CancellationToken.ThrowIfCancellationRequested();
             _screen.HideImmediate();
             return UniTask.CompletedTask;
         }

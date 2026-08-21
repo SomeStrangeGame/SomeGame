@@ -4,11 +4,11 @@ namespace Novels.StoryQueue
 {
     internal sealed class StoryCommandQueueBuilder
     {
-        private readonly StoryQueueBuilder.CommandCtx _ctx;
+        private readonly StoryQueueBuilder.Dependencies _dependencies;
 
-        internal StoryCommandQueueBuilder(StoryQueueBuilder.CommandCtx ctx)
+        internal StoryCommandQueueBuilder(StoryQueueBuilder.Dependencies dependencies)
         {
-            _ctx = ctx;
+            _dependencies = dependencies;
         }
 
         internal StoryExecution.IStoryOperation Build(StoryCommands.StoryCommand command)
@@ -24,34 +24,34 @@ namespace Novels.StoryQueue
                     return new StoryExecution.DelegateStoryOperation(context =>
                     {
                         if (context.Mode == StoryExecution.QueueExecutionMode.Live)
-                            _ctx.ShowNotification(notification.Data.Text);
+                            _dependencies.Notification.Enqueue(notification.Data.Text);
                         return Cysharp.Threading.Tasks.UniTask.CompletedTask;
                     });
 
                 case StoryCommands.BackgroundStoryCommand background:
                     return new StoryExecution.BackgroundOperation.SetBackgroundQueue(
-                        _ctx.Location.SetImage,
+                        _dependencies.Location.SetImage,
                         background.Data.AssetName,
                         background.Data.Presentation);
 
                 case StoryCommands.AudioStoryCommand audio:
-                    var playAudio = audio.Type == StoryCommands.StoryCommandType.Music
-                        ? _ctx.Audio.PlayMusic
+                    var audioType = audio.Type == StoryCommands.StoryCommandType.Music
+                        ? Audio.AudioController.Audio.Music
                         : audio.Type == StoryCommands.StoryCommandType.Sound
-                            ? _ctx.Audio.PlaySound
-                            : _ctx.Audio.PlayAmbient;
+                            ? Audio.AudioController.Audio.Sound
+                            : Audio.AudioController.Audio.Ambient;
                     return new StoryExecution.DelegateStoryOperation(
-                        _ => playAudio(audio.Data.AssetName));
+                        _ => _dependencies.Audio.PlayAudio(audio.Data.AssetName, audioType));
 
                 case StoryCommands.CameraStoryCommand camera:
                     return new StoryExecution.BackgroundOperation.CameraQueue(
-                        _ctx.Location.SetCamera,
+                        _dependencies.Location.SetCamera,
                         camera.Data.Action);
 
                 case StoryCommands.WaitStoryCommand wait:
                     return new StoryExecution.DelegateStoryOperation(context =>
                         context.Mode == StoryExecution.QueueExecutionMode.Live
-                            ? _ctx.Location.Wait(wait.Data.Duration)
+                            ? _dependencies.Wait(wait.Data.Duration)
                             : Cysharp.Threading.Tasks.UniTask.CompletedTask);
 
                 default:

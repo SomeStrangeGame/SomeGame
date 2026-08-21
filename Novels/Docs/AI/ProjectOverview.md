@@ -11,8 +11,7 @@ EntryPoint
           -> подготовка story/episode content
           -> создание экранов эпизода
           -> StoryProcessor + StoryCommands
-          -> StoryQueueBuilder
-          -> StoryOperationExecutor
+          -> StoryQueueBuilder -> StoryOperationExecutor
 ```
 
 `EntryPoint` получает сериализованные ссылки сцены и создаёт неизменяемое окружение. `ApplicationRuntime` загружает каталог, предлагает выбрать историю и владеет только одним активным `NovelRuntime`. `NovelRuntime` выбирает эпизод, создаёт `EpisodeScope` и передаёт каждой фиче episode cancellation token.
@@ -34,6 +33,7 @@ EntryPoint
 - `ApplicationRuntime`: каталог, общая bundle-сессия, выбор истории.
 - `NovelRuntime`: выбранная definition, прогресс, save system и композиция эпизода.
 - `EpisodeRuntime`/`EpisodeScope`: экраны, медиа, операции и cancellation одного эпизода.
+- `EpisodePresentation`: все UI- и media-контроллеры текущего эпизода.
 - Feature controller: presentation state конкретной фичи.
 - Feature screen: только Unity/uGUI-представление.
 - `Bundles`: получение, проверка целостности, кеширование и lifetime bundle.
@@ -47,8 +47,8 @@ EntryPoint
 5. `StoryOperationExecutor` выполняет операции последовательно.
 6. Решение игрока записывается `SaveSystem`; replay использует те же операции с `PresentationMode.Immediate`.
 
-Композиция `NovelRuntime` сгруппирована по трём областям: `Content` загружает definition и сохранение, `Presentation` создаёт UI и медиа-фичи, `StoryQueue` связывает процессор истории с операциями.
+Композиция `NovelRuntime` сгруппирована по трём областям: `Content` загружает definition и сохранение, `Presentation` создаёт единый `EpisodePresentation`, `StoryQueue` связывает процессор истории с операциями напрямую, без промежуточных delegate-port структур.
 
 ## Сборки
 
-Один asmdef соответствует самостоятельной фиче или реальной границе зависимостей. Маленькие View-файлы Bootstrap, Catalog и Notification входят в сборку своей фичи. `Choose` и `Wardrobe` сохраняют отдельные runtime, View и contract assemblies и собственные экраны, поскольку будут развиваться независимо. Каждый экран принимает контракт своей фичи напрямую, без промежуточной View-модели.
+Один asmdef соответствует самостоятельной фиче или реальной границе зависимостей. View-код входит в assembly своей фичи. `Choose` и `Wardrobe` сохраняют отдельные контроллеры и contract assemblies, поскольку будут развиваться независимо, но используют общий нейтральный `OptionListScreen` вместо двух копий одинакового uGUI-кода. Очередь и исполнение истории входят в основную `Novels` assembly.

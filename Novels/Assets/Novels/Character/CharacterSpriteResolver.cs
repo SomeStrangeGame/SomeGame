@@ -10,6 +10,7 @@ namespace Novels.Character
         private readonly Content.CharacterAssetProfile _profile;
         private readonly CharacterAppearanceStore _appearances;
         private readonly CharacterSpriteSetLoader _sprites;
+        private readonly CharacterThumbnailLoader _thumbnails;
 
         internal CharacterSpriteResolver(
             string contentPrefix,
@@ -21,9 +22,18 @@ namespace Novels.Character
         {
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _appearances = new CharacterAppearanceStore();
+            var addresses = new ContentAddressing.ContentAddresses(
+                contentPrefix,
+                episodeId);
             _sprites = new CharacterSpriteSetLoader(
                 profile,
-                new ContentAddressing.ContentAddresses(contentPrefix, episodeId),
+                addresses,
+                getSprite,
+                missingCharacter,
+                cancellationToken);
+            _thumbnails = new CharacterThumbnailLoader(
+                profile,
+                addresses,
                 getSprite,
                 missingCharacter,
                 cancellationToken);
@@ -75,6 +85,6 @@ namespace Novels.Character
             StoryContracts.StoryChoiceAction actions,
             string value,
             string mainCharacterView) =>
-            _sprites.LoadWardrobeThumbnail(actions, value, mainCharacterView);
+            _thumbnails.Load(actions, value, mainCharacterView);
     }
 }

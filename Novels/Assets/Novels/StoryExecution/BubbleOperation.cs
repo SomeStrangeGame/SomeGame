@@ -5,13 +5,13 @@ namespace Novels.StoryExecution
 {
     public class BubbleOperation
     {
-        public class SetBubbleQueue : IStoryOperation
+        internal sealed class SetBubbleQueue : IStoryOperation
         {
             private readonly BubbleOperationRequest _request;
             private readonly ChoiceSelectionHandler _choices;
             private readonly BubblePresentationRouter _router;
 
-            public SetBubbleQueue(BubbleOperationRequest request)
+            internal SetBubbleQueue(BubbleOperationRequest request)
             {
                 _request = request ?? throw new ArgumentNullException(nameof(request));
                 _choices = new ChoiceSelectionHandler(request);
@@ -24,7 +24,7 @@ namespace Novels.StoryExecution
                 if (context.Mode == QueueExecutionMode.Replay)
                 {
                     _choices.ApplySaved(context.SavedDecision);
-                    _request.BubbleDone.TrySetResult();
+                    _request.Completed.TrySetResult();
                     return UniTask.CompletedTask;
                 }
                 _router.Present();

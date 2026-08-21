@@ -4,9 +4,9 @@ using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace Novels.Wardrobe.View
+namespace Novels.OptionSelection
 {
-    public class WardrobeScreen : MonoBehaviour
+    public sealed class OptionListScreen : MonoBehaviour
     {
         private static readonly Color PanelColor = new(0.12f, 0.14f, 0.17f, 0.96f);
         private static readonly Color CardColor = new(0.24f, 0.27f, 0.32f, 0.96f);
@@ -15,7 +15,7 @@ namespace Novels.Wardrobe.View
         private readonly List<Image> _cardBackgrounds = new();
         private readonly List<RectTransform> _cardRects = new();
         private readonly List<Image> _cardThumbnails = new();
-        private readonly List<int> _cardOptionIndices = new();
+        private readonly List<int> _cardItemIndices = new();
         private CanvasGroup _canvasGroup;
         private RectTransform _content;
         private RectTransform _viewport;
@@ -24,7 +24,7 @@ namespace Novels.Wardrobe.View
         private Text _selection;
         private Button _confirm;
         private Text _confirmLabel;
-        private WardrobeContracts.WardrobePresentation _presentation;
+        private OptionListPresentation _presentation;
         private int _selectedIndex = -1;
         private int _presentationVersion;
         private int _initialSlot;
@@ -35,8 +35,9 @@ namespace Novels.Wardrobe.View
             var canvas = gameObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 150;
-            gameObject.AddComponent<CanvasScaler>().uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            gameObject.GetComponent<CanvasScaler>().referenceResolution = new Vector2(1080f, 1920f);
+            var scaler = gameObject.AddComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
             gameObject.AddComponent<GraphicRaycaster>();
             _canvasGroup = gameObject.AddComponent<CanvasGroup>();
 
@@ -50,7 +51,7 @@ namespace Novels.Wardrobe.View
 
             var viewport = CreateImage("Viewport", panel.transform, new Color(0f, 0f, 0f, 0.22f));
             _viewport = viewport.rectTransform;
-            SetRect(viewport.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f),
+            SetRect(_viewport, new Vector2(0f, 0f), new Vector2(1f, 1f),
                 new Vector2(80f, 170f), new Vector2(-80f, -96f));
             viewport.gameObject.AddComponent<RectMask2D>();
 
@@ -74,7 +75,7 @@ namespace Novels.Wardrobe.View
             fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
 
             _scroll = viewport.gameObject.AddComponent<ScrollRect>();
-            _scroll.viewport = viewport.rectTransform;
+            _scroll.viewport = _viewport;
             _scroll.content = _content;
             _scroll.horizontal = true;
             _scroll.vertical = false;
@@ -87,40 +88,37 @@ namespace Novels.Wardrobe.View
                 new Vector2(40f, 104f), new Vector2(-40f, 164f));
 
             _confirm = CreateButton("Confirm", panel.transform, SelectedColor, out _confirmLabel);
-            SetRect(_confirm.GetComponent<RectTransform>(), new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
+            SetRect(_confirm.GetComponent<RectTransform>(),
+                new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
                 new Vector2(-260f, 28f), new Vector2(260f, 100f));
             _confirm.onClick.AddListener(Confirm);
             HideImmediate();
         }
 
-        public void SetPresentation(WardrobeContracts.WardrobePresentation presentation)
+        public void SetPresentation(OptionListPresentation presentation)
         {
-            _presentation = presentation ?? throw new ArgumentNullException(nameof(presentation));
+            _presentation = presentation
+                ?? throw new ArgumentNullException(nameof(presentation));
             _presentationVersion++;
             ClearCards();
             _title.text = presentation.Title;
             _confirmLabel.text = presentation.ConfirmationText;
-            _confirm.interactable = presentation.Options.Length > 0;
+            _confirm.interactable = presentation.Items.Length > 0;
 
-            var copies = presentation.Options.Length > 1 ? 3 : 1;
+            var copies = presentation.Items.Length > 1 ? 3 : 1;
             for (var copy = 0; copy < copies; copy++)
             {
-                for (var index = 0; index < presentation.Options.Length; index++)
-                    CreateCard(index, presentation.Options[index]);
+                for (var index = 0; index < presentation.Items.Length; index++)
+                    CreateCard(index, presentation.Items[index]);
             }
+            for (var index = 0; index < presentation.Items.Length; index++)
+                LoadThumbnail(index, presentation.Items[index].Id, _presentationVersion).Forget();
 
-            for (var index = 0; index < presentation.Options.Length; index++)
-            {
-                var option = presentation.Options[index];
-                LoadThumbnail(index, option.Id, _presentationVersion).Forget();
-            }
-
-            if (presentation.Options.Length > 0)
-            {
-                _initialSlot = copies == 1 ? 0 : presentation.Options.Length;
-                _needsCentering = true;
-                SelectOption(0);
-            }
+            if (presentation.Items.Length == 0)
+                return;
+            _initialSlot = copies == 1 ? 0 : presentation.Items.Length;
+            _needsCentering = true;
+            SelectItem(0);
         }
 
         public void ShowImmediate()
@@ -144,15 +142,15 @@ namespace Novels.Wardrobe.View
             gameObject.SetActive(false);
         }
 
-        private void CreateCard(int optionIndex, WardrobeContracts.WardrobeOption option)
+        private void CreateCard(int itemIndex, OptionListItem item)
         {
-            var card = CreateButton($"Option_{option.Id}", _content, CardColor, out var label);
+            var card = CreateButton($"Option_{item.Id}", _content, CardColor, out var label);
             var rect = card.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(240f, 270f);
             var layout = card.gameObject.AddComponent<LayoutElement>();
             layout.preferredWidth = 240f;
             layout.preferredHeight = 270f;
-            label.text = option.Text;
+            label.text = item.Text;
             label.fontSize = 28;
             label.alignment = TextAnchor.LowerCenter;
             SetRect(label.rectTransform, Vector2.zero, Vector2.one,
@@ -164,15 +162,14 @@ namespace Novels.Wardrobe.View
             SetRect(thumbnail.rectTransform, Vector2.zero, Vector2.one,
                 new Vector2(12f, 72f), new Vector2(-12f, -12f));
 
-            var capturedIndex = optionIndex;
-            card.onClick.AddListener(() => SelectOption(capturedIndex));
+            card.onClick.AddListener(() => SelectItem(itemIndex));
             _cardBackgrounds.Add(card.GetComponent<Image>());
             _cardRects.Add(rect);
             _cardThumbnails.Add(thumbnail);
-            _cardOptionIndices.Add(optionIndex);
+            _cardItemIndices.Add(itemIndex);
         }
 
-        private async UniTaskVoid LoadThumbnail(int optionIndex, int id, int version)
+        private async UniTaskVoid LoadThumbnail(int itemIndex, int id, int version)
         {
             try
             {
@@ -181,11 +178,8 @@ namespace Novels.Wardrobe.View
                     return;
                 for (var index = 0; index < _cardThumbnails.Count; index++)
                 {
-                    if (_cardOptionIndices[index] == optionIndex
-                        && _cardThumbnails[index] != null)
-                    {
+                    if (_cardItemIndices[index] == itemIndex && _cardThumbnails[index] != null)
                         _cardThumbnails[index].sprite = sprite;
-                    }
                 }
             }
             catch (OperationCanceledException)
@@ -193,33 +187,30 @@ namespace Novels.Wardrobe.View
             }
         }
 
-        private void SelectOption(int index)
+        private void SelectItem(int index)
         {
-            if (_presentation == null || index < 0 || index >= _presentation.Options.Length)
-                return;
-            if (_selectedIndex == index)
+            if (_presentation == null || index < 0 || index >= _presentation.Items.Length
+                || _selectedIndex == index)
                 return;
             _selectedIndex = index;
             for (var cardIndex = 0; cardIndex < _cardBackgrounds.Count; cardIndex++)
             {
-                _cardBackgrounds[cardIndex].color =
-                    _cardOptionIndices[cardIndex] == index ? SelectedColor : CardColor;
+                _cardBackgrounds[cardIndex].color = _cardItemIndices[cardIndex] == index
+                    ? SelectedColor
+                    : CardColor;
             }
-            var option = _presentation.Options[index];
-            _selection.text = option.Text;
-            _presentation.Preview(option.Id).Forget();
+            var item = _presentation.Items[index];
+            _selection.text = item.Text;
+            _presentation.Preview?.Invoke(item.Id).Forget();
         }
 
         private void Confirm()
         {
-            if (_presentation == null
-                || _selectedIndex < 0
-                || _selectedIndex >= _presentation.Options.Length)
-            {
+            if (_presentation == null || _selectedIndex < 0
+                || _selectedIndex >= _presentation.Items.Length)
                 return;
-            }
             _confirm.interactable = false;
-            _presentation.Confirm(_presentation.Options[_selectedIndex].Id);
+            _presentation.Confirm(_presentation.Items[_selectedIndex].Id);
         }
 
         private void ClearCards()
@@ -228,7 +219,7 @@ namespace Novels.Wardrobe.View
             _cardBackgrounds.Clear();
             _cardRects.Clear();
             _cardThumbnails.Clear();
-            _cardOptionIndices.Clear();
+            _cardItemIndices.Clear();
             _scroll.velocity = Vector2.zero;
             _needsCentering = false;
             for (var index = _content.childCount - 1; index >= 0; index--)
@@ -248,39 +239,30 @@ namespace Novels.Wardrobe.View
             for (var index = 0; index < _cardRects.Count; index++)
             {
                 var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(
-                    _viewport,
-                    _cardRects[index]);
+                    _viewport, _cardRects[index]);
                 var distance = Mathf.Abs(bounds.center.x);
                 if (distance >= closestDistance)
                     continue;
                 closestDistance = distance;
                 closestIndex = index;
             }
-            SelectOption(_cardOptionIndices[closestIndex]);
+            SelectItem(_cardItemIndices[closestIndex]);
             WrapCarousel(closestIndex);
         }
 
         private void WrapCarousel(int closestSlot)
         {
-            var optionCount = _presentation?.Options.Length ?? 0;
-            if (optionCount <= 1)
+            var itemCount = _presentation?.Items.Length ?? 0;
+            if (itemCount <= 1)
                 return;
-            if (closestSlot < optionCount)
-            {
-                ShiftContent(-GetCycleWidth(optionCount));
-            }
-            else if (closestSlot >= optionCount * 2)
-            {
-                ShiftContent(GetCycleWidth(optionCount));
-            }
+            if (closestSlot < itemCount)
+                ShiftContent(-GetCycleWidth(itemCount));
+            else if (closestSlot >= itemCount * 2)
+                ShiftContent(GetCycleWidth(itemCount));
         }
 
-        private float GetCycleWidth(int optionCount)
-        {
-            var first = _cardRects[0];
-            var nextCycle = _cardRects[optionCount];
-            return nextCycle.anchoredPosition.x - first.anchoredPosition.x;
-        }
+        private float GetCycleWidth(int itemCount) =>
+            _cardRects[itemCount].anchoredPosition.x - _cardRects[0].anchoredPosition.x;
 
         private void ShiftContent(float offset)
         {
@@ -292,16 +274,12 @@ namespace Novels.Wardrobe.View
         private void CenterCard(int slot)
         {
             var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(
-                _viewport,
-                _cardRects[slot]);
+                _viewport, _cardRects[slot]);
             ShiftContent(-bounds.center.x);
         }
 
         private static Button CreateButton(
-            string name,
-            Transform parent,
-            Color color,
-            out Text label)
+            string name, Transform parent, Color color, out Text label)
         {
             var image = CreateImage(name, parent, color);
             var button = image.gameObject.AddComponent<Button>();
@@ -313,16 +291,19 @@ namespace Novels.Wardrobe.View
 
         private static Image CreateImage(string name, Transform parent, Color color)
         {
-            var value = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
+            var value = new GameObject(
+                name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Image));
             value.transform.SetParent(parent, false);
             var image = value.GetComponent<Image>();
             image.color = color;
             return image;
         }
 
-        private static Text CreateText(string name, Transform parent, int size, TextAnchor alignment)
+        private static Text CreateText(
+            string name, Transform parent, int size, TextAnchor alignment)
         {
-            var value = new GameObject(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
+            var value = new GameObject(
+                name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
             value.transform.SetParent(parent, false);
             var text = value.GetComponent<Text>();
             text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");

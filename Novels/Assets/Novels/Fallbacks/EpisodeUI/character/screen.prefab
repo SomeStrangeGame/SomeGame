@@ -545,7 +545,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 6f54110861d3b47ab9ba3de84df846aa, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Novels.Character.View::Novels.Character.View.CharacterScreen
+  m_EditorClassIdentifier: Novels.Character::Novels.Character.View.CharacterScreen
   _showHideImageDuration: 0.2
   _canvasGroup: {fileID: 4118663256727940756}
   _mainBody: {fileID: 1001999228551003425}

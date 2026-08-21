@@ -66,44 +66,6 @@ namespace Novels.Character
             return sprites;
         }
 
-        internal async UniTask<Sprite> LoadWardrobeThumbnail(
-            StoryContracts.StoryChoiceAction actions,
-            string value,
-            string mainCharacterView)
-        {
-            var name = _profile.MainCharacterAssetId;
-            if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
-            {
-                return await GetSprite(_addresses.CharacterMainBody(
-                    name,
-                    _profile.ViewPath(value),
-                    null)) ?? _missingCharacter;
-            }
-            if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
-                return await GetSprite(_addresses.CharacterClothes(name, value, 1))
-                    ?? _missingCharacter;
-            if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
-            {
-                var front = await GetSprite(
-                    Hair(name, value, _profile.FrontLayer));
-                var back = await GetSprite(
-                    Hair(name, value, _profile.BackLayer));
-                return front ?? back ?? _missingCharacter;
-            }
-            if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
-            {
-                var middle = await GetSprite(
-                    _addresses.CharacterAccessory(name, value, _profile.MiddleLayer));
-                var front = await GetSprite(
-                    _addresses.CharacterAccessory(name, value, _profile.FrontLayer));
-                var back = await GetSprite(
-                    _addresses.CharacterAccessory(name, value, _profile.BackLayer));
-                return middle ?? front ?? back ?? _missingCharacter;
-            }
-            return await GetSprite(_addresses.CharacterMainBody(name, mainCharacterView, null))
-                ?? _missingCharacter;
-        }
-
         private async UniTask<bool> RequiresFallback(
             string name,
             string view,

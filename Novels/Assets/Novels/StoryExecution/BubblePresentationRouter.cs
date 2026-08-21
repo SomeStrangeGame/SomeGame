@@ -18,19 +18,23 @@ namespace Novels.StoryExecution
             switch (_request.PresentationKind)
             {
                 case BubbleContracts.BubblePresentationKind.Wardrobe:
-                    _request.SetWardrobeScreen(_choices.CreateWardrobePresentation());
+                    _request.Services.Wardrobe.SetScreen(
+                        _choices.CreateWardrobePresentation());
                     return;
 
                 case BubbleContracts.BubblePresentationKind.Choose:
-                    _request.SetChooseScreen(_choices.CreateChoosePresentation());
+                    _request.Services.Choose.SetScreen(
+                        _choices.CreateChoosePresentation());
                     return;
 
                 default:
-                    _request.SetBubbleScreen(new BubbleContracts.BubblePresentation(
-                        _request.Name,
+                    _request.Services.Bubble.SetBubbleScreen(
+                        new BubbleContracts.BubblePresentation(
+                        DisplayName,
                         _request.SpeakerRole,
-                        _request.Presentation,
-                        new BubbleContracts.BubbleText(GetHeader(), _request.Value),
+                        _request.Dialogue.Presentation,
+                        new BubbleContracts.BubbleText(
+                            GetHeader(), _request.Dialogue.Text),
                         _choices.CreatePresentations(),
                         _choices.CompleteWithoutChoice));
                     return;
@@ -39,13 +43,19 @@ namespace Novels.StoryExecution
 
         private string GetHeader()
         {
-            if (_request.Presentation == StoryContracts.DialoguePresentation.Disclaimer)
+            if (_request.Dialogue.Presentation
+                == StoryContracts.DialoguePresentation.Disclaimer)
             {
                 return BubbleContracts.BubbleHeaders.Disclaimer;
             }
-            if (_request.Presentation == StoryContracts.DialoguePresentation.Hint)
+            if (_request.Dialogue.Presentation == StoryContracts.DialoguePresentation.Hint)
                 return BubbleContracts.BubbleHeaders.Hint;
-            return _request.Name;
+            return DisplayName;
         }
+
+        private string DisplayName =>
+            string.IsNullOrEmpty(_request.Dialogue.Character.DisplayName)
+                ? _request.Dialogue.Speaker
+                : _request.Dialogue.Character.DisplayName;
     }
 }

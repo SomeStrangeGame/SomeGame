@@ -31,7 +31,8 @@
 
 - `ApplicationRuntime` управляет каталогом и активной историей.
 - `NovelRuntime` управляет выбранной историей и композицией эпизода.
-- Фичи используют предметные имена (`CharacterController`, `LocationController`, `SaveSystem`) и структуры `Dependencies`.
+- Фичи используют предметные имена (`CharacterController`, `LocationController`, `SaveSystem`) и небольшие структуры `Dependencies` только на инфраструктурных границах.
+- `EpisodePresentation` объединяет контроллеры одного эпизода; `Choose` и `Wardrobe` остаются независимыми фичами, но переиспользуют `OptionListScreen`.
 - `StoryQueueBuilder` строит последовательность `IStoryOperation`, которую выполняет `StoryOperationExecutor`.
 
 Исторические названия `Entity`, `Screen`, `Ctx`, `QueueProcess` могут встречаться только в старом журнале или во внешних общих пакетах.

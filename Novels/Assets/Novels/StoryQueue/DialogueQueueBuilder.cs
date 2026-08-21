@@ -6,14 +6,14 @@ namespace Novels.StoryQueue
 {
     internal sealed class DialogueQueueBuilder
     {
-        private readonly StoryQueueBuilder.DialogueCtx _ctx;
+        private readonly StoryQueueBuilder.Dependencies _dependencies;
         private readonly HashSet<string> _hiddenCharacters = new(StringComparer.Ordinal);
 
         private string _lastCharacterId = string.Empty;
 
-        internal DialogueQueueBuilder(StoryQueueBuilder.DialogueCtx ctx)
+        internal DialogueQueueBuilder(StoryQueueBuilder.Dependencies dependencies)
         {
-            _ctx = ctx;
+            _dependencies = dependencies;
         }
 
         internal (
@@ -71,8 +71,8 @@ namespace Novels.StoryQueue
             var afterCommands = new List<StoryExecution.IStoryOperation>
             {
                 new StoryExecution.CharacterOperation.SetDialogueQueue(
-                    _ctx.Location.SetDialogue,
-                    _ctx.Character.CharacterHide,
+                    _dependencies.Location.SetDialogue,
+                    _dependencies.Character.Hide,
                     layout.Alignment,
                     hideDuringDialogueTransition),
             };
@@ -81,8 +81,8 @@ namespace Novels.StoryQueue
             {
                 afterCommands.Add(
                     new StoryExecution.CharacterOperation.ShowCharacterQueue(
-                        _ctx.Character.CharacterSetImage,
-                        _ctx.Character.CharacterShow,
+                        _dependencies.Character.SetImage,
+                        _dependencies.Character.Show,
                         shouldShow,
                         new StoryContracts.CharacterRenderRequest(
                             name,
@@ -99,7 +99,7 @@ namespace Novels.StoryQueue
             {
                 beforeCommands.Add(
                     new StoryExecution.CharacterOperation.HideCharacterQueue(
-                        _ctx.Character.CharacterHide,
+                        _dependencies.Character.Hide,
                         shouldHide: true));
             }
 
@@ -117,29 +117,12 @@ namespace Novels.StoryQueue
         {
             return new StoryExecution.BubbleOperation.SetBubbleQueue(
                 new StoryExecution.BubbleOperationRequest(
-                bubbleDone,
-                choices,
-                _ctx.Character.SetMainCharacterView,
-                _ctx.Character.SetMainCharacterClothes,
-                _ctx.Character.SetMainCharacterHair,
-                _ctx.Character.SetMainCharacterAccessory,
-                _ctx.Character.LoadWardrobeThumbnail,
-                _ctx.Character.PreviewWardrobeChoice,
-                _ctx.Choose.LoadThumbnail,
-                _ctx.Choice.SaveDecision,
-                _ctx.Choice.SetChoice,
-                string.IsNullOrEmpty(dialogue.Character.DisplayName)
-                    ? dialogue.Speaker
-                    : dialogue.Character.DisplayName,
-                dialogue.Text,
-                dialogue.ChoiceConfirmationText,
-                role,
-                dialogue.Presentation,
-                dialogue.ChoiceActions,
-                ResolvePresentationKind(dialogue),
-                _ctx.Bubble.SetBubbleScreen,
-                _ctx.Wardrobe.SetScreen,
-                _ctx.Choose.SetScreen));
+                    _dependencies,
+                    dialogue,
+                    choices,
+                    bubbleDone,
+                    role,
+                    ResolvePresentationKind(dialogue)));
         }
 
         private static BubbleContracts.BubblePresentationKind ResolvePresentationKind(
@@ -157,7 +140,7 @@ namespace Novels.StoryQueue
             => StoryContracts.StorySpeakerRoleResolver.Resolve(
                 dialogue.Speaker,
                 dialogue.Presentation,
-                _ctx.MainCharacter);
+                _dependencies.MainCharacter);
 
         private static (
             StoryContracts.StoryCharacterPosition Position,
@@ -188,14 +171,14 @@ namespace Novels.StoryQueue
                 Func<StoryContracts.PresentationMode, UniTask> Hide) lifecycle = kind switch
             {
                 BubbleContracts.BubblePresentationKind.Wardrobe => (
-                    _ctx.Wardrobe.Show,
-                    _ctx.Wardrobe.Hide),
+                    _dependencies.Wardrobe.Show,
+                    _dependencies.Wardrobe.Hide),
                 BubbleContracts.BubblePresentationKind.Choose => (
-                    _ctx.Choose.Show,
-                    _ctx.Choose.Hide),
+                    _dependencies.Choose.Show,
+                    _dependencies.Choose.Hide),
                 _ => (
-                    _ctx.Bubble.Show,
-                    _ctx.Bubble.Hide),
+                    _dependencies.Bubble.Show,
+                    _dependencies.Bubble.Hide),
             };
             return new StoryExecution.IStoryOperation[]
             {

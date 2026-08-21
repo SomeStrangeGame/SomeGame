@@ -7,7 +7,50 @@ using UnityEngine;
 namespace Novels
 {
     internal partial class NovelRuntime
-    {   
+    {
+        private EpisodePresentation CreateEpisodePresentation(
+            PreparedNovelResources state,
+            EpisodeAssetSet assets,
+            Loading.Entity loading)
+        {
+            var cancellationToken = state.CancellationToken;
+            return new EpisodePresentation
+            {
+                Loading = loading,
+                Audio = CreateAudio(
+                    state.EpisodeScope,
+                    state.EpisodeBundles.ResolveAudioUrl,
+                    cancellationToken),
+                Bubble = CreateBubble(
+                    state.EpisodeScope,
+                    assets.Bubble,
+                    cancellationToken),
+                Character = CreateCharacter(
+                    state.EpisodeScope,
+                    assets.Character,
+                    assetName => GetCharacterSprite(state, assetName),
+                    _ctx.FallbackAssets.Character,
+                    cancellationToken),
+                Choose = CreateChoose(state.EpisodeScope, cancellationToken),
+                Location = CreateLocation(
+                    state.EpisodeScope,
+                    assets.Location,
+                    assetName => _priorityLoader.Run(() => state.EpisodeBundles
+                        .TryGetBundledSprite(new Bundles.BundleAssetAddress(
+                            _episode.BundleName,
+                            state.Addresses.LocationImage(assetName)))
+                        .AttachExternalCancellation(cancellationToken)),
+                    state.EpisodeBundles.ResolveVideoUrl,
+                    _ctx.FallbackAssets.Background,
+                    cancellationToken),
+                Notification = CreateNotification(
+                    state.EpisodeScope,
+                    assets.Notification,
+                    cancellationToken),
+                Wardrobe = CreateWardrobe(state.EpisodeScope, cancellationToken),
+            };
+        }
+
         private Audio.AudioController CreateAudio(
             IBaseDisposable owner,
             Func<string, UniTask<string>> resolveAudioUrl,

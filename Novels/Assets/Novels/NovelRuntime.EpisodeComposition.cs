@@ -39,57 +39,13 @@ namespace Novels
                 initialState,
                 storyData.SourceMapText);
             var storyCommands = new StoryCommands.Entity();
-
-            var bubble = CreateBubble(
-                state.EpisodeScope,
-                assets.Bubble,
-                cancellationToken);
-            var wardrobe = CreateWardrobe(
-                state.EpisodeScope,
-                cancellationToken);
-            var choose = CreateChoose(
-                state.EpisodeScope,
-                cancellationToken);
-
-            var location = CreateLocation(
-                state.EpisodeScope,
-                assets.Location,
-                assetName => _priorityLoader.Run(() => state.EpisodeBundles
-                    .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                        _episode.BundleName,
-                        state.Addresses.LocationImage(assetName)))
-                    .AttachExternalCancellation(cancellationToken)),
-                state.EpisodeBundles.ResolveVideoUrl,
-                _ctx.FallbackAssets.Background,
-                cancellationToken);
-
-            var character = CreateCharacter(
-                state.EpisodeScope,
-                assets.Character,
-                assetName => GetCharacterSprite(state, assetName),
-                _ctx.FallbackAssets.Character,
-                cancellationToken);
-
-            var notification = CreateNotification(
-                state.EpisodeScope,
-                assets.Notification,
-                cancellationToken);
-            var audio = CreateAudio(
-                state.EpisodeScope,
-                state.EpisodeBundles.ResolveAudioUrl,
-                cancellationToken);
+            var presentation = CreateEpisodePresentation(state, assets, loading);
             var storyQueue = CreateStoryQueue(
                 storyProcessor,
-                notification,
-                location,
+                presentation,
                 cancellationToken,
-                audio,
-                bubble,
-                wardrobe,
-                choose,
                 assetName => GetChooseSprite(state, assetName),
-                state.SaveSystem,
-                character);
+                state.SaveSystem);
             var queueExecutor = new StoryExecution.StoryOperationExecutor();
             var novelProcess = new NovelProcess(new NovelProcess.Dependencies
             {
@@ -101,13 +57,13 @@ namespace Novels
                 CompleteQueue = storyQueue.TryComplete,
                 ExecuteQueue = queueExecutor.Run,
                 GetNextSavedDecision = state.SaveSystem.GetNextSavedDecision,
-                HideLoading = loading.Hide,
+                HideLoading = presentation.Loading.Hide,
                 CancellationToken = cancellationToken,
                 OnError = ReportError,
                 OnStorySourceChanged = _ctx.OnStorySourceChanged,
             }).AddTo(state.EpisodeScope);
             state.EpisodeRuntime.Configure(
-                novelProcess.ShowNovelProcess,
+                novelProcess.Run,
                 state.SaveSystem.FlushAsync);
             return await state.EpisodeRuntime.Run();
         }

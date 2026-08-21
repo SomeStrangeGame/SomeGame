@@ -37,26 +37,27 @@ namespace Novels
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
-        private Dependencies _ctx;
+        private readonly Dependencies _dependencies;
 
-        internal NovelProcess(Dependencies ctx)
+        internal NovelProcess(Dependencies dependencies)
         {
-            _ctx = ctx;
+            _dependencies = dependencies;
         }
 
-        internal async UniTask<EpisodeRunResult> ShowNovelProcess()
+        internal async UniTask<EpisodeRunResult> Run()
         {
-            await _ctx.HideLoading().AttachExternalCancellation(_ctx.CancellationToken);
+            await _dependencies.HideLoading()
+                .AttachExternalCancellation(_dependencies.CancellationToken);
 
             while (!IsDisposed)
             {
-                await UniTask.Yield(_ctx.CancellationToken);
+                await UniTask.Yield(_dependencies.CancellationToken);
 
-                var readResult = _ctx.ReadNext();
-                _ctx.OnStorySourceChanged?.Invoke(readResult.SourceLocation);
+                var readResult = _dependencies.ReadNext();
+                _dependencies.OnStorySourceChanged?.Invoke(readResult.SourceLocation);
                 if (readResult.Status == StoryProcessor.StoryReadStatus.Completed)
                 {
-                    if (_ctx.CompleteQueue(out var finalQueue))
+                    if (_dependencies.CompleteQueue(out var finalQueue))
                     {
                         var execution = await TryExecute(finalQueue, null);
                         if (execution.HasValue)
@@ -65,10 +66,12 @@ namespace Novels
                     return EpisodeRunResult.Completed();
                 }
 
-                var stepResult = _ctx.ParseStep(readResult.Source, readResult.Choices);
+                var stepResult = _dependencies.ParseStep(
+                    readResult.Source,
+                    readResult.Choices);
                 if (!stepResult.IsSuccess)
                 {
-                    _ctx.OnError(new Diagnostics.NovelError(
+                    _dependencies.OnError(new Diagnostics.NovelError(
                         stepResult.Error.Code,
                         Diagnostics.NovelErrorSeverity.Recoverable,
                         stepResult.Error.Message,
@@ -76,15 +79,17 @@ namespace Novels
                     continue;
                 }
 
-                if (!_ctx.BuildQueue(stepResult.Step, out var queue))
+                if (!_dependencies.BuildQueue(stepResult.Step, out var queue))
                     continue;
 
-                var result = await TryExecute(queue, _ctx.GetNextSavedDecision());
+                var result = await TryExecute(
+                    queue,
+                    _dependencies.GetNextSavedDecision());
                 if (result.HasValue)
                     return result.Value;
 
-                if (_ctx.IsEpisodeEnd?.Invoke(readResult.Source) == true)
-                    return EpisodeRunResult.Completed(_ctx.ExportStoryState());
+                if (_dependencies.IsEpisodeEnd?.Invoke(readResult.Source) == true)
+                    return EpisodeRunResult.Completed(_dependencies.ExportStoryState());
             }
 
             return EpisodeRunResult.Cancelled();
@@ -96,14 +101,14 @@ namespace Novels
         {
             try
             {
-                await _ctx.ExecuteQueue(
+                await _dependencies.ExecuteQueue(
                     queue,
                     savedDecision,
-                    _ctx.CancellationToken);
+                    _dependencies.CancellationToken);
                 return null;
             }
             catch (OperationCanceledException)
-                when (_ctx.CancellationToken.IsCancellationRequested)
+                when (_dependencies.CancellationToken.IsCancellationRequested)
             {
                 return EpisodeRunResult.Cancelled();
             }

@@ -26,17 +26,21 @@ namespace Novels.StoryExecution
                 new WardrobeContracts.WardrobeOption(choice.Id, choice.Text)).ToArray();
             return new WardrobeContracts.WardrobePresentation(
                 GetWardrobeTitle(),
-                _request.ChoiceConfirmationText,
+                _request.Dialogue.ChoiceConfirmationText,
                 options,
                 id =>
                 {
                     var choice = GetChoice(id);
-                    return _request.LoadWardrobeThumbnail(_request.ChoiceActions, choice.Text);
+                    return _request.Services.Character.LoadWardrobeThumbnail(
+                        _request.Dialogue.ChoiceActions,
+                        choice.Text);
                 },
                 id =>
                 {
                     var choice = GetChoice(id);
-                    return _request.PreviewWardrobeChoice(_request.ChoiceActions, choice.Text);
+                    return _request.Services.Character.PreviewWardrobeChoice(
+                        _request.Dialogue.ChoiceActions,
+                        choice.Text);
                 },
                 id =>
                 {
@@ -50,10 +54,10 @@ namespace Novels.StoryExecution
             var options = _request.Choices.Select(choice =>
                 new ChooseContracts.ChooseOption(choice.Id, choice.Text)).ToArray();
             return new ChooseContracts.ChoosePresentation(
-                _request.Value,
-                _request.ChoiceConfirmationText,
+                _request.Dialogue.Text,
+                _request.Dialogue.ChoiceConfirmationText,
                 options,
-                id => _request.LoadChooseThumbnail(GetChoice(id).Text),
+                id => _request.Services.LoadChooseThumbnail(GetChoice(id).Text),
                 id =>
                 {
                     var choice = GetChoice(id);
@@ -63,13 +67,16 @@ namespace Novels.StoryExecution
 
         private string GetWardrobeTitle()
         {
-            if (!string.IsNullOrWhiteSpace(_request.Value))
-                return _request.Value;
-            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+            if (!string.IsNullOrWhiteSpace(_request.Dialogue.Text))
+                return _request.Dialogue.Text;
+            if ((_request.Dialogue.ChoiceActions
+                    & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
                 return WardrobeContracts.WardrobeLabels.Appearance;
-            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+            if ((_request.Dialogue.ChoiceActions
+                    & StoryContracts.StoryChoiceAction.SelectHair) != 0)
                 return WardrobeContracts.WardrobeLabels.Hair;
-            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+            if ((_request.Dialogue.ChoiceActions
+                    & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
                 return WardrobeContracts.WardrobeLabels.Accessory;
             return WardrobeContracts.WardrobeLabels.Clothes;
         }
@@ -80,33 +87,35 @@ namespace Novels.StoryExecution
                 return;
             var choice = GetSavedChoice(decision.ChoiceId);
             ApplyActions(choice);
-            _request.SetChoice(choice.Id);
+            _request.Services.Story.SetChoice(choice.Id);
         }
 
         internal void CompleteWithoutChoice()
         {
-            _request.SaveDecision(StoryContracts.StoryDecision.Advance);
-            _request.BubbleDone.TrySetResult();
+            _request.Services.Save.SaveDecision(StoryContracts.StoryDecision.Advance);
+            _request.Completed.TrySetResult();
         }
 
         private void Select(StoryContracts.StoryChoice choice, int id)
         {
             ApplyActions(choice);
-            _request.SaveDecision(StoryContracts.StoryDecision.Choice(id));
-            _request.SetChoice(id);
-            _request.BubbleDone.TrySetResult();
+            _request.Services.Save.SaveDecision(StoryContracts.StoryDecision.Choice(id));
+            _request.Services.Story.SetChoice(id);
+            _request.Completed.TrySetResult();
         }
 
         private void ApplyActions(StoryContracts.StoryChoice choice)
         {
-            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
-                _request.SetMainCharacterView(choice.Text);
-            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
-                _request.SetMainCharacterClothes(choice.Text);
-            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
-                _request.SetMainCharacterHair(choice.Text);
-            if ((_request.ChoiceActions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
-                _request.SetMainCharacterAccessory(choice.Text);
+            var actions = _request.Dialogue.ChoiceActions;
+            var character = _request.Services.Character;
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+                character.SetMainCharacterView(choice.Text);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                character.SetMainCharacterClothes(choice.Text);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                character.SetMainCharacterHair(choice.Text);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                character.SetMainCharacterAccessory(choice.Text);
         }
 
         private StoryContracts.StoryChoice GetSavedChoice(int choiceId)
