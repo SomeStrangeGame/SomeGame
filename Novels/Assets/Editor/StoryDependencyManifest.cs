@@ -108,7 +108,8 @@ namespace Editor
                 (characterAssets ?? Array.Empty<StoryCharacterAssetReference>())
                     .Where(value => value != null
                         && !string.IsNullOrWhiteSpace(value.Speaker)
-                        && !string.IsNullOrWhiteSpace(value.Candidate))
+                        && (value.IsChild
+                            || !string.IsNullOrWhiteSpace(value.Candidate)))
                     .ToArray());
             Issues = Array.AsReadOnly(
                 (issues ?? Array.Empty<ContentValidationIssue>()).ToArray());

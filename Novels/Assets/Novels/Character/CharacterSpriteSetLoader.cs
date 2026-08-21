@@ -86,7 +86,9 @@ namespace Novels.Character
         {
             if (mainBody == null)
                 return true;
-            if (!string.IsNullOrWhiteSpace(appearance.Emotion) && emotion == null)
+            if (!presentation.IsChild
+                && !string.IsNullOrWhiteSpace(appearance.Emotion)
+                && emotion == null)
                 return true;
             if (!presentation.IsChild
                 && !presentation.RemoveClothes
@@ -196,6 +198,9 @@ namespace Novels.Character
             StoryContracts.CharacterPresentation presentation,
             CharacterAppearanceState appearance)
         {
+            var inheritedEmotion = presentation.IsChild
+                ? null
+                : appearance.Emotion;
             if (presentation.IsChild)
                 view = $"{view}/{_profile.ChildView}";
             foreach (var candidate in presentation.AssetCandidates)
@@ -203,13 +208,14 @@ namespace Novels.Character
                 var sprite = await GetSprite(_addresses.Emotion(name, view, candidate));
                 if (sprite == null)
                     continue;
-                appearance.Emotion = candidate;
+                if (!presentation.IsChild)
+                    appearance.Emotion = candidate;
                 return sprite;
             }
 
-            // Missing authored variants are tolerated while incomplete stories are
-            // integrated. Keep the last resolvable emotion for this character.
-            return await GetSprite(_addresses.Emotion(name, view, appearance.Emotion));
+            // Adult appearance state must not leak into the child asset tree.
+            // Missing authored adult variants keep the last resolvable emotion.
+            return await GetSprite(_addresses.Emotion(name, view, inheritedEmotion));
         }
 
         private async UniTask<Sprite> LoadClothes(

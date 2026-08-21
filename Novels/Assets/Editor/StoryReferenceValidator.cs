@@ -265,8 +265,11 @@ namespace Editor
                     ? "Matching assets with different casing: "
                         + string.Join(", ", caseMatches.Select(path => $"'{path}'")) + "."
                     : "No matching body, emotion, clothes, hair, or accessory sprite exists.";
-                var message = $"Ink character asset '{reference.Candidate}' for "
-                    + $"'{reference.Speaker}' cannot be resolved for: "
+                var subject = reference.IsChild
+                    && string.IsNullOrWhiteSpace(reference.Candidate)
+                        ? "Ink child body"
+                        : $"Ink character asset '{reference.Candidate}'";
+                var message = $"{subject} for '{reference.Speaker}' cannot be resolved for: "
                     + string.Join(", ", missingViews)
                     + $". {detail} Referenced at {reference.Location}.";
                 // TODO: Restore Error severity when all authored character states

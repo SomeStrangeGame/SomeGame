@@ -114,9 +114,11 @@ namespace Editor
             BuildReport report;
             IsEmbeddedTestPlayerBuild = true;
             var useCustomKeystore = PlayerSettings.Android.useCustomKeystore;
+            var stripEngineCode = PlayerSettings.stripEngineCode;
             try
             {
                 PlayerSettings.Android.useCustomKeystore = false;
+                PlayerSettings.stripEngineCode = false;
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
                     scenes = scenes,
@@ -128,6 +130,7 @@ namespace Editor
             }
             finally
             {
+                PlayerSettings.stripEngineCode = stripEngineCode;
                 PlayerSettings.Android.useCustomKeystore = useCustomKeystore;
                 IsEmbeddedTestPlayerBuild = false;
             }

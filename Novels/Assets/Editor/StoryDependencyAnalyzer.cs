@@ -358,6 +358,17 @@ namespace Editor
                         {
                             continue;
                         }
+                        if (command.Data.Character.IsChild)
+                        {
+                            characterAssets.Add(new StoryCharacterAssetReference(
+                                resolvedSpeaker.Value,
+                                role,
+                                string.Empty,
+                                true,
+                                resolvedSpeaker.SourceLine.SourcePath,
+                                resolvedSpeaker.SourceLine.LineNumber,
+                                resolvedSpeaker.SourceLine.Text));
+                        }
                         foreach (var candidate in command.Data.Character.AssetCandidates)
                         {
                             var resolvedCandidates = Resolve(
