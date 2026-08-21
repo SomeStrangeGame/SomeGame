@@ -13,9 +13,9 @@ namespace Novels.Location
             Immediate,
         }
 
-        internal struct Ctx
+        internal struct Dependencies
         {
-            internal View.Screen Screen;
+            internal View.LocationScreen Screen;
             internal VideoPlayback VideoPlayback;
             internal Camera TargetCamera;
             internal Func<string, UniTask<Sprite>> GetSprite;
@@ -25,9 +25,9 @@ namespace Novels.Location
             internal int CutSceneFallbackDelayMilliseconds;
         }
 
-        private readonly Ctx _ctx;
+        private readonly Dependencies _ctx;
 
-        internal BackgroundPresentationController(Ctx ctx)
+        internal BackgroundPresentationController(Dependencies ctx)
         {
             _ctx = ctx;
             if (ctx.Screen == null)

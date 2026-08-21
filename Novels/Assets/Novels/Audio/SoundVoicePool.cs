@@ -32,10 +32,10 @@ namespace Novels.Audio
             Cache(assetName, clip);
             var voice = GetVoice();
             voice.Stop();
-            voice.name = $"{assetName}-{Entity.Audio.Sound}";
+            voice.name = $"{assetName}-{AudioController.Audio.Sound}";
             voice.clip = clip;
             voice.loop = false;
-            voice.outputAudioMixerGroup = _mixerGroups.Get(Entity.Audio.Sound);
+            voice.outputAudioMixerGroup = _mixerGroups.Get(AudioController.Audio.Sound);
             voice.Play();
         }
 

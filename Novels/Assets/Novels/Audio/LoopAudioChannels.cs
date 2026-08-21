@@ -7,16 +7,16 @@ namespace Novels.Audio
     internal sealed class LoopAudioChannels : IDisposable
     {
         private readonly AudioMixerGroups _mixerGroups;
-        private readonly Dictionary<Entity.Audio, AudioSource> _sources = new();
+        private readonly Dictionary<AudioController.Audio, AudioSource> _sources = new();
 
         internal LoopAudioChannels(AudioMixerGroups mixerGroups)
         {
             _mixerGroups = mixerGroups;
         }
 
-        internal void Play(string assetName, AudioClip clip, Entity.Audio channel)
+        internal void Play(string assetName, AudioClip clip, AudioController.Audio channel)
         {
-            if (channel == Entity.Audio.Sound)
+            if (channel == AudioController.Audio.Sound)
                 throw new ArgumentOutOfRangeException(nameof(channel));
             var source = GetSource(channel);
             source.Stop();
@@ -28,7 +28,7 @@ namespace Novels.Audio
             source.Play();
         }
 
-        internal void Clear(Entity.Audio channel)
+        internal void Clear(AudioController.Audio channel)
         {
             if (!_sources.TryGetValue(channel, out var source))
                 return;
@@ -50,7 +50,7 @@ namespace Novels.Audio
             _sources.Clear();
         }
 
-        private AudioSource GetSource(Entity.Audio channel)
+        private AudioSource GetSource(AudioController.Audio channel)
         {
             if (_sources.TryGetValue(channel, out var source))
                 return source;

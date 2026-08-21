@@ -56,6 +56,61 @@ namespace Novels.StoryCommands
                 ["Ожидание"] = StoryCommandType.Wait,
             };
 
+        internal static readonly IReadOnlyDictionary<
+            string,
+            StoryContracts.StoryChoiceAction> ChoiceActions =
+            new Dictionary<string, StoryContracts.StoryChoiceAction>(
+                StringComparer.OrdinalIgnoreCase)
+            {
+                [StoryContracts.StoryChoiceActions.SelectAppearance] =
+                    StoryContracts.StoryChoiceAction.SelectAppearance,
+                [StoryContracts.StoryChoiceActions.SelectAppearanceFormal] =
+                    StoryContracts.StoryChoiceAction.SelectAppearance,
+                [StoryContracts.StoryChoiceActions.SelectClothes] =
+                    StoryContracts.StoryChoiceAction.SelectClothes,
+                [StoryContracts.StoryChoiceActions.SelectClothesFormal] =
+                    StoryContracts.StoryChoiceAction.SelectClothes,
+                [StoryContracts.StoryChoiceActions.SelectSwimsuit] =
+                    StoryContracts.StoryChoiceAction.SelectClothes,
+                [StoryContracts.StoryChoiceActions.SelectSwimsuitFormal] =
+                    StoryContracts.StoryChoiceAction.SelectClothes,
+                [StoryContracts.StoryChoiceActions.ConfirmClothes] =
+                    StoryContracts.StoryChoiceAction.SelectClothes,
+                [StoryContracts.StoryChoiceActions.SelectHair] =
+                    StoryContracts.StoryChoiceAction.SelectHair,
+                [StoryContracts.StoryChoiceActions.SelectHairLegacy] =
+                    StoryContracts.StoryChoiceAction.SelectHair,
+                [StoryContracts.StoryChoiceActions.SelectHairFormal] =
+                    StoryContracts.StoryChoiceAction.SelectHair,
+                [StoryContracts.StoryChoiceActions.SelectHairFormalLegacy] =
+                    StoryContracts.StoryChoiceAction.SelectHair,
+                [StoryContracts.StoryChoiceActions.SelectAccessory] =
+                    StoryContracts.StoryChoiceAction.SelectAccessory,
+                [StoryContracts.StoryChoiceActions.SelectAccessoryFormal] =
+                    StoryContracts.StoryChoiceAction.SelectAccessory,
+            };
+
+        internal static readonly HashSet<string> DialogueControlArguments = new(
+            StringComparer.OrdinalIgnoreCase)
+        {
+            StoryContracts.StoryArguments.Child,
+            StoryContracts.StoryArguments.Disclaimer,
+            StoryContracts.StoryArguments.Hint,
+            StoryContracts.StoryArguments.Thoughts,
+            StoryContracts.StoryArguments.RemoveClothes,
+            StoryContracts.StoryArguments.RemoveHair,
+            StoryContracts.StoryArguments.RemoveHairLegacy,
+            StoryContracts.StoryArguments.RemoveAccessory,
+            StoryContracts.StoryArguments.HideCharacter,
+            StoryContracts.StoryArguments.ShowCharacter,
+            StoryContracts.StoryArguments.ShowCharacterLegacy,
+            StoryContracts.StoryArguments.ChangeClothes,
+            StoryContracts.StoryChoiceActions.SelectAppearance,
+            StoryContracts.StoryChoiceActions.SelectClothes,
+            StoryContracts.StoryChoiceActions.SelectHair,
+            StoryContracts.StoryChoiceActions.SelectHairLegacy,
+        };
+
         internal static readonly IReadOnlyDictionary<string, StoryContracts.StoryCameraAction>
             CameraActions = new Dictionary<string, StoryContracts.StoryCameraAction>(
                 StringComparer.OrdinalIgnoreCase)

@@ -11,15 +11,15 @@ namespace Novels
     {
         internal delegate bool TryBuildQueueDelegate(
             StoryCommands.StoryStep step,
-            out Queue<QueueProcess.IQueue> queue);
+            out Queue<StoryExecution.IStoryOperation> queue);
         internal delegate bool TryCompleteQueueDelegate(
-            out Queue<QueueProcess.IQueue> queue);
+            out Queue<StoryExecution.IStoryOperation> queue);
         internal delegate UniTask ExecuteQueueDelegate(
-            Queue<QueueProcess.IQueue> queue,
+            Queue<StoryExecution.IStoryOperation> queue,
             StoryContracts.StoryDecision? savedDecision,
             CancellationToken cancellationToken);
 
-        internal struct Ctx
+        internal struct Dependencies
         {
             internal Func<StoryProcessor.StoryReadResult> ReadNext;
             internal Func<string> ExportStoryState;
@@ -37,9 +37,9 @@ namespace Novels
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
-        private Ctx _ctx;
+        private Dependencies _ctx;
 
-        internal NovelProcess(Ctx ctx)
+        internal NovelProcess(Dependencies ctx)
         {
             _ctx = ctx;
         }
@@ -91,7 +91,7 @@ namespace Novels
         }
 
         private async UniTask<EpisodeRunResult?> TryExecute(
-            Queue<QueueProcess.IQueue> queue,
+            Queue<StoryExecution.IStoryOperation> queue,
             StoryContracts.StoryDecision? savedDecision)
         {
             try

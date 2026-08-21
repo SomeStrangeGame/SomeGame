@@ -4,29 +4,29 @@ namespace Novels.StoryQueue
 {
     internal sealed class StoryCommandQueueBuilder
     {
-        private readonly Entity.CommandCtx _ctx;
+        private readonly StoryQueueBuilder.CommandCtx _ctx;
 
-        internal StoryCommandQueueBuilder(Entity.CommandCtx ctx)
+        internal StoryCommandQueueBuilder(StoryQueueBuilder.CommandCtx ctx)
         {
             _ctx = ctx;
         }
 
-        internal QueueProcess.IQueue Build(StoryCommands.StoryCommand command)
+        internal StoryExecution.IStoryOperation Build(StoryCommands.StoryCommand command)
         {
             switch (command)
             {
                 case StoryCommands.EmptyStoryCommand:
                 case StoryCommands.MetadataStoryCommand:
                 case StoryCommands.KeyboardStoryCommand:
-                    return new QueueProcess.EmptyQueue();
+                    return new StoryExecution.NoOpOperation();
 
                 case StoryCommands.NotificationStoryCommand notification:
-                    return new QueueProcess.NotificationQueue(
+                    return new StoryExecution.NotificationOperation(
                         _ctx.ShowNotification,
                         notification.Data.Text);
 
                 case StoryCommands.BackgroundStoryCommand background:
-                    return new QueueProcess.BackgroundQueue.SetBackgroundQueue(
+                    return new StoryExecution.BackgroundOperation.SetBackgroundQueue(
                         _ctx.Location.SetImage,
                         _ctx.Location.SetImageImmediate,
                         background.Data.AssetName,
@@ -38,18 +38,18 @@ namespace Novels.StoryQueue
                         : audio.Type == StoryCommands.StoryCommandType.Sound
                             ? _ctx.Audio.PlaySound
                             : _ctx.Audio.PlayAmbient;
-                    return new QueueProcess.AudioQueue(
+                    return new StoryExecution.PlayAudioOperation(
                         playAudio,
                         audio.Data.AssetName);
 
                 case StoryCommands.CameraStoryCommand camera:
-                    return new QueueProcess.BackgroundQueue.CameraQueue(
+                    return new StoryExecution.BackgroundOperation.CameraQueue(
                         _ctx.Location.SetCamera,
                         _ctx.Location.SetCameraImmediate,
                         camera.Data.Action);
 
                 case StoryCommands.WaitStoryCommand wait:
-                    return new QueueProcess.AwaitQueue(
+                    return new StoryExecution.WaitOperation(
                         _ctx.Location.Wait,
                         wait.Data.Duration);
 

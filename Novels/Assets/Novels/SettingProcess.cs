@@ -17,7 +17,7 @@ namespace Novels
         private const string _newGameButtonId = "newGame";
         private const string _continueGameButtonId = "continueGame";
 
-        internal struct Ctx
+        internal struct Dependencies
         {
             internal GameObject BundledPrefab;
             internal Func<UniTask> ShowLoading;
@@ -27,9 +27,9 @@ namespace Novels
             internal CancellationToken CancellationToken;
         }
 
-        private Ctx _ctx;
+        private Dependencies _ctx;
 
-        internal SettingProcess(Ctx ctx)
+        internal SettingProcess(Dependencies ctx)
         {
             _ctx = ctx;
         }

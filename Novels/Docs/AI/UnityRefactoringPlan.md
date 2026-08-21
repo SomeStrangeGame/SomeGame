@@ -1,5 +1,7 @@
 # Unity Refactoring Plan
 
+Исторический план выполненных волн. Для текущей структуры используйте [UnityProjectContext.md](UnityProjectContext.md) и [ProjectOverview.md](ProjectOverview.md).
+
 ## Completed on 2026-08-19 — authoring, localization, release, and save contracts
 
 1. Audio references in Ink now use only a file name without an extension. A single matching physical audio format is inferred from authored files during the build and from the pinned release at runtime; zero or multiple matches are validation errors.

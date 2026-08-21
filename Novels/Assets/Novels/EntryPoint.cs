@@ -49,7 +49,7 @@ namespace Novels
                         _fallbackCharacter,
                         _fallbackNotification),
                     runtimeTuning);
-                _runtime = new ApplicationRuntime(new ApplicationRuntime.Ctx
+                _runtime = new ApplicationRuntime(new ApplicationRuntime.Dependencies
                 {
                     Environment = environment,
                     ContentSource = CreateContentSource(

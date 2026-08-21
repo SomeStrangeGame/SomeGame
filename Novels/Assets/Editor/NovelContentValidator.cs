@@ -16,10 +16,7 @@ namespace Editor
         {
             var errors = ValidateLoadedConfiguration(true);
             LogWarnings(errors, "Full");
-            var actualErrors = errors.Issues
-                .Where(issue => issue.Severity == ContentValidationSeverity.Error)
-                .ToArray();
-            if (actualErrors.Length == 0)
+            if (!errors.HasErrors)
             {
                 Debug.Log("Novel content validation completed without errors.");
                 return;
@@ -95,24 +92,7 @@ namespace Editor
                 return errors;
             }
             var entryPointData = new SerializedObject(entryPoint);
-            if (entryPointData.FindProperty("_targetCamera")?.objectReferenceValue == null)
-                errors.Add("Novels.EntryPoint has no target Camera reference.");
-            if (entryPointData.FindProperty("_missingBackground")?.objectReferenceValue == null)
-                errors.Add("Novels.EntryPoint has no missing-background fallback reference.");
-            if (entryPointData.FindProperty("_missingCharacter")?.objectReferenceValue == null)
-                errors.Add("Novels.EntryPoint has no missing-character fallback reference.");
-            foreach (var (propertyName, label) in new[]
-                     {
-                         ("_fallbackLoading", "loading"),
-                         ("_fallbackBubble", "bubble"),
-                         ("_fallbackLocation", "location"),
-                         ("_fallbackCharacter", "character"),
-                         ("_fallbackNotification", "notification"),
-                     })
-            {
-                if (entryPointData.FindProperty(propertyName)?.objectReferenceValue == null)
-                    errors.Add($"Novels.EntryPoint has no {label} fallback prefab reference.");
-            }
+            ValidateEntryPointReferences(entryPointData, errors);
 
             if (project == null)
                 ContentProjectIndex.TryBuild(errors, out project);
@@ -182,16 +162,34 @@ namespace Editor
         private static void ThrowIfInvalid(ContentValidationReport errors, string phase)
         {
             LogWarnings(errors, phase);
-            var actualErrors = errors.Issues
-                .Where(issue => issue.Severity == ContentValidationSeverity.Error)
-                .ToArray();
-            if (actualErrors.Length > 0)
+            if (errors.HasErrors)
             {
                 throw new InvalidOperationException(
                     ContentValidationReportFormatter.Format(
                         errors,
                         ContentValidationSeverity.Error,
                         phase));
+            }
+        }
+
+        private static void ValidateEntryPointReferences(
+            SerializedObject entryPoint,
+            ContentValidationReport errors)
+        {
+            foreach (var (propertyName, description) in new[]
+                     {
+                         ("_targetCamera", "target Camera"),
+                         ("_missingBackground", "missing-background fallback"),
+                         ("_missingCharacter", "missing-character fallback"),
+                         ("_fallbackLoading", "loading fallback prefab"),
+                         ("_fallbackBubble", "bubble fallback prefab"),
+                         ("_fallbackLocation", "location fallback prefab"),
+                         ("_fallbackCharacter", "character fallback prefab"),
+                         ("_fallbackNotification", "notification fallback prefab"),
+                     })
+            {
+                if (entryPoint.FindProperty(propertyName)?.objectReferenceValue == null)
+                    errors.Add($"Novels.EntryPoint has no {description} reference.");
             }
         }
 

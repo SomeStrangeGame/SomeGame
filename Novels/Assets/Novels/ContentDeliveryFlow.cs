@@ -18,7 +18,7 @@ namespace Novels
         }
 
         internal UniTask<Bundles.ContentDeliveryLease> PrepareNovel(
-            Bootstrap.Entity bootstrap,
+            Bootstrap.BootstrapController bootstrap,
             string contentId)
         {
             return PrepareGroup(
@@ -27,7 +27,7 @@ namespace Novels
         }
 
         internal UniTask<Bundles.ContentDeliveryLease> PrepareEpisode(
-            Bootstrap.Entity bootstrap,
+            Bootstrap.BootstrapController bootstrap,
             Content.NovelDefinition definition,
             Content.EpisodeDefinition episode)
         {
@@ -39,7 +39,7 @@ namespace Novels
         }
 
         private async UniTask<Bundles.ContentDeliveryLease> PrepareGroup(
-            Bootstrap.Entity bootstrap,
+            Bootstrap.BootstrapController bootstrap,
             string group)
         {
             if (_bundles.DeliveryMode == Bundles.ContentDeliveryMode.Embedded

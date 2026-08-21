@@ -10,10 +10,10 @@ namespace Editor
     {
         internal static void ValidateCatalog(GameObject prefab, ContentValidationReport errors)
         {
-            var screen = prefab.GetComponent<Novels.Catalog.View.Screen>();
+            var screen = prefab.GetComponent<Novels.Catalog.View.CatalogScreen>();
             if (screen == null)
             {
-                errors.Add("Catalog screen prefab has no Catalog.View.Screen component.");
+                errors.Add("Catalog screen prefab has no Catalog.View.CatalogScreen component.");
                 return;
             }
             var serializedScreen = new SerializedObject(screen);
@@ -47,7 +47,7 @@ namespace Editor
                 errors.Add($"Local bootstrap prefab is missing: {path}");
                 return;
             }
-            var screen = prefab.GetComponent<Novels.Bootstrap.View.Screen>();
+            var screen = prefab.GetComponent<Novels.Bootstrap.View.BootstrapScreen>();
             if (screen == null)
             {
                 errors.Add($"Local bootstrap prefab has no Screen component: {path}");
@@ -178,7 +178,7 @@ namespace Editor
         {
             if (string.IsNullOrEmpty(path))
                 return;
-            var screen = LoadScreen<Novels.Bubble.View.Screen>(path, "Bubble", errors);
+            var screen = LoadScreen<Novels.Bubble.View.BubbleScreen>(path, "Bubble", errors);
             if (screen == null)
                 return;
             var serialized = new SerializedObject(screen);
@@ -221,7 +221,7 @@ namespace Editor
         {
             if (string.IsNullOrEmpty(path))
                 return;
-            var screen = LoadScreen<Novels.Character.View.Screen>(
+            var screen = LoadScreen<Novels.Character.View.CharacterScreen>(
                 path,
                 "Character",
                 errors);
@@ -247,7 +247,7 @@ namespace Editor
         {
             if (string.IsNullOrEmpty(path))
                 return;
-            var screen = LoadScreen<Novels.Location.View.Screen>(path, "Location", errors);
+            var screen = LoadScreen<Novels.Location.View.LocationScreen>(path, "Location", errors);
             if (screen == null)
                 return;
             var serialized = new SerializedObject(screen);
@@ -283,7 +283,7 @@ namespace Editor
         {
             if (string.IsNullOrEmpty(path))
                 return;
-            var screen = LoadScreen<Novels.Notification.View.Screen>(
+            var screen = LoadScreen<Novels.Notification.View.NotificationScreen>(
                 path,
                 "Notification",
                 errors);

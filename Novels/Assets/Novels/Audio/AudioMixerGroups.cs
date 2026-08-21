@@ -6,23 +6,23 @@ namespace Novels.Audio
 {
     internal sealed class AudioMixerGroups
     {
-        private static readonly IReadOnlyDictionary<Entity.Audio, string> _names =
-            new Dictionary<Entity.Audio, string>
+        private static readonly IReadOnlyDictionary<AudioController.Audio, string> _names =
+            new Dictionary<AudioController.Audio, string>
             {
-                [Entity.Audio.Music] = "Music",
-                [Entity.Audio.Sound] = "Sound",
-                [Entity.Audio.Ambient] = "Ambient",
+                [AudioController.Audio.Music] = "Music",
+                [AudioController.Audio.Sound] = "Sound",
+                [AudioController.Audio.Ambient] = "Ambient",
             };
 
         private readonly AudioMixer _mixer;
-        private readonly Dictionary<Entity.Audio, AudioMixerGroup> _groups = new();
+        private readonly Dictionary<AudioController.Audio, AudioMixerGroup> _groups = new();
 
         internal AudioMixerGroups(AudioMixer mixer)
         {
             _mixer = mixer;
         }
 
-        internal AudioMixerGroup Get(Entity.Audio channel)
+        internal AudioMixerGroup Get(AudioController.Audio channel)
         {
             if (_groups.TryGetValue(channel, out var group))
                 return group;

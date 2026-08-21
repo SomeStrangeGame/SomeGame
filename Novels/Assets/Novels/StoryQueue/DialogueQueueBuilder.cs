@@ -6,19 +6,19 @@ namespace Novels.StoryQueue
 {
     internal sealed class DialogueQueueBuilder
     {
-        private readonly Entity.DialogueCtx _ctx;
+        private readonly StoryQueueBuilder.DialogueCtx _ctx;
         private readonly HashSet<string> _hiddenCharacters = new(StringComparer.Ordinal);
 
         private string _lastCharacterId = string.Empty;
 
-        internal DialogueQueueBuilder(Entity.DialogueCtx ctx)
+        internal DialogueQueueBuilder(StoryQueueBuilder.DialogueCtx ctx)
         {
             _ctx = ctx;
         }
 
         internal (
-            QueueProcess.IQueue[] BeforeCommands,
-            QueueProcess.IQueue[] AfterCommands) Build(
+            StoryExecution.IStoryOperation[] BeforeCommands,
+            StoryExecution.IStoryOperation[] AfterCommands) Build(
             StoryCommands.DialogueCommandData dialogue,
             StoryContracts.StoryChoice[] choices,
             UniTaskCompletionSource bubbleDone,
@@ -28,7 +28,7 @@ namespace Novels.StoryQueue
             if (string.IsNullOrEmpty(dialogue.Speaker) && string.IsNullOrEmpty(dialogue.Text))
             {
                 return (
-                    new QueueProcess.IQueue[]
+                    new StoryExecution.IStoryOperation[]
                     {
                         CreateSetBubbleQueue(
                             dialogue,
@@ -68,9 +68,9 @@ namespace Novels.StoryQueue
             var hideBeforePendingCommands = shouldHide && hasPendingCommands;
             var hideDuringDialogueTransition = shouldHide && !hasPendingCommands;
 
-            var afterCommands = new List<QueueProcess.IQueue>
+            var afterCommands = new List<StoryExecution.IStoryOperation>
             {
-                new QueueProcess.CharacterQueue.SetDialogueQueue(
+                new StoryExecution.CharacterOperation.SetDialogueQueue(
                     _ctx.Location.SetDialogue,
                     _ctx.Location.SetDialogueImmediate,
                     _ctx.Character.CharacterHide,
@@ -82,7 +82,7 @@ namespace Novels.StoryQueue
                 && StoryContracts.StorySpeakerRoleResolver.ShowsCharacter(role))
             {
                 afterCommands.Add(
-                    new QueueProcess.CharacterQueue.ShowCharacterQueue(
+                    new StoryExecution.CharacterOperation.ShowCharacterQueue(
                         _ctx.Character.CharacterSetImage,
                         _ctx.Character.CharacterShow,
                         _ctx.Character.CharacterShowImmediate,
@@ -97,11 +97,11 @@ namespace Novels.StoryQueue
                 ResolvePresentationKind(dialogue),
                 bubbleDone));
 
-            var beforeCommands = new List<QueueProcess.IQueue>();
+            var beforeCommands = new List<StoryExecution.IStoryOperation>();
             if (hideBeforePendingCommands)
             {
                 beforeCommands.Add(
-                    new QueueProcess.CharacterQueue.HideCharacterQueue(
+                    new StoryExecution.CharacterOperation.HideCharacterQueue(
                         _ctx.Character.CharacterHide,
                         _ctx.Character.CharacterHideImmediate,
                         shouldHide: true));
@@ -113,14 +113,14 @@ namespace Novels.StoryQueue
                 afterCommands.ToArray());
         }
 
-        private QueueProcess.BubbleQueue.SetBubbleQueue CreateSetBubbleQueue(
+        private StoryExecution.BubbleOperation.SetBubbleQueue CreateSetBubbleQueue(
             StoryCommands.DialogueCommandData dialogue,
             StoryContracts.StorySpeakerRole role,
             StoryContracts.StoryChoice[] choices,
             UniTaskCompletionSource bubbleDone)
         {
-            return new QueueProcess.BubbleQueue.SetBubbleQueue(
-                new QueueProcess.BubbleQueueRequest(
+            return new StoryExecution.BubbleOperation.SetBubbleQueue(
+                new StoryExecution.BubbleOperationRequest(
                 bubbleDone,
                 choices,
                 _ctx.Character.SetMainCharacterView,
@@ -184,7 +184,7 @@ namespace Novels.StoryQueue
             };
         }
 
-        private QueueProcess.IQueue[] CreatePresentationLifecycle(
+        private StoryExecution.IStoryOperation[] CreatePresentationLifecycle(
             BubbleContracts.BubblePresentationKind kind,
             UniTaskCompletionSource bubbleDone)
         {
@@ -207,13 +207,13 @@ namespace Novels.StoryQueue
                     _ctx.Bubble.BubbleHide,
                     _ctx.Bubble.BubbleHideImmediate),
             };
-            return new QueueProcess.IQueue[]
+            return new StoryExecution.IStoryOperation[]
             {
-                new QueueProcess.BubbleQueue.ShowBubbleQueue(
+                new StoryExecution.BubbleOperation.ShowBubbleQueue(
                     bubbleDone,
                     lifecycle.Show,
                     lifecycle.ShowImmediate),
-                new QueueProcess.BubbleQueue.HideBubbleQueue(
+                new StoryExecution.BubbleOperation.HideBubbleQueue(
                     lifecycle.Hide,
                     lifecycle.HideImmediate),
             };

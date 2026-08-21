@@ -496,7 +496,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 80ea198e930446429a896e6be1401d41, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Novels.Catalog.View::Novels.Catalog.View.Card
+  m_EditorClassIdentifier: Novels.Catalog::Novels.Catalog.View.Card
   _title: {fileID: 5670389368411258075}
   _description: {fileID: 895797210284152474}
   _status: {fileID: 2444772523499946891}
@@ -1056,6 +1056,6 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 2633ed0142754281b42d77de2e640a8f, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Novels.Catalog.View::Novels.Catalog.View.Screen
+  m_EditorClassIdentifier: Novels.Catalog::Novels.Catalog.View.CatalogScreen
   _title: {fileID: 1633305251863425057}
   _cardPrefab: {fileID: 1947818341915338342}

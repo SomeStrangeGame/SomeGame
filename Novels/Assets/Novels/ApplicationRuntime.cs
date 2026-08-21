@@ -19,7 +19,7 @@ namespace Novels
         }
 
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
-        internal struct Ctx
+        internal struct Dependencies
         {
             internal ApplicationEnvironment Environment;
             internal Action<(LogType type, string message)> OnLog;
@@ -28,15 +28,15 @@ namespace Novels
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
-        private readonly Ctx _ctx;
+        private readonly Dependencies _ctx;
         private readonly ApplicationEnvironment _environment;
         private readonly PriorityLoader _priorityLoader;
         private readonly Bundles.Entity _bundles;
-        private readonly DisposableSlot<Entity> _activeNovel;
+        private readonly DisposableSlot<NovelRuntime> _activeNovel;
         private readonly CatalogFlow _catalogFlow;
         private readonly ContentDeliveryFlow _contentDeliveryFlow;
 
-        internal ApplicationRuntime(Ctx ctx)
+        internal ApplicationRuntime(Dependencies ctx)
         {
             _ctx = ctx;
             _environment = ctx.Environment
@@ -46,7 +46,7 @@ namespace Novels
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
             _bundles = CreateBundles().AddTo(this);
-            _catalogFlow = new CatalogFlow(new CatalogFlow.Ctx
+            _catalogFlow = new CatalogFlow(new CatalogFlow.Dependencies
             {
                 Bundles = _bundles,
                 PriorityLoader = _priorityLoader,
@@ -61,12 +61,12 @@ namespace Novels
             _contentDeliveryFlow = new ContentDeliveryFlow(
                 _bundles,
                 _environment.CancellationToken);
-            _activeNovel = new DisposableSlot<Entity>().AddTo(this);
+            _activeNovel = new DisposableSlot<NovelRuntime>().AddTo(this);
         }
 
         internal async UniTask Run()
         {
-            using var bootstrap = new Bootstrap.Entity(_environment.CancellationToken);
+            using var bootstrap = new Bootstrap.BootstrapController(_environment.CancellationToken);
             CatalogFlow.Resources catalog = null;
             Catalog.NovelCatalogEntry content = null;
             var state = ApplicationFlowState.LoadingCatalog;
@@ -113,9 +113,9 @@ namespace Novels
         private async UniTask<ApplicationFlowState> RunStory(
             Catalog.NovelCatalogEntry content,
             CatalogFlow.Resources catalog,
-            Bootstrap.Entity bootstrap)
+            Bootstrap.BootstrapController bootstrap)
         {
-            var novel = new Entity(new Entity.Ctx
+            var novel = new NovelRuntime(new NovelRuntime.Dependencies
             {
                 Bundles = _bundles,
                 Content = content,

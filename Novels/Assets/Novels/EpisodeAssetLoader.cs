@@ -30,7 +30,7 @@ namespace Novels
 
     internal sealed class EpisodeAssetLoader
     {
-        internal struct Ctx
+        internal struct Dependencies
         {
             internal Bundles.Scope Bundles;
             internal Bundles.Scope SharedBundles;
@@ -42,9 +42,9 @@ namespace Novels
             internal CancellationToken CancellationToken;
         }
 
-        private readonly Ctx _ctx;
+        private readonly Dependencies _ctx;
 
-        internal EpisodeAssetLoader(Ctx ctx)
+        internal EpisodeAssetLoader(Dependencies ctx)
         {
             _ctx = ctx;
             if (ctx.Bundles == null)

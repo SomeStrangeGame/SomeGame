@@ -190,7 +190,7 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: dedb3e0f76da4e578f0431368fe7f49a, type: 3}
   m_Name:
-  m_EditorClassIdentifier: Novels.Bootstrap.View::Novels.Bootstrap.View.Screen
+  m_EditorClassIdentifier: Novels.Bootstrap::Novels.Bootstrap.View.BootstrapScreen
   _message: {fileID: 1074746320243453720}
   _retryLabel: {fileID: 4099724886360921877}
   _retry: {fileID: 2735528505137471812}

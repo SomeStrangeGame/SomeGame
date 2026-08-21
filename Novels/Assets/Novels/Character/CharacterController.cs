@@ -1,0 +1,170 @@
+using System;
+using System.Threading;
+using Cysharp.Threading.Tasks;
+using Disposable;
+using UnityEngine;
+
+namespace Novels.Character
+{
+    public class CharacterController : BaseDisposable
+    {
+        public struct Dependencies
+        {
+            public GameObject ScreenPrefab;
+            public string ContentPrefix;
+            public string EpisodeId;
+            public Content.CharacterAssetProfile AssetProfile;
+            public Func<string, UniTask<Sprite>> GetSprite;
+            public Sprite MissingCharacter;
+            public CancellationToken CancellationToken;
+        }
+
+        private readonly Dependencies _ctx;
+        private readonly CharacterSpriteResolver _spriteResolver;
+        private readonly Content.CharacterAssetProfile _assetProfile;
+        private View.CharacterScreen _screen;
+        private string _mainCharacterView;
+        private string _mainCharacterClothes;
+        private string _mainCharacterHair;
+        private string _mainCharacterAccessory;
+        private StoryContracts.CharacterRenderRequest _lastRenderRequest;
+        private int _wardrobePreviewVersion;
+
+        public CharacterController(Dependencies ctx)
+        {
+            _ctx = ctx;
+            _assetProfile = ctx.AssetProfile
+                ?? throw new ArgumentNullException(nameof(ctx.AssetProfile));
+            _spriteResolver = new CharacterSpriteResolver(
+                ctx.ContentPrefix,
+                ctx.EpisodeId,
+                _assetProfile,
+                ctx.GetSprite,
+                ctx.MissingCharacter,
+                ctx.CancellationToken);
+        }
+
+        public void Init()
+        {
+            var screenGO = GameObject.Instantiate(_ctx.ScreenPrefab);
+            _screen = screenGO.GetComponent<View.CharacterScreen>();
+            _screen.HideImageImmediate();
+        }
+
+        public void SetMainCharacterView(string view)
+        {
+            _mainCharacterView = _assetProfile.ViewPath(view);
+        }
+
+        public void SetMainCharacterClothes(string clothes)
+        {
+            _mainCharacterClothes = clothes;
+            _spriteResolver.ClearClothes();
+        }
+
+        public void SetMainCharacterHair(string hair)
+        {
+            _mainCharacterHair = hair;
+            _spriteResolver.ClearHair();
+        }
+
+        public void SetMainCharacterAccessory(string accessory)
+        {
+            _mainCharacterAccessory = accessory;
+            _spriteResolver.ClearAccessories();
+        }
+
+        public async UniTask SetImage(StoryContracts.CharacterRenderRequest request)
+        {
+            _wardrobePreviewVersion++;
+            _lastRenderRequest = request;
+            Apply(await _spriteResolver.Resolve(
+                request,
+                _mainCharacterView,
+                _mainCharacterClothes,
+                _mainCharacterHair,
+                _mainCharacterAccessory));
+        }
+
+        public UniTask<Sprite> LoadWardrobeThumbnail(
+            StoryContracts.StoryChoiceAction actions,
+            string value) =>
+            _spriteResolver.LoadWardrobeThumbnail(
+                actions,
+                value,
+                _mainCharacterView);
+
+        public async UniTask PreviewWardrobeChoice(
+            StoryContracts.StoryChoiceAction actions,
+            string value)
+        {
+            ApplyWardrobeChoice(actions, value);
+            var request = _lastRenderRequest;
+            if (request == null)
+                return;
+
+            var version = ++_wardrobePreviewVersion;
+            var sprites = await _spriteResolver.Resolve(
+                request,
+                _mainCharacterView,
+                _mainCharacterClothes,
+                _mainCharacterHair,
+                _mainCharacterAccessory);
+            if (version == _wardrobePreviewVersion)
+                Apply(sprites);
+        }
+
+        public UniTask Show(StoryContracts.StoryCharacterPosition position) =>
+            _screen.ShowImage(ToViewPosition(position), _ctx.CancellationToken);
+
+        public void ShowImmediate(StoryContracts.StoryCharacterPosition position) =>
+            _screen.ShowImageImmediate(ToViewPosition(position));
+
+        public UniTask Hide() => _screen.HideImage(_ctx.CancellationToken);
+
+        public void HideImmediate() => _screen.HideImageImmediate();
+
+        private static bool? ToViewPosition(StoryContracts.StoryCharacterPosition position)
+        {
+            return position switch
+            {
+                StoryContracts.StoryCharacterPosition.Left => true,
+                StoryContracts.StoryCharacterPosition.Right => false,
+                _ => null,
+            };
+        }
+
+        private void ApplyWardrobeChoice(
+            StoryContracts.StoryChoiceAction actions,
+            string value)
+        {
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+                SetMainCharacterView(value);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                SetMainCharacterClothes(value);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                SetMainCharacterHair(value);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                SetMainCharacterAccessory(value);
+        }
+
+        private void Apply(CharacterSpriteSet sprites)
+        {
+            _screen.SetMainBody(sprites.MainBody);
+            _screen.SetEmotion(sprites.Emotion);
+            _screen.SetClothes(sprites.Clothes);
+            _screen.SetBackHairs(sprites.Hair.Back);
+            _screen.SetFrontHairs(sprites.Hair.Front);
+            _screen.SetBackAccessories(sprites.Accessories.Back);
+            _screen.SetMiddleAccessories(sprites.Accessories.Middle);
+            _screen.SetFrontAccessories(sprites.Accessories.Front);
+        }
+
+        protected override void OnDispose()
+        {
+            base.OnDispose();
+            if (_screen != null)
+                GameObject.Destroy(_screen.gameObject);
+        }
+    }
+}

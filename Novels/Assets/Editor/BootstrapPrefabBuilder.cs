@@ -17,7 +17,7 @@ namespace Editor
         [MenuItem("Novels/UI/Rebuild Bootstrap Screen")]
         private static void Build()
         {
-            var screen = Novels.Bootstrap.View.Screen.CreateGenerated();
+            var screen = Novels.Bootstrap.View.BootstrapScreen.CreateGenerated();
             try
             {
                 GeneratedPrefabWriter.Save(screen.gameObject, _path);

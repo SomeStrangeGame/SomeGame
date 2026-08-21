@@ -7,15 +7,15 @@ namespace Novels
 {
     internal sealed class NovelBootstrapProcess : BaseDisposable
     {
-        internal struct Ctx
+        internal struct Dependencies
         {
             internal Func<UniTask<NovelStartSession>> Prepare;
             internal CancellationToken CancellationToken;
         }
 
-        private readonly Ctx _ctx;
+        private readonly Dependencies _ctx;
 
-        internal NovelBootstrapProcess(Ctx ctx)
+        internal NovelBootstrapProcess(Dependencies ctx)
         {
             _ctx = ctx;
         }

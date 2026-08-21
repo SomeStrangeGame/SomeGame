@@ -41,7 +41,7 @@ namespace Novels.Location
     {
         private const int _preparationTimeoutMilliseconds = 10000;
 
-        internal struct Ctx
+        internal struct Dependencies
         {
             internal VideoPlayer VideoPlayer;
             internal Action<RenderTexture> SetTexture;
@@ -49,13 +49,13 @@ namespace Novels.Location
             internal Action<Diagnostics.NovelError> OnError;
         }
 
-        private readonly Ctx _ctx;
+        private readonly Dependencies _ctx;
         private RenderTexture _renderTexture;
         private UniTaskCompletionSource _prepared;
         private UniTaskCompletionSource _completed;
         private string _error;
 
-        internal VideoPlayback(Ctx ctx)
+        internal VideoPlayback(Dependencies ctx)
         {
             _ctx = ctx;
             _ctx.VideoPlayer.prepareCompleted += OnPrepared;

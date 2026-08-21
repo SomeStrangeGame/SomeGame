@@ -23,7 +23,7 @@ namespace Editor
                 typeof(Canvas),
                 typeof(CanvasScaler),
                 typeof(GraphicRaycaster),
-                typeof(Novels.Catalog.View.Screen));
+                typeof(Novels.Catalog.View.CatalogScreen));
             try
             {
                 var canvas = root.GetComponent<Canvas>();
@@ -149,7 +149,7 @@ namespace Editor
                 card.ApplyModifiedPropertiesWithoutUndo();
 
                 var screen = new SerializedObject(
-                    root.GetComponent<Novels.Catalog.View.Screen>());
+                    root.GetComponent<Novels.Catalog.View.CatalogScreen>());
                 screen.FindProperty("_title").objectReferenceValue = title;
                 screen.FindProperty("_cardPrefab").objectReferenceValue =
                     cardObject.GetComponent<Novels.Catalog.View.Card>();

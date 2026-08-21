@@ -36,38 +36,10 @@ namespace Novels.StoryCommands
         {
             var result = StoryContracts.StoryChoiceAction.None;
 
-            if (HasAnyArgument(
-                    arguments,
-                    StoryContracts.StoryChoiceActions.SelectAppearance,
-                    StoryContracts.StoryChoiceActions.SelectAppearanceFormal))
-                result |= StoryContracts.StoryChoiceAction.SelectAppearance;
-
-            if (HasAnyArgument(
-                    arguments,
-                    StoryContracts.StoryChoiceActions.SelectClothes,
-                    StoryContracts.StoryChoiceActions.SelectClothesFormal,
-                    StoryContracts.StoryChoiceActions.SelectSwimsuit,
-                    StoryContracts.StoryChoiceActions.SelectSwimsuitFormal,
-                    StoryContracts.StoryChoiceActions.ConfirmClothes))
-                result |= StoryContracts.StoryChoiceAction.SelectClothes;
-
-            if (HasAnyArgument(
-                    arguments,
-                    StoryContracts.StoryChoiceActions.SelectHair,
-                    StoryContracts.StoryChoiceActions.SelectHairLegacy,
-                    StoryContracts.StoryChoiceActions.SelectHairFormal,
-                    StoryContracts.StoryChoiceActions.SelectHairFormalLegacy))
-            {
-                result |= StoryContracts.StoryChoiceAction.SelectHair;
-            }
-
-            if (HasAnyArgument(
-                    arguments,
-                    StoryContracts.StoryChoiceActions.SelectAccessory,
-                    StoryContracts.StoryChoiceActions.SelectAccessoryFormal))
-            {
-                result |= StoryContracts.StoryChoiceAction.SelectAccessory;
-            }
+            foreach (var argument in arguments)
+                if (!string.IsNullOrEmpty(argument)
+                    && StoryCommandSyntax.ChoiceActions.TryGetValue(argument, out var action))
+                    result |= action;
 
             return result;
         }
@@ -256,22 +228,8 @@ namespace Novels.StoryCommands
 
         private static bool IsDialogueControlArgument(string argument)
         {
-            return IsArgument(argument, StoryContracts.StoryArguments.Child)
-                || IsArgument(argument, StoryContracts.StoryArguments.Disclaimer)
-                || IsArgument(argument, StoryContracts.StoryArguments.Hint)
-                || IsArgument(argument, StoryContracts.StoryArguments.Thoughts)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveClothes)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveHair)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveHairLegacy)
-                || IsArgument(argument, StoryContracts.StoryArguments.RemoveAccessory)
-                || IsArgument(argument, StoryContracts.StoryArguments.HideCharacter)
-                || IsArgument(argument, StoryContracts.StoryArguments.ShowCharacter)
-                || IsArgument(argument, StoryContracts.StoryArguments.ShowCharacterLegacy)
-                || IsArgument(argument, StoryContracts.StoryArguments.ChangeClothes)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectAppearance)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectClothes)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectHair)
-                || IsArgument(argument, StoryContracts.StoryChoiceActions.SelectHairLegacy);
+            return !string.IsNullOrEmpty(argument)
+                && StoryCommandSyntax.DialogueControlArguments.Contains(argument);
         }
 
         private static bool IsUnsupportedTimedChoiceArgument(string argument)
@@ -293,14 +251,6 @@ namespace Novels.StoryCommands
                     return true;
             }
 
-            return false;
-        }
-
-        private static bool HasAnyArgument(string[] arguments, params string[] expected)
-        {
-            foreach (var value in expected)
-                if (HasArgument(arguments, value))
-                    return true;
             return false;
         }
 

@@ -115,6 +115,8 @@ namespace Editor
 
         internal IReadOnlyList<ContentValidationIssue> Issues => _issues;
         public int Count => _issues.Count;
+        internal bool HasErrors => _issues.Any(
+            issue => issue.Severity == ContentValidationSeverity.Error);
         internal void Add(string message) =>
             Add(ContentValidationIssue.Error(
                 ContentValidationCodes.Generic,
@@ -149,9 +151,8 @@ namespace Editor
                 .AppendLine("):");
 
             foreach (var contextGroup in issues
-                         .GroupBy(
-                             issue => (issue.ContentId, issue.EpisodeId),
-                             ContentValidationContextComparer.Instance)
+                .GroupBy(
+                             issue => (issue.ContentId, issue.EpisodeId))
                          .OrderBy(group => group.Key.ContentId, StringComparer.Ordinal)
                          .ThenBy(group => group.Key.EpisodeId, StringComparer.Ordinal))
             {
@@ -195,25 +196,5 @@ namespace Editor
                 : $"{contentId}/{episodeId}";
         }
 
-        private sealed class ContentValidationContextComparer
-            : IEqualityComparer<(string ContentId, string EpisodeId)>
-        {
-            internal static readonly ContentValidationContextComparer Instance = new();
-
-            public bool Equals(
-                (string ContentId, string EpisodeId) left,
-                (string ContentId, string EpisodeId) right) =>
-                string.Equals(left.ContentId, right.ContentId, StringComparison.Ordinal)
-                && string.Equals(left.EpisodeId, right.EpisodeId, StringComparison.Ordinal);
-
-            public int GetHashCode((string ContentId, string EpisodeId) value)
-            {
-                unchecked
-                {
-                    return ((value.ContentId?.GetHashCode() ?? 0) * 397)
-                        ^ (value.EpisodeId?.GetHashCode() ?? 0);
-                }
-            }
-        }
     }
 }

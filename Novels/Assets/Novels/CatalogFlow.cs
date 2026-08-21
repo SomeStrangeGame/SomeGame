@@ -32,7 +32,7 @@ namespace Novels
             }
         }
 
-        internal struct Ctx
+        internal struct Dependencies
         {
             internal Bundles.Entity Bundles;
             internal PriorityLoader PriorityLoader;
@@ -43,9 +43,9 @@ namespace Novels
             internal Action<(LogType type, string message)> OnLog;
         }
 
-        private readonly Ctx _ctx;
+        private readonly Dependencies _ctx;
 
-        internal CatalogFlow(Ctx ctx)
+        internal CatalogFlow(Dependencies ctx)
         {
             _ctx = ctx;
             if (ctx.Bundles == null)
@@ -60,7 +60,7 @@ namespace Novels
             }
         }
 
-        internal async UniTask<Resources> LoadWithRetry(Bootstrap.Entity bootstrap)
+        internal async UniTask<Resources> LoadWithRetry(Bootstrap.BootstrapController bootstrap)
         {
             const string loading = ApplicationTexts.CatalogLoading;
             const string failed = ApplicationTexts.CatalogLoadFailed;
@@ -151,7 +151,7 @@ namespace Novels
         }
 
         private async UniTask<Bundles.ContentDeliveryLease> PrepareApplicationContent(
-            Bootstrap.Entity bootstrap,
+            Bootstrap.BootstrapController bootstrap,
             string message)
         {
             if (_ctx.Bundles.DeliveryMode == Bundles.ContentDeliveryMode.Embedded
@@ -192,15 +192,15 @@ namespace Novels
             return new Resources(catalog, screen, deliveryLease);
         }
 
-        private Catalog.Entity CreateSelection(GameObject screen) =>
-            new(new Catalog.Entity.Ctx
+        private Catalog.CatalogController CreateSelection(GameObject screen) =>
+            new(new Catalog.CatalogController.Dependencies
             {
                 BundledPrefab = screen,
                 CancellationToken = _ctx.CancellationToken,
             });
 
         private static void ShowProgress(
-            Bootstrap.Entity bootstrap,
+            Bootstrap.BootstrapController bootstrap,
             string message,
             Bundles.ContentDeliveryProgress progress)
         {

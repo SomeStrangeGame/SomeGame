@@ -17,8 +17,8 @@ namespace Novels.Location
     {
         private CameraActionPlan(
             CameraActionPresentation presentation,
-            View.Screen.CameraEffect motion,
-            View.Screen.Effect effect)
+            View.LocationScreen.CameraEffect motion,
+            View.LocationScreen.Effect effect)
         {
             Presentation = presentation;
             Motion = motion;
@@ -26,8 +26,8 @@ namespace Novels.Location
         }
 
         internal CameraActionPresentation Presentation { get; }
-        internal View.Screen.CameraEffect Motion { get; }
-        internal View.Screen.Effect Effect { get; }
+        internal View.LocationScreen.CameraEffect Motion { get; }
+        internal View.LocationScreen.Effect Effect { get; }
 
         internal static bool TryCreate(
             StoryContracts.StoryCameraAction action,
@@ -36,31 +36,31 @@ namespace Novels.Location
             switch (action)
             {
                 case StoryContracts.StoryCameraAction.FadeIn:
-                    plan = PersistentEffect(View.Screen.Effect.Dark);
+                    plan = PersistentEffect(View.LocationScreen.Effect.Dark);
                     return true;
                 case StoryContracts.StoryCameraAction.PanLeftToRight:
-                    plan = MotionPlan(View.Screen.CameraEffect.LeftRight);
+                    plan = MotionPlan(View.LocationScreen.CameraEffect.LeftRight);
                     return true;
                 case StoryContracts.StoryCameraAction.PanRightToLeft:
-                    plan = MotionPlan(View.Screen.CameraEffect.RightLeft);
+                    plan = MotionPlan(View.LocationScreen.CameraEffect.RightLeft);
                     return true;
                 case StoryContracts.StoryCameraAction.MoveToCenter:
-                    plan = MotionPlan(View.Screen.CameraEffect.ToCenter);
+                    plan = MotionPlan(View.LocationScreen.CameraEffect.ToCenter);
                     return true;
                 case StoryContracts.StoryCameraAction.MoveToLeft:
-                    plan = MotionPlan(View.Screen.CameraEffect.ToLeft);
+                    plan = MotionPlan(View.LocationScreen.CameraEffect.ToLeft);
                     return true;
                 case StoryContracts.StoryCameraAction.MoveToRight:
-                    plan = MotionPlan(View.Screen.CameraEffect.ToRight);
+                    plan = MotionPlan(View.LocationScreen.CameraEffect.ToRight);
                     return true;
                 case StoryContracts.StoryCameraAction.Shake:
-                    plan = MotionPlan(View.Screen.CameraEffect.Shaking);
+                    plan = MotionPlan(View.LocationScreen.CameraEffect.Shaking);
                     return true;
                 case StoryContracts.StoryCameraAction.Injury:
-                    plan = TransientEffect(View.Screen.Effect.Dark);
+                    plan = TransientEffect(View.LocationScreen.Effect.Dark);
                     return true;
                 case StoryContracts.StoryCameraAction.Splashes:
-                    plan = TransientEffect(View.Screen.Effect.Light);
+                    plan = TransientEffect(View.LocationScreen.Effect.Light);
                     return true;
                 default:
                     plan = default;
@@ -68,13 +68,13 @@ namespace Novels.Location
             }
         }
 
-        private static CameraActionPlan MotionPlan(View.Screen.CameraEffect motion) =>
+        private static CameraActionPlan MotionPlan(View.LocationScreen.CameraEffect motion) =>
             new(CameraActionPresentation.Motion, motion, default);
 
-        private static CameraActionPlan PersistentEffect(View.Screen.Effect effect) =>
+        private static CameraActionPlan PersistentEffect(View.LocationScreen.Effect effect) =>
             new(CameraActionPresentation.PersistentEffect, default, effect);
 
-        private static CameraActionPlan TransientEffect(View.Screen.Effect effect) =>
+        private static CameraActionPlan TransientEffect(View.LocationScreen.Effect effect) =>
             new(CameraActionPresentation.TransientEffect, default, effect);
     }
 }
