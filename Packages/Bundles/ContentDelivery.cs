@@ -4,9 +4,7 @@ namespace Bundles
 {
     public enum ContentDeliveryMode
     {
-        Embedded,
-        Hybrid,
-        Remote,
+        Remote = 2,
     }
 
     public readonly struct ContentDeliveryProgress

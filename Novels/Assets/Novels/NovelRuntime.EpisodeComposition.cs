@@ -17,12 +17,10 @@ namespace Novels
             ValidateSavedReplay(state.SaveSystem, storyText, initialState);
             var assets = await new EpisodeAssetLoader(new EpisodeAssetLoader.Dependencies
             {
-                Bundles = state.EpisodeBundles,
-                SharedBundles = state.NovelBundles,
+                Bundles = state.StoryAssets,
                 PriorityLoader = _priorityLoader,
                 Addresses = state.Addresses,
-                BundleName = _episode.BundleName,
-                SharedBundleName = _definition.BundleName,
+                BundleName = _definition.BundleName,
                 Fallbacks = _ctx.FallbackAssets,
                 CancellationToken = cancellationToken,
             }).Load();
@@ -73,9 +71,9 @@ namespace Novels
             string episodeAssetPath)
         {
             var cancellationToken = state.CancellationToken;
-            var sprite = await _priorityLoader.Run(() => state.EpisodeBundles
+            var sprite = await _priorityLoader.Run(() => state.StoryAssets
                 .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _episode.BundleName,
+                    _definition.BundleName,
                     episodeAssetPath))
                 .AttachExternalCancellation(cancellationToken));
             if (sprite != null)
@@ -85,7 +83,7 @@ namespace Novels
                 .SharedCharacterAsset(_definition.Prefix, episodeAssetPath);
             return string.IsNullOrEmpty(sharedAssetPath)
                 ? null
-                : await _priorityLoader.Run(() => state.NovelBundles
+                : await _priorityLoader.Run(() => state.StoryAssets
                     .TryGetBundledSprite(new Bundles.BundleAssetAddress(
                         _definition.BundleName,
                         sharedAssetPath))

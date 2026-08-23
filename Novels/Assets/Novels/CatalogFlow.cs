@@ -173,8 +173,7 @@ namespace Novels
             Bootstrap.BootstrapController bootstrap,
             string message)
         {
-            if (_ctx.Bundles.DeliveryMode == Bundles.ContentDeliveryMode.Embedded
-                || !_ctx.Bundles.HasDeliveryGroup(
+            if (!_ctx.Bundles.HasDeliveryGroup(
                     ContentAddressing.ContentPackageConvention.ApplicationDeliveryGroup))
             {
                 return null;

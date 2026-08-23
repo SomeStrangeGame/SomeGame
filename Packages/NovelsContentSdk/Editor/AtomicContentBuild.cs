@@ -87,7 +87,8 @@ namespace Novels.ContentSdk.Editor
                 ValidateStoryCard(definition.Id);
                 return new ProjectContent(
                     expected,
-                    definition.Id,
+                    ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(
+                        definition.Id),
                     buildConfiguration.minimumClientVersion);
             }
             if (contentGuids.Length > 1)

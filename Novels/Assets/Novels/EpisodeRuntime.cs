@@ -21,11 +21,6 @@ namespace Novels
         internal EpisodeScope Scope { get; }
         internal CancellationToken CancellationToken => _lifetimeCancellation.Token;
 
-        internal void AttachDelivery(Bundles.ContentDeliveryLease lease)
-        {
-            lease?.AddTo(Scope);
-        }
-
         internal void Configure(
             Func<UniTask<EpisodeRunResult>> run,
             Func<UniTask> flushSave)

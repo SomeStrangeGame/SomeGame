@@ -31,7 +31,6 @@ namespace Novels.Content
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
             Prefix = Id;
             BundleName = ContentAddressing.ContentPackageConvention.ContentBundle(Id);
-            MainLoadingBundleName = BundleName;
             CharacterAssets = CharacterAssetProfile.Default;
             var episodeArray = episodes?.ToArray() ?? Array.Empty<EpisodeDefinition>();
             if (episodeArray.Length == 0 || episodeArray.Any(episode => episode == null))
@@ -68,7 +67,6 @@ namespace Novels.Content
         public string Id { get; }
         public string Prefix { get; }
         public string MainCharacter { get; }
-        public string MainLoadingBundleName { get; }
         public string BundleName { get; }
         public CharacterAssetProfile CharacterAssets { get; }
         public IReadOnlyList<EpisodeDefinition> Episodes { get; }
@@ -133,9 +131,6 @@ namespace Novels.Content
             SourcePath = string.IsNullOrWhiteSpace(sourcePath)
                 ? string.Empty
                 : sourcePath.Trim();
-            BundleName = ContentAddressing.ContentPackageConvention.EpisodeBundle(
-                ContentId,
-                Id);
             Media = media ?? throw new ArgumentNullException(nameof(media));
         }
 
@@ -146,7 +141,6 @@ namespace Novels.Content
         public string ContentVersion { get; }
         public string EndMarker { get; }
         public string SourcePath { get; }
-        public string BundleName { get; }
         public EpisodeMediaDefinition Media { get; }
 
         private static string Require(string value, string parameterName)

@@ -1,7 +1,7 @@
 using System;
 using UnityEditor;
 
-namespace Editor
+namespace Novels.ContentSdk.Editor
 {
     internal sealed class NovelContentTextureImporter : AssetPostprocessor
     {

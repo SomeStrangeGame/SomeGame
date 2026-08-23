@@ -19,7 +19,7 @@ namespace Novels
                 Loading = loading,
                 Audio = CreateAudio(
                     state.EpisodeScope,
-                    state.EpisodeBundles.ResolveAudioUrl,
+                    state.StoryMedia.ResolveAudioUrl,
                     cancellationToken),
                 Bubble = CreateBubble(
                     state.EpisodeScope,
@@ -35,12 +35,12 @@ namespace Novels
                 Location = CreateLocation(
                     state.EpisodeScope,
                     assets.Location,
-                    assetName => _priorityLoader.Run(() => state.EpisodeBundles
+                    assetName => _priorityLoader.Run(() => state.StoryAssets
                         .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                            _episode.BundleName,
+                            _definition.BundleName,
                             state.Addresses.LocationImage(assetName)))
                         .AttachExternalCancellation(cancellationToken)),
-                    assetName => state.EpisodeBundles.ResolveVideoUrl(
+                    assetName => state.StoryMedia.ResolveVideoUrl(
                         _definition.ResolveVideoId(assetName)),
                     _ctx.FallbackAssets.Background,
                     cancellationToken),
@@ -121,14 +121,14 @@ namespace Novels
             string assetName)
         {
             var cancellationToken = state.CancellationToken;
-            var episodeSprite = await _priorityLoader.Run(() => state.EpisodeBundles
+            var episodeSprite = await _priorityLoader.Run(() => state.StoryAssets
                 .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _episode.BundleName,
+                    _definition.BundleName,
                     state.Addresses.ChooseItem(assetName)))
                 .AttachExternalCancellation(cancellationToken));
             if (episodeSprite != null)
                 return episodeSprite;
-            var sharedSprite = await _priorityLoader.Run(() => state.NovelBundles
+            var sharedSprite = await _priorityLoader.Run(() => state.StoryAssets
                 .TryGetBundledSprite(new Bundles.BundleAssetAddress(
                     _definition.BundleName,
                     state.Addresses.SharedChooseItem(assetName)))

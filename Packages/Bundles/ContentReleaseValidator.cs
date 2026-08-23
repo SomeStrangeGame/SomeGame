@@ -31,8 +31,8 @@ namespace Bundles
                     + $"with this client (supported: {minimumSupportedSchemaVersion}-"
                     + $"{maximumSupportedSchemaVersion}).");
             }
-            if (!Enum.IsDefined(typeof(ContentDeliveryMode), release.deliveryMode))
-                throw new ContentIntegrityException("Content delivery mode is invalid.");
+            if (release.deliveryMode != ContentDeliveryMode.Remote)
+                throw new ContentIntegrityException("Only remote content delivery is supported.");
             if (!ClientVersion.TryParse(release.minimumClientVersion, out var minimum))
             {
                 throw new ContentIntegrityException(
@@ -154,12 +154,10 @@ namespace Bundles
                     }
                 }
             }
-            if ((release.contentSchemaVersion >= 4
-                    || release.deliveryMode != ContentDeliveryMode.Embedded)
-                && groupIds.Count == 0)
+            if (groupIds.Count == 0)
             {
                 throw new ContentIntegrityException(
-                    "Non-embedded content release has no delivery groups.");
+                    "Content release has no delivery groups.");
             }
             var expectedReleaseId = ContentReleaseFingerprint.Compute(release);
             if (!string.Equals(

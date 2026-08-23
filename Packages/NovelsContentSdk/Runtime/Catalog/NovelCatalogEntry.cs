@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using UnityEngine;
 
 namespace Novels.Catalog
@@ -44,20 +42,5 @@ namespace Novels.Catalog
         public string ContentAssetName =>
             ContentAddressing.ContentPackageConvention.DefinitionAsset(_contentId);
         public CatalogText Text => new(_title, _description);
-    }
-
-    [CreateAssetMenu(fileName = "NovelCatalog", menuName = "Novels/Catalog")]
-    public sealed class NovelCatalogAsset : ScriptableObject
-    {
-        [SerializeField] private string _title;
-        [SerializeField] private string _description;
-        [SerializeField] private NovelCatalogEntry[] _entries;
-
-        private ReadOnlyCollection<NovelCatalogEntry> _readOnlyEntries;
-
-        public CatalogText Text => new(_title, _description);
-        public IReadOnlyList<NovelCatalogEntry> Entries =>
-            _readOnlyEntries ??= Array.AsReadOnly(
-                _entries ?? Array.Empty<NovelCatalogEntry>());
     }
 }

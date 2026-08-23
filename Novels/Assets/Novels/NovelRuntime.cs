@@ -28,10 +28,7 @@ namespace Novels
                 SelectEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
                 PrepareNovelContent;
-            internal Func<
-                Content.NovelDefinition,
-                Content.EpisodeDefinition,
-                UniTask<Bundles.ContentDeliveryLease>> PrepareEpisodeContent;
+            internal Action HidePreparationScreen;
         }
 
         private readonly Dependencies _ctx;
@@ -55,10 +52,10 @@ namespace Novels
                     nameof(ctx.PersistentDataPath));
             if (ctx.SelectEpisode == null)
                 throw new ArgumentNullException(nameof(ctx.SelectEpisode));
-            if (ctx.PrepareEpisodeContent == null)
-                throw new ArgumentNullException(nameof(ctx.PrepareEpisodeContent));
             if (ctx.PrepareNovelContent == null)
                 throw new ArgumentNullException(nameof(ctx.PrepareNovelContent));
+            if (ctx.HidePreparationScreen == null)
+                throw new ArgumentNullException(nameof(ctx.HidePreparationScreen));
             if (ctx.TargetCamera == null)
                 throw new ArgumentNullException(nameof(ctx.TargetCamera));
             if (ctx.FallbackAssets == null)
@@ -72,6 +69,7 @@ namespace Novels
             novelSession.AttachDelivery(await _ctx.PrepareNovelContent(
                 _ctx.Content.ContentId));
             _definition = await LoadContent(novelSession.Bundles, _ctx.Content);
+            _ctx.HidePreparationScreen();
             _progress = new NovelProgress(
                 _definition,
                 _ctx.PersistentDataPath,
@@ -83,9 +81,6 @@ namespace Novels
             _episode = await _ctx.SelectEpisode(playableDefinition);
             _progress.Begin(_episode);
             var episodeRuntime = new EpisodeRuntime(_ctx.CancellationToken).AddTo(this);
-            episodeRuntime.AttachDelivery(await _ctx.PrepareEpisodeContent(
-                _definition,
-                _episode));
 
             var bootstrap = new NovelBootstrapProcess(
                 new NovelBootstrapProcess.Dependencies

@@ -54,16 +54,6 @@ rsync -a \
   --exclude Logs \
   --exclude Build \
   --exclude .utmp \
-  --exclude Assets/RemoteAssets \
-  --exclude Assets/RemoteAssets.meta \
-  --exclude Assets/StreamingAssets/noveltexts \
-  --exclude Assets/StreamingAssets/noveltexts.meta \
-  --exclude Assets/StreamingAssets/novelsaudio \
-  --exclude Assets/StreamingAssets/novelsaudio.meta \
-  --exclude Assets/StreamingAssets/novelsvideos \
-  --exclude Assets/StreamingAssets/novelsvideos.meta \
-  --exclude Assets/StreamingAssets/Remote \
-  --exclude Assets/StreamingAssets/Remote.meta \
   "${project_root}/" "${stage_project}/"
 
 set +e
@@ -72,7 +62,7 @@ set +e
   -quit \
   -projectPath "${stage_project}" \
   -buildTarget "${target}" \
-  -executeMethod Editor.NovelCiValidation.BuildRemotePlayerBatch \
+  -executeMethod Editor.PlayerBuildAutomation.BuildRemotePlayerBatch \
   -remoteContentBaseUrl "${remote_url}" \
   -playerOutput "${output_path}" \
   ${development_argument:+-developmentBuild} \

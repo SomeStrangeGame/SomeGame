@@ -10,7 +10,7 @@ namespace Editor
 
         public void OnPreprocessBuild(BuildReport report)
         {
-            if (!NovelCiValidation.IsAuthorizedPlayerBuild)
+            if (!PlayerBuildAutomation.IsAuthorizedPlayerBuild)
             {
                 throw new BuildFailedException(
                     "Novel Player builds must use Tools/build-remote-player.sh.");

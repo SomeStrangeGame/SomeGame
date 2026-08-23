@@ -25,8 +25,8 @@ namespace Novels
                 Save.SaveSystem saveSystem,
                 ContentAddressing.ContentAddresses addresses,
                 EpisodeRuntime episodeRuntime,
-                Bundles.Scope novelBundles,
-                Bundles.MediaScope episodeBundles,
+                Bundles.Scope storyAssets,
+                Bundles.MediaScope storyMedia,
                 Loading.Entity mainLoading,
                 UniTask<EpisodeStoryData> episodePreloading)
             {
@@ -34,8 +34,8 @@ namespace Novels
                 Addresses = addresses;
                 EpisodeRuntime = episodeRuntime;
                 EpisodeScope = episodeRuntime.Scope;
-                NovelBundles = novelBundles;
-                EpisodeBundles = episodeBundles;
+                StoryAssets = storyAssets;
+                StoryMedia = storyMedia;
                 MainLoading = mainLoading;
                 EpisodePreloading = episodePreloading;
             }
@@ -46,43 +46,40 @@ namespace Novels
             internal EpisodeScope EpisodeScope { get; }
             internal CancellationToken CancellationToken =>
                 EpisodeRuntime.CancellationToken;
-            internal Bundles.Scope NovelBundles { get; }
-            internal Bundles.MediaScope EpisodeBundles { get; }
+            internal Bundles.Scope StoryAssets { get; }
+            internal Bundles.MediaScope StoryMedia { get; }
             internal Loading.Entity MainLoading { get; }
             internal UniTask<EpisodeStoryData> EpisodePreloading { get; }
         }
 
         private async UniTask<NovelStartSession> PrepareApplication(
-            Bundles.Scope novelBundles,
+            Bundles.Scope storyAssets,
             EpisodeRuntime episodeRuntime)
         {
             var saveSystem = CreateSaveSystem();
             var addresses = new ContentAddressing.ContentAddresses(
                 _definition.Id,
                 _episode.Id);
-            var episodeBundles = _ctx.Bundles
+            var storyMedia = _ctx.Bundles
                 .CreateMediaScope(
                     _definition.Prefix,
                     new[]
                     {
-                        ContentAddressing.ContentPackageConvention.EpisodeDeliveryGroup(
-                            _definition.Id,
-                            _episode.Id),
-                        ContentAddressing.ContentPackageConvention.SharedDeliveryGroup(
+                        ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(
                             _definition.Id),
                     },
                     new Bundles.MediaManifest(_episode.Media.SilentAudioIds),
                     episodeRuntime.CancellationToken)
                 .AddTo(episodeRuntime.Scope);
 
-            await _priorityLoader.Run(() => novelBundles
-                .GetAssetBundle(_definition.MainLoadingBundleName)
+            await _priorityLoader.Run(() => storyAssets
+                .GetAssetBundle(_definition.BundleName)
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoadingAddress = new Bundles.BundleAssetAddress(
-                _definition.MainLoadingBundleName,
+                _definition.BundleName,
                 addresses.SharedLoadingPrefab(
                     ContentAddressing.ContentAssetNames.EpisodeScreen));
-            var bundledMainLoadingScreen = await _priorityLoader.Run(() => novelBundles
+            var bundledMainLoadingScreen = await _priorityLoader.Run(() => storyAssets
                 .TryGetBundledPrefab(mainLoadingAddress)
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoadingScreen = bundledMainLoadingScreen
@@ -93,14 +90,13 @@ namespace Novels
 
             var episodePreloading = PreloadEpisode(
                 addresses,
-                episodeBundles,
                 episodeRuntime.CancellationToken).Preserve();
             await mainLoading.Show().AttachExternalCancellation(_ctx.CancellationToken);
 
             var settingsAddress = new Bundles.BundleAssetAddress(
                 _definition.BundleName,
                 addresses.SettingPrefab(BootstrapAddresses.ScreenAssetName));
-            var settingsScreen = await _priorityLoader.Run(() => novelBundles
+            var settingsScreen = await _priorityLoader.Run(() => storyAssets
                 .GetBundledPrefab(settingsAddress)
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var settingProcess = new SettingProcess(new SettingProcess.Dependencies
@@ -116,8 +112,8 @@ namespace Novels
                 saveSystem,
                 addresses,
                 episodeRuntime,
-                novelBundles,
-                episodeBundles,
+                storyAssets,
+                storyMedia,
                 mainLoading,
                 episodePreloading);
             var selection = await settingProcess.ShowSettingProcess();
@@ -129,22 +125,19 @@ namespace Novels
 
         private async UniTask<EpisodeStoryData> PreloadEpisode(
             ContentAddressing.ContentAddresses addresses,
-            Bundles.MediaScope episodeBundles,
             CancellationToken cancellationToken)
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             var result = await UniTask.WhenAll(
                 _ctx.Bundles.GetText(addresses.NovelText(_episode.StoryPath))
                     .AttachExternalCancellation(cancellationToken),
-                TryLoadStorySourceMap(addresses, cancellationToken),
-                episodeBundles.GetAssetBundle(_episode.BundleName));
+                TryLoadStorySourceMap(addresses, cancellationToken));
             return new EpisodeStoryData(result.Item1, result.Item2);
 #else
-            var result = await UniTask.WhenAll(
-                _ctx.Bundles.GetText(addresses.NovelText(_episode.StoryPath))
-                    .AttachExternalCancellation(cancellationToken),
-                episodeBundles.GetAssetBundle(_episode.BundleName));
-            return new EpisodeStoryData(result.Item1, string.Empty);
+            var storyText = await _ctx.Bundles.GetText(
+                    addresses.NovelText(_episode.StoryPath))
+                .AttachExternalCancellation(cancellationToken);
+            return new EpisodeStoryData(storyText, string.Empty);
 #endif
         }
 

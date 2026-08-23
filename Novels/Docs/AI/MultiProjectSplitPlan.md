@@ -101,13 +101,13 @@ stories/<storyId>/
 - соответствующие корни `Assets/RemoteAssets/content/<storyId>`;
 - соответствующие Ink, audio и video authoring sources.
 
-### Удалить после переключения
+### Удалено после переключения
 
-- `StreamingAssets/Remote`;
-- embedded test Player и seed builder;
-- Local/Embedded/Hybrid delivery branches;
-- старые `ServerRoot` и compatibility/migration paths;
-- исходники историй и рабочий Catalog UI из Game.
+- Game-owned content build profile, validator и bundle pipeline;
+- `StreamingAssets` и authoring `RemoteAssets` из Game;
+- embedded test Player, seed builder и Local/Embedded/Hybrid delivery branches;
+- старый ScriptableObject-каталог и монолитные ServerRoot tools;
+- эпизодные delivery groups и отдельные loading bundles.
 
 ## Порядок переноса
 
@@ -117,5 +117,5 @@ stories/<storyId>/
 4. Перейти на один bundle истории.
 5. Вынести template, TZM, ZDM и Catalog проекты.
 6. Добавить `novels-tools` для build-local/compose-local/publish-local.
-7. Удалить старый delivery и authoring content из Game.
+7. Удалить старый delivery и authoring content из Game. Выполнено.
 8. Выполнить Editor, Android и iOS сквозную проверку.

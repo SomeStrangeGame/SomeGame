@@ -17,51 +17,31 @@ namespace Novels
             _cancellationToken = cancellationToken;
         }
 
-        internal UniTask<Bundles.ContentDeliveryLease> PrepareNovel(
+        internal UniTask<Bundles.ContentDeliveryLease> PrepareStory(
             Bootstrap.BootstrapController bootstrap,
             string contentId)
         {
             return PrepareGroup(
                 bootstrap,
-                ContentAddressing.ContentPackageConvention.SharedDeliveryGroup(contentId));
-        }
-
-        internal UniTask<Bundles.ContentDeliveryLease> PrepareEpisode(
-            Bootstrap.BootstrapController bootstrap,
-            Content.NovelDefinition definition,
-            Content.EpisodeDefinition episode)
-        {
-            return PrepareGroup(
-                bootstrap,
-                ContentAddressing.ContentPackageConvention.EpisodeDeliveryGroup(
-                    definition.Id,
-                    episode.Id));
+                ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(contentId));
         }
 
         private async UniTask<Bundles.ContentDeliveryLease> PrepareGroup(
             Bootstrap.BootstrapController bootstrap,
             string group)
         {
-            if (_bundles.DeliveryMode == Bundles.ContentDeliveryMode.Embedded
-                || !_bundles.HasDeliveryGroup(group))
+            if (!_bundles.HasDeliveryGroup(group))
             {
                 return null;
             }
             const string message = ApplicationTexts.PreparingContent;
             bootstrap.ShowLoading(message);
-            try
-            {
-                return await _bundles.PrepareDeliveryGroup(
-                    group,
-                    progress => bootstrap.ShowLoading(
-                        $"{message} {progress.CompletedItems}/{progress.TotalItems} "
-                        + $"({progress.Ratio:P0})"),
-                    _cancellationToken);
-            }
-            finally
-            {
-                bootstrap.Hide();
-            }
+            return await _bundles.PrepareDeliveryGroup(
+                group,
+                progress => bootstrap.ShowLoading(
+                    $"{message} {progress.CompletedItems}/{progress.TotalItems} "
+                    + $"({progress.Ratio:P0})"),
+                _cancellationToken);
         }
     }
 }

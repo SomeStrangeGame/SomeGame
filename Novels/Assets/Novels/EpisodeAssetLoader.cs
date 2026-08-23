@@ -33,11 +33,9 @@ namespace Novels
         internal struct Dependencies
         {
             internal Bundles.Scope Bundles;
-            internal Bundles.Scope SharedBundles;
             internal PriorityLoader PriorityLoader;
             internal ContentAddressing.ContentAddresses Addresses;
             internal string BundleName;
-            internal string SharedBundleName;
             internal FallbackAssets Fallbacks;
             internal CancellationToken CancellationToken;
         }
@@ -49,18 +47,12 @@ namespace Novels
             _ctx = ctx;
             if (ctx.Bundles == null)
                 throw new ArgumentNullException(nameof(ctx.Bundles));
-            if (ctx.SharedBundles == null)
-                throw new ArgumentNullException(nameof(ctx.SharedBundles));
             if (ctx.PriorityLoader == null)
                 throw new ArgumentNullException(nameof(ctx.PriorityLoader));
             if (ctx.Addresses == null)
                 throw new ArgumentNullException(nameof(ctx.Addresses));
             if (string.IsNullOrWhiteSpace(ctx.BundleName))
-                throw new ArgumentException("Episode bundle name must not be empty.", nameof(ctx.BundleName));
-            if (string.IsNullOrWhiteSpace(ctx.SharedBundleName))
-                throw new ArgumentException(
-                    "Shared bundle name must not be empty.",
-                    nameof(ctx.SharedBundleName));
+                throw new ArgumentException("Story bundle name must not be empty.", nameof(ctx.BundleName));
             if (ctx.Fallbacks == null)
                 throw new ArgumentNullException(nameof(ctx.Fallbacks));
         }
@@ -113,9 +105,9 @@ namespace Novels
                 return prefab;
 
             var sharedAddress = new Bundles.BundleAssetAddress(
-                _ctx.SharedBundleName,
+                _ctx.BundleName,
                 sharedAssetName);
-            var shared = await _ctx.PriorityLoader.Run(() => _ctx.SharedBundles
+            var shared = await _ctx.PriorityLoader.Run(() => _ctx.Bundles
                 .TryGetBundledPrefab(sharedAddress)
                 .AttachExternalCancellation(_ctx.CancellationToken));
             return shared != null ? shared : fallback;
