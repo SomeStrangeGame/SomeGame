@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.Networking;
 
 namespace Novels
 {
@@ -12,29 +13,42 @@ namespace Novels
         internal sealed class Resources : IDisposable
         {
             internal Resources(
-                Catalog.NovelCatalogAsset catalog,
+                IReadOnlyList<Catalog.NovelCatalogEntry> entries,
+                IReadOnlyDictionary<string, Sprite> covers,
                 GameObject screen,
                 Bundles.ContentDeliveryLease deliveryLease)
             {
-                Catalog = catalog;
+                Entries = entries ?? throw new ArgumentNullException(nameof(entries));
+                Covers = covers ?? throw new ArgumentNullException(nameof(covers));
                 Screen = screen;
                 _deliveryLease = deliveryLease;
             }
 
             private readonly Bundles.ContentDeliveryLease _deliveryLease;
 
-            internal Catalog.NovelCatalogAsset Catalog { get; }
+            internal IReadOnlyList<Catalog.NovelCatalogEntry> Entries { get; }
+            internal IReadOnlyDictionary<string, Sprite> Covers { get; }
             internal GameObject Screen { get; }
 
             public void Dispose()
             {
                 _deliveryLease?.Dispose();
+                foreach (var cover in Covers.Values)
+                {
+                    if (cover == null)
+                        continue;
+                    var texture = cover.texture;
+                    UnityEngine.Object.Destroy(cover);
+                    if (texture != null)
+                        UnityEngine.Object.Destroy(texture);
+                }
             }
         }
 
         internal struct Dependencies
         {
             internal Bundles.Entity Bundles;
+            internal Bundles.IContentSource RootContentSource;
             internal PriorityLoader PriorityLoader;
             internal string ClientVersion;
             internal int MinimumSupportedSchemaVersion;
@@ -50,6 +64,8 @@ namespace Novels
             _ctx = ctx;
             if (ctx.Bundles == null)
                 throw new ArgumentNullException(nameof(ctx.Bundles));
+            if (ctx.RootContentSource == null)
+                throw new ArgumentNullException(nameof(ctx.RootContentSource));
             if (ctx.PriorityLoader == null)
                 throw new ArgumentNullException(nameof(ctx.PriorityLoader));
             if (string.IsNullOrWhiteSpace(ctx.ClientVersion))
@@ -106,7 +122,7 @@ namespace Novels
         internal async UniTask<Catalog.NovelCatalogEntry> SelectContent(
             Resources resources)
         {
-            var availableEntries = resources.Catalog.Entries
+            var availableEntries = resources.Entries
                 .Where(entry => entry.IsEnabled)
                 .ToArray();
             if (availableEntries.Length == 0)
@@ -121,11 +137,14 @@ namespace Novels
                     entry.ContentId,
                     text.Title,
                     text.Description,
-                    ApplicationTexts.ContentAvailable);
+                    ApplicationTexts.ContentAvailable,
+                    cover: resources.Covers.TryGetValue(entry.ContentId, out var cover)
+                        ? cover
+                        : null);
             }).ToArray();
             using var selection = CreateSelection(resources.Screen);
             var selected = await selection.Select(
-                resources.Catalog.Text.Title,
+                ApplicationTexts.CatalogTitle,
                 items);
             return entries[selected.Id];
         }
@@ -172,24 +191,102 @@ namespace Novels
             await _ctx.PriorityLoader.Run(() => _ctx.Bundles
                 .GetAssetBundle(Catalog.CatalogAddresses.BundleName)
                 .AttachExternalCancellation(_ctx.CancellationToken));
-            var catalog = await _ctx.PriorityLoader.Run(() => _ctx.Bundles
-                .GetBundledSO<Catalog.NovelCatalogAsset>(
-                    new Bundles.BundleAssetAddress(
-                        Catalog.CatalogAddresses.BundleName,
-                        Catalog.CatalogAddresses.AssetName))
-                .AttachExternalCancellation(_ctx.CancellationToken));
             var screen = await _ctx.PriorityLoader.Run(() => _ctx.Bundles
                 .GetBundledPrefab(new Bundles.BundleAssetAddress(
                     Catalog.CatalogAddresses.BundleName,
                     Catalog.CatalogAddresses.ScreenAssetName))
                 .AttachExternalCancellation(_ctx.CancellationToken));
-            if (catalog == null || screen == null)
+            if (screen == null)
             {
                 throw new InvalidOperationException(
                     $"Catalog assets could not be loaded from "
                     + $"AssetBundle '{Catalog.CatalogAddresses.BundleName}'.");
             }
-            return new Resources(catalog, screen, deliveryLease);
+            var loaded = await LoadEntries();
+            return new Resources(loaded.entries, loaded.covers, screen, deliveryLease);
+        }
+
+        private async UniTask<(
+            IReadOnlyList<Catalog.NovelCatalogEntry> entries,
+            IReadOnlyDictionary<string, Sprite> covers)> LoadEntries()
+        {
+            var registryJson = await _ctx.RootContentSource.DownloadText(
+                ContentAddressing.ContentPackageConvention.CatalogRegistryPath,
+                _ctx.CancellationToken);
+            var registry = Catalog.Contracts.CatalogContractCodec
+                .DeserializeRegistry(registryJson);
+            var result = new List<(int order, Catalog.NovelCatalogEntry entry)>();
+            var covers = new Dictionary<string, Sprite>(StringComparer.OrdinalIgnoreCase);
+            try
+            {
+                foreach (var registryEntry in registry.stories)
+                {
+                    if (!registryEntry.enabled)
+                        continue;
+                    var cardJson = await _ctx.RootContentSource.DownloadText(
+                        ContentAddressing.ContentPackageConvention.StoryCardPath(
+                            registryEntry.storyId),
+                        _ctx.CancellationToken);
+                    var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
+                        cardJson,
+                        registryEntry.storyId);
+                    covers.Add(card.storyId, await LoadCover(card));
+                    result.Add((
+                        registryEntry.order,
+                        new Catalog.NovelCatalogEntry(
+                            card.storyId,
+                            card.title,
+                            card.description)));
+                }
+            }
+            catch
+            {
+                DestroyCovers(covers.Values);
+                throw;
+            }
+            var entries = result
+                .OrderBy(item => item.order)
+                .ThenBy(item => item.entry.ContentId, StringComparer.Ordinal)
+                .Select(item => item.entry)
+                .ToArray();
+            return (entries, covers);
+        }
+
+        private static void DestroyCovers(IEnumerable<Sprite> covers)
+        {
+            foreach (var cover in covers)
+            {
+                if (cover == null)
+                    continue;
+                var texture = cover.texture;
+                UnityEngine.Object.Destroy(cover);
+                if (texture != null)
+                    UnityEngine.Object.Destroy(texture);
+            }
+        }
+
+        private async UniTask<Sprite> LoadCover(Catalog.Contracts.StoryCard card)
+        {
+            var path = ContentAddressing.ContentPackageConvention.StoryCoverPath(
+                card.storyId,
+                card.cover);
+            using var request = UnityWebRequestTexture.GetTexture(
+                _ctx.RootContentSource.GetUrl(path),
+                true);
+            await request.SendWebRequest().ToUniTask(
+                cancellationToken: _ctx.CancellationToken);
+            if (request.result != UnityWebRequest.Result.Success)
+            {
+                throw new Bundles.ContentSourceException(
+                    $"Story cover '{path}' could not be loaded: {request.error}");
+            }
+            var texture = DownloadHandlerTexture.GetContent(request);
+            if (texture == null)
+                throw new Bundles.ContentSourceException($"Story cover '{path}' is empty.");
+            return Sprite.Create(
+                texture,
+                new Rect(0, 0, texture.width, texture.height),
+                new Vector2(0.5f, 0.5f));
         }
 
         private Catalog.CatalogController CreateSelection(GameObject screen) =>

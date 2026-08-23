@@ -14,6 +14,7 @@
     "somegame.loading-priority": "file:../../Packages/LoadingPriority",
     "somegame.logs": "file:../../Packages/Logs",
     "somegame.novel-ink": "file:../../Packages/NovelInk",
+    "somegame.novels-content-sdk": "file:../../Packages/NovelsContentSdk",
     "somegame.setting": "file:../../Packages/Setting",
     "somegame.ui-transitions": "file:../../Packages/UITransitions",
     "com.unity.modules.adaptiveperformance": "1.0.0",

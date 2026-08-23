@@ -77,8 +77,6 @@ namespace Editor
             {
                 [Novels.Catalog.CatalogAddresses.BundleName] =
                     Novels.ContentAddressing.ContentPackageConvention.ApplicationDeliveryGroup,
-                [Novels.ContentAddressing.ContentPackageConvention.SharedLoadingBundleName] =
-                    Novels.ContentAddressing.ContentPackageConvention.ApplicationDeliveryGroup,
             };
 
             foreach (var catalogEntry in catalog.Entries)

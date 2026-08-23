@@ -43,9 +43,15 @@ namespace Editor
             IReadOnlyDictionary<string, string> knownDeliveryIndex)
         {
             var platform = AssetBundleBuildPipeline.GetPlatformName(target);
+            var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
+                ?? throw new InvalidOperationException(
+                    "Unity project root cannot be resolved.");
             var remoteRoot = Path.Combine(
                 string.IsNullOrWhiteSpace(remoteBasePath)
-                    ? Path.Combine(Application.streamingAssetsPath, "Remote")
+                    ? Path.Combine(
+                        projectRoot,
+                        profile.PublishRoot,
+                        "Remote")
                     : remoteBasePath,
                 platform);
             var path = Path.Combine(remoteRoot, "release.json");

@@ -14,7 +14,7 @@ By default, builds and validates Android/iOS content locally.
 Options:
   --config <path>          Load configuration file (default: Tools/release-content.env).
   --local-only             Never upload, verify remote content, or build Players.
-  --skip-content-build     Use the existing Build/NovelContent/ServerRoot.
+  --skip-content-build     Use the existing Build/LocalContent.
   --server-url <https-url> Public URL corresponding to ServerRoot.
   --upload                 Upload through rsync using the configured target.
   --no-upload              Disable upload even when enabled by configuration.
@@ -152,7 +152,7 @@ fi
 android_output=${android_output:A}
 ios_output=${ios_output:A}
 server_url=${server_url%/}
-server_root=${project_root}/Build/NovelContent/ServerRoot
+server_root=${project_root}/Build/LocalContent
 log_root=${project_root}/Build/Logs
 content_log=${log_root}/content-release.log
 

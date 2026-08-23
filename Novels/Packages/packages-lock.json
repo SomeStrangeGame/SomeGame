@@ -124,6 +124,18 @@
         "com.inkle.ink-unity-integration": "1.2.0"
       }
     },
+    "somegame.novels-content-sdk": {
+      "version": "file:../../Packages/NovelsContentSdk",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "somegame.novel-ink": "0.0.1",
+        "somegame.ui-transitions": "0.0.1",
+        "com.cysharp.unitask": "2.5.10",
+        "com.unity.ugui": "2.0.0"
+      }
+    },
     "somegame.setting": {
       "version": "file:../../Packages/Setting",
       "depth": 0,

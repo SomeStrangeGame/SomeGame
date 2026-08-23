@@ -1,0 +1,21 @@
+{
+    "name": "Novels.ContentSdk.Editor",
+    "rootNamespace": "",
+    "references": [
+        "GUID:e2cbfeb45c46b40aaa8387f79db2b162",
+        "GUID:6820401752ad470d9242a7a164f36117",
+        "GUID:3b89f9e6e94d45f2a6cd7001c9720201",
+        "GUID:64ebfae35cb14b57ba4770741d9b1aa3"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}

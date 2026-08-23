@@ -7,7 +7,7 @@
 - Unity 6000.3.11f1.
 - Единственная стартовая сцена: `Assets/Novels/Novels.unity`.
 - Визуальные новеллы читаются из Ink, а изображения, UI и настройки загружаются из AssetBundle.
-- В Editor источником контента служит `StreamingAssets`; обычные Android/iOS-сборки используют удалённый `ServerRoot`. Для локальной проверки существует embedded test Player.
+- В Editor источником является готовый publish-root `Build/LocalContent`; Android/iOS используют удалённый HTTP(S) root. Runtime не читает исходные authoring assets напрямую.
 - `Choose` и `Wardrobe` намеренно остаются разными фичами: сейчас их UI похож, но дальнейшее поведение будет расходиться.
 
 ## Где начинать чтение
@@ -16,6 +16,7 @@
 2. [ContentPipeline.md](ContentPipeline.md) — валидация, AssetBundle и Player-сборки.
 3. [InkSyntax.md](InkSyntax.md) — поддерживаемые сценарные команды.
 4. [RefactoringHistory.md](RefactoringHistory.md) — история решений и прежние проверки.
+5. [MultiProjectSplitPlan.md](MultiProjectSplitPlan.md) — актуальный план разделения на Game, SDK, Catalog и проекты историй.
 
 ## Рабочие ограничения
 

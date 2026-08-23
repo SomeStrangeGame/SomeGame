@@ -1,98 +1,89 @@
 # Content Pipeline
 
-## Быстрая работа в Editor
+## Единая команда
 
-- Валидация: `Novels > Content > Validate`.
-- Полная сборка AssetBundle: `Novels > Content > Build All Bundles`.
-- Полная очистка runtime-кеша: `Novels > Content > Clear Cache`.
-- Пересоздание локального UI: команды в `Novels > UI`.
-
-## Терминал
-
-Из корня `Novels`:
+Из корня репозитория:
 
 ```bash
-Tools/validate-novels.sh validate
+Tools/novels-tools/novels-content doctor
+Tools/novels-tools/novels-content build-local all
 ```
 
-Проверяет authoring и существующий built output.
+Сборка выполняется строго последовательно: Catalog UI, затем каждый найденный
+story-project. Новая история обнаруживается автоматически по файлу
+`Projects/novels-<storyId>/Config/card.json`.
+
+Можно пересобрать только одну часть:
 
 ```bash
-Tools/validate-novels.sh content
+Tools/novels-tools/novels-content build-local catalog
+Tools/novels-tools/novels-content build-local tzm
+Tools/novels-tools/novels-content build-local zdm
 ```
 
-Собирает и валидирует контент по активному `NovelContentBuildProfile`.
+После каждой сборки CLI автоматически обновляет композицию для Game в
+`Novels/Build/LocalContent`. Если bundles уже готовы, композицию можно обновить
+без запуска Unity:
 
 ```bash
-Tools/release-novel-content.sh --local-only
+Tools/novels-tools/novels-content compose-local
 ```
 
-Создаёт локальный Android/iOS release и готовый к публикации каталог `Build/NovelContent/ServerRoot`, ничего не загружая на сервер.
+## Что принадлежит проектам
 
-## Результат публикации
+- `novels-catalog` собирает только визуальный Catalog UI bundle и хранит
+  центральный `Config/catalog.json` (`storyId`, порядок, enabled).
+- Каждый `novels-<storyId>` хранит весь контент одной истории, Ink и
+  `Config/card.json` с собственной `Config/cover.*`.
+- Каждый контентный проект содержит `Config/build.json`. Поле
+  `minimumClientVersion` явно задаёт минимальную совместимую версию Game и не
+  связано с `PlayerSettings.bundleVersion` контентного Unity-проекта.
+- Каждая история собирается в один большой bundle на платформу. Эпизодных и
+  shared bundles нет.
+- `novels-game` не содержит authoring-контент историй и не кладёт bundles в
+  `StreamingAssets`.
 
-`ServerRoot` содержит:
+## Локальный и серверный root
 
 ```text
-ServerRoot/
-  deployment.json
-  Files/<sha256>.bin
-  Remote/Android/release.json
-  Remote/Android/<bundles>
-  Remote/iOS/release.json
-  Remote/iOS/<bundles>
+LocalContent/
+  catalog/
+    registry/catalog.json
+    ui/Remote/<platform>/release.json
+    ui/Remote/<platform>/<bundle>
+  stories/<storyId>/
+    card.json
+    cover.<extension>
+    Files/<sha256>.bin
+    Remote/<platform>/release.json
+    Remote/<platform>/<bundle>
 ```
 
-На сервер переносится содержимое `ServerRoot` без переименования каталогов.
+Editor читает `Novels/Build/LocalContent` через `FileSystemContentSource`.
+Android/iOS читают идентичное дерево через `HttpContentSource`; отдельных
+Preview, Embedded и StreamingAssets-режимов нет.
 
-## Player
-
-Embedded Android APK для проверки без сервера:
+## Локальная публикация
 
 ```bash
-Tools/build-embedded-test-player.sh
+Tools/novels-tools/novels-content publish-local /absolute/server/root
 ```
 
-Remote Player:
+Команда зеркально копирует готовую композицию в указанную папку. Для реального
+HTTP-хостинга эта папка является корнем удалённого контента.
 
-```bash
-Tools/build-remote-player.sh Android https://example.test/content Build/Players/Novels.apk
-Tools/build-remote-player.sh iOS https://example.test/content Build/Players/iOS
-```
-
-Remote Android development APK с debug-подписью и номером текущей строки Ink:
-
-```bash
-Tools/build-remote-player.sh Android https://example.test/content \
-  Build/Players/Novels-dev.apk --development
-```
-
-Editor всегда читает `StreamingAssets`. Обычный Player требует HTTP(S) root. Embedded test Player создаётся отдельным скриптом и не меняет рабочий проект.
-
-## Алиасы видео
-
-Если разные команды Ink должны показывать один ролик, физически хранится только один
-MP4. Соответствие имён задаётся в `_videoAliases` соответствующего
-`NovelContentAsset`:
+## Runtime-порядок
 
 ```text
-причал с катерами -> причал
+catalog/registry/catalog.json
+  -> stories/<id>/card.json
+  -> Catalog UI release
+  -> выбор истории
+  -> stories/<id>/release
+  -> проверка SHA-256 и кеш
+  -> запуск истории
 ```
 
-Ink остаётся без изменений. Runtime и delivery index разрешают алиас до построения
-адреса `novelsvideos/<content>/<name>.mp4`. Валидация останавливает сборку, если
-целевой файл отсутствует, и предупреждает об алиасах, которые больше не используются.
-
-## Порядок проверки
-
-```text
-индексация проекта
-  -> анализ Ink и INCLUDE
-  -> проверка ссылок на контент
-  -> сборка bundles во staging
-  -> построение release/deployment manifests
-  -> проверка размеров и SHA-256
-  -> атомарная публикация результата
-```
-
-Warnings собираются в одно сгруппированное сообщение и не останавливают сборку. Errors также группируются, после чего сборка прекращается.
+Catalog UI и каждая история имеют независимые release и namespace кеша. Поэтому
+историю можно пересобрать и опубликовать атомарно, не пересобирая приложение,
+каталог или другие истории.

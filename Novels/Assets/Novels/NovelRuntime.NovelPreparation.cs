@@ -80,10 +80,15 @@ namespace Novels
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoadingAddress = new Bundles.BundleAssetAddress(
                 _definition.MainLoadingBundleName,
-                addresses.MainLoadingPrefab(BootstrapAddresses.ScreenAssetName));
-            var mainLoadingScreen = await _priorityLoader.Run(() => novelBundles
-                .GetBundledPrefab(mainLoadingAddress)
+                addresses.SharedLoadingPrefab(
+                    ContentAddressing.ContentAssetNames.EpisodeScreen));
+            var bundledMainLoadingScreen = await _priorityLoader.Run(() => novelBundles
+                .TryGetBundledPrefab(mainLoadingAddress)
                 .AttachExternalCancellation(_ctx.CancellationToken));
+            var mainLoadingScreen = bundledMainLoadingScreen
+                != null
+                ? bundledMainLoadingScreen
+                : _ctx.FallbackAssets.Loading;
             var mainLoading = CreateMainLoading(mainLoadingScreen);
 
             var episodePreloading = PreloadEpisode(

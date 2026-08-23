@@ -1,0 +1,16 @@
+{
+  "name": "somegame.novels-content-sdk",
+  "displayName": "Novels Content SDK",
+  "version": "1.0.0",
+  "unity": "6000.3",
+  "description": "Shared runtime contracts, authoring conventions, and build tooling for Novels content projects.",
+  "category": "SomeGame package",
+  "type": "tool",
+  "dependencies": {
+    "somegame.disposable": "0.0.1",
+    "somegame.novel-ink": "0.0.1",
+    "somegame.ui-transitions": "0.0.1",
+    "com.cysharp.unitask": "2.5.10",
+    "com.unity.ugui": "2.0.0"
+  }
+}

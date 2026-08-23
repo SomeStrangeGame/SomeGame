@@ -6,7 +6,11 @@ namespace Bundles
     {
         public static string GetCurrent()
         {
-#if UNITY_STANDALONE_OSX
+#if UNITY_EDITOR_OSX
+            // The active build profile can define UNITY_ANDROID or UNITY_IOS while
+            // the macOS Editor still needs bundles built for its host platform.
+            return "Mac";
+#elif UNITY_STANDALONE_OSX
             return "Mac";
 #elif UNITY_STANDALONE_WIN
             return "Win";

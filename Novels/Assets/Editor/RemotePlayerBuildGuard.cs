@@ -13,8 +13,7 @@ namespace Editor
             if (!NovelCiValidation.IsAuthorizedPlayerBuild)
             {
                 throw new BuildFailedException(
-                    "Novel Player builds must use Tools/build-remote-player.sh or "
-                    + "Tools/build-embedded-test-player.sh.");
+                    "Novel Player builds must use Tools/build-remote-player.sh.");
             }
         }
     }

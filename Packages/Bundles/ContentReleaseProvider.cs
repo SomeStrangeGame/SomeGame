@@ -10,6 +10,7 @@ namespace Bundles
         private readonly IContentSource _source;
         private readonly Cache.Entity _cache;
         private readonly string _platform;
+        private readonly string _cachePrefix;
         private readonly CancellationToken _cancellationToken;
         private readonly Action<(LogType type, string message)> _onLog;
         private ContentReleaseSession _activatedSession;
@@ -17,12 +18,14 @@ namespace Bundles
         internal ContentReleaseProvider(
             IContentSource source,
             Cache.Entity cache,
+            string cacheNamespace,
             string platform,
             CancellationToken cancellationToken,
             Action<(LogType type, string message)> onLog)
         {
             _source = source;
             _cache = cache;
+            _cachePrefix = ContentCacheNamespace.CreatePrefix(cacheNamespace);
             _platform = platform;
             _cancellationToken = cancellationToken;
             _onLog = onLog;
@@ -37,8 +40,8 @@ namespace Bundles
             int maximumSupportedSchemaVersion)
         {
             var path = $"Remote/{_platform}/release.json";
-            var cachePath = $"Remote/{_platform}/Releases/current.json";
-            var previousCachePath = $"Remote/{_platform}/Releases/previous.json";
+            var cachePath = CachePath("current.json");
+            var previousCachePath = CachePath("previous.json");
             ContentReleaseDto release;
             string candidateJson = null;
             try
@@ -109,8 +112,8 @@ namespace Bundles
             if (ReferenceEquals(Current, _activatedSession)
                 || string.IsNullOrEmpty(Current.CandidateJson))
                 return;
-            var cachePath = $"Remote/{_platform}/Releases/current.json";
-            var previousCachePath = $"Remote/{_platform}/Releases/previous.json";
+            var cachePath = CachePath("current.json");
+            var previousCachePath = CachePath("previous.json");
             if (_cache.Exists(cachePath))
             {
                 var activeJson = _cache.TextFromCache(cachePath);
@@ -177,5 +180,8 @@ namespace Bundles
                 minimumSupportedSchemaVersion,
                 maximumSupportedSchemaVersion);
         }
+
+        private string CachePath(string fileName) =>
+            $"{_cachePrefix}Remote/{_platform}/Releases/{fileName}";
     }
 }

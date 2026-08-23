@@ -81,8 +81,8 @@ namespace Editor
                 }
                 foreach (var result in results)
                 {
-                    result.RemotePath = Path.Combine(
-                        Application.streamingAssetsPath,
+                    result.RemotePath = GetProjectDestination(
+                        profile.PublishRoot,
                         "Remote",
                         result.Platform);
                     result.PublishPath = GetProjectDestination(profile.PublishRoot);
@@ -135,7 +135,6 @@ namespace Editor
         {
             var staged = new List<(string path, string destination)>
             {
-                (RemoteRoot, Path.Combine(Application.streamingAssetsPath, "Remote")),
                 (PublishRoot, GetProjectDestination(profile.PublishRoot)),
             };
             foreach (var result in results)
@@ -159,6 +158,16 @@ namespace Editor
                 _projectPath,
                 root.Replace('/', Path.DirectorySeparatorChar),
                 platform);
+
+        private string GetProjectDestination(
+            string root,
+            string first,
+            string second) =>
+            Path.Combine(
+                _projectPath,
+                root.Replace('/', Path.DirectorySeparatorChar),
+                first,
+                second);
 
         private string GetProjectDestination(string root) =>
             Path.Combine(

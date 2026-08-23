@@ -31,10 +31,9 @@ namespace Novels
         private readonly Dependencies _ctx;
         private readonly ApplicationEnvironment _environment;
         private readonly PriorityLoader _priorityLoader;
-        private readonly Bundles.Entity _bundles;
+        private readonly Bundles.Entity _catalogBundles;
         private readonly DisposableSlot<NovelRuntime> _activeNovel;
         private readonly CatalogFlow _catalogFlow;
-        private readonly ContentDeliveryFlow _contentDeliveryFlow;
 
         internal ApplicationRuntime(Dependencies ctx)
         {
@@ -45,10 +44,15 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.ContentSource));
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
-            _bundles = CreateBundles().AddTo(this);
+            _catalogBundles = CreateBundles(
+                new Bundles.PrefixedContentSource(
+                    _ctx.ContentSource,
+                    ContentAddressing.ContentPackageConvention.CatalogUiPrefix),
+                "catalog").AddTo(this);
             _catalogFlow = new CatalogFlow(new CatalogFlow.Dependencies
             {
-                Bundles = _bundles,
+                Bundles = _catalogBundles,
+                RootContentSource = _ctx.ContentSource,
                 PriorityLoader = _priorityLoader,
                 ClientVersion = _environment.ClientVersion,
                 MinimumSupportedSchemaVersion =
@@ -58,9 +62,6 @@ namespace Novels
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _ctx.OnLog,
             });
-            _contentDeliveryFlow = new ContentDeliveryFlow(
-                _bundles,
-                _environment.CancellationToken);
             _activeNovel = new DisposableSlot<NovelRuntime>().AddTo(this);
         }
 
@@ -115,9 +116,18 @@ namespace Novels
             CatalogFlow.Resources catalog,
             Bootstrap.BootstrapController bootstrap)
         {
+            using var storyBundles = CreateBundles(
+                new Bundles.PrefixedContentSource(
+                    _ctx.ContentSource,
+                    ContentAddressing.ContentPackageConvention.StoryPrefix(
+                        content.ContentId)),
+                $"story-{content.ContentId}");
+            var contentDeliveryFlow = new ContentDeliveryFlow(
+                storyBundles,
+                _environment.CancellationToken);
             var novel = new NovelRuntime(new NovelRuntime.Dependencies
             {
-                Bundles = _bundles,
+                Bundles = storyBundles,
                 Content = content,
                 PersistentDataPath = _environment.PersistentDataPath,
                 TargetCamera = _environment.TargetCamera,
@@ -126,9 +136,9 @@ namespace Novels
                 SelectEpisode = definition =>
                     _catalogFlow.SelectEpisode(definition, catalog.Screen),
                 PrepareNovelContent = contentId =>
-                    _contentDeliveryFlow.PrepareNovel(bootstrap, contentId),
+                    contentDeliveryFlow.PrepareNovel(bootstrap, contentId),
                 PrepareEpisodeContent = (definition, episode) =>
-                    _contentDeliveryFlow.PrepareEpisode(
+                    contentDeliveryFlow.PrepareEpisode(
                         bootstrap,
                         definition,
                         episode),
@@ -138,11 +148,18 @@ namespace Novels
                 OnStorySourceChanged = _ctx.OnStorySourceChanged,
             });
             _activeNovel.Replace(novel);
+            var storyReleaseLoaded = false;
             try
             {
                 EpisodeRunResult result;
                 try
                 {
+                    await storyBundles.LoadReleaseAsync(
+                        _environment.ClientVersion,
+                        ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion,
+                        ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion);
+                    storyReleaseLoaded = true;
+                    storyBundles.ActivateRelease();
                     result = await novel.Init();
                 }
                 catch (Exception exception) when (
@@ -157,9 +174,11 @@ namespace Novels
                         "Story content could not be prepared.",
                         exception: exception,
                         context: new Diagnostics.NovelErrorContext(
-                            _bundles.ReleaseId,
+                            storyReleaseLoaded ? storyBundles.ReleaseId : string.Empty,
                             content.ContentId,
-                            deliveryMode: _bundles.DeliveryMode.ToString())));
+                            deliveryMode: storyReleaseLoaded
+                                ? storyBundles.DeliveryMode.ToString()
+                                : Bundles.ContentDeliveryMode.Remote.ToString())));
                     return ApplicationFlowState.ReturningToCatalog;
                 }
                 if (result.Status == EpisodeRunStatus.Cancelled)
@@ -185,12 +204,15 @@ namespace Novels
             _activeNovel.Value?.FlushSaveSynchronously();
         }
 
-        private Bundles.Entity CreateBundles()
+        private Bundles.Entity CreateBundles(
+            Bundles.IContentSource source,
+            string cacheNamespace)
         {
             return new Bundles.Entity(new Bundles.Entity.Ctx
             {
-                ContentSource = _ctx.ContentSource,
+                ContentSource = source,
                 PersistentDataPath = _environment.PersistentDataPath,
+                CacheNamespace = cacheNamespace,
                 Platform = _environment.ContentPlatform,
                 DeliveryOptions = _environment.RuntimeTuning.ContentDelivery,
                 CancellationToken = _environment.CancellationToken,

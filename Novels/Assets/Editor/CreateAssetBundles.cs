@@ -33,6 +33,12 @@ namespace Editor
             BuildConfiguredBundles();
         }
 
+        [MenuItem("Novels/Content/Build Local Content")]
+        private static void BuildLocalContent()
+        {
+            BuildConfiguredBundles();
+        }
+
         public static void BuildConfiguredBundles()
         {
             var profile = NovelContentBuildProfile.Load();

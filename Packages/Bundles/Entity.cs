@@ -12,6 +12,7 @@ namespace Bundles
         {
             public IContentSource ContentSource;
             public string PersistentDataPath;
+            public string CacheNamespace;
             public string Platform;
             public ContentDeliveryOptions DeliveryOptions;
             public CancellationToken CancellationToken;
@@ -49,6 +50,7 @@ namespace Bundles
             _releases = new ContentReleaseProvider(
                 source,
                 cache,
+                ctx.CacheNamespace,
                 platform,
                 ctx.CancellationToken,
                 ctx.OnLog);

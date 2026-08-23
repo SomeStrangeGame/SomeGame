@@ -1,0 +1,140 @@
+{
+  "dependencies": {
+    "com.cysharp.unitask": {
+      "version": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#73a63b7f672b88f7e9992f6917eb458a8cbb6fa9",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "73a63b7f672b88f7e9992f6917eb458a8cbb6fa9"
+    },
+    "com.inkle.ink-unity-integration": {
+      "version": "https://github.com/inkle/ink-unity-integration.git#770b372042728fc9df9d26ae19287cf6145d47a5",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "770b372042728fc9df9d26ae19287cf6145d47a5"
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.ugui": {
+      "version": "2.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.imgui": "1.0.0"
+      }
+    },
+    "somegame.bundles": {
+      "version": "file:../../../Packages/Bundles",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10",
+        "somegame.cache": "0.0.1"
+      }
+    },
+    "somegame.cache": {
+      "version": "file:../../../Packages/Cache",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "somegame.disposable": {
+      "version": "file:../../../Packages/Disposable",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
+    "somegame.novel-ink": {
+      "version": "file:../../../Packages/NovelInk",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "com.cysharp.unitask": "2.5.10",
+        "com.inkle.ink-unity-integration": "1.2.0"
+      }
+    },
+    "somegame.novels-content-sdk": {
+      "version": "file:../../../Packages/NovelsContentSdk",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "somegame.disposable": "0.0.1",
+        "somegame.novel-ink": "0.0.1",
+        "somegame.ui-transitions": "0.0.1",
+        "com.cysharp.unitask": "2.5.10",
+        "com.unity.ugui": "2.0.0"
+      }
+    },
+    "somegame.ui-transitions": {
+      "version": "file:../../../Packages/UITransitions",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {
+        "com.cysharp.unitask": "2.5.10"
+      }
+    },
+    "com.unity.modules.assetbundle": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.audio": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.imgui": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.jsonserialize": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.ui": {
+      "version": "1.0.0",
+      "depth": 1,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.unitywebrequest": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.modules.unitywebrequestaudio": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.unitywebrequest": "1.0.0",
+        "com.unity.modules.audio": "1.0.0"
+      }
+    },
+    "com.unity.modules.video": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {
+        "com.unity.modules.audio": "1.0.0",
+        "com.unity.modules.ui": "1.0.0",
+        "com.unity.modules.unitywebrequest": "1.0.0"
+      }
+    }
+  }
+}

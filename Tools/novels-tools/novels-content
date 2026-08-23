@@ -1,0 +1,146 @@
+#!/bin/zsh
+set -euo pipefail
+
+TOOL_DIR=${0:A:h}
+REPOSITORY_ROOT=${TOOL_DIR:h:h}
+GAME_PROJECT="$REPOSITORY_ROOT/Novels"
+PROJECTS_ROOT="$REPOSITORY_ROOT/Projects"
+UNITY_BIN=${NOVELS_UNITY_BIN:-/Applications/Unity/Hub/Editor/6000.3.11f1/Unity.app/Contents/MacOS/Unity}
+BUILD_METHOD=${NOVELS_BUILD_METHOD:-Novels.ContentSdk.Editor.AtomicContentBuild.BuildLocal}
+
+usage() {
+  print 'Usage:'
+  print '  novels-content doctor'
+  print '  novels-content build-local <catalog|story-id|all>'
+  print '  novels-content compose-local'
+  print '  novels-content publish-local <destination-directory>'
+}
+
+project_path() {
+  local project="$PROJECTS_ROOT/novels-$1"
+  [[ -f "$project/ProjectSettings/ProjectVersion.txt" ]] || {
+    print -u2 "Unknown content project: $1"
+    return 2
+  }
+  print "$project"
+}
+
+project_prefix() {
+  case "$1" in
+    catalog) print 'catalog/ui' ;;
+    *) print "stories/$1" ;;
+  esac
+}
+
+story_ids() {
+  local card
+  for card in "$PROJECTS_ROOT"/novels-*/Config/card.json(N); do
+    local project=${card:h:h}
+    local name=${project:t}
+    print "${name#novels-}"
+  done
+}
+
+doctor() {
+  local failed=0
+  [[ -x "$UNITY_BIN" ]] || { print -u2 "Unity executable is missing: $UNITY_BIN"; failed=1; }
+  local ids=(catalog ${(f)"$(story_ids)"})
+  for id in $ids; do
+    local project=$(project_path "$id")
+    [[ -f "$project/ProjectSettings/ProjectVersion.txt" ]] || {
+      print -u2 "Unity project is incomplete: $project"
+      failed=1
+    }
+    [[ -f "$project/Config/build.json" ]] || {
+      print -u2 "Content build configuration is missing: $project/Config/build.json"
+      failed=1
+    }
+  done
+  [[ $failed -eq 0 ]] || return 1
+  print 'novels-content: configuration is valid.'
+}
+
+build_one() {
+  local id=$1
+  local project=$(project_path "$id")
+  local log="$project/Build/build-local.log"
+  mkdir -p "$project/Build"
+  print "Building $id..."
+  "$UNITY_BIN" -batchmode -quit -nographics \
+    -projectPath "$project" \
+    -executeMethod "$BUILD_METHOD" \
+    -logFile "$log"
+  print "Built $id. Log: $log"
+}
+
+copy_tree() {
+  local source=$1
+  local destination=$2
+  [[ -d "$source" ]] || {
+    print -u2 "Built content is missing: $source"
+    return 1
+  }
+  mkdir -p "$destination"
+  rsync -a --delete "$source/" "$destination/"
+}
+
+compose_local() {
+  local destination="$GAME_PROJECT/Build/LocalContent"
+  mkdir -p "$destination/catalog/registry"
+  local catalog_build="$(project_path catalog)/Build/LocalContent"
+  if [[ -d "$catalog_build" ]]; then
+    copy_tree "$catalog_build" "$destination/$(project_prefix catalog)"
+  fi
+  local id
+  for id in ${(f)"$(story_ids)"}; do
+    local story_build="$(project_path "$id")/Build/LocalContent"
+    [[ -d "$story_build" ]] || continue
+    copy_tree "$story_build" "$destination/$(project_prefix "$id")"
+    cp "$(project_path "$id")/Config/card.json" \
+      "$destination/$(project_prefix "$id")/card.json"
+    local covers=("$(project_path "$id")"/Config/cover.*(N))
+    [[ ${#covers} -eq 1 ]] || {
+      print -u2 "Story '$id' must contain exactly one Config/cover.* file."
+      return 1
+    }
+    cp "$covers[1]" \
+      "$destination/$(project_prefix "$id")/${covers[1]:t}"
+  done
+  cp "$(project_path catalog)/Config/catalog.json" \
+    "$destination/catalog/registry/catalog.json"
+  print "Composed local content: $destination"
+}
+
+build_local() {
+  local target=${1:-}
+  [[ -n "$target" ]] || { usage; return 2; }
+  doctor
+  if [[ "$target" == all ]]; then
+    local ids=(catalog ${(f)"$(story_ids)"})
+    for id in $ids; do build_one "$id"; done
+  else
+    build_one "$target"
+  fi
+  compose_local
+}
+
+publish_local() {
+  local destination=${1:-}
+  [[ -n "$destination" ]] || { usage; return 2; }
+  local source="$GAME_PROJECT/Build/LocalContent"
+  [[ -d "$source" ]] || {
+    print -u2 "Local content is missing. Run build-local first."
+    return 1
+  }
+  mkdir -p "$destination"
+  rsync -a --delete "$source/" "$destination/"
+  print "Published content to: $destination"
+}
+
+case ${1:-} in
+  doctor) doctor ;;
+  build-local) build_local "${2:-}" ;;
+  compose-local) compose_local ;;
+  publish-local) publish_local "${2:-}" ;;
+  *) usage; exit 2 ;;
+esac

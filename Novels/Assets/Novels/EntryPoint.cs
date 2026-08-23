@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
@@ -80,8 +81,11 @@ namespace Novels
             CancellationToken cancellationToken,
             Bundles.ContentDeliveryOptions options)
         {
-#if UNITY_EDITOR || NOVELS_EMBEDDED_TEST_PLAYER
-            return new Bundles.StreamingAssetsSource(
+#if UNITY_EDITOR
+            var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
+                ?? throw new InvalidOperationException("Unity project root cannot be resolved.");
+            return new Bundles.FileSystemContentSource(
+                Path.Combine(projectRoot, "Build", "LocalContent"),
                 cancellationToken,
                 options.LocalRequestPolicy);
 #else

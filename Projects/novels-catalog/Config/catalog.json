@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "stories": [
+    {
+      "storyId": "tzm",
+      "order": 10,
+      "enabled": true
+    },
+    {
+      "storyId": "zdm",
+      "order": 20,
+      "enabled": true
+    }
+  ]
+}
