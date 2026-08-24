@@ -148,7 +148,7 @@ story/presentation/<feature>/screen-variant.prefab
 4. Не создавайте копию существующего файла ради второго эпизода: Unity-ресурс
    уже глобален в пределах истории. Для второго имени используйте alias.
 5. Убедитесь, что texture importer применил Sprite, отключённые mipmaps и
-   Read/Write, а на Android/iOS — ASTC 6×6.
+   Read/Write, а также Android ASTC 6×6 и iOS ASTC 8×8.
 6. Проверьте ссылку валидатором и только затем собирайте bundle.
 
 ## Команды рабочего процесса

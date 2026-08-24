@@ -29,10 +29,11 @@ namespace Novels.StoryQueue
                     });
 
                 case StoryCommands.BackgroundStoryCommand background:
-                    return new StoryExecution.BackgroundOperation.SetBackgroundQueue(
-                        _dependencies.Location.SetImage,
-                        background.Data.AssetName,
-                        background.Data.Presentation);
+                    return new StoryExecution.DelegateStoryOperation(context =>
+                        _dependencies.Location.SetImage(
+                            background.Data.AssetName,
+                            background.Data.Presentation,
+                            context.PresentationMode));
 
                 case StoryCommands.AudioStoryCommand audio:
                     var audioType = audio.Type == StoryCommands.StoryCommandType.Music
@@ -44,9 +45,10 @@ namespace Novels.StoryQueue
                         _ => _dependencies.Audio.PlayAudio(audio.Data.AssetName, audioType));
 
                 case StoryCommands.CameraStoryCommand camera:
-                    return new StoryExecution.BackgroundOperation.CameraQueue(
-                        _dependencies.Location.SetCamera,
-                        camera.Data.Action);
+                    return new StoryExecution.DelegateStoryOperation(context =>
+                        _dependencies.Location.SetCamera(
+                            camera.Data.Action,
+                            context.PresentationMode));
 
                 case StoryCommands.WaitStoryCommand wait:
                     return new StoryExecution.DelegateStoryOperation(context =>

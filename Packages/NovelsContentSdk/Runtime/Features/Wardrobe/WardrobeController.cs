@@ -7,17 +7,11 @@ namespace Novels.Wardrobe
 {
     public sealed class WardrobeController : BaseDisposable
     {
-        public struct Dependencies
-        {
-            public CancellationToken CancellationToken;
-        }
-
         private readonly OptionSelection.OptionListController _options;
 
-        public WardrobeController(Dependencies dependencies)
+        public WardrobeController(CancellationToken cancellationToken)
         {
-            _options = new OptionSelection.OptionListController(
-                dependencies.CancellationToken);
+            _options = new OptionSelection.OptionListController(cancellationToken);
         }
 
         public void Init()

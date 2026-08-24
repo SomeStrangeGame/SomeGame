@@ -7,17 +7,11 @@ namespace Novels.Choose
 {
     public sealed class ChooseController : BaseDisposable
     {
-        public struct Dependencies
-        {
-            public CancellationToken CancellationToken;
-        }
-
         private readonly OptionSelection.OptionListController _options;
 
-        public ChooseController(Dependencies dependencies)
+        public ChooseController(CancellationToken cancellationToken)
         {
-            _options = new OptionSelection.OptionListController(
-                dependencies.CancellationToken);
+            _options = new OptionSelection.OptionListController(cancellationToken);
         }
 
         public void Init()

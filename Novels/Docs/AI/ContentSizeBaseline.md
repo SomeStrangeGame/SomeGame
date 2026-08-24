@@ -17,7 +17,7 @@
 
 Android bundle — главный платформенный риск в обеих историях. Это согласуется
 с отсутствием явной platform override-политики в текущем
-`NovelContentTextureImporter`: он задаёт Sprite, mipmaps и alpha, но оставляет
+`NovelContentTexturePostprocessor`: он задаёт Sprite, mipmaps и alpha, но оставляет
 формат и качество платформенным defaults.
 
 ## Состав payloads
@@ -96,6 +96,13 @@ quality gate.
 Из source tree дополнительно исключены 64 409 963 B точных ZDM-дубликатов и
 158 357 019 B точных TZM-дубликатов. Payloads не менялись: Ink, video и audio
 остались отдельными от Unity bundle.
+
+После отдельного H.264 CRF 18 прохода TZM video payload уменьшился с
+346 350 427 B до 287 268 760 B (−59 081 667 B, −17,06%); аудиопотоки удалены.
+Android TZM целиком теперь занимает 594 744 791 B против исходных
+837 660 386 B (−242 915 595 B, −29,0%). iOS ASTC 8×8 дал bundle
+181 345 930 B для TZM и 66 039 336 B для ZDM; временная регрессия ASTC 6×6 до
+305 236 981 B устранена.
 
 ## Правило обновления baseline
 

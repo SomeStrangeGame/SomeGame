@@ -3,7 +3,7 @@ using Cysharp.Threading.Tasks;
 
 namespace Novels.StoryExecution
 {
-    public class BubbleOperation
+    internal static class BubbleOperation
     {
         internal sealed class SetBubbleQueue : IStoryOperation
         {
@@ -32,42 +32,5 @@ namespace Novels.StoryExecution
             }
         }
 
-        public readonly struct ShowBubbleQueue : IStoryOperation
-        {
-            private readonly UniTaskCompletionSource _bubbleDone;
-            private readonly Func<StoryContracts.PresentationMode, UniTask> _show;
-
-            public ShowBubbleQueue(
-                UniTaskCompletionSource bubbleDone,
-                Func<StoryContracts.PresentationMode, UniTask> show)
-            {
-                _bubbleDone = bubbleDone ?? throw new ArgumentNullException(nameof(bubbleDone));
-                _show = show ?? throw new ArgumentNullException(nameof(show));
-            }
-
-            public async UniTask Run(StoryExecutionContext context)
-            {
-                context.CancellationToken.ThrowIfCancellationRequested();
-                await _show(context.PresentationMode);
-
-                await _bubbleDone.Task.AttachExternalCancellation(context.CancellationToken);
-            }
-        }
-        public readonly struct HideBubbleQueue : IStoryOperation
-        {
-            private readonly Func<StoryContracts.PresentationMode, UniTask> _hide;
-
-            public HideBubbleQueue(
-                Func<StoryContracts.PresentationMode, UniTask> hide)
-            {
-                _hide = hide ?? throw new ArgumentNullException(nameof(hide));
-            }
-
-            public async UniTask Run(StoryExecutionContext context)
-            {
-                context.CancellationToken.ThrowIfCancellationRequested();
-                await _hide(context.PresentationMode);
-            }
-        }
     }
 }

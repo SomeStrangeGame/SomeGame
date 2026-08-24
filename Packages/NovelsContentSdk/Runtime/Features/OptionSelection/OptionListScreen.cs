@@ -28,89 +28,38 @@ namespace Novels.OptionSelection
             internal Image Thumbnail { get; }
         }
 
-        private static readonly Color PanelColor = new(0.12f, 0.14f, 0.17f, 0.96f);
         private static readonly Color CardColor = new(0.24f, 0.27f, 0.32f, 0.96f);
         private static readonly Color SelectedColor = new(0.20f, 0.55f, 0.78f, 1f);
 
         private readonly List<CardView> _cards = new();
-        private CanvasGroup _canvasGroup;
-        private RectTransform _content;
-        private RectTransform _viewport;
-        private ScrollRect _scroll;
-        private Text _title;
-        private Text _selection;
-        private Button _confirm;
-        private Text _confirmLabel;
+        [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private RectTransform _content;
+        [SerializeField] private RectTransform _viewport;
+        [SerializeField] private ScrollRect _scroll;
+        [SerializeField] private Text _title;
+        [SerializeField] private Text _selection;
+        [SerializeField] private Button _confirm;
+        [SerializeField] private Text _confirmLabel;
         private OptionListPresentation _presentation;
         private int _selectedIndex = -1;
         private int _presentationVersion;
         private int _initialSlot;
         private bool _needsCentering;
 
-        public void Init()
+        private void Awake()
         {
-            var canvas = gameObject.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 150;
-            var scaler = gameObject.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1080f, 1920f);
-            gameObject.AddComponent<GraphicRaycaster>();
-            _canvasGroup = gameObject.AddComponent<CanvasGroup>();
-
-            var panel = CreateImage("Panel", transform, PanelColor);
-            SetRect(panel.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f),
-                new Vector2(24f, 28f), new Vector2(-24f, 560f));
-
-            _title = CreateText("Title", panel.transform, 42, TextAnchor.MiddleCenter);
-            SetRect(_title.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f),
-                new Vector2(24f, -82f), new Vector2(-24f, -20f));
-
-            var viewport = CreateImage("Viewport", panel.transform, new Color(0f, 0f, 0f, 0.22f));
-            _viewport = viewport.rectTransform;
-            SetRect(_viewport, new Vector2(0f, 0f), new Vector2(1f, 1f),
-                new Vector2(80f, 170f), new Vector2(-80f, -96f));
-            viewport.gameObject.AddComponent<RectMask2D>();
-
-            var contentObject = new GameObject("Content", typeof(RectTransform));
-            _content = contentObject.GetComponent<RectTransform>();
-            _content.SetParent(viewport.transform, false);
-            _content.anchorMin = new Vector2(0f, 0f);
-            _content.anchorMax = new Vector2(0f, 1f);
-            _content.pivot = new Vector2(0f, 0.5f);
-            _content.anchoredPosition = Vector2.zero;
-            var layout = contentObject.AddComponent<HorizontalLayoutGroup>();
-            layout.padding = new RectOffset(18, 18, 18, 18);
-            layout.spacing = 18f;
-            layout.childAlignment = TextAnchor.MiddleLeft;
-            layout.childControlWidth = false;
-            layout.childControlHeight = false;
-            layout.childForceExpandWidth = false;
-            layout.childForceExpandHeight = false;
-            var fitter = contentObject.AddComponent<ContentSizeFitter>();
-            fitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            fitter.verticalFit = ContentSizeFitter.FitMode.Unconstrained;
-
-            _scroll = viewport.gameObject.AddComponent<ScrollRect>();
-            _scroll.viewport = _viewport;
-            _scroll.content = _content;
-            _scroll.horizontal = true;
-            _scroll.vertical = false;
-            _scroll.movementType = ScrollRect.MovementType.Unrestricted;
-            _scroll.scrollSensitivity = 40f;
-            _scroll.onValueChanged.AddListener(_ => SelectClosestCard());
-
-            _selection = CreateText("Selection", panel.transform, 34, TextAnchor.MiddleCenter);
-            SetRect(_selection.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f),
-                new Vector2(40f, 104f), new Vector2(-40f, 164f));
-
-            _confirm = CreateButton("Confirm", panel.transform, SelectedColor, out _confirmLabel);
-            SetRect(_confirm.GetComponent<RectTransform>(),
-                new Vector2(0.5f, 0f), new Vector2(0.5f, 0f),
-                new Vector2(-260f, 28f), new Vector2(260f, 100f));
+            _scroll.onValueChanged.AddListener(OnScrollChanged);
             _confirm.onClick.AddListener(Confirm);
             HideImmediate();
         }
+
+        private void OnDestroy()
+        {
+            _scroll.onValueChanged.RemoveListener(OnScrollChanged);
+            _confirm.onClick.RemoveListener(Confirm);
+        }
+
+        private void OnScrollChanged(Vector2 _) => SelectClosestCard();
 
         public void SetPresentation(OptionListPresentation presentation)
         {

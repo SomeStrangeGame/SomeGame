@@ -94,9 +94,7 @@ namespace Novels.StoryQueue
 
             var afterCommands = new List<StoryExecution.IStoryOperation>
             {
-                new StoryExecution.CharacterOperation.SetDialogueQueue(
-                    _dependencies.Location.SetDialogue,
-                    _dependencies.Character.Hide,
+                CreateSetDialogueOperation(
                     frame.Alignment,
                     hideDuringDialogueTransition),
             };
@@ -104,9 +102,7 @@ namespace Novels.StoryQueue
                 && StoryContracts.StorySpeakerRoleResolver.ShowsCharacter(frame.Role))
             {
                 afterCommands.Add(
-                    new StoryExecution.CharacterOperation.ShowCharacterQueue(
-                        _dependencies.Character.SetImage,
-                        _dependencies.Character.Show,
+                    CreateShowCharacterOperation(
                         shouldShow,
                         new StoryContracts.CharacterRenderRequest(
                             dialogue.Speaker,
@@ -122,9 +118,7 @@ namespace Novels.StoryQueue
             if (hideBeforePendingCommands)
             {
                 beforeCommands.Add(
-                    new StoryExecution.CharacterOperation.HideCharacterQueue(
-                        _dependencies.Character.Hide,
-                        shouldHide: true));
+                    CreateHideCharacterOperation());
             }
 
             beforeCommands.Add(setBubble);
@@ -145,7 +139,55 @@ namespace Novels.StoryQueue
                     choices,
                     bubbleDone,
                     frame.Role,
-                    frame.Presentation));
+                frame.Presentation));
+        }
+
+        private StoryExecution.IStoryOperation CreateSetDialogueOperation(
+            StoryContracts.StoryDialogueAlignment alignment,
+            bool hideCharacter)
+        {
+            return new StoryExecution.DelegateStoryOperation(async context =>
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                if (!hideCharacter)
+                {
+                    await _dependencies.Location.SetDialogue(
+                        alignment,
+                        context.PresentationMode);
+                    return;
+                }
+                await UniTask.WhenAll(
+                    _dependencies.Character.Hide(context.PresentationMode),
+                    _dependencies.Location.SetDialogue(
+                        alignment,
+                        context.PresentationMode));
+            });
+        }
+
+        private StoryExecution.IStoryOperation CreateShowCharacterOperation(
+            bool animate,
+            StoryContracts.CharacterRenderRequest character)
+        {
+            return new StoryExecution.DelegateStoryOperation(async context =>
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                await _dependencies.Character.SetImage(character);
+                if (animate || context.Mode == StoryExecution.QueueExecutionMode.Replay)
+                {
+                    await _dependencies.Character.Show(
+                        character.Position,
+                        context.PresentationMode);
+                }
+            });
+        }
+
+        private StoryExecution.IStoryOperation CreateHideCharacterOperation()
+        {
+            return new StoryExecution.DelegateStoryOperation(context =>
+            {
+                context.CancellationToken.ThrowIfCancellationRequested();
+                return _dependencies.Character.Hide(context.PresentationMode);
+            });
         }
 
         private DialogueFrame CreateFrame(StoryCommands.DialogueCommandData dialogue)
@@ -217,11 +259,18 @@ namespace Novels.StoryQueue
             };
             return new StoryExecution.IStoryOperation[]
             {
-                new StoryExecution.BubbleOperation.ShowBubbleQueue(
-                    bubbleDone,
-                    lifecycle.Show),
-                new StoryExecution.BubbleOperation.HideBubbleQueue(
-                    lifecycle.Hide),
+                new StoryExecution.DelegateStoryOperation(async context =>
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    await lifecycle.Show(context.PresentationMode);
+                    await bubbleDone.Task.AttachExternalCancellation(
+                        context.CancellationToken);
+                }),
+                new StoryExecution.DelegateStoryOperation(context =>
+                {
+                    context.CancellationToken.ThrowIfCancellationRequested();
+                    return lifecycle.Hide(context.PresentationMode);
+                }),
             };
         }
     }

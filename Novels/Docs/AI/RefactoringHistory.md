@@ -4,6 +4,23 @@
 
 <!-- unity-onboarding:generated:start -->
 
+## Second simplification wave completed on 2026-08-24
+
+- Content validation стал линейным маршрутом без интерфейса и четырёх
+  одноразовых rule-классов.
+- Удалены промежуточные `NovelBootstrapProcess`, `NovelStartSession` и
+  `NovelSession`; их небольшой маршрут и lifetime теперь видны в
+  `NovelRuntime.Init`.
+- Простые background, camera, character и Bubble lifecycle operations заменены
+  существующим `DelegateStoryOperation`; отдельные типы оставлены только для
+  выбора с собственным состоянием.
+- Статическая разметка `OptionListScreen` перенесена в общий Resources prefab с
+  прежними размерами; код продолжает создавать только динамические карточки.
+- Choose, Wardrobe и Catalog принимают маленькие зависимости напрямую вместо
+  одноразовых структур.
+- Unity batch compile и последовательная validation Catalog, TZM и ZDM прошли;
+  ручная проверка Choose/Wardrobe оставлена владельцу проекта.
+
 ## Simplification wave completed on 2026-08-24
 
 - `ApplicationRuntime` теперь выражает линейный цикл каталог → история без

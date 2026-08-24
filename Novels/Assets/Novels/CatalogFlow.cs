@@ -213,28 +213,24 @@ namespace Novels
                 _ctx.CancellationToken);
             var registry = Catalog.Contracts.CatalogContractCodec
                 .DeserializeRegistry(registryJson);
-            var result = new List<(int order, Catalog.NovelCatalogEntry entry)>();
+            var entries = new List<Catalog.NovelCatalogEntry>();
             var covers = new Dictionary<string, Sprite>(StringComparer.OrdinalIgnoreCase);
             try
             {
-                foreach (var registryEntry in registry.stories)
+                foreach (var storyId in registry.stories)
                 {
-                    if (!registryEntry.enabled)
-                        continue;
                     var cardJson = await _ctx.RootContentSource.DownloadText(
                         ContentAddressing.ContentPackageConvention.StoryCardPath(
-                            registryEntry.storyId),
+                            storyId),
                         _ctx.CancellationToken);
                     var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
                         cardJson,
-                        registryEntry.storyId);
+                        storyId);
                     covers.Add(card.storyId, await LoadCover(card));
-                    result.Add((
-                        registryEntry.order,
-                        new Catalog.NovelCatalogEntry(
-                            card.storyId,
-                            card.title,
-                            card.description)));
+                    entries.Add(new Catalog.NovelCatalogEntry(
+                        card.storyId,
+                        card.title,
+                        card.description));
                 }
             }
             catch
@@ -242,11 +238,6 @@ namespace Novels
                 DestroyCovers(covers.Values);
                 throw;
             }
-            var entries = result
-                .OrderBy(item => item.order)
-                .ThenBy(item => item.entry.ContentId, StringComparer.Ordinal)
-                .Select(item => item.entry)
-                .ToArray();
             return (entries, covers);
         }
 
@@ -288,11 +279,7 @@ namespace Novels
         }
 
         private Catalog.CatalogController CreateSelection(GameObject screen) =>
-            new(new Catalog.CatalogController.Dependencies
-            {
-                BundledPrefab = screen,
-                CancellationToken = _ctx.CancellationToken,
-            });
+            new(screen, _ctx.CancellationToken);
 
         private static void ShowProgress(
             Bootstrap.BootstrapController bootstrap,

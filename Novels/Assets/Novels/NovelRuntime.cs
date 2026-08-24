@@ -65,10 +65,9 @@ namespace Novels
 
         internal async UniTask<EpisodeRunResult> Init()
         {
-            var novelSession = new NovelSession(_ctx.Bundles.CreateScope()).AddTo(this);
-            novelSession.AttachDelivery(await _ctx.PrepareNovelContent(
-                _ctx.Content.ContentId));
-            _definition = await LoadContent(novelSession.Bundles, _ctx.Content);
+            var storyAssets = _ctx.Bundles.CreateScope().AddTo(this);
+            (await _ctx.PrepareNovelContent(_ctx.Content.ContentId))?.AddTo(this);
+            _definition = await LoadContent(storyAssets, _ctx.Content);
             _ctx.HidePreparationScreen();
             _progress = new NovelProgress(
                 _definition,
@@ -82,16 +81,21 @@ namespace Novels
             _progress.Begin(_episode);
             var episodeRuntime = new EpisodeRuntime(_ctx.CancellationToken).AddTo(this);
 
-            var bootstrap = new NovelBootstrapProcess(
-                new NovelBootstrapProcess.Dependencies
-                {
-                    Prepare = () => PrepareApplication(
-                        novelSession.Bundles,
-                        episodeRuntime),
-                    CancellationToken = _ctx.CancellationToken,
-                }).AddTo(this);
-
-            var result = await bootstrap.Run();
+            EpisodeRunResult result;
+            try
+            {
+                _ctx.CancellationToken.ThrowIfCancellationRequested();
+                var prepared = await PrepareApplication(storyAssets, episodeRuntime);
+                if (prepared.selection == SettingSelection.NewGame)
+                    prepared.episode.SaveSystem.Clear();
+                _ctx.CancellationToken.ThrowIfCancellationRequested();
+                result = await RunEpisode(prepared.episode);
+            }
+            catch (OperationCanceledException)
+                when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+                result = EpisodeRunResult.Cancelled();
+            }
             if (result.Status == EpisodeRunStatus.Completed)
                 _progress.Complete(_episode, result.ContinuationState);
             return result.Status == EpisodeRunStatus.Failed && result.Error.HasValue

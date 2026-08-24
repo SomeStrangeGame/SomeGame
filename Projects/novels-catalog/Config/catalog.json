@@ -1,16 +1,5 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "minimumClientVersion": "0.1.0",
-  "stories": [
-    {
-      "storyId": "tzm",
-      "order": 10,
-      "enabled": true
-    },
-    {
-      "storyId": "zdm",
-      "order": 20,
-      "enabled": true
-    }
-  ]
+  "stories": ["tzm", "zdm"]
 }

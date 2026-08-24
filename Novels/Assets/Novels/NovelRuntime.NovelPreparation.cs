@@ -52,7 +52,8 @@ namespace Novels
             internal UniTask<EpisodeStoryData> EpisodePreloading { get; }
         }
 
-        private async UniTask<NovelStartSession> PrepareApplication(
+        private async UniTask<(PreparedEpisode episode, SettingSelection selection)>
+            PrepareApplication(
             Bundles.Scope storyAssets,
             EpisodeRuntime episodeRuntime)
         {
@@ -115,10 +116,7 @@ namespace Novels
                 mainLoading,
                 episodePreloading);
             var selection = await settingProcess.ShowSettingProcess();
-            return new NovelStartSession(
-                selection,
-                saveSystem.Clear,
-                () => RunEpisode(episode));
+            return (episode, selection);
         }
 
         private async UniTask<EpisodeStoryData> PreloadEpisode(

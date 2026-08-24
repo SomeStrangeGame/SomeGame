@@ -16,9 +16,14 @@ namespace Novels.OptionSelection
 
         public void Init(string name)
         {
-            var screenObject = new GameObject(name);
-            _screen = screenObject.AddComponent<OptionListScreen>();
-            _screen.Init();
+            var prefab = Resources.Load<OptionListScreen>("OptionListScreen");
+            if (prefab == null)
+            {
+                throw new System.InvalidOperationException(
+                    "OptionListScreen prefab is missing from Resources.");
+            }
+            _screen = Object.Instantiate(prefab);
+            _screen.name = name;
         }
 
         public void Present(OptionListPresentation presentation) =>

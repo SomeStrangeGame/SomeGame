@@ -43,30 +43,136 @@ namespace Novels.ContentSdk.Editor
         internal Content.NovelDefinition Story { get; }
     }
 
-    internal interface IContentValidationRule
-    {
-        void Validate(ContentProject project, ValidationReport report);
-    }
-
     internal static class ContentValidator
     {
-        private static readonly IContentValidationRule[] _rules =
-        {
-            new ProjectStructureRule(),
-            new StoryRule(),
-            new CatalogRule(),
-            new BundleRule(),
-        };
-
         internal static ContentProject Validate()
         {
             var report = new ValidationReport();
             var project = ContentProjectInspector.Inspect(report);
-            foreach (var rule in _rules)
-                rule.Validate(project, report);
+            ValidateStructure(project, report);
+            if (project.Kind == ContentProjectKind.Story && project.Story != null)
+            {
+                ValidateStoryCard(project.Story.Id, report);
+                ValidateStorySources(project.Story, report);
+            }
+            else if (project.Kind == ContentProjectKind.Catalog)
+            {
+                ValidateCatalog(report);
+            }
+            ValidateBundle(report, project.Kind);
             report.LogWarnings();
             report.ThrowIfInvalid();
             return project;
+        }
+
+        private static void ValidateStructure(
+            ContentProject project,
+            ValidationReport report)
+        {
+            if (project.Kind == ContentProjectKind.Unknown)
+            {
+                report.Error(
+                    "CONTENT_PROJECT_UNKNOWN",
+                    "The project contains neither a NovelContentAsset nor "
+                    + "the catalog screen.");
+            }
+            if (project.DefinitionCount > 1)
+            {
+                report.Error(
+                    "CONTENT_DEFINITION_COUNT",
+                    "An atomic project may contain only one NovelContentAsset.");
+            }
+        }
+
+        private static void ValidateStoryCard(
+            string storyId,
+            ValidationReport report)
+        {
+            var relativePath = ContentProjectInspector.StoryConfig;
+            var path = ContentProjectInspector.Absolute(relativePath);
+            if (!File.Exists(path))
+                return;
+            try
+            {
+                var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
+                    File.ReadAllText(path),
+                    storyId);
+                if (!File.Exists(ContentProjectInspector.Absolute("Config/" + card.cover)))
+                {
+                    report.Error(
+                        "STORY_COVER_MISSING",
+                        $"Cover '{card.cover}' does not exist.",
+                        relativePath);
+                }
+            }
+            catch (Exception exception)
+            {
+                report.Error("STORY_CARD_INVALID", exception.Message, relativePath);
+            }
+        }
+
+        private static void ValidateStorySources(
+            Content.NovelDefinition definition,
+            ValidationReport report)
+        {
+            foreach (var episode in definition.Episodes)
+            {
+                var path = Path.Combine(
+                    Application.streamingAssetsPath,
+                    "noveltexts",
+                    definition.Prefix,
+                    episode.StoryPath.Replace('/', Path.DirectorySeparatorChar));
+                if (!File.Exists(path))
+                {
+                    report.Error(
+                        "STORY_SOURCE_FILE_MISSING",
+                        "Ink story source does not exist.",
+                        path);
+                }
+            }
+        }
+
+        private static void ValidateCatalog(ValidationReport report)
+        {
+            var relativePath = ContentProjectInspector.CatalogConfig;
+            var path = ContentProjectInspector.Absolute(relativePath);
+            if (!File.Exists(path))
+                return;
+            try
+            {
+                Catalog.Contracts.CatalogContractCodec.DeserializeRegistry(
+                    File.ReadAllText(path));
+            }
+            catch (Exception exception)
+            {
+                report.Error("CATALOG_CONFIG_INVALID", exception.Message, relativePath);
+            }
+        }
+
+        private static void ValidateBundle(
+            ValidationReport report,
+            ContentProjectKind kind)
+        {
+            if (kind == ContentProjectKind.Unknown)
+                return;
+            if (ContentAssets.FindBundleAssets().Length == 0)
+            {
+                report.Error(
+                    "CONTENT_ASSETS_MISSING",
+                    "Assets/RemoteAssets contains no bundle assets.");
+            }
+            var labels = AssetDatabase.GetAllAssetBundleNames()
+                .Where(name => AssetDatabase
+                    .GetAssetPathsFromAssetBundle(name).Length > 0)
+                .OrderBy(name => name, StringComparer.Ordinal)
+                .ToArray();
+            if (labels.Length > 0)
+            {
+                report.Error(
+                    "CONTENT_BUNDLE_LABEL_PRESENT",
+                    "Manual AssetBundle labels are not supported: "
+                    + string.Join(", ", labels));
+            }
         }
     }
 
@@ -170,11 +276,14 @@ namespace Novels.ContentSdk.Editor
             try
             {
                 var value = JsonUtility.FromJson<Metadata>(File.ReadAllText(path));
-                if (value == null || value.schemaVersion != 1)
+                var expectedSchemaVersion = kind == ContentProjectKind.Catalog
+                    ? 2
+                    : 1;
+                if (value == null || value.schemaVersion != expectedSchemaVersion)
                 {
                     report.Error(
                         "CONTENT_CONFIG_SCHEMA",
-                        "schemaVersion must be 1.",
+                        $"schemaVersion must be {expectedSchemaVersion}.",
                         relativePath);
                 }
                 if (string.IsNullOrWhiteSpace(value?.minimumClientVersion))
@@ -198,141 +307,4 @@ namespace Novels.ContentSdk.Editor
         }
     }
 
-    internal sealed class ProjectStructureRule : IContentValidationRule
-    {
-        public void Validate(ContentProject project, ValidationReport report)
-        {
-            if (project.Kind == ContentProjectKind.Unknown)
-            {
-                report.Error(
-                    "CONTENT_PROJECT_UNKNOWN",
-                    "The project contains neither a NovelContentAsset nor "
-                    + "the catalog screen.");
-            }
-            if (project.DefinitionCount > 1)
-            {
-                report.Error(
-                    "CONTENT_DEFINITION_COUNT",
-                    "An atomic project may contain only one NovelContentAsset.");
-            }
-        }
-    }
-
-    internal sealed class StoryRule : IContentValidationRule
-    {
-        public void Validate(ContentProject project, ValidationReport report)
-        {
-            if (project.Kind != ContentProjectKind.Story)
-                return;
-            if (project.Story == null)
-                return;
-            ValidateCard(project.Story.Id, report);
-            ValidateSources(project.Story, report);
-        }
-
-        private static void ValidateCard(string storyId, ValidationReport report)
-        {
-            var relativePath = ContentProjectInspector.StoryConfig;
-            var path = ContentProjectInspector.Absolute(relativePath);
-            if (!File.Exists(path))
-                return;
-            try
-            {
-                var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
-                    File.ReadAllText(path),
-                    storyId);
-                var cover = ContentProjectInspector.Absolute(
-                    "Config/" + card.cover);
-                if (!File.Exists(cover))
-                {
-                    report.Error(
-                        "STORY_COVER_MISSING",
-                        $"Cover '{card.cover}' does not exist.",
-                        relativePath);
-                }
-            }
-            catch (Exception exception)
-            {
-                report.Error(
-                    "STORY_CARD_INVALID",
-                    exception.Message,
-                    relativePath);
-            }
-        }
-
-        private static void ValidateSources(
-            Content.NovelDefinition definition,
-            ValidationReport report)
-        {
-            foreach (var episode in definition.Episodes)
-            {
-                var path = Path.Combine(
-                    Application.streamingAssetsPath,
-                    "noveltexts",
-                    definition.Prefix,
-                    episode.StoryPath.Replace(
-                        '/',
-                        Path.DirectorySeparatorChar));
-                if (!File.Exists(path))
-                {
-                    report.Error(
-                        "STORY_SOURCE_FILE_MISSING",
-                        "Ink story source does not exist.",
-                        path);
-                }
-            }
-        }
-    }
-
-    internal sealed class CatalogRule : IContentValidationRule
-    {
-        public void Validate(ContentProject project, ValidationReport report)
-        {
-            if (project.Kind != ContentProjectKind.Catalog)
-                return;
-            var relativePath = ContentProjectInspector.CatalogConfig;
-            var path = ContentProjectInspector.Absolute(relativePath);
-            if (!File.Exists(path))
-                return;
-            try
-            {
-                Catalog.Contracts.CatalogContractCodec.DeserializeRegistry(
-                    File.ReadAllText(path));
-            }
-            catch (Exception exception)
-            {
-                report.Error(
-                    "CATALOG_CONFIG_INVALID",
-                    exception.Message,
-                    relativePath);
-            }
-        }
-    }
-
-    internal sealed class BundleRule : IContentValidationRule
-    {
-        public void Validate(ContentProject project, ValidationReport report)
-        {
-            if (project.Kind == ContentProjectKind.Unknown)
-                return;
-            if (ContentAssets.FindBundleAssets().Length == 0)
-            {
-                report.Error(
-                    "CONTENT_ASSETS_MISSING",
-                    "Assets/RemoteAssets contains no bundle assets.");
-            }
-            var labels = AssetDatabase.GetAllAssetBundleNames()
-                .Where(name => AssetDatabase
-                    .GetAssetPathsFromAssetBundle(name).Length > 0)
-                .OrderBy(name => name, StringComparer.Ordinal)
-                .ToArray();
-            if (labels.Length > 0)
-            {
-                report.Error(
-                    "CONTENT_BUNDLE_LABEL_PRESENT",
-                    "Manual AssetBundle labels are not supported: "
-                    + string.Join(", ", labels));
-            }
-        }
-    }
 }

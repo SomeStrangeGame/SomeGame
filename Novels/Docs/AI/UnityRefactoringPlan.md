@@ -37,6 +37,19 @@ EntryPoint
 - [x] Пересобрать Editor bundles и локальную композицию.
 - [ ] Проверить запуск Novels вручную в Editor.
 
+## Вторая волна упрощения
+
+- [x] Сделать validation линейным без одноразовых rule-классов.
+- [x] Удалить `NovelBootstrapProcess` и `NovelStartSession`.
+- [x] Удалить тривиальный `NovelSession`.
+- [x] Заменить простые классы StoryOperation на `DelegateStoryOperation`.
+- [x] Перенести статическую разметку OptionList в общий prefab без изменения
+  размеров.
+- [x] Заменить одно- и двухполевые `Dependencies` прямыми конструкторами в
+  Choose, Wardrobe и Catalog.
+- [x] Подтвердить Unity-компиляцию и validation Catalog/TZM/ZDM.
+- [ ] Вручную проверить Choose и Wardrobe в Play Mode.
+
 ## Не менять в этой волне
 
 - Форматы Ink, release и save.

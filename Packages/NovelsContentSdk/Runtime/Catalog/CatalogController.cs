@@ -9,20 +9,17 @@ namespace Novels.Catalog
 {
     public sealed class CatalogController : BaseDisposable
     {
-        public struct Dependencies
-        {
-            public GameObject BundledPrefab;
-            public CancellationToken CancellationToken;
-        }
-
-        private readonly Dependencies _ctx;
+        private readonly GameObject _bundledPrefab;
+        private readonly CancellationToken _cancellationToken;
         private View.CatalogScreen _screen;
 
-        public CatalogController(Dependencies ctx)
+        public CatalogController(
+            GameObject bundledPrefab,
+            CancellationToken cancellationToken)
         {
-            _ctx = ctx;
-            if (ctx.BundledPrefab == null)
-                throw new ArgumentNullException(nameof(ctx.BundledPrefab));
+            _bundledPrefab = bundledPrefab
+                ?? throw new ArgumentNullException(nameof(bundledPrefab));
+            _cancellationToken = cancellationToken;
         }
 
         public async UniTask<CatalogItem> Select(
@@ -54,7 +51,7 @@ namespace Novels.Catalog
             {
                 _screen.gameObject.SetActive(true);
                 return await selection.Task.AttachExternalCancellation(
-                    _ctx.CancellationToken);
+                    _cancellationToken);
             }
             finally
             {
@@ -75,7 +72,7 @@ namespace Novels.Catalog
         {
             if (_screen != null)
                 return;
-            var instance = UnityEngine.Object.Instantiate(_ctx.BundledPrefab);
+            var instance = UnityEngine.Object.Instantiate(_bundledPrefab);
             _screen = instance.GetComponent<View.CatalogScreen>();
             if (_screen == null)
             {

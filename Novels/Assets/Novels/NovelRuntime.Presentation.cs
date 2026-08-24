@@ -107,10 +107,7 @@ namespace Novels
             IBaseDisposable owner,
             CancellationToken cancellationToken)
         {
-            var choose = new Choose.ChooseController(new Choose.ChooseController.Dependencies
-            {
-                CancellationToken = cancellationToken,
-            }).AddTo(owner);
+            var choose = new Choose.ChooseController(cancellationToken).AddTo(owner);
             choose.Init();
             return choose;
         }
@@ -191,11 +188,8 @@ namespace Novels
             IBaseDisposable owner,
             CancellationToken cancellationToken)
         {
-            var wardrobe = new Wardrobe.WardrobeController(
-                new Wardrobe.WardrobeController.Dependencies
-                {
-                    CancellationToken = cancellationToken,
-                }).AddTo(owner);
+            var wardrobe = new Wardrobe.WardrobeController(cancellationToken)
+                .AddTo(owner);
             wardrobe.Init();
             return wardrobe;
         }

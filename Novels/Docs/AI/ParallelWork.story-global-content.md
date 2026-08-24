@@ -46,7 +46,8 @@
 - ZDM: `shared` переименован в `story`, уникальные локации объединены в
   `story/location/locations`, 12 файлов-дубликатов вынесены из проекта.
 - TZM: выполнена та же миграция; вынесено 29 точных location-дубликатов.
-- Android/iOS importer использует ASTC 6×6, Max Size 4096, quality 100.
+- Importer использует Android ASTC 6×6 и iOS ASTC 8×8, Max Size 4096,
+  quality 100.
 
 ## Проверено
 
@@ -68,5 +69,5 @@
 ## Требуется при интеграции
 
 - Ручной визуальный quality gate ASTC на Android/iOS.
-- iOS build для фиксации фактической delta; platform override задан, но в этой
-  итерации собирался только Android.
+- iOS build выполнен последующим блоком `ios-texture-profile`; размеры ниже
+  исходного baseline для обеих историй.
