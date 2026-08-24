@@ -50,6 +50,15 @@ EntryPoint
 - [x] Подтвердить Unity-компиляцию и validation Catalog/TZM/ZDM.
 - [ ] Вручную проверить Choose и Wardrobe в Play Mode.
 
+## Третья волна упрощения
+
+- [x] Удалить неиспользуемый уровень warning из общего validation report.
+- [x] Заменить промежуточный `ContentProject` компактным `ContentBuildPlan`.
+- [x] Определять Catalog/Story по единственному JSON-маркеру проекта.
+- [x] Оставить подробный состав bundle только в диагностике ошибки.
+- [x] Вынести смысловую и визуальную приёмку в ручной чек-лист.
+- [x] Подтвердить Unity-компиляцию, validation всех проектов и сборку Catalog.
+
 ## Не менять в этой волне
 
 - Форматы Ink, release и save.

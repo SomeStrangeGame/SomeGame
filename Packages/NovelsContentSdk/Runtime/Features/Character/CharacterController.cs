@@ -14,6 +14,7 @@ namespace Novels.Character
             public string ContentPrefix;
             public Content.CharacterAssetProfile AssetProfile;
             public Func<string, UniTask<Sprite>> GetSprite;
+            public Func<UniTask<CharacterSpriteTrimManifest>> GetSpriteTrimManifest;
             public Sprite MissingCharacter;
             public CancellationToken CancellationToken;
         }
@@ -38,6 +39,7 @@ namespace Novels.Character
                 ctx.ContentPrefix,
                 _assetProfile,
                 ctx.GetSprite,
+                ctx.GetSpriteTrimManifest,
                 ctx.MissingCharacter,
                 ctx.CancellationToken);
         }
@@ -156,14 +158,15 @@ namespace Novels.Character
 
         private void Apply(CharacterSpriteSet sprites)
         {
-            _screen.SetMainBody(sprites.MainBody);
-            _screen.SetEmotion(sprites.Emotion);
-            _screen.SetClothes(sprites.Clothes);
-            _screen.SetBackHairs(sprites.Hair.Back);
-            _screen.SetFrontHairs(sprites.Hair.Front);
-            _screen.SetBackAccessories(sprites.Accessories.Back);
-            _screen.SetMiddleAccessories(sprites.Accessories.Middle);
-            _screen.SetFrontAccessories(sprites.Accessories.Front);
+            var layouts = sprites.TrimLayouts;
+            _screen.SetMainBody(sprites.MainBody, layouts.MainBody);
+            _screen.SetEmotion(sprites.Emotion, layouts.Emotion);
+            _screen.SetClothes(sprites.Clothes, layouts.Clothes);
+            _screen.SetBackHairs(sprites.Hair.Back, layouts.BackHair);
+            _screen.SetFrontHairs(sprites.Hair.Front, layouts.FrontHair);
+            _screen.SetBackAccessories(sprites.Accessories.Back, layouts.BackAccessory);
+            _screen.SetMiddleAccessories(sprites.Accessories.Middle, layouts.MiddleAccessory);
+            _screen.SetFrontAccessories(sprites.Accessories.Front, layouts.FrontAccessory);
         }
 
         protected override void OnDispose()

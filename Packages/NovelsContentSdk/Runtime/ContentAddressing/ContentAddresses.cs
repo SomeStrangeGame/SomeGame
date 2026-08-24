@@ -40,6 +40,9 @@ namespace Novels.ContentAddressing
         public string CharacterPrefab(string assetName) =>
             ContentAddressConvention.CharacterPrefab(ContentId, assetName);
 
+        public string CharacterSpriteTrimManifest() =>
+            ContentAddressConvention.CharacterSpriteTrimManifest(ContentId);
+
         public string CharacterMainBody(string name, string view, string candidate) =>
             ContentAddressConvention.CharacterMainBody(
                 ContentId, name, view, candidate);

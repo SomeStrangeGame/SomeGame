@@ -89,6 +89,7 @@ GameObject:
   - component: {fileID: 754643317053777147}
   - component: {fileID: 28625510435288336}
   - component: {fileID: 6635566638958025401}
+  - component: {fileID: 900771238450120001}
   m_Layer: 0
   m_Name: Viewport
   m_TagString: Untagged
@@ -181,8 +182,8 @@ MonoBehaviour:
   m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ScrollRect
   m_Content: {fileID: 6609446171818615514}
-  m_Horizontal: 0
-  m_Vertical: 1
+  m_Horizontal: 1
+  m_Vertical: 0
   m_MovementType: 2
   m_Elasticity: 0.1
   m_Inertia: 1
@@ -218,6 +219,25 @@ MonoBehaviour:
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
+--- !u!114 &900771238450120001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 556618712047429567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9c6fb2780913f4a23b65d61e4ee24dd8, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Novels.Catalog::Novels.Catalog.View.CatalogCarousel
+  _scrollRect: {fileID: 28625510435288336}
+  _viewport: {fileID: 7527204416390713265}
+  _content: {fileID: 6609446171818615514}
+  _layout: {fileID: 305528965031048642}
+  _snapSpeed: 12
+  _sideScale: 0.85
+  _sideOpacity: 0.65
 --- !u!1 &720094821756507112
 GameObject:
   m_ObjectHideFlags: 0
@@ -439,8 +459,8 @@ MonoBehaviour:
   m_IgnoreLayout: 0
   m_MinWidth: -1
   m_MinHeight: -1
-  m_PreferredWidth: -1
-  m_PreferredHeight: 150
+  m_PreferredWidth: 280
+  m_PreferredHeight: 340
   m_FlexibleWidth: -1
   m_FlexibleHeight: -1
   m_LayoutPriority: 1
@@ -693,11 +713,11 @@ RectTransform:
   - {fileID: 2318704664157264751}
   m_Father: {fileID: 7527204416390713265}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 1, y: 1}
+  m_AnchorMin: {x: 0, y: 0.5}
+  m_AnchorMax: {x: 0, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
-  m_Pivot: {x: 0.5, y: 1}
+  m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &305528965031048642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -707,18 +727,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 2547007809642594709}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 59f8146938fff824cb5fd77236b75775, type: 3}
+  m_Script: {fileID: 11500000, guid: 30649d3a9faa99c48a7b1166b86bf2a0, type: 3}
   m_Name:
-  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.VerticalLayoutGroup
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.HorizontalLayoutGroup
   m_Padding:
     m_Left: 0
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
-  m_ChildAlignment: 0
+  m_ChildAlignment: 4
   m_Spacing: 16
-  m_ChildForceExpandWidth: 1
-  m_ChildForceExpandHeight: 0
+  m_ChildForceExpandWidth: 0
+  m_ChildForceExpandHeight: 1
   m_ChildControlWidth: 1
   m_ChildControlHeight: 1
   m_ChildScaleWidth: 0
@@ -736,8 +756,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
   m_Name:
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.ContentSizeFitter
-  m_HorizontalFit: 0
-  m_VerticalFit: 2
+  m_HorizontalFit: 2
+  m_VerticalFit: 0
 --- !u!1 &5267933223797625879
 GameObject:
   m_ObjectHideFlags: 0
@@ -1060,3 +1080,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: Novels.Catalog::Novels.Catalog.View.CatalogScreen
   _title: {fileID: 1633305251863425057}
   _cardPrefab: {fileID: 1947818341915338342}
+  _carousel: {fileID: 900771238450120001}

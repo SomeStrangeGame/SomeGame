@@ -16,6 +16,7 @@ namespace Novels.Character
             string contentPrefix,
             Content.CharacterAssetProfile profile,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<UniTask<CharacterSpriteTrimManifest>> getSpriteTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
         {
@@ -26,6 +27,7 @@ namespace Novels.Character
                 profile,
                 addresses,
                 getSprite,
+                getSpriteTrimManifest,
                 missingCharacter,
                 cancellationToken);
             _thumbnails = new CharacterThumbnailLoader(

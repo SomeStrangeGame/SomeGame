@@ -12,13 +12,15 @@ namespace Novels.Catalog.View
         [SerializeField] private Button _button;
         [SerializeField] private Image _cover;
 
+        private CanvasGroup _canvasGroup;
+
+        public RectTransform RectTransform => (RectTransform)transform;
+
         public void Bind(
             string title,
             string description,
             string status,
-            bool isEnabled,
-            Sprite cover,
-            Action onClick)
+            Sprite cover)
         {
             _cover ??= GetComponent<Image>();
             if (_cover != null)
@@ -32,9 +34,23 @@ namespace Novels.Catalog.View
                 !string.IsNullOrWhiteSpace(description));
             _status.text = status ?? string.Empty;
             _status.gameObject.SetActive(!string.IsNullOrWhiteSpace(status));
+        }
+
+        public void SetClick(Action onClick)
+        {
             _button.onClick.RemoveAllListeners();
             _button.onClick.AddListener(() => onClick?.Invoke());
-            _button.interactable = isEnabled;
+            _button.interactable = true;
+        }
+
+        public void SetFocus(float scale, float opacity)
+        {
+            transform.localScale = Vector3.one * scale;
+            if (_canvasGroup == null)
+                _canvasGroup = GetComponent<CanvasGroup>();
+            if (_canvasGroup == null)
+                _canvasGroup = gameObject.AddComponent<CanvasGroup>();
+            _canvasGroup.alpha = opacity;
         }
     }
 }

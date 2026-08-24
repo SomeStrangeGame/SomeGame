@@ -10,12 +10,11 @@ namespace Novels.ContentSdk.Editor
     internal static class ContentBundleAudit
     {
         private const string _catalogRoot = "Assets/RemoteAssets/catalog/";
-        private const long _catalogTargetSize = 50 * 1024;
         private const long _catalogWarningSize = 100 * 1024;
         private const long _catalogMaximumSize = 500 * 1024;
 
         internal static void Audit(
-            ContentProject project,
+            ContentBuildPlan plan,
             IReadOnlyCollection<string> rootAssets,
             string bundlePath,
             long declaredSize)
@@ -39,10 +38,6 @@ namespace Novels.ContentSdk.Editor
             var assets = rootAssets?
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray() ?? Array.Empty<string>();
-            Debug.Log(
-                $"Content bundle '{project.BundleName}' root assets:\n- "
-                + string.Join("\n- ", assets));
-
             foreach (var path in assets)
             {
                 if (!path.StartsWith(
@@ -53,22 +48,32 @@ namespace Novels.ContentSdk.Editor
                 }
             }
 
-            if (project.Kind == ContentProjectKind.Catalog)
-                AuditCatalog(assets, actualSize, errors);
-            else
-                Debug.Log($"Content bundle size: {FormatSize(actualSize)}.");
+            var dependencies = plan.Kind == ContentProjectKind.Catalog
+                ? AuditCatalog(assets, actualSize, errors)
+                : Array.Empty<string>();
 
             if (errors.Count > 0)
             {
+                Debug.LogError(
+                    $"Content bundle '{plan.BundleName}' root assets:\n- "
+                    + string.Join("\n- ", assets));
+                if (dependencies.Length > 0)
+                {
+                    Debug.LogError(
+                        "Catalog bundle dependencies:\n- "
+                        + string.Join("\n- ", dependencies));
+                }
                 throw new InvalidOperationException(
                     "Content bundle audit failed:\n- "
                     + string.Join("\n- ", errors));
             }
 
-            Debug.Log("Content bundle audit passed.");
+            Debug.Log(
+                $"Content bundle '{plan.BundleName}' audit passed: "
+                + $"{assets.Length} root assets, {FormatSize(actualSize)}.");
         }
 
-        private static void AuditCatalog(
+        private static string[] AuditCatalog(
             string[] rootAssets,
             long size,
             ICollection<string> errors)
@@ -76,10 +81,6 @@ namespace Novels.ContentSdk.Editor
             var dependencies = AssetDatabase.GetDependencies(rootAssets, true)
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray();
-            Debug.Log(
-                "Catalog bundle dependencies:\n- "
-                + string.Join("\n- ", dependencies));
-
             foreach (var path in dependencies)
             {
                 if (path.StartsWith("Assets/", StringComparison.Ordinal)
@@ -103,18 +104,7 @@ namespace Novels.ContentSdk.Editor
                     $"Catalog bundle is {FormatSize(size)}; warning threshold is "
                     + $"{FormatSize(_catalogWarningSize)}.");
             }
-            else if (size > _catalogTargetSize)
-            {
-                Debug.Log(
-                    $"Catalog bundle is {FormatSize(size)}; target is "
-                    + $"{FormatSize(_catalogTargetSize)}.");
-            }
-            else
-            {
-                Debug.Log(
-                    $"Catalog bundle is {FormatSize(size)} and fits the target "
-                    + "budget.");
-            }
+            return dependencies;
         }
 
         private static string FormatSize(long bytes) =>

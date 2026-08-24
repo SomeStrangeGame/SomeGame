@@ -24,7 +24,8 @@ bundle + files  +--> release.json
 Перед любым изменением pipeline прочитайте
 `ParallelRefactoringCoordination.md`. Текущие команды сборки и публикации
 описаны в `ContentPipeline.md`, а поддерживаемый предметный синтаксис — в
-`InkSyntax.md`.
+`InkSyntax.md`. После автоматической проверки пройдите
+[ручной чек-лист](ManualContentChecklist.md).
 
 ## Первые пять минут
 
@@ -149,7 +150,18 @@ story/presentation/<feature>/screen-variant.prefab
    уже глобален в пределах истории. Для второго имени используйте alias.
 5. Убедитесь, что texture importer применил Sprite, отключённые mipmaps и
    Read/Write, а также Android ASTC 6×6 и iOS ASTC 8×8.
-6. Проверьте ссылку валидатором и только затем собирайте bundle.
+6. После добавления эмоций, волос или аксессуаров выполните сначала отчёт,
+   затем безопасную обрезку прозрачных полей:
+
+   ```bash
+   Tools/novels-tools/novels-content trim-sprites <story-id> report
+   Tools/novels-tools/novels-content trim-sprites <story-id> apply
+   ```
+
+   Команда сохраняет оригиналы в `Build/SpriteTrimBackup/<timestamp>`, не
+   меняет `.meta` PNG и обновляет один `sprite-trim-manifest.asset` истории.
+   Повторный запуск идемпотентен: уже обработанные файлы пропускаются.
+7. Проверьте ссылку валидатором и только затем собирайте bundle.
 
 ## Команды рабочего процесса
 
@@ -174,3 +186,4 @@ Tools/novels-tools/novels-content build zdm editor
 - размер bundle сравнен с baseline из `ContentSizeBaseline.md`;
 - `git diff --check` проходит;
 - в статус-файле потока перечислены проверки и известные предупреждения.
+- смысл и визуальная целостность проверены по `ManualContentChecklist.md`.

@@ -9,6 +9,7 @@ namespace Novels.Catalog.View
     {
         [SerializeField] private Text _title;
         [SerializeField] private Card _cardPrefab;
+        [SerializeField] private CatalogCarousel _carousel;
 
         private readonly Dictionary<string, Card> _cards = new();
 
@@ -33,8 +34,9 @@ namespace Novels.Catalog.View
                 _cards.Add(id, card);
             }
 
-            card.Bind(title, description, status, isEnabled, cover, onClick);
+            card.Bind(title, description, status, cover);
             card.gameObject.SetActive(true);
+            _carousel.Register(card, isEnabled, onClick);
         }
     }
 }

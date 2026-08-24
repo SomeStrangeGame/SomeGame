@@ -1,0 +1,3488 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e5e7b97f324d399b50316092795f4a, type: 3}
+  m_Name: sprite-trim-manifest
+  m_EditorClassIdentifier: Novels.Character::Novels.Character.CharacterSpriteTrimManifest
+  _entries:
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/accessories/middle/\u0432\u043E\u0434\u044B
+      \u0445\u0430\u043F\u0438.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 430
+    _cropY: 928
+    _cropWidth: 270
+    _cropHeight: 576
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/accessories/middle/\u043B\u0438\u0441\u0442\u044C\u044F
+      \u043B\u043E\u0442\u043E\u0441\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 438
+    _cropY: 1060
+    _cropWidth: 247
+    _cropHeight: 182
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/accessories/middle/\u043B\u0443\u0447\u0438
+      \u0441\u043E\u043B\u043D\u0446\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 459
+    _cropY: 1057
+    _cropWidth: 201
+    _cropHeight: 193
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/accessories/middle/\u043F\u043E\u0434\u0432\u0435\u0441\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 474
+    _cropY: 1089
+    _cropWidth: 216
+    _cropHeight: 157
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/accessories/middle/\u043F\u043E\u043B\u044F
+      \u0438\u0430\u043B\u0443.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 355
+    _cropY: 895
+    _cropWidth: 340
+    _cropHeight: 637
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/accessories/middle/\u0441\u0435\u0440\u0434\u0446\u0435
+      \u0444\u0430\u0440\u0430\u043E\u043D\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 462
+    _cropY: 1108
+    _cropWidth: 217
+    _cropHeight: 165
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/accessories/middle/\u0441\u043E\u043A\u0440\u043E\u0432\u0438\u0449\u0435
+      \u0445\u0430\u0442\u0445\u043E\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 472
+    _cropY: 1106
+    _cropWidth: 173
+    _cropHeight: 151
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0431\u0430\u0441\u0442\u0435\u0442/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 298
+    _cropY: 0
+    _cropWidth: 546
+    _cropHeight: 1316
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0431\u0435\u0433\u043B\u044F\u043D\u043A\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 187
+    _cropY: 0
+    _cropWidth: 677
+    _cropHeight: 1225
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0431\u043B\u0430\u0433\u043E\u0441\u043B\u043E\u0432\u0435\u043D\u0438\u0435
+      \u0431\u0430\u0441\u0442\u0435\u0442/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 116
+    _cropY: 0
+    _cropWidth: 785
+    _cropHeight: 1227
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0432\u0434\u043E\u0445\u043D\u043E\u0432\u0435\u043D\u0438\u0435/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 166
+    _cropY: 0
+    _cropWidth: 727
+    _cropHeight: 1214
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0432\u0435\u043B\u0438\u043A\u043E\u043B\u0435\u043F\u0438\u0435/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 188
+    _cropY: 0
+    _cropWidth: 716
+    _cropHeight: 1292
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0432\u043B\u0430\u0441\u0442\u0438\u0442\u0435\u043B\u044C\u043D\u0438\u0446\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 266
+    _cropY: 0
+    _cropWidth: 548
+    _cropHeight: 1289
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0433\u043E\u0441\u043F\u043E\u0436\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 299
+    _cropY: 0
+    _cropWidth: 537
+    _cropHeight: 1239
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0436\u0440\u0438\u0446\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 9
+    _cropY: 0
+    _cropWidth: 974
+    _cropHeight: 1245
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0438\u0441\u0438\u0434\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 174
+    _cropY: 0
+    _cropWidth: 735
+    _cropHeight: 1257
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043C\u0430\u0430\u0442/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 376
+    _cropY: 0
+    _cropWidth: 418
+    _cropHeight: 1259
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043D\u0430
+      \u043E\u0441\u043E\u0431\u044B\u0439 \u0441\u043B\u0443\u0447\u0430\u0439/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 118
+    _cropY: 0
+    _cropWidth: 733
+    _cropHeight: 1218
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043D\u043E\u0447\u043D\u0443\u0448\u043A\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 306
+    _cropY: 0
+    _cropWidth: 574
+    _cropHeight: 1213
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043E\u0437\u0430\u0440\u0435\u043D\u0438\u0435/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 293
+    _cropY: 0
+    _cropWidth: 502
+    _cropHeight: 1074
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043E\u0442\u043A\u0440\u043E\u0432\u0435\u043D\u0438\u0435/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 352
+    _cropY: 0
+    _cropWidth: 464
+    _cropHeight: 1074
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043E\u0447\u0430\u0440\u043E\u0432\u0430\u043D\u0438\u0435/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 217
+    _cropY: 0
+    _cropWidth: 579
+    _cropHeight: 1211
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043F\u043E\u0432\u0435\u043B\u0438\u0442\u0435\u043B\u044C\u043D\u0438\u0446\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 369
+    _cropY: 0
+    _cropWidth: 423
+    _cropHeight: 1219
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043F\u043E\u043A\u043E\u0439/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 229
+    _cropY: 0
+    _cropWidth: 667
+    _cropHeight: 1071
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043F\u0440\u0430\u0437\u0434\u043D\u0438\u0447\u043D\u043E\u0435
+      \u0436\u0440\u0435\u0447\u0435\u0441\u043A\u043E\u0435/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 172
+    _cropY: 0
+    _cropWidth: 726
+    _cropHeight: 1231
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u043F\u0443\u0442\u0435\u0448\u0435\u0441\u0442\u0432\u0435\u043D\u043D\u0438\u0446\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 212
+    _cropY: 0
+    _cropWidth: 622
+    _cropHeight: 1233
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0440\u043E\u0441\u043A\u043E\u0448\u044C/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 220
+    _cropY: 0
+    _cropWidth: 680
+    _cropHeight: 1291
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0441\u0435\u0445\u043C\u0435\u0442/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 336
+    _cropY: 0
+    _cropWidth: 462
+    _cropHeight: 1262
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0441\u043E\u0440\u043E\u0447\u043A\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 363
+    _cropY: 0
+    _cropWidth: 429
+    _cropHeight: 1219
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0441\u0442\u0440\u0430\u043D\u043D\u0438\u0446\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 167
+    _cropY: 0
+    _cropWidth: 677
+    _cropHeight: 1304
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/clothes/\u0446\u0430\u0440\u0438\u0446\u0430/1.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 153
+    _cropY: 0
+    _cropWidth: 773
+    _cropHeight: 1221
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u0432\u044B\u0441\u043E\u043A\u0438\u0439
+      \u0445\u0432\u043E\u0441\u0442 \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 234
+    _cropY: 777
+    _cropWidth: 491
+    _cropHeight: 850
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u0432\u044B\u0441\u043E\u043A\u0438\u0439
+      \u0445\u0432\u043E\u0441\u0442 \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 234
+    _cropY: 777
+    _cropWidth: 491
+    _cropHeight: 850
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u0432\u044B\u0441\u043E\u043A\u0438\u0439
+      \u0445\u0432\u043E\u0441\u0442 \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 234
+    _cropY: 777
+    _cropWidth: 491
+    _cropHeight: 850
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u0433\u043B\u0430\u0434\u043A\u0438\u0435
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 284
+    _cropY: 704
+    _cropWidth: 422
+    _cropHeight: 874
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u0433\u043B\u0430\u0434\u043A\u0438\u0435
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 284
+    _cropY: 704
+    _cropWidth: 422
+    _cropHeight: 874
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u0433\u043B\u0430\u0434\u043A\u0438\u0435
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 284
+    _cropY: 704
+    _cropWidth: 422
+    _cropHeight: 874
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u043F\u043E\u043B\u0443\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 301
+    _cropY: 702
+    _cropWidth: 407
+    _cropHeight: 924
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u043F\u043E\u043B\u0443\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 301
+    _cropY: 702
+    _cropWidth: 407
+    _cropHeight: 924
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u043F\u043E\u043B\u0443\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 301
+    _cropY: 702
+    _cropWidth: 407
+    _cropHeight: 924
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u043F\u0440\u044F\u043C\u044B\u0435
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 61
+    _cropY: 228
+    _cropWidth: 653
+    _cropHeight: 1358
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u043F\u0440\u044F\u043C\u044B\u0435
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 61
+    _cropY: 228
+    _cropWidth: 651
+    _cropHeight: 1358
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/back/\u043F\u0440\u044F\u043C\u044B\u0435
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 61
+    _cropY: 228
+    _cropWidth: 651
+    _cropHeight: 1358
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0432\u043E\u043B\u043D\u044B
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 304
+    _cropY: 780
+    _cropWidth: 522
+    _cropHeight: 800
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0432\u043E\u043B\u043D\u044B
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 301
+    _cropY: 780
+    _cropWidth: 525
+    _cropHeight: 801
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0432\u043E\u043B\u043D\u044B
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 301
+    _cropY: 780
+    _cropWidth: 525
+    _cropHeight: 801
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0437\u0430\u0432\u0438\u0442\u043A\u0438
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 326
+    _cropY: 913
+    _cropWidth: 504
+    _cropHeight: 759
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0437\u0430\u0432\u0438\u0442\u043A\u0438
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 326
+    _cropY: 913
+    _cropWidth: 504
+    _cropHeight: 759
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0437\u0430\u0432\u0438\u0442\u043A\u0438
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 326
+    _cropY: 913
+    _cropWidth: 504
+    _cropHeight: 759
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0437\u0430\u043F\u043B\u0435\u0442\u0451\u043D\u043D\u044B\u0435
+      \u043D\u0430\u0431\u043E\u043A \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 441
+    _cropY: 807
+    _cropWidth: 409
+    _cropHeight: 782
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0437\u0430\u043F\u043B\u0435\u0442\u0451\u043D\u043D\u044B\u0435
+      \u043D\u0430\u0431\u043E\u043A \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 441
+    _cropY: 807
+    _cropWidth: 409
+    _cropHeight: 782
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0437\u0430\u043F\u043B\u0435\u0442\u0451\u043D\u043D\u044B\u0435
+      \u043D\u0430\u0431\u043E\u043A \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 443
+    _cropY: 805
+    _cropWidth: 409
+    _cropHeight: 783
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u043E\u0441\u0430
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 418
+    _cropY: 723
+    _cropWidth: 271
+    _cropHeight: 860
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u043E\u0441\u0430
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 418
+    _cropY: 723
+    _cropWidth: 271
+    _cropHeight: 860
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u043E\u0441\u0430
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 418
+    _cropY: 723
+    _cropWidth: 271
+    _cropHeight: 860
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u043E\u0441\u044B
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 347
+    _cropY: 916
+    _cropWidth: 389
+    _cropHeight: 751
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u043E\u0441\u044B
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 347
+    _cropY: 916
+    _cropWidth: 389
+    _cropHeight: 751
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u043E\u0441\u044B
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 349
+    _cropY: 916
+    _cropWidth: 387
+    _cropHeight: 749
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u0443\u0434\u0440\u0438
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 269
+    _cropY: 767
+    _cropWidth: 600
+    _cropHeight: 814
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u0443\u0434\u0440\u0438
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 268
+    _cropY: 767
+    _cropWidth: 601
+    _cropHeight: 814
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u0443\u0434\u0440\u0438
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 270
+    _cropY: 768
+    _cropWidth: 599
+    _cropHeight: 814
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 258
+    _cropY: 732
+    _cropWidth: 570
+    _cropHeight: 855
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 258
+    _cropY: 732
+    _cropWidth: 570
+    _cropHeight: 857
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043A\u0443\u0434\u0440\u044F\u0448\u043A\u0438
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 258
+    _cropY: 732
+    _cropWidth: 570
+    _cropHeight: 857
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043C\u0435\u043B\u043A\u0438\u0435
+      \u043A\u043E\u0441\u044B \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 362
+    _cropY: 619
+    _cropWidth: 399
+    _cropHeight: 969
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043C\u0435\u043B\u043A\u0438\u0435
+      \u043A\u043E\u0441\u044B \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 362
+    _cropY: 619
+    _cropWidth: 399
+    _cropHeight: 969
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043C\u0435\u043B\u043A\u0438\u0435
+      \u043A\u043E\u0441\u044B \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 362
+    _cropY: 619
+    _cropWidth: 399
+    _cropHeight: 969
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043C\u043E\u043A\u0440\u044B\u0435
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 409
+    _cropY: 487
+    _cropWidth: 375
+    _cropHeight: 1088
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043C\u043E\u043A\u0440\u044B\u0435
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 409
+    _cropY: 487
+    _cropWidth: 375
+    _cropHeight: 1088
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043C\u043E\u043A\u0440\u044B\u0435
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 409
+    _cropY: 487
+    _cropWidth: 375
+    _cropHeight: 1088
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043D\u0430\u043A\u0438\u0434\u043A\u0430
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 75
+    _cropY: 0
+    _cropWidth: 866
+    _cropHeight: 1571
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043D\u0430\u043A\u0438\u0434\u043A\u0430
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 75
+    _cropY: 0
+    _cropWidth: 866
+    _cropHeight: 1571
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043D\u0430\u043A\u0438\u0434\u043A\u0430
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 75
+    _cropY: 0
+    _cropWidth: 866
+    _cropHeight: 1571
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043F\u0440\u044F\u0434\u0438
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 377
+    _cropY: 766
+    _cropWidth: 459
+    _cropHeight: 811
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043F\u0440\u044F\u0434\u0438
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 377
+    _cropY: 766
+    _cropWidth: 459
+    _cropHeight: 811
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043F\u0440\u044F\u0434\u0438
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 377
+    _cropY: 766
+    _cropWidth: 459
+    _cropHeight: 811
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043F\u0440\u044F\u043C\u044B\u0435
+      \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 435
+    _cropY: 771
+    _cropWidth: 336
+    _cropHeight: 802
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043F\u0440\u044F\u043C\u044B\u0435
+      \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 435
+    _cropY: 771
+    _cropWidth: 336
+    _cropHeight: 802
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u043F\u0440\u044F\u043C\u044B\u0435
+      \u0434\u043B\u0438\u043D\u043D\u044B\u0435 \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 435
+    _cropY: 771
+    _cropWidth: 336
+    _cropHeight: 802
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0440\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 326
+    _cropY: 911
+    _cropWidth: 522
+    _cropHeight: 704
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0440\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 326
+    _cropY: 911
+    _cropWidth: 522
+    _cropHeight: 704
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0440\u0430\u0441\u043F\u0443\u0449\u0435\u043D\u043D\u044B\u0435
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 330
+    _cropY: 911
+    _cropWidth: 518
+    _cropHeight: 689
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441
+      \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 335
+    _cropY: 861
+    _cropWidth: 513
+    _cropHeight: 722
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441
+      \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 335
+    _cropY: 861
+    _cropWidth: 513
+    _cropHeight: 722
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441
+      \u0443\u043A\u0440\u0430\u0448\u0435\u043D\u0438\u0435\u043C \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 335
+    _cropY: 861
+    _cropWidth: 513
+    _cropHeight: 722
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 387
+    _cropY: 1193
+    _cropWidth: 325
+    _cropHeight: 411
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u043A\u0443\u0434\u0440\u0438 \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 425
+    _cropY: 1235
+    _cropWidth: 270
+    _cropHeight: 436
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u043A\u0443\u0434\u0440\u0438 \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 425
+    _cropY: 1235
+    _cropWidth: 270
+    _cropHeight: 436
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u043A\u0443\u0434\u0440\u0438 \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 425
+    _cropY: 1235
+    _cropWidth: 270
+    _cropHeight: 436
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 388
+    _cropY: 1199
+    _cropWidth: 322
+    _cropHeight: 401
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0441\u043E\u0431\u0440\u0430\u043D\u043D\u044B\u0435
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 388
+    _cropY: 1199
+    _cropWidth: 322
+    _cropHeight: 401
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0445\u0432\u043E\u0441\u0442
+      \u043A\u0430\u0448\u0442\u0430\u043D\u043E\u0432\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 317
+    _cropY: 827
+    _cropWidth: 388
+    _cropHeight: 799
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0445\u0432\u043E\u0441\u0442
+      \u043C\u0435\u0434\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 317
+    _cropY: 827
+    _cropWidth: 388
+    _cropHeight: 799
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/hairs/front/\u0445\u0432\u043E\u0441\u0442
+      \u0447\u0451\u0440\u043D\u044B\u0435/\u0431\u043B\u043E\u043D\u0434.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 317
+    _cropY: 827
+    _cropWidth: 388
+    _cropHeight: 799
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0431\u043E\u043B\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 204
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 431
+    _cropY: 0
+    _cropWidth: 251
+    _cropHeight: 1544
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0438\u0441\u043F\u0443\u0433.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043A\u0440\u0438\u043A.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1238
+    _cropWidth: 213
+    _cropHeight: 306
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 204
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 930
+    _cropWidth: 355
+    _cropHeight: 614
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 930
+    _cropWidth: 355
+    _cropHeight: 614
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043B\u0451\u0437\u044B.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 930
+    _cropWidth: 355
+    _cropHeight: 614
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 930
+    _cropWidth: 355
+    _cropHeight: 614
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0442\u0440\u0430\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 479
+    _cropY: 1265
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 323
+    _cropY: 769
+    _cropWidth: 360
+    _cropHeight: 776
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0433\u043E\u043B\u0443\u0431\u043E\u0439
+      \u043B\u043E\u0442\u043E\u0441/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 319
+    _cropY: 0
+    _cropWidth: 531
+    _cropHeight: 1569
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0431\u043E\u043B\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0438\u0441\u043F\u0443\u0433.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043A\u0440\u0438\u043A.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043B\u0435\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 394
+    _cropY: 242
+    _cropWidth: 289
+    _cropHeight: 1292
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043B\u0435\u0437\u044B.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043B\u0451\u0437\u044B.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 288
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0442\u0440\u0430\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 395
+    _cropY: 247
+    _cropWidth: 288
+    _cropHeight: 1287
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 396
+    _cropY: 253
+    _cropWidth: 286
+    _cropHeight: 1280
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0436\u0451\u043B\u0442\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 318
+    _cropY: 0
+    _cropWidth: 533
+    _cropHeight: 1569
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0431\u043E\u043B\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 207
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 426
+    _cropY: 1187
+    _cropWidth: 265
+    _cropHeight: 356
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 394
+    _cropY: 260
+    _cropWidth: 313
+    _cropHeight: 1284
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 426
+    _cropY: 1187
+    _cropWidth: 265
+    _cropHeight: 356
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 426
+    _cropY: 1187
+    _cropWidth: 265
+    _cropHeight: 356
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1268
+    _cropWidth: 206
+    _cropHeight: 285
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0438\u0441\u043F\u0443\u0433.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1267
+    _cropWidth: 221
+    _cropHeight: 286
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043A\u0440\u0438\u043A.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1231
+    _cropWidth: 221
+    _cropHeight: 322
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043B\u0451\u0437\u044B.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0442\u0440\u0430\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1267
+    _cropWidth: 221
+    _cropHeight: 286
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1268
+    _cropWidth: 206
+    _cropHeight: 285
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1265
+    _cropWidth: 207
+    _cropHeight: 288
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1265
+    _cropWidth: 207
+    _cropHeight: 288
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 476
+    _cropY: 1270
+    _cropWidth: 206
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0440\u043E\u0437\u043E\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 315
+    _cropY: 0
+    _cropWidth: 536
+    _cropHeight: 1569
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0431\u043E\u043B\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 333
+    _cropY: 1010
+    _cropWidth: 349
+    _cropHeight: 552
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0438\u043F\u043D\u043E\u0437.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 207
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1234
+    _cropWidth: 207
+    _cropHeight: 329
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 207
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 207
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0438\u0441\u043F\u0443\u0433.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1234
+    _cropWidth: 230
+    _cropHeight: 329
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043A\u0440\u0438\u043A.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1234
+    _cropWidth: 230
+    _cropHeight: 329
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043B\u0451\u0437\u044B.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 995
+    _cropWidth: 216
+    _cropHeight: 567
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0442\u0440\u0430\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1234
+    _cropWidth: 230
+    _cropHeight: 329
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 475
+    _cropY: 1260
+    _cropWidth: 216
+    _cropHeight: 302
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/maincharacter/view/\u0441\u0438\u0440\u0435\u043D\u0435\u0432\u044B\u0439
+      \u043B\u043E\u0442\u043E\u0441/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 318
+    _cropY: 0
+    _cropWidth: 533
+    _cropHeight: 1569
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0431\u043E\u043B\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 439
+    _cropY: 1325
+    _cropWidth: 227
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1330
+    _cropWidth: 204
+    _cropHeight: 286
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1330
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1331
+    _cropWidth: 205
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 448
+    _cropY: 1332
+    _cropWidth: 209
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1330
+    _cropWidth: 204
+    _cropHeight: 287
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u043F\u043E\u0434\u0441\u0432\u0435\u0442\u043A\u0430
+      \u0433\u043B\u0430\u0437.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 489
+    _cropY: 1493
+    _cropWidth: 123
+    _cropHeight: 26
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 363
+    _cropY: 1331
+    _cropWidth: 289
+    _cropHeight: 328
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 450
+    _cropY: 1331
+    _cropWidth: 213
+    _cropHeight: 278
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0441\u0432\u0435\u0442\u044F\u0449\u0438\u0435\u0441\u044F
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 440
+    _cropY: 1332
+    _cropWidth: 215
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0441\u0438\u044F\u044E\u0449\u0438\u0435
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 440
+    _cropY: 1332
+    _cropWidth: 215
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 429
+    _cropY: 1244
+    _cropWidth: 225
+    _cropHeight: 360
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1336
+    _cropWidth: 201
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 453
+    _cropY: 1331
+    _cropWidth: 199
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 450
+    _cropY: 1332
+    _cropWidth: 202
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 429
+    _cropY: 1244
+    _cropWidth: 225
+    _cropHeight: 360
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 449
+    _cropY: 1331
+    _cropWidth: 202
+    _cropHeight: 278
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1332
+    _cropWidth: 202
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1332
+    _cropWidth: 202
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 146
+    _cropY: 0
+    _cropWidth: 832
+    _cropHeight: 1703
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/\u0432\u0437\u043B\u043E\u0445\u043C\u0430\u0447\u0435\u043D\u043D\u044B\u0439.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 139
+    _cropY: 0
+    _cropWidth: 852
+    _cropHeight: 1707
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0430\u043D\u043F\u0443/view/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 139
+    _cropY: 0
+    _cropWidth: 843
+    _cropHeight: 1709
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 238
+    _cropY: 448
+    _cropWidth: 722
+    _cropHeight: 1257
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 474
+    _cropWidth: 719
+    _cropHeight: 1228
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 474
+    _cropWidth: 719
+    _cropHeight: 1228
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 474
+    _cropWidth: 719
+    _cropHeight: 1228
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 474
+    _cropWidth: 719
+    _cropHeight: 1228
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 474
+    _cropWidth: 719
+    _cropHeight: 1228
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 474
+    _cropWidth: 719
+    _cropHeight: 1228
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 474
+    _cropWidth: 719
+    _cropHeight: 1228
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 131
+    _cropY: 0
+    _cropWidth: 869
+    _cropHeight: 1799
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0431\u0430\u0441\u0442\u0435\u0442/view/\u0436\u0435\u043D\u0449\u0438\u043D\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 131
+    _cropY: 0
+    _cropWidth: 869
+    _cropHeight: 1799
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 498
+    _cropY: 1215
+    _cropWidth: 214
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 498
+    _cropY: 1215
+    _cropWidth: 214
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 498
+    _cropY: 1215
+    _cropWidth: 214
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 498
+    _cropY: 1215
+    _cropWidth: 214
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0441\u0442\u0440\u0430\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 498
+    _cropY: 1215
+    _cropWidth: 214
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 498
+    _cropY: 1215
+    _cropWidth: 214
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0435\u0440\u0445\u043E\u0432\u043D\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 31
+    _cropY: 0
+    _cropWidth: 1010
+    _cropHeight: 1550
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u043E\u0438\u043D/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 266
+    _cropY: 0
+    _cropWidth: 607
+    _cropHeight: 1574
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u043E\u0438\u043D/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 266
+    _cropY: 0
+    _cropWidth: 607
+    _cropHeight: 1574
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u043E\u0438\u043D/view/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 266
+    _cropY: 0
+    _cropWidth: 607
+    _cropHeight: 1574
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u043E\u0438\u043D/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 56
+    _cropY: 0
+    _cropWidth: 976
+    _cropHeight: 1634
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u043E\u0438\u043D/view/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 52
+    _cropY: 0
+    _cropWidth: 980
+    _cropHeight: 1634
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 247
+    _cropY: 0
+    _cropWidth: 557
+    _cropHeight: 1479
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0432\u043E\u0438\u043D/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 46
+    _cropY: 0
+    _cropWidth: 1007
+    _cropHeight: 1743
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0432\u043E\u0438\u043D/view/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 40
+    _cropY: 0
+    _cropWidth: 1013
+    _cropHeight: 1743
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1360
+    _originalHeight: 1920
+    _cropX: 593
+    _cropY: 1277
+    _cropWidth: 181
+    _cropHeight: 212
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1360
+    _originalHeight: 1920
+    _cropX: 590
+    _cropY: 1277
+    _cropWidth: 181
+    _cropHeight: 213
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u043E\u0441\u043A\u0430\u043B.png"
+    _originalWidth: 1360
+    _originalHeight: 1920
+    _cropX: 590
+    _cropY: 1278
+    _cropWidth: 182
+    _cropHeight: 212
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u043F\u0440\u0438\u0437\u0440\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1360
+    _originalHeight: 1920
+    _cropX: 590
+    _cropY: 1280
+    _cropWidth: 183
+    _cropHeight: 207
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1360
+    _originalHeight: 1920
+    _cropX: 589
+    _cropY: 1269
+    _cropWidth: 184
+    _cropHeight: 221
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+    _originalWidth: 1360
+    _originalHeight: 1920
+    _cropX: 591
+    _cropY: 1275
+    _cropWidth: 182
+    _cropHeight: 215
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0432\u0442\u043E\u0440\u043E\u0439
+      \u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/main.png"
+    _originalWidth: 1360
+    _originalHeight: 1920
+    _cropX: 296
+    _cropY: 0
+    _cropWidth: 1062
+    _cropHeight: 1591
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0431\u043E\u043B\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 439
+    _cropY: 1325
+    _cropWidth: 227
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1330
+    _cropWidth: 204
+    _cropHeight: 286
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1330
+    _cropWidth: 203
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1331
+    _cropWidth: 205
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 448
+    _cropY: 1332
+    _cropWidth: 209
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1330
+    _cropWidth: 204
+    _cropHeight: 287
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u043F\u043E\u0434\u0441\u0432\u0435\u0442\u043A\u0430
+      \u0433\u043B\u0430\u0437.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 489
+    _cropY: 1493
+    _cropWidth: 123
+    _cropHeight: 26
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 363
+    _cropY: 1331
+    _cropWidth: 289
+    _cropHeight: 328
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 450
+    _cropY: 1331
+    _cropWidth: 213
+    _cropHeight: 278
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0441\u0432\u0435\u0442\u044F\u0449\u0438\u0435\u0441\u044F
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 440
+    _cropY: 1332
+    _cropWidth: 215
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0441\u0438\u044F\u044E\u0449\u0438\u0435
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 440
+    _cropY: 1332
+    _cropWidth: 215
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 429
+    _cropY: 1244
+    _cropWidth: 225
+    _cropHeight: 360
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1336
+    _cropWidth: 201
+    _cropHeight: 264
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 453
+    _cropY: 1331
+    _cropWidth: 199
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 450
+    _cropY: 1332
+    _cropWidth: 202
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 429
+    _cropY: 1244
+    _cropWidth: 225
+    _cropHeight: 360
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 449
+    _cropY: 1331
+    _cropWidth: 202
+    _cropHeight: 278
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1332
+    _cropWidth: 202
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u0445\u043C\u044B\u043B\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 451
+    _cropY: 1332
+    _cropWidth: 202
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 384
+    _cropY: 0
+    _cropWidth: 499
+    _cropHeight: 1620
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 146
+    _cropY: 0
+    _cropWidth: 832
+    _cropHeight: 1703
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/\u0430\u043D\u043F\u0443.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 146
+    _cropY: 0
+    _cropWidth: 832
+    _cropHeight: 1703
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/\u0432\u0437\u043B\u043E\u0445\u043C\u0430\u0447\u0435\u043D\u043D\u044B\u0439.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 139
+    _cropY: 0
+    _cropWidth: 852
+    _cropHeight: 1707
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/\u043D\u0435\u0437\u043D\u0430\u043A\u043E\u043C\u0435\u0446.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 146
+    _cropY: 0
+    _cropWidth: 832
+    _cropHeight: 1703
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440/view/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 139
+    _cropY: 0
+    _cropWidth: 843
+    _cropHeight: 1709
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C
+      (\u0433\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430).png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 448
+    _cropY: 1234
+    _cropWidth: 196
+    _cropHeight: 245
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 437
+    _cropY: 1240
+    _cropWidth: 212
+    _cropHeight: 250
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 437
+    _cropY: 1240
+    _cropWidth: 212
+    _cropHeight: 250
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 441
+    _cropY: 1233
+    _cropWidth: 201
+    _cropHeight: 259
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0433\u043E\u0440\u043E\u0436\u0430\u043D\u043A\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 237
+    _cropY: 0
+    _cropWidth: 629
+    _cropHeight: 1572
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1244
+    _cropWidth: 193
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1244
+    _cropWidth: 193
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u043B\u0435\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1243
+    _cropWidth: 244
+    _cropHeight: 278
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1244
+    _cropWidth: 193
+    _cropHeight: 279
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 259
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 446
+    _cropY: 1244
+    _cropWidth: 245
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1243
+    _cropWidth: 244
+    _cropHeight: 278
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 259
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 443
+    _cropY: 1244
+    _cropWidth: 200
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0441\u0442\u0440\u0430\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1244
+    _cropWidth: 193
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1268
+    _cropWidth: 193
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 446
+    _cropY: 1244
+    _cropWidth: 245
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1244
+    _cropWidth: 193
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 447
+    _cropY: 1244
+    _cropWidth: 193
+    _cropHeight: 277
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 206
+    _cropY: 0
+    _cropWidth: 759
+    _cropHeight: 1625
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0434\u0436\u043E\u0441\u0435\u0440/view/\u0432\u0437\u043B\u043E\u0445\u043C\u0430\u0447\u0435\u043D\u043D\u044B\u0439.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 205
+    _cropY: 0
+    _cropWidth: 763
+    _cropHeight: 1619
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0436\u0440\u0438\u0446\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 260
+    _cropY: 0
+    _cropWidth: 514
+    _cropHeight: 1502
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B\u0430
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 255
+    _cropY: 503
+    _cropWidth: 723
+    _cropHeight: 929
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0441\u0435\u0440\u044B\u0435
+      \u0437\u0440\u0430\u0447\u043A\u0438.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 410
+    _cropY: 1220
+    _cropWidth: 210
+    _cropHeight: 205
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 327
+    _cropY: 0
+    _cropWidth: 636
+    _cropHeight: 1477
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 245
+    _cropY: 0
+    _cropWidth: 742
+    _cropHeight: 1533
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0437\u0430\u0445\u0440\u0430/view/\u043C\u0451\u0440\u0442\u0432\u0430\u044F.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 242
+    _cropY: 0
+    _cropWidth: 745
+    _cropHeight: 1534
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0438\u0441\u0441\u0430/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 454
+    _cropY: 1211
+    _cropWidth: 194
+    _cropHeight: 246
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0438\u0441\u0441\u0430/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 454
+    _cropY: 1213
+    _cropWidth: 194
+    _cropHeight: 247
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0438\u0441\u0441\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 452
+    _cropY: 1208
+    _cropWidth: 197
+    _cropHeight: 251
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0438\u0441\u0441\u0430/view/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 452
+    _cropY: 1214
+    _cropWidth: 194
+    _cropHeight: 250
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0438\u0441\u0441\u0430/view/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 455
+    _cropY: 1211
+    _cropWidth: 193
+    _cropHeight: 243
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0438\u0441\u0441\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 188
+    _cropY: 0
+    _cropWidth: 754
+    _cropHeight: 1543
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u043E\u043D\u0442\u0430\u0440/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 86
+    _cropY: 0
+    _cropWidth: 964
+    _cropHeight: 1659
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u043E\u043D\u0442\u0430\u0440/view/\u0432
+      \u043D\u0430\u043A\u0438\u0434\u043A\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 15
+    _cropY: 0
+    _cropWidth: 1065
+    _cropHeight: 1691
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u043E\u043D\u0442\u0430\u0440/view/\u043D\u0430\u043A\u0438\u0434\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 15
+    _cropY: 0
+    _cropWidth: 1065
+    _cropHeight: 1691
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u0431\u043E\u043B\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u043D\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 280
+    _cropY: 0
+    _cropWidth: 610
+    _cropHeight: 1317
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u043A\u0443\u0438\u0431\u0438\u043B\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 240
+    _cropY: 0
+    _cropWidth: 655
+    _cropHeight: 1401
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u043B
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 404
+    _cropY: 1452
+    _cropWidth: 203
+    _cropHeight: 283
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u043A\u0440\u0438\u043A.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 308
+    _cropY: 1291
+    _cropWidth: 308
+    _cropHeight: 426
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0440\u0430\u0437\u043C\u044B\u0448\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0441\u043C\u0443\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0441\u0442\u0440\u0430\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 249
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0441\u0447\u0430\u0441\u0442\u044C\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 360
+    _cropY: 1432
+    _cropWidth: 250
+    _cropHeight: 377
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0440\u0430\u043C\u043E\u0441/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 55
+    _cropY: 0
+    _cropWidth: 1014
+    _cropHeight: 1825
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 391
+    _cropY: 1171
+    _cropWidth: 346
+    _cropHeight: 545
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0437\u0430\u043A\u0430\u0442\u0438\u0442\u044C
+      \u0433\u043B\u0430\u0437\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u043F\u043E\u0441\u0434\u0441\u0432\u0435\u0442\u043A\u0430
+      \u0433\u043B\u0430\u0437.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 459
+    _cropY: 1609
+    _cropWidth: 108
+    _cropHeight: 29
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u043F\u0440\u0438\u0449\u0443\u0440.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 431
+    _cropY: 1462
+    _cropWidth: 199
+    _cropHeight: 254
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 431
+    _cropY: 1462
+    _cropWidth: 199
+    _cropHeight: 254
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0441\u043E\u0431\u043B\u0430\u0437\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1449
+    _cropWidth: 199
+    _cropHeight: 267
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0441\u043E\u043D.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 431
+    _cropY: 1462
+    _cropWidth: 199
+    _cropHeight: 254
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0444\u043B\u0438\u0440\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/emotions/\u044F\u0440\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 432
+    _cropY: 1463
+    _cropWidth: 198
+    _cropHeight: 253
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0435\u0442/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 121
+    _cropY: 0
+    _cropWidth: 841
+    _cropHeight: 1804
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0430\u0440\u0448\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 232
+    _cropY: 951
+    _cropWidth: 631
+    _cropHeight: 579
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0430\u0440\u0448\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 232
+    _cropY: 951
+    _cropWidth: 631
+    _cropHeight: 579
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0430\u0440\u0448\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u043B\u0451\u0433\u043A\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 232
+    _cropY: 951
+    _cropWidth: 631
+    _cropHeight: 579
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0430\u0440\u0448\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 232
+    _cropY: 951
+    _cropWidth: 631
+    _cropHeight: 579
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0430\u0440\u0448\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0441\u043D\u0438\u0441\u0445\u043E\u0436\u0434\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 232
+    _cropY: 951
+    _cropWidth: 631
+    _cropHeight: 579
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0430\u0440\u0448\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 232
+    _cropY: 951
+    _cropWidth: 631
+    _cropHeight: 579
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0430\u0440\u0448\u0430\u044F
+      \u0436\u0440\u0438\u0446\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 137
+    _cropY: 0
+    _cropWidth: 823
+    _cropHeight: 1630
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 461
+    _cropY: 1243
+    _cropWidth: 187
+    _cropHeight: 257
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 364
+    _cropY: 1186
+    _cropWidth: 285
+    _cropHeight: 320
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 123
+    _cropY: 0
+    _cropWidth: 852
+    _cropHeight: 1558
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A\u0438/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 461
+    _cropY: 1243
+    _cropWidth: 187
+    _cropHeight: 257
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A\u0438/view/emotions/\u043D\u0435\u0434\u043E\u0432\u0435\u0440\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 364
+    _cropY: 1186
+    _cropWidth: 285
+    _cropHeight: 320
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0441\u0442\u0440\u0430\u0436\u043D\u0438\u043A\u0438/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 123
+    _cropY: 0
+    _cropWidth: 852
+    _cropHeight: 1558
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0442\u0451\u043C\u043D\u0430\u044F
+      \u0444\u0438\u0433\u0443\u0440\u0430/view/emotions/\u0437\u043B\u043E\u0431\u043D\u044B\u0439
+      \u043E\u0441\u043A\u0430\u043B.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 313
+    _cropY: 0
+    _cropWidth: 582
+    _cropHeight: 1385
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0442\u0451\u043C\u043D\u0430\u044F
+      \u0444\u0438\u0433\u0443\u0440\u0430/view/emotions/\u0437\u043B\u043E\u0431\u043D\u044B\u0439
+      \u0441\u043C\u0435\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 313
+    _cropY: 0
+    _cropWidth: 582
+    _cropHeight: 1385
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0442\u0451\u043C\u043D\u0430\u044F
+      \u0444\u0438\u0433\u0443\u0440\u0430/view/emotions/\u0437\u043B\u043E\u0432\u0435\u0449\u0430\u044F
+      \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 313
+    _cropY: 0
+    _cropWidth: 582
+    _cropHeight: 1385
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0442\u0451\u043C\u043D\u0430\u044F
+      \u0444\u0438\u0433\u0443\u0440\u0430/view/emotions/\u0437\u043B\u043E\u0432\u0435\u0449\u0438\u0439
+      \u0441\u043C\u0435\u0445.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 313
+    _cropY: 0
+    _cropWidth: 582
+    _cropHeight: 1385
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0442\u0451\u043C\u043D\u0430\u044F
+      \u0444\u0438\u0433\u0443\u0440\u0430/view/emotions/\u043E\u0442\u043A\u0440\u044B\u0442\u0430\u044F
+      \u043F\u0430\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 313
+    _cropY: 0
+    _cropWidth: 582
+    _cropHeight: 1385
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0442\u0451\u043C\u043D\u0430\u044F
+      \u0444\u0438\u0433\u0443\u0440\u0430/view/emotions/\u0443\u0436\u0430\u0441\u043D\u043E\u0435
+      \u043B\u0438\u0446\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 313
+    _cropY: 0
+    _cropWidth: 582
+    _cropHeight: 1385
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0442\u0451\u043C\u043D\u0430\u044F
+      \u0444\u0438\u0433\u0443\u0440\u0430/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 0
+    _cropY: 0
+    _cropWidth: 1080
+    _cropHeight: 1514
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u0433\u0440\u0443\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 442
+    _cropY: 811
+    _cropWidth: 527
+    _cropHeight: 683
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u0437\u0430\u0434\u0443\u043C\u0447\u0438\u0432\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 442
+    _cropY: 811
+    _cropWidth: 527
+    _cropHeight: 683
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 442
+    _cropY: 811
+    _cropWidth: 527
+    _cropHeight: 683
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u043D\u0435\u0434\u043E\u0432\u043E\u043B\u044C\u0441\u0442\u0432\u043E.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 442
+    _cropY: 811
+    _cropWidth: 527
+    _cropHeight: 683
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u043D\u0435\u0434\u043E\u0443\u043C\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 442
+    _cropY: 811
+    _cropWidth: 527
+    _cropHeight: 683
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u043E\u0442\u0432\u0440\u0430\u0449\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 442
+    _cropY: 811
+    _cropWidth: 527
+    _cropHeight: 683
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u0440\u0435\u0448\u0438\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 354
+    _cropY: 1220
+    _cropWidth: 444
+    _cropHeight: 297
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 442
+    _cropY: 811
+    _cropWidth: 527
+    _cropHeight: 683
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/main.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 0
+    _cropY: 0
+    _cropWidth: 1080
+    _cropHeight: 1602
+  - _assetAddress: "Assets/RemoteAssets/content/zdm/story/character/characters/\u0444\u0430\u0440\u0430\u043E\u043D/view/\u0441\u0438\u043B\u0443\u044D\u0442.png"
+    _originalWidth: 1080
+    _originalHeight: 1920
+    _cropX: 0
+    _cropY: 0
+    _cropWidth: 1080
+    _cropHeight: 1603

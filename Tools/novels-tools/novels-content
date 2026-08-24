@@ -14,6 +14,7 @@ usage() {
   print '  novels-content doctor'
   print '  novels-content validate <catalog|story-id|all>'
   print '  novels-content build <catalog|story-id|all> <editor|android|ios>'
+  print '  novels-content trim-sprites <story-id|all> <report|apply> [padding]'
   print '  novels-content publish <destination-directory>'
 }
 
@@ -58,12 +59,58 @@ doctor() {
   print 'novels-content: configuration is valid.'
 }
 
+activate_platform_library() {
+  local project=$1 platform=$2
+  local library="$project/Library"
+  local cache="$project/Build/UnityLibraryCache"
+  local marker=.novels-content-platform
+  local current=''
+
+  [[ ! -e "$project/Temp/UnityLockfile" ]] || {
+    print -u2 "Close Unity before changing the content platform: $project"
+    return 1
+  }
+  mkdir -p "$cache"
+
+  if [[ -d "$library" ]]; then
+    [[ ! -f "$library/$marker" ]] || current=$(<"$library/$marker")
+    if [[ "$current" == "$platform" ]]; then
+      print "Reuse $platform Library cache: $project"
+      return
+    fi
+    if [[ -z "$current" ]]; then
+      print -r -- "$platform" > "$library/$marker"
+      print "Adopt current Library as $platform cache: $project"
+      return
+    fi
+    [[ "$current" == editor || "$current" == android || "$current" == ios ]] || {
+      print -u2 "Unknown Library cache marker '$current': $library/$marker"
+      return 1
+    }
+    [[ ! -e "$cache/$current" ]] || {
+      print -u2 "Inactive $current Library cache already exists: $cache/$current"
+      return 1
+    }
+    mv "$library" "$cache/$current"
+  fi
+
+  if [[ -d "$cache/$platform" ]]; then
+    mv "$cache/$platform" "$library"
+    print "Activate cached $platform Library: $project"
+  else
+    mkdir -p "$library"
+    print "Create cold $platform Library cache: $project"
+  fi
+  print -r -- "$platform" > "$library/$marker"
+}
+
 run_unity() {
   local id=$1 method=$2 platform=${3:-}
   local project=$(project_path "$id")
   local action=${method:t}
   local log="$project/Build/${action:l}-${platform:-content}.log"
   mkdir -p "$project/Build"
+  [[ -z "$platform" ]] || activate_platform_library "$project" "$platform"
   print "${action} $id${platform:+ for $platform}..."
   local arguments=(-batchmode -quit -nographics -projectPath "$project" -executeMethod "$method" -logFile "$log")
   [[ -n "$platform" ]] && arguments+=(-contentPlatform "$platform")
@@ -125,6 +172,29 @@ build() {
   compose
 }
 
+trim_sprites() {
+  local selected=${1:-} mode=${2:-report} padding=${3:-4}
+  [[ -n "$selected" ]] || { usage; return 2; }
+  [[ "$selected" != catalog ]] || { print -u2 'Catalog has no character sprites.'; return 2; }
+  [[ "$mode" == report || "$mode" == apply ]] || {
+    print -u2 "Unknown trim mode: $mode"
+    return 2
+  }
+  local id project log
+  local ids=($selected)
+  [[ "$selected" == all ]] && ids=(${(f)"$(story_ids)"})
+  for id in $ids; do
+    project=$(project_path "$id")
+    log="$project/Build/trim-sprites-$mode.log"
+    mkdir -p "$project/Build"
+    print "Character sprite trim $mode: $id..."
+    "$UNITY_BIN" -batchmode -quit -nographics -projectPath "$project" \
+      -executeMethod Novels.ContentSdk.Editor.CharacterSpriteAlphaTrim.Run \
+      -spriteTrimMode "$mode" -spriteTrimPadding "$padding" -logFile "$log"
+    print "Done. Log: $log"
+  done
+}
+
 publish() {
   local destination=${1:-}
   [[ -n "$destination" ]] || { usage; return 2; }
@@ -136,6 +206,7 @@ case ${1:-} in
   doctor) doctor ;;
   validate) validate "${2:-}" ;;
   build) build "${2:-}" "${3:-}" ;;
+  trim-sprites) trim_sprites "${2:-}" "${3:-report}" "${4:-4}" ;;
   publish) publish "${2:-}" ;;
   *) usage; exit 2 ;;
 esac

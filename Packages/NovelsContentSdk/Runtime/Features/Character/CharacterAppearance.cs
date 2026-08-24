@@ -47,19 +47,54 @@ namespace Novels.Character
         internal readonly Sprite Clothes;
         internal readonly CharacterHairSprites Hair;
         internal readonly CharacterAccessorySprites Accessories;
+        internal readonly CharacterSpriteTrimLayouts TrimLayouts;
 
         internal CharacterSpriteSet(
             Sprite mainBody,
             Sprite emotion,
             Sprite clothes,
             CharacterHairSprites hair,
-            CharacterAccessorySprites accessories)
+            CharacterAccessorySprites accessories,
+            CharacterSpriteTrimLayouts trimLayouts = default)
         {
             MainBody = mainBody;
             Emotion = emotion;
             Clothes = clothes;
             Hair = hair;
             Accessories = accessories;
+            TrimLayouts = trimLayouts;
+        }
+    }
+
+    internal readonly struct CharacterSpriteTrimLayouts
+    {
+        internal readonly CharacterSpriteTrimLayout MainBody;
+        internal readonly CharacterSpriteTrimLayout Emotion;
+        internal readonly CharacterSpriteTrimLayout Clothes;
+        internal readonly CharacterSpriteTrimLayout BackHair;
+        internal readonly CharacterSpriteTrimLayout FrontHair;
+        internal readonly CharacterSpriteTrimLayout BackAccessory;
+        internal readonly CharacterSpriteTrimLayout MiddleAccessory;
+        internal readonly CharacterSpriteTrimLayout FrontAccessory;
+
+        internal CharacterSpriteTrimLayouts(
+            CharacterSpriteTrimLayout mainBody,
+            CharacterSpriteTrimLayout emotion,
+            CharacterSpriteTrimLayout clothes,
+            CharacterSpriteTrimLayout backHair,
+            CharacterSpriteTrimLayout frontHair,
+            CharacterSpriteTrimLayout backAccessory,
+            CharacterSpriteTrimLayout middleAccessory,
+            CharacterSpriteTrimLayout frontAccessory)
+        {
+            MainBody = mainBody;
+            Emotion = emotion;
+            Clothes = clothes;
+            BackHair = backHair;
+            FrontHair = frontHair;
+            BackAccessory = backAccessory;
+            MiddleAccessory = middleAccessory;
+            FrontAccessory = frontAccessory;
         }
     }
 }

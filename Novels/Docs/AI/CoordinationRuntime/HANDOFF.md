@@ -353,3 +353,255 @@ Pending / risks:
 Suggested next step:
 - Интегрировать SDK, Game и Catalog одним контрактным блоком, затем выполнить
   обычный ручной маршрут открытия каталога.
+
+## 2026-08-24T13:31:09Z — validation-simplification — completed
+
+Task: Упростить Content SDK validation, промежуточный план сборки и диагностические
+логи, отделив автоматические проверки от ручной приёмки.
+
+Changed:
+- `ContentValidation.cs`: удалён неиспользуемый общий warning-слой; ошибки
+  по-прежнему собираются и группируются одним сообщением.
+- `ContentProjectValidation.cs`: `ContentProject`/inspector заменены линейной
+  проверкой и компактным `ContentBuildPlan`; тип проекта задаёт JSON-маркер.
+- `ContentBundleAudit.cs`, `ContentPipeline.cs`: успешный audit выдаёт одну
+  сводку, подробные assets/dependencies показываются при ошибке.
+- `ManualContentChecklist.md` и связанные документы: субъективная визуальная и
+  смысловая приёмка явно передана человеку.
+
+Validation:
+- Unity 6000.3.11f1 batch compile Novels: успешно, C#-ошибок нет.
+- `Tools/novels-tools/novels-content validate all`: Catalog, TZM, ZDM успешно.
+- `Tools/novels-tools/novels-content build catalog editor`: успешно; audit
+  `novels_catalog` — одна строка, 1 root asset, 6.5 KiB.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Ручная визуальная проверка контента не выполнялась; для неё добавлен чек-лист.
+- Тесты намеренно не добавлялись и не запускались.
+
+Suggested next step:
+- Выполнить обычный ручной маршрут Catalog → история → эпизод; следующая FIFO-
+  заявка `catalog-carousel` может начинать работу после освобождения lock.
+
+## 2026-08-24T13:42:24Z — catalog-carousel — ready-for-integration
+
+Task: Заменить вертикальный список Catalog полной горизонтальной каруселью.
+
+Changed:
+- `CatalogCarousel.cs`: drag, snap ближайшей карточки, адаптивные отступы,
+  масштаб/прозрачность и select-or-open click behavior.
+- `Card.cs`, `CatalogScreen.cs`: минимальная интеграция focus и click без
+  изменения загрузки данных.
+- `screen.prefab`: горизонтальный ScrollRect/LayoutGroup, карточка 280×340 и
+  полностью связанные сериализованные ссылки карусели.
+- `README.md`: поведение, параметры и ручной device/aspect smoke checklist.
+
+Validation:
+- Unity Catalog import/validation: успешно, prefab импортирован без missing
+  scripts или invalid references.
+- `novels-content build catalog editor`: успешно; audit — 1 root asset,
+  bundle 6,7 КиБ.
+- Unity 6000.3.11f1 batch compile `Novels`: успешно.
+- Scoped `git diff --check`, GUID и prefab file ID: успешно.
+
+Pending / risks:
+- Реальные mouse/touch gestures и визуальная плавность на телефоне/планшете
+  требуют ручной проверки; batch mode этого не подтверждает.
+
+Suggested next step:
+- Пройти чек-лист README в Game Play Mode на узком и широком экране.
+## 2026-08-24T14:08:00Z — character-alpha-trim — completed
+
+Task: physically trim transparent canvas from character emotion/hair/accessory
+sprites while preserving authored placement at runtime.
+
+Changed:
+- added one generated `sprite-trim-manifest.asset` per story and runtime layout
+  restoration in `CharacterScreen`; character prefabs and asset addresses remain
+  unchanged;
+- added `CharacterSpriteAlphaTrim` and CLI command
+  `novels-content trim-sprites <story|all> <report|apply> [padding]`;
+- trimmed 305 TZM and 391 ZDM PNGs with 4 px padding; source files decreased by
+  76 386 043 B, and recoverable originals are under each project's
+  `Build/SpriteTrimBackup`;
+- documented the authoring workflow and exact bundle deltas in
+  `ParallelWork.character-alpha-trim.md` and size documentation.
+
+Validation:
+- main Novels Unity batch compile: passed;
+- repeated trim report: 0 new trims, 696 already processed;
+- TZM/ZDM content validation: passed;
+- Android/iOS builds and bundle audits: passed;
+- final `git diff --check`: passed.
+
+Pending / risks:
+- manual visual gate is still required for emotion, front/back hair and
+  accessories on narrow and wide screens.
+
+Suggested next step:
+- run the representative character visual checklist before publishing the new
+  bundles.
+
+## 2026-08-24T14:15:00Z — platform-library-cache — completed
+
+Task: Устранить повторный массовый импорт текстур при чередовании Android и
+iOS content builds.
+
+Changed:
+- `Tools/novels-tools/novels-content`: перед сборкой активируется постоянный
+  `Library` выбранной платформы; неактивные кэши хранятся в игнорируемом
+  `<project>/Build/UnityLibraryCache`.
+- `Tools/novels-tools/README.md`, `ContentPipeline.md`: описаны расположение,
+  первый холодный прогрев, требование закрыть Unity и очистка кэшей.
+
+Validation:
+- shell syntax и `novels-content doctor`: успешно.
+- Catalog Android → iOS → Android: все три bundle build/audit успешны, размер
+  каждой платформы 6,7 КиБ.
+- Повторный Android-запуск вывел `Activate cached android Library` и не содержал
+  запусков `TextureImporter`.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- TZM и ZDM получат отдельные кэши при следующих штатных сборках; их холодный
+  прогрев намеренно не запускался ради времени и памяти.
+- Кэши увеличивают локальное использование диска, но лежат только в уже
+  игнорируемых `Library` и `Build`.
+
+Suggested next step:
+- Обычной командой собрать нужные TZM/ZDM платформы; первая сборка прогреет
+  кэш, последующие переключения будут использовать сохранённый.
+## 2026-08-24T14:32:00Z — character-body-clothes-trim — completed
+
+Task: extend the existing reversible character alpha trim to body and clothes.
+
+Changed:
+- `CharacterSpriteAlphaTrim.cs`: added clothes and narrowly classified body
+  addresses; unknown nested view folders remain excluded;
+- trimmed 130 additional TZM PNGs and 64 ZDM PNGs with 4 px padding, preserving
+  original files and `.meta` in timestamped `Build/SpriteTrimBackup` folders;
+- expanded story manifests to 435 TZM and 455 ZDM entries;
+- updated size/status documentation with exact source and bundle deltas.
+
+Validation:
+- main Novels Unity batch compile: passed;
+- repeated trim report: 0 new trims, all 890 entries recognized;
+- TZM/ZDM validation: passed;
+- Android/iOS builds and bundle audits: passed;
+- final `git diff --check` and CLI shell syntax: passed.
+
+Pending / risks:
+- manual visual comparison of body/clothes alignment on narrow and wide screens
+  is still required before publication.
+
+Suggested next step:
+- run the representative character visual checklist, then publish the rebuilt
+  content if alignment matches the backup originals.
+
+## 2026-08-24T14:56:27Z — editor-content-smoke-build — completed
+
+Task: Подготовить актуальные bundles и локальную композицию для полного ручного
+теста Novels в Editor.
+
+Changed:
+- Сгенерированы свежие Mac releases/bundles Catalog, TZM и ZDM.
+- `Novels/Build/LocalContent` скомпонован для `FileSystemContentSource` игры.
+- Unity-generated `Novels.slnx` нормализован обратно к LF без изменения состава.
+
+Validation:
+- Unity 6000.3.11f1 batch compile Game: успешно, C#-ошибок нет.
+- `novels-content validate all`: Catalog, TZM, ZDM успешно.
+- `novels-content build all editor`: все три проекта успешно, bundle audit
+  прошёл; Catalog 6,7 КиБ, TZM 240902,1 КиБ, ZDM 145638,0 КиБ.
+- Локально проверены existence, size и SHA-256 всех Mac payloads: 1 Catalog,
+  63 TZM, 16 ZDM.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Play Mode и визуальное поведение не автоматизировались; требуется ручной
+  маршрут Catalog → TZM/ZDM, особенно carousel и trimmed character layers.
+- Тесты не запускались; проект ранее договорённо проверяется ручным smoke test.
+
+Suggested next step:
+- Открыть `Novels/Assets/Novels/Novels.unity`, нажать Play и пройти обе истории
+  по `ManualContentChecklist.md`.
+## 2026-08-24T15:08:44Z — catalog-carousel-canvasgroup-hotfix — ready-for-integration
+
+Task: Исправить MissingComponentException при первом показе карточки Catalog.
+
+Changed:
+- `Packages/NovelsContentSdk/Runtime/Catalog/View/Card.cs`: заменён несовместимый
+  с Unity fake-null оператор `??` на две явные проверки `== null`, поэтому
+  отсутствующий `CanvasGroup` действительно добавляется перед установкой alpha.
+
+Validation:
+- Scoped `git diff --check`: успешно.
+- Unity batch compile: не запущен, поскольку проект уже открыт в Unity Editor;
+  второй экземпляр Unity штатно отказался открывать тот же проект.
+
+Pending / risks:
+- Требуется дождаться компиляции открытого Editor и повторить запуск Catalog.
+
+Suggested next step:
+- В Unity выйти из Play Mode при необходимости, дождаться завершения compile и
+  снова запустить игру; каталог должен открыться без MissingComponentException.
+## 2026-08-24T15:18:47Z — catalog-card-sizing — ready-for-integration
+
+Task: Сделать карточки Catalog адаптивными и размером около 80% viewport.
+
+Changed:
+- `CatalogCarousel.cs`: родительский layout пересчитывается до чтения viewport;
+  карточкам назначается размер до 80% viewport с сохранением пропорций;
+  изменение размеров viewport отслеживается по обеим координатам.
+
+Validation:
+- Scoped `git diff --check`: успешно.
+- Новых сериализованных ссылок нет; коэффициент имеет безопасный default 0.8.
+- Отдельный Unity compile не запускался: проект открыт в пользовательском Editor.
+
+Pending / risks:
+- Требуется ручной Play Mode smoke на текущем портретном разрешении и проверка
+  свайпа между двумя карточками.
+
+Suggested next step:
+- Дождаться recompilation открытого Unity и снова открыть Catalog.
+## 2026-08-24T15:27:40Z — catalog-content-height-hotfix — ready-for-integration
+
+Task: Исправить оставшееся сжатие карточек Catalog.
+
+Changed:
+- `CatalogCarousel.cs`: content горизонтального layout получает высоту viewport
+  перед расчётом карточек и rebuild.
+
+Validation:
+- Scoped `git diff --check`: успешно.
+- Исходные cover PNG проверены визуально: 1360×1920, без видимых прозрачных
+  полей; проблема находилась в нулевой высоте `StoryList`.
+- Отдельный Unity compile не запускался: проект открыт пользователем.
+
+Pending / risks:
+- Открытый Editor ещё не перечитал последнюю правку; требуется выйти из Play
+  Mode, дождаться recompilation и запустить Catalog заново.
+
+Suggested next step:
+- Повторить Play Mode smoke после recompilation; bundle rebuild не нужен.
+## 2026-08-24T15:33:10Z — character-trim-manifest-hotfix — ready-for-integration
+
+Task: Исправить падение story queue из-за повторного ожидания trim-manifest.
+
+Changed:
+- `CharacterSpriteSetLoader.cs`: `Preserve` заменён на `AsyncLazy`; готовый
+  manifest загружается до `WhenAll`, а `GetSprite` выполняет только lookup.
+
+Validation:
+- Scoped `git diff --check`: успешно.
+- Путь повторного ожидания одного `MemoizeSource` удалён статически.
+- Отдельный Unity compile не запускался: проект открыт пользователем.
+
+Pending / risks:
+- Требуется выйти из Play Mode, дождаться recompilation и повторить запуск
+  `tzm/s01e01`.
+
+Suggested next step:
+- Повторный Play Mode smoke; content bundle rebuild не требуется.

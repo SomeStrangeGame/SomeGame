@@ -350,3 +350,16 @@
 - The script validates the generated `ServerRoot`, extracts its deployment ID, uploads immutable files and bundles before activation manifests, verifies both remote platforms against that exact local deployment, and can then build Android and/or iOS Players.
 - `Tools/release-content.env.example` documents machine/server configuration. The personal `Tools/release-content.env` is ignored by Git, and upload remains disabled by default even when a destination is configured.
 - The upload adapter is intentionally limited to `rsync`; the destination root must already exist. Other hosting providers should be added as explicit adapters rather than embedding provider-specific credentials in the script.
+
+## Validation simplification completed on 2026-08-24
+
+- Atomic project kind is derived from exactly one configuration marker:
+  `Config/catalog.json` or `Config/card.json`.
+- The Editor pipeline consumes a compact `ContentBuildPlan`; inspection-only
+  definition paths, counts and story data no longer leak into bundle building.
+- The unused generic warning layer was removed from validation. Objective
+  failures remain grouped by stable code in one exception.
+- Successful bundle audits emit one summary. Full root-asset and Catalog
+  dependency lists are printed only when the audit fails.
+- Subjective visual and narrative acceptance is explicitly owned by
+  `ManualContentChecklist.md`, keeping automation focused on reproducible facts.

@@ -11,21 +11,28 @@ namespace Novels.Character
         private readonly Content.CharacterAssetProfile _profile;
         private readonly ContentAddressing.ContentAddresses _addresses;
         private readonly Func<string, UniTask<Sprite>> _getSprite;
+        private readonly AsyncLazy<CharacterSpriteTrimManifest> _trimManifestLoad;
         private readonly Sprite _missingCharacter;
         private readonly CancellationToken _cancellationToken;
         private readonly Dictionary<string, Sprite> _loadedSprites =
             new(StringComparer.Ordinal);
+        private readonly Dictionary<Sprite, CharacterSpriteTrimLayout> _trimLayouts = new();
+        private CharacterSpriteTrimManifest _trimManifest;
 
         internal CharacterSpriteSetLoader(
             Content.CharacterAssetProfile profile,
             ContentAddressing.ContentAddresses addresses,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<UniTask<CharacterSpriteTrimManifest>> getTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
         {
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _addresses = addresses ?? throw new ArgumentNullException(nameof(addresses));
             _getSprite = getSprite ?? throw new ArgumentNullException(nameof(getSprite));
+            if (getTrimManifest != null)
+                _trimManifestLoad = new AsyncLazy<CharacterSpriteTrimManifest>(
+                    getTrimManifest);
             _missingCharacter = missingCharacter
                 ?? throw new ArgumentNullException(nameof(missingCharacter));
             _cancellationToken = cancellationToken;
@@ -40,6 +47,8 @@ namespace Novels.Character
             StoryContracts.CharacterPresentation presentation,
             CharacterAppearanceState appearance)
         {
+            if (_trimManifestLoad != null)
+                _trimManifest = await _trimManifestLoad;
             var (mainBody, emotion, clothesSprite, hairSprites, accessorySprites) =
                 await UniTask.WhenAll(
                     LoadMainBody(name, view, presentation),
@@ -52,7 +61,8 @@ namespace Novels.Character
                 emotion,
                 clothesSprite,
                 hairSprites,
-                accessorySprites);
+                accessorySprites,
+                Layouts(mainBody, emotion, clothesSprite, hairSprites, accessorySprites));
             if (await RequiresFallback(
                     name,
                     view,
@@ -348,6 +358,26 @@ namespace Novels.Character
             new CharacterHairSprites(null, null),
             new CharacterAccessorySprites(null, null, null));
 
+        private CharacterSpriteTrimLayouts Layouts(
+            Sprite mainBody,
+            Sprite emotion,
+            Sprite clothes,
+            CharacterHairSprites hair,
+            CharacterAccessorySprites accessories) => new(
+                Layout(mainBody),
+                Layout(emotion),
+                Layout(clothes),
+                Layout(hair.Back),
+                Layout(hair.Front),
+                Layout(accessories.Back),
+                Layout(accessories.Middle),
+                Layout(accessories.Front));
+
+        private CharacterSpriteTrimLayout Layout(Sprite sprite) =>
+            sprite != null && _trimLayouts.TryGetValue(sprite, out var layout)
+                ? layout
+                : default;
+
         private async UniTask<Sprite> GetSprite(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -357,6 +387,12 @@ namespace Novels.Character
             sprite = await _getSprite(path)
                 .AttachExternalCancellation(_cancellationToken);
             _loadedSprites[path] = sprite;
+            if (sprite != null
+                && _trimManifest != null
+                && _trimManifest.TryGetLayout(path, out var layout))
+            {
+                _trimLayouts[sprite] = layout;
+            }
             return sprite;
         }
     }

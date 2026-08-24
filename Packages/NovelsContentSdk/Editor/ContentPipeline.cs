@@ -19,7 +19,7 @@ namespace Novels.ContentSdk.Editor
 
         internal static void Build(string platform)
         {
-            var content = ContentValidator.Validate();
+            var plan = ContentValidator.Validate();
             var target = ContentPlatform.Resolve(platform);
             Directory.CreateDirectory(_outputPath);
             RecreateDirectory(_stagingPath);
@@ -29,10 +29,10 @@ namespace Novels.ContentSdk.Editor
                 ContentPlatform.Name(target)));
             try
             {
-                var files = BuildFilePayloads(content.DeliveryGroup);
-                BuildTargetRelease(content, files, target);
+                var files = BuildFilePayloads(plan.DeliveryGroup);
+                BuildTargetRelease(plan, files, target);
                 Debug.Log(
-                    $"Atomic content '{content.DeliveryGroup}' built for "
+                    $"Atomic content '{plan.DeliveryGroup}' built for "
                     + $"{platform} to {Path.GetFullPath(_outputPath)}");
             }
             finally
@@ -83,7 +83,7 @@ namespace Novels.ContentSdk.Editor
         }
 
         private static void BuildTargetRelease(
-            ContentProject content,
+            ContentBuildPlan plan,
             ContentFileEntry[] files,
             BuildTarget target)
         {
@@ -92,7 +92,7 @@ namespace Novels.ContentSdk.Editor
             Directory.CreateDirectory(staging);
             var build = new AssetBundleBuild
             {
-                assetBundleName = content.BundleName,
+                assetBundleName = plan.BundleName,
                 assetNames = ContentAssets.FindBundleAssets(),
             };
             var manifest = BuildPipeline.BuildAssetBundles(
@@ -102,8 +102,8 @@ namespace Novels.ContentSdk.Editor
                     target)
                 ?? throw new InvalidOperationException(
                     $"AssetBundle build failed for {target}.");
-            var source = Path.Combine(staging, content.BundleName);
-            var version = manifest.GetAssetBundleHash(content.BundleName).ToString();
+            var source = Path.Combine(staging, plan.BundleName);
+            var version = manifest.GetAssetBundleHash(plan.BundleName).ToString();
             if (!BuildPipeline.GetCRCForAssetBundle(source, out var crc))
                 throw new InvalidOperationException(
                     "AssetBundle CRC cannot be calculated.");
@@ -111,25 +111,25 @@ namespace Novels.ContentSdk.Editor
                 _outputPath,
                 "Remote",
                 platform,
-                content.BundleName);
+                plan.BundleName);
             Directory.CreateDirectory(destinationDirectory);
             var destination = Path.Combine(destinationDirectory, version);
             File.Copy(source, destination, true);
             var bundle = new BundleReleaseEntry
             {
-                name = content.BundleName,
+                name = plan.BundleName,
                 version = version,
                 size = new FileInfo(destination).Length,
                 sha256 = ContentHash.ComputeSha256(destination),
                 crc = crc,
-                deliveryGroup = content.DeliveryGroup,
+                deliveryGroup = plan.DeliveryGroup,
             };
             ContentBundleAudit.Audit(
-                content,
+                plan,
                 build.assetNames,
                 destination,
                 bundle.size);
-            var release = CreateRelease(content, files, bundle);
+            var release = CreateRelease(plan, files, bundle);
             var releasePath = Path.Combine(
                 _outputPath,
                 "Remote",
@@ -142,13 +142,13 @@ namespace Novels.ContentSdk.Editor
         }
 
         private static ContentReleaseDto CreateRelease(
-            ContentProject content,
+            ContentBuildPlan plan,
             ContentFileEntry[] files,
             BundleReleaseEntry bundle)
         {
             var release = new ContentReleaseDto
             {
-                minimumClientVersion = content.MinimumClientVersion,
+                minimumClientVersion = plan.MinimumClientVersion,
                 contentSchemaVersion = _contentSchemaVersion,
                 deliveryMode = ContentDeliveryMode.Remote,
                 bundles = new[] {bundle},
@@ -157,7 +157,7 @@ namespace Novels.ContentSdk.Editor
                 {
                     new ContentDeliveryGroupEntry
                     {
-                        id = content.DeliveryGroup,
+                        id = plan.DeliveryGroup,
                         payloadCount = 1 + files.Length,
                         size = bundle.size + files.Sum(value => value.size),
                     },
@@ -166,7 +166,7 @@ namespace Novels.ContentSdk.Editor
             release.releaseId = ContentReleaseFingerprint.Compute(release);
             ContentReleaseValidator.Validate(
                 release,
-                content.MinimumClientVersion,
+                plan.MinimumClientVersion,
                 _contentSchemaVersion,
                 _contentSchemaVersion);
             return release;

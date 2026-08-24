@@ -81,6 +81,18 @@ namespace Novels
                 .AttachExternalCancellation(cancellationToken));
         }
 
+        private async UniTask<Character.CharacterSpriteTrimManifest>
+            GetCharacterSpriteTrimManifest(PreparedEpisode state)
+        {
+            var cancellationToken = state.CancellationToken;
+            var bundle = await state.StoryAssets.GetAssetBundle(_definition.BundleName);
+            var address = state.Addresses.CharacterSpriteTrimManifest();
+            return await bundle
+                .LoadAssetAsync<Character.CharacterSpriteTrimManifest>(address)
+                .WithCancellation(cancellationToken)
+                as Character.CharacterSpriteTrimManifest;
+        }
+
         private static bool IsEpisodeEnd(string source, string marker)
         {
             if (string.IsNullOrWhiteSpace(marker))

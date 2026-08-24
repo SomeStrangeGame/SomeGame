@@ -14,73 +14,128 @@ namespace Novels.ContentSdk.Editor
         Story,
     }
 
-    internal sealed class ContentProject
+    internal sealed class ContentBuildPlan
     {
-        internal ContentProject(
+        internal ContentBuildPlan(
             ContentProjectKind kind,
-            int definitionCount,
-            string definitionPath,
             string bundleName,
             string deliveryGroup,
-            string minimumClientVersion,
-            Content.NovelDefinition story)
+            string minimumClientVersion)
         {
             Kind = kind;
-            DefinitionCount = definitionCount;
-            DefinitionPath = definitionPath;
             BundleName = bundleName;
             DeliveryGroup = deliveryGroup;
             MinimumClientVersion = minimumClientVersion;
-            Story = story;
         }
 
         internal ContentProjectKind Kind { get; }
-        internal int DefinitionCount { get; }
-        internal string DefinitionPath { get; }
         internal string BundleName { get; }
         internal string DeliveryGroup { get; }
         internal string MinimumClientVersion { get; }
-        internal Content.NovelDefinition Story { get; }
     }
 
     internal static class ContentValidator
     {
-        internal static ContentProject Validate()
+        private const string _catalogConfig = "Config/catalog.json";
+        private const string _storyConfig = "Config/card.json";
+
+        [Serializable]
+        private sealed class Metadata
         {
-            var report = new ValidationReport();
-            var project = ContentProjectInspector.Inspect(report);
-            ValidateStructure(project, report);
-            if (project.Kind == ContentProjectKind.Story && project.Story != null)
-            {
-                ValidateStoryCard(project.Story.Id, report);
-                ValidateStorySources(project.Story, report);
-            }
-            else if (project.Kind == ContentProjectKind.Catalog)
-            {
-                ValidateCatalog(report);
-            }
-            ValidateBundle(report, project.Kind);
-            report.LogWarnings();
-            report.ThrowIfInvalid();
-            return project;
+            public int schemaVersion;
+            public string minimumClientVersion;
         }
 
-        private static void ValidateStructure(
-            ContentProject project,
-            ValidationReport report)
+        internal static ContentBuildPlan Validate()
         {
-            if (project.Kind == ContentProjectKind.Unknown)
+            var report = new ValidationReport();
+            var kind = FindProjectKind(report);
+            var minimumClientVersion = ReadMinimumClientVersion(kind, report);
+            var story = kind == ContentProjectKind.Story
+                ? LoadStory(report)
+                : null;
+
+            if (story != null)
+            {
+                ValidateStoryCard(story.Id, report);
+                ValidateStorySources(story, report);
+            }
+            else if (kind == ContentProjectKind.Catalog)
+                ValidateCatalog(report);
+
+            ValidateDefinitionCount(kind, report);
+            ValidateBundle(report, kind);
+            report.ThrowIfInvalid();
+
+            if (kind == ContentProjectKind.Catalog)
+            {
+                return new ContentBuildPlan(
+                    kind,
+                    ContentAddressing.ContentPackageConvention.CatalogBundleName,
+                    ContentAddressing.ContentPackageConvention.ApplicationDeliveryGroup,
+                    minimumClientVersion);
+            }
+
+            return new ContentBuildPlan(
+                kind,
+                ContentAddressing.ContentPackageConvention.ContentBundle(story.Id),
+                ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(story.Id),
+                minimumClientVersion);
+        }
+
+        private static ContentProjectKind FindProjectKind(ValidationReport report)
+        {
+            var hasCatalog = File.Exists(Absolute(_catalogConfig));
+            var hasStory = File.Exists(Absolute(_storyConfig));
+            if (hasCatalog == hasStory)
             {
                 report.Error(
-                    "CONTENT_PROJECT_UNKNOWN",
-                    "The project contains neither a NovelContentAsset nor "
-                    + "the catalog screen.");
+                    hasCatalog
+                        ? "CONTENT_PROJECT_AMBIGUOUS"
+                        : "CONTENT_PROJECT_UNKNOWN",
+                    hasCatalog
+                        ? $"Keep only one project marker: {_catalogConfig} or {_storyConfig}."
+                        : $"Add one project marker: {_catalogConfig} or {_storyConfig}.");
+                return ContentProjectKind.Unknown;
             }
-            if (project.DefinitionCount > 1)
+            return hasCatalog ? ContentProjectKind.Catalog : ContentProjectKind.Story;
+        }
+
+        private static Content.NovelDefinition LoadStory(ValidationReport report)
+        {
+            var definitions = FindDefinitions();
+            if (definitions.Length != 1)
+                return null;
+            var path = definitions[0];
+            try
+            {
+                return AssetDatabase.LoadAssetAtPath<Content.NovelContentAsset>(path)
+                           ?.ToDefinition()
+                       ?? throw new InvalidOperationException(
+                           "NovelContentAsset cannot be loaded.");
+            }
+            catch (Exception exception)
+            {
+                report.Error("CONTENT_DEFINITION_INVALID", exception.Message, path);
+                return null;
+            }
+        }
+
+        private static void ValidateDefinitionCount(
+            ContentProjectKind kind,
+            ValidationReport report)
+        {
+            if (kind == ContentProjectKind.Unknown)
+                return;
+            var count = FindDefinitions().Length;
+            var expected = kind == ContentProjectKind.Story ? 1 : 0;
+            if (count != expected)
             {
                 report.Error(
                     "CONTENT_DEFINITION_COUNT",
-                    "An atomic project may contain only one NovelContentAsset.");
+                    kind == ContentProjectKind.Story
+                        ? $"A story project must contain exactly one NovelContentAsset; found {count}."
+                        : $"A catalog project must not contain NovelContentAsset; found {count}.");
             }
         }
 
@@ -88,8 +143,8 @@ namespace Novels.ContentSdk.Editor
             string storyId,
             ValidationReport report)
         {
-            var relativePath = ContentProjectInspector.StoryConfig;
-            var path = ContentProjectInspector.Absolute(relativePath);
+            var relativePath = _storyConfig;
+            var path = Absolute(relativePath);
             if (!File.Exists(path))
                 return;
             try
@@ -97,7 +152,7 @@ namespace Novels.ContentSdk.Editor
                 var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
                     File.ReadAllText(path),
                     storyId);
-                if (!File.Exists(ContentProjectInspector.Absolute("Config/" + card.cover)))
+                if (!File.Exists(Absolute("Config/" + card.cover)))
                 {
                     report.Error(
                         "STORY_COVER_MISSING",
@@ -134,8 +189,8 @@ namespace Novels.ContentSdk.Editor
 
         private static void ValidateCatalog(ValidationReport report)
         {
-            var relativePath = ContentProjectInspector.CatalogConfig;
-            var path = ContentProjectInspector.Absolute(relativePath);
+            var relativePath = _catalogConfig;
+            var path = Absolute(relativePath);
             if (!File.Exists(path))
                 return;
             try
@@ -174,78 +229,13 @@ namespace Novels.ContentSdk.Editor
                     + string.Join(", ", labels));
             }
         }
-    }
 
-    internal static class ContentProjectInspector
-    {
-        [Serializable]
-        private sealed class Metadata
-        {
-            public int schemaVersion;
-            public string minimumClientVersion;
-        }
+        private static string[] FindDefinitions() =>
+            AssetDatabase.FindAssets("t:NovelContentAsset")
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .ToArray();
 
-        internal const string CatalogConfig = "Config/catalog.json";
-        internal const string StoryConfig = "Config/card.json";
-        internal const string CatalogScreen =
-            "Assets/RemoteAssets/catalog/screen.prefab";
-
-        internal static ContentProject Inspect(ValidationReport report)
-        {
-            var definitions = AssetDatabase.FindAssets("t:NovelContentAsset");
-            var definitionPath = definitions.Length == 0
-                ? string.Empty
-                : AssetDatabase.GUIDToAssetPath(definitions[0]);
-            var kind = definitions.Length > 0
-                ? ContentProjectKind.Story
-                : AssetDatabase.LoadAssetAtPath<GameObject>(CatalogScreen) == null
-                    ? ContentProjectKind.Unknown
-                    : ContentProjectKind.Catalog;
-            var minimumClientVersion = ReadMinimumClientVersion(kind, report);
-            Content.NovelDefinition story = null;
-            var bundleName = string.Empty;
-            var deliveryGroup = string.Empty;
-
-            if (kind == ContentProjectKind.Story)
-            {
-                var asset = AssetDatabase.LoadAssetAtPath<Content.NovelContentAsset>(
-                    definitionPath);
-                try
-                {
-                    story = asset?.ToDefinition()
-                        ?? throw new InvalidOperationException(
-                            "NovelContentAsset cannot be loaded.");
-                    bundleName = ContentAddressing.ContentPackageConvention
-                        .ContentBundle(story.Id);
-                    deliveryGroup = ContentAddressing.ContentPackageConvention
-                        .StoryDeliveryGroup(story.Id);
-                }
-                catch (Exception exception)
-                {
-                    report.Error(
-                        "CONTENT_DEFINITION_INVALID",
-                        exception.Message,
-                        definitionPath);
-                }
-            }
-            else if (kind == ContentProjectKind.Catalog)
-            {
-                bundleName = ContentAddressing.ContentPackageConvention.CatalogBundleName;
-                deliveryGroup = ContentAddressing.ContentPackageConvention
-                    .ApplicationDeliveryGroup;
-            }
-
-            return new ContentProject(
-                kind,
-                definitions.Length,
-                definitionPath,
-                bundleName,
-                deliveryGroup,
-                minimumClientVersion,
-                story);
-        }
-
-        internal static string Absolute(string relativePath) =>
+        private static string Absolute(string relativePath) =>
             Path.Combine(
                 ProjectRoot(),
                 relativePath.Replace('/', Path.DirectorySeparatorChar));
@@ -262,8 +252,8 @@ namespace Novels.ContentSdk.Editor
             if (kind == ContentProjectKind.Unknown)
                 return string.Empty;
             var relativePath = kind == ContentProjectKind.Catalog
-                ? ContentProjectInspector.CatalogConfig
-                : ContentProjectInspector.StoryConfig;
+                ? _catalogConfig
+                : _storyConfig;
             var path = Absolute(relativePath);
             if (!File.Exists(path))
             {

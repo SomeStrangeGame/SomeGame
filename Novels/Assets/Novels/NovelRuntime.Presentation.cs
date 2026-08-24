@@ -29,6 +29,7 @@ namespace Novels
                     state.EpisodeScope,
                     assets.Character,
                     assetName => GetCharacterSprite(state, assetName),
+                    () => GetCharacterSpriteTrimManifest(state),
                     _ctx.FallbackAssets.Character,
                     cancellationToken),
                 Choose = CreateChoose(state.EpisodeScope, cancellationToken),
@@ -86,6 +87,7 @@ namespace Novels
             IBaseDisposable owner,
             GameObject screenPrefab,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<UniTask<Character.CharacterSpriteTrimManifest>> getSpriteTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
         {
@@ -96,6 +98,7 @@ namespace Novels
                     ContentPrefix = _definition.Prefix,
                     AssetProfile = _definition.CharacterAssets,
                     GetSprite = getSprite,
+                    GetSpriteTrimManifest = getSpriteTrimManifest,
                     MissingCharacter = missingCharacter,
                     CancellationToken = cancellationToken,
                 }).AddTo(owner);
