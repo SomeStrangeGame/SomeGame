@@ -10,9 +10,9 @@ namespace Novels
 {
     internal sealed class CatalogFlow
     {
-        internal sealed class Resources : IDisposable
+        internal sealed class LoadedCatalog : IDisposable
         {
-            internal Resources(
+            internal LoadedCatalog(
                 IReadOnlyList<Catalog.NovelCatalogEntry> entries,
                 IReadOnlyDictionary<string, Sprite> covers,
                 GameObject screen,
@@ -51,8 +51,6 @@ namespace Novels
             internal Bundles.IContentSource RootContentSource;
             internal PriorityLoader PriorityLoader;
             internal string ClientVersion;
-            internal int MinimumSupportedSchemaVersion;
-            internal int MaximumSupportedSchemaVersion;
             internal CancellationToken CancellationToken;
             internal Action<(LogType type, string message)> OnLog;
         }
@@ -76,7 +74,8 @@ namespace Novels
             }
         }
 
-        internal async UniTask<Resources> LoadWithRetry(Bootstrap.BootstrapController bootstrap)
+        internal async UniTask<LoadedCatalog> LoadWithRetry(
+            Bootstrap.BootstrapController bootstrap)
         {
             const string loading = ApplicationTexts.CatalogLoading;
             const string failed = ApplicationTexts.CatalogLoadFailed;
@@ -89,8 +88,8 @@ namespace Novels
                     bootstrap.ShowLoading(loading);
                     await _ctx.Bundles.LoadReleaseAsync(
                         _ctx.ClientVersion,
-                        _ctx.MinimumSupportedSchemaVersion,
-                        _ctx.MaximumSupportedSchemaVersion);
+                        ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion,
+                        ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion);
                     deliveryLease = await PrepareApplicationContent(bootstrap, loading);
                     var resources = await Load(deliveryLease);
                     _ctx.Bundles.ActivateRelease();
@@ -120,17 +119,14 @@ namespace Novels
         }
 
         internal async UniTask<Catalog.NovelCatalogEntry> SelectContent(
-            Resources resources)
+            LoadedCatalog catalog)
         {
-            var availableEntries = resources.Entries
+            var entries = catalog.Entries
                 .Where(entry => entry.IsEnabled)
                 .ToArray();
-            if (availableEntries.Length == 0)
+            if (entries.Length == 0)
                 throw new InvalidOperationException("Novel catalog has no enabled stories.");
-            var entries = availableEntries.ToDictionary(
-                entry => entry.ContentId,
-                StringComparer.OrdinalIgnoreCase);
-            var items = availableEntries.Select(entry =>
+            var items = entries.Select(entry =>
             {
                 var text = entry.Text;
                 return new Catalog.CatalogItem(
@@ -138,24 +134,24 @@ namespace Novels
                     text.Title,
                     text.Description,
                     ApplicationTexts.ContentAvailable,
-                    cover: resources.Covers.TryGetValue(entry.ContentId, out var cover)
+                    cover: catalog.Covers.TryGetValue(entry.ContentId, out var cover)
                         ? cover
                         : null);
             }).ToArray();
-            using var selection = CreateSelection(resources.Screen);
+            using var selection = CreateSelection(catalog.Screen);
             var selected = await selection.Select(
                 ApplicationTexts.CatalogTitle,
                 items);
-            return entries[selected.Id];
+            return entries.First(entry => string.Equals(
+                entry.ContentId,
+                selected.Id,
+                StringComparison.OrdinalIgnoreCase));
         }
 
         internal async UniTask<Content.EpisodeDefinition> SelectEpisode(
             Content.NovelDefinition definition,
             GameObject screen)
         {
-            var episodes = definition.Episodes.ToDictionary(
-                episode => episode.Id,
-                StringComparer.OrdinalIgnoreCase);
             var items = definition.Episodes
                 .Select(episode => new Catalog.CatalogItem(
                     episode.Id,
@@ -166,7 +162,10 @@ namespace Novels
             var selected = await selection.Select(
                 ApplicationTexts.ChooseEpisode,
                 items);
-            return episodes[selected.Id];
+            return definition.Episodes.First(episode => string.Equals(
+                episode.Id,
+                selected.Id,
+                StringComparison.OrdinalIgnoreCase));
         }
 
         private async UniTask<Bundles.ContentDeliveryLease> PrepareApplicationContent(
@@ -184,7 +183,7 @@ namespace Novels
                 _ctx.CancellationToken);
         }
 
-        private async UniTask<Resources> Load(
+        private async UniTask<LoadedCatalog> Load(
             Bundles.ContentDeliveryLease deliveryLease)
         {
             await _ctx.PriorityLoader.Run(() => _ctx.Bundles
@@ -202,7 +201,7 @@ namespace Novels
                     + $"AssetBundle '{Catalog.CatalogAddresses.BundleName}'.");
             }
             var loaded = await LoadEntries();
-            return new Resources(loaded.entries, loaded.covers, screen, deliveryLease);
+            return new LoadedCatalog(loaded.entries, loaded.covers, screen, deliveryLease);
         }
 
         private async UniTask<(

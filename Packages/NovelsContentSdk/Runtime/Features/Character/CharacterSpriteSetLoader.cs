@@ -189,11 +189,11 @@ namespace Novels.Character
                 : appearance.Emotion;
             if (presentation.IsChild)
                 view = $"{view}/{_profile.ChildView}";
-            foreach (var candidate in presentation.AssetCandidates)
+            var (candidate, sprite) = await FindCandidate(
+                presentation.AssetCandidates,
+                value => GetSprite(_addresses.CharacterEmotion(name, view, value)));
+            if (sprite != null)
             {
-                var sprite = await GetSprite(_addresses.CharacterEmotion(name, view, candidate));
-                if (sprite == null)
-                    continue;
                 if (!presentation.IsChild)
                     appearance.Emotion = candidate;
                 return sprite;
@@ -220,11 +220,11 @@ namespace Novels.Character
             {
                 appearance.Clothes = null;
             }
-            foreach (var candidate in presentation.AssetCandidates)
+            var (candidate, sprite) = await FindCandidate(
+                presentation.AssetCandidates,
+                value => GetSprite(_addresses.CharacterClothes(name, value, index)));
+            if (sprite != null)
             {
-                var sprite = await GetSprite(_addresses.CharacterClothes(name, candidate, index));
-                if (sprite == null)
-                    continue;
                 appearance.Clothes = candidate;
                 return sprite;
             }
@@ -247,15 +247,14 @@ namespace Novels.Character
             {
                 appearance.Hair = null;
             }
-            foreach (var candidate in presentation.AssetCandidates)
+            var (candidate, candidateSprites) = await FindCandidate(
+                presentation.AssetCandidates,
+                value => LoadHairLayers(name, value),
+                value => !value.IsEmpty);
+            if (!candidateSprites.IsEmpty)
             {
-                var (backCandidate, frontCandidate) = await UniTask.WhenAll(
-                    GetSprite(Hair(name, candidate, _profile.BackLayer)),
-                    GetSprite(Hair(name, candidate, _profile.FrontLayer)));
-                if (backCandidate == null && frontCandidate == null)
-                    continue;
                 appearance.Hair = candidate;
-                return new CharacterHairSprites(backCandidate, frontCandidate);
+                return candidateSprites;
             }
             var resolved = presentation.IsChild
                 ? null
@@ -263,10 +262,7 @@ namespace Novels.Character
                     ?? (string.IsNullOrWhiteSpace(hair)
                         ? _profile.DefaultHairStyle
                         : hair);
-            var (back, front) = await UniTask.WhenAll(
-                GetSprite(Hair(name, resolved, _profile.BackLayer)),
-                GetSprite(Hair(name, resolved, _profile.FrontLayer)));
-            return new CharacterHairSprites(back, front);
+            return await LoadHairLayers(name, resolved);
         }
 
         private async UniTask<CharacterAccessorySprites> LoadAccessories(
@@ -277,35 +273,68 @@ namespace Novels.Character
         {
             if (presentation.IsChild || presentation.RemoveAccessory)
                 appearance.Accessories = null;
-            foreach (var candidate in presentation.AssetCandidates)
+            var (candidate, candidateSprites) = await FindCandidate(
+                presentation.AssetCandidates,
+                value => LoadAccessoryLayers(name, value),
+                value => !value.IsEmpty);
+            if (!candidateSprites.IsEmpty)
             {
-                var (backCandidate, middleCandidate, frontCandidate) =
-                    await UniTask.WhenAll(
-                        GetSprite(_addresses.CharacterAccessory(
-                            name, candidate, _profile.BackLayer)),
-                        GetSprite(_addresses.CharacterAccessory(
-                            name, candidate, _profile.MiddleLayer)),
-                        GetSprite(_addresses.CharacterAccessory(
-                            name, candidate, _profile.FrontLayer)));
-                if (backCandidate == null
-                    && middleCandidate == null
-                    && frontCandidate == null)
-                    continue;
                 appearance.Accessories = candidate;
-                return new CharacterAccessorySprites(
-                    backCandidate,
-                    middleCandidate,
-                    frontCandidate);
+                return candidateSprites;
             }
             var resolved = appearance.Accessories ?? accessory;
+            return await LoadAccessoryLayers(name, resolved);
+        }
+
+        private async UniTask<CharacterHairSprites> LoadHairLayers(
+            string name,
+            string style)
+        {
+            var (back, front) = await UniTask.WhenAll(
+                GetSprite(Hair(name, style, _profile.BackLayer)),
+                GetSprite(Hair(name, style, _profile.FrontLayer)));
+            return new CharacterHairSprites(back, front);
+        }
+
+        private async UniTask<CharacterAccessorySprites> LoadAccessoryLayers(
+            string name,
+            string accessory)
+        {
             var (back, middle, front) = await UniTask.WhenAll(
                 GetSprite(_addresses.CharacterAccessory(
-                    name, resolved, _profile.BackLayer)),
+                    name, accessory, _profile.BackLayer)),
                 GetSprite(_addresses.CharacterAccessory(
-                    name, resolved, _profile.MiddleLayer)),
+                    name, accessory, _profile.MiddleLayer)),
                 GetSprite(_addresses.CharacterAccessory(
-                    name, resolved, _profile.FrontLayer)));
+                    name, accessory, _profile.FrontLayer)));
             return new CharacterAccessorySprites(back, middle, front);
+        }
+
+        private static async UniTask<(string candidate, Sprite value)> FindCandidate(
+            IReadOnlyList<string> candidates,
+            Func<string, UniTask<Sprite>> load)
+        {
+            foreach (var candidate in candidates)
+            {
+                var value = await load(candidate);
+                if (value != null)
+                    return (candidate, value);
+            }
+            return (null, null);
+        }
+
+        private static async UniTask<(string candidate, T value)> FindCandidate<T>(
+            IReadOnlyList<string> candidates,
+            Func<string, UniTask<T>> load,
+            Func<T, bool> hasValue)
+        {
+            foreach (var candidate in candidates)
+            {
+                var value = await load(candidate);
+                if (hasValue(value))
+                    return (candidate, value);
+            }
+            return (null, default);
         }
 
         private string Hair(string name, string candidate, string layer) =>

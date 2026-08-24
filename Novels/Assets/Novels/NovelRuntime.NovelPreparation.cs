@@ -19,9 +19,9 @@ namespace Novels
             internal string SourceMapText { get; }
         }
 
-        private sealed class PreparedNovelResources
+        private sealed class PreparedEpisode
         {
-            internal PreparedNovelResources(
+            internal PreparedEpisode(
                 Save.SaveSystem saveSystem,
                 ContentAddressing.ContentAddresses addresses,
                 EpisodeRuntime episodeRuntime,
@@ -57,9 +57,7 @@ namespace Novels
             EpisodeRuntime episodeRuntime)
         {
             var saveSystem = CreateSaveSystem();
-            var addresses = new ContentAddressing.ContentAddresses(
-                _definition.Id,
-                _episode.Id);
+            var addresses = new ContentAddressing.ContentAddresses(_definition.Id);
             var storyMedia = _ctx.Bundles
                 .CreateMediaScope(
                     _definition.Prefix,
@@ -77,7 +75,7 @@ namespace Novels
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoadingAddress = new Bundles.BundleAssetAddress(
                 _definition.BundleName,
-                addresses.SharedLoadingPrefab(
+                addresses.LoadingPrefab(
                     ContentAddressing.ContentAssetNames.EpisodeScreen));
             var bundledMainLoadingScreen = await _priorityLoader.Run(() => storyAssets
                 .TryGetBundledPrefab(mainLoadingAddress)
@@ -108,7 +106,7 @@ namespace Novels
                 NovelTitle = _ctx.Content.Text.Title,
                 CancellationToken = _ctx.CancellationToken,
             }).AddTo(this);
-            var resources = new PreparedNovelResources(
+            var episode = new PreparedEpisode(
                 saveSystem,
                 addresses,
                 episodeRuntime,
@@ -120,7 +118,7 @@ namespace Novels
             return new NovelStartSession(
                 selection,
                 saveSystem.Clear,
-                () => RunEpisode(resources));
+                () => RunEpisode(episode));
         }
 
         private async UniTask<EpisodeStoryData> PreloadEpisode(

@@ -2,7 +2,6 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
-using UnityEngine;
 
 namespace Novels.Wardrobe
 {
@@ -13,19 +12,17 @@ namespace Novels.Wardrobe
             public CancellationToken CancellationToken;
         }
 
-        private readonly Dependencies _dependencies;
-        private OptionSelection.OptionListScreen _screen;
+        private readonly OptionSelection.OptionListController _options;
 
         public WardrobeController(Dependencies dependencies)
         {
-            _dependencies = dependencies;
+            _options = new OptionSelection.OptionListController(
+                dependencies.CancellationToken);
         }
 
         public void Init()
         {
-            var screenObject = new GameObject("WardrobeScreen");
-            _screen = screenObject.AddComponent<OptionSelection.OptionListScreen>();
-            _screen.Init();
+            _options.Init("WardrobeScreen");
         }
 
         public void SetScreen(WardrobeContracts.WardrobePresentation presentation)
@@ -36,7 +33,7 @@ namespace Novels.Wardrobe
                 var option = presentation.Options[index];
                 items[index] = new OptionSelection.OptionListItem(option.Id, option.Text);
             }
-            _screen.SetPresentation(new OptionSelection.OptionListPresentation(
+            _options.Present(new OptionSelection.OptionListPresentation(
                 presentation.Title,
                 presentation.ConfirmationText,
                 items,
@@ -47,23 +44,18 @@ namespace Novels.Wardrobe
 
         public UniTask Show(StoryContracts.PresentationMode mode)
         {
-            _dependencies.CancellationToken.ThrowIfCancellationRequested();
-            _screen.ShowImmediate();
-            return UniTask.CompletedTask;
+            return _options.Show();
         }
 
         public UniTask Hide(StoryContracts.PresentationMode mode)
         {
-            _dependencies.CancellationToken.ThrowIfCancellationRequested();
-            _screen.HideImmediate();
-            return UniTask.CompletedTask;
+            return _options.Hide();
         }
 
         protected override void OnDispose()
         {
             base.OnDispose();
-            if (_screen != null)
-                GameObject.Destroy(_screen.gameObject);
+            _options.Dispose();
         }
     }
 }

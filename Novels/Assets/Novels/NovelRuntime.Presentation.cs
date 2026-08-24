@@ -9,7 +9,7 @@ namespace Novels
     internal partial class NovelRuntime
     {
         private EpisodePresentation CreateEpisodePresentation(
-            PreparedNovelResources state,
+            PreparedEpisode state,
             EpisodeAssetSet assets,
             Loading.Entity loading)
         {
@@ -94,7 +94,6 @@ namespace Novels
                 {
                     ScreenPrefab = screenPrefab,
                     ContentPrefix = _definition.Prefix,
-                    EpisodeId = _episode.Id,
                     AssetProfile = _definition.CharacterAssets,
                     GetSprite = getSprite,
                     MissingCharacter = missingCharacter,
@@ -117,23 +116,16 @@ namespace Novels
         }
 
         private async UniTask<Sprite> GetChooseSprite(
-            PreparedNovelResources state,
+            PreparedEpisode state,
             string assetName)
         {
             var cancellationToken = state.CancellationToken;
-            var episodeSprite = await _priorityLoader.Run(() => state.StoryAssets
+            var sprite = await _priorityLoader.Run(() => state.StoryAssets
                 .TryGetBundledSprite(new Bundles.BundleAssetAddress(
                     _definition.BundleName,
                     state.Addresses.ChooseItem(assetName)))
                 .AttachExternalCancellation(cancellationToken));
-            if (episodeSprite != null)
-                return episodeSprite;
-            var sharedSprite = await _priorityLoader.Run(() => state.StoryAssets
-                .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _definition.BundleName,
-                    state.Addresses.SharedChooseItem(assetName)))
-                .AttachExternalCancellation(cancellationToken));
-            return sharedSprite != null ? sharedSprite : _ctx.FallbackAssets.Background;
+            return sprite != null ? sprite : _ctx.FallbackAssets.Background;
         }
 
         private Loading.Entity CreateMainLoading(GameObject bundledPrefab) =>

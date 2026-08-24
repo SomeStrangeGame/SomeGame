@@ -31,8 +31,8 @@ namespace Novels.ContentAddressing
         public static string StoryCoverPath(string contentId, string fileName = "cover.webp") =>
             $"{StoryPrefix(contentId)}/{RequireFileName(fileName, nameof(fileName))}";
 
-        public static string EpisodeRoot(string contentId, string episodeId) =>
-            $"{ContentRoot(contentId)}/episodes/{RequireId(episodeId, nameof(episodeId))}";
+        public static string StoryRoot(string contentId) =>
+            $"{ContentRoot(contentId)}/story";
 
         public static string DefinitionAsset(string contentId)
         {

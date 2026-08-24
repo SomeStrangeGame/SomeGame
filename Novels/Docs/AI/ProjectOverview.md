@@ -16,6 +16,21 @@ EntryPoint
 
 `EntryPoint` получает сериализованные ссылки сцены и создаёт неизменяемое окружение. `ApplicationRuntime` загружает каталог, предлагает выбрать историю и владеет только одним активным `NovelRuntime`. `NovelRuntime` выбирает эпизод, создаёт `EpisodeScope` и передаёт каждой фиче episode cancellation token.
 
+## Порядок чтения кода
+
+Для знакомства с runtime достаточно идти по этому списку:
+
+1. `EntryPoint.cs` — Unity lifecycle и composition root.
+2. `ApplicationRuntime.cs` — каталог и lifetime выбранной истории.
+3. `CatalogFlow.cs` — загрузка и выбор истории/эпизода.
+4. `NovelRuntime.cs` и его partial-файлы — подготовка и фабрика эпизода.
+5. `EpisodeRuntime.cs` — cancellation и завершение эпизода.
+6. `StoryQueue/StoryQueueBuilder.cs` — перевод шагов Ink в операции.
+7. `StoryExecution/StoryOperationExecutor.cs` — последовательное выполнение.
+
+`ReplayValidator.cs` проверяет совместимость сохранения отдельно от запуска
+эпизода. Детали отдельных UI-фичей нужны только при изменении конкретной фичи.
+
 ## Основные каталоги
 
 | Путь | Ответственность |
@@ -51,4 +66,4 @@ EntryPoint
 
 ## Сборки
 
-Один asmdef соответствует самостоятельной фиче или реальной границе зависимостей. View-код входит в assembly своей фичи. `Choose` и `Wardrobe` сохраняют отдельные контроллеры и contract assemblies, поскольку будут развиваться независимо, но используют общий нейтральный `OptionListScreen` вместо двух копий одинакового uGUI-кода. Очередь и исполнение истории входят в основную `Novels` assembly.
+Один asmdef соответствует самостоятельной фиче или реальной границе зависимостей. View-код и простые DTO-контракты входят в assembly своей фичи. `Choose` и `Wardrobe` сохраняют отдельные assemblies и контроллеры, поскольку будут развиваться независимо, но используют общие `OptionListController` и `OptionListScreen`. Очередь и исполнение истории входят в основную `Novels` assembly.

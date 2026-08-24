@@ -6,6 +6,29 @@ namespace Novels.StoryQueue
 {
     internal sealed class DialogueQueueBuilder
     {
+        private readonly struct DialogueFrame
+        {
+            internal DialogueFrame(
+                StoryCommands.DialogueCommandData dialogue,
+                StoryContracts.StorySpeakerRole role,
+                BubbleContracts.BubblePresentationKind presentation,
+                StoryContracts.StoryCharacterPosition position,
+                StoryContracts.StoryDialogueAlignment alignment)
+            {
+                Dialogue = dialogue;
+                Role = role;
+                Presentation = presentation;
+                Position = position;
+                Alignment = alignment;
+            }
+
+            internal StoryCommands.DialogueCommandData Dialogue { get; }
+            internal StoryContracts.StorySpeakerRole Role { get; }
+            internal BubbleContracts.BubblePresentationKind Presentation { get; }
+            internal StoryContracts.StoryCharacterPosition Position { get; }
+            internal StoryContracts.StoryDialogueAlignment Alignment { get; }
+        }
+
         private readonly StoryQueueBuilder.Dependencies _dependencies;
         private readonly HashSet<string> _hiddenCharacters = new(StringComparer.Ordinal);
 
@@ -24,15 +47,18 @@ namespace Novels.StoryQueue
             UniTaskCompletionSource bubbleDone,
             bool hasPendingCommands)
         {
-            var name = dialogue.Speaker;
             if (string.IsNullOrEmpty(dialogue.Speaker) && string.IsNullOrEmpty(dialogue.Text))
             {
                 return (
                     new StoryExecution.IStoryOperation[]
                     {
                         CreateSetBubbleQueue(
-                            dialogue,
-                            StoryContracts.StorySpeakerRole.Character,
+                            new DialogueFrame(
+                                dialogue,
+                                StoryContracts.StorySpeakerRole.Character,
+                                BubbleContracts.BubblePresentationKind.Dialogue,
+                                StoryContracts.StoryCharacterPosition.Center,
+                                StoryContracts.StoryDialogueAlignment.Center),
                             choices,
                             bubbleDone),
                     },
@@ -41,12 +67,10 @@ namespace Novels.StoryQueue
                         bubbleDone));
             }
 
-            var role = ResolveSpeakerRole(dialogue);
-            var layout = GetDialogueLayout(role);
-            var position = dialogue.Character.Position ?? layout.Position;
-            var setBubble = CreateSetBubbleQueue(dialogue, role, choices, bubbleDone);
+            var frame = CreateFrame(dialogue);
+            var setBubble = CreateSetBubbleQueue(frame, choices, bubbleDone);
 
-            var characterName = name;
+            var characterName = dialogue.Speaker;
             if (dialogue.Character.IsChild)
                 characterName += "_child";
 
@@ -56,11 +80,11 @@ namespace Novels.StoryQueue
 
             var visibility = dialogue.Character.Visibility;
             if (visibility == StoryContracts.StoryCharacterVisibilityCommand.Hide)
-                _hiddenCharacters.Add(name);
+                _hiddenCharacters.Add(dialogue.Speaker);
             else if (visibility == StoryContracts.StoryCharacterVisibilityCommand.Show)
-                _hiddenCharacters.Remove(name);
+                _hiddenCharacters.Remove(dialogue.Speaker);
 
-            var isHidden = _hiddenCharacters.Contains(name);
+            var isHidden = _hiddenCharacters.Contains(dialogue.Speaker);
             var shouldHide = isNewCharacter
                 || visibility == StoryContracts.StoryCharacterVisibilityCommand.Hide;
             var shouldShow = isNewCharacter
@@ -73,11 +97,11 @@ namespace Novels.StoryQueue
                 new StoryExecution.CharacterOperation.SetDialogueQueue(
                     _dependencies.Location.SetDialogue,
                     _dependencies.Character.Hide,
-                    layout.Alignment,
+                    frame.Alignment,
                     hideDuringDialogueTransition),
             };
             if (!isHidden
-                && StoryContracts.StorySpeakerRoleResolver.ShowsCharacter(role))
+                && StoryContracts.StorySpeakerRoleResolver.ShowsCharacter(frame.Role))
             {
                 afterCommands.Add(
                     new StoryExecution.CharacterOperation.ShowCharacterQueue(
@@ -85,13 +109,13 @@ namespace Novels.StoryQueue
                         _dependencies.Character.Show,
                         shouldShow,
                         new StoryContracts.CharacterRenderRequest(
-                            name,
-                            role,
-                            position,
+                            dialogue.Speaker,
+                            frame.Role,
+                            frame.Position,
                             dialogue.Character)));
             }
             afterCommands.AddRange(CreatePresentationLifecycle(
-                ResolvePresentationKind(dialogue),
+                frame.Presentation,
                 bubbleDone));
 
             var beforeCommands = new List<StoryExecution.IStoryOperation>();
@@ -110,19 +134,30 @@ namespace Novels.StoryQueue
         }
 
         private StoryExecution.BubbleOperation.SetBubbleQueue CreateSetBubbleQueue(
-            StoryCommands.DialogueCommandData dialogue,
-            StoryContracts.StorySpeakerRole role,
+            DialogueFrame frame,
             StoryContracts.StoryChoice[] choices,
             UniTaskCompletionSource bubbleDone)
         {
             return new StoryExecution.BubbleOperation.SetBubbleQueue(
                 new StoryExecution.BubbleOperationRequest(
                     _dependencies,
-                    dialogue,
+                    frame.Dialogue,
                     choices,
                     bubbleDone,
-                    role,
-                    ResolvePresentationKind(dialogue)));
+                    frame.Role,
+                    frame.Presentation));
+        }
+
+        private DialogueFrame CreateFrame(StoryCommands.DialogueCommandData dialogue)
+        {
+            var role = ResolveSpeakerRole(dialogue);
+            var layout = GetDialogueLayout(role);
+            return new DialogueFrame(
+                dialogue,
+                role,
+                ResolvePresentationKind(dialogue),
+                dialogue.Character.Position ?? layout.Position,
+                layout.Alignment);
         }
 
         private static BubbleContracts.BubblePresentationKind ResolvePresentationKind(

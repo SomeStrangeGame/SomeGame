@@ -1,4 +1,4 @@
-﻿<Solution>
+<Solution>
   <Project Path="Novels.csproj" />
   <Project Path="Novels.Editor.csproj" />
   <Project Path="Bundles.csproj" />
@@ -13,26 +13,23 @@
   <Project Path="Logs.csproj" />
   <Project Path="Novels.Save.csproj" />
   <Project Path="Novels.StoryContracts.csproj" />
+  <Project Path="Novels.ContentSdk.Editor.csproj" />
   <Project Path="Novels.Notification.csproj" />
   <Project Path="Novels.ContentAddressing.csproj" />
   <Project Path="Novels.OptionSelection.csproj" />
   <Project Path="Novels.Bubble.csproj" />
   <Project Path="Novels.Choose.csproj" />
-  <Project Path="Novels.Wardrobe.Contracts.csproj" />
   <Project Path="Novels.Catalog.Contracts.csproj" />
   <Project Path="UITransitions.csproj" />
   <Project Path="Novels.Wardrobe.csproj" />
-  <Project Path="Novels.ContentSdk.Editor.csproj" />
   <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Content.csproj" />
   <Project Path="Bundles.Editor.csproj" />
   <Project Path="LoadingPriority.csproj" />
   <Project Path="Novels.Diagnostics.csproj" />
-  <Project Path="Novels.Choose.Contracts.csproj" />
   <Project Path="Setting.View.csproj" />
   <Project Path="CodeStrippingFix.csproj" />
   <Project Path="Setting.csproj" />
-  <Project Path="Novels.Bubble.Contracts.csproj" />
   <Project Path="Cache.csproj" />
   <Project Path="Loading.csproj" />
 </Solution>

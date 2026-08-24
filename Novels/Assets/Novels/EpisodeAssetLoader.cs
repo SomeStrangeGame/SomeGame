@@ -64,23 +64,18 @@ namespace Novels
                 await UniTask.WhenAll(
                     LoadPrefab(
                         _ctx.Addresses.LoadingPrefab(assetName),
-                        _ctx.Addresses.SharedLoadingPrefab(assetName),
                         _ctx.Fallbacks.Loading),
                     LoadPrefab(
                         _ctx.Addresses.BubblePrefab(assetName),
-                        _ctx.Addresses.SharedBubblePrefab(assetName),
                         _ctx.Fallbacks.Bubble),
                     LoadPrefab(
                         _ctx.Addresses.LocationPrefab(assetName),
-                        _ctx.Addresses.SharedLocationPrefab(assetName),
                         _ctx.Fallbacks.Location),
                     LoadPrefab(
                         _ctx.Addresses.CharacterPrefab(assetName),
-                        _ctx.Addresses.SharedCharacterPrefab(assetName),
                         _ctx.Fallbacks.CharacterScreen),
                     LoadPrefab(
                         _ctx.Addresses.NotificationPrefab(assetName),
-                        _ctx.Addresses.SharedNotificationPrefab(assetName),
                         _ctx.Fallbacks.Notification));
             return new EpisodeAssetSet(
                 loading,
@@ -91,26 +86,16 @@ namespace Novels
         }
 
         private async UniTask<GameObject> LoadPrefab(
-            string episodeAssetName,
-            string sharedAssetName,
+            string assetName,
             GameObject fallback)
         {
-            var episodeAddress = new Bundles.BundleAssetAddress(
+            var address = new Bundles.BundleAssetAddress(
                 _ctx.BundleName,
-                episodeAssetName);
+                assetName);
             var prefab = await _ctx.PriorityLoader.Run(() => _ctx.Bundles
-                .TryGetBundledPrefab(episodeAddress)
+                .TryGetBundledPrefab(address)
                 .AttachExternalCancellation(_ctx.CancellationToken));
-            if (prefab != null)
-                return prefab;
-
-            var sharedAddress = new Bundles.BundleAssetAddress(
-                _ctx.BundleName,
-                sharedAssetName);
-            var shared = await _ctx.PriorityLoader.Run(() => _ctx.Bundles
-                .TryGetBundledPrefab(sharedAddress)
-                .AttachExternalCancellation(_ctx.CancellationToken));
-            return shared != null ? shared : fallback;
+            return prefab != null ? prefab : fallback;
         }
     }
 }

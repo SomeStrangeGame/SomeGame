@@ -9,15 +9,6 @@ namespace Novels
 {
     internal sealed class ApplicationRuntime : BaseDisposable
     {
-        private enum ApplicationFlowState
-        {
-            LoadingCatalog,
-            SelectingStory,
-            RunningStory,
-            ReturningToCatalog,
-            Completed,
-        }
-
         private const ThreadPriority _defaultThreadPriority = ThreadPriority.Low;
         internal struct Dependencies
         {
@@ -28,39 +19,38 @@ namespace Novels
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
-        private readonly Dependencies _ctx;
         private readonly ApplicationEnvironment _environment;
-        private readonly PriorityLoader _priorityLoader;
+        private readonly Bundles.IContentSource _contentSource;
+        private readonly Action<(LogType type, string message)> _onLog;
+        private readonly Action<Diagnostics.NovelError> _onError;
+        private readonly Action<StoryProcessor.StorySourceLocation> _onStorySourceChanged;
         private readonly Bundles.Entity _catalogBundles;
         private readonly DisposableSlot<NovelRuntime> _activeNovel;
         private readonly CatalogFlow _catalogFlow;
 
         internal ApplicationRuntime(Dependencies ctx)
         {
-            _ctx = ctx;
             _environment = ctx.Environment
                 ?? throw new ArgumentNullException(nameof(ctx.Environment));
-            if (ctx.ContentSource == null)
-                throw new ArgumentNullException(nameof(ctx.ContentSource));
+            _contentSource = ctx.ContentSource
+                ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
+            _onLog = ctx.OnLog;
+            _onError = ctx.OnError;
+            _onStorySourceChanged = ctx.OnStorySourceChanged;
             Application.backgroundLoadingPriority = _defaultThreadPriority;
-            _priorityLoader = new PriorityLoader(_defaultThreadPriority);
             _catalogBundles = CreateBundles(
                 new Bundles.PrefixedContentSource(
-                    _ctx.ContentSource,
+                    _contentSource,
                     ContentAddressing.ContentPackageConvention.CatalogUiPrefix),
                 "catalog").AddTo(this);
             _catalogFlow = new CatalogFlow(new CatalogFlow.Dependencies
             {
                 Bundles = _catalogBundles,
-                RootContentSource = _ctx.ContentSource,
-                PriorityLoader = _priorityLoader,
+                RootContentSource = _contentSource,
+                PriorityLoader = new PriorityLoader(_defaultThreadPriority),
                 ClientVersion = _environment.ClientVersion,
-                MinimumSupportedSchemaVersion =
-                    ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion,
-                MaximumSupportedSchemaVersion =
-                    ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion,
                 CancellationToken = _environment.CancellationToken,
-                OnLog = _ctx.OnLog,
+                OnLog = _onLog,
             });
             _activeNovel = new DisposableSlot<NovelRuntime>().AddTo(this);
         }
@@ -68,57 +58,25 @@ namespace Novels
         internal async UniTask Run()
         {
             using var bootstrap = new Bootstrap.BootstrapController(_environment.CancellationToken);
-            CatalogFlow.Resources catalog = null;
-            Catalog.NovelCatalogEntry content = null;
-            var state = ApplicationFlowState.LoadingCatalog;
-            try
+            using var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
+            bootstrap.Hide();
+            while (!_environment.CancellationToken.IsCancellationRequested)
             {
-                while (state != ApplicationFlowState.Completed)
-                {
-                    _environment.CancellationToken.ThrowIfCancellationRequested();
-                    switch (state)
-                    {
-                        case ApplicationFlowState.LoadingCatalog:
-                            catalog = await _catalogFlow.LoadWithRetry(bootstrap);
-                            bootstrap.Hide();
-                            state = ApplicationFlowState.SelectingStory;
-                            break;
-
-                        case ApplicationFlowState.SelectingStory:
-                            content = await _catalogFlow.SelectContent(catalog);
-                            state = ApplicationFlowState.RunningStory;
-                            break;
-
-                        case ApplicationFlowState.RunningStory:
-                            state = await RunStory(content, catalog, bootstrap);
-                            break;
-
-                        case ApplicationFlowState.ReturningToCatalog:
-                            bootstrap.Hide();
-                            content = null;
-                            state = ApplicationFlowState.SelectingStory;
-                            break;
-
-                        default:
-                            state = ApplicationFlowState.Completed;
-                            break;
-                    }
-                }
-            }
-            finally
-            {
-                catalog?.Dispose();
+                var content = await _catalogFlow.SelectContent(catalog);
+                if (!await RunStory(content, catalog, bootstrap))
+                    return;
+                bootstrap.Hide();
             }
         }
 
-        private async UniTask<ApplicationFlowState> RunStory(
+        private async UniTask<bool> RunStory(
             Catalog.NovelCatalogEntry content,
-            CatalogFlow.Resources catalog,
+            CatalogFlow.LoadedCatalog catalog,
             Bootstrap.BootstrapController bootstrap)
         {
             using var storyBundles = CreateBundles(
                 new Bundles.PrefixedContentSource(
-                    _ctx.ContentSource,
+                    _contentSource,
                     ContentAddressing.ContentPackageConvention.StoryPrefix(
                         content.ContentId)),
                 $"story-{content.ContentId}");
@@ -139,9 +97,9 @@ namespace Novels
                     contentDeliveryFlow.PrepareStory(bootstrap, contentId),
                 HidePreparationScreen = bootstrap.Hide,
                 CancellationToken = _environment.CancellationToken,
-                OnLog = _ctx.OnLog,
-                OnError = _ctx.OnError,
-                OnStorySourceChanged = _ctx.OnStorySourceChanged,
+                OnLog = _onLog,
+                OnError = _onError,
+                OnStorySourceChanged = _onStorySourceChanged,
             });
             _activeNovel.Replace(novel);
             var storyReleaseLoaded = false;
@@ -164,7 +122,7 @@ namespace Novels
                     || exception is Bundles.ContentStorageException
                     || exception is Bundles.ContentConfigurationException)
                 {
-                    _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                    _onError?.Invoke(new Diagnostics.NovelError(
                         Diagnostics.NovelErrorCodes.ContentPreparationFailed,
                         Diagnostics.NovelErrorSeverity.Recoverable,
                         "Story content could not be prepared.",
@@ -175,17 +133,17 @@ namespace Novels
                             deliveryMode: storyReleaseLoaded
                                 ? storyBundles.DeliveryMode.ToString()
                                 : Bundles.ContentDeliveryMode.Remote.ToString())));
-                    return ApplicationFlowState.ReturningToCatalog;
+                    return true;
                 }
                 if (result.Status == EpisodeRunStatus.Cancelled)
-                    return ApplicationFlowState.Completed;
+                    return false;
                 if (result.Status == EpisodeRunStatus.Failed)
-                    _ctx.OnError?.Invoke(result.Error.Value);
-                return ApplicationFlowState.ReturningToCatalog;
+                    _onError?.Invoke(result.Error.Value);
+                return true;
             }
             finally
             {
-                _ctx.OnStorySourceChanged?.Invoke(default);
+                _onStorySourceChanged?.Invoke(default);
                 _activeNovel.Clear(novel);
             }
         }
@@ -212,7 +170,7 @@ namespace Novels
                 Platform = _environment.ContentPlatform,
                 DeliveryOptions = _environment.RuntimeTuning.ContentDelivery,
                 CancellationToken = _environment.CancellationToken,
-                OnLog = _ctx.OnLog,
+                OnLog = _onLog,
             });
         }
     }

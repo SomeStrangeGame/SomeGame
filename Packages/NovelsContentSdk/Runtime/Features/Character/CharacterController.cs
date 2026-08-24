@@ -12,7 +12,6 @@ namespace Novels.Character
         {
             public GameObject ScreenPrefab;
             public string ContentPrefix;
-            public string EpisodeId;
             public Content.CharacterAssetProfile AssetProfile;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Sprite MissingCharacter;
@@ -37,7 +36,6 @@ namespace Novels.Character
                 ?? throw new ArgumentNullException(nameof(ctx.AssetProfile));
             _spriteResolver = new CharacterSpriteResolver(
                 ctx.ContentPrefix,
-                ctx.EpisodeId,
                 _assetProfile,
                 ctx.GetSprite,
                 ctx.MissingCharacter,

@@ -14,7 +14,6 @@ namespace Novels.Character
 
         internal CharacterSpriteResolver(
             string contentPrefix,
-            string episodeId,
             Content.CharacterAssetProfile profile,
             Func<string, UniTask<Sprite>> getSprite,
             Sprite missingCharacter,
@@ -22,9 +21,7 @@ namespace Novels.Character
         {
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _appearances = new CharacterAppearanceStore();
-            var addresses = new ContentAddressing.ContentAddresses(
-                contentPrefix,
-                episodeId);
+            var addresses = new ContentAddressing.ContentAddresses(contentPrefix);
             _sprites = new CharacterSpriteSetLoader(
                 profile,
                 addresses,

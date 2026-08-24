@@ -16,13 +16,31 @@ namespace Novels.ContentSdk.Editor
 
     internal sealed class ContentProject
     {
-        internal ContentProjectKind Kind;
-        internal int DefinitionCount;
-        internal string DefinitionPath;
-        internal string BundleName;
-        internal string DeliveryGroup;
-        internal string MinimumClientVersion;
-        internal Content.NovelDefinition Story;
+        internal ContentProject(
+            ContentProjectKind kind,
+            int definitionCount,
+            string definitionPath,
+            string bundleName,
+            string deliveryGroup,
+            string minimumClientVersion,
+            Content.NovelDefinition story)
+        {
+            Kind = kind;
+            DefinitionCount = definitionCount;
+            DefinitionPath = definitionPath;
+            BundleName = bundleName;
+            DeliveryGroup = deliveryGroup;
+            MinimumClientVersion = minimumClientVersion;
+            Story = story;
+        }
+
+        internal ContentProjectKind Kind { get; }
+        internal int DefinitionCount { get; }
+        internal string DefinitionPath { get; }
+        internal string BundleName { get; }
+        internal string DeliveryGroup { get; }
+        internal string MinimumClientVersion { get; }
+        internal Content.NovelDefinition Story { get; }
     }
 
     internal interface IContentValidationRule
@@ -35,7 +53,6 @@ namespace Novels.ContentSdk.Editor
         private static readonly IContentValidationRule[] _rules =
         {
             new ProjectStructureRule(),
-            new ConfigurationRule(),
             new StoryRule(),
             new CatalogRule(),
             new BundleRule(),
@@ -44,7 +61,7 @@ namespace Novels.ContentSdk.Editor
         internal static ContentProject Validate()
         {
             var report = new ValidationReport();
-            var project = ContentProjectInspector.Inspect();
+            var project = ContentProjectInspector.Inspect(report);
             foreach (var rule in _rules)
                 rule.Validate(project, report);
             report.LogWarnings();
@@ -55,29 +72,71 @@ namespace Novels.ContentSdk.Editor
 
     internal static class ContentProjectInspector
     {
+        [Serializable]
+        private sealed class Metadata
+        {
+            public int schemaVersion;
+            public string minimumClientVersion;
+        }
+
         internal const string CatalogConfig = "Config/catalog.json";
         internal const string StoryConfig = "Config/card.json";
         internal const string CatalogScreen =
             "Assets/RemoteAssets/catalog/screen.prefab";
 
-        internal static ContentProject Inspect()
+        internal static ContentProject Inspect(ValidationReport report)
         {
             var definitions = AssetDatabase.FindAssets("t:NovelContentAsset");
-            if (definitions.Length > 0)
-            {
-                return new ContentProject
-                {
-                    Kind = ContentProjectKind.Story,
-                    DefinitionCount = definitions.Length,
-                    DefinitionPath = AssetDatabase.GUIDToAssetPath(definitions[0]),
-                };
-            }
-            return new ContentProject
-            {
-                Kind = AssetDatabase.LoadAssetAtPath<GameObject>(CatalogScreen) == null
+            var definitionPath = definitions.Length == 0
+                ? string.Empty
+                : AssetDatabase.GUIDToAssetPath(definitions[0]);
+            var kind = definitions.Length > 0
+                ? ContentProjectKind.Story
+                : AssetDatabase.LoadAssetAtPath<GameObject>(CatalogScreen) == null
                     ? ContentProjectKind.Unknown
-                    : ContentProjectKind.Catalog,
-            };
+                    : ContentProjectKind.Catalog;
+            var minimumClientVersion = ReadMinimumClientVersion(kind, report);
+            Content.NovelDefinition story = null;
+            var bundleName = string.Empty;
+            var deliveryGroup = string.Empty;
+
+            if (kind == ContentProjectKind.Story)
+            {
+                var asset = AssetDatabase.LoadAssetAtPath<Content.NovelContentAsset>(
+                    definitionPath);
+                try
+                {
+                    story = asset?.ToDefinition()
+                        ?? throw new InvalidOperationException(
+                            "NovelContentAsset cannot be loaded.");
+                    bundleName = ContentAddressing.ContentPackageConvention
+                        .ContentBundle(story.Id);
+                    deliveryGroup = ContentAddressing.ContentPackageConvention
+                        .StoryDeliveryGroup(story.Id);
+                }
+                catch (Exception exception)
+                {
+                    report.Error(
+                        "CONTENT_DEFINITION_INVALID",
+                        exception.Message,
+                        definitionPath);
+                }
+            }
+            else if (kind == ContentProjectKind.Catalog)
+            {
+                bundleName = ContentAddressing.ContentPackageConvention.CatalogBundleName;
+                deliveryGroup = ContentAddressing.ContentPackageConvention
+                    .ApplicationDeliveryGroup;
+            }
+
+            return new ContentProject(
+                kind,
+                definitions.Length,
+                definitionPath,
+                bundleName,
+                deliveryGroup,
+                minimumClientVersion,
+                story);
         }
 
         internal static string Absolute(string relativePath) =>
@@ -89,6 +148,54 @@ namespace Novels.ContentSdk.Editor
             Directory.GetParent(Application.dataPath)?.FullName
             ?? throw new InvalidOperationException(
                 "Unity project root cannot be resolved.");
+
+        private static string ReadMinimumClientVersion(
+            ContentProjectKind kind,
+            ValidationReport report)
+        {
+            if (kind == ContentProjectKind.Unknown)
+                return string.Empty;
+            var relativePath = kind == ContentProjectKind.Catalog
+                ? ContentProjectInspector.CatalogConfig
+                : ContentProjectInspector.StoryConfig;
+            var path = Absolute(relativePath);
+            if (!File.Exists(path))
+            {
+                report.Error(
+                    "CONTENT_CONFIG_MISSING",
+                    "Configuration file is missing.",
+                    relativePath);
+                return string.Empty;
+            }
+            try
+            {
+                var value = JsonUtility.FromJson<Metadata>(File.ReadAllText(path));
+                if (value == null || value.schemaVersion != 1)
+                {
+                    report.Error(
+                        "CONTENT_CONFIG_SCHEMA",
+                        "schemaVersion must be 1.",
+                        relativePath);
+                }
+                if (string.IsNullOrWhiteSpace(value?.minimumClientVersion))
+                {
+                    report.Error(
+                        "CONTENT_MINIMUM_VERSION_MISSING",
+                        "minimumClientVersion is required.",
+                        relativePath);
+                    return string.Empty;
+                }
+                return value.minimumClientVersion.Trim();
+            }
+            catch (Exception exception)
+            {
+                report.Error(
+                    "CONTENT_CONFIG_INVALID",
+                    exception.Message,
+                    relativePath);
+                return string.Empty;
+            }
+        }
     }
 
     internal sealed class ProjectStructureRule : IContentValidationRule
@@ -111,93 +218,14 @@ namespace Novels.ContentSdk.Editor
         }
     }
 
-    internal sealed class ConfigurationRule : IContentValidationRule
-    {
-        [Serializable]
-        private sealed class Metadata
-        {
-            public int schemaVersion;
-            public string minimumClientVersion;
-        }
-
-        public void Validate(ContentProject project, ValidationReport report)
-        {
-            if (project.Kind == ContentProjectKind.Unknown)
-                return;
-            var relativePath = project.Kind == ContentProjectKind.Catalog
-                ? ContentProjectInspector.CatalogConfig
-                : ContentProjectInspector.StoryConfig;
-            var path = ContentProjectInspector.Absolute(relativePath);
-            if (!File.Exists(path))
-            {
-                report.Error(
-                    "CONTENT_CONFIG_MISSING",
-                    "Configuration file is missing.",
-                    relativePath);
-                return;
-            }
-            try
-            {
-                var value = JsonUtility.FromJson<Metadata>(File.ReadAllText(path));
-                if (value == null || value.schemaVersion != 1)
-                {
-                    report.Error(
-                        "CONTENT_CONFIG_SCHEMA",
-                        "schemaVersion must be 1.",
-                        relativePath);
-                }
-                if (string.IsNullOrWhiteSpace(value?.minimumClientVersion))
-                {
-                    report.Error(
-                        "CONTENT_MINIMUM_VERSION_MISSING",
-                        "minimumClientVersion is required.",
-                        relativePath);
-                    return;
-                }
-                project.MinimumClientVersion = value.minimumClientVersion.Trim();
-            }
-            catch (Exception exception)
-            {
-                report.Error(
-                    "CONTENT_CONFIG_INVALID",
-                    exception.Message,
-                    relativePath);
-            }
-        }
-    }
-
     internal sealed class StoryRule : IContentValidationRule
     {
         public void Validate(ContentProject project, ValidationReport report)
         {
             if (project.Kind != ContentProjectKind.Story)
                 return;
-            var asset = AssetDatabase.LoadAssetAtPath<Content.NovelContentAsset>(
-                project.DefinitionPath);
-            if (asset == null)
-            {
-                report.Error(
-                    "CONTENT_DEFINITION_INVALID",
-                    "NovelContentAsset cannot be loaded.",
-                    project.DefinitionPath);
+            if (project.Story == null)
                 return;
-            }
-            try
-            {
-                project.Story = asset.ToDefinition();
-                project.BundleName = ContentAddressing.ContentPackageConvention
-                    .ContentBundle(project.Story.Id);
-                project.DeliveryGroup = ContentAddressing.ContentPackageConvention
-                    .StoryDeliveryGroup(project.Story.Id);
-            }
-            catch (Exception exception)
-            {
-                report.Error(
-                    "CONTENT_DEFINITION_INVALID",
-                    exception.Message,
-                    project.DefinitionPath);
-                return;
-            }
             ValidateCard(project.Story.Id, report);
             ValidateSources(project.Story, report);
         }
@@ -262,10 +290,6 @@ namespace Novels.ContentSdk.Editor
         {
             if (project.Kind != ContentProjectKind.Catalog)
                 return;
-            project.BundleName = ContentAddressing.ContentPackageConvention
-                .CatalogBundleName;
-            project.DeliveryGroup = ContentAddressing.ContentPackageConvention
-                .ApplicationDeliveryGroup;
             var relativePath = ContentProjectInspector.CatalogConfig;
             var path = ContentProjectInspector.Absolute(relativePath);
             if (!File.Exists(path))

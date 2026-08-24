@@ -124,6 +124,11 @@ namespace Novels.ContentSdk.Editor
                 crc = crc,
                 deliveryGroup = content.DeliveryGroup,
             };
+            ContentBundleAudit.Audit(
+                content,
+                build.assetNames,
+                destination,
+                bundle.size);
             var release = CreateRelease(content, files, bundle);
             var releasePath = Path.Combine(
                 _outputPath,

@@ -51,3 +51,170 @@ Pending / risks:
 Suggested next step:
 - Для переноса Catalog size audit создать отдельный
   `ParallelWork.bundle-audit.md` с точными shared-файлами.
+
+## 2026-08-24T10:25:30Z — bundle-audit — ready-for-integration
+
+Task: Перенести контроль размера и состава Catalog bundle из локального
+Editor-кода в общий Content SDK.
+
+Changed:
+- `Packages/NovelsContentSdk/Editor/ContentBundleAudit.cs`: общий аудит root
+  assets, фактического размера и Catalog dependencies/budget.
+- `Packages/NovelsContentSdk/Editor/ContentPipeline.cs`: аудит подключён после
+  создания bundle и до записи `release.json`.
+- `Projects/novels-catalog/Assets/Editor/**`: локальный audit удалён вместе с
+  папкой и meta.
+- `Projects/novels-catalog/README.md`: отдельное Unity-меню заменено описанием
+  автоматической проверки.
+- `Novels/Docs/AI/ParallelWork.bundle-audit.md`: записан scope и результат.
+
+Validation:
+- `novels-content doctor`: успешно.
+- `novels-content validate catalog`: успешно.
+- `novels-content build catalog editor`: успешно.
+- Unity log: `Content bundle audit passed`; размер 6606 байт (6,5 КиБ).
+- Catalog не содержит локальных C#-файлов.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Для Story bundle audit пока только проверяет root assets, файл и размер без
+  отдельного size budget; поведение сборки Story не менялось.
+
+Suggested next step:
+- Интеграционному координатору принять единым блоком общий audit и удаление
+  локального Catalog audit.
+
+## 2026-08-24T11:09:42Z — novels-simplification — completed
+
+Task: Последовательно упростить Game runtime, Content SDK, UI, адресацию и
+валидацию Novels, принять готовый bundle audit и пересобрать Editor-контент.
+
+Changed:
+- `Novels/Assets/Novels/**`: линейный application flow, предметный lifetime
+  каталога, отдельный `ReplayValidator`, единый dialogue frame.
+- `Packages/NovelsContentSdk/Runtime/**`: общие операции адресации и поиска
+  слоёв; удалены три пустые contract assemblies; Choose и Wardrobe используют
+  общий lifecycle через композицию, оставаясь самостоятельными фичами.
+- `Packages/NovelsContentSdk/Editor/**`: неизменяемый результат инспекции
+  проекта; принят общий `ContentBundleAudit` из предыдущей задачи.
+- `Novels/Docs/AI/**`: актуализированы обзор, короткий план и история волны.
+
+Validation:
+- Unity 6000.3.11f1 batch compile Game runtime и Editor assemblies: успешно,
+  C#-ошибок нет.
+- `novels-content doctor`: успешно.
+- `novels-content validate all`: Catalog, TZM и ZDM успешно.
+- `novels-content build all editor`: application, TZM и ZDM успешно; свежая
+  локальная композиция находится в `Novels/Build/LocalContent`.
+- `git diff --check`: успешно; ссылок на удалённые contract assemblies нет.
+
+Pending / risks:
+- Play Mode, визуальные размеры и полный игровой маршрут автоматически не
+  проверялись; пользователь выполнит ручной smoke test в Editor.
+- Тесты намеренно не добавлялись и не запускались согласно правилам проекта.
+- Editor-сборка не заменяет Android/iOS player build.
+
+Suggested next step:
+- Открыть Novels, пройти каталог → выбор истории → эпизод для TZM и ZDM и
+  проверить Console; при успехе зафиксировать изменения отдельным коммитом.
+
+## 2026-08-24T11:12:00Z — story-global-content — completed block 0
+
+Task: Разрешить ограниченное продолжительное ожидание FIFO по явному запросу
+пользователя.
+
+Changed:
+- `Novels/Docs/AI/ParallelRefactoringCoordination.md`: добавлен режим ожидания
+  без write-lock с интервалом не менее 60 секунд, таймаутом 10 минут и не более
+  чем 10 проверками.
+
+Validation:
+- `git diff --check` для изменённых coordination-файлов: успешно.
+- Ручная сверка с FIFO/write-lock: ожидание не даёт права записи и не позволяет
+  удерживать lock.
+
+Pending / risks:
+- Нет; режим включается только явным запросом пользователя или координатора.
+
+Suggested next step:
+- Освободить lock атомарного блока 0 и продолжить блок 1
+  `story-global-content` через обычную FIFO.
+
+## 2026-08-24T11:20:00Z — story-global-content — completed blocks 1-2
+
+Task: Ввести единый story-global адресный контракт и мигрировать ZDM.
+
+Changed:
+- `Packages/NovelsContentSdk/Runtime/ContentAddressing/**`: Unity-assets теперь
+  адресуются только через `content/<story>/story/**`.
+- Character/runtime loaders: удалён episode/shared fallback.
+- `Projects/novels-zdm/Assets/RemoteAssets/content/zdm/**`: `shared` перенесён
+  в `story`, локации дедуплицированы и собраны в story-global каталог.
+
+Validation:
+- `git diff --check`: успешно.
+- `Tools/novels-tools/novels-content validate zdm`: успешно.
+- `Tools/novels-tools/novels-content build zdm editor`: успешно.
+
+Pending / risks:
+- 12 исключённых ZDM PNG (64 409 963 байта) временно сохранены в
+  `/tmp/novels-zdm-story-global-20260824T1115Z`.
+- TZM ещё не мигрирован.
+
+Suggested next step:
+- Отдельным lock-блоком мигрировать и собрать TZM.
+
+## 2026-08-24T11:40:00Z — story-global-content — ready-for-integration
+
+Task: Завершить story-global миграцию двух историй и первую итерацию сжатия.
+
+Changed:
+- `Projects/novels-tzm/**` и `Projects/novels-zdm/**`: Unity-assets собраны в
+  `content/<story>/story/**`; episode/shared каталоги удалены.
+- `NovelContentTextureImporter.cs`: Android/iOS ASTC 6×6, Max Size 4096.
+- Документация authoring/size: зафиксированы новый контракт и измерения.
+
+Validation:
+- `validate zdm`, `build zdm editor`, `validate tzm`, `build tzm editor`:
+  успешно.
+- Android build ZDM: 111 465 312 B, экономия 64,3%.
+- Android build TZM: 304 933 451 B, экономия 37,6%.
+- Суммарный Android bundle: 416 398 763 B вместо 800 659 912 B, экономия
+  384 261 149 B (48,0%).
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Нужен ручной визуальный quality gate ASTC на устройствах.
+- iOS override задан, но iOS build в этой итерации не запускался.
+- Обратимые копии исключённых дубликатов временно находятся в
+  `/tmp/novels-zdm-story-global-20260824T1115Z` и
+  `/tmp/novels-tzm-story-global-20260824T1121Z`.
+
+Suggested next step:
+- Выполнить визуальный smoke test и затем iOS size build; видео оптимизировать
+  отдельным блоком, не смешивая с Unity bundle.
+
+## 2026-08-24T11:43:46Z — continuous-wait-policy — completed
+
+Task: Формализовать непрерывное ожидание и автоматическое возобновление.
+
+Changed:
+- `ParallelRefactoringCoordination.md`: для явного требования «не
+  останавливаться» добавлены повторяемые ограниченные периоды ожидания без
+  удержания `write-lock`.
+- После освобождения ресурса поток обязан сам перечитать handoff, FIFO и
+  состояние репозитория, затем продолжить исходную задачу без нового сообщения
+  пользователя.
+- Занятая очередь и долгая сборка явно не считаются самостоятельным блокером.
+
+Validation:
+- `git diff --no-index --check`: успешно.
+- Правило сохраняет интервал не менее 60 секунд и не более 10 проверок за один
+  период ожидания.
+
+Pending / risks:
+- Нет.
+
+Suggested next step:
+- Применять непрерывное ожидание только при явном терминальном требовании
+  пользователя или координатора.

@@ -20,6 +20,8 @@ namespace Novels.Character
             Back = back;
             Front = front;
         }
+
+        internal bool IsEmpty => Back == null && Front == null;
     }
 
     internal readonly struct CharacterAccessorySprites
@@ -34,6 +36,8 @@ namespace Novels.Character
             Middle = middle;
             Front = front;
         }
+
+        internal bool IsEmpty => Back == null && Middle == null && Front == null;
     }
 
     internal readonly struct CharacterSpriteSet

@@ -4,6 +4,25 @@
 
 <!-- unity-onboarding:generated:start -->
 
+## Simplification wave completed on 2026-08-24
+
+- `ApplicationRuntime` теперь выражает линейный цикл каталог → история без
+  искусственной state machine; загруженный каталог оформлен как явный lifetime.
+- Проверка replay вынесена в `ReplayValidator`, а построитель диалога вычисляет
+  единый кадр представления до формирования очередей Bubble и Character.
+- Повторяющиеся алгоритмы поиска слоёв персонажа и построения адресов сведены к
+  общим локальным операциям; результат инспекции контентного проекта стал
+  неизменяемым.
+- Удалены три пустые contract assemblies Bubble/Choose/Wardrobe. Их контракты
+  живут в соответствующих feature assemblies, при этом Choose и Wardrobe
+  остаются независимыми фичами.
+- Общий `OptionListController` устранил дублирование lifecycle Choose/Wardrobe,
+  а `OptionListScreen` хранит одну коллекцию карточек вместо параллельных
+  списков. Размеры и оформление UI не менялись.
+- Unity runtime и Editor assemblies скомпилированы; `doctor`, валидация Catalog,
+  TZM и ZDM прошли; Editor bundles всех трёх атомарных проектов пересобраны.
+  Ручная проверка игрового маршрута оставлена владельцу проекта.
+
 ## Simplification wave completed on 2026-08-21
 
 - The redundant `Novels.Waiting` feature, factory, and assembly were removed. StoryQueue now receives the episode token and performs the same scaled-time wait directly.

@@ -34,7 +34,8 @@ bundle + files  +--> release.json
    эпизодов, главный персонаж, пути Ink и aliases.
 3. Откройте `Assets/StreamingAssets/noveltexts/<id>/<id>.ink`: он включает
    эпизодные Ink-файлы.
-4. Найдите нужный эпизод в `Assets/RemoteAssets/content/<id>/episodes/`.
+4. Найдите Unity-ресурсы истории в
+   `Assets/RemoteAssets/content/<id>/story/`.
 5. До сборки запустите `Tools/novels-tools/novels-content validate <id>`.
 
 Не пытайтесь запускать content-проект кнопкой Play: сцены намеренно отсутствуют.
@@ -47,11 +48,11 @@ Projects/novels-<id>/
     RemoteAssets/content/<id>/
       application/setting/       настройки UI истории
       definition/<id>.asset      контракт истории и эпизодов
-      episodes/<episodeId>/      ресурсы конкретного эпизода
-      shared/                     ресурсы нескольких эпизодов
+      story/                      все Unity-ресурсы истории
     StreamingAssets/
       noveltexts/<id>/            Ink source, compiled story и source map
       novelsvideos/<id>/          внешние видео, если история их использует
+      novelsaudio/<id>/           внешнее аудио, если история его использует
   Config/
     card.json                     storyId, заголовок, версия и обложка
     cover.*                       обложка истории
@@ -107,13 +108,14 @@ presentation-prefabs.
 Основные шаблоны:
 
 ```text
-episodes/<episodeId>/location/locations/<location>.png
-shared/choose/items/<item>.png
-shared/character/characters/<character>/view/<view>/main.png
-shared/character/characters/<character>/view/<view>/emotions/<emotion>.png
-shared/character/characters/<character>/clothes/<clothes>/1.png
-shared/character/characters/<character>/hairs/<front|back>/<hair>/<color>.png
-shared/character/characters/<character>/accessories/<front|middle|back>/<item>.png
+story/location/locations/<location>.png
+story/choose/items/<item>.png
+story/character/characters/<character>/view/<view>/main.png
+story/character/characters/<character>/view/<view>/emotions/<emotion>.png
+story/character/characters/<character>/clothes/<clothes>/1.png
+story/character/characters/<character>/hairs/<front|back>/<hair>/<color>.png
+story/character/characters/<character>/accessories/<front|middle|back>/<item>.png
+story/presentation/<feature>/screen-variant.prefab
 ```
 
 Для персонажей runtime пробует основной слой и кандидаты, переданные в Ink.
@@ -139,13 +141,14 @@ shared/character/characters/<character>/accessories/<front|middle|back>/<item>.p
 
 ## Безопасное добавление ресурса
 
-1. Определите scope: один эпизод или `shared`.
+1. Выберите семантический каталог внутри `story`: `location`, `character`,
+   `choose` или `presentation`.
 2. Используйте каноническое имя из Ink без расширения.
 3. Добавьте файл вместе с созданным Unity `.meta`.
-4. Не создавайте копию существующего файла ради второго имени: сначала
-   рассмотрите alias или перенос в `shared`.
+4. Не создавайте копию существующего файла ради второго эпизода: Unity-ресурс
+   уже глобален в пределах истории. Для второго имени используйте alias.
 5. Убедитесь, что texture importer применил Sprite, отключённые mipmaps и
-   Read/Write.
+   Read/Write, а на Android/iOS — ASTC 6×6.
 6. Проверьте ссылку валидатором и только затем собирайте bundle.
 
 ## Команды рабочего процесса
@@ -171,4 +174,3 @@ Tools/novels-tools/novels-content build zdm editor
 - размер bundle сравнен с baseline из `ContentSizeBaseline.md`;
 - `git diff --check` проходит;
 - в статус-файле потока перечислены проверки и известные предупреждения.
-

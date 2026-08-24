@@ -22,8 +22,8 @@ Tools/novels-tools/novels-content validate catalog
 Tools/novels-tools/novels-content build catalog editor
 ```
 
-После сборки выберите `Novels → Catalog → Audit Built Content`. Целевой размер
-bundle — 50 КиБ, предупреждение — 100 КиБ, ошибка — 500 КиБ.
+Сборка автоматически проверяет состав bundle и его размер. Целевой размер —
+50 КиБ, предупреждение — 100 КиБ, ошибка — 500 КиБ.
 
-Общая логика находится в `NovelsContentSdk`. Папки `Build`, `Library` и `Logs`
-создаются автоматически и не редактируются вручную.
+Вся логика, включая проверку размера, находится в `NovelsContentSdk`. Папки
+`Build`, `Library` и `Logs` создаются автоматически и не редактируются вручную.

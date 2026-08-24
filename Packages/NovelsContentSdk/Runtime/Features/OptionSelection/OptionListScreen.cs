@@ -8,14 +8,31 @@ namespace Novels.OptionSelection
 {
     public sealed class OptionListScreen : MonoBehaviour
     {
+        private readonly struct CardView
+        {
+            internal CardView(
+                int itemIndex,
+                Image background,
+                RectTransform rect,
+                Image thumbnail)
+            {
+                ItemIndex = itemIndex;
+                Background = background;
+                Rect = rect;
+                Thumbnail = thumbnail;
+            }
+
+            internal int ItemIndex { get; }
+            internal Image Background { get; }
+            internal RectTransform Rect { get; }
+            internal Image Thumbnail { get; }
+        }
+
         private static readonly Color PanelColor = new(0.12f, 0.14f, 0.17f, 0.96f);
         private static readonly Color CardColor = new(0.24f, 0.27f, 0.32f, 0.96f);
         private static readonly Color SelectedColor = new(0.20f, 0.55f, 0.78f, 1f);
 
-        private readonly List<Image> _cardBackgrounds = new();
-        private readonly List<RectTransform> _cardRects = new();
-        private readonly List<Image> _cardThumbnails = new();
-        private readonly List<int> _cardItemIndices = new();
+        private readonly List<CardView> _cards = new();
         private CanvasGroup _canvasGroup;
         private RectTransform _content;
         private RectTransform _viewport;
@@ -163,10 +180,11 @@ namespace Novels.OptionSelection
                 new Vector2(12f, 72f), new Vector2(-12f, -12f));
 
             card.onClick.AddListener(() => SelectItem(itemIndex));
-            _cardBackgrounds.Add(card.GetComponent<Image>());
-            _cardRects.Add(rect);
-            _cardThumbnails.Add(thumbnail);
-            _cardItemIndices.Add(itemIndex);
+            _cards.Add(new CardView(
+                itemIndex,
+                card.GetComponent<Image>(),
+                rect,
+                thumbnail));
         }
 
         private async UniTaskVoid LoadThumbnail(int itemIndex, int id, int version)
@@ -176,10 +194,10 @@ namespace Novels.OptionSelection
                 var sprite = await _presentation.LoadThumbnail(id);
                 if (version != _presentationVersion)
                     return;
-                for (var index = 0; index < _cardThumbnails.Count; index++)
+                foreach (var card in _cards)
                 {
-                    if (_cardItemIndices[index] == itemIndex && _cardThumbnails[index] != null)
-                        _cardThumbnails[index].sprite = sprite;
+                    if (card.ItemIndex == itemIndex && card.Thumbnail != null)
+                        card.Thumbnail.sprite = sprite;
                 }
             }
             catch (OperationCanceledException)
@@ -193,9 +211,9 @@ namespace Novels.OptionSelection
                 || _selectedIndex == index)
                 return;
             _selectedIndex = index;
-            for (var cardIndex = 0; cardIndex < _cardBackgrounds.Count; cardIndex++)
+            foreach (var card in _cards)
             {
-                _cardBackgrounds[cardIndex].color = _cardItemIndices[cardIndex] == index
+                card.Background.color = card.ItemIndex == index
                     ? SelectedColor
                     : CardColor;
             }
@@ -216,10 +234,7 @@ namespace Novels.OptionSelection
         private void ClearCards()
         {
             _selectedIndex = -1;
-            _cardBackgrounds.Clear();
-            _cardRects.Clear();
-            _cardThumbnails.Clear();
-            _cardItemIndices.Clear();
+            _cards.Clear();
             _scroll.velocity = Vector2.zero;
             _needsCentering = false;
             for (var index = _content.childCount - 1; index >= 0; index--)
@@ -232,21 +247,21 @@ namespace Novels.OptionSelection
 
         private void SelectClosestCard()
         {
-            if (_cardRects.Count == 0)
+            if (_cards.Count == 0)
                 return;
             var closestIndex = 0;
             var closestDistance = float.MaxValue;
-            for (var index = 0; index < _cardRects.Count; index++)
+            for (var index = 0; index < _cards.Count; index++)
             {
                 var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(
-                    _viewport, _cardRects[index]);
+                    _viewport, _cards[index].Rect);
                 var distance = Mathf.Abs(bounds.center.x);
                 if (distance >= closestDistance)
                     continue;
                 closestDistance = distance;
                 closestIndex = index;
             }
-            SelectItem(_cardItemIndices[closestIndex]);
+            SelectItem(_cards[closestIndex].ItemIndex);
             WrapCarousel(closestIndex);
         }
 
@@ -262,7 +277,8 @@ namespace Novels.OptionSelection
         }
 
         private float GetCycleWidth(int itemCount) =>
-            _cardRects[itemCount].anchoredPosition.x - _cardRects[0].anchoredPosition.x;
+            _cards[itemCount].Rect.anchoredPosition.x
+            - _cards[0].Rect.anchoredPosition.x;
 
         private void ShiftContent(float offset)
         {
@@ -274,7 +290,7 @@ namespace Novels.OptionSelection
         private void CenterCard(int slot)
         {
             var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(
-                _viewport, _cardRects[slot]);
+                _viewport, _cards[slot].Rect);
             ShiftContent(-bounds.center.x);
         }
 
