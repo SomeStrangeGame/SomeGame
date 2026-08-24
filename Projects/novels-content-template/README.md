@@ -1,7 +1,17 @@
-# Novels content template
+# Atomic Novel Content Project
 
-Шаблон атомарного проекта истории. Проект должен содержать authoring-данные одной истории, `card.json` и собирать один Story AssetBundle на платформу.
+Скопируйте шаблон в `Projects/novels-<storyId>` и добавьте:
 
-Перед первой сборкой укажите минимальную версию приложения в
-`Config/build.json`. Версия самого Unity-проекта на совместимость release не
-влияет.
+- `Config/card.json` с `schemaVersion`, `minimumClientVersion`, `storyId`,
+  `title`, `description` и `cover`;
+- `Config/cover.<extension>`;
+- один `NovelContentAsset` и контент в `Assets/RemoteAssets`;
+- Ink в `Assets/StreamingAssets`.
+
+AssetBundle label назначать не требуется. Проверка и сборка выполняются из
+корня общего репозитория:
+
+```bash
+Tools/novels-tools/novels-content validate <storyId>
+Tools/novels-tools/novels-content build <storyId> editor
+```

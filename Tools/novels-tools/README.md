@@ -1,16 +1,13 @@
-# novels-tools
+# novels-content
 
-Локальный последовательный оркестратор content-проектов. Он намеренно не
-запускает несколько Unity Editor одновременно.
+Единственный CLI для контентных Unity-проектов:
 
 ```bash
 Tools/novels-tools/novels-content doctor
-Tools/novels-tools/novels-content build-local all
-Tools/novels-tools/novels-content publish-local /path/to/server-root
+Tools/novels-tools/novels-content validate <catalog|story-id|all>
+Tools/novels-tools/novels-content build <catalog|story-id|all> <editor|android|ios>
+Tools/novels-tools/novels-content publish <destination-directory>
 ```
 
-Основной Game-проект не собирает контент. APK/IPA собираются отдельно через
-`Novels/Tools/build-remote-player.sh` и всегда используют удалённый content root.
-
-Путь к Unity можно переопределить через `NOVELS_UNITY_BIN`, а статический
-build entry point — через `NOVELS_BUILD_METHOD`.
+`build` автоматически компонует результат для Game. Проекты обрабатываются
+последовательно, поэтому команда безопасна для больших наборов контента.

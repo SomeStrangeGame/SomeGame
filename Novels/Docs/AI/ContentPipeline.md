@@ -1,89 +1,107 @@
 # Content Pipeline
 
-## Единая команда
-
-Из корня репозитория:
+Весь рабочий процесс доступен через один исполняемый файл из корня репозитория:
 
 ```bash
 Tools/novels-tools/novels-content doctor
-Tools/novels-tools/novels-content build-local all
+Tools/novels-tools/novels-content validate all
+Tools/novels-tools/novels-content build all android
 ```
 
-Сборка выполняется строго последовательно: Catalog UI, затем каждый найденный
-story-project. Новая история обнаруживается автоматически по файлу
-`Projects/novels-<storyId>/Config/card.json`.
+Команды выполняют проекты строго последовательно: сначала каталог, затем
+истории. Это важно для проектов с большим объёмом графики.
 
-Можно пересобрать только одну часть:
+## Команды
+
+Проверить окружение и конфигурацию без Unity:
 
 ```bash
-Tools/novels-tools/novels-content build-local catalog
-Tools/novels-tools/novels-content build-local tzm
-Tools/novels-tools/novels-content build-local zdm
+Tools/novels-tools/novels-content doctor
 ```
 
-После каждой сборки CLI автоматически обновляет композицию для Game в
-`Novels/Build/LocalContent`. Если bundles уже готовы, композицию можно обновить
-без запуска Unity:
+Запустить полную Unity-валидацию одного проекта или всех проектов:
 
 ```bash
-Tools/novels-tools/novels-content compose-local
+Tools/novels-tools/novels-content validate tzm
+Tools/novels-tools/novels-content validate all
 ```
 
-## Что принадлежит проектам
+Собрать один проект или всё содержимое для одной платформы:
 
-- `novels-catalog` собирает только визуальный Catalog UI bundle и хранит
-  центральный `Config/catalog.json` (`storyId`, порядок, enabled).
-- Каждый `novels-<storyId>` хранит весь контент одной истории, Ink и
-  `Config/card.json` с собственной `Config/cover.*`.
-- Каждый контентный проект содержит `Config/build.json`. Поле
-  `minimumClientVersion` явно задаёт минимальную совместимую версию Game и не
-  связано с `PlayerSettings.bundleVersion` контентного Unity-проекта.
-- Каждая история собирается в один большой bundle на платформу. Эпизодных и
-  shared bundles нет.
-- `novels-game` не содержит authoring-контент историй и не кладёт bundles в
-  `StreamingAssets`.
+```bash
+Tools/novels-tools/novels-content build catalog editor
+Tools/novels-tools/novels-content build tzm android
+Tools/novels-tools/novels-content build all ios
+```
 
-## Локальный и серверный root
+Допустимые платформы: `editor`, `android`, `ios`. После успешной сборки CLI
+сам обновляет `Novels/Build/LocalContent`; отдельной команды compose больше нет.
+
+Сборка пересоздаёт только `Remote/<выбранная-платформа>` и сохраняет ранее
+собранные платформы. Поэтому последовательные `build all android` и
+`build all ios` формируют единое серверное дерево. Content-addressed `Files`
+дополняются; конкретный release использует только перечисленные в нём payloads.
+
+Опубликовать уже собранное дерево:
+
+```bash
+Tools/novels-tools/novels-content publish /absolute/server/root
+```
+
+## Конфигурация
+
+- каталог: `Projects/novels-catalog/Config/catalog.json`;
+- история: `Projects/novels-<storyId>/Config/card.json`;
+- `minimumClientVersion` хранится прямо в соответствующем JSON;
+- отдельного `Config/build.json` больше нет;
+- новый story-project обнаруживается по `Config/card.json`.
+
+Каждый атомарный проект создаёт ровно один bundle. Ручные AssetBundle labels в
+Inspector не используются: SDK явно включает содержимое `Assets/RemoteAssets`.
+Ink и прочие потоковые файлы записываются как content-addressed payloads.
+
+## Отчёт валидации
+
+Валидатор не останавливается на первой найденной проблеме. За один проход он
+собирает полный отчёт и выводит:
+
+- одно сгруппированное сообщение со всеми предупреждениями;
+- одно сгруппированное сообщение со всеми ошибками.
+
+При наличии ошибок сборка не начинается.
+
+Правила реализуют `IContentValidationRule` и последовательно получают один
+`ContentProject` и один `ValidationReport`. Новую проверку следует оформлять
+отдельным небольшим правилом и добавлять в список `ContentValidator`; создавать
+ещё одну точку запуска или собственный формат лога не нужно.
+
+Базовая последовательность правил:
+
+```text
+ProjectStructureRule
+  -> ConfigurationRule
+  -> StoryRule / CatalogRule
+  -> BundleRule
+```
+
+Story-specific исключения не добавляются в общий SDK. Они должны оставаться
+данными соответствующего контентного проекта.
+
+## Выходное дерево
 
 ```text
 LocalContent/
   catalog/
     registry/catalog.json
     ui/Remote/<platform>/release.json
-    ui/Remote/<platform>/<bundle>
+    ui/Remote/<platform>/<bundle>/<version>
   stories/<storyId>/
     card.json
     cover.<extension>
     Files/<sha256>.bin
     Remote/<platform>/release.json
-    Remote/<platform>/<bundle>
+    Remote/<platform>/<bundle>/<version>
 ```
 
-Editor читает `Novels/Build/LocalContent` через `FileSystemContentSource`.
-Android/iOS читают идентичное дерево через `HttpContentSource`; отдельных
-Preview, Embedded и StreamingAssets-режимов нет.
-
-## Локальная публикация
-
-```bash
-Tools/novels-tools/novels-content publish-local /absolute/server/root
-```
-
-Команда зеркально копирует готовую композицию в указанную папку. Для реального
-HTTP-хостинга эта папка является корнем удалённого контента.
-
-## Runtime-порядок
-
-```text
-catalog/registry/catalog.json
-  -> stories/<id>/card.json
-  -> Catalog UI release
-  -> выбор истории
-  -> stories/<id>/release
-  -> проверка SHA-256 и кеш
-  -> запуск истории
-```
-
-Catalog UI и каждая история имеют независимые release и namespace кеша. Поэтому
-историю можно пересобрать и опубликовать атомарно, не пересобирая приложение,
-каталог или другие истории.
+Editor читает это дерево через `FileSystemContentSource`, Android/iOS — через
+`HttpContentSource`. Каталог и истории публикуются независимо.

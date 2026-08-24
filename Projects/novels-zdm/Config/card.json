@@ -1,5 +1,6 @@
 {
   "schemaVersion": 1,
+  "minimumClientVersion": "0.1.0",
   "storyId": "zdm",
   "title": "ЖДМ",
   "description": "",

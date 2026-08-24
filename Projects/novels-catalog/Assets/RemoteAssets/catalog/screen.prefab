@@ -314,12 +314,12 @@ GameObject:
   - component: {fileID: 792584008824364728}
   - component: {fileID: 1947818341915338342}
   m_Layer: 0
-  m_Name: CardTemplate
+  m_Name: TEMPLATE - Story Card
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2318704664157264751
 RectTransform:
   m_ObjectHideFlags: 0
@@ -501,6 +501,7 @@ MonoBehaviour:
   _description: {fileID: 895797210284152474}
   _status: {fileID: 2444772523499946891}
   _button: {fileID: 3800682896677321491}
+  _cover: {fileID: 8383563251787723355}
 --- !u!1 &2115419329933406415
 GameObject:
   m_ObjectHideFlags: 0
@@ -671,7 +672,7 @@ GameObject:
   - component: {fileID: 305528965031048642}
   - component: {fileID: 373680453049872553}
   m_Layer: 0
-  m_Name: Cards
+  m_Name: StoryList
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -750,7 +751,7 @@ GameObject:
   - component: {fileID: 7561120091293973524}
   - component: {fileID: 7116027901326870520}
   m_Layer: 0
-  m_Name: Content
+  m_Name: CatalogContent
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -955,7 +956,7 @@ GameObject:
   - component: {fileID: 7792442949654031430}
   - component: {fileID: 4193034219087203250}
   m_Layer: 0
-  m_Name: Screen
+  m_Name: CatalogScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

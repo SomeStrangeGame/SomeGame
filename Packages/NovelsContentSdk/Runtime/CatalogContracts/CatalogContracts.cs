@@ -8,6 +8,7 @@ namespace Novels.Catalog.Contracts
     public sealed class CatalogRegistry
     {
         public int schemaVersion = 1;
+        public string minimumClientVersion;
         public CatalogRegistryEntry[] stories = Array.Empty<CatalogRegistryEntry>();
     }
 
@@ -23,6 +24,7 @@ namespace Novels.Catalog.Contracts
     public sealed class StoryCard
     {
         public int schemaVersion = 1;
+        public string minimumClientVersion;
         public string storyId;
         public string title;
         public string description;

@@ -6,14 +6,15 @@ REPOSITORY_ROOT=${TOOL_DIR:h:h}
 GAME_PROJECT="$REPOSITORY_ROOT/Novels"
 PROJECTS_ROOT="$REPOSITORY_ROOT/Projects"
 UNITY_BIN=${NOVELS_UNITY_BIN:-/Applications/Unity/Hub/Editor/6000.3.11f1/Unity.app/Contents/MacOS/Unity}
-BUILD_METHOD=${NOVELS_BUILD_METHOD:-Novels.ContentSdk.Editor.AtomicContentBuild.BuildLocal}
+BUILD_METHOD=Novels.ContentSdk.Editor.AtomicContentBuild.BuildLocal
+VALIDATE_METHOD=Novels.ContentSdk.Editor.AtomicContentBuild.Validate
 
 usage() {
   print 'Usage:'
   print '  novels-content doctor'
-  print '  novels-content build-local <catalog|story-id|all>'
-  print '  novels-content compose-local'
-  print '  novels-content publish-local <destination-directory>'
+  print '  novels-content validate <catalog|story-id|all>'
+  print '  novels-content build <catalog|story-id|all> <editor|android|ios>'
+  print '  novels-content publish <destination-directory>'
 }
 
 project_path() {
@@ -25,34 +26,31 @@ project_path() {
   print "$project"
 }
 
-project_prefix() {
-  case "$1" in
-    catalog) print 'catalog/ui' ;;
-    *) print "stories/$1" ;;
-  esac
-}
-
 story_ids() {
   local card
   for card in "$PROJECTS_ROOT"/novels-*/Config/card.json(N); do
-    local project=${card:h:h}
-    local name=${project:t}
-    print "${name#novels-}"
+    print "${${card:h:h:t}#novels-}"
   done
 }
 
+all_ids() {
+  print catalog
+  story_ids
+}
+
+config_path() {
+  local project=$(project_path "$1")
+  [[ "$1" == catalog ]] && print "$project/Config/catalog.json" || print "$project/Config/card.json"
+}
+
 doctor() {
-  local failed=0
+  local failed=0 id
   [[ -x "$UNITY_BIN" ]] || { print -u2 "Unity executable is missing: $UNITY_BIN"; failed=1; }
-  local ids=(catalog ${(f)"$(story_ids)"})
-  for id in $ids; do
-    local project=$(project_path "$id")
-    [[ -f "$project/ProjectSettings/ProjectVersion.txt" ]] || {
-      print -u2 "Unity project is incomplete: $project"
-      failed=1
-    }
-    [[ -f "$project/Config/build.json" ]] || {
-      print -u2 "Content build configuration is missing: $project/Config/build.json"
+  for id in ${(f)"$(all_ids)"}; do
+    local config=$(config_path "$id")
+    [[ -f "$config" ]] || { print -u2 "Content configuration is missing: $config"; failed=1; }
+    grep -q '"minimumClientVersion"' "$config" || {
+      print -u2 "minimumClientVersion is missing: $config"
       failed=1
     }
   done
@@ -60,87 +58,84 @@ doctor() {
   print 'novels-content: configuration is valid.'
 }
 
-build_one() {
-  local id=$1
+run_unity() {
+  local id=$1 method=$2 platform=${3:-}
   local project=$(project_path "$id")
-  local log="$project/Build/build-local.log"
+  local action=${method:t}
+  local log="$project/Build/${action:l}-${platform:-content}.log"
   mkdir -p "$project/Build"
-  print "Building $id..."
-  "$UNITY_BIN" -batchmode -quit -nographics \
-    -projectPath "$project" \
-    -executeMethod "$BUILD_METHOD" \
-    -logFile "$log"
-  print "Built $id. Log: $log"
+  print "${action} $id${platform:+ for $platform}..."
+  local arguments=(-batchmode -quit -nographics -projectPath "$project" -executeMethod "$method" -logFile "$log")
+  [[ -n "$platform" ]] && arguments+=(-contentPlatform "$platform")
+  "$UNITY_BIN" $arguments
+  print "Done. Log: $log"
+}
+
+for_each_project() {
+  local selected=$1 method=$2 platform=${3:-} id
+  if [[ "$selected" == all ]]; then
+    for id in ${(f)"$(all_ids)"}; do run_unity "$id" "$method" "$platform"; done
+  else
+    run_unity "$selected" "$method" "$platform"
+  fi
 }
 
 copy_tree() {
-  local source=$1
-  local destination=$2
-  [[ -d "$source" ]] || {
-    print -u2 "Built content is missing: $source"
-    return 1
-  }
+  local source=$1 destination=$2
+  [[ -d "$source" ]] || { print -u2 "Built content is missing: $source"; return 1; }
   mkdir -p "$destination"
   rsync -a --delete "$source/" "$destination/"
 }
 
-compose_local() {
-  local destination="$GAME_PROJECT/Build/LocalContent"
+compose() {
+  local destination="$GAME_PROJECT/Build/LocalContent" id
   mkdir -p "$destination/catalog/registry"
-  local catalog_build="$(project_path catalog)/Build/LocalContent"
-  if [[ -d "$catalog_build" ]]; then
-    copy_tree "$catalog_build" "$destination/$(project_prefix catalog)"
-  fi
-  local id
+  local catalog="$(project_path catalog)/Build/LocalContent"
+  [[ -d "$catalog" ]] && copy_tree "$catalog" "$destination/catalog/ui"
   for id in ${(f)"$(story_ids)"}; do
-    local story_build="$(project_path "$id")/Build/LocalContent"
-    [[ -d "$story_build" ]] || continue
-    copy_tree "$story_build" "$destination/$(project_prefix "$id")"
-    cp "$(project_path "$id")/Config/card.json" \
-      "$destination/$(project_prefix "$id")/card.json"
-    local covers=("$(project_path "$id")"/Config/cover.*(N))
-    [[ ${#covers} -eq 1 ]] || {
-      print -u2 "Story '$id' must contain exactly one Config/cover.* file."
-      return 1
-    }
-    cp "$covers[1]" \
-      "$destination/$(project_prefix "$id")/${covers[1]:t}"
+    local project=$(project_path "$id")
+    local build="$project/Build/LocalContent"
+    [[ -d "$build" ]] || continue
+    copy_tree "$build" "$destination/stories/$id"
+    cp "$project/Config/card.json" "$destination/stories/$id/card.json"
+    local covers=("$project"/Config/cover.*(N))
+    [[ ${#covers} -eq 1 ]] || { print -u2 "Story '$id' must contain one cover."; return 1; }
+    cp "$covers[1]" "$destination/stories/$id/${covers[1]:t}"
   done
-  cp "$(project_path catalog)/Config/catalog.json" \
-    "$destination/catalog/registry/catalog.json"
-  print "Composed local content: $destination"
+  cp "$(project_path catalog)/Config/catalog.json" "$destination/catalog/registry/catalog.json"
+  print "Composed: $destination"
 }
 
-build_local() {
-  local target=${1:-}
-  [[ -n "$target" ]] || { usage; return 2; }
+validate() {
+  local selected=${1:-}
+  [[ -n "$selected" ]] || { usage; return 2; }
   doctor
-  if [[ "$target" == all ]]; then
-    local ids=(catalog ${(f)"$(story_ids)"})
-    for id in $ids; do build_one "$id"; done
-  else
-    build_one "$target"
-  fi
-  compose_local
+  for_each_project "$selected" "$VALIDATE_METHOD"
 }
 
-publish_local() {
+build() {
+  local selected=${1:-} platform=${2:-}
+  [[ -n "$selected" && -n "$platform" ]] || { usage; return 2; }
+  [[ "$platform" == editor || "$platform" == android || "$platform" == ios ]] || {
+    print -u2 "Unknown platform: $platform"
+    return 2
+  }
+  doctor
+  for_each_project "$selected" "$BUILD_METHOD" "$platform"
+  compose
+}
+
+publish() {
   local destination=${1:-}
   [[ -n "$destination" ]] || { usage; return 2; }
-  local source="$GAME_PROJECT/Build/LocalContent"
-  [[ -d "$source" ]] || {
-    print -u2 "Local content is missing. Run build-local first."
-    return 1
-  }
-  mkdir -p "$destination"
-  rsync -a --delete "$source/" "$destination/"
-  print "Published content to: $destination"
+  copy_tree "$GAME_PROJECT/Build/LocalContent" "$destination"
+  print "Published: $destination"
 }
 
 case ${1:-} in
   doctor) doctor ;;
-  build-local) build_local "${2:-}" ;;
-  compose-local) compose_local ;;
-  publish-local) publish_local "${2:-}" ;;
+  validate) validate "${2:-}" ;;
+  build) build "${2:-}" "${3:-}" ;;
+  publish) publish "${2:-}" ;;
   *) usage; exit 2 ;;
 esac
