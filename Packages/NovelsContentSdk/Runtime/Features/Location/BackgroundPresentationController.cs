@@ -75,18 +75,21 @@ namespace Novels.Location
                 == StoryContracts.StoryBackgroundColor.White
                     ? Color.white
                     : Color.black;
-            await Hide(mode);
-            _ctx.Screen.ResetCamera();
-            _ctx.Screen.ResetEffect();
 
             if (StoryContracts.StoryBackgroundAssets.IsSolidBlack(assetName))
             {
+                await Hide(mode);
+                _ctx.Screen.ResetCamera();
+                _ctx.Screen.ResetEffect();
                 await ShowSolidColor(mode);
                 return;
             }
 
             var sprite = await _ctx.GetSprite(assetName)
                 .AttachExternalCancellation(_ctx.CancellationToken);
+            await Hide(mode);
+            _ctx.Screen.ResetCamera();
+            _ctx.Screen.ResetEffect();
             if (sprite == null)
             {
                 await ShowStatic(_ctx.MissingBackground, mode);
