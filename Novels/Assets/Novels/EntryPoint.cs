@@ -89,10 +89,14 @@ namespace Novels
             if (!_restartRequested)
                 return;
             _restartRequested = false;
-            if (_coldRestartRequested)
-                _cacheGeneration++;
+            var coldRestart = _coldRestartRequested;
             _coldRestartRequested = false;
             DisposeSession();
+            if (coldRestart)
+            {
+                ClearRemoteContentCache();
+                _cacheGeneration++;
+            }
             StreamingExperimentDiagnostics.Reset();
             OnEnable();
         }
@@ -101,6 +105,13 @@ namespace Novels
         {
             _restartRequested = true;
             _coldRestartRequested |= cold;
+        }
+
+        private static void ClearRemoteContentCache()
+        {
+            var cache = new Cache.Entity(Application.persistentDataPath);
+            cache.DeleteDirectory("RemoteContent");
+            cache.DeleteDirectory("ContentStaging");
         }
 
         private Bundles.IContentSource CreateContentSource(
