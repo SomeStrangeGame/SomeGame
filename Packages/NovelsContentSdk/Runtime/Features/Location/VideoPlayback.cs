@@ -55,6 +55,7 @@ namespace Novels.Location
         private UniTaskCompletionSource _firstFrame;
         private UniTaskCompletionSource _completed;
         private string _error;
+        private bool _acceptFrames;
 
         internal VideoPlayback(Dependencies ctx)
         {
@@ -70,7 +71,6 @@ namespace Novels.Location
             Stop();
 
             _prepared = new UniTaskCompletionSource();
-            _firstFrame = new UniTaskCompletionSource();
             _completed = new UniTaskCompletionSource();
             _error = null;
 
@@ -109,6 +109,8 @@ namespace Novels.Location
                 RenderTextureFormat.ARGB32);
             _renderTexture.Create();
             _ctx.SetTexture(_renderTexture);
+            _firstFrame = new UniTaskCompletionSource();
+            _acceptFrames = true;
             videoPlayer.Play();
 
             timeout = UniTask.Delay(
@@ -169,6 +171,8 @@ namespace Novels.Location
 
         internal void Stop()
         {
+            _acceptFrames = false;
+            _firstFrame = null;
             if (_ctx.VideoPlayer != null)
             {
                 _ctx.VideoPlayer.Stop();
@@ -186,7 +190,8 @@ namespace Novels.Location
 
         private void OnFrameReady(VideoPlayer source, long frameIndex)
         {
-            _firstFrame?.TrySetResult();
+            if (_acceptFrames)
+                _firstFrame?.TrySetResult();
         }
 
         private void OnCompleted(VideoPlayer source)
