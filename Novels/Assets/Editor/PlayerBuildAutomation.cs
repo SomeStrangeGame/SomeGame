@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEditor.SceneManagement;
 using UnityEngine;
@@ -29,6 +30,7 @@ namespace Editor
                 throw new InvalidOperationException("-playerOutput is required.");
 
             AssertRemoteContentExcluded();
+            AssertReleasePlayerSettings(isDevelopmentBuild);
             EditorSceneManager.OpenScene(
                 "Assets/Novels/Novels.unity",
                 OpenSceneMode.Single);
@@ -72,7 +74,9 @@ namespace Editor
                     $"Remote Player build failed: {report.summary.result}, "
                     + $"{report.summary.totalErrors} errors.");
             }
-            Debug.Log($"Remote Player build completed: {report.summary.outputPath}");
+            Debug.Log(
+                $"Remote Player build completed: {report.summary.outputPath} "
+                + $"({report.summary.totalSize / (1024f * 1024f):F1} MiB)");
         }
 
         private static void CreateRuntimeConfiguration(string remoteUrl)
@@ -139,6 +143,40 @@ namespace Editor
                     throw new InvalidOperationException(
                         $"Remote Player staging project still contains '{path}'.");
                 }
+            }
+        }
+
+        private static void AssertReleasePlayerSettings(bool isDevelopmentBuild)
+        {
+            if (isDevelopmentBuild
+                || EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
+            {
+                return;
+            }
+
+            if (PlayerSettings.GetScriptingBackend(NamedBuildTarget.Android)
+                != ScriptingImplementation.IL2CPP)
+            {
+                throw new InvalidOperationException(
+                    "Android release Player must use IL2CPP.");
+            }
+            if (PlayerSettings.Android.targetArchitectures
+                != AndroidArchitecture.ARM64)
+            {
+                throw new InvalidOperationException(
+                    "Android release Player must target ARM64 only.");
+            }
+            if (!PlayerSettings.stripEngineCode)
+            {
+                throw new InvalidOperationException(
+                    "Android release Player must strip unused engine code.");
+            }
+            var stripping = PlayerSettings.GetManagedStrippingLevel(
+                NamedBuildTarget.Android);
+            if ((int)stripping < (int)ManagedStrippingLevel.Medium)
+            {
+                throw new InvalidOperationException(
+                    "Android release Player must use Medium or High managed stripping.");
             }
         }
     }
