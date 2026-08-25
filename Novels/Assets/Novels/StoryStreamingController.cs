@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -166,7 +167,11 @@ namespace Novels
         }
 
         private static string Canonicalize(string value) =>
-            (value ?? string.Empty).Replace('\\', '/').Trim().ToLowerInvariant();
+            (value ?? string.Empty)
+                .Replace('\\', '/')
+                .Normalize(NormalizationForm.FormC)
+                .Trim()
+                .ToLowerInvariant();
 
         private static string QueueLabel(
             IReadOnlyList<Bundles.ContentStreamingChunkEntry> chunks,
