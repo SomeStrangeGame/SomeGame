@@ -123,42 +123,16 @@ namespace Novels.ContentSdk.Editor
             var staging = Path.Combine(_stagingPath, platform);
             Directory.CreateDirectory(staging);
             var assets = ContentAssets.FindBundleAssets();
+            if (streamingExperiment)
+            {
+                BuildStreamingTargetRelease(plan, files, target, platform, staging, assets);
+                return;
+            }
             var build = new AssetBundleBuild
             {
                 assetBundleName = plan.BundleName,
                 assetNames = assets,
             };
-            if (streamingExperiment)
-            {
-                ExperimentalPreviewTextures.Apply(target);
-                try
-                {
-                    var previewName = ContentAddressing.ContentPackageConvention
-                        .PreviewBundle(plan.DeliveryGroup);
-                    var previewStaging = Path.Combine(staging, "preview");
-                    Directory.CreateDirectory(previewStaging);
-                    var previewBuild = new AssetBundleBuild
-                    {
-                        assetBundleName = previewName,
-                        assetNames = assets,
-                    };
-                    var previewManifest = BuildPipeline.BuildAssetBundles(
-                            previewStaging,
-                            new[] {previewBuild},
-                            BuildAssetBundleOptions.None,
-                            target)
-                        ?? throw new InvalidOperationException(
-                            $"Preview AssetBundle build failed for {target}.");
-                    ExperimentalPreviewTextures.RegisterBuiltBundle(
-                        previewManifest,
-                        previewStaging,
-                        previewName);
-                }
-                finally
-                {
-                    ExperimentalPreviewTextures.Restore();
-                }
-            }
             var manifest = BuildPipeline.BuildAssetBundles(
                     staging,
                     new[] {build},
@@ -193,15 +167,7 @@ namespace Novels.ContentSdk.Editor
                 build.assetNames,
                 destination,
                 bundle.size);
-            var bundles = new List<BundleReleaseEntry> {bundle};
-            if (streamingExperiment)
-            {
-                bundles.Insert(0, ExperimentalPreviewTextures.CopyBuiltBundle(
-                    _outputPath,
-                    platform,
-                    plan.DeliveryGroup));
-            }
-            var release = CreateRelease(plan, files, bundles.ToArray());
+            var release = CreateRelease(plan, files, new[] {bundle});
             var releasePath = Path.Combine(
                 _outputPath,
                 "Remote",
@@ -213,10 +179,168 @@ namespace Novels.ContentSdk.Editor
                 new UTF8Encoding(false));
         }
 
+        private static void BuildStreamingTargetRelease(
+            ContentBuildPlan plan,
+            ContentFileEntry[] files,
+            BuildTarget target,
+            string platform,
+            string staging,
+            string[] assets)
+        {
+            var streaming = ExperimentalStreamingPlan.Create(
+                plan.DeliveryGroup,
+                assets,
+                files.Select(value => value.path).ToArray());
+            var mediaGroups = streaming.Media.ToDictionary(
+                value => value.path,
+                value => value.deliveryGroup,
+                StringComparer.OrdinalIgnoreCase);
+            foreach (var file in files)
+            {
+                if (mediaGroups.TryGetValue(file.path, out var group))
+                    file.deliveryGroup = group;
+            }
+
+            var previewName = ContentAddressing.ContentPackageConvention
+                .PreviewBundle(plan.DeliveryGroup);
+            ExperimentalPreviewTextures.Apply(target, streaming.Chunks[0]);
+            try
+            {
+                var previewStaging = Path.Combine(staging, "preview");
+                Directory.CreateDirectory(previewStaging);
+                var previewManifest = BuildPipeline.BuildAssetBundles(
+                        previewStaging,
+                        new[]
+                        {
+                            new AssetBundleBuild
+                            {
+                                assetBundleName = previewName,
+                                assetNames = streaming.Chunks[0],
+                            },
+                        },
+                        BuildAssetBundleOptions.None,
+                        target)
+                    ?? throw new InvalidOperationException(
+                        $"Preview AssetBundle build failed for {target}.");
+                ExperimentalPreviewTextures.RegisterBuiltBundle(
+                    previewManifest,
+                    previewStaging,
+                    previewName);
+            }
+            finally
+            {
+                ExperimentalPreviewTextures.Restore();
+            }
+
+            var chunkBuilds = streaming.Chunks
+                .Select((chunkAssets, index) => new AssetBundleBuild
+                {
+                    assetBundleName = ContentAddressing.ContentPackageConvention
+                        .StoryChunkBundle(plan.DeliveryGroup, index),
+                    assetNames = chunkAssets,
+                })
+                .ToArray();
+            var manifest = BuildPipeline.BuildAssetBundles(
+                    staging,
+                    chunkBuilds,
+                    BuildAssetBundleOptions.None,
+                    target)
+                ?? throw new InvalidOperationException(
+                    $"Streaming AssetBundle build failed for {target}.");
+            var bundles = new List<BundleReleaseEntry>
+            {
+                ExperimentalPreviewTextures.CopyBuiltBundle(
+                    _outputPath,
+                    platform,
+                    plan.DeliveryGroup),
+            };
+            var chunks = new ContentStreamingChunkEntry[chunkBuilds.Length];
+            for (var index = 0; index < chunkBuilds.Length; index++)
+            {
+                var build = chunkBuilds[index];
+                var group = ContentAddressing.ContentPackageConvention
+                    .StoryChunkDeliveryGroup(plan.DeliveryGroup, index);
+                bundles.Add(CopyBuiltBundle(
+                    plan,
+                    manifest,
+                    staging,
+                    platform,
+                    build,
+                    group));
+                chunks[index] = new ContentStreamingChunkEntry
+                {
+                    index = index,
+                    bundle = build.assetBundleName,
+                    deliveryGroup = group,
+                    assets = build.assetNames,
+                };
+            }
+            var release = CreateRelease(
+                plan,
+                files,
+                bundles.ToArray(),
+                new ContentStreamingPlanEntry
+                {
+                    previewBundle = previewName,
+                    previewDeliveryGroup = ContentAddressing.ContentPackageConvention
+                        .StoryPreviewDeliveryGroup(plan.DeliveryGroup),
+                    chunks = chunks,
+                    media = streaming.Media.ToArray(),
+                });
+            var releasePath = Path.Combine(
+                _outputPath,
+                "Remote",
+                platform,
+                "release.json");
+            File.WriteAllText(
+                releasePath,
+                ContentReleaseCodec.Serialize(release),
+                new UTF8Encoding(false));
+        }
+
+        private static BundleReleaseEntry CopyBuiltBundle(
+            ContentBuildPlan plan,
+            AssetBundleManifest manifest,
+            string staging,
+            string platform,
+            AssetBundleBuild build,
+            string deliveryGroup)
+        {
+            var source = Path.Combine(staging, build.assetBundleName);
+            var version = manifest.GetAssetBundleHash(build.assetBundleName).ToString();
+            if (!BuildPipeline.GetCRCForAssetBundle(source, out var crc))
+                throw new InvalidOperationException(
+                    $"AssetBundle CRC cannot be calculated for '{build.assetBundleName}'.");
+            var directory = Path.Combine(
+                _outputPath,
+                "Remote",
+                platform,
+                build.assetBundleName);
+            Directory.CreateDirectory(directory);
+            var destination = Path.Combine(directory, version);
+            File.Copy(source, destination, true);
+            var result = new BundleReleaseEntry
+            {
+                name = build.assetBundleName,
+                version = version,
+                size = new FileInfo(destination).Length,
+                sha256 = ContentHash.ComputeSha256(destination),
+                crc = crc,
+                deliveryGroup = deliveryGroup,
+            };
+            ContentBundleAudit.Audit(
+                plan,
+                build.assetNames,
+                destination,
+                result.size);
+            return result;
+        }
+
         private static ContentReleaseDto CreateRelease(
             ContentBuildPlan plan,
             ContentFileEntry[] files,
-            BundleReleaseEntry[] bundles)
+            BundleReleaseEntry[] bundles,
+            ContentStreamingPlanEntry streamingPlan = null)
         {
             var release = new ContentReleaseDto
             {
@@ -225,6 +349,7 @@ namespace Novels.ContentSdk.Editor
                 deliveryMode = ContentDeliveryMode.Remote,
                 bundles = bundles,
                 files = files,
+                streamingPlan = streamingPlan,
                 deliveryGroups = bundles
                     .Select(value => value.deliveryGroup)
                     .Concat(files.Select(value => value.deliveryGroup))

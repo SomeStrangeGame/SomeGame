@@ -1,6 +1,6 @@
 # Parallel work: story streaming experiment
 
-- Статус: completed (experimental handoff)
+- Статус: active (predictive chunk delivery wave)
 - Ветка: `experiment/story-preview-streaming`
 - Базовый commit: `ce28b7e0c6ead5ec7a8dee712dc6800d83698d4c`
 - Ответственный поток: preview/chunk streaming test version
@@ -31,10 +31,15 @@
 
 ## Атомарные блоки
 
-1. bootstrap/preview build output;
-2. runtime preview fallback and prefetch;
-3. Editor simulation and OnGUI diagnostics;
-4. TZM experimental build and validation.
+1. delivery-plan contract and build-time Ink/asset analysis;
+2. `preview`, `chunk-0..N` bundle build output;
+3. continuous runtime chunk queue and predictive media prefetch;
+4. live-upgrade backgrounds and character layers;
+5. diagnostics and realistic Editor network simulation;
+6. TZM experimental rebuild and cold/warm validation.
+
+Публичное имя облегчённого стартового чанка — `preview`. Отрицательные номера
+чанков в manifest, release и runtime API не используются.
 
 ## Выполнено
 

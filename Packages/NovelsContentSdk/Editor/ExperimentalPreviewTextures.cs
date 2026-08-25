@@ -21,11 +21,11 @@ namespace Novels.ContentSdk.Editor
         private static string _builtVersion;
         private static uint _builtCrc;
 
-        internal static void Apply(BuildTarget target)
+        internal static void Apply(BuildTarget target, IEnumerable<string> assetPaths = null)
         {
             Restore();
             var platform = PlatformName(target);
-            foreach (var path in ContentAssets.FindBundleAssets())
+            foreach (var path in assetPaths ?? ContentAssets.FindBundleAssets())
             {
                 if (AssetImporter.GetAtPath(path) is not TextureImporter importer)
                     continue;

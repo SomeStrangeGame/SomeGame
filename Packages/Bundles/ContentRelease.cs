@@ -15,6 +15,7 @@ namespace Bundles
         public BundleReleaseEntry[] bundles;
         public ContentFileEntry[] files;
         public ContentDeliveryGroupEntry[] deliveryGroups;
+        public ContentStreamingPlanEntry streamingPlan;
     }
 
     [Serializable]
@@ -46,6 +47,32 @@ namespace Bundles
         public long size;
     }
 
+    [Serializable]
+    public sealed class ContentStreamingPlanEntry
+    {
+        public string previewBundle;
+        public string previewDeliveryGroup;
+        public ContentStreamingChunkEntry[] chunks;
+        public ContentStreamingMediaEntry[] media;
+    }
+
+    [Serializable]
+    public sealed class ContentStreamingChunkEntry
+    {
+        public int index;
+        public string bundle;
+        public string deliveryGroup;
+        public string[] assets;
+    }
+
+    [Serializable]
+    public sealed class ContentStreamingMediaEntry
+    {
+        public int order;
+        public string path;
+        public string deliveryGroup;
+    }
+
     public sealed class ContentReleaseSnapshot
     {
         private readonly IReadOnlyDictionary<string, BundleReleaseDescriptor> _bundlesByName;
@@ -69,6 +96,7 @@ namespace Bundles
             Bundles = Array.AsReadOnly(bundles);
             Files = Array.AsReadOnly(files);
             DeliveryGroups = Array.AsReadOnly(groups);
+            StreamingPlan = source.streamingPlan;
             _bundlesByName = new ReadOnlyDictionary<string, BundleReleaseDescriptor>(
                 bundles.ToDictionary(value => value.Name, StringComparer.OrdinalIgnoreCase));
             _filesByPath = new ReadOnlyDictionary<string, ContentFileDescriptor>(
@@ -82,6 +110,7 @@ namespace Bundles
         public IReadOnlyList<BundleReleaseDescriptor> Bundles { get; }
         public IReadOnlyList<ContentFileDescriptor> Files { get; }
         public IReadOnlyList<ContentDeliveryGroupDescriptor> DeliveryGroups { get; }
+        public ContentStreamingPlanEntry StreamingPlan { get; }
 
         public BundleReleaseDescriptor FindBundle(string name) =>
             name != null && _bundlesByName.TryGetValue(name, out var value) ? value : null;
