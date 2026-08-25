@@ -55,6 +55,7 @@ namespace Novels.ContentSdk.Editor
         {
             var storyText = ReadStoryText(storyId);
             var targetBytes = ReadChunkTarget();
+            var firstSceneEnd = FindFirstSceneEnd(storyText);
             var orderedAssets = assets
                 .Select(path => new
                 {
@@ -62,8 +63,20 @@ namespace Novels.ContentSdk.Editor
                     FirstUse = FirstAssetUse(storyText, path),
                     Size = SourceSize(path),
                     Bootstrap = IsBootstrapAsset(path),
+                    RuntimeDefault = IsRuntimeDefaultAsset(path),
                 })
-                .OrderBy(value => value.Bootstrap ? 0 : 1)
+                .Select(value => new
+                {
+                    value.Path,
+                    value.FirstUse,
+                    value.Size,
+                    value.Bootstrap,
+                    Startup = value.RuntimeDefault
+                        || firstSceneEnd > 0
+                        && value.FirstUse >= 0
+                        && value.FirstUse < firstSceneEnd,
+                })
+                .OrderBy(value => value.Bootstrap ? 0 : value.Startup ? 1 : 2)
                 .ThenBy(value => value.FirstUse)
                 .ThenBy(value => value.Path, StringComparer.Ordinal)
                 .ToArray();
@@ -74,6 +87,7 @@ namespace Novels.ContentSdk.Editor
             {
                 if (current.Count > 0
                     && !asset.Bootstrap
+                    && !asset.Startup
                     && currentBytes + asset.Size > targetBytes)
                 {
                     chunks.Add(current.ToArray());
@@ -162,6 +176,29 @@ namespace Novels.ContentSdk.Editor
                 .ToLowerInvariant();
             var result = storyText.IndexOf(token, StringComparison.Ordinal);
             return result >= 0 ? result : int.MaxValue;
+        }
+
+        private static int FindFirstSceneEnd(string storyText)
+        {
+            var locationCount = 0;
+            var lineStart = 0;
+            while (lineStart < storyText.Length)
+            {
+                var lineEnd = storyText.IndexOf('\n', lineStart);
+                if (lineEnd < 0)
+                    lineEnd = storyText.Length;
+                var line = storyText.Substring(lineStart, lineEnd - lineStart)
+                    .TrimStart();
+                if (line.StartsWith("локация:", StringComparison.Ordinal)
+                    || line.StartsWith("location:", StringComparison.Ordinal))
+                {
+                    locationCount++;
+                    if (locationCount == 3)
+                        return lineStart;
+                }
+                lineStart = lineEnd + 1;
+            }
+            return -1;
         }
 
         private static bool IsBootstrapAsset(string path)
