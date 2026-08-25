@@ -44,6 +44,7 @@ namespace Novels.Location.View
         [Space]
         [SerializeField] private VideoPlayer _video;
         [SerializeField] private RawImage _videoImage;
+        private CanvasGroup _videoCanvasGroup;
 
         [Space]
         [SerializeField] private EffectImage[] _effects;
@@ -155,6 +156,23 @@ namespace Novels.Location.View
         public void SetEnabledVideo(bool state)
         {
             _videoImage.enabled = state;
+            if (!state && _videoCanvasGroup != null)
+                _videoCanvasGroup.alpha = 0f;
+        }
+
+        public async UniTask CrossfadeToVideo(CancellationToken cancellationToken)
+        {
+            _videoCanvasGroup ??= _videoImage.GetComponent<CanvasGroup>()
+                ?? _videoImage.gameObject.AddComponent<CanvasGroup>();
+            _videoCanvasGroup.alpha = 0f;
+            _videoImage.enabled = true;
+            await global::UITransitions.Transition.Fade(
+                _videoCanvasGroup,
+                0f,
+                1f,
+                _showHideImageDuration,
+                cancellationToken);
+            _image.enabled = false;
         }
 
         public void ResetCamera()

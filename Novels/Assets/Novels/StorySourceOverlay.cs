@@ -10,11 +10,16 @@ namespace Novels
         private const float _margin = 24f;
         private const float _maxWidth = 620f;
         private const int _fontSize = 22;
+        private const float _referenceWidth = 465f;
+        private const float _referenceHeight = 1024f;
+        private const float _minimumScale = 0.75f;
+        private const float _maximumScale = 2f;
         private const float _refreshInterval = 0.25f;
 
         private StoryProcessor.StorySourceLocation _location;
         private GUIStyle _style;
         private GUIStyle _buttonStyle;
+        private float _styleScale;
         private string _cachedText = "";
         private float _nextRefresh;
         private float _smoothedFrameMilliseconds;
@@ -62,21 +67,39 @@ namespace Novels
             _style ??= new GUIStyle(GUI.skin.label)
             {
                 alignment = TextAnchor.UpperLeft,
-                padding = new RectOffset(12, 12, 8, 8),
+                wordWrap = true,
                 normal = {textColor = Color.white},
             };
-            _style.fontSize = _fontSize;
-            _buttonStyle ??= new GUIStyle(GUI.skin.button)
+            _buttonStyle ??= new GUIStyle(GUI.skin.button);
+
+            var scale = Mathf.Clamp(
+                Mathf.Min(
+                    Screen.width / _referenceWidth,
+                    Screen.height / _referenceHeight),
+                _minimumScale,
+                _maximumScale);
+            if (!Mathf.Approximately(_styleScale, scale))
             {
-                fontSize = 18,
-            };
+                _styleScale = scale;
+                _style.fontSize = Mathf.RoundToInt(_fontSize * scale);
+                _style.padding = new RectOffset(
+                    Mathf.RoundToInt(12f * scale),
+                    Mathf.RoundToInt(12f * scale),
+                    Mathf.RoundToInt(8f * scale),
+                    Mathf.RoundToInt(8f * scale));
+                _buttonStyle.fontSize = Mathf.RoundToInt(18f * scale);
+            }
 
             var safeArea = Screen.safeArea;
+            var margin = _margin * scale;
+            var width = Mathf.Min(
+                _maxWidth * scale,
+                safeArea.width - margin * 2f);
             var rect = new Rect(
-                safeArea.xMin + _margin,
-                Screen.height - safeArea.yMax + _margin,
-                Mathf.Min(_maxWidth, safeArea.width - _margin * 2f),
-                96f);
+                safeArea.xMin + margin,
+                Screen.height - safeArea.yMax + margin,
+                width,
+                _style.CalcHeight(GUIContent.Temp(_cachedText), width));
             GUI.depth = int.MinValue;
             var previousColor = GUI.color;
             GUI.color = new Color(0f, 0f, 0f, 0.9f);
@@ -86,10 +109,20 @@ namespace Novels
                 rect,
                 _cachedText,
                 _style);
-            var buttonY = rect.yMax + 4f;
-            if (GUI.Button(new Rect(rect.x, buttonY, 132f, 34f), "Cold App", _buttonStyle))
+            var buttonY = rect.yMax + 4f * scale;
+            if (GUI.Button(
+                    new Rect(rect.x, buttonY, 132f * scale, 34f * scale),
+                    "Cold App",
+                    _buttonStyle))
                 _coldRestart?.Invoke();
-            if (GUI.Button(new Rect(rect.x + 138f, buttonY, 110f, 34f), "Warm", _buttonStyle))
+            if (GUI.Button(
+                    new Rect(
+                        rect.x + 138f * scale,
+                        buttonY,
+                        110f * scale,
+                        34f * scale),
+                    "Warm",
+                    _buttonStyle))
                 _warmRestart?.Invoke();
         }
 #else

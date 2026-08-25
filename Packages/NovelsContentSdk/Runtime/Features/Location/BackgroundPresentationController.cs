@@ -85,33 +85,28 @@ namespace Novels.Location
                 return;
             }
 
-            var resources = await UniTask.WhenAll(
-                _ctx.GetSprite(assetName)
-                    .AttachExternalCancellation(_ctx.CancellationToken),
-                _ctx.ResolveVideoUrl(assetName)
-                    .AttachExternalCancellation(_ctx.CancellationToken));
-            var sprite = resources.Item1;
-            var url = resources.Item2;
+            var sprite = await _ctx.GetSprite(assetName)
+                .AttachExternalCancellation(_ctx.CancellationToken);
             if (sprite == null)
             {
                 await ShowStatic(_ctx.MissingBackground, mode);
                 return;
             }
+            _currentSprite = sprite;
+            await ShowStatic(sprite, mode);
+
+            var url = await _ctx.ResolveVideoUrl(assetName)
+                .AttachExternalCancellation(_ctx.CancellationToken);
             var plan = BackgroundPresentationPlan.Create(
                 assetName,
                 presentation,
                 !string.IsNullOrEmpty(url));
-            _ctx.Screen.SetImage(sprite);
             if (!plan.UsesVideo)
             {
-                await ShowStatic(sprite, mode);
-                _currentSprite = sprite;
                 if (_fullQualityAvailable && version == _currentVersion)
                     await UpgradeCurrentBackground();
                 return;
             }
-
-            _currentSprite = sprite;
 
             var playbackStatus = await _ctx.VideoPlayback.Play(
                 new VideoPlaybackRequest(
@@ -124,9 +119,8 @@ namespace Novels.Location
                         : Time.timeScale));
             var videoReady = playbackStatus == VideoPlaybackStatus.Ready;
             _showingVideo = videoReady;
-            _ctx.Screen.SetEnabledImage(!videoReady);
-            _ctx.Screen.SetEnabledVideo(videoReady);
-            await Show(mode);
+            if (videoReady)
+                await _ctx.Screen.CrossfadeToVideo(_ctx.CancellationToken);
             if (!plan.IsCutScene)
             {
                 if (_fullQualityAvailable && version == _currentVersion)
