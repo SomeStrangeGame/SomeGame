@@ -44,6 +44,8 @@
 - Runtime начинает историю с preview и догружает full-арт в фоне.
 - Текущий фон при готовности full перечитывается и плавно заменяется без
   пересборки контента; во время видео обновляется скрытый poster.
+- Video RenderTexture создаётся после `Prepare()` по native-размеру MP4, а не
+  по уменьшенному preview-poster; depth-buffer для UI-видео отключён.
 - Добавлен компактный OnGUI HUD: Ink source, FPS, frame time, RAM, tier,
   прогресс и скорость загрузки.
 - Добавлены кнопки `Cold App` и `Warm`; cold использует новый namespace кеша

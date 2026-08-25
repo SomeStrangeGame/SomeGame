@@ -71,14 +71,6 @@ namespace Novels.Location
             _completed = new UniTaskCompletionSource();
             _error = null;
 
-            _renderTexture = new RenderTexture(
-                request.Width,
-                request.Height,
-                16,
-                RenderTextureFormat.ARGB32);
-            _renderTexture.Create();
-            _ctx.SetTexture(_renderTexture);
-
             var videoPlayer = _ctx.VideoPlayer;
             videoPlayer.url = request.Url;
             videoPlayer.isLooping = request.Loop;
@@ -105,8 +97,35 @@ namespace Novels.Location
                 return VideoPlaybackStatus.Failed;
             }
 
+            var renderSize = ResolveRenderSize(videoPlayer, request);
+            _renderTexture = new RenderTexture(
+                renderSize.x,
+                renderSize.y,
+                0,
+                RenderTextureFormat.ARGB32);
+            _renderTexture.Create();
+            _ctx.SetTexture(_renderTexture);
             videoPlayer.Play();
             return VideoPlaybackStatus.Ready;
+        }
+
+        private static Vector2Int ResolveRenderSize(
+            VideoPlayer videoPlayer,
+            VideoPlaybackRequest request)
+        {
+            var width = videoPlayer.width > 0
+                ? (int)Math.Min(videoPlayer.width, (uint)int.MaxValue)
+                : request.Width;
+            var height = videoPlayer.height > 0
+                ? (int)Math.Min(videoPlayer.height, (uint)int.MaxValue)
+                : request.Height;
+            width = Math.Max(1, width);
+            height = Math.Max(1, height);
+            var maximum = Math.Max(1, SystemInfo.maxTextureSize);
+            var scale = Math.Min(1f, maximum / (float)Math.Max(width, height));
+            return new Vector2Int(
+                Math.Max(1, Mathf.RoundToInt(width * scale)),
+                Math.Max(1, Mathf.RoundToInt(height * scale)));
         }
 
         internal async UniTask<VideoPlaybackStatus> WaitForCompletion()
