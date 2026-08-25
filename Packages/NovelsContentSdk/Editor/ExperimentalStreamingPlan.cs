@@ -126,7 +126,7 @@ namespace Novels.ContentSdk.Editor
 
         private static int FirstAssetUse(string storyText, string assetPath)
         {
-            if (IsBootstrapAsset(assetPath))
+            if (IsBootstrapAsset(assetPath) || IsRuntimeDefaultAsset(assetPath))
                 return -1;
             var segments = assetPath
                 .Replace('\\', '/')
@@ -171,6 +171,19 @@ namespace Novels.ContentSdk.Editor
                    && !string.Equals(extension, ".jpg", StringComparison.OrdinalIgnoreCase)
                    && !string.Equals(extension, ".jpeg", StringComparison.OrdinalIgnoreCase)
                    && !string.Equals(extension, ".webp", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool IsRuntimeDefaultAsset(string path)
+        {
+            var normalized = path
+                .Replace('\\', '/')
+                .Normalize(NormalizationForm.FormC)
+                .ToLowerInvariant();
+            return normalized.Contains(
+                       "/characters/maincharacter/hairs/",
+                       StringComparison.Ordinal)
+                   && normalized.Contains("/распущенные/", StringComparison.Ordinal)
+                   && normalized.EndsWith("/блонд.png", StringComparison.Ordinal);
         }
 
         private static bool IsMediaPath(string path) =>
