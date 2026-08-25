@@ -40,6 +40,14 @@ namespace Bundles
             return await loading;
         }
 
+        public void ReleaseAssetBundle(string bundleName)
+        {
+            EnsureActive();
+            if (!_bundleNames.Remove(bundleName))
+                return;
+            _owner.ReleaseBundles(_session, new[] { bundleName });
+        }
+
         public UniTask<Sprite> GetBundledSprite(
             string bundleName,
             string assetName)

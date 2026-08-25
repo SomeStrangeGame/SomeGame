@@ -19,6 +19,7 @@ namespace Novels
         private readonly Dictionary<string, Bundles.ContentStreamingChunkEntry> _assets;
         private readonly Dictionary<int, UniTaskCompletionSource> _chunkTasks = new();
         private readonly HashSet<int> _readyChunks = new();
+        private bool _previewAvailable = true;
 
         internal StoryStreamingController(
             Bundles.Entity bundles,
@@ -59,7 +60,10 @@ namespace Novels
                     new Bundles.BundleAssetAddress(_plan.previewBundle, assetName));
             }
             var bundle = _plan.previewBundle;
-            if (requireFull || chunk.index > 0 || _readyChunks.Contains(chunk.index))
+            if (requireFull
+                || !_previewAvailable
+                || chunk.index > 0
+                || _readyChunks.Contains(chunk.index))
             {
                 await EnsureChunk(chunk.index);
                 bundle = chunk.bundle;
@@ -128,6 +132,14 @@ namespace Novels
                     StreamingExperimentDiagnostics.ReportDelivery,
                     _cancellationToken);
                 lease.AddTo(this);
+                if (index == 0 && _previewAvailable)
+                {
+                    // Preview and chunk-0 contain the same authored asset set.
+                    // Keep instantiated preview objects alive, but unload its
+                    // serialized file before Unity opens the full-quality bundle.
+                    _scope.ReleaseAssetBundle(_plan.previewBundle);
+                    _previewAvailable = false;
+                }
                 await _scope.GetAssetBundle(chunk.bundle);
                 _readyChunks.Add(index);
                 _onChunkReady?.Invoke(index);
