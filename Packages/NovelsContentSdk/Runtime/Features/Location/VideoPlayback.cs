@@ -129,6 +129,14 @@ namespace Novels.Location
                 Stop();
                 return VideoPlaybackStatus.Failed;
             }
+
+            // VideoPlayer.frameReady means that the decoder produced a frame,
+            // but the target RenderTexture can still contain its initial black
+            // contents until Unity's video/render update finishes.  Do not let
+            // the UI crossfade to that texture before the render loop has had a
+            // chance to publish the decoded frame.
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate,
+                _ctx.CancellationToken);
             return VideoPlaybackStatus.Ready;
         }
 
