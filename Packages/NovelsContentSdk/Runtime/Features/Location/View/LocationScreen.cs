@@ -46,7 +46,6 @@ namespace Novels.Location.View
         [Space]
         [SerializeField] private VideoPlayer _video;
         [SerializeField] private RawImage _videoImage;
-        private CanvasGroup _videoCanvasGroup;
 
         [Space]
         [SerializeField] private EffectImage[] _effects;
@@ -83,9 +82,7 @@ namespace Novels.Location.View
             var texture = sprite == null ? null : sprite.texture;
             var videoTexture = screen._videoImage.texture;
             var rect = screen._image.rectTransform.rect;
-            var videoAlpha = screen._videoCanvasGroup == null
-                ? 1f
-                : screen._videoCanvasGroup.alpha;
+            var videoAlpha = screen._videoImage.color.a;
             return $"Location · sprite {(sprite == null ? "null" : sprite.name)} "
                 + $"{(texture == null ? "-" : $"{texture.width}x{texture.height}")} · "
                 + $"img e:{screen._image.enabled} a:{screen._imageCanvasGroup.alpha:F1} "
@@ -192,23 +189,31 @@ namespace Novels.Location.View
         public void SetEnabledVideo(bool state)
         {
             _videoImage.enabled = state;
-            if (!state && _videoCanvasGroup != null)
-                _videoCanvasGroup.alpha = 0f;
+            if (!state)
+                SetVideoAlpha(0f);
         }
 
         public async UniTask CrossfadeToVideo(CancellationToken cancellationToken)
         {
-            _videoCanvasGroup ??= _videoImage.GetComponent<CanvasGroup>()
-                ?? _videoImage.gameObject.AddComponent<CanvasGroup>();
-            _videoCanvasGroup.alpha = 0f;
+            SetVideoAlpha(0f);
             _videoImage.enabled = true;
-            await global::UITransitions.Transition.Fade(
-                _videoCanvasGroup,
-                0f,
-                1f,
-                _showHideImageDuration,
-                cancellationToken);
+            cancellationToken.ThrowIfCancellationRequested();
+            var elapsed = 0f;
+            while (elapsed < _showHideImageDuration)
+            {
+                await UniTask.Yield(cancellationToken);
+                elapsed += Time.deltaTime;
+                SetVideoAlpha(Mathf.Clamp01(elapsed / _showHideImageDuration));
+            }
+            SetVideoAlpha(1f);
             _image.enabled = false;
+        }
+
+        private void SetVideoAlpha(float alpha)
+        {
+            var color = _videoImage.color;
+            color.a = alpha;
+            _videoImage.color = color;
         }
 
         public void ResetCamera()
