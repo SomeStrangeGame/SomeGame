@@ -9,6 +9,8 @@ namespace Novels.Location.View
 {
     public class LocationScreen : MonoBehaviour
     {
+        private static LocationScreen _debugInstance;
+
         public enum Effect
         {
             Light,
@@ -60,6 +62,40 @@ namespace Novels.Location.View
 
         public VideoPlayer VideoPlayer => _video;
         private LocationLayout Layout => _layout ??= new LocationLayout(_image);
+
+        private void Awake()
+        {
+            _debugInstance = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (_debugInstance == this)
+                _debugInstance = null;
+        }
+
+        public static string GetPresentationDebugSnapshot()
+        {
+            if (_debugInstance == null)
+                return "Location · no screen";
+            var screen = _debugInstance;
+            var sprite = screen._image.sprite;
+            var texture = sprite == null ? null : sprite.texture;
+            var videoTexture = screen._videoImage.texture;
+            var rect = screen._image.rectTransform.rect;
+            var videoAlpha = screen._videoCanvasGroup == null
+                ? 1f
+                : screen._videoCanvasGroup.alpha;
+            return $"Location · sprite {(sprite == null ? "null" : sprite.name)} "
+                + $"{(texture == null ? "-" : $"{texture.width}x{texture.height}")} · "
+                + $"img e:{screen._image.enabled} a:{screen._imageCanvasGroup.alpha:F1} "
+                + $"go:{screen._image.gameObject.activeInHierarchy} "
+                + $"rect:{rect.width:F0}x{rect.height:F0} · "
+                + $"video e:{screen._videoImage.enabled} a:{videoAlpha:F1} "
+                + $"rt:{(videoTexture == null ? "null" : $"{videoTexture.width}x{videoTexture.height}")} "
+                + $"p:{screen._video.isPrepared}/{screen._video.isPlaying} "
+                + $"f:{screen._video.frame}";
+        }
 
         public void SetImage(Sprite sprite)
         {

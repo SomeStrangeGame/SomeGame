@@ -63,7 +63,8 @@ namespace Novels
                     : 1000f / _smoothedFrameMilliseconds;
                 _cachedText = $"{source}\n{fps:F0} FPS · "
                     + $"{_smoothedFrameMilliseconds:F1} ms · RAM {memory:F0} MiB\n"
-                    + StreamingExperimentDiagnostics.Snapshot();
+                    + StreamingExperimentDiagnostics.Snapshot() + "\n"
+                    + Location.View.LocationScreen.GetPresentationDebugSnapshot();
                 _content.text = _cachedText;
             }
             _style ??= new GUIStyle(GUI.skin.label)
