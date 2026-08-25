@@ -66,16 +66,18 @@ namespace Novels
                     {
                         ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(
                             _definition.Id),
+                        ContentAddressing.ContentPackageConvention.StoryMediaDeliveryGroup(
+                            _definition.Id),
                     },
                     new Bundles.MediaManifest(_episode.Media.SilentAudioIds),
                     episodeRuntime.CancellationToken)
                 .AddTo(episodeRuntime.Scope);
 
             await _priorityLoader.Run(() => storyAssets
-                .GetAssetBundle(_definition.BundleName)
+                .GetAssetBundle(_assetBundleName)
                 .AttachExternalCancellation(_ctx.CancellationToken));
             var mainLoadingAddress = new Bundles.BundleAssetAddress(
-                _definition.BundleName,
+                _assetBundleName,
                 addresses.LoadingPrefab(
                     ContentAddressing.ContentAssetNames.EpisodeScreen));
             var bundledMainLoadingScreen = await _priorityLoader.Run(() => storyAssets
@@ -93,7 +95,7 @@ namespace Novels
             await mainLoading.Show().AttachExternalCancellation(_ctx.CancellationToken);
 
             var settingsAddress = new Bundles.BundleAssetAddress(
-                _definition.BundleName,
+                _assetBundleName,
                 addresses.SettingPrefab(BootstrapAddresses.ScreenAssetName));
             var settingsScreen = await _priorityLoader.Run(() => storyAssets
                 .GetBundledPrefab(settingsAddress)

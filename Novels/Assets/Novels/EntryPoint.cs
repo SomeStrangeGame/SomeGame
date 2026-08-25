@@ -22,6 +22,9 @@ namespace Novels
         private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
         private StorySourceOverlay _storySourceOverlay;
+        private int _cacheGeneration;
+        private bool _restartRequested;
+        private bool _coldRestartRequested;
 
         private void OnEnable()
         {
@@ -33,6 +36,9 @@ namespace Novels
                 Application.targetFrameRate = runtimeTuning.TargetFrameRate;
                 _storySourceOverlay = GetComponent<StorySourceOverlay>()
                     ?? gameObject.AddComponent<StorySourceOverlay>();
+                _storySourceOverlay.Configure(
+                    () => RequestRestart(true),
+                    () => RequestRestart(false));
 
                 _sessionCancellation = new CancellationTokenSource();
                 var environment = new ApplicationEnvironment(
@@ -49,7 +55,8 @@ namespace Novels
                         _fallbackLocation,
                         _fallbackCharacter,
                         _fallbackNotification),
-                    runtimeTuning);
+                    runtimeTuning,
+                    _cacheGeneration);
                 _runtime = new ApplicationRuntime(new ApplicationRuntime.Dependencies
                 {
                     Environment = environment,
@@ -77,6 +84,25 @@ namespace Novels
             }
         }
 
+        private void Update()
+        {
+            if (!_restartRequested)
+                return;
+            _restartRequested = false;
+            if (_coldRestartRequested)
+                _cacheGeneration++;
+            _coldRestartRequested = false;
+            DisposeSession();
+            StreamingExperimentDiagnostics.Reset();
+            OnEnable();
+        }
+
+        private void RequestRestart(bool cold)
+        {
+            _restartRequested = true;
+            _coldRestartRequested |= cold;
+        }
+
         private Bundles.IContentSource CreateContentSource(
             CancellationToken cancellationToken,
             Bundles.ContentDeliveryOptions options)
@@ -84,8 +110,19 @@ namespace Novels
 #if UNITY_EDITOR
             var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
                 ?? throw new InvalidOperationException("Unity project root cannot be resolved.");
+            var contentRoot = Path.Combine(projectRoot, "Build", "LocalContent");
+            var simulatedMegabits = Environment.GetEnvironmentVariable(
+                "NOVELS_SIMULATED_MBITS");
+            if (Bundles.ThrottledFileSystemContentSource.TryParseMegabits(
+                    simulatedMegabits,
+                    out var megabits))
+            {
+                return new Bundles.ThrottledFileSystemContentSource(
+                    contentRoot,
+                    megabits);
+            }
             return new Bundles.FileSystemContentSource(
-                Path.Combine(projectRoot, "Build", "LocalContent"),
+                contentRoot,
                 cancellationToken,
                 options.LocalRequestPolicy);
 #else

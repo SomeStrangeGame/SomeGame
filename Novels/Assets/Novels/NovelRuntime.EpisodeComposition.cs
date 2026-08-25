@@ -23,7 +23,7 @@ namespace Novels
                 Bundles = state.StoryAssets,
                 PriorityLoader = _priorityLoader,
                 Addresses = state.Addresses,
-                BundleName = _definition.BundleName,
+                BundleName = _assetBundleName,
                 Fallbacks = _ctx.FallbackAssets,
                 CancellationToken = cancellationToken,
             }).Load();
@@ -76,7 +76,7 @@ namespace Novels
             var cancellationToken = state.CancellationToken;
             return await _priorityLoader.Run(() => state.StoryAssets
                 .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _definition.BundleName,
+                    _assetBundleName,
                     episodeAssetPath))
                 .AttachExternalCancellation(cancellationToken));
         }
@@ -85,7 +85,7 @@ namespace Novels
             GetCharacterSpriteTrimManifest(PreparedEpisode state)
         {
             var cancellationToken = state.CancellationToken;
-            var bundle = await state.StoryAssets.GetAssetBundle(_definition.BundleName);
+            var bundle = await state.StoryAssets.GetAssetBundle(_assetBundleName);
             var address = state.Addresses.CharacterSpriteTrimManifest();
             return await bundle
                 .LoadAssetAsync<Character.CharacterSpriteTrimManifest>(address)

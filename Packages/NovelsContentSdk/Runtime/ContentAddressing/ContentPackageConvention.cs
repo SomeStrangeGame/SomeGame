@@ -43,8 +43,17 @@ namespace Novels.ContentAddressing
         public static string ContentBundle(string contentId) =>
             $"novels_content_{BundleToken(contentId)}";
 
+        public static string PreviewBundle(string contentId) =>
+            $"{ContentBundle(contentId)}_preview";
+
         public static string StoryDeliveryGroup(string contentId) =>
             RequireId(contentId, nameof(contentId));
+
+        public static string StoryPreviewDeliveryGroup(string contentId) =>
+            $"{RequireId(contentId, nameof(contentId))}-preview";
+
+        public static string StoryMediaDeliveryGroup(string contentId) =>
+            $"{RequireId(contentId, nameof(contentId))}-media";
 
         public static string ContentPayload(string sha256) =>
             $"Files/{RequireId(sha256, nameof(sha256))}.bin";

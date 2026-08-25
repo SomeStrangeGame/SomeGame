@@ -94,7 +94,11 @@ namespace Novels
                 SelectEpisode = definition =>
                     _catalogFlow.SelectEpisode(definition, catalog.Screen),
                 PrepareNovelContent = contentId =>
-                    contentDeliveryFlow.PrepareStory(bootstrap, contentId),
+                    contentDeliveryFlow.PrepareStoryPreview(bootstrap, contentId),
+                PrepareFullNovelContent = contentId =>
+                    contentDeliveryFlow.PrepareStoryInBackground(
+                        contentId,
+                        StreamingExperimentDiagnostics.ReportDelivery),
                 HidePreparationScreen = bootstrap.Hide,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _onLog,
@@ -166,7 +170,9 @@ namespace Novels
             {
                 ContentSource = source,
                 PersistentDataPath = _environment.PersistentDataPath,
-                CacheNamespace = cacheNamespace,
+                CacheNamespace = _environment.CacheGeneration <= 0
+                    ? cacheNamespace
+                    : $"{cacheNamespace}-experiment-{_environment.CacheGeneration}",
                 Platform = _environment.ContentPlatform,
                 DeliveryOptions = _environment.RuntimeTuning.ContentDelivery,
                 CancellationToken = _environment.CancellationToken,

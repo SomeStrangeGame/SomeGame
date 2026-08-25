@@ -128,6 +128,10 @@ namespace Bundles
                     StringComparison.OrdinalIgnoreCase));
         }
 
+        public bool HasBundle(string bundleName) =>
+            !string.IsNullOrWhiteSpace(bundleName)
+            && RequireSession().FindBundle(bundleName) != null;
+
         public UniTask<ContentDeliveryLease> PrepareDeliveryGroup(
             string groupId,
             Action<ContentDeliveryProgress> onProgress,

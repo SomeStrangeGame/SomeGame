@@ -28,6 +28,8 @@ namespace Novels
                 SelectEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
                 PrepareNovelContent;
+            internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
+                PrepareFullNovelContent;
             internal Action HidePreparationScreen;
         }
 
@@ -36,6 +38,7 @@ namespace Novels
         private Content.NovelDefinition _definition;
         private Content.EpisodeDefinition _episode;
         private AudioMixer _audioMixer;
+        private string _assetBundleName;
         private Save.SaveSystem _saveSystem;
         private NovelProgress _progress;
 
@@ -54,6 +57,8 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.SelectEpisode));
             if (ctx.PrepareNovelContent == null)
                 throw new ArgumentNullException(nameof(ctx.PrepareNovelContent));
+            if (ctx.PrepareFullNovelContent == null)
+                throw new ArgumentNullException(nameof(ctx.PrepareFullNovelContent));
             if (ctx.HidePreparationScreen == null)
                 throw new ArgumentNullException(nameof(ctx.HidePreparationScreen));
             if (ctx.TargetCamera == null)
@@ -67,7 +72,20 @@ namespace Novels
         {
             var storyAssets = _ctx.Bundles.CreateScope().AddTo(this);
             (await _ctx.PrepareNovelContent(_ctx.Content.ContentId))?.AddTo(this);
-            _definition = await LoadContent(storyAssets, _ctx.Content);
+            var previewBundle = ContentAddressing.ContentPackageConvention
+                .PreviewBundle(_ctx.Content.ContentId);
+            var hasPreview = _ctx.Bundles.HasBundle(previewBundle);
+            _assetBundleName = hasPreview
+                ? previewBundle
+                : _ctx.Content.ContentBundleName;
+            StreamingExperimentDiagnostics.SetQuality(
+                hasPreview ? "Preview" : "Full");
+            _definition = await LoadContent(
+                storyAssets,
+                _ctx.Content,
+                _assetBundleName);
+            if (hasPreview)
+                ActivateFullContent(storyAssets).Forget();
             _ctx.HidePreparationScreen();
             _progress = new NovelProgress(
                 _definition,
@@ -101,6 +119,28 @@ namespace Novels
             return result.Status == EpisodeRunStatus.Failed && result.Error.HasValue
                 ? EpisodeRunResult.Failed(WithContext(result.Error.Value))
                 : result;
+        }
+
+        private async UniTaskVoid ActivateFullContent(Bundles.Scope storyAssets)
+        {
+            try
+            {
+                var lease = await _ctx.PrepareFullNovelContent(_ctx.Content.ContentId);
+                lease?.AddTo(this);
+                await storyAssets.GetAssetBundle(_definition.BundleName);
+                _assetBundleName = _definition.BundleName;
+                StreamingExperimentDiagnostics.SetQuality("Full");
+            }
+            catch (OperationCanceledException)
+                when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+            }
+            catch (Exception exception)
+            {
+                _ctx.OnLog?.Invoke((
+                    LogType.Warning,
+                    $"Full-quality content prefetch failed: {exception.Message}"));
+            }
         }
 
         internal UniTask FlushSaveAsync()

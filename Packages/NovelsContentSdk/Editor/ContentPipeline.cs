@@ -21,6 +21,11 @@ namespace Novels.ContentSdk.Editor
         {
             var plan = ContentValidator.Validate();
             var target = ContentPlatform.Resolve(platform);
+            var streamingExperiment = plan.Kind == ContentProjectKind.Story
+                && string.Equals(
+                    Environment.GetEnvironmentVariable("NOVELS_STREAMING_EXPERIMENT"),
+                    "1",
+                    StringComparison.Ordinal);
             Directory.CreateDirectory(_outputPath);
             RecreateDirectory(_stagingPath);
             RecreateDirectory(Path.Combine(
@@ -29,8 +34,8 @@ namespace Novels.ContentSdk.Editor
                 ContentPlatform.Name(target)));
             try
             {
-                var files = BuildFilePayloads(plan.DeliveryGroup);
-                BuildTargetRelease(plan, files, target);
+                var files = BuildFilePayloads(plan, streamingExperiment);
+                BuildTargetRelease(plan, files, target, streamingExperiment);
                 Debug.Log(
                     $"Atomic content '{plan.DeliveryGroup}' built for "
                     + $"{platform} to {Path.GetFullPath(_outputPath)}");
@@ -43,7 +48,9 @@ namespace Novels.ContentSdk.Editor
             }
         }
 
-        private static ContentFileEntry[] BuildFilePayloads(string deliveryGroup)
+        private static ContentFileEntry[] BuildFilePayloads(
+            ContentBuildPlan plan,
+            bool streamingExperiment)
         {
             if (!Directory.Exists(Application.streamingAssetsPath))
                 return Array.Empty<ContentFileEntry>();
@@ -76,25 +83,82 @@ namespace Novels.ContentSdk.Editor
                     payloadPath = payloadPath,
                     size = new FileInfo(source).Length,
                     sha256 = hash,
-                    deliveryGroup = deliveryGroup,
+                    deliveryGroup = DeliveryGroupForFile(
+                        plan,
+                        relative,
+                        streamingExperiment),
                 });
             }
             return result.ToArray();
         }
 
+        private static string DeliveryGroupForFile(
+            ContentBuildPlan plan,
+            string relativePath,
+            bool streamingExperiment)
+        {
+            if (!streamingExperiment)
+                return plan.DeliveryGroup;
+            if (relativePath.StartsWith("noveltexts/", StringComparison.OrdinalIgnoreCase))
+            {
+                return ContentAddressing.ContentPackageConvention
+                    .StoryPreviewDeliveryGroup(plan.DeliveryGroup);
+            }
+            if (relativePath.StartsWith("novelsvideos/", StringComparison.OrdinalIgnoreCase)
+                || relativePath.StartsWith("novelsaudio/", StringComparison.OrdinalIgnoreCase))
+            {
+                return ContentAddressing.ContentPackageConvention
+                    .StoryMediaDeliveryGroup(plan.DeliveryGroup);
+            }
+            return plan.DeliveryGroup;
+        }
+
         private static void BuildTargetRelease(
             ContentBuildPlan plan,
             ContentFileEntry[] files,
-            BuildTarget target)
+            BuildTarget target,
+            bool streamingExperiment)
         {
             var platform = ContentPlatform.Name(target);
             var staging = Path.Combine(_stagingPath, platform);
             Directory.CreateDirectory(staging);
+            var assets = ContentAssets.FindBundleAssets();
             var build = new AssetBundleBuild
             {
                 assetBundleName = plan.BundleName,
-                assetNames = ContentAssets.FindBundleAssets(),
+                assetNames = assets,
             };
+            if (streamingExperiment)
+            {
+                ExperimentalPreviewTextures.Apply(target);
+                try
+                {
+                    var previewName = ContentAddressing.ContentPackageConvention
+                        .PreviewBundle(plan.DeliveryGroup);
+                    var previewStaging = Path.Combine(staging, "preview");
+                    Directory.CreateDirectory(previewStaging);
+                    var previewBuild = new AssetBundleBuild
+                    {
+                        assetBundleName = previewName,
+                        assetNames = assets,
+                    };
+                    var previewManifest = BuildPipeline.BuildAssetBundles(
+                            previewStaging,
+                            new[] {previewBuild},
+                            BuildAssetBundleOptions.None,
+                            target)
+                        ?? throw new InvalidOperationException(
+                            $"Preview AssetBundle build failed for {target}.");
+                    ExperimentalPreviewTextures.RegisterBuiltBundle(
+                        previewManifest,
+                        previewStaging,
+                        previewName);
+                }
+                finally
+                {
+                    ExperimentalPreviewTextures.Restore();
+                }
+            }
             var manifest = BuildPipeline.BuildAssetBundles(
                     staging,
                     new[] {build},
@@ -129,7 +193,15 @@ namespace Novels.ContentSdk.Editor
                 build.assetNames,
                 destination,
                 bundle.size);
-            var release = CreateRelease(plan, files, bundle);
+            var bundles = new List<BundleReleaseEntry> {bundle};
+            if (streamingExperiment)
+            {
+                bundles.Insert(0, ExperimentalPreviewTextures.CopyBuiltBundle(
+                    _outputPath,
+                    platform,
+                    plan.DeliveryGroup));
+            }
+            var release = CreateRelease(plan, files, bundles.ToArray());
             var releasePath = Path.Combine(
                 _outputPath,
                 "Remote",
@@ -144,24 +216,34 @@ namespace Novels.ContentSdk.Editor
         private static ContentReleaseDto CreateRelease(
             ContentBuildPlan plan,
             ContentFileEntry[] files,
-            BundleReleaseEntry bundle)
+            BundleReleaseEntry[] bundles)
         {
             var release = new ContentReleaseDto
             {
                 minimumClientVersion = plan.MinimumClientVersion,
                 contentSchemaVersion = _contentSchemaVersion,
                 deliveryMode = ContentDeliveryMode.Remote,
-                bundles = new[] {bundle},
+                bundles = bundles,
                 files = files,
-                deliveryGroups = new[]
-                {
-                    new ContentDeliveryGroupEntry
+                deliveryGroups = bundles
+                    .Select(value => value.deliveryGroup)
+                    .Concat(files.Select(value => value.deliveryGroup))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .Select(group => new ContentDeliveryGroupEntry
                     {
-                        id = plan.DeliveryGroup,
-                        payloadCount = 1 + files.Length,
-                        size = bundle.size + files.Sum(value => value.size),
-                    },
-                },
+                        id = group,
+                        payloadCount = bundles.Count(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase))
+                            + files.Count(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase)),
+                        size = bundles.Where(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase))
+                            .Sum(value => value.size)
+                            + files.Where(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase))
+                            .Sum(value => value.size),
+                    })
+                    .ToArray(),
             };
             release.releaseId = ContentReleaseFingerprint.Compute(release);
             ContentReleaseValidator.Validate(

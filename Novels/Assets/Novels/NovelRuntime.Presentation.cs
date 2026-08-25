@@ -38,7 +38,7 @@ namespace Novels
                     assets.Location,
                     assetName => _priorityLoader.Run(() => state.StoryAssets
                         .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                            _definition.BundleName,
+                            _assetBundleName,
                             state.Addresses.LocationImage(assetName)))
                         .AttachExternalCancellation(cancellationToken)),
                     assetName => state.StoryMedia.ResolveVideoUrl(
@@ -122,7 +122,7 @@ namespace Novels
             var cancellationToken = state.CancellationToken;
             var sprite = await _priorityLoader.Run(() => state.StoryAssets
                 .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _definition.BundleName,
+                    _assetBundleName,
                     state.Addresses.ChooseItem(assetName)))
                 .AttachExternalCancellation(cancellationToken));
             return sprite != null ? sprite : _ctx.FallbackAssets.Background;

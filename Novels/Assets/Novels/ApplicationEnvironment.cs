@@ -47,6 +47,27 @@ namespace Novels
             Camera targetCamera,
             FallbackAssets fallbackAssets,
             NovelRuntimeTuning runtimeTuning)
+            : this(
+                cancellationToken,
+                persistentDataPath,
+                clientVersion,
+                contentPlatform,
+                targetCamera,
+                fallbackAssets,
+                runtimeTuning,
+                0)
+        {
+        }
+
+        internal ApplicationEnvironment(
+            CancellationToken cancellationToken,
+            string persistentDataPath,
+            string clientVersion,
+            string contentPlatform,
+            Camera targetCamera,
+            FallbackAssets fallbackAssets,
+            NovelRuntimeTuning runtimeTuning,
+            int cacheGeneration)
         {
             if (string.IsNullOrWhiteSpace(persistentDataPath))
                 throw new ArgumentException("Persistent data path must not be empty.", nameof(persistentDataPath));
@@ -63,6 +84,7 @@ namespace Novels
             FallbackAssets = fallbackAssets
                 ?? throw new ArgumentNullException(nameof(fallbackAssets));
             RuntimeTuning = runtimeTuning;
+            CacheGeneration = Math.Max(0, cacheGeneration);
         }
 
         internal CancellationToken CancellationToken { get; }
@@ -72,5 +94,6 @@ namespace Novels
         internal Camera TargetCamera { get; }
         internal FallbackAssets FallbackAssets { get; }
         internal NovelRuntimeTuning RuntimeTuning { get; }
+        internal int CacheGeneration { get; }
     }
 }
