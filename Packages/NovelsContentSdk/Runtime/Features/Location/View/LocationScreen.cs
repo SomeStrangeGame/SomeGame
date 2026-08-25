@@ -81,7 +81,8 @@ namespace Novels.Location.View
             previous.name = $"{_image.name} (Quality Crossfade)";
             previous.raycastTarget = false;
             previous.transform.SetSiblingIndex(_image.transform.GetSiblingIndex() + 1);
-            var fade = previous.gameObject.AddComponent<CanvasGroup>();
+            var fade = previous.GetComponent<CanvasGroup>()
+                ?? previous.gameObject.AddComponent<CanvasGroup>();
             SetImage(sprite);
             try
             {

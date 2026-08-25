@@ -29,6 +29,7 @@ namespace Novels
                     state.EpisodeScope,
                     assets.Character,
                     assetName => GetCharacterSprite(state, assetName),
+                    assetName => GetFullCharacterSprite(state, assetName),
                     () => GetCharacterSpriteTrimManifest(state),
                     _ctx.FallbackAssets.Character,
                     cancellationToken),
@@ -90,6 +91,7 @@ namespace Novels
             IBaseDisposable owner,
             GameObject screenPrefab,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<string, UniTask<Sprite>> getFullQualitySprite,
             Func<UniTask<Character.CharacterSpriteTrimManifest>> getSpriteTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
@@ -101,6 +103,7 @@ namespace Novels
                     ContentPrefix = _definition.Prefix,
                     AssetProfile = _definition.CharacterAssets,
                     GetSprite = getSprite,
+                    GetFullQualitySprite = getFullQualitySprite,
                     GetSpriteTrimManifest = getSpriteTrimManifest,
                     MissingCharacter = missingCharacter,
                     CancellationToken = cancellationToken,

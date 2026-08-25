@@ -80,6 +80,17 @@ namespace Novels
                 .AttachExternalCancellation(cancellationToken));
         }
 
+        private async UniTask<Sprite> GetFullCharacterSprite(
+            PreparedEpisode state,
+            string episodeAssetPath)
+        {
+            var cancellationToken = state.CancellationToken;
+            return await _priorityLoader.Run(() => GetFullStorySprite(
+                    state,
+                    episodeAssetPath)
+                .AttachExternalCancellation(cancellationToken));
+        }
+
         private UniTask<Sprite> GetStorySprite(
             PreparedEpisode state,
             string assetPath) => _streaming != null

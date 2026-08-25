@@ -16,6 +16,7 @@ namespace Novels.Character
             string contentPrefix,
             Content.CharacterAssetProfile profile,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<string, UniTask<Sprite>> getFullQualitySprite,
             Func<UniTask<CharacterSpriteTrimManifest>> getSpriteTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
@@ -27,6 +28,7 @@ namespace Novels.Character
                 profile,
                 addresses,
                 getSprite,
+                getFullQualitySprite,
                 getSpriteTrimManifest,
                 missingCharacter,
                 cancellationToken);
@@ -48,6 +50,8 @@ namespace Novels.Character
             _appearances.ClearAccessories(_profile.MainCharacterAssetId);
 
         internal void ClearLoadedSprites() => _sprites.ClearLoadedSprites();
+
+        internal void EnableFullQuality() => _sprites.EnableFullQuality();
 
         internal UniTask<CharacterSpriteSet> Resolve(
             StoryContracts.CharacterRenderRequest request,

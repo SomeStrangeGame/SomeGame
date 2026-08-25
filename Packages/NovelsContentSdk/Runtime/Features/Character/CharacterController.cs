@@ -14,6 +14,7 @@ namespace Novels.Character
             public string ContentPrefix;
             public Content.CharacterAssetProfile AssetProfile;
             public Func<string, UniTask<Sprite>> GetSprite;
+            public Func<string, UniTask<Sprite>> GetFullQualitySprite;
             public Func<UniTask<CharacterSpriteTrimManifest>> GetSpriteTrimManifest;
             public Sprite MissingCharacter;
             public CancellationToken CancellationToken;
@@ -39,6 +40,7 @@ namespace Novels.Character
                 ctx.ContentPrefix,
                 _assetProfile,
                 ctx.GetSprite,
+                ctx.GetFullQualitySprite,
                 ctx.GetSpriteTrimManifest,
                 ctx.MissingCharacter,
                 ctx.CancellationToken);
@@ -90,6 +92,7 @@ namespace Novels.Character
         {
             if (_lastRenderRequest == null)
                 return;
+            _spriteResolver.EnableFullQuality();
             _spriteResolver.ClearLoadedSprites();
             var version = ++_wardrobePreviewVersion;
             var sprites = await _spriteResolver.Resolve(

@@ -11,6 +11,7 @@ namespace Novels.Character
         private readonly Content.CharacterAssetProfile _profile;
         private readonly ContentAddressing.ContentAddresses _addresses;
         private readonly Func<string, UniTask<Sprite>> _getSprite;
+        private readonly Func<string, UniTask<Sprite>> _getFullQualitySprite;
         private readonly AsyncLazy<CharacterSpriteTrimManifest> _trimManifestLoad;
         private readonly Sprite _missingCharacter;
         private readonly CancellationToken _cancellationToken;
@@ -18,11 +19,13 @@ namespace Novels.Character
             new(StringComparer.Ordinal);
         private readonly Dictionary<Sprite, CharacterSpriteTrimLayout> _trimLayouts = new();
         private CharacterSpriteTrimManifest _trimManifest;
+        private bool _fullQualityAvailable;
 
         internal CharacterSpriteSetLoader(
             Content.CharacterAssetProfile profile,
             ContentAddressing.ContentAddresses addresses,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<string, UniTask<Sprite>> getFullQualitySprite,
             Func<UniTask<CharacterSpriteTrimManifest>> getTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
@@ -30,6 +33,8 @@ namespace Novels.Character
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _addresses = addresses ?? throw new ArgumentNullException(nameof(addresses));
             _getSprite = getSprite ?? throw new ArgumentNullException(nameof(getSprite));
+            _getFullQualitySprite = getFullQualitySprite
+                ?? throw new ArgumentNullException(nameof(getFullQualitySprite));
             if (getTrimManifest != null)
                 _trimManifestLoad = new AsyncLazy<CharacterSpriteTrimManifest>(
                     getTrimManifest);
@@ -81,6 +86,8 @@ namespace Novels.Character
             _loadedSprites.Clear();
             _trimLayouts.Clear();
         }
+
+        internal void EnableFullQuality() => _fullQualityAvailable = true;
 
         private async UniTask<bool> RequiresFallback(
             string name,
@@ -390,7 +397,8 @@ namespace Novels.Character
                 return null;
             if (_loadedSprites.TryGetValue(path, out var sprite))
                 return sprite;
-            sprite = await _getSprite(path)
+            var load = _fullQualityAvailable ? _getFullQualitySprite : _getSprite;
+            sprite = await load(path)
                 .AttachExternalCancellation(_cancellationToken);
             _loadedSprites[path] = sprite;
             if (sprite != null
