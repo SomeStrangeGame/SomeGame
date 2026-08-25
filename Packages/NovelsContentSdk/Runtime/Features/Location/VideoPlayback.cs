@@ -52,6 +52,7 @@ namespace Novels.Location
         private readonly Dependencies _ctx;
         private RenderTexture _renderTexture;
         private UniTaskCompletionSource _prepared;
+        private UniTaskCompletionSource _firstFrame;
         private UniTaskCompletionSource _completed;
         private string _error;
 
@@ -59,6 +60,7 @@ namespace Novels.Location
         {
             _ctx = ctx;
             _ctx.VideoPlayer.prepareCompleted += OnPrepared;
+            _ctx.VideoPlayer.frameReady += OnFrameReady;
             _ctx.VideoPlayer.loopPointReached += OnCompleted;
             _ctx.VideoPlayer.errorReceived += OnFailed;
         }
@@ -68,6 +70,7 @@ namespace Novels.Location
             Stop();
 
             _prepared = new UniTaskCompletionSource();
+            _firstFrame = new UniTaskCompletionSource();
             _completed = new UniTaskCompletionSource();
             _error = null;
 
@@ -75,6 +78,7 @@ namespace Novels.Location
             videoPlayer.url = request.Url;
             videoPlayer.isLooping = request.Loop;
             videoPlayer.playbackSpeed = request.Speed;
+            videoPlayer.sendFrameReadyEvents = true;
             videoPlayer.Prepare();
 
             var timeout = UniTask.Delay(
@@ -106,6 +110,25 @@ namespace Novels.Location
             _renderTexture.Create();
             _ctx.SetTexture(_renderTexture);
             videoPlayer.Play();
+
+            timeout = UniTask.Delay(
+                _preparationTimeoutMilliseconds,
+                cancellationToken: _ctx.CancellationToken);
+            completedTaskIndex = await UniTask.WhenAny(_firstFrame.Task, timeout);
+            _ctx.CancellationToken.ThrowIfCancellationRequested();
+            if (completedTaskIndex == 1)
+            {
+                _error = $"Video first frame timed out after "
+                    + $"{_preparationTimeoutMilliseconds} ms";
+                LogFailure(request.Url);
+                Stop();
+                return VideoPlaybackStatus.Failed;
+            }
+            if (_error != null)
+            {
+                Stop();
+                return VideoPlaybackStatus.Failed;
+            }
             return VideoPlaybackStatus.Ready;
         }
 
@@ -153,6 +176,11 @@ namespace Novels.Location
             _prepared?.TrySetResult();
         }
 
+        private void OnFrameReady(VideoPlayer source, long frameIndex)
+        {
+            _firstFrame?.TrySetResult();
+        }
+
         private void OnCompleted(VideoPlayer source)
         {
             _completed?.TrySetResult();
@@ -163,6 +191,7 @@ namespace Novels.Location
             _error = message;
             LogFailure(source.url);
             _prepared?.TrySetResult();
+            _firstFrame?.TrySetResult();
             _completed?.TrySetResult();
         }
 
@@ -194,6 +223,7 @@ namespace Novels.Location
             }
 
             _ctx.VideoPlayer.prepareCompleted -= OnPrepared;
+            _ctx.VideoPlayer.frameReady -= OnFrameReady;
             _ctx.VideoPlayer.loopPointReached -= OnCompleted;
             _ctx.VideoPlayer.errorReceived -= OnFailed;
             Stop();
