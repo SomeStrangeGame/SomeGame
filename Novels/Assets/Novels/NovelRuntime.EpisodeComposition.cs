@@ -74,12 +74,25 @@ namespace Novels
             string episodeAssetPath)
         {
             var cancellationToken = state.CancellationToken;
-            return await _priorityLoader.Run(() => state.StoryAssets
-                .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _assetBundleName,
-                    episodeAssetPath))
+            return await _priorityLoader.Run(() => GetStorySprite(
+                    state,
+                    episodeAssetPath)
                 .AttachExternalCancellation(cancellationToken));
         }
+
+        private UniTask<Sprite> GetStorySprite(
+            PreparedEpisode state,
+            string assetPath) => _streaming != null
+            ? _streaming.GetSprite(assetPath)
+            : state.StoryAssets.TryGetBundledSprite(
+                new Bundles.BundleAssetAddress(_assetBundleName, assetPath));
+
+        private UniTask<Sprite> GetFullStorySprite(
+            PreparedEpisode state,
+            string assetPath) => _streaming != null
+            ? _streaming.GetFullSprite(assetPath)
+            : state.StoryAssets.TryGetBundledSprite(
+                new Bundles.BundleAssetAddress(_definition.BundleName, assetPath));
 
         private async UniTask<Character.CharacterSpriteTrimManifest>
             GetCharacterSpriteTrimManifest(PreparedEpisode state)

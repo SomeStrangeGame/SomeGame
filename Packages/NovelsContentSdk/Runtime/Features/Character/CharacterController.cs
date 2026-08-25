@@ -86,6 +86,22 @@ namespace Novels.Character
                 _mainCharacterAccessory));
         }
 
+        public async UniTask EnableFullQuality()
+        {
+            if (_lastRenderRequest == null)
+                return;
+            _spriteResolver.ClearLoadedSprites();
+            var version = ++_wardrobePreviewVersion;
+            var sprites = await _spriteResolver.Resolve(
+                _lastRenderRequest,
+                _mainCharacterView,
+                _mainCharacterClothes,
+                _mainCharacterHair,
+                _mainCharacterAccessory);
+            if (version == _wardrobePreviewVersion)
+                Apply(sprites);
+        }
+
         public UniTask<Sprite> LoadWardrobeThumbnail(
             StoryContracts.StoryChoiceAction actions,
             string value) =>

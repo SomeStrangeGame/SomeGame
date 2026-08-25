@@ -47,6 +47,8 @@ namespace Novels.Character
         internal void ClearAccessories() =>
             _appearances.ClearAccessories(_profile.MainCharacterAssetId);
 
+        internal void ClearLoadedSprites() => _sprites.ClearLoadedSprites();
+
         internal UniTask<CharacterSpriteSet> Resolve(
             StoryContracts.CharacterRenderRequest request,
             string mainCharacterView,

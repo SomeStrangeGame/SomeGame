@@ -36,17 +36,15 @@ namespace Novels
                 Location = CreateLocation(
                     state.EpisodeScope,
                     assets.Location,
-                    assetName => _priorityLoader.Run(() => state.StoryAssets
-                        .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                            _assetBundleName,
-                            state.Addresses.LocationImage(assetName)))
+                    assetName => _priorityLoader.Run(() => GetStorySprite(
+                            state,
+                            state.Addresses.LocationImage(assetName))
                         .AttachExternalCancellation(cancellationToken)),
                     assetName => state.StoryMedia.ResolveVideoUrl(
                         _definition.ResolveVideoId(assetName)),
-                    assetName => _priorityLoader.Run(() => state.StoryAssets
-                        .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                            _definition.BundleName,
-                            state.Addresses.LocationImage(assetName)))
+                    assetName => _priorityLoader.Run(() => GetFullStorySprite(
+                            state,
+                            state.Addresses.LocationImage(assetName))
                         .AttachExternalCancellation(cancellationToken)),
                     _ctx.FallbackAssets.Background,
                     cancellationToken),
@@ -108,6 +106,7 @@ namespace Novels
                     CancellationToken = cancellationToken,
                 }).AddTo(owner);
             character.Init();
+            _activeCharacter = character;
             return character;
         }
 
@@ -125,10 +124,9 @@ namespace Novels
             string assetName)
         {
             var cancellationToken = state.CancellationToken;
-            var sprite = await _priorityLoader.Run(() => state.StoryAssets
-                .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _assetBundleName,
-                    state.Addresses.ChooseItem(assetName)))
+            var sprite = await _priorityLoader.Run(() => GetStorySprite(
+                    state,
+                    state.Addresses.ChooseItem(assetName))
                 .AttachExternalCancellation(cancellationToken));
             return sprite != null ? sprite : _ctx.FallbackAssets.Background;
         }

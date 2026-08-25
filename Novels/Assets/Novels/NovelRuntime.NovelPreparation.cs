@@ -1,5 +1,6 @@
 using Cysharp.Threading.Tasks;
 using Disposable;
+using System.Linq;
 using System.Threading;
 using UnityEngine;
 
@@ -59,16 +60,23 @@ namespace Novels
         {
             var saveSystem = CreateSaveSystem();
             var addresses = new ContentAddressing.ContentAddresses(_definition.Id);
+            var streamingMedia = _ctx.Bundles.StreamingPlan?.media;
+            var mediaGroups = streamingMedia != null && streamingMedia.Length > 0
+                ? streamingMedia
+                    .Select(value => value.deliveryGroup)
+                    .Distinct(System.StringComparer.OrdinalIgnoreCase)
+                    .ToArray()
+                : new[]
+                {
+                    ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(
+                        _definition.Id),
+                    ContentAddressing.ContentPackageConvention.StoryMediaDeliveryGroup(
+                        _definition.Id),
+                };
             var storyMedia = _ctx.Bundles
                 .CreateMediaScope(
                     _definition.Prefix,
-                    new[]
-                    {
-                        ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(
-                            _definition.Id),
-                        ContentAddressing.ContentPackageConvention.StoryMediaDeliveryGroup(
-                            _definition.Id),
-                    },
+                    mediaGroups,
                     new Bundles.MediaManifest(_episode.Media.SilentAudioIds),
                     episodeRuntime.CancellationToken)
                 .AddTo(episodeRuntime.Scope);

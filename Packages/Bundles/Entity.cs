@@ -113,6 +113,9 @@ namespace Bundles
         public string ReleaseId =>
             RequireSession().ReleaseId;
 
+        public ContentStreamingPlanEntry StreamingPlan =>
+            RequireSession().Release.StreamingPlan;
+
         public void ActivateRelease() => _releases.ActivateCurrent();
 
         public bool HasDeliveryGroup(string groupId)

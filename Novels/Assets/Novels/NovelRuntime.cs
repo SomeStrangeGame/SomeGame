@@ -42,6 +42,8 @@ namespace Novels
         private Save.SaveSystem _saveSystem;
         private NovelProgress _progress;
         private Location.LocationController _activeLocation;
+        private Character.CharacterController _activeCharacter;
+        private StoryStreamingController _streaming;
 
         internal NovelRuntime(Dependencies ctx)
         {
@@ -85,7 +87,18 @@ namespace Novels
                 storyAssets,
                 _ctx.Content,
                 _assetBundleName);
-            if (hasPreview)
+            if (hasPreview && _ctx.Bundles.StreamingPlan != null)
+            {
+                _streaming = new StoryStreamingController(
+                    _ctx.Bundles,
+                    storyAssets,
+                    _ctx.Bundles.StreamingPlan,
+                    _ctx.CancellationToken,
+                    _ctx.OnLog,
+                    OnChunkReady).AddTo(this);
+                _streaming.Start();
+            }
+            else if (hasPreview)
                 ActivateFullContent(storyAssets).Forget();
             _ctx.HidePreparationScreen();
             _progress = new NovelProgress(
@@ -120,6 +133,15 @@ namespace Novels
             return result.Status == EpisodeRunStatus.Failed && result.Error.HasValue
                 ? EpisodeRunResult.Failed(WithContext(result.Error.Value))
                 : result;
+        }
+
+        private void OnChunkReady(int index)
+        {
+            if (_activeLocation != null)
+                _activeLocation.EnableFullQuality().Forget();
+            if (_activeCharacter != null)
+                _activeCharacter.EnableFullQuality().Forget();
+            StreamingExperimentDiagnostics.SetQuality($"Chunk {index}");
         }
 
         private async UniTaskVoid ActivateFullContent(Bundles.Scope storyAssets)

@@ -76,6 +76,12 @@ namespace Novels.Character
             return sprites;
         }
 
+        internal void ClearLoadedSprites()
+        {
+            _loadedSprites.Clear();
+            _trimLayouts.Clear();
+        }
+
         private async UniTask<bool> RequiresFallback(
             string name,
             string view,
