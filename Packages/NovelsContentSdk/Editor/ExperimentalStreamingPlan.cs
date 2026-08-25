@@ -25,6 +25,28 @@ namespace Novels.ContentSdk.Editor
     internal static class ExperimentalStreamingPlan
     {
         private const long _defaultChunkSourceBytes = 96L * 1024L * 1024L;
+        private static readonly HashSet<string> _technicalAssetTokens = new(
+            StringComparer.Ordinal)
+        {
+            "story",
+            "presentation",
+            "character",
+            "characters",
+            "maincharacter",
+            "location",
+            "locations",
+            "view",
+            "emotions",
+            "clothes",
+            "hair",
+            "hairs",
+            "back",
+            "front",
+            "accessory",
+            "accessories",
+            "child",
+            "main",
+        };
 
         internal static ExperimentalStreamingBuildPlan Create(
             string storyId,
@@ -106,49 +128,31 @@ namespace Novels.ContentSdk.Editor
         {
             if (IsBootstrapAsset(assetPath))
                 return -1;
-            var normalized = assetPath.Replace('\\', '/').ToLowerInvariant();
-            var token = Path.GetFileNameWithoutExtension(normalized);
-            if (string.Equals(token, "main", StringComparison.Ordinal))
+            var segments = assetPath
+                .Replace('\\', '/')
+                .Normalize(NormalizationForm.FormC)
+                .ToLowerInvariant()
+                .Split('/');
+            var storyIndex = Array.FindIndex(
+                segments,
+                value => string.Equals(value, "story", StringComparison.Ordinal));
+            var firstUse = int.MaxValue;
+            for (var index = Math.Max(0, storyIndex); index < segments.Length; index++)
             {
-                var marker = "/characters/";
-                var start = normalized.IndexOf(marker, StringComparison.Ordinal);
-                if (start >= 0)
+                var token = index == segments.Length - 1
+                    ? Path.GetFileNameWithoutExtension(segments[index])
+                    : segments[index];
+                if (token.Length < 2
+                    || token.All(char.IsDigit)
+                    || _technicalAssetTokens.Contains(token))
                 {
-                    start += marker.Length;
-                    var end = normalized.IndexOf('/', start);
-                    if (end > start)
-                    {
-                        token = normalized.Substring(start, end - start);
-                        if (string.Equals(
-                                token,
-                                "maincharacter",
-                                StringComparison.Ordinal))
-                        {
-                            var viewMarker = "/view/";
-                            var viewStart = normalized.IndexOf(
-                                viewMarker,
-                                end,
-                                StringComparison.Ordinal);
-                            if (viewStart >= 0)
-                            {
-                                viewStart += viewMarker.Length;
-                                var viewEnd = normalized.IndexOf('/', viewStart);
-                                if (viewEnd > viewStart)
-                                {
-                                    token = normalized.Substring(
-                                        viewStart,
-                                        viewEnd - viewStart);
-                                }
-                            }
-                        }
-                    }
+                    continue;
                 }
+                var use = storyText.IndexOf(token, StringComparison.Ordinal);
+                if (use >= 0 && use < firstUse)
+                    firstUse = use;
             }
-            if (token.All(char.IsDigit))
-                token = Path.GetFileName(Path.GetDirectoryName(normalized));
-            token = token.Normalize(NormalizationForm.FormC);
-            var result = storyText.IndexOf(token, StringComparison.Ordinal);
-            return result >= 0 ? result : int.MaxValue;
+            return firstUse;
         }
 
         private static int FirstMediaUse(string storyText, string path)
