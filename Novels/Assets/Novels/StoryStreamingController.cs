@@ -17,7 +17,7 @@ namespace Novels
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Action<int> _onChunkReady;
         private readonly Dictionary<string, Bundles.ContentStreamingChunkEntry> _assets;
-        private readonly Dictionary<int, UniTask> _chunkTasks = new();
+        private readonly Dictionary<int, UniTaskCompletionSource> _chunkTasks = new();
         private readonly HashSet<int> _readyChunks = new();
 
         internal StoryStreamingController(
@@ -103,28 +103,45 @@ namespace Novels
         {
             if (_readyChunks.Contains(index))
                 return UniTask.CompletedTask;
-            if (!_chunkTasks.TryGetValue(index, out var task))
+            if (!_chunkTasks.TryGetValue(index, out var completion))
             {
-                task = PrepareChunk(index).Preserve();
-                _chunkTasks.Add(index, task);
+                completion = new UniTaskCompletionSource();
+                _chunkTasks.Add(index, completion);
+                PrepareChunk(index, completion).Forget();
             }
-            return task;
+            return completion.Task;
         }
 
-        private async UniTask PrepareChunk(int index)
+        private async UniTaskVoid PrepareChunk(
+            int index,
+            UniTaskCompletionSource completion)
         {
-            var chunk = (_plan.chunks ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
-                .FirstOrDefault(value => value.index == index)
-                ?? throw new Bundles.ContentConfigurationException(
-                    $"Streaming chunk {index} is absent.");
-            var lease = await _bundles.PrepareDeliveryGroup(
-                chunk.deliveryGroup,
-                StreamingExperimentDiagnostics.ReportDelivery,
-                _cancellationToken);
-            lease.AddTo(this);
-            await _scope.GetAssetBundle(chunk.bundle);
-            _readyChunks.Add(index);
-            _onChunkReady?.Invoke(index);
+            try
+            {
+                var chunk = (_plan.chunks
+                        ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
+                    .FirstOrDefault(value => value.index == index)
+                    ?? throw new Bundles.ContentConfigurationException(
+                        $"Streaming chunk {index} is absent.");
+                var lease = await _bundles.PrepareDeliveryGroup(
+                    chunk.deliveryGroup,
+                    StreamingExperimentDiagnostics.ReportDelivery,
+                    _cancellationToken);
+                lease.AddTo(this);
+                await _scope.GetAssetBundle(chunk.bundle);
+                _readyChunks.Add(index);
+                _onChunkReady?.Invoke(index);
+                completion.TrySetResult();
+            }
+            catch (OperationCanceledException)
+                when (_cancellationToken.IsCancellationRequested)
+            {
+                completion.TrySetCanceled(_cancellationToken);
+            }
+            catch (Exception exception)
+            {
+                completion.TrySetException(exception);
+            }
         }
 
         private async UniTask PrepareMedia(Bundles.ContentStreamingMediaEntry media)
