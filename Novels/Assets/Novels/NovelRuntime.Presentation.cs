@@ -43,6 +43,11 @@ namespace Novels
                         .AttachExternalCancellation(cancellationToken)),
                     assetName => state.StoryMedia.ResolveVideoUrl(
                         _definition.ResolveVideoId(assetName)),
+                    assetName => _priorityLoader.Run(() => state.StoryAssets
+                        .TryGetBundledSprite(new Bundles.BundleAssetAddress(
+                            _definition.BundleName,
+                            state.Addresses.LocationImage(assetName)))
+                        .AttachExternalCancellation(cancellationToken)),
                     _ctx.FallbackAssets.Background,
                     cancellationToken),
                 Notification = CreateNotification(
@@ -150,6 +155,7 @@ namespace Novels
             GameObject screenPrefab,
             Func<string, UniTask<Sprite>> getSprite,
             Func<string, UniTask<string>> resolveVideoUrl,
+            Func<string, UniTask<Sprite>> getFullQualitySprite,
             Sprite missingBackground,
             CancellationToken cancellationToken)
         {
@@ -159,6 +165,7 @@ namespace Novels
                     ScreenPrefab = screenPrefab,
                     TargetCamera = _ctx.TargetCamera,
                     GetSprite = getSprite,
+                    GetFullQualitySprite = getFullQualitySprite,
                     ResolveVideoUrl = resolveVideoUrl,
                     MissingBackground = missingBackground,
                     CancellationToken = cancellationToken,
@@ -167,6 +174,7 @@ namespace Novels
                     OnError = ReportError,
                 }).AddTo(owner);
             location.Init();
+            _activeLocation = location;
             return location;
         }
 

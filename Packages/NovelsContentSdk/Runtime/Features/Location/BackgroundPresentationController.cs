@@ -13,6 +13,7 @@ namespace Novels.Location
             internal VideoPlayback VideoPlayback;
             internal Camera TargetCamera;
             internal Func<string, UniTask<Sprite>> GetSprite;
+            internal Func<string, UniTask<Sprite>> GetFullQualitySprite;
             internal Func<string, UniTask<string>> ResolveVideoUrl;
             internal Sprite MissingBackground;
             internal CancellationToken CancellationToken;
@@ -32,6 +33,8 @@ namespace Novels.Location
                 throw new ArgumentNullException(nameof(ctx.TargetCamera));
             if (ctx.GetSprite == null)
                 throw new ArgumentNullException(nameof(ctx.GetSprite));
+            if (ctx.GetFullQualitySprite == null)
+                throw new ArgumentNullException(nameof(ctx.GetFullQualitySprite));
             if (ctx.ResolveVideoUrl == null)
                 throw new ArgumentNullException(nameof(ctx.ResolveVideoUrl));
             if (ctx.MissingBackground == null)
@@ -43,11 +46,31 @@ namespace Novels.Location
             }
         }
 
+        private string _currentAssetName;
+        private Sprite _currentSprite;
+        private int _currentVersion;
+        private int _upgradedVersion = -1;
+        private int _upgradeTaskVersion = -1;
+        private UniTask _upgradeTask = UniTask.CompletedTask;
+        private bool _fullQualityAvailable;
+        private bool _showingVideo;
+
+        internal async UniTask EnableFullQuality()
+        {
+            _fullQualityAvailable = true;
+            await UpgradeCurrentBackground();
+        }
+
         internal async UniTask Set(
             string assetName,
             StoryContracts.StoryBackgroundPresentation presentation,
             StoryContracts.PresentationMode mode)
         {
+            var version = ++_currentVersion;
+            _currentAssetName = assetName;
+            _currentSprite = null;
+            _showingVideo = false;
+            _upgradedVersion = -1;
             _ctx.TargetCamera.backgroundColor = presentation.BackgroundColor
                 == StoryContracts.StoryBackgroundColor.White
                     ? Color.white
@@ -82,8 +105,13 @@ namespace Novels.Location
             if (!plan.UsesVideo)
             {
                 await ShowStatic(sprite, mode);
+                _currentSprite = sprite;
+                if (_fullQualityAvailable && version == _currentVersion)
+                    await UpgradeCurrentBackground();
                 return;
             }
+
+            _currentSprite = sprite;
 
             var playbackStatus = await _ctx.VideoPlayback.Play(
                 new VideoPlaybackRequest(
@@ -95,17 +123,58 @@ namespace Novels.Location
                         ? Time.timeScale * 5f
                         : Time.timeScale));
             var videoReady = playbackStatus == VideoPlaybackStatus.Ready;
+            _showingVideo = videoReady;
             _ctx.Screen.SetEnabledImage(!videoReady);
             _ctx.Screen.SetEnabledVideo(videoReady);
             await Show(mode);
             if (!plan.IsCutScene)
+            {
+                if (_fullQualityAvailable && version == _currentVersion)
+                    await UpgradeCurrentBackground();
                 return;
+            }
             if (videoReady)
                 playbackStatus = await _ctx.VideoPlayback.WaitForCompletion();
             if (playbackStatus == VideoPlaybackStatus.Failed)
                 await WaitForCutSceneFallback(mode);
             if (!plan.KeepsFinalVideoFrame)
-                await ReturnToPoster(sprite, mode);
+                await ReturnToPoster(_currentSprite ?? sprite, mode);
+        }
+
+        private UniTask UpgradeCurrentBackground()
+        {
+            var version = _currentVersion;
+            var assetName = _currentAssetName;
+            if (!_fullQualityAvailable
+                || _currentSprite == null
+                || string.IsNullOrWhiteSpace(assetName)
+                || _upgradedVersion == version)
+            {
+                return UniTask.CompletedTask;
+            }
+            if (_upgradeTaskVersion == version)
+                return _upgradeTask;
+            _upgradeTaskVersion = version;
+            _upgradeTask = UpgradeCurrentBackground(version, assetName).Preserve();
+            return _upgradeTask;
+        }
+
+        private async UniTask UpgradeCurrentBackground(
+            int version,
+            string assetName)
+        {
+            var sprite = await _ctx.GetFullQualitySprite(assetName)
+                .AttachExternalCancellation(_ctx.CancellationToken);
+            if (sprite == null || version != _currentVersion)
+                return;
+            _currentSprite = sprite;
+            _upgradedVersion = version;
+            if (_showingVideo)
+            {
+                _ctx.Screen.SetImage(sprite);
+                return;
+            }
+            await _ctx.Screen.CrossfadeImage(sprite, _ctx.CancellationToken);
         }
 
         private async UniTask ShowStatic(
@@ -132,6 +201,7 @@ namespace Novels.Location
             Sprite sprite,
             StoryContracts.PresentationMode mode)
         {
+            _showingVideo = false;
             await Hide(mode);
             _ctx.Screen.ResetCamera();
             _ctx.Screen.ResetEffect();

@@ -41,6 +41,7 @@ namespace Novels
         private string _assetBundleName;
         private Save.SaveSystem _saveSystem;
         private NovelProgress _progress;
+        private Location.LocationController _activeLocation;
 
         internal NovelRuntime(Dependencies ctx)
         {
@@ -129,6 +130,8 @@ namespace Novels
                 lease?.AddTo(this);
                 await storyAssets.GetAssetBundle(_definition.BundleName);
                 _assetBundleName = _definition.BundleName;
+                if (_activeLocation != null)
+                    await _activeLocation.EnableFullQuality();
                 StreamingExperimentDiagnostics.SetQuality("Full");
             }
             catch (OperationCanceledException)

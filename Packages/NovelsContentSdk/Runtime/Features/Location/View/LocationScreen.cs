@@ -65,6 +65,40 @@ namespace Novels.Location.View
             Layout.SetImage(sprite);
         }
 
+        public async UniTask CrossfadeImage(
+            Sprite sprite,
+            CancellationToken cancellationToken)
+        {
+            if (sprite == null)
+                throw new ArgumentNullException(nameof(sprite));
+            if (_image.sprite == null || !_image.enabled || !_image.gameObject.activeInHierarchy)
+            {
+                SetImage(sprite);
+                return;
+            }
+
+            var previous = Instantiate(_image, _image.transform.parent);
+            previous.name = $"{_image.name} (Quality Crossfade)";
+            previous.raycastTarget = false;
+            previous.transform.SetSiblingIndex(_image.transform.GetSiblingIndex() + 1);
+            var fade = previous.gameObject.AddComponent<CanvasGroup>();
+            SetImage(sprite);
+            try
+            {
+                await global::UITransitions.Transition.Fade(
+                    fade,
+                    1f,
+                    0f,
+                    _showHideImageDuration,
+                    cancellationToken);
+            }
+            finally
+            {
+                if (previous != null)
+                    Destroy(previous.gameObject);
+            }
+        }
+
         public void ShowImageImmediate()
         {
             _imageCanvasGroup.alpha = 1f;
