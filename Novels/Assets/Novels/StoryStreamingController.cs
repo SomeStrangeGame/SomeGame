@@ -78,11 +78,14 @@ namespace Novels
                 for (var index = 0; index < count; index++)
                 {
                     _cancellationToken.ThrowIfCancellationRequested();
+                    StreamingExperimentDiagnostics.SetQueue(
+                        QueueLabel(chunks, media, index));
                     if (index < chunks.Length)
                         await EnsureChunk(index);
                     if (index < media.Length)
                         await PrepareMedia(media[index]);
                 }
+                StreamingExperimentDiagnostics.SetQueue("complete");
                 StreamingExperimentDiagnostics.SetQuality("Full");
             }
             catch (OperationCanceledException) when (_cancellationToken.IsCancellationRequested)
@@ -135,5 +138,22 @@ namespace Novels
 
         private static string Canonicalize(string value) =>
             (value ?? string.Empty).Replace('\\', '/').Trim().ToLowerInvariant();
+
+        private static string QueueLabel(
+            IReadOnlyList<Bundles.ContentStreamingChunkEntry> chunks,
+            IReadOnlyList<Bundles.ContentStreamingMediaEntry> media,
+            int index)
+        {
+            var values = new List<string>(4);
+            for (var offset = 0; offset < 2; offset++)
+            {
+                var current = index + offset;
+                if (current < chunks.Count)
+                    values.Add($"chunk-{current}");
+                if (current < media.Count)
+                    values.Add($"media-{current}");
+            }
+            return string.Join(" → ", values);
+        }
     }
 }

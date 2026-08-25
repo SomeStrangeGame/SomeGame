@@ -11,8 +11,21 @@ namespace Bundles
         private const int _bufferSize = 64 * 1024;
         private readonly string _root;
         private readonly double _bytesPerSecond;
+        private readonly int _latencyMilliseconds;
+        private readonly int _jitterMilliseconds;
+        private readonly Random _random = new(7349);
+        private readonly object _randomGate = new();
 
         public ThrottledFileSystemContentSource(string root, double megabitsPerSecond)
+            : this(root, megabitsPerSecond, 0, 0)
+        {
+        }
+
+        public ThrottledFileSystemContentSource(
+            string root,
+            double megabitsPerSecond,
+            int latencyMilliseconds,
+            int jitterMilliseconds)
         {
             if (string.IsNullOrWhiteSpace(root))
                 throw new ArgumentException("Content root must not be empty.", nameof(root));
@@ -20,6 +33,8 @@ namespace Bundles
                 throw new ArgumentOutOfRangeException(nameof(megabitsPerSecond));
             _root = Path.GetFullPath(root);
             _bytesPerSecond = megabitsPerSecond * 1_000_000d / 8d;
+            _latencyMilliseconds = Math.Max(0, latencyMilliseconds);
+            _jitterMilliseconds = Math.Max(0, jitterMilliseconds);
         }
 
         public string ResolveFilePayloadPath(string logicalPath, string payloadPath) =>
@@ -33,6 +48,7 @@ namespace Bundles
             CancellationToken cancellationToken)
         {
             var source = ResolvePath(path);
+            await DelayForRequest(cancellationToken);
             await DelayForBytes(new FileInfo(source).Length, cancellationToken);
             return await File.ReadAllTextAsync(source, cancellationToken);
         }
@@ -44,6 +60,7 @@ namespace Bundles
             CancellationToken cancellationToken)
         {
             var sourcePath = ResolvePath(path);
+            await DelayForRequest(cancellationToken);
             Directory.CreateDirectory(Path.GetDirectoryName(destinationPath));
             await using var source = new FileStream(
                 sourcePath, FileMode.Open, FileAccess.Read, FileShare.Read,
@@ -73,6 +90,26 @@ namespace Bundles
                 CultureInfo.InvariantCulture,
                 out result)
             && result > 0d;
+
+        public static int ParseMilliseconds(string value, int fallback) =>
+            int.TryParse(value, NumberStyles.Integer, CultureInfo.InvariantCulture, out var result)
+                && result >= 0
+                ? result
+                : Math.Max(0, fallback);
+
+        private UniTask DelayForRequest(CancellationToken cancellationToken)
+        {
+            var jitter = 0;
+            if (_jitterMilliseconds > 0)
+            {
+                lock (_randomGate)
+                    jitter = _random.Next(-_jitterMilliseconds, _jitterMilliseconds + 1);
+            }
+            var milliseconds = Math.Max(0, _latencyMilliseconds + jitter);
+            return milliseconds == 0
+                ? UniTask.CompletedTask
+                : UniTask.Delay(milliseconds, cancellationToken: cancellationToken);
+        }
 
         private UniTask DelayForBytes(long bytes, CancellationToken cancellationToken)
         {

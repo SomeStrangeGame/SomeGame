@@ -130,7 +130,15 @@ namespace Novels
             {
                 return new Bundles.ThrottledFileSystemContentSource(
                     contentRoot,
-                    megabits);
+                    megabits,
+                    Bundles.ThrottledFileSystemContentSource.ParseMilliseconds(
+                        Environment.GetEnvironmentVariable(
+                            "NOVELS_SIMULATED_LATENCY_MS"),
+                        120),
+                    Bundles.ThrottledFileSystemContentSource.ParseMilliseconds(
+                        Environment.GetEnvironmentVariable(
+                            "NOVELS_SIMULATED_JITTER_MS"),
+                        30));
             }
             return new Bundles.FileSystemContentSource(
                 contentRoot,

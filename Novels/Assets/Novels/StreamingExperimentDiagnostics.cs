@@ -13,6 +13,7 @@ namespace Novels
         private static long _lastCompleted;
         private static float _lastSampleTime;
         private static float _bytesPerSecond;
+        private static string _queue = "-";
 
         internal static void SetQuality(string value)
         {
@@ -45,13 +46,20 @@ namespace Novels
             }
         }
 
+        internal static void SetQueue(string value)
+        {
+            lock (_gate)
+                _queue = string.IsNullOrWhiteSpace(value) ? "-" : value;
+        }
+
         internal static string Snapshot()
         {
             lock (_gate)
             {
                 var ratio = _total <= 0 ? 0f : (float)_completed / _total;
                 return $"{_quality} · {_group} {ratio:P0} · "
-                    + $"{_bytesPerSecond / (1024f * 1024f):F1} MiB/s";
+                    + $"{_bytesPerSecond / (1024f * 1024f):F1} MiB/s\n"
+                    + $"Queue · {_queue}";
             }
         }
 
@@ -66,6 +74,7 @@ namespace Novels
                 _lastCompleted = 0;
                 _lastSampleTime = 0f;
                 _bytesPerSecond = 0f;
+                _queue = "-";
             }
         }
     }
