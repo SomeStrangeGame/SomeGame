@@ -19,6 +19,7 @@ namespace Novels
         private StoryProcessor.StorySourceLocation _location;
         private GUIStyle _style;
         private GUIStyle _buttonStyle;
+        private readonly GUIContent _content = new();
         private float _styleScale;
         private string _cachedText = "";
         private float _nextRefresh;
@@ -63,6 +64,7 @@ namespace Novels
                 _cachedText = $"{source}\n{fps:F0} FPS · "
                     + $"{_smoothedFrameMilliseconds:F1} ms · RAM {memory:F0} MiB\n"
                     + StreamingExperimentDiagnostics.Snapshot();
+                _content.text = _cachedText;
             }
             _style ??= new GUIStyle(GUI.skin.label)
             {
@@ -99,7 +101,7 @@ namespace Novels
                 safeArea.xMin + margin,
                 Screen.height - safeArea.yMax + margin,
                 width,
-                _style.CalcHeight(GUIContent.Temp(_cachedText), width));
+                _style.CalcHeight(_content, width));
             GUI.depth = int.MinValue;
             var previousColor = GUI.color;
             GUI.color = new Color(0f, 0f, 0f, 0.9f);
