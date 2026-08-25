@@ -117,7 +117,31 @@ namespace Novels.ContentSdk.Editor
                     start += marker.Length;
                     var end = normalized.IndexOf('/', start);
                     if (end > start)
+                    {
                         token = normalized.Substring(start, end - start);
+                        if (string.Equals(
+                                token,
+                                "maincharacter",
+                                StringComparison.Ordinal))
+                        {
+                            var viewMarker = "/view/";
+                            var viewStart = normalized.IndexOf(
+                                viewMarker,
+                                end,
+                                StringComparison.Ordinal);
+                            if (viewStart >= 0)
+                            {
+                                viewStart += viewMarker.Length;
+                                var viewEnd = normalized.IndexOf('/', viewStart);
+                                if (viewEnd > viewStart)
+                                {
+                                    token = normalized.Substring(
+                                        viewStart,
+                                        viewEnd - viewStart);
+                                }
+                            }
+                        }
+                    }
                 }
             }
             if (token.All(char.IsDigit))
