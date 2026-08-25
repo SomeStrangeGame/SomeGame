@@ -201,9 +201,16 @@ namespace Bundles
                 throw new ContentIntegrityException("Content release JSON is empty.");
             try
             {
-                return UnityEngine.JsonUtility.FromJson<ContentReleaseDto>(json)
+                var release = UnityEngine.JsonUtility.FromJson<ContentReleaseDto>(json)
                     ?? throw new ContentIntegrityException(
                         "Content release JSON produced no document.");
+                // JsonUtility materializes an explicit JSON null nested object as an
+                // empty instance. Keep the optional plan absent for legacy/catalog
+                // releases, while partially populated malformed plans still reach
+                // the validator and fail closed.
+                if (IsEmptyStreamingPlan(release.streamingPlan))
+                    release.streamingPlan = null;
+                return release;
             }
             catch (ContentIntegrityException)
             {
@@ -216,6 +223,13 @@ namespace Bundles
                     exception);
             }
         }
+
+        private static bool IsEmptyStreamingPlan(ContentStreamingPlanEntry plan) =>
+            plan != null
+            && string.IsNullOrWhiteSpace(plan.previewBundle)
+            && string.IsNullOrWhiteSpace(plan.previewDeliveryGroup)
+            && (plan.chunks == null || plan.chunks.Length == 0)
+            && (plan.media == null || plan.media.Length == 0);
 
         public static ContentReleaseDto DeserializeAndValidate(
             string json,

@@ -120,8 +120,9 @@ namespace Novels.ContentSdk.Editor
                         token = normalized.Substring(start, end - start);
                 }
             }
-            if (token == "1")
+            if (token.All(char.IsDigit))
                 token = Path.GetFileName(Path.GetDirectoryName(normalized));
+            token = token.Normalize(NormalizationForm.FormC);
             var result = storyText.IndexOf(token, StringComparison.Ordinal);
             return result >= 0 ? result : int.MaxValue;
         }
