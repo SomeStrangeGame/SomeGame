@@ -24,13 +24,21 @@ namespace Novels.Catalog
 
         public async UniTask<CatalogItem> Select(
             string title,
-            IReadOnlyList<CatalogItem> items)
+            IReadOnlyList<CatalogItem> items,
+            CatalogAction secondaryAction = null)
         {
             if (items == null || items.Count == 0)
                 throw new InvalidOperationException("Catalog is empty.");
 
             EnsureScreen();
             _screen.SetTitle(title);
+            void RefreshSecondaryAction() => _screen.SetSecondaryAction(
+                secondaryAction?.Text,
+                secondaryAction?.IsInteractable ?? false,
+                secondaryAction == null ? null : secondaryAction.Invoke);
+            RefreshSecondaryAction();
+            if (secondaryAction != null)
+                secondaryAction.Changed += RefreshSecondaryAction;
             var selection = new UniTaskCompletionSource<CatalogItem>();
             foreach (var item in items)
             {
@@ -55,8 +63,13 @@ namespace Novels.Catalog
             }
             finally
             {
+                if (secondaryAction != null)
+                    secondaryAction.Changed -= RefreshSecondaryAction;
                 if (_screen != null)
+                {
+                    _screen.SetSecondaryAction(null, false, null);
                     _screen.gameObject.SetActive(false);
+                }
             }
         }
 

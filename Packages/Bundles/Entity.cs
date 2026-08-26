@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -134,6 +135,18 @@ namespace Bundles
         public bool HasBundle(string bundleName) =>
             !string.IsNullOrWhiteSpace(bundleName)
             && RequireSession().FindBundle(bundleName) != null;
+
+        public long GetDeliveryGroupSize(string groupId)
+        {
+            if (string.IsNullOrWhiteSpace(groupId))
+                return 0L;
+            return RequireSession().Release.DeliveryGroups
+                .FirstOrDefault(group => string.Equals(
+                    group.Id,
+                    groupId,
+                    StringComparison.OrdinalIgnoreCase))
+                ?.Size ?? 0L;
+        }
 
         public UniTask<ContentDeliveryLease> PrepareDeliveryGroup(
             string groupId,
