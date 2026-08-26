@@ -22,6 +22,34 @@ namespace Novels.ContentSdk.Editor
         internal IReadOnlyList<ContentStreamingMediaEntry> Media { get; }
     }
 
+    internal enum StoryAssetUsageKind
+    {
+        Art,
+        Video,
+        Audio,
+    }
+
+    internal sealed class StoryAssetUsageEntry
+    {
+        internal StoryAssetUsageEntry(
+            string path,
+            StoryAssetUsageKind kind,
+            int firstUse,
+            long sourceBytes)
+        {
+            Path = path;
+            Kind = kind;
+            FirstUse = firstUse;
+            SourceBytes = sourceBytes;
+        }
+
+        internal string Path { get; }
+        internal StoryAssetUsageKind Kind { get; }
+        internal int FirstUse { get; }
+        internal long SourceBytes { get; }
+        internal bool IsReferenced => FirstUse != int.MaxValue;
+    }
+
     internal static class ExperimentalStreamingPlan
     {
         private const long _defaultChunkSourceBytes = 16L * 1024L * 1024L;
@@ -120,6 +148,35 @@ namespace Novels.ContentSdk.Editor
                 })
                 .ToArray();
             return new ExperimentalStreamingBuildPlan(chunks, media);
+        }
+
+        internal static StoryAssetUsageEntry[] CreateLinearUsageReport(
+            string storyId,
+            IReadOnlyCollection<string> assets,
+            IReadOnlyCollection<string> filePaths)
+        {
+            var storyText = ReadStoryText(storyId);
+            var art = assets.Select(path => new StoryAssetUsageEntry(
+                path,
+                StoryAssetUsageKind.Art,
+                FirstAssetUse(storyText, path),
+                SourceSize(path)));
+            var media = filePaths
+                .Where(IsMediaPath)
+                .Select(path => new StoryAssetUsageEntry(
+                    path,
+                    path.StartsWith(
+                        "novelsvideos/",
+                        StringComparison.OrdinalIgnoreCase)
+                        ? StoryAssetUsageKind.Video
+                        : StoryAssetUsageKind.Audio,
+                    FirstMediaUse(storyText, path),
+                    StreamingAssetSourceSize(path)));
+            return art
+                .Concat(media)
+                .OrderBy(value => value.FirstUse)
+                .ThenBy(value => value.Path, StringComparer.Ordinal)
+                .ToArray();
         }
 
         private static HashSet<string> FindBootstrapAssets(
@@ -253,6 +310,14 @@ namespace Novels.ContentSdk.Editor
         private static long SourceSize(string assetPath)
         {
             var absolute = Path.GetFullPath(assetPath);
+            return File.Exists(absolute) ? new FileInfo(absolute).Length : 0L;
+        }
+
+        private static long StreamingAssetSourceSize(string relativePath)
+        {
+            var absolute = Path.Combine(
+                UnityEngine.Application.streamingAssetsPath,
+                relativePath.Replace('/', Path.DirectorySeparatorChar));
             return File.Exists(absolute) ? new FileInfo(absolute).Length : 0L;
         }
 
