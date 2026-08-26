@@ -56,13 +56,14 @@ namespace Novels.ContentSdk.Editor
             var storyText = ReadStoryText(storyId);
             var targetBytes = ReadChunkTarget();
             var firstSceneEnd = FindFirstSceneEnd(storyText);
+            var bootstrapAssets = FindBootstrapAssets(assets);
             var orderedAssets = assets
                 .Select(path => new
                 {
                     Path = path,
                     FirstUse = FirstAssetUse(storyText, path),
                     Size = SourceSize(path),
-                    Bootstrap = IsBootstrapAsset(path),
+                    Bootstrap = bootstrapAssets.Contains(path),
                     RuntimeDefault = IsRuntimeDefaultAsset(path),
                 })
                 .Select(value => new
@@ -119,6 +120,29 @@ namespace Novels.ContentSdk.Editor
                 })
                 .ToArray();
             return new ExperimentalStreamingBuildPlan(chunks, media);
+        }
+
+        private static HashSet<string> FindBootstrapAssets(
+            IReadOnlyCollection<string> assets)
+        {
+            var availableAssets = new HashSet<string>(assets, StringComparer.Ordinal);
+            var bootstrapRoots = assets
+                .Where(IsBootstrapAsset)
+                .ToArray();
+            var bootstrapAssets = new HashSet<string>(
+                bootstrapRoots,
+                StringComparer.Ordinal);
+            if (bootstrapRoots.Length == 0)
+                return bootstrapAssets;
+
+            foreach (var dependency in AssetDatabase.GetDependencies(
+                         bootstrapRoots,
+                         true))
+            {
+                if (availableAssets.Contains(dependency))
+                    bootstrapAssets.Add(dependency);
+            }
+            return bootstrapAssets;
         }
 
         private static string ReadStoryText(string storyId)
