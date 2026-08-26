@@ -68,7 +68,7 @@ namespace Novels.ContentSdk.Editor
                         Application.streamingAssetsPath,
                         source)
                     .Replace('\\', '/');
-                if (!ShouldPublishStreamingAsset(source, relative))
+                if (!ShouldPublishStreamingAsset(relative))
                     continue;
                 var hash = ContentHash.ComputeSha256(source);
                 var payloadPath = ContentAddressing.ContentPackageConvention
@@ -94,9 +94,7 @@ namespace Novels.ContentSdk.Editor
             return result.ToArray();
         }
 
-        private static bool ShouldPublishStreamingAsset(
-            string sourcePath,
-            string relativePath)
+        private static bool ShouldPublishStreamingAsset(string relativePath)
         {
             if (!relativePath.StartsWith(
                     "noveltexts/",
@@ -105,35 +103,14 @@ namespace Novels.ContentSdk.Editor
                 return true;
             }
 
-            // Raw Ink remains in the authoring project because the streaming
-            // planner analyzes it at build time, but runtime reads compiled JSON.
-            if (relativePath.EndsWith(".ink", StringComparison.OrdinalIgnoreCase))
-                return false;
-
-            // Compiled stories and source maps are runtime/analytics artifacts.
-            if (!relativePath.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
-                || relativePath.EndsWith(
+            // Authoring sources stay in the project for build-time analysis.
+            // Runtime needs only compiled Ink and its analytics source map.
+            return relativePath.EndsWith(
                     ".ink.json",
                     StringComparison.OrdinalIgnoreCase)
                 || relativePath.EndsWith(
                     ".source-map.json",
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                return true;
-            }
-
-            // A legacy plain JSON is safe to omit only when its compiled Ink
-            // sibling exists and contains exactly the same text. File.ReadAllText
-            // handles an optional UTF-8 BOM, which is the known legacy difference.
-            var directory = Path.GetDirectoryName(sourcePath);
-            var compiledPath = Path.Combine(
-                directory ?? string.Empty,
-                Path.GetFileNameWithoutExtension(sourcePath) + ".ink.json");
-            return !File.Exists(compiledPath)
-                || !string.Equals(
-                    File.ReadAllText(sourcePath),
-                    File.ReadAllText(compiledPath),
-                    StringComparison.Ordinal);
+                    StringComparison.OrdinalIgnoreCase);
         }
 
         private static string DeliveryGroupForFile(
