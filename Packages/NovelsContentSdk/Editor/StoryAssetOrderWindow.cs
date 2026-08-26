@@ -44,8 +44,8 @@ namespace Novels.ContentSdk.Editor
             {
                 EditorGUILayout.HelpBox(
                     _inkFiles.Length == 0
-                        ? "В проекте не найдено ни одного .ink файла."
-                        : "Выберите Ink-файл и нажмите «Рассчитать».",
+                        ? "В проекте не найдено ни одного .ink.json файла."
+                        : "Выберите compiled Ink и нажмите «Рассчитать».",
                     MessageType.Info);
                 return;
             }
@@ -76,13 +76,15 @@ namespace Novels.ContentSdk.Editor
             {
                 if (_inkFiles.Length == 1)
                 {
-                    EditorGUILayout.LabelField("Ink-файл", ProjectPath(_inkFiles[0]));
+                    EditorGUILayout.LabelField(
+                        "Compiled Ink",
+                        ProjectPath(_inkFiles[0]));
                 }
                 else if (_inkFiles.Length > 1)
                 {
                     var labels = _inkFiles.Select(ProjectPath).ToArray();
                     var selected = EditorGUILayout.Popup(
-                        "Ink-файл",
+                        "Compiled Ink",
                         _selectedInk,
                         labels);
                     if (selected != _selectedInk)
@@ -176,7 +178,7 @@ namespace Novels.ContentSdk.Editor
             _inkFiles = Directory.Exists(Application.dataPath)
                 ? Directory.EnumerateFiles(
                         Application.dataPath,
-                        "*.ink",
+                        "*.ink.json",
                         SearchOption.AllDirectories)
                     .OrderBy(path => path, StringComparer.Ordinal)
                     .ToArray()
