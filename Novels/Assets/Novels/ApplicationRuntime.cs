@@ -91,8 +91,11 @@ namespace Novels
                 TargetCamera = _environment.TargetCamera,
                 FallbackAssets = _environment.FallbackAssets,
                 RuntimeTuning = _environment.RuntimeTuning,
-                SelectEpisode = definition =>
-                    _catalogFlow.SelectEpisode(definition, catalog.Screen),
+                SelectEpisode = (definition, downloadAllAction) =>
+                    _catalogFlow.SelectEpisode(
+                        definition,
+                        catalog.Screen,
+                        downloadAllAction),
                 PrepareNovelContent = contentId =>
                     contentDeliveryFlow.PrepareStoryInitial(bootstrap, contentId),
                 HidePreparationScreen = bootstrap.Hide,

@@ -22,7 +22,16 @@ namespace Novels
         private readonly Dictionary<int, Bundles.ContentDeliveryProgress> _chunkProgress = new();
         private readonly HashSet<int> _blockingChunks = new();
         private readonly HashSet<int> _readyChunks = new();
+        private readonly Dictionary<string, long> _downloadedGroupBytes = new(
+            StringComparer.OrdinalIgnoreCase);
+        private readonly string[] _downloadAllGroups;
+        private readonly long _downloadAllBytes;
         private readonly StoryDownloadOverlay _downloadOverlay;
+        private bool _downloadAllRequested;
+        private bool _downloadAllComplete;
+        private bool _streamingRunning;
+
+        internal Catalog.CatalogAction DownloadAllAction { get; }
 
         internal StoryStreamingController(
             Bundles.Entity bundles,
@@ -39,6 +48,10 @@ namespace Novels
             _onLog = onLog;
             _onChunkReady = onChunkReady;
             _downloadOverlay = StoryDownloadOverlay.Create();
+            DownloadAllAction = new Catalog.CatalogAction(
+                "Скачать всю историю",
+                RequestDownloadAll);
+            _downloadOverlay.BindDownloadAll(DownloadAllAction);
             _assets = (_plan.chunks ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
                 .SelectMany(chunk => (chunk.assets ?? Array.Empty<string>())
                     .Select(asset => (asset, chunk)))
@@ -47,9 +60,29 @@ namespace Novels
                     value => value.chunk,
                     StringComparer.OrdinalIgnoreCase);
             _readyChunks.Add(0);
+            _downloadAllGroups = (_plan.chunks
+                    ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
+                .Select(value => value.deliveryGroup)
+                .Concat((_plan.media
+                        ?? Array.Empty<Bundles.ContentStreamingMediaEntry>())
+                    .Select(value => value.deliveryGroup))
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            _downloadAllBytes = _downloadAllGroups.Sum(
+                _bundles.GetDeliveryGroupSize);
+            var initialGroup = (_plan.chunks
+                    ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
+                .FirstOrDefault()?.deliveryGroup;
+            if (!string.IsNullOrWhiteSpace(initialGroup))
+            {
+                _downloadedGroupBytes[initialGroup] =
+                    _bundles.GetDeliveryGroupSize(initialGroup);
+            }
+            PublishDownloadAllState();
         }
 
-        internal void Start() => Run().Forget();
+        internal void Start() => StartStreaming();
 
         internal UniTask<Sprite> GetSprite(string assetName) =>
             LoadSprite(assetName);
@@ -116,16 +149,41 @@ namespace Novels
                 }
                 StreamingExperimentDiagnostics.SetQueue("complete");
                 StreamingExperimentDiagnostics.SetQuality("Full");
+                _downloadAllComplete = true;
+                PublishDownloadAllState();
             }
             catch (OperationCanceledException) when (_cancellationToken.IsCancellationRequested)
             {
             }
             catch (Exception exception)
             {
+                _downloadAllRequested = false;
+                DownloadAllAction.SetState("Продолжить загрузку", true);
                 _onLog?.Invoke((
                     LogType.Warning,
                     $"Predictive story streaming stopped: {exception.Message}"));
             }
+            finally
+            {
+                _streamingRunning = false;
+            }
+        }
+
+        private void StartStreaming()
+        {
+            if (_streamingRunning || _downloadAllComplete)
+                return;
+            _streamingRunning = true;
+            Run().Forget();
+        }
+
+        private void RequestDownloadAll()
+        {
+            if (_downloadAllComplete)
+                return;
+            _downloadAllRequested = true;
+            PublishDownloadAllState();
+            StartStreaming();
         }
 
         private UniTask EnsureChunk(int index)
@@ -169,6 +227,7 @@ namespace Novels
             }
             catch (Exception exception)
             {
+                _chunkTasks.Remove(index);
                 completion.TrySetException(exception);
             }
         }
@@ -178,6 +237,7 @@ namespace Novels
             Bundles.ContentDeliveryProgress progress)
         {
             _chunkProgress[index] = progress;
+            ReportDownloadAllProgress(progress);
             StreamingExperimentDiagnostics.ReportDelivery(progress);
             if (_blockingChunks.Contains(index))
                 _downloadOverlay.Report(progress);
@@ -217,9 +277,46 @@ namespace Novels
         {
             var lease = await _bundles.PrepareDeliveryGroup(
                 media.deliveryGroup,
-                StreamingExperimentDiagnostics.ReportDelivery,
+                progress =>
+                {
+                    ReportDownloadAllProgress(progress);
+                    StreamingExperimentDiagnostics.ReportDelivery(progress);
+                },
                 _cancellationToken);
             lease.AddTo(this);
+        }
+
+        private void ReportDownloadAllProgress(
+            Bundles.ContentDeliveryProgress progress)
+        {
+            _downloadedGroupBytes[progress.GroupId] = Math.Min(
+                progress.CompletedBytes,
+                progress.TotalBytes);
+            PublishDownloadAllState();
+        }
+
+        private void PublishDownloadAllState()
+        {
+            if (_downloadAllComplete)
+            {
+                DownloadAllAction.SetState("История загружена", false);
+                return;
+            }
+            if (!_downloadAllRequested)
+            {
+                DownloadAllAction.SetState("Скачать всю историю", true);
+                return;
+            }
+            var completed = _downloadAllGroups.Sum(group =>
+                _downloadedGroupBytes.TryGetValue(group, out var bytes)
+                    ? bytes
+                    : 0L);
+            var ratio = _downloadAllBytes <= 0L
+                ? 0f
+                : Mathf.Clamp01((float)completed / _downloadAllBytes);
+            DownloadAllAction.SetState(
+                $"Загрузка всей истории · {ratio:P0}",
+                false);
         }
 
         private static string Canonicalize(string value) =>

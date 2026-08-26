@@ -24,7 +24,10 @@ namespace Novels
             internal Camera TargetCamera;
             internal FallbackAssets FallbackAssets;
             internal NovelRuntimeTuning RuntimeTuning;
-            internal Func<Content.NovelDefinition, UniTask<Content.EpisodeDefinition>>
+            internal Func<
+                Content.NovelDefinition,
+                Catalog.CatalogAction,
+                UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
                 PrepareNovelContent;
@@ -103,7 +106,9 @@ namespace Novels
                 _definition.Id,
                 _definition.MainCharacter,
                 _progress.PlayableEpisodes);
-            _episode = await _ctx.SelectEpisode(playableDefinition);
+            _episode = await _ctx.SelectEpisode(
+                playableDefinition,
+                _streaming?.DownloadAllAction);
             _progress.Begin(_episode);
             var episodeRuntime = new EpisodeRuntime(_ctx.CancellationToken).AddTo(this);
 

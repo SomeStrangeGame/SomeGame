@@ -150,7 +150,8 @@ namespace Novels
 
         internal async UniTask<Content.EpisodeDefinition> SelectEpisode(
             Content.NovelDefinition definition,
-            GameObject screen)
+            GameObject screen,
+            Catalog.CatalogAction downloadAllAction = null)
         {
             var items = definition.Episodes
                 .Select(episode => new Catalog.CatalogItem(
@@ -161,7 +162,8 @@ namespace Novels
             using var selection = CreateSelection(screen);
             var selected = await selection.Select(
                 ApplicationTexts.ChooseEpisode,
-                items);
+                items,
+                downloadAllAction);
             return definition.Episodes.First(episode => string.Equals(
                 episode.Id,
                 selected.Id,

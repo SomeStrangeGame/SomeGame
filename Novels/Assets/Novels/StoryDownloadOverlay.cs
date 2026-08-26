@@ -27,6 +27,11 @@ namespace Novels
         private float _bytesPerSecond;
         private bool _visible;
 
+        internal void BindDownloadAll(Catalog.CatalogAction action)
+        {
+            _screen.BindDownloadAll(action);
+        }
+
         internal static StoryDownloadOverlay Create()
         {
             var prefab = Resources.Load<GameObject>(_fallbackResource);
