@@ -15,6 +15,10 @@ namespace Novels
         private readonly object _gate = new();
         private GUIStyle _titleStyle;
         private GUIStyle _detailsStyle;
+        private Texture2D _shadeTexture;
+        private Texture2D _panelTexture;
+        private Texture2D _trackTexture;
+        private Texture2D _fillTexture;
         private RenderTexture _blurredFrame;
         private string _group = "-";
         private long _completedBytes;
@@ -31,6 +35,14 @@ namespace Novels
         {
             var root = new GameObject(nameof(StoryDownloadOverlay));
             return root.AddComponent<StoryDownloadOverlay>();
+        }
+
+        private void Awake()
+        {
+            _shadeTexture = CreateColorTexture(new Color(0f, 0f, 0f, 0.48f));
+            _panelTexture = CreateColorTexture(new Color(0.055f, 0.07f, 0.1f, 0.96f));
+            _trackTexture = CreateColorTexture(new Color(1f, 1f, 1f, 0.16f));
+            _fillTexture = CreateColorTexture(new Color(0.18f, 0.63f, 1f, 1f));
         }
 
         internal void Show(
@@ -151,6 +163,10 @@ namespace Novels
         private void OnDestroy()
         {
             ReleaseFrame();
+            Destroy(_shadeTexture);
+            Destroy(_panelTexture);
+            Destroy(_trackTexture);
+            Destroy(_fillTexture);
         }
 
         private void OnGUI()
@@ -177,10 +193,7 @@ namespace Novels
             var full = new Rect(0f, 0f, Screen.width, Screen.height);
             if (_blurredFrame != null)
                 GUI.DrawTexture(full, _blurredFrame, ScaleMode.ScaleAndCrop);
-            var previousColor = GUI.color;
-            GUI.color = new Color(0f, 0f, 0f, 0.48f);
-            GUI.DrawTexture(full, Texture2D.whiteTexture);
-            GUI.color = previousColor;
+            GUI.DrawTexture(full, _shadeTexture);
 
             var scale = Mathf.Clamp(
                 Mathf.Min(
@@ -191,16 +204,21 @@ namespace Novels
             EnsureStyles(scale);
             var width = Mathf.Min(390f * scale, Screen.safeArea.width - 32f * scale);
             var height = 196f * scale;
+            var safeArea = new Rect(
+                Screen.safeArea.x,
+                Screen.height - Screen.safeArea.yMax,
+                Screen.safeArea.width,
+                Screen.safeArea.height);
             var box = new Rect(
-                Screen.safeArea.center.x - width * 0.5f,
-                Screen.height - Screen.safeArea.center.y - height * 0.5f,
+                safeArea.center.x - width * 0.5f,
+                safeArea.center.y - height * 0.5f,
                 width,
                 height);
-            GUI.color = new Color(0.055f, 0.07f, 0.1f, 0.96f);
-            GUI.DrawTexture(box, Texture2D.whiteTexture);
-            GUI.color = previousColor;
+            GUI.DrawTexture(box, _panelTexture);
 
             var padding = 22f * scale;
+            var previousContentColor = GUI.contentColor;
+            GUI.contentColor = Color.white;
             GUI.Label(
                 new Rect(box.x + padding, box.y + 20f * scale,
                     box.width - padding * 2f, 34f * scale),
@@ -215,13 +233,10 @@ namespace Novels
                 box.y + 78f * scale,
                 box.width - padding * 2f,
                 14f * scale);
-            GUI.color = new Color(1f, 1f, 1f, 0.16f);
-            GUI.DrawTexture(bar, Texture2D.whiteTexture);
-            GUI.color = new Color(0.18f, 0.63f, 1f, 1f);
+            GUI.DrawTexture(bar, _trackTexture);
             GUI.DrawTexture(
                 new Rect(bar.x, bar.y, bar.width * ratio, bar.height),
-                Texture2D.whiteTexture);
-            GUI.color = previousColor;
+                _fillTexture);
 
             var details = total > 0
                 ? $"{ratio:P0} · {FormatBytes(completed)} из {FormatBytes(total)}"
@@ -241,6 +256,7 @@ namespace Novels
                     Time.realtimeSinceStartup - shownAt,
                     Time.realtimeSinceStartup - lastProgressAt),
                 _detailsStyle);
+            GUI.contentColor = previousContentColor;
         }
 
         private void EnsureStyles(float scale)
@@ -289,6 +305,19 @@ namespace Novels
             return value >= mebibyte
                 ? $"{value / mebibyte:F1} МБ"
                 : $"{value / 1024f:F0} КБ";
+        }
+
+        private static Texture2D CreateColorTexture(Color color)
+        {
+            var texture = new Texture2D(1, 1, TextureFormat.RGBA32, false)
+            {
+                hideFlags = HideFlags.DontSave,
+                wrapMode = TextureWrapMode.Clamp,
+                filterMode = FilterMode.Point,
+            };
+            texture.SetPixel(0, 0, color);
+            texture.Apply(false, true);
+            return texture;
         }
     }
 }
