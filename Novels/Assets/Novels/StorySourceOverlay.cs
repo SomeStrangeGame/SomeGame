@@ -1,4 +1,5 @@
 using System.IO;
+using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
 
@@ -64,7 +65,9 @@ namespace Novels
                 _cachedText = $"{source}\n{fps:F0} FPS · "
                     + $"{_smoothedFrameMilliseconds:F1} ms · RAM {memory:F0} MiB\n"
                     + StreamingExperimentDiagnostics.Snapshot() + "\n"
-                    + Location.View.LocationScreen.GetPresentationDebugSnapshot();
+                    + Location.View.LocationScreen.GetPresentationDebugSnapshot()
+                    + "\n" + Setting.Entity.GetDebugSnapshot()
+                    + "\n" + CanvasSnapshot();
                 _content.text = _cachedText;
             }
             _style ??= new GUIStyle(GUI.skin.label)
@@ -127,6 +130,31 @@ namespace Novels
                     "Warm",
                     _buttonStyle))
                 _warmRestart?.Invoke();
+        }
+
+        private static string CanvasSnapshot()
+        {
+            var result = new StringBuilder("Canvas · ");
+            var canvases = Resources.FindObjectsOfTypeAll<Canvas>();
+            var written = 0;
+            foreach (var canvas in canvases)
+            {
+                if (!canvas.gameObject.scene.IsValid()
+                    || !canvas.gameObject.activeInHierarchy)
+                {
+                    continue;
+                }
+                if (written++ > 0)
+                    result.Append(" | ");
+                var group = canvas.GetComponent<CanvasGroup>();
+                result.Append(canvas.name)
+                    .Append('#').Append(canvas.sortingOrder)
+                    .Append(" cg=")
+                    .Append(group != null ? group.alpha.ToString("F1") : "-");
+                if (written >= 6)
+                    break;
+            }
+            return result.ToString();
         }
 #else
         internal void Show(StoryProcessor.StorySourceLocation location)

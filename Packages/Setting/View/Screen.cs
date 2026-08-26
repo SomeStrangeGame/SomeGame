@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,13 +12,17 @@ namespace Setting.View
         [SerializeField] private Button _buttonPrefab;
 
         private readonly Dictionary<string, Button> _buttons = new();
-        private Font _runtimeFont;
+        private static Screen _active;
 
         private void Awake()
         {
-            _runtimeFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            ApplyRuntimeFont(_description);
-            ApplyRuntimeFont(_buttonPrefab.GetComponentInChildren<Text>(true));
+            _active = this;
+        }
+
+        private void OnDestroy()
+        {
+            if (_active == this)
+                _active = null;
         }
 
         public void SetDescription(string text)
@@ -33,17 +38,54 @@ namespace Setting.View
 
             _buttons[id] = button;
             var label = button.GetComponentInChildren<Text>(true);
-            ApplyRuntimeFont(label);
             label.text = text;
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => onClick.Invoke());
             button.gameObject.SetActive(true);
         }
 
-        private void ApplyRuntimeFont(Text label)
+        public static string GetDebugSnapshot()
         {
-            if (label != null && _runtimeFont != null)
-                label.font = _runtimeFont;
+            if (_active == null)
+                return "Setting · inactive";
+            var result = new StringBuilder("Setting · ");
+            AppendGraphic(result, "desc", _active._description);
+            foreach (var pair in _active._buttons)
+            {
+                var button = pair.Value;
+                result.Append(" · ").Append(pair.Key).Append(' ');
+                AppendGraphic(result, "img", button.targetGraphic);
+                result.Append(' ');
+                AppendGraphic(
+                    result,
+                    "text",
+                    button.GetComponentInChildren<Text>(true));
+            }
+            return result.ToString();
+        }
+
+        private static void AppendGraphic(
+            StringBuilder result,
+            string label,
+            Graphic graphic)
+        {
+            if (graphic == null)
+            {
+                result.Append(label).Append(":null");
+                return;
+            }
+            var rect = graphic.rectTransform.rect;
+            var material = graphic.material;
+            result.Append(label)
+                .Append(":on=").Append(graphic.gameObject.activeInHierarchy)
+                .Append(" a=").Append(graphic.color.a.ToString("F1"))
+                .Append(" rect=").Append(rect.width.ToString("F0"))
+                .Append('x').Append(rect.height.ToString("F0"))
+                .Append(" mat=").Append(material != null ? material.name : "null")
+                .Append(" sh=").Append(
+                    material != null && material.shader != null
+                        ? material.shader.name
+                        : "null");
         }
     }
 }
