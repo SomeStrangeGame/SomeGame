@@ -36,6 +36,12 @@ namespace Novels.ContentSdk.Editor
                 EditorGUI.BeginDisabledGroup(_inkFiles.Length == 0);
                 if (GUILayout.Button("Рассчитать", GUILayout.Width(110f)))
                     Generate();
+                if (GUILayout.Button(
+                        "Рассчитать source map",
+                        GUILayout.Width(180f)))
+                {
+                    GenerateSourceMap();
+                }
                 EditorGUI.EndDisabledGroup();
                 _filter = EditorGUILayout.TextField("Фильтр", _filter);
             }
@@ -127,6 +133,27 @@ namespace Novels.ContentSdk.Editor
                 _entries = Array.Empty<StoryAssetUsageEntry>();
                 Debug.LogException(exception);
                 ShowNotification(new GUIContent("Asset report failed. See Console."));
+            }
+        }
+
+        private void GenerateSourceMap()
+        {
+            try
+            {
+                var result = StorySourceMapBuilder.Build(
+                    _inkFiles[_selectedInk]);
+                AssetDatabase.Refresh();
+                ShowNotification(new GUIContent(
+                    $"Source map: {result.EntryCount} записей"));
+                Debug.Log(
+                    $"Story source map generated: '{result.OutputPath}', "
+                    + $"{result.EntryCount} entries.");
+            }
+            catch (Exception exception)
+            {
+                Debug.LogException(exception);
+                ShowNotification(new GUIContent(
+                    "Source map не создан. См. Console."));
             }
         }
 
