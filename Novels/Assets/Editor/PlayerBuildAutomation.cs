@@ -12,7 +12,68 @@ namespace Editor
     public static class PlayerBuildAutomation
     {
         internal static bool IsRemotePlayerBuild { get; private set; }
-        internal static bool IsAuthorizedPlayerBuild => IsRemotePlayerBuild;
+        internal static bool IsEmbeddedPlayerBuild { get; private set; }
+        internal static bool IsAuthorizedPlayerBuild =>
+            IsRemotePlayerBuild || IsEmbeddedPlayerBuild;
+
+        public static void BuildEmbeddedPlayerBatch()
+        {
+            var arguments = Environment.GetCommandLineArgs();
+            var output = GetArgument(
+                arguments,
+                "-playerOutput");
+            if (string.IsNullOrWhiteSpace(output))
+                throw new InvalidOperationException("-playerOutput is required.");
+            var contentRoot = Path.Combine(
+                Application.streamingAssetsPath,
+                "NovelContent");
+            if (!File.Exists(Path.Combine(
+                    contentRoot,
+                    "catalog",
+                    "registry",
+                    "catalog.json")))
+            {
+                throw new InvalidOperationException(
+                    $"Embedded content is missing: {contentRoot}");
+            }
+
+            EditorSceneManager.OpenScene(
+                "Assets/Novels/Novels.unity",
+                OpenSceneMode.Single);
+            BuildReport report;
+            var buildIdentity = ApplyBuildIdentity(arguments);
+            IsEmbeddedPlayerBuild = true;
+            try
+            {
+                report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
+                {
+                    scenes = EditorBuildSettings.scenes
+                        .Where(value => value.enabled)
+                        .Select(value => value.path)
+                        .ToArray(),
+                    locationPathName = Path.GetFullPath(output),
+                    target = EditorUserBuildSettings.activeBuildTarget,
+                    options = arguments.Contains("-developmentBuild")
+                        ? BuildOptions.Development
+                        : BuildOptions.None,
+                    extraScriptingDefines = new[] {"NOVELS_EMBEDDED_CONTENT"},
+                });
+            }
+            finally
+            {
+                buildIdentity.Restore();
+                IsEmbeddedPlayerBuild = false;
+            }
+            if (report.summary.result != BuildResult.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    $"Embedded Player build failed: {report.summary.result}, "
+                    + $"{report.summary.totalErrors} errors.");
+            }
+            Debug.Log(
+                $"Embedded Player build completed: {report.summary.outputPath} "
+                + $"({report.summary.totalSize / (1024f * 1024f):F1} MiB)");
+        }
         public static void BuildRemotePlayerBatch()
         {
             var arguments = Environment.GetCommandLineArgs();
@@ -41,6 +102,7 @@ namespace Editor
                 .Select(value => value.path)
                 .ToArray();
             BuildReport report;
+            var buildIdentity = ApplyBuildIdentity(arguments);
             IsRemotePlayerBuild = true;
             var useCustomKeystore = PlayerSettings.Android.useCustomKeystore;
             var stripEngineCode = PlayerSettings.stripEngineCode;
@@ -64,6 +126,7 @@ namespace Editor
             }
             finally
             {
+                buildIdentity.Restore();
                 PlayerSettings.stripEngineCode = stripEngineCode;
                 PlayerSettings.Android.useCustomKeystore = useCustomKeystore;
                 IsRemotePlayerBuild = false;
@@ -119,6 +182,59 @@ namespace Editor
             return index >= 0 && index + 1 < arguments.Length
                 ? arguments[index + 1]
                 : string.Empty;
+        }
+
+        private static BuildIdentitySnapshot ApplyBuildIdentity(string[] arguments)
+        {
+            var snapshot = new BuildIdentitySnapshot(
+                PlayerSettings.bundleVersion,
+                PlayerSettings.Android.bundleVersionCode,
+                PlayerSettings.iOS.buildNumber,
+                PlayerSettings.macOS.buildNumber);
+            var version = GetArgument(arguments, "-playerVersion");
+            var buildNumber = GetArgument(arguments, "-playerBuildNumber");
+            if (string.IsNullOrWhiteSpace(version)
+                || !int.TryParse(buildNumber, out var numericBuild)
+                || numericBuild <= 0)
+            {
+                throw new InvalidOperationException(
+                    "-playerVersion and a positive -playerBuildNumber are required.");
+            }
+
+            PlayerSettings.bundleVersion = version;
+            PlayerSettings.Android.bundleVersionCode = numericBuild;
+            PlayerSettings.iOS.buildNumber = buildNumber;
+            PlayerSettings.macOS.buildNumber = buildNumber;
+            Debug.Log($"Player build identity: version={version}, build={buildNumber}.");
+            return snapshot;
+        }
+
+        private readonly struct BuildIdentitySnapshot
+        {
+            private readonly string _version;
+            private readonly int _androidBuild;
+            private readonly string _iosBuild;
+            private readonly string _macBuild;
+
+            internal BuildIdentitySnapshot(
+                string version,
+                int androidBuild,
+                string iosBuild,
+                string macBuild)
+            {
+                _version = version;
+                _androidBuild = androidBuild;
+                _iosBuild = iosBuild;
+                _macBuild = macBuild;
+            }
+
+            internal void Restore()
+            {
+                PlayerSettings.bundleVersion = _version;
+                PlayerSettings.Android.bundleVersionCode = _androidBuild;
+                PlayerSettings.iOS.buildNumber = _iosBuild;
+                PlayerSettings.macOS.buildNumber = _macBuild;
+            }
         }
 
         private static void AssertRemoteContentExcluded()

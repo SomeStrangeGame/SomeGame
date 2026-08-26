@@ -11,6 +11,9 @@ namespace Novels.ContentSdk.Editor
         [MenuItem("Novels/Content/Build/Editor")]
         public static void BuildEditor() => ContentPipeline.Build("editor");
 
+        [MenuItem("Novels/Content/Build/Windows")]
+        public static void BuildWindows() => ContentPipeline.Build("windows");
+
         public static void BuildLocal() => ContentPipeline.Build(
             Argument("-contentPlatform", "editor"));
 

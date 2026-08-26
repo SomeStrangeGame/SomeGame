@@ -13,7 +13,7 @@ usage() {
   print 'Usage:'
   print '  novels-content doctor'
   print '  novels-content validate <catalog|story-id|all>'
-  print '  novels-content build <catalog|story-id|all> <editor|android|ios>'
+  print '  novels-content build <catalog|story-id|all> <editor|windows|android|ios>'
   print '  novels-content trim-sprites <story-id|all> <report|apply> [padding]'
   print '  novels-content publish <destination-directory>'
 }
@@ -83,7 +83,7 @@ activate_platform_library() {
       print "Adopt current Library as $platform cache: $project"
       return
     fi
-    [[ "$current" == editor || "$current" == android || "$current" == ios ]] || {
+    [[ "$current" == editor || "$current" == windows || "$current" == android || "$current" == ios ]] || {
       print -u2 "Unknown Library cache marker '$current': $library/$marker"
       return 1
     }
@@ -163,7 +163,7 @@ validate() {
 build() {
   local selected=${1:-} platform=${2:-}
   [[ -n "$selected" && -n "$platform" ]] || { usage; return 2; }
-  [[ "$platform" == editor || "$platform" == android || "$platform" == ios ]] || {
+  [[ "$platform" == editor || "$platform" == windows || "$platform" == android || "$platform" == ios ]] || {
     print -u2 "Unknown platform: $platform"
     return 2
   }

@@ -81,11 +81,18 @@ namespace Novels
             CancellationToken cancellationToken,
             Bundles.ContentDeliveryOptions options)
         {
+#if UNITY_EDITOR || NOVELS_EMBEDDED_CONTENT
 #if UNITY_EDITOR
             var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
                 ?? throw new InvalidOperationException("Unity project root cannot be resolved.");
+            var contentRoot = Path.Combine(projectRoot, "Build", "LocalContent");
+#else
+            var contentRoot = Path.Combine(
+                Application.streamingAssetsPath,
+                "NovelContent");
+#endif
             return new Bundles.FileSystemContentSource(
-                Path.Combine(projectRoot, "Build", "LocalContent"),
+                contentRoot,
                 cancellationToken,
                 options.LocalRequestPolicy);
 #else

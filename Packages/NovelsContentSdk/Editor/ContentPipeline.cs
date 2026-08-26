@@ -186,16 +186,18 @@ namespace Novels.ContentSdk.Editor
             value?.ToLowerInvariant() switch
             {
                 "editor" => BuildTarget.StandaloneOSX,
+                "windows" => BuildTarget.StandaloneWindows64,
                 "android" => BuildTarget.Android,
                 "ios" => BuildTarget.iOS,
                 _ => throw new ArgumentException(
                     $"Unknown content platform '{value}'. "
-                    + "Use editor, android or ios."),
+                    + "Use editor, windows, android or ios."),
             };
 
         internal static string Name(BuildTarget target) => target switch
         {
             BuildTarget.StandaloneOSX => "Mac",
+            BuildTarget.StandaloneWindows64 => "Win",
             BuildTarget.Android => "Android",
             BuildTarget.iOS => "iOS",
             _ => throw new NotSupportedException(
