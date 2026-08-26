@@ -154,8 +154,8 @@ namespace Novels
                 0,
                 false);
             screenshot.Apply(false, false);
-            var width = Mathf.Max(32, Screen.width / 12);
-            var height = Mathf.Max(32, Screen.height / 12);
+            var width = Mathf.Max(64, Screen.width / 4);
+            var height = Mathf.Max(64, Screen.height / 4);
             _blurredFrame = new RenderTexture(width, height, 0)
             {
                 filterMode = FilterMode.Bilinear,
@@ -163,8 +163,22 @@ namespace Novels
                 name = "Story Download Blur",
             };
             _blurredFrame.Create();
-            Graphics.Blit(screenshot, _blurredFrame);
-            Destroy(screenshot);
+            var intermediate = RenderTexture.GetTemporary(
+                Mathf.Max(width, Screen.width / 2),
+                Mathf.Max(height, Screen.height / 2),
+                0,
+                RenderTextureFormat.ARGB32);
+            intermediate.filterMode = FilterMode.Bilinear;
+            try
+            {
+                Graphics.Blit(screenshot, intermediate);
+                Graphics.Blit(intermediate, _blurredFrame);
+            }
+            finally
+            {
+                RenderTexture.ReleaseTemporary(intermediate);
+                Destroy(screenshot);
+            }
             _screen.SetFrame(_blurredFrame);
             RefreshView();
             _screen.SetVisible(true);
