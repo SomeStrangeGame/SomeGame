@@ -6,19 +6,15 @@ namespace Novels
 {
     internal sealed class StoryDownloadOverlay : MonoBehaviour
     {
-        private const float _referenceWidth = 465f;
-        private const float _referenceHeight = 1024f;
+        private const string _fallbackResource =
+            "Fallbacks/StoryDownload/screen";
         private const float _minimumRate = 1024f;
         private const float _etaWarmup = 1.5f;
         private const float _stalledAfter = 3f;
+        private const float _viewRefreshInterval = 0.2f;
 
         private readonly object _gate = new();
-        private GUIStyle _titleStyle;
-        private GUIStyle _detailsStyle;
-        private Texture2D _shadeTexture;
-        private Texture2D _panelTexture;
-        private Texture2D _trackTexture;
-        private Texture2D _fillTexture;
+        private StoryDownloadScreen _screen;
         private RenderTexture _blurredFrame;
         private string _group = "-";
         private long _completedBytes;
@@ -27,22 +23,31 @@ namespace Novels
         private float _shownAt;
         private float _lastSampleAt;
         private float _lastProgressAt;
+        private float _nextViewRefresh;
         private float _bytesPerSecond;
-        private bool _capturePending;
         private bool _visible;
 
         internal static StoryDownloadOverlay Create()
         {
-            var root = new GameObject(nameof(StoryDownloadOverlay));
-            return root.AddComponent<StoryDownloadOverlay>();
+            var prefab = Resources.Load<GameObject>(_fallbackResource);
+            if (prefab == null)
+            {
+                throw new InvalidOperationException(
+                    $"Story download fallback prefab '{_fallbackResource}' is missing.");
+            }
+            var instance = Instantiate(prefab);
+            instance.name = nameof(StoryDownloadOverlay);
+            return instance.GetComponent<StoryDownloadOverlay>()
+                ?? throw new InvalidOperationException(
+                    "Story download fallback prefab has no overlay controller.");
         }
 
         private void Awake()
         {
-            _shadeTexture = CreateColorTexture(new Color(0f, 0f, 0f, 0.48f));
-            _panelTexture = CreateColorTexture(new Color(0.055f, 0.07f, 0.1f, 0.96f));
-            _trackTexture = CreateColorTexture(new Color(1f, 1f, 1f, 0.16f));
-            _fillTexture = CreateColorTexture(new Color(0.18f, 0.63f, 1f, 1f));
+            _screen = GetComponent<StoryDownloadScreen>()
+                ?? throw new InvalidOperationException(
+                    "Story download fallback prefab has no screen view.");
+            _screen.SetVisible(false);
         }
 
         internal void Show(
@@ -58,7 +63,7 @@ namespace Novels
                 if (!_visible || changedGroup)
                 {
                     StopAllCoroutines();
-                    _capturePending = true;
+                    _screen.SetVisible(false);
                     StartCoroutine(CaptureFrame());
                     _shownAt = Time.realtimeSinceStartup;
                     _lastSampleAt = _shownAt;
@@ -70,6 +75,7 @@ namespace Novels
                 _group = string.IsNullOrWhiteSpace(group) ? "-" : group;
                 if (progress.HasValue)
                     ApplyProgress(progress.Value);
+                _nextViewRefresh = 0f;
             }
         }
 
@@ -93,10 +99,21 @@ namespace Novels
             lock (_gate)
             {
                 _visible = false;
-                _capturePending = false;
                 StopAllCoroutines();
+                _screen.SetVisible(false);
+                _screen.SetFrame(null);
                 ReleaseFrame();
             }
+        }
+
+        private void Update()
+        {
+            if (!_visible || Time.realtimeSinceStartup < _nextViewRefresh)
+            {
+                return;
+            }
+            _nextViewRefresh = Time.realtimeSinceStartup + _viewRefreshInterval;
+            RefreshView();
         }
 
         private void ApplyProgress(Bundles.ContentDeliveryProgress progress)
@@ -148,7 +165,43 @@ namespace Novels
             _blurredFrame.Create();
             Graphics.Blit(screenshot, _blurredFrame);
             Destroy(screenshot);
-            _capturePending = false;
+            _screen.SetFrame(_blurredFrame);
+            RefreshView();
+            _screen.SetVisible(true);
+        }
+
+        private void RefreshView()
+        {
+            string group;
+            long completed;
+            long total;
+            float speed;
+            float shownAt;
+            float lastProgressAt;
+            lock (_gate)
+            {
+                group = _group;
+                completed = _completedBytes;
+                total = _totalBytes;
+                speed = _bytesPerSecond;
+                shownAt = _shownAt;
+                lastProgressAt = _lastProgressAt;
+            }
+            var ratio = total <= 0
+                ? 0f
+                : Mathf.Clamp01((float)completed / total);
+            var details = total > 0
+                ? $"{ratio:P0} · {FormatBytes(completed)} из {FormatBytes(total)}"
+                : group;
+            _screen.SetProgress(
+                ratio,
+                details,
+                RemainingText(
+                    completed,
+                    total,
+                    speed,
+                    Time.realtimeSinceStartup - shownAt,
+                    Time.realtimeSinceStartup - lastProgressAt));
         }
 
         private void ReleaseFrame()
@@ -163,117 +216,6 @@ namespace Novels
         private void OnDestroy()
         {
             ReleaseFrame();
-            Destroy(_shadeTexture);
-            Destroy(_panelTexture);
-            Destroy(_trackTexture);
-            Destroy(_fillTexture);
-        }
-
-        private void OnGUI()
-        {
-            string group;
-            long completed;
-            long total;
-            float speed;
-            float shownAt;
-            float lastProgressAt;
-            lock (_gate)
-            {
-                if (!_visible || _capturePending)
-                    return;
-                group = _group;
-                completed = _completedBytes;
-                total = _totalBytes;
-                speed = _bytesPerSecond;
-                shownAt = _shownAt;
-                lastProgressAt = _lastProgressAt;
-            }
-
-            GUI.depth = int.MinValue;
-            var full = new Rect(0f, 0f, Screen.width, Screen.height);
-            if (_blurredFrame != null)
-                GUI.DrawTexture(full, _blurredFrame, ScaleMode.ScaleAndCrop);
-            GUI.DrawTexture(full, _shadeTexture);
-
-            var scale = Mathf.Clamp(
-                Mathf.Min(
-                    Screen.width / _referenceWidth,
-                    Screen.height / _referenceHeight),
-                0.75f,
-                1.7f);
-            EnsureStyles(scale);
-            var width = Mathf.Min(390f * scale, Screen.safeArea.width - 32f * scale);
-            var height = 196f * scale;
-            var safeArea = new Rect(
-                Screen.safeArea.x,
-                Screen.height - Screen.safeArea.yMax,
-                Screen.safeArea.width,
-                Screen.safeArea.height);
-            var box = new Rect(
-                safeArea.center.x - width * 0.5f,
-                safeArea.center.y - height * 0.5f,
-                width,
-                height);
-            GUI.DrawTexture(box, _panelTexture);
-
-            var padding = 22f * scale;
-            var previousContentColor = GUI.contentColor;
-            GUI.contentColor = Color.white;
-            GUI.Label(
-                new Rect(box.x + padding, box.y + 20f * scale,
-                    box.width - padding * 2f, 34f * scale),
-                "Загружаем продолжение",
-                _titleStyle);
-
-            var ratio = total <= 0
-                ? 0f
-                : Mathf.Clamp01((float)completed / total);
-            var bar = new Rect(
-                box.x + padding,
-                box.y + 78f * scale,
-                box.width - padding * 2f,
-                14f * scale);
-            GUI.DrawTexture(bar, _trackTexture);
-            GUI.DrawTexture(
-                new Rect(bar.x, bar.y, bar.width * ratio, bar.height),
-                _fillTexture);
-
-            var details = total > 0
-                ? $"{ratio:P0} · {FormatBytes(completed)} из {FormatBytes(total)}"
-                : group;
-            GUI.Label(
-                new Rect(box.x + padding, box.y + 104f * scale,
-                    box.width - padding * 2f, 28f * scale),
-                details,
-                _detailsStyle);
-            GUI.Label(
-                new Rect(box.x + padding, box.y + 140f * scale,
-                    box.width - padding * 2f, 28f * scale),
-                RemainingText(
-                    completed,
-                    total,
-                    speed,
-                    Time.realtimeSinceStartup - shownAt,
-                    Time.realtimeSinceStartup - lastProgressAt),
-                _detailsStyle);
-            GUI.contentColor = previousContentColor;
-        }
-
-        private void EnsureStyles(float scale)
-        {
-            _titleStyle ??= new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                fontStyle = FontStyle.Bold,
-                normal = {textColor = Color.white},
-            };
-            _detailsStyle ??= new GUIStyle(GUI.skin.label)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                normal = {textColor = new Color(0.88f, 0.91f, 0.96f)},
-            };
-            _titleStyle.fontSize = Mathf.RoundToInt(24f * scale);
-            _detailsStyle.fontSize = Mathf.RoundToInt(18f * scale);
         }
 
         private static string RemainingText(
@@ -305,19 +247,6 @@ namespace Novels
             return value >= mebibyte
                 ? $"{value / mebibyte:F1} МБ"
                 : $"{value / 1024f:F0} КБ";
-        }
-
-        private static Texture2D CreateColorTexture(Color color)
-        {
-            var texture = new Texture2D(1, 1, TextureFormat.RGBA32, false)
-            {
-                hideFlags = HideFlags.DontSave,
-                wrapMode = TextureWrapMode.Clamp,
-                filterMode = FilterMode.Point,
-            };
-            texture.SetPixel(0, 0, color);
-            texture.Apply(false, true);
-            return texture;
         }
     }
 }

@@ -47,9 +47,6 @@ namespace Setting
             _screen.AddOrUpdateButton(id, text, onClick);
         }
 
-        public static string GetDebugSnapshot() =>
-            View.Screen.GetDebugSnapshot();
-
         protected override void OnDispose()
         {
             base.OnDispose();
