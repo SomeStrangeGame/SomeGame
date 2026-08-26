@@ -68,6 +68,8 @@ namespace Novels.ContentSdk.Editor
                         Application.streamingAssetsPath,
                         source)
                     .Replace('\\', '/');
+                if (!ShouldPublishStreamingAsset(source, relative))
+                    continue;
                 var hash = ContentHash.ComputeSha256(source);
                 var payloadPath = ContentAddressing.ContentPackageConvention
                     .ContentPayload(hash);
@@ -90,6 +92,48 @@ namespace Novels.ContentSdk.Editor
                 });
             }
             return result.ToArray();
+        }
+
+        private static bool ShouldPublishStreamingAsset(
+            string sourcePath,
+            string relativePath)
+        {
+            if (!relativePath.StartsWith(
+                    "noveltexts/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            // Raw Ink remains in the authoring project because the streaming
+            // planner analyzes it at build time, but runtime reads compiled JSON.
+            if (relativePath.EndsWith(".ink", StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Compiled stories and source maps are runtime/analytics artifacts.
+            if (!relativePath.EndsWith(".json", StringComparison.OrdinalIgnoreCase)
+                || relativePath.EndsWith(
+                    ".ink.json",
+                    StringComparison.OrdinalIgnoreCase)
+                || relativePath.EndsWith(
+                    ".source-map.json",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            // A legacy plain JSON is safe to omit only when its compiled Ink
+            // sibling exists and contains exactly the same text. File.ReadAllText
+            // handles an optional UTF-8 BOM, which is the known legacy difference.
+            var directory = Path.GetDirectoryName(sourcePath);
+            var compiledPath = Path.Combine(
+                directory ?? string.Empty,
+                Path.GetFileNameWithoutExtension(sourcePath) + ".ink.json");
+            return !File.Exists(compiledPath)
+                || !string.Equals(
+                    File.ReadAllText(sourcePath),
+                    File.ReadAllText(compiledPath),
+                    StringComparison.Ordinal);
         }
 
         private static string DeliveryGroupForFile(
