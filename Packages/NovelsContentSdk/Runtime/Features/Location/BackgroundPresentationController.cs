@@ -18,6 +18,7 @@ namespace Novels.Location
             internal Sprite MissingBackground;
             internal CancellationToken CancellationToken;
             internal int CutSceneFallbackDelayMilliseconds;
+            internal Action<Diagnostics.NovelError> OnError;
         }
 
         private readonly Dependencies _ctx;
@@ -98,6 +99,17 @@ namespace Novels.Location
             _currentSprite = sprite;
             await ShowStatic(sprite, mode);
 
+            if (presentation.Type != StoryContracts.StoryBackgroundType.CutScene)
+            {
+                PrepareLoopingVideo(
+                    version,
+                    assetName,
+                    sprite).Forget();
+                if (_fullQualityAvailable && version == _currentVersion)
+                    await UpgradeCurrentBackground();
+                return;
+            }
+
             var url = await _ctx.ResolveVideoUrl(assetName)
                 .AttachExternalCancellation(_ctx.CancellationToken);
             var plan = BackgroundPresentationPlan.Create(
@@ -126,8 +138,6 @@ namespace Novels.Location
                 await _ctx.Screen.CrossfadeToVideo(_ctx.CancellationToken);
             if (!plan.IsCutScene)
             {
-                if (_fullQualityAvailable && version == _currentVersion)
-                    await UpgradeCurrentBackground();
                 return;
             }
             if (videoReady)
@@ -136,6 +146,46 @@ namespace Novels.Location
                 await WaitForCutSceneFallback(mode);
             if (!plan.KeepsFinalVideoFrame)
                 await ReturnToPoster(_currentSprite ?? sprite, mode);
+        }
+
+        private async UniTask PrepareLoopingVideo(
+            int version,
+            string assetName,
+            Sprite poster)
+        {
+            try
+            {
+                var url = await _ctx.ResolveVideoUrl(assetName)
+                    .AttachExternalCancellation(_ctx.CancellationToken);
+                if (version != _currentVersion || string.IsNullOrEmpty(url))
+                    return;
+                var playbackStatus = await _ctx.VideoPlayback.Play(
+                    new VideoPlaybackRequest(
+                        url,
+                        poster.texture.width,
+                        poster.texture.height,
+                        true,
+                        Time.timeScale));
+                if (version != _currentVersion
+                    || playbackStatus != VideoPlaybackStatus.Ready)
+                {
+                    return;
+                }
+                _showingVideo = true;
+                await _ctx.Screen.CrossfadeToVideo(_ctx.CancellationToken);
+            }
+            catch (OperationCanceledException)
+                when (_ctx.CancellationToken.IsCancellationRequested)
+            {
+            }
+            catch (Exception exception)
+            {
+                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.VideoPlaybackFailed,
+                    Diagnostics.NovelErrorSeverity.Warning,
+                    $"Background video '{assetName}' could not be prepared in parallel.",
+                    exception: exception));
+            }
         }
 
         private UniTask UpgradeCurrentBackground()

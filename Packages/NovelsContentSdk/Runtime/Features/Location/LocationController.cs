@@ -59,6 +59,7 @@ namespace Novels.Location
                     CancellationToken = _ctx.CancellationToken,
                     CutSceneFallbackDelayMilliseconds =
                         _ctx.CutSceneFallbackDelayMilliseconds,
+                    OnError = _ctx.OnError,
                 });
         }
 
