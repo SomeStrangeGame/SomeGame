@@ -26,7 +26,6 @@ namespace Novels
             internal NovelRuntimeTuning RuntimeTuning;
             internal Func<
                 Content.NovelDefinition,
-                Catalog.CatalogAction,
                 UniTask<Content.EpisodeDefinition>>
                 SelectEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
@@ -106,9 +105,7 @@ namespace Novels
                 _definition.Id,
                 _definition.MainCharacter,
                 _progress.PlayableEpisodes);
-            _episode = await _ctx.SelectEpisode(
-                playableDefinition,
-                _streaming?.DownloadAllAction);
+            _episode = await _ctx.SelectEpisode(playableDefinition);
             _progress.Begin(_episode);
             var episodeRuntime = new EpisodeRuntime(_ctx.CancellationToken).AddTo(this);
 
