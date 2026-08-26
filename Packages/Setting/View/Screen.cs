@@ -11,6 +11,14 @@ namespace Setting.View
         [SerializeField] private Button _buttonPrefab;
 
         private readonly Dictionary<string, Button> _buttons = new();
+        private Font _runtimeFont;
+
+        private void Awake()
+        {
+            _runtimeFont = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            ApplyRuntimeFont(_description);
+            ApplyRuntimeFont(_buttonPrefab.GetComponentInChildren<Text>(true));
+        }
 
         public void SetDescription(string text)
         {
@@ -24,11 +32,18 @@ namespace Setting.View
                 button = Instantiate(_buttonPrefab, _buttonPrefab.transform.parent);
 
             _buttons[id] = button;
-            button.GetComponentInChildren<Text>(true).text = text;
+            var label = button.GetComponentInChildren<Text>(true);
+            ApplyRuntimeFont(label);
+            label.text = text;
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => onClick.Invoke());
             button.gameObject.SetActive(true);
         }
+
+        private void ApplyRuntimeFont(Text label)
+        {
+            if (label != null && _runtimeFont != null)
+                label.font = _runtimeFont;
+        }
     }
 }
-
