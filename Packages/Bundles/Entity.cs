@@ -69,6 +69,7 @@ namespace Bundles
                 payloads,
                 storage,
                 options.MaximumParallelDownloads,
+                ctx.CancellationToken,
                 ctx.OnLog);
             _bundles = new BundleStore(payloads, ctx.CancellationToken);
         }

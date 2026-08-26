@@ -142,10 +142,13 @@ namespace Novels
                     _cancellationToken.ThrowIfCancellationRequested();
                     StreamingExperimentDiagnostics.SetQueue(
                         QueueLabel(chunks, media, index));
-                    if (index < chunks.Length)
-                        await EnsureChunk(index);
-                    if (index < media.Length)
-                        await PrepareMedia(media[index]);
+                    var chunkPreparation = index < chunks.Length
+                        ? EnsureChunk(index)
+                        : UniTask.CompletedTask;
+                    var mediaPreparation = index < media.Length
+                        ? PrepareMedia(media[index])
+                        : UniTask.CompletedTask;
+                    await UniTask.WhenAll(chunkPreparation, mediaPreparation);
                 }
                 StreamingExperimentDiagnostics.SetQueue("complete");
                 StreamingExperimentDiagnostics.SetQuality("Full");
