@@ -1,6 +1,5 @@
 using System;
 using System.IO;
-using System.Linq;
 using UnityEditor;
 using UnityEngine;
 
@@ -10,8 +9,7 @@ namespace Novels.ContentSdk.Editor
     {
         private const string _mainMenuPath = "Novels/Content/Ink Compiler";
         private const string _contextMenuPath = "Assets/Novels/Open Ink Compiler";
-        private string[] _rootInkFiles = Array.Empty<string>();
-        private int _selectedRoot;
+        [SerializeField] private DefaultAsset _rootInk;
         private string _lastResult = string.Empty;
 
         [MenuItem(_mainMenuPath)]
@@ -23,69 +21,46 @@ namespace Novels.ContentSdk.Editor
             window.Show();
         }
 
-        private void OnEnable() => FindRootInkFiles();
-
         private void OnGUI()
         {
             EditorGUILayout.LabelField("Компиляция истории Ink", EditorStyles.boldLabel);
             EditorGUILayout.HelpBox(
-                "Корневой .ink компилируется официальным Ink Compiler. "
+                "Перетащите корневой .ink в поле ниже. Он компилируется "
+                + "официальным Ink Compiler. "
                 + "Compiled JSON и source map обновляются рядом только после "
                 + "успешного завершения.",
                 MessageType.Info);
-            DrawRootSelection();
-            using (new EditorGUILayout.HorizontalScope())
+            var selected = (DefaultAsset)EditorGUILayout.ObjectField(
+                "Корневой Ink",
+                _rootInk,
+                typeof(DefaultAsset),
+                false);
+            if (selected != _rootInk)
             {
-                EditorGUI.BeginDisabledGroup(_rootInkFiles.Length == 0);
-                if (GUILayout.Button("Скомпилировать", GUILayout.Height(30f)))
-                    CompileSelected();
-                EditorGUI.EndDisabledGroup();
-                if (GUILayout.Button(
-                        "Обновить список",
-                        GUILayout.Width(130f),
-                        GUILayout.Height(30f)))
-                {
-                    FindRootInkFiles();
-                }
+                _rootInk = selected;
+                _lastResult = string.Empty;
             }
+            var sourcePath = RootInkPath();
+            if (_rootInk != null && string.IsNullOrEmpty(sourcePath))
+            {
+                EditorGUILayout.HelpBox(
+                    "Перетащите файл с расширением .ink, а не папку или другой asset.",
+                    MessageType.Warning);
+            }
+            EditorGUI.BeginDisabledGroup(string.IsNullOrEmpty(sourcePath));
+            if (GUILayout.Button("Скомпилировать", GUILayout.Height(30f)))
+                CompileSelected(sourcePath);
+            EditorGUI.EndDisabledGroup();
             if (!string.IsNullOrEmpty(_lastResult))
                 EditorGUILayout.HelpBox(_lastResult, MessageType.None);
         }
 
-        private void DrawRootSelection()
-        {
-            if (_rootInkFiles.Length == 0)
-            {
-                EditorGUILayout.HelpBox(
-                    "Корневой .ink не найден. Ожидается файл с INCLUDE или "
-                    + "существующим соседним .ink.json.",
-                    MessageType.Warning);
-                return;
-            }
-            if (_rootInkFiles.Length == 1)
-            {
-                EditorGUILayout.LabelField(
-                    "Корневой Ink",
-                    ProjectPath(_rootInkFiles[0]));
-                return;
-            }
-            var selected = EditorGUILayout.Popup(
-                "Корневой Ink",
-                _selectedRoot,
-                _rootInkFiles.Select(ProjectPath).ToArray());
-            if (selected != _selectedRoot)
-            {
-                _selectedRoot = selected;
-                _lastResult = string.Empty;
-            }
-        }
-
-        private void CompileSelected()
+        private void CompileSelected(string sourcePath)
         {
             try
             {
                 var result = StorySourceMapBuilder.CompileArtifacts(
-                    _rootInkFiles[_selectedRoot]);
+                    sourcePath);
                 AssetDatabase.Refresh();
                 _lastResult = "Созданы:\n"
                     + ProjectPath(result.CompiledPath) + "\n"
@@ -106,34 +81,15 @@ namespace Novels.ContentSdk.Editor
             Repaint();
         }
 
-        private void FindRootInkFiles()
+        private string RootInkPath()
         {
-            var previous = _rootInkFiles.Length > 0
-                && _selectedRoot < _rootInkFiles.Length
-                ? _rootInkFiles[_selectedRoot]
-                : string.Empty;
-            _rootInkFiles = Directory.Exists(Application.dataPath)
-                ? Directory.EnumerateFiles(
-                        Application.dataPath,
-                        "*.ink",
-                        SearchOption.AllDirectories)
-                    .Where(IsRootInk)
-                    .OrderBy(path => path, StringComparer.Ordinal)
-                    .ToArray()
-                : Array.Empty<string>();
-            var previousIndex = Array.IndexOf(_rootInkFiles, previous);
-            _selectedRoot = previousIndex >= 0 ? previousIndex : 0;
-            _lastResult = string.Empty;
-            Repaint();
-        }
-
-        private static bool IsRootInk(string path)
-        {
-            if (File.Exists(path + ".json"))
-                return true;
-            return File.ReadLines(path).Any(line => line
-                .TrimStart()
-                .StartsWith("INCLUDE ", StringComparison.OrdinalIgnoreCase));
+            if (_rootInk == null)
+                return string.Empty;
+            var assetPath = AssetDatabase.GetAssetPath(_rootInk);
+            if (!assetPath.EndsWith(".ink", StringComparison.OrdinalIgnoreCase))
+                return string.Empty;
+            var absolutePath = Path.GetFullPath(assetPath);
+            return File.Exists(absolutePath) ? absolutePath : string.Empty;
         }
 
         private static string ProjectPath(string absolutePath) =>
