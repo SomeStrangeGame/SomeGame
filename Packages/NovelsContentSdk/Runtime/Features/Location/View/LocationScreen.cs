@@ -184,6 +184,45 @@ namespace Novels.Location.View
         {
             _videoImage.texture = renderTexture;
             _video.targetTexture = renderTexture;
+            ApplyVideoAspect();
+        }
+
+        private void OnRectTransformDimensionsChange()
+        {
+            ApplyVideoAspect();
+        }
+
+        private void ApplyVideoAspect()
+        {
+            var texture = _videoImage == null ? null : _videoImage.texture;
+            if (texture == null || texture.width <= 0 || texture.height <= 0)
+            {
+                if (_videoImage != null)
+                    _videoImage.uvRect = new Rect(0f, 0f, 1f, 1f);
+                return;
+            }
+            var rect = _videoImage.rectTransform.rect;
+            if (rect.width <= 0f || rect.height <= 0f)
+                return;
+
+            var sourceAspect = (float)texture.width / texture.height;
+            var targetAspect = rect.width / rect.height;
+            if (sourceAspect > targetAspect)
+            {
+                var visibleWidth = targetAspect / sourceAspect;
+                _videoImage.uvRect = new Rect(
+                    (1f - visibleWidth) * 0.5f,
+                    0f,
+                    visibleWidth,
+                    1f);
+                return;
+            }
+            var visibleHeight = sourceAspect / targetAspect;
+            _videoImage.uvRect = new Rect(
+                0f,
+                (1f - visibleHeight) * 0.5f,
+                1f,
+                visibleHeight);
         }
 
         public void SetEnabledVideo(bool state)
