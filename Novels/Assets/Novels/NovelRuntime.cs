@@ -28,8 +28,6 @@ namespace Novels
                 SelectEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
                 PrepareNovelContent;
-            internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
-                PrepareFullNovelContent;
             internal Action HidePreparationScreen;
         }
 
@@ -60,8 +58,6 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.SelectEpisode));
             if (ctx.PrepareNovelContent == null)
                 throw new ArgumentNullException(nameof(ctx.PrepareNovelContent));
-            if (ctx.PrepareFullNovelContent == null)
-                throw new ArgumentNullException(nameof(ctx.PrepareFullNovelContent));
             if (ctx.HidePreparationScreen == null)
                 throw new ArgumentNullException(nameof(ctx.HidePreparationScreen));
             if (ctx.TargetCamera == null)
@@ -75,31 +71,29 @@ namespace Novels
         {
             var storyAssets = _ctx.Bundles.CreateScope().AddTo(this);
             (await _ctx.PrepareNovelContent(_ctx.Content.ContentId))?.AddTo(this);
-            var previewBundle = ContentAddressing.ContentPackageConvention
-                .PreviewBundle(_ctx.Content.ContentId);
-            var hasPreview = _ctx.Bundles.HasBundle(previewBundle);
-            _assetBundleName = hasPreview
-                ? previewBundle
+            var streamingPlan = _ctx.Bundles.StreamingPlan;
+            var chunks = streamingPlan?.chunks;
+            var hasStreamingPlan = chunks != null && chunks.Length > 0;
+            _assetBundleName = hasStreamingPlan
+                ? chunks[0].bundle
                 : _ctx.Content.ContentBundleName;
             StreamingExperimentDiagnostics.SetQuality(
-                hasPreview ? "Preview" : "Full");
+                hasStreamingPlan ? "Chunk 0" : "Full");
             _definition = await LoadContent(
                 storyAssets,
                 _ctx.Content,
                 _assetBundleName);
-            if (hasPreview && _ctx.Bundles.StreamingPlan != null)
+            if (hasStreamingPlan)
             {
                 _streaming = new StoryStreamingController(
                     _ctx.Bundles,
                     storyAssets,
-                    _ctx.Bundles.StreamingPlan,
+                    streamingPlan,
                     _ctx.CancellationToken,
                     _ctx.OnLog,
                     OnChunkReady).AddTo(this);
                 _streaming.Start();
             }
-            else if (hasPreview)
-                ActivateFullContent(storyAssets).Forget();
             _ctx.HidePreparationScreen();
             _progress = new NovelProgress(
                 _definition,
@@ -142,30 +136,6 @@ namespace Novels
             if (_activeCharacter != null)
                 _activeCharacter.EnableFullQuality().Forget();
             StreamingExperimentDiagnostics.SetQuality($"Chunk {index}");
-        }
-
-        private async UniTaskVoid ActivateFullContent(Bundles.Scope storyAssets)
-        {
-            try
-            {
-                var lease = await _ctx.PrepareFullNovelContent(_ctx.Content.ContentId);
-                lease?.AddTo(this);
-                await storyAssets.GetAssetBundle(_definition.BundleName);
-                _assetBundleName = _definition.BundleName;
-                if (_activeLocation != null)
-                    await _activeLocation.EnableFullQuality();
-                StreamingExperimentDiagnostics.SetQuality("Full");
-            }
-            catch (OperationCanceledException)
-                when (_ctx.CancellationToken.IsCancellationRequested)
-            {
-            }
-            catch (Exception exception)
-            {
-                _ctx.OnLog?.Invoke((
-                    LogType.Warning,
-                    $"Full-quality content prefetch failed: {exception.Message}"));
-            }
         }
 
         internal UniTask FlushSaveAsync()

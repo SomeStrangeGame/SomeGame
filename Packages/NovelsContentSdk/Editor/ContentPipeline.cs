@@ -102,7 +102,7 @@ namespace Novels.ContentSdk.Editor
             if (relativePath.StartsWith("noveltexts/", StringComparison.OrdinalIgnoreCase))
             {
                 return ContentAddressing.ContentPackageConvention
-                    .StoryPreviewDeliveryGroup(plan.DeliveryGroup);
+                    .StoryChunkDeliveryGroup(plan.DeliveryGroup, 0);
             }
             if (relativePath.StartsWith("novelsvideos/", StringComparison.OrdinalIgnoreCase)
                 || relativePath.StartsWith("novelsaudio/", StringComparison.OrdinalIgnoreCase))
@@ -201,37 +201,6 @@ namespace Novels.ContentSdk.Editor
                     file.deliveryGroup = group;
             }
 
-            var previewName = ContentAddressing.ContentPackageConvention
-                .PreviewBundle(plan.DeliveryGroup);
-            ExperimentalPreviewTextures.Apply(target, streaming.Chunks[0]);
-            try
-            {
-                var previewStaging = Path.Combine(staging, "preview");
-                Directory.CreateDirectory(previewStaging);
-                var previewManifest = BuildPipeline.BuildAssetBundles(
-                        previewStaging,
-                        new[]
-                        {
-                            new AssetBundleBuild
-                            {
-                                assetBundleName = previewName,
-                                assetNames = streaming.Chunks[0],
-                            },
-                        },
-                        BuildAssetBundleOptions.None,
-                        target)
-                    ?? throw new InvalidOperationException(
-                        $"Preview AssetBundle build failed for {target}.");
-                ExperimentalPreviewTextures.RegisterBuiltBundle(
-                    previewManifest,
-                    previewStaging,
-                    previewName);
-            }
-            finally
-            {
-                ExperimentalPreviewTextures.Restore();
-            }
-
             var chunkBuilds = streaming.Chunks
                 .Select((chunkAssets, index) => new AssetBundleBuild
                 {
@@ -247,13 +216,7 @@ namespace Novels.ContentSdk.Editor
                     target)
                 ?? throw new InvalidOperationException(
                     $"Streaming AssetBundle build failed for {target}.");
-            var bundles = new List<BundleReleaseEntry>
-            {
-                ExperimentalPreviewTextures.CopyBuiltBundle(
-                    _outputPath,
-                    platform,
-                    plan.DeliveryGroup),
-            };
+            var bundles = new List<BundleReleaseEntry>();
             var chunks = new ContentStreamingChunkEntry[chunkBuilds.Length];
             for (var index = 0; index < chunkBuilds.Length; index++)
             {
@@ -281,9 +244,6 @@ namespace Novels.ContentSdk.Editor
                 bundles.ToArray(),
                 new ContentStreamingPlanEntry
                 {
-                    previewBundle = previewName,
-                    previewDeliveryGroup = ContentAddressing.ContentPackageConvention
-                        .StoryPreviewDeliveryGroup(plan.DeliveryGroup),
                     chunks = chunks,
                     media = streaming.Media.ToArray(),
                 });

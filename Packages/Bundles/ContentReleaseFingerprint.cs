@@ -33,9 +33,6 @@ namespace Bundles
                 .Select(value => $"G:{value?.id}:{value?.payloadCount}:{value?.size}"));
             if (release.streamingPlan != null)
             {
-                lines.Add(
-                    $"P:{release.streamingPlan.previewBundle}:"
-                    + release.streamingPlan.previewDeliveryGroup);
                 lines.AddRange((release.streamingPlan.chunks
                         ?? Array.Empty<ContentStreamingChunkEntry>())
                     .OrderBy(value => value?.index)

@@ -26,24 +26,15 @@ namespace Novels
                 ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(contentId));
         }
 
-        internal UniTask<Bundles.ContentDeliveryLease> PrepareStoryPreview(
+        internal UniTask<Bundles.ContentDeliveryLease> PrepareStoryInitial(
             Bootstrap.BootstrapController bootstrap,
             string contentId)
         {
-            var group = ContentAddressing.ContentPackageConvention
-                .StoryPreviewDeliveryGroup(contentId);
-            return _bundles.HasDeliveryGroup(group)
-                ? PrepareGroup(bootstrap, group)
+            var chunks = _bundles.StreamingPlan?.chunks;
+            return chunks != null && chunks.Length > 0
+                ? PrepareGroup(bootstrap, chunks[0].deliveryGroup)
                 : PrepareStory(bootstrap, contentId);
         }
-
-        internal UniTask<Bundles.ContentDeliveryLease> PrepareStoryInBackground(
-            string contentId,
-            Action<Bundles.ContentDeliveryProgress> onProgress) =>
-            _bundles.PrepareDeliveryGroup(
-                ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(contentId),
-                onProgress,
-                _cancellationToken);
 
         private async UniTask<Bundles.ContentDeliveryLease> PrepareGroup(
             Bootstrap.BootstrapController bootstrap,

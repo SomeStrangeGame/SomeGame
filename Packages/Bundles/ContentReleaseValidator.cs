@@ -179,13 +179,10 @@ namespace Bundles
         {
             if (plan == null)
                 return;
-            if (string.IsNullOrWhiteSpace(plan.previewBundle)
-                || !bundleNames.Contains(plan.previewBundle)
-                || string.IsNullOrWhiteSpace(plan.previewDeliveryGroup)
-                || !groupIds.Contains(plan.previewDeliveryGroup))
+            if (plan.chunks == null || plan.chunks.Length == 0)
             {
                 throw new ContentIntegrityException(
-                    "Streaming preview references an unknown bundle or delivery group.");
+                    "Streaming plan must contain at least one art chunk.");
             }
             var expectedChunk = 0;
             foreach (var chunk in plan.chunks ?? Array.Empty<ContentStreamingChunkEntry>())

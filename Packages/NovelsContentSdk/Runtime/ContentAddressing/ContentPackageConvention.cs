@@ -43,17 +43,11 @@ namespace Novels.ContentAddressing
         public static string ContentBundle(string contentId) =>
             $"novels_content_{BundleToken(contentId)}";
 
-        public static string PreviewBundle(string contentId) =>
-            $"{ContentBundle(contentId)}_preview";
-
         public static string StoryChunkBundle(string contentId, int index) =>
             $"{ContentBundle(contentId)}_chunk_{RequireIndex(index)}";
 
         public static string StoryDeliveryGroup(string contentId) =>
             RequireId(contentId, nameof(contentId));
-
-        public static string StoryPreviewDeliveryGroup(string contentId) =>
-            $"{RequireId(contentId, nameof(contentId))}-preview";
 
         public static string StoryChunkDeliveryGroup(string contentId, int index) =>
             $"{RequireId(contentId, nameof(contentId))}-chunk-{RequireIndex(index)}";

@@ -19,8 +19,10 @@ namespace Novels
         private readonly Action<int> _onChunkReady;
         private readonly Dictionary<string, Bundles.ContentStreamingChunkEntry> _assets;
         private readonly Dictionary<int, UniTaskCompletionSource> _chunkTasks = new();
+        private readonly Dictionary<int, Bundles.ContentDeliveryProgress> _chunkProgress = new();
+        private readonly HashSet<int> _blockingChunks = new();
         private readonly HashSet<int> _readyChunks = new();
-        private bool _previewAvailable = true;
+        private readonly StoryDownloadOverlay _downloadOverlay;
 
         internal StoryStreamingController(
             Bundles.Entity bundles,
@@ -36,6 +38,7 @@ namespace Novels
             _cancellationToken = cancellationToken;
             _onLog = onLog;
             _onChunkReady = onChunkReady;
+            _downloadOverlay = StoryDownloadOverlay.Create();
             _assets = (_plan.chunks ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
                 .SelectMany(chunk => (chunk.assets ?? Array.Empty<string>())
                     .Select(asset => (asset, chunk)))
@@ -43,34 +46,55 @@ namespace Novels
                     value => Canonicalize(value.asset),
                     value => value.chunk,
                     StringComparer.OrdinalIgnoreCase);
+            _readyChunks.Add(0);
         }
 
         internal void Start() => Run().Forget();
 
         internal UniTask<Sprite> GetSprite(string assetName) =>
-            LoadSprite(assetName, false);
+            LoadSprite(assetName);
 
         internal UniTask<Sprite> GetFullSprite(string assetName) =>
-            LoadSprite(assetName, true);
+            LoadSprite(assetName);
 
-        private async UniTask<Sprite> LoadSprite(string assetName, bool requireFull)
+        private async UniTask<Sprite> LoadSprite(string assetName)
         {
             if (!_assets.TryGetValue(Canonicalize(assetName), out var chunk))
             {
+                var initial = (_plan.chunks
+                        ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
+                    .FirstOrDefault();
+                if (initial == null)
+                    return null;
                 return await _scope.TryGetBundledSprite(
-                    new Bundles.BundleAssetAddress(_plan.previewBundle, assetName));
+                    new Bundles.BundleAssetAddress(initial.bundle, assetName));
             }
-            var bundle = _plan.previewBundle;
-            if (requireFull
-                || !_previewAvailable
-                || chunk.index > 0
-                || _readyChunks.Contains(chunk.index))
-            {
-                await EnsureChunk(chunk.index);
-                bundle = chunk.bundle;
-            }
+            await EnsureChunkForDemand(chunk.index);
             return await _scope.TryGetBundledSprite(
-                new Bundles.BundleAssetAddress(bundle, assetName));
+                new Bundles.BundleAssetAddress(chunk.bundle, assetName));
+        }
+
+        private async UniTask EnsureChunkForDemand(int index)
+        {
+            if (_readyChunks.Contains(index))
+                return;
+            var preparation = EnsureChunk(index);
+            var delay = UniTask.Delay(
+                TimeSpan.FromSeconds(0.7d),
+                DelayType.UnscaledDeltaTime,
+                PlayerLoopTiming.Update,
+                _cancellationToken);
+            if (await UniTask.WhenAny(preparation, delay) == 0)
+                return;
+            BeginBlockingWait(index);
+            try
+            {
+                await EnsureChunk(index);
+            }
+            finally
+            {
+                EndBlockingWait(index);
+            }
         }
 
         private async UniTaskVoid Run()
@@ -130,17 +154,9 @@ namespace Novels
                         $"Streaming chunk {index} is absent.");
                 var lease = await _bundles.PrepareDeliveryGroup(
                     chunk.deliveryGroup,
-                    StreamingExperimentDiagnostics.ReportDelivery,
+                    progress => ReportChunkProgress(index, progress),
                     _cancellationToken);
                 lease.AddTo(this);
-                if (index == 0 && _previewAvailable)
-                {
-                    // Preview and chunk-0 contain the same authored asset set.
-                    // Keep instantiated preview objects alive, but unload its
-                    // serialized file before Unity opens the full-quality bundle.
-                    _scope.ReleaseAssetBundle(_plan.previewBundle);
-                    _previewAvailable = false;
-                }
                 await _scope.GetAssetBundle(chunk.bundle);
                 _readyChunks.Add(index);
                 _onChunkReady?.Invoke(index);
@@ -155,6 +171,46 @@ namespace Novels
             {
                 completion.TrySetException(exception);
             }
+        }
+
+        private void ReportChunkProgress(
+            int index,
+            Bundles.ContentDeliveryProgress progress)
+        {
+            _chunkProgress[index] = progress;
+            StreamingExperimentDiagnostics.ReportDelivery(progress);
+            if (_blockingChunks.Contains(index))
+                _downloadOverlay.Report(progress);
+        }
+
+        private void BeginBlockingWait(int index)
+        {
+            _blockingChunks.Add(index);
+            RefreshBlockingOverlay();
+        }
+
+        private void EndBlockingWait(int index)
+        {
+            _blockingChunks.Remove(index);
+            RefreshBlockingOverlay();
+        }
+
+        private void RefreshBlockingOverlay()
+        {
+            if (_blockingChunks.Count == 0)
+            {
+                _downloadOverlay.Hide();
+                return;
+            }
+            var index = _blockingChunks.Min();
+            var chunk = (_plan.chunks
+                    ?? Array.Empty<Bundles.ContentStreamingChunkEntry>())
+                .First(value => value.index == index);
+            _downloadOverlay.Show(
+                chunk.deliveryGroup,
+                _chunkProgress.TryGetValue(index, out var progress)
+                    ? progress
+                    : null);
         }
 
         private async UniTask PrepareMedia(Bundles.ContentStreamingMediaEntry media)
@@ -188,6 +244,13 @@ namespace Novels
                     values.Add($"media-{current}");
             }
             return string.Join(" → ", values);
+        }
+
+        protected override void OnDispose()
+        {
+            if (_downloadOverlay != null)
+                UnityEngine.Object.Destroy(_downloadOverlay.gameObject);
+            base.OnDispose();
         }
     }
 }

@@ -50,8 +50,6 @@ namespace Bundles
     [Serializable]
     public sealed class ContentStreamingPlanEntry
     {
-        public string previewBundle;
-        public string previewDeliveryGroup;
         public ContentStreamingChunkEntry[] chunks;
         public ContentStreamingMediaEntry[] media;
     }
@@ -226,8 +224,6 @@ namespace Bundles
 
         private static bool IsEmptyStreamingPlan(ContentStreamingPlanEntry plan) =>
             plan != null
-            && string.IsNullOrWhiteSpace(plan.previewBundle)
-            && string.IsNullOrWhiteSpace(plan.previewDeliveryGroup)
             && (plan.chunks == null || plan.chunks.Length == 0)
             && (plan.media == null || plan.media.Length == 0);
 

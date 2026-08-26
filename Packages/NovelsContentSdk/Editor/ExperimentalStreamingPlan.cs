@@ -24,7 +24,7 @@ namespace Novels.ContentSdk.Editor
 
     internal static class ExperimentalStreamingPlan
     {
-        private const long _defaultChunkSourceBytes = 96L * 1024L * 1024L;
+        private const long _defaultChunkSourceBytes = 16L * 1024L * 1024L;
         private static readonly HashSet<string> _technicalAssetTokens = new(
             StringComparer.Ordinal)
         {
@@ -87,7 +87,6 @@ namespace Novels.ContentSdk.Editor
             {
                 if (current.Count > 0
                     && !asset.Bootstrap
-                    && !asset.Startup
                     && currentBytes + asset.Size > targetBytes)
                 {
                     chunks.Add(current.ToArray());

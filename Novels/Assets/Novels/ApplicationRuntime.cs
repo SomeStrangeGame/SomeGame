@@ -94,11 +94,7 @@ namespace Novels
                 SelectEpisode = definition =>
                     _catalogFlow.SelectEpisode(definition, catalog.Screen),
                 PrepareNovelContent = contentId =>
-                    contentDeliveryFlow.PrepareStoryPreview(bootstrap, contentId),
-                PrepareFullNovelContent = contentId =>
-                    contentDeliveryFlow.PrepareStoryInBackground(
-                        contentId,
-                        StreamingExperimentDiagnostics.ReportDelivery),
+                    contentDeliveryFlow.PrepareStoryInitial(bootstrap, contentId),
                 HidePreparationScreen = bootstrap.Hide,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _onLog,
