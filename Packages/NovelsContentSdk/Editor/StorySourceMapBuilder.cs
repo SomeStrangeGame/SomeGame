@@ -20,6 +20,23 @@ namespace Novels.ContentSdk.Editor
         internal int EntryCount { get; }
     }
 
+    internal readonly struct StoryCompilationBuildResult
+    {
+        internal StoryCompilationBuildResult(
+            string compiledPath,
+            string sourceMapPath,
+            int sourceMapEntryCount)
+        {
+            CompiledPath = compiledPath;
+            SourceMapPath = sourceMapPath;
+            SourceMapEntryCount = sourceMapEntryCount;
+        }
+
+        internal string CompiledPath { get; }
+        internal string SourceMapPath { get; }
+        internal int SourceMapEntryCount { get; }
+    }
+
     internal static class StorySourceMapBuilder
     {
         private const string _compiledSuffix = ".ink.json";
@@ -47,6 +64,45 @@ namespace Novels.ContentSdk.Editor
                     sourcePath);
             }
 
+            var story = Compile(sourcePath);
+            var entries = SourceMapEntries(story);
+            var outputPath = compiledPath + _sourceMapSuffix;
+            WriteAtomically(
+                outputPath,
+                new StorySourceMap(entries.ToArray()).ToJson());
+            return new StorySourceMapBuildResult(outputPath, entries.Count);
+        }
+
+        internal static StoryCompilationBuildResult CompileArtifacts(
+            string sourcePath)
+        {
+            if (string.IsNullOrWhiteSpace(sourcePath)
+                || !sourcePath.EndsWith(".ink", StringComparison.OrdinalIgnoreCase))
+            {
+                throw new ArgumentException(
+                    "Root story path must end with '.ink'.",
+                    nameof(sourcePath));
+            }
+            if (!File.Exists(sourcePath))
+                throw new FileNotFoundException("Root Ink source is missing.", sourcePath);
+
+            var story = Compile(sourcePath);
+            var entries = SourceMapEntries(story);
+            var compiledPath = sourcePath + ".json";
+            var sourceMapPath = compiledPath + _sourceMapSuffix;
+            WritePairSafely(
+                compiledPath,
+                story.ToJson(),
+                sourceMapPath,
+                new StorySourceMap(entries.ToArray()).ToJson());
+            return new StoryCompilationBuildResult(
+                compiledPath,
+                sourceMapPath,
+                entries.Count);
+        }
+
+        private static Ink.Runtime.Story Compile(string sourcePath)
+        {
             var errors = new List<string>();
             var sourceDirectory = IOPath.GetDirectoryName(sourcePath)
                 ?? string.Empty;
@@ -67,20 +123,21 @@ namespace Novels.ContentSdk.Editor
             if (story == null || errors.Count > 0)
             {
                 throw new InvalidOperationException(
-                    $"Ink source-map compilation failed for '{sourcePath}':\n"
+                    $"Ink compilation failed for '{sourcePath}':\n"
                     + string.Join("\n", errors));
             }
+            return story;
+        }
 
+        private static List<StorySourceMap.Entry> SourceMapEntries(
+            Ink.Runtime.Story story)
+        {
             var entries = new List<StorySourceMap.Entry>();
             Visit(
                 story.mainContentContainer,
                 new HashSet<Ink.Runtime.Object>(),
                 entries);
-            var outputPath = compiledPath + _sourceMapSuffix;
-            WriteAtomically(
-                outputPath,
-                new StorySourceMap(entries.ToArray()).ToJson());
-            return new StorySourceMapBuildResult(outputPath, entries.Count);
+            return entries;
         }
 
         private static void Visit(
@@ -130,6 +187,69 @@ namespace Novels.ContentSdk.Editor
                 if (File.Exists(temporaryPath))
                     File.Delete(temporaryPath);
             }
+        }
+
+        private static void WritePairSafely(
+            string firstPath,
+            string firstContents,
+            string secondPath,
+            string secondContents)
+        {
+            var firstTemporary = firstPath + ".tmp";
+            var secondTemporary = secondPath + ".tmp";
+            var firstBackup = firstPath + ".backup.tmp";
+            var secondBackup = secondPath + ".backup.tmp";
+            var firstExisted = File.Exists(firstPath);
+            var secondExisted = File.Exists(secondPath);
+            try
+            {
+                File.WriteAllText(firstTemporary, firstContents);
+                File.WriteAllText(secondTemporary, secondContents);
+                if (firstExisted)
+                    File.Copy(firstPath, firstBackup, true);
+                if (secondExisted)
+                    File.Copy(secondPath, secondBackup, true);
+                ReplaceOrMove(firstTemporary, firstPath);
+                ReplaceOrMove(secondTemporary, secondPath);
+            }
+            catch
+            {
+                Restore(firstPath, firstBackup, firstExisted);
+                Restore(secondPath, secondBackup, secondExisted);
+                throw;
+            }
+            finally
+            {
+                DeleteIfExists(firstTemporary);
+                DeleteIfExists(secondTemporary);
+                DeleteIfExists(firstBackup);
+                DeleteIfExists(secondBackup);
+            }
+        }
+
+        private static void ReplaceOrMove(string temporaryPath, string outputPath)
+        {
+            if (File.Exists(outputPath))
+                File.Replace(temporaryPath, outputPath, null);
+            else
+                File.Move(temporaryPath, outputPath);
+        }
+
+        private static void Restore(
+            string outputPath,
+            string backupPath,
+            bool outputExisted)
+        {
+            if (outputExisted && File.Exists(backupPath))
+                File.Copy(backupPath, outputPath, true);
+            else if (!outputExisted)
+                DeleteIfExists(outputPath);
+        }
+
+        private static void DeleteIfExists(string path)
+        {
+            if (File.Exists(path))
+                File.Delete(path);
         }
 
         private sealed class RelativeInkFileHandler : IFileHandler
