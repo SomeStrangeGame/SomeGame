@@ -83,14 +83,14 @@ namespace Novels.Editor
                     24,
                     FontStyle.Bold,
                     Color.white,
-                    Anchored(22f, -20f, -22f, 54f));
+                    Anchored(22f, 20f, -22f, 54f));
                 title.alignment = TextAnchor.MiddleCenter;
 
                 var track = CreateImage(
                     "Progress Track",
                     panel.transform,
                     new Color(1f, 1f, 1f, 0.16f),
-                    Anchored(22f, -78f, -22f, 92f));
+                    Anchored(22f, 78f, -22f, 92f));
                 track.raycastTarget = false;
                 var fill = CreateImage(
                     "Progress Fill",
@@ -108,7 +108,7 @@ namespace Novels.Editor
                     18,
                     FontStyle.Normal,
                     new Color(0.88f, 0.91f, 0.96f),
-                    Anchored(22f, -104f, -22f, 132f));
+                    Anchored(22f, 104f, -22f, 132f));
                 var remaining = CreateText(
                     "Remaining",
                     panel.transform,
@@ -117,7 +117,7 @@ namespace Novels.Editor
                     18,
                     FontStyle.Normal,
                     new Color(0.88f, 0.91f, 0.96f),
-                    Anchored(22f, -140f, -22f, 168f));
+                    Anchored(22f, 140f, -22f, 168f));
                 details.alignment = TextAnchor.MiddleCenter;
                 remaining.alignment = TextAnchor.MiddleCenter;
 
