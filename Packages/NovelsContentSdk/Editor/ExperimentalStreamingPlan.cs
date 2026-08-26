@@ -151,11 +151,13 @@ namespace Novels.ContentSdk.Editor
         }
 
         internal static StoryAssetUsageEntry[] CreateLinearUsageReport(
-            string storyId,
+            string inkPath,
             IReadOnlyCollection<string> assets,
             IReadOnlyCollection<string> filePaths)
         {
-            var storyText = ReadStoryText(storyId);
+            var storyText = File.ReadAllText(inkPath)
+                .Normalize(NormalizationForm.FormC)
+                .ToLowerInvariant();
             var art = assets.Select(path => new StoryAssetUsageEntry(
                 path,
                 StoryAssetUsageKind.Art,
