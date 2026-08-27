@@ -170,20 +170,13 @@ namespace Novels.ContentSdk.Editor
             Content.NovelDefinition definition,
             ValidationReport report)
         {
-            foreach (var episode in definition.Episodes)
+            var path = ContentAssets.InkPath(definition.Prefix, definition.StoryPath);
+            if (!File.Exists(path))
             {
-                var path = Path.Combine(
-                    Application.streamingAssetsPath,
-                    "noveltexts",
-                    definition.Prefix,
-                    episode.StoryPath.Replace('/', Path.DirectorySeparatorChar));
-                if (!File.Exists(path))
-                {
-                    report.Error(
-                        "STORY_SOURCE_FILE_MISSING",
-                        "Ink story source does not exist.",
-                        path);
-                }
+                report.Error(
+                    "STORY_SOURCE_FILE_MISSING",
+                    "Compiled Ink story does not exist.",
+                    path);
             }
         }
 
@@ -214,7 +207,7 @@ namespace Novels.ContentSdk.Editor
             {
                 report.Error(
                     "CONTENT_ASSETS_MISSING",
-                    "Assets/RemoteAssets contains no bundle assets.");
+                    "The project contains no bundle assets.");
             }
             var labels = AssetDatabase.GetAllAssetBundleNames()
                 .Where(name => AssetDatabase
