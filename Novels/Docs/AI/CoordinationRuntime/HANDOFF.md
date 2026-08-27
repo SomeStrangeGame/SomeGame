@@ -1315,3 +1315,33 @@ Pending / risks:
 Suggested next step:
 - При необходимости выполнить короткий playback smoke начала TZM через Game;
   сами legacy-каталоги больше не восстанавливать.
+
+## 2026-08-27T17:14:07Z — tzm-shared-presentation-font — integrated
+
+Task: Объединить три идентичные копии Liberation Sans Regular TZM в один общий
+font asset.
+
+Changed:
+- Canonical TTF с GUID `0125029842d6d993020c25af5bf725f6` перенесён из
+  `Presentation/setting` в `Presentation/Fonts`; две копии из bubble и
+  notification удалены.
+- Все 14 ссылок трёх Presentation-prefab используют canonical GUID.
+- `tzm.asset`: два удалённых font GUID исключены из первого chunk; assignments
+  416 → 414, число chunks осталось 12.
+- `ContentAuthoringGuide.md`: общие шрифты закреплены за `Presentation/Fonts`.
+
+Validation:
+- Static serialization audit: один font-файл, 14 canonical references, старые
+  GUID отсутствуют.
+- `novels-content validate tzm`, `build tzm editor`, `doctor`: успешно.
+- Bundle audit: 555 roots / 183902.2 KiB, одна запись Liberation Sans; release
+  bundle 188 315 864 байт, на 312 218 байт меньше baseline.
+- 12 chunks, 414 GUID, 51/51 video и 56 unused posters сохранены.
+
+Pending / risks:
+- Визуальный UI smoke через Game не выполнялся; prefab references, Unity import
+  и content bundle проверены.
+
+Suggested next step:
+- При следующем playback проверить bubble, notification и settings text; новых
+  authoring-шагов не требуется.

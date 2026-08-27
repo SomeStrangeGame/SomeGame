@@ -51,6 +51,7 @@ Projects/novels-tzm/
     Locations/                    фоны
     Choices/                      изображения выборов
     Presentation/                 story-specific UI и его зависимости
+      Fonts/                      общие шрифты Presentation-prefab
       setting/                    настройки UI истории
     Video/                        внешние видео
     Audio/                        внешнее аудио, если используется
@@ -113,6 +114,10 @@ presentation-prefabs.
 `Presentation/location/locations` не являются runtime roots и не должны
 восстанавливаться при импорте. В TZM они удалены после успешных validation и
 bundle build; актуальный story art находится только в поддерживаемых корнях.
+
+Общие шрифты Presentation-prefab хранятся один раз в `Presentation/Fonts`.
+Не копируйте один TTF в каталоги отдельных prefab: все ссылки должны вести на
+единый font asset с одним Unity GUID.
 
 ### Постеры видеолокаций и чанки
 

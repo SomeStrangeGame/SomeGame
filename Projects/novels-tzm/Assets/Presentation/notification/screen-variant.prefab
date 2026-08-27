@@ -131,7 +131,7 @@ PrefabInstance:
     - target: {fileID: 7582084287330492310, guid: 3f848d94f36894b3099c9736b9895daf, type: 3}
       propertyPath: m_FontData.m_Font
       value: 
-      objectReference: {fileID: 12800000, guid: 2f2d78f78095d07d0876c6245226860f, type: 3}
+      objectReference: {fileID: 12800000, guid: 0125029842d6d993020c25af5bf725f6, type: 3}
     - target: {fileID: 8316904409407908245, guid: 3f848d94f36894b3099c9736b9895daf, type: 3}
       propertyPath: m_Pivot.x
       value: 0
