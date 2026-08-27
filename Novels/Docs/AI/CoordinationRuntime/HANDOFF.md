@@ -1255,3 +1255,34 @@ Suggested next step:
 - После refresh открытого TZM Editor последовательно выполнить `validate tzm`,
   `build tzm editor` и проверить bundle audit; только затем отдельно решать об
   удалении legacy Presentation art.
+
+## 2026-08-27T16:50:38Z — story-preview-integration-commit — integrated
+
+Task: Проверить и разложить накопленное story-preview дерево на логические
+Git-коммиты без LFS.
+
+Changed:
+- `3c1a2e7d`: runtime/Game contracts и обновлённый ZDM definition.
+- `a81f79fb`: единый Content SDK Editor authoring/streaming pipeline.
+- `05dc9494`: плоская TZM-структура; Git распознал 2955 перемещений контента.
+- `62bcf9e3`: authoring-документация и завершённые coordination-записи.
+- Финальная status/handoff-запись фиксируется отдельным coordination-коммитом.
+
+Validation:
+- Из 3040 исходных untracked файлов 2953 переиспользовали существующие blobs
+  на 1 506 031 045 байт; реально новых untracked blobs было 351 420 байт,
+  максимальный файл — 18 354 220 байт. Git LFS не использован и не требуется.
+- Unity Roslyn `Novels.ContentSdk.Editor`, `novels-content doctor`, scoped
+  layout checks и `git diff bfee19aa..HEAD --check`: успешно.
+- TZM: 12 чанков, 416 GUID, 51/51 video, 56 unused posters; SHA-256
+  `tzm.asset` после whitespace-нормализации —
+  `95032a7a122c6bf2c0159e76ae86f51ab96e76c0d992ee448297ff73ce3e4882`.
+
+Pending / risks:
+- Полный `validate tzm`, `build tzm editor` и Inspector smoke не запускались:
+  пользовательский Unity PID 97689 всё ещё владеет UnityLockfile; второй Unity
+  не стартовал.
+
+Suggested next step:
+- После refresh/закрытия TZM Editor последовательно выполнить `validate tzm`,
+  `build tzm editor` и короткий playback smoke, затем push текущей ветки.
