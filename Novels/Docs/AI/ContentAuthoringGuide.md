@@ -110,10 +110,9 @@ presentation-prefabs.
 `Assets/Characters` и `Assets/Locations` (для legacy-layout — из стабильных
 `story/character/characters` и `story/location/locations`). Старые вложенные
 каталоги `Presentation/character/characters` и
-`Presentation/location/locations` намеренно игнорируются расчётом: они не
-являются runtime roots и не должны случайно дублировать настоящий story art.
-Физически удалять такие каталоги следует отдельным шагом только после проверки
-свежего bundle.
+`Presentation/location/locations` не являются runtime roots и не должны
+восстанавливаться при импорте. В TZM они удалены после успешных validation и
+bundle build; актуальный story art находится только в поддерживаемых корнях.
 
 ### Постеры видеолокаций и чанки
 

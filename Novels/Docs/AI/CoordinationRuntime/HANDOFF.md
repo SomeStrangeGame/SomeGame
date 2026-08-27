@@ -1286,3 +1286,32 @@ Pending / risks:
 Suggested next step:
 - После refresh/закрытия TZM Editor последовательно выполнить `validate tzm`,
   `build tzm editor` и короткий playback smoke, затем push текущей ветки.
+
+## 2026-08-27T17:03:47Z — tzm-remove-legacy-presentation-art — integrated
+
+Task: Удалить физически уже исключённый legacy character/location art TZM.
+
+Changed:
+- Удалены `Assets/Presentation/character/characters` и
+  `Assets/Presentation/location/locations` с folder meta: 713 PNG,
+  711 938 459 байт; всего 1551 tracked-файл с Unity meta.
+- `ContentAuthoringGuide.md`: legacy Presentation roots TZM помечены как
+  удалённые и не подлежащие восстановлению.
+
+Validation:
+- Baseline и regression `novels-content validate tzm` / `build tzm editor`:
+  успешно.
+- TZM layout неизменен: 12 чанков, 416 GUID, 51/51 video и 56 unused posters;
+  SHA-256 `tzm.asset` остался `95032a7a…e3e4882`.
+- После удаления все 10 Presentation images являются сохранёнными prefab
+  dependencies; direct/unreachable legacy и внешние ссылки на 838 удалённых
+  GUID отсутствуют.
+- Composed TZM tree уменьшился с 704828 до 648100 KiB.
+
+Pending / risks:
+- Визуальный playback smoke через Game не выполнялся; content validation и
+  bundle build прошли полностью.
+
+Suggested next step:
+- При необходимости выполнить короткий playback smoke начала TZM через Game;
+  сами legacy-каталоги больше не восстанавливать.
