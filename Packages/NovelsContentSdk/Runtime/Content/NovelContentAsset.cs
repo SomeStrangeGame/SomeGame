@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.Audio;
 
 namespace Novels.Content
 {
@@ -13,11 +12,7 @@ namespace Novels.Content
         {
             [SerializeField] private string _id;
             [SerializeField] private string _title;
-            [SerializeField] private string _storyPath;
-            [SerializeField] private string _contentVersion;
-            [SerializeField] private string _endMarker;
-            [SerializeField] private string _sourcePath;
-            [SerializeField] private string[] _silentAudioIds;
+            [SerializeField] private string _description;
 
             internal readonly EpisodeDefinition ToDefinition(string contentId)
             {
@@ -25,11 +20,7 @@ namespace Novels.Content
                     contentId,
                     _id,
                     _title,
-                    _storyPath,
-                    _contentVersion,
-                    new EpisodeMediaDefinition(_silentAudioIds),
-                    _endMarker,
-                    _sourcePath);
+                    _description);
             }
         }
 
@@ -43,23 +34,52 @@ namespace Novels.Content
                 new(_alias, _target);
         }
 
+        [Serializable]
+        private struct CharacterDefaultEntry
+        {
+            [SerializeField] private string _character;
+            [SerializeField] private string _clothes;
+            [SerializeField] private string _hair;
+            [SerializeField] private string _hairColor;
+            [SerializeField] private string _accessory;
+
+            internal readonly CharacterDefaultAppearanceDefinition ToDefinition() =>
+                new(_character, _clothes, _hair, _hairColor, _accessory);
+        }
+
+        [Serializable]
+        private struct StreamingChunkEntry
+        {
+            [SerializeField] private string[] _assetGuids;
+        }
+
         [SerializeField] private string _id;
         [SerializeField] private string _mainCharacter;
-        [SerializeField] private AudioMixer _audioMixer;
+        [SerializeField] private string _contentVersion = "1";
+        [SerializeField] private string _endMarker;
+        [SerializeField] private string[] _silentAudioIds;
         [SerializeField] private EpisodeEntry[] _episodes;
         [SerializeField] private VideoAliasEntry[] _videoAliases;
-
-        public AudioMixer AudioMixer => _audioMixer;
+        [SerializeField] private CharacterDefaultEntry[] _characterDefaults;
+        [SerializeField, HideInInspector] private string _authoringRootInkGuid;
+        [SerializeField, HideInInspector] private int _authoringChunkSizeMiB;
+        [SerializeField, HideInInspector] private StreamingChunkEntry[] _authoringChunks;
+        [SerializeField, HideInInspector] private string[] _authoringUnusedAssetGuids;
 
         public NovelDefinition ToDefinition()
         {
             return new NovelDefinition(
                 _id,
                 _mainCharacter,
+                _contentVersion,
+                _endMarker,
+                _silentAudioIds,
                 (_episodes ?? Array.Empty<EpisodeEntry>())
                     .Select(episode => episode.ToDefinition(_id)),
                 (_videoAliases ?? Array.Empty<VideoAliasEntry>())
-                    .Select(alias => alias.ToDefinition()));
+                    .Select(alias => alias.ToDefinition()),
+                (_characterDefaults ?? Array.Empty<CharacterDefaultEntry>())
+                    .Select(value => value.ToDefinition()));
         }
     }
 }

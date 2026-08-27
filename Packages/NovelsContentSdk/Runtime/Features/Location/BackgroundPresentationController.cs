@@ -86,30 +86,6 @@ namespace Novels.Location
                 return;
             }
 
-            var sprite = await _ctx.GetSprite(assetName)
-                .AttachExternalCancellation(_ctx.CancellationToken);
-            await Hide(mode);
-            _ctx.Screen.ResetCamera();
-            _ctx.Screen.ResetEffect();
-            if (sprite == null)
-            {
-                await ShowStatic(_ctx.MissingBackground, mode);
-                return;
-            }
-            _currentSprite = sprite;
-            await ShowStatic(sprite, mode);
-
-            if (presentation.Type != StoryContracts.StoryBackgroundType.CutScene)
-            {
-                PrepareLoopingVideo(
-                    version,
-                    assetName,
-                    sprite).Forget();
-                if (_fullQualityAvailable && version == _currentVersion)
-                    await UpgradeCurrentBackground();
-                return;
-            }
-
             var url = await _ctx.ResolveVideoUrl(assetName)
                 .AttachExternalCancellation(_ctx.CancellationToken);
             var plan = BackgroundPresentationPlan.Create(
@@ -118,16 +94,32 @@ namespace Novels.Location
                 !string.IsNullOrEmpty(url));
             if (!plan.UsesVideo)
             {
+                var sprite = await _ctx.GetSprite(assetName)
+                    .AttachExternalCancellation(_ctx.CancellationToken);
+                await Hide(mode);
+                _ctx.Screen.ResetCamera();
+                _ctx.Screen.ResetEffect();
+                if (sprite == null)
+                {
+                    await ShowStatic(_ctx.MissingBackground, mode);
+                    return;
+                }
+                _currentSprite = sprite;
+                await ShowStatic(sprite, mode);
                 if (_fullQualityAvailable && version == _currentVersion)
                     await UpgradeCurrentBackground();
                 return;
             }
 
+            await Hide(mode);
+            _ctx.Screen.ResetCamera();
+            _ctx.Screen.ResetEffect();
+            await ShowSolidColor(mode);
             var playbackStatus = await _ctx.VideoPlayback.Play(
                 new VideoPlaybackRequest(
                     url,
-                    sprite.texture.width,
-                    sprite.texture.height,
+                    Math.Max(1, UnityEngine.Screen.width),
+                    Math.Max(1, UnityEngine.Screen.height),
                     !plan.IsCutScene,
                     mode == StoryContracts.PresentationMode.Immediate && plan.IsCutScene
                         ? Time.timeScale * 5f
@@ -145,47 +137,7 @@ namespace Novels.Location
             if (playbackStatus == VideoPlaybackStatus.Failed)
                 await WaitForCutSceneFallback(mode);
             if (!plan.KeepsFinalVideoFrame)
-                await ReturnToPoster(_currentSprite ?? sprite, mode);
-        }
-
-        private async UniTask PrepareLoopingVideo(
-            int version,
-            string assetName,
-            Sprite poster)
-        {
-            try
-            {
-                var url = await _ctx.ResolveVideoUrl(assetName)
-                    .AttachExternalCancellation(_ctx.CancellationToken);
-                if (version != _currentVersion || string.IsNullOrEmpty(url))
-                    return;
-                var playbackStatus = await _ctx.VideoPlayback.Play(
-                    new VideoPlaybackRequest(
-                        url,
-                        poster.texture.width,
-                        poster.texture.height,
-                        true,
-                        Time.timeScale));
-                if (version != _currentVersion
-                    || playbackStatus != VideoPlaybackStatus.Ready)
-                {
-                    return;
-                }
-                _showingVideo = true;
-                await _ctx.Screen.CrossfadeToVideo(_ctx.CancellationToken);
-            }
-            catch (OperationCanceledException)
-                when (_ctx.CancellationToken.IsCancellationRequested)
-            {
-            }
-            catch (Exception exception)
-            {
-                _ctx.OnError?.Invoke(new Diagnostics.NovelError(
-                    Diagnostics.NovelErrorCodes.VideoPlaybackFailed,
-                    Diagnostics.NovelErrorSeverity.Warning,
-                    $"Background video '{assetName}' could not be prepared in parallel.",
-                    exception: exception));
-            }
+                await ReturnToSolidColor(mode);
         }
 
         private UniTask UpgradeCurrentBackground()
@@ -244,15 +196,14 @@ namespace Novels.Location
             await Show(mode);
         }
 
-        private async UniTask ReturnToPoster(
-            Sprite sprite,
+        private async UniTask ReturnToSolidColor(
             StoryContracts.PresentationMode mode)
         {
             _showingVideo = false;
             await Hide(mode);
             _ctx.Screen.ResetCamera();
             _ctx.Screen.ResetEffect();
-            await ShowStatic(sprite, mode);
+            await ShowSolidColor(mode);
         }
 
         private UniTask Hide(StoryContracts.PresentationMode mode)

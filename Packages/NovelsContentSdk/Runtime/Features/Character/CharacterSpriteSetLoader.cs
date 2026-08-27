@@ -251,8 +251,10 @@ namespace Novels.Character
                 appearance.Clothes = candidate;
                 return sprite;
             }
-            return await GetSprite(
-                _addresses.CharacterClothes(name, appearance.Clothes ?? clothes, index));
+            var defaults = _profile.Defaults(name);
+            var resolved = appearance.Clothes
+                ?? (string.IsNullOrWhiteSpace(clothes) ? defaults.Clothes : clothes);
+            return await GetSprite(_addresses.CharacterClothes(name, resolved, index));
         }
 
         private async UniTask<CharacterHairSprites> LoadHair(
@@ -283,7 +285,7 @@ namespace Novels.Character
                 ? null
                 : appearance.Hair
                     ?? (string.IsNullOrWhiteSpace(hair)
-                        ? _profile.DefaultHairStyle
+                        ? _profile.Defaults(name).Hair
                         : hair);
             return await LoadHairLayers(name, resolved);
         }
@@ -305,7 +307,10 @@ namespace Novels.Character
                 appearance.Accessories = candidate;
                 return candidateSprites;
             }
-            var resolved = appearance.Accessories ?? accessory;
+            var resolved = appearance.Accessories
+                ?? (string.IsNullOrWhiteSpace(accessory)
+                    ? _profile.Defaults(name).Accessory
+                    : accessory);
             return await LoadAccessoryLayers(name, resolved);
         }
 
@@ -362,7 +367,7 @@ namespace Novels.Character
 
         private string Hair(string name, string candidate, string layer) =>
             _addresses.CharacterHair(
-                name, candidate, layer, _profile.DefaultHairColor);
+                name, candidate, layer, _profile.Defaults(name).HairColor);
 
         private CharacterSpriteSet MissingCharacter() => new(
             _missingCharacter,

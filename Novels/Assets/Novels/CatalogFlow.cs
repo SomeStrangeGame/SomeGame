@@ -156,6 +156,7 @@ namespace Novels
                 .Select(episode => new Catalog.CatalogItem(
                     episode.Id,
                     episode.Title,
+                    episode.Description,
                     status: ApplicationTexts.ContentAvailable))
                 .ToArray();
             using var selection = CreateSelection(screen);

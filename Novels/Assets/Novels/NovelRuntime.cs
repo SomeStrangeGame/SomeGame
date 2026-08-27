@@ -22,6 +22,7 @@ namespace Novels
             internal Catalog.NovelCatalogEntry Content;
             internal string PersistentDataPath;
             internal Camera TargetCamera;
+            internal AudioMixer AudioMixer;
             internal FallbackAssets FallbackAssets;
             internal NovelRuntimeTuning RuntimeTuning;
             internal Func<
@@ -37,7 +38,6 @@ namespace Novels
         private readonly PriorityLoader _priorityLoader;
         private Content.NovelDefinition _definition;
         private Content.EpisodeDefinition _episode;
-        private AudioMixer _audioMixer;
         private string _assetBundleName;
         private Save.SaveSystem _saveSystem;
         private NovelProgress _progress;
@@ -64,6 +64,8 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.HidePreparationScreen));
             if (ctx.TargetCamera == null)
                 throw new ArgumentNullException(nameof(ctx.TargetCamera));
+            if (ctx.AudioMixer == null)
+                throw new ArgumentNullException(nameof(ctx.AudioMixer));
             if (ctx.FallbackAssets == null)
                 throw new ArgumentNullException(nameof(ctx.FallbackAssets));
             _priorityLoader = new PriorityLoader(_defaultThreadPriority);
@@ -104,6 +106,9 @@ namespace Novels
             var playableDefinition = new Content.NovelDefinition(
                 _definition.Id,
                 _definition.MainCharacter,
+                _definition.ContentVersion,
+                _definition.EndMarker,
+                _definition.SilentAudioIds,
                 _progress.PlayableEpisodes);
             _episode = await _ctx.SelectEpisode(playableDefinition);
             _progress.Begin(_episode);

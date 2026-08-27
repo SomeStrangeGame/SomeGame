@@ -14,82 +14,40 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: zdm
   _mainCharacter: "\u041D\u0443\u0440"
-  _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
+  _contentVersion: 1
+  _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+  _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
   _episodes:
   - _id: s01e01
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 1"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e01.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Кровь на священных песках"
+    _description: "Обвинённая в убийстве жрица покидает родной дом и отправляется к Фараону искать справедливости. Но путь спасения оборачивается сплошной полосой из предательства и обмана."
   - _id: s01e02
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 2"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e02.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Друг или враг?"
+    _description: "Все надежды и мечты разрушены. Получится ли приспособиться к новому витку жизни?"
   - _id: s01e03
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 3"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e03.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Вопросы"
+    _description: "Вокруг одни вопросы и ни одного ответа."
   - _id: s01e04
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 4"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e04.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Обещание"
+    _description: "Назад нельзя, только вперёд."
   - _id: s01e05
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 5"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e05.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Последствия решений"
+    _description: "Гелиополь открывает свои двери."
   - _id: s01e06
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 6"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e06.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Тень за спиной"
+    _description: "Маски сброшены."
   - _id: s01e07
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 7"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e07.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Новые знакомства"
+    _description: "Один секрет раскрыт, но новые уже ждут за порогом."
   - _id: s01e08
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 8"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e08.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Первая часть правды"
+    _description: "Вы скованы обещанием в золотой клетке. Что предпримете теперь?"
   - _id: s01e09
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 9"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMS01e09.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Сделка"
+    _description: "Когда боги молчат, остаётся надежда только на хаос."
   - _id: s01e10
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 10"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMS01e10.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Лицом к лицу"
+    _description: "Пора платить по счетам."
   - _id: s02e01
-    _title: "\u0421\u0435\u0437\u043E\u043D 2, \u044D\u043F\u0438\u0437\u043E\u0434 1"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: ""
-    _sourcePath: ZDMS02e01.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Путь Ба"
+    _description: "Добро пожаловать в Дуат."

@@ -200,17 +200,19 @@ namespace Bundles
                         "Streaming chunks must be contiguous and reference known payloads.");
                 }
             }
-            var expectedMedia = 0;
+            var previousMediaOrder = -1;
             foreach (var media in plan.media ?? Array.Empty<ContentStreamingMediaEntry>())
             {
                 if (media == null
-                    || media.order != expectedMedia++
+                    || media.order < 0
+                    || media.order < previousMediaOrder
                     || !filePaths.Contains(media.path)
                     || !groupIds.Contains(media.deliveryGroup))
                 {
                     throw new ContentIntegrityException(
                         "Streaming media order references an unknown payload.");
                 }
+                previousMediaOrder = media.order;
             }
         }
 

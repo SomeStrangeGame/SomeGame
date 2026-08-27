@@ -1,6 +1,7 @@
 using System;
 using System.Threading;
 using UnityEngine;
+using UnityEngine.Audio;
 
 namespace Novels
 {
@@ -45,6 +46,7 @@ namespace Novels
             string clientVersion,
             string contentPlatform,
             Camera targetCamera,
+            AudioMixer audioMixer,
             FallbackAssets fallbackAssets,
             NovelRuntimeTuning runtimeTuning)
             : this(
@@ -53,6 +55,7 @@ namespace Novels
                 clientVersion,
                 contentPlatform,
                 targetCamera,
+                audioMixer,
                 fallbackAssets,
                 runtimeTuning,
                 0)
@@ -65,6 +68,7 @@ namespace Novels
             string clientVersion,
             string contentPlatform,
             Camera targetCamera,
+            AudioMixer audioMixer,
             FallbackAssets fallbackAssets,
             NovelRuntimeTuning runtimeTuning,
             int cacheGeneration)
@@ -81,6 +85,8 @@ namespace Novels
             ContentPlatform = contentPlatform;
             TargetCamera = targetCamera
                 ?? throw new ArgumentNullException(nameof(targetCamera));
+            AudioMixer = audioMixer
+                ?? throw new ArgumentNullException(nameof(audioMixer));
             FallbackAssets = fallbackAssets
                 ?? throw new ArgumentNullException(nameof(fallbackAssets));
             RuntimeTuning = runtimeTuning;
@@ -92,6 +98,7 @@ namespace Novels
         internal string ClientVersion { get; }
         internal string ContentPlatform { get; }
         internal Camera TargetCamera { get; }
+        internal AudioMixer AudioMixer { get; }
         internal FallbackAssets FallbackAssets { get; }
         internal NovelRuntimeTuning RuntimeTuning { get; }
         internal int CacheGeneration { get; }

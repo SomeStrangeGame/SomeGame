@@ -4,6 +4,7 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.LowLevel;
+using UnityEngine.Audio;
 
 namespace Novels
 {
@@ -11,6 +12,7 @@ namespace Novels
     {
         [SerializeField] private Logs.Entity.ShowLogs _logs;
         [SerializeField] private Camera _targetCamera;
+        [SerializeField] private AudioMixer _audioMixer;
         [SerializeField] private Sprite _missingBackground;
         [SerializeField] private Sprite _missingCharacter;
         [SerializeField] private GameObject _fallbackLoading;
@@ -47,6 +49,7 @@ namespace Novels
                     Application.version,
                     Bundles.ContentPlatform.GetCurrent(),
                     _targetCamera,
+                    _audioMixer,
                     new FallbackAssets(
                         _missingBackground,
                         _missingCharacter,

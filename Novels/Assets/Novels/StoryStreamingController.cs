@@ -131,7 +131,9 @@ namespace Novels
             {
                 var chunks = _plan.chunks ?? Array.Empty<Bundles.ContentStreamingChunkEntry>();
                 var media = _plan.media ?? Array.Empty<Bundles.ContentStreamingMediaEntry>();
-                var count = Math.Max(chunks.Length, media.Length);
+                var count = Math.Max(
+                    chunks.Length,
+                    media.Length == 0 ? 0 : media.Max(value => value.order) + 1);
                 for (var index = 0; index < count; index++)
                 {
                     _cancellationToken.ThrowIfCancellationRequested();
@@ -140,9 +142,7 @@ namespace Novels
                     var chunkPreparation = index < chunks.Length
                         ? EnsureChunk(index)
                         : UniTask.CompletedTask;
-                    var mediaPreparation = index < media.Length
-                        ? PrepareMedia(media[index])
-                        : UniTask.CompletedTask;
+                    var mediaPreparation = PrepareMediaGroup(media, index);
                     await UniTask.WhenAll(chunkPreparation, mediaPreparation);
                 }
                 StreamingExperimentDiagnostics.SetQueue("complete");
@@ -274,6 +274,24 @@ namespace Novels
             lease.AddTo(this);
         }
 
+        private UniTask PrepareMediaGroup(
+            IReadOnlyCollection<Bundles.ContentStreamingMediaEntry> media,
+            int order)
+        {
+            var groups = media
+                .Where(value => value.order == order)
+                .Select(value => value.deliveryGroup)
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Select(group => PrepareMedia(new Bundles.ContentStreamingMediaEntry
+                {
+                    order = order,
+                    deliveryGroup = group,
+                }))
+                .ToArray();
+            return groups.Length == 0 ? UniTask.CompletedTask : UniTask.WhenAll(groups);
+        }
+
         private void ReportStoryProgress(
             Bundles.ContentDeliveryProgress progress)
         {
@@ -317,7 +335,7 @@ namespace Novels
                 var current = index + offset;
                 if (current < chunks.Count)
                     values.Add($"chunk-{current}");
-                if (current < media.Count)
+                if (media.Any(value => value.order == current))
                     values.Add($"media-{current}");
             }
             return string.Join(" → ", values);

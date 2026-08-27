@@ -52,7 +52,7 @@ namespace Novels
             {
                 ReadNext = storyProcessor.ReadNext,
                 ExportStoryState = storyProcessor.ExportState,
-                IsEpisodeEnd = source => IsEpisodeEnd(source, _episode.EndMarker),
+                IsEpisodeEnd = source => IsEpisodeEnd(source, _definition.EndMarker),
                 ParseStep = storyCommands.ParseStep,
                 BuildQueue = storyQueue.TryBuild,
                 CompleteQueue = storyQueue.TryComplete,

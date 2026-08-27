@@ -11,27 +11,47 @@ namespace Novels.Content
         public NovelDefinition(
             string id,
             string mainCharacter,
+            string contentVersion,
+            string endMarker,
+            IEnumerable<string> silentAudioIds,
             EpisodeDefinition episode,
-            IEnumerable<VideoAliasDefinition> videoAliases = null)
+            IEnumerable<VideoAliasDefinition> videoAliases = null,
+            IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null)
             : this(
                 id,
                 mainCharacter,
+                contentVersion,
+                endMarker,
+                silentAudioIds,
                 new[] { episode },
-                videoAliases)
+                videoAliases,
+                characterDefaults)
         {
         }
 
         public NovelDefinition(
             string id,
             string mainCharacter,
+            string contentVersion,
+            string endMarker,
+            IEnumerable<string> silentAudioIds,
             IEnumerable<EpisodeDefinition> episodes,
-            IEnumerable<VideoAliasDefinition> videoAliases = null)
+            IEnumerable<VideoAliasDefinition> videoAliases = null,
+            IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null)
         {
             Id = Require(id, nameof(id));
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
+            StoryPath = Id + ".ink.json";
+            ContentVersion = Require(contentVersion, nameof(contentVersion));
+            EndMarker = endMarker?.Trim() ?? string.Empty;
+            SilentAudioIds = Array.AsReadOnly(
+                (silentAudioIds ?? Array.Empty<string>())
+                    .Where(value => !string.IsNullOrWhiteSpace(value))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray());
             Prefix = Id;
             BundleName = ContentAddressing.ContentPackageConvention.ContentBundle(Id);
-            CharacterAssets = CharacterAssetProfile.Default;
+            CharacterAssets = new CharacterAssetProfile(mainCharacter, characterDefaults);
             var episodeArray = episodes?.ToArray() ?? Array.Empty<EpisodeDefinition>();
             if (episodeArray.Length == 0 || episodeArray.Any(episode => episode == null))
                 throw new ArgumentException("At least one valid episode is required.", nameof(episodes));
@@ -67,6 +87,10 @@ namespace Novels.Content
         public string Id { get; }
         public string Prefix { get; }
         public string MainCharacter { get; }
+        public string StoryPath { get; }
+        public string ContentVersion { get; }
+        public string EndMarker { get; }
+        public IReadOnlyList<string> SilentAudioIds { get; }
         public string BundleName { get; }
         public CharacterAssetProfile CharacterAssets { get; }
         public IReadOnlyList<EpisodeDefinition> Episodes { get; }
@@ -110,38 +134,47 @@ namespace Novels.Content
         }
     }
 
+    public sealed class CharacterDefaultAppearanceDefinition
+    {
+        public CharacterDefaultAppearanceDefinition(
+            string character,
+            string clothes,
+            string hair,
+            string hairColor,
+            string accessory)
+        {
+            Character = character ?? string.Empty;
+            Clothes = clothes ?? string.Empty;
+            Hair = hair ?? string.Empty;
+            HairColor = hairColor ?? string.Empty;
+            Accessory = accessory ?? string.Empty;
+        }
+
+        public string Character { get; }
+        public string Clothes { get; }
+        public string Hair { get; }
+        public string HairColor { get; }
+        public string Accessory { get; }
+    }
+
     public sealed class EpisodeDefinition
     {
         public EpisodeDefinition(
             string contentId,
             string id,
             string title,
-            string storyPath,
-            string contentVersion,
-            EpisodeMediaDefinition media,
-            string endMarker = null,
-            string sourcePath = null)
+            string description)
         {
             ContentId = Require(contentId, nameof(contentId));
             Id = Require(id, nameof(id));
             Title = Require(title, nameof(title));
-            StoryPath = Require(storyPath, nameof(storyPath));
-            ContentVersion = Require(contentVersion, nameof(contentVersion));
-            EndMarker = endMarker?.Trim() ?? string.Empty;
-            SourcePath = string.IsNullOrWhiteSpace(sourcePath)
-                ? string.Empty
-                : sourcePath.Trim();
-            Media = media ?? throw new ArgumentNullException(nameof(media));
+            Description = description?.Trim() ?? string.Empty;
         }
 
         public string ContentId { get; }
         public string Id { get; }
         public string Title { get; }
-        public string StoryPath { get; }
-        public string ContentVersion { get; }
-        public string EndMarker { get; }
-        public string SourcePath { get; }
-        public EpisodeMediaDefinition Media { get; }
+        public string Description { get; }
 
         private static string Require(string value, string parameterName)
         {
@@ -151,17 +184,4 @@ namespace Novels.Content
         }
     }
 
-    public sealed class EpisodeMediaDefinition
-    {
-        public EpisodeMediaDefinition(IEnumerable<string> silentAudioIds = null)
-        {
-            SilentAudioIds = Array.AsReadOnly(
-                (silentAudioIds ?? Array.Empty<string>())
-                    .Where(value => !string.IsNullOrWhiteSpace(value))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToArray());
-        }
-
-        public IReadOnlyList<string> SilentAudioIds { get; }
-    }
 }

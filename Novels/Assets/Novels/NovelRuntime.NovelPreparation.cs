@@ -77,7 +77,7 @@ namespace Novels
                 .CreateMediaScope(
                     _definition.Prefix,
                     mediaGroups,
-                    new Bundles.MediaManifest(_episode.Media.SilentAudioIds),
+                    new Bundles.MediaManifest(_definition.SilentAudioIds),
                     episodeRuntime.CancellationToken)
                 .AddTo(episodeRuntime.Scope);
 
@@ -135,13 +135,13 @@ namespace Novels
         {
 #if UNITY_EDITOR || DEVELOPMENT_BUILD
             var result = await UniTask.WhenAll(
-                _ctx.Bundles.GetText(addresses.NovelText(_episode.StoryPath))
+                _ctx.Bundles.GetText(addresses.NovelText(_definition.StoryPath))
                     .AttachExternalCancellation(cancellationToken),
                 TryLoadStorySourceMap(addresses, cancellationToken));
             return new EpisodeStoryData(result.Item1, result.Item2);
 #else
             var storyText = await _ctx.Bundles.GetText(
-                    addresses.NovelText(_episode.StoryPath))
+                    addresses.NovelText(_definition.StoryPath))
                 .AttachExternalCancellation(cancellationToken);
             return new EpisodeStoryData(storyText, string.Empty);
 #endif
@@ -155,7 +155,7 @@ namespace Novels
             try
             {
                 return await _ctx.Bundles
-                    .GetText(addresses.NovelSourceMap(_episode.StoryPath))
+                    .GetText(addresses.NovelSourceMap(_definition.StoryPath))
                     .AttachExternalCancellation(cancellationToken);
             }
             catch (System.OperationCanceledException)

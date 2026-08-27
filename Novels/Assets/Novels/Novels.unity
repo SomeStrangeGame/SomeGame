@@ -354,6 +354,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _logs: 255
   _targetCamera: {fileID: 330585545}
+  _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
   _missingBackground: {fileID: 21300000, guid: 621ac610a1204d48aea925430b4b3de5, type: 3}
   _missingCharacter: {fileID: 21300000, guid: 6e95ef6c5687426c939909b1649aa33f, type: 3}
   _fallbackLoading: {fileID: 5409107741591515597, guid: 355ef8307ed59470194f757c009dc90c, type: 3}

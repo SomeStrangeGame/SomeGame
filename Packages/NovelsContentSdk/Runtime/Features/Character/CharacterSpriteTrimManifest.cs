@@ -14,12 +14,14 @@ namespace Novels.Character
         [SerializeField] private int _cropY;
         [SerializeField] private int _cropWidth;
         [SerializeField] private int _cropHeight;
+        [SerializeField] private string _trimmedSha256;
 
         public CharacterSpriteTrimEntry(
             string assetAddress,
             int originalWidth,
             int originalHeight,
-            RectInt crop)
+            RectInt crop,
+            string trimmedSha256 = null)
         {
             _assetAddress = assetAddress;
             _originalWidth = originalWidth;
@@ -28,12 +30,14 @@ namespace Novels.Character
             _cropY = crop.y;
             _cropWidth = crop.width;
             _cropHeight = crop.height;
+            _trimmedSha256 = trimmedSha256;
         }
 
         public string AssetAddress => _assetAddress;
         public int OriginalWidth => _originalWidth;
         public int OriginalHeight => _originalHeight;
         public RectInt Crop => new(_cropX, _cropY, _cropWidth, _cropHeight);
+        public string TrimmedSha256 => _trimmedSha256;
 
         internal CharacterSpriteTrimLayout Layout => new(
             _originalWidth,

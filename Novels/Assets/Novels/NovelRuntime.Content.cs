@@ -30,7 +30,6 @@ namespace Novels
                     + $"AssetBundle '{bundleName}'.");
             }
             var definition = content.ToDefinition();
-            _audioMixer = content.AudioMixer;
             return definition;
         }
 
@@ -43,7 +42,7 @@ namespace Novels
             {
                 SaveChoiceFileName = saveKey,
                 ContentId = $"{_definition.Id}/{_episode.Id}",
-                ContentVersion = _episode.ContentVersion,
+                ContentVersion = _definition.ContentVersion,
                 ReadBytes = cache.ReadBytes,
                 WriteBytes = cache.WriteBytes,
                 Delete = cache.Delete,

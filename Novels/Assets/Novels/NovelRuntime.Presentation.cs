@@ -65,7 +65,7 @@ namespace Novels
             return new Audio.AudioController(new Audio.AudioController.Dependencies
             {
                 ResolveAudioUrl = resolveAudioUrl,
-                AudioMixer = _audioMixer,
+                AudioMixer = _ctx.AudioMixer,
                 CancellationToken = cancellationToken,
 
                 OnLog = _ctx.OnLog,
