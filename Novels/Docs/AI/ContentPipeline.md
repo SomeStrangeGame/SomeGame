@@ -64,8 +64,17 @@ Tools/novels-tools/novels-content publish /absolute/server/root
 - новый story-project обнаруживается по `Config/card.json`.
 
 Каждый атомарный проект создаёт ровно один bundle. Ручные AssetBundle labels в
-Inspector не используются: SDK явно включает содержимое `Assets/RemoteAssets`.
-Ink и прочие потоковые файлы записываются как content-addressed payloads.
+Inspector не используются. Для пилотного TZM SDK берёт Unity-ресурсы из
+коротких каталогов `Assets/Characters`, `Assets/Locations`, `Assets/Choices`,
+`Assets/Presentation` и definition из корня `Assets`; legacy-проекты пока
+продолжают использовать `Assets/RemoteAssets`. Физические пути при сборке
+отображаются в стабильные runtime-адреса, поэтому структура проекта не является
+публичным ключом AssetBundle.
+
+TZM Ink и медиа берутся из `Assets/Ink`, `Assets/Video`, `Assets/Audio` и
+публикуются под прежними namespaced-путями `noveltexts/<id>`,
+`novelsvideos/<id>`, `novelsaudio/<id>`. Legacy `StreamingAssets` остаётся
+поддержанным до отдельной миграции остальных историй.
 
 ## Отчёт валидации
 
