@@ -21,6 +21,7 @@ namespace Novels.ContentSdk.Editor
         {
             var plan = ContentValidator.Validate();
             var target = ContentPlatform.Resolve(platform);
+            var streaming = plan.Kind == ContentProjectKind.Story;
             Directory.CreateDirectory(_outputPath);
             RecreateDirectory(_stagingPath);
             RecreateDirectory(Path.Combine(
@@ -29,8 +30,8 @@ namespace Novels.ContentSdk.Editor
                 ContentPlatform.Name(target)));
             try
             {
-                var files = BuildFilePayloads(plan.DeliveryGroup);
-                BuildTargetRelease(plan, files, target);
+                var files = BuildFilePayloads(plan, streaming);
+                BuildTargetRelease(plan, files, target, streaming);
                 Debug.Log(
                     $"Atomic content '{plan.DeliveryGroup}' built for "
                     + $"{platform} to {Path.GetFullPath(_outputPath)}");
@@ -43,24 +44,17 @@ namespace Novels.ContentSdk.Editor
             }
         }
 
-        private static ContentFileEntry[] BuildFilePayloads(string deliveryGroup)
+        private static ContentFileEntry[] BuildFilePayloads(
+            ContentBuildPlan plan,
+            bool streaming)
         {
-            if (!Directory.Exists(Application.streamingAssetsPath))
-                return Array.Empty<ContentFileEntry>();
             var result = new List<ContentFileEntry>();
-            foreach (var source in Directory.EnumerateFiles(
-                         Application.streamingAssetsPath,
-                         "*",
-                         SearchOption.AllDirectories)
-                     .Where(path => !path.EndsWith(
-                         ".meta",
-                         StringComparison.OrdinalIgnoreCase))
-                     .OrderBy(path => path, StringComparer.Ordinal))
+            foreach (var file in ContentAssets.FindContentFiles(plan))
             {
-                var relative = Path.GetRelativePath(
-                        Application.streamingAssetsPath,
-                        source)
-                    .Replace('\\', '/');
+                var source = file.SourcePath;
+                var relative = file.ContentPath;
+                if (!ShouldPublishStreamingAsset(relative))
+                    continue;
                 var hash = ContentHash.ComputeSha256(source);
                 var payloadPath = ContentAddressing.ContentPackageConvention
                     .ContentPayload(hash);
@@ -76,25 +70,68 @@ namespace Novels.ContentSdk.Editor
                     payloadPath = payloadPath,
                     size = new FileInfo(source).Length,
                     sha256 = hash,
-                    deliveryGroup = deliveryGroup,
+                    deliveryGroup = DeliveryGroupForFile(
+                        plan,
+                        relative,
+                        streaming),
                 });
             }
             return result.ToArray();
         }
 
+        private static bool ShouldPublishStreamingAsset(string relativePath)
+        {
+            if (!relativePath.StartsWith(
+                    "noveltexts/",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            // Authoring sources stay in the project for build-time analysis.
+            // Runtime needs only compiled Ink.
+            return relativePath.EndsWith(
+                    ".ink.json",
+                    StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string DeliveryGroupForFile(
+            ContentBuildPlan plan,
+            string relativePath,
+            bool streaming)
+        {
+            if (!streaming)
+                return plan.DeliveryGroup;
+            if (relativePath.StartsWith("noveltexts/", StringComparison.OrdinalIgnoreCase))
+            {
+                return ContentAddressing.ContentPackageConvention
+                    .StoryChunkDeliveryGroup(plan.DeliveryGroup, 0);
+            }
+            if (relativePath.StartsWith("novelsvideos/", StringComparison.OrdinalIgnoreCase)
+                || relativePath.StartsWith("novelsaudio/", StringComparison.OrdinalIgnoreCase))
+            {
+                return ContentAddressing.ContentPackageConvention
+                    .StoryMediaDeliveryGroup(plan.DeliveryGroup);
+            }
+            return plan.DeliveryGroup;
+        }
+
         private static void BuildTargetRelease(
             ContentBuildPlan plan,
             ContentFileEntry[] files,
-            BuildTarget target)
+            BuildTarget target,
+            bool streaming)
         {
             var platform = ContentPlatform.Name(target);
             var staging = Path.Combine(_stagingPath, platform);
             Directory.CreateDirectory(staging);
-            var build = new AssetBundleBuild
+            var assets = ContentAssets.FindBundleAssets(plan);
+            if (streaming)
             {
-                assetBundleName = plan.BundleName,
-                assetNames = ContentAssets.FindBundleAssets(),
-            };
+                BuildStreamingTargetRelease(plan, files, target, platform, staging, assets);
+                return;
+            }
+            var build = ContentAssets.BundleBuild(plan, plan.BundleName, assets);
             var manifest = BuildPipeline.BuildAssetBundles(
                     staging,
                     new[] {build},
@@ -129,7 +166,7 @@ namespace Novels.ContentSdk.Editor
                 build.assetNames,
                 destination,
                 bundle.size);
-            var release = CreateRelease(plan, files, bundle);
+            var release = CreateRelease(plan, files, new[] {bundle});
             var releasePath = Path.Combine(
                 _outputPath,
                 "Remote",
@@ -141,27 +178,155 @@ namespace Novels.ContentSdk.Editor
                 new UTF8Encoding(false));
         }
 
+        private static void BuildStreamingTargetRelease(
+            ContentBuildPlan plan,
+            ContentFileEntry[] files,
+            BuildTarget target,
+            string platform,
+            string staging,
+            string[] assets)
+        {
+            var streaming = StoryStreamingPlan.Create(
+                plan.DeliveryGroup,
+                assets,
+                files.Select(value => value.path).ToArray());
+            var mediaGroups = streaming.Media.ToDictionary(
+                value => value.path,
+                value => value.deliveryGroup,
+                StringComparer.OrdinalIgnoreCase);
+            foreach (var file in files)
+            {
+                if (mediaGroups.TryGetValue(file.path, out var group))
+                    file.deliveryGroup = group;
+            }
+
+            var chunkBuilds = streaming.Chunks
+                .Select((chunkAssets, index) => ContentAssets.BundleBuild(
+                    plan,
+                    ContentAddressing.ContentPackageConvention
+                        .StoryChunkBundle(plan.DeliveryGroup, index),
+                    chunkAssets))
+                .ToArray();
+            var manifest = BuildPipeline.BuildAssetBundles(
+                    staging,
+                    chunkBuilds,
+                    BuildAssetBundleOptions.None,
+                    target)
+                ?? throw new InvalidOperationException(
+                    $"Streaming AssetBundle build failed for {target}.");
+            var bundles = new List<BundleReleaseEntry>();
+            var chunks = new ContentStreamingChunkEntry[chunkBuilds.Length];
+            for (var index = 0; index < chunkBuilds.Length; index++)
+            {
+                var build = chunkBuilds[index];
+                var group = ContentAddressing.ContentPackageConvention
+                    .StoryChunkDeliveryGroup(plan.DeliveryGroup, index);
+                bundles.Add(CopyBuiltBundle(
+                    plan,
+                    manifest,
+                    staging,
+                    platform,
+                    build,
+                    group));
+                chunks[index] = new ContentStreamingChunkEntry
+                {
+                    index = index,
+                    bundle = build.assetBundleName,
+                    deliveryGroup = group,
+                    assets = build.addressableNames ?? build.assetNames,
+                };
+            }
+            var release = CreateRelease(
+                plan,
+                files,
+                bundles.ToArray(),
+                new ContentStreamingPlanEntry
+                {
+                    chunks = chunks,
+                    media = streaming.Media.ToArray(),
+                });
+            var releasePath = Path.Combine(
+                _outputPath,
+                "Remote",
+                platform,
+                "release.json");
+            File.WriteAllText(
+                releasePath,
+                ContentReleaseCodec.Serialize(release),
+                new UTF8Encoding(false));
+        }
+
+        private static BundleReleaseEntry CopyBuiltBundle(
+            ContentBuildPlan plan,
+            AssetBundleManifest manifest,
+            string staging,
+            string platform,
+            AssetBundleBuild build,
+            string deliveryGroup)
+        {
+            var source = Path.Combine(staging, build.assetBundleName);
+            var version = manifest.GetAssetBundleHash(build.assetBundleName).ToString();
+            if (!BuildPipeline.GetCRCForAssetBundle(source, out var crc))
+                throw new InvalidOperationException(
+                    $"AssetBundle CRC cannot be calculated for '{build.assetBundleName}'.");
+            var directory = Path.Combine(
+                _outputPath,
+                "Remote",
+                platform,
+                build.assetBundleName);
+            Directory.CreateDirectory(directory);
+            var destination = Path.Combine(directory, version);
+            File.Copy(source, destination, true);
+            var result = new BundleReleaseEntry
+            {
+                name = build.assetBundleName,
+                version = version,
+                size = new FileInfo(destination).Length,
+                sha256 = ContentHash.ComputeSha256(destination),
+                crc = crc,
+                deliveryGroup = deliveryGroup,
+            };
+            ContentBundleAudit.Audit(
+                plan,
+                build.assetNames,
+                destination,
+                result.size);
+            return result;
+        }
+
         private static ContentReleaseDto CreateRelease(
             ContentBuildPlan plan,
             ContentFileEntry[] files,
-            BundleReleaseEntry bundle)
+            BundleReleaseEntry[] bundles,
+            ContentStreamingPlanEntry streamingPlan = null)
         {
             var release = new ContentReleaseDto
             {
                 minimumClientVersion = plan.MinimumClientVersion,
                 contentSchemaVersion = _contentSchemaVersion,
                 deliveryMode = ContentDeliveryMode.Remote,
-                bundles = new[] {bundle},
+                bundles = bundles,
                 files = files,
-                deliveryGroups = new[]
-                {
-                    new ContentDeliveryGroupEntry
+                streamingPlan = streamingPlan,
+                deliveryGroups = bundles
+                    .Select(value => value.deliveryGroup)
+                    .Concat(files.Select(value => value.deliveryGroup))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .Select(group => new ContentDeliveryGroupEntry
                     {
-                        id = plan.DeliveryGroup,
-                        payloadCount = 1 + files.Length,
-                        size = bundle.size + files.Sum(value => value.size),
-                    },
-                },
+                        id = group,
+                        payloadCount = bundles.Count(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase))
+                            + files.Count(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase)),
+                        size = bundles.Where(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase))
+                            .Sum(value => value.size)
+                            + files.Where(value => string.Equals(
+                                value.deliveryGroup, group, StringComparison.OrdinalIgnoreCase))
+                            .Sum(value => value.size),
+                    })
+                    .ToArray(),
             };
             release.releaseId = ContentReleaseFingerprint.Compute(release);
             ContentReleaseValidator.Validate(
@@ -207,10 +372,262 @@ namespace Novels.ContentSdk.Editor
 
     internal static class ContentAssets
     {
-        private const string _root = "Assets/RemoteAssets";
+        private const string _legacyBundleRoot = "Assets/RemoteAssets";
+        private const string _simpleInkRoot = "Assets/Ink";
+        private const string _simpleVideoRoot = "Assets/Video";
+        private const string _simpleAudioRoot = "Assets/Audio";
+        private static readonly string[] _simpleBundleRoots =
+        {
+            "Assets/Characters",
+            "Assets/Locations",
+            "Assets/Choices",
+            "Assets/Presentation",
+        };
 
-        internal static string[] FindBundleAssets() =>
-            AssetDatabase.FindAssets(string.Empty, new[] {_root})
+        internal sealed class ContentFileSource
+        {
+            internal ContentFileSource(string sourcePath, string contentPath)
+            {
+                SourcePath = sourcePath;
+                ContentPath = contentPath;
+            }
+
+            internal string SourcePath { get; }
+            internal string ContentPath { get; }
+        }
+
+        internal static string[] FindBundleAssets()
+        {
+            if (!UsesSimpleStoryLayout())
+                return FindAssets(new[] {_legacyBundleRoot});
+
+            var roots = _simpleBundleRoots
+                .Where(Directory.Exists)
+                .ToArray();
+            return FindAssets(roots)
+                .Concat(AssetDatabase.FindAssets("t:NovelContentAsset", new[] {"Assets"})
+                    .Select(AssetDatabase.GUIDToAssetPath))
+                .Where(path => !string.IsNullOrEmpty(path))
+                .Distinct(StringComparer.Ordinal)
+                .OrderBy(path => path, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        internal static string[] FindBundleAssets(ContentBuildPlan plan)
+        {
+            var assets = FindBundleAssets();
+            if (plan.Kind != ContentProjectKind.Story)
+                return assets;
+
+            var authoring = CurrentStoryDefinition();
+            var definition = authoring.ToDefinition();
+            var unused = StoryChunkAuthoring.UnusedPaths(authoring);
+            var withoutUnused = assets
+                .Where(path => !unused.Contains(path))
+                .ToArray();
+            var excludedUnusedCount = assets.Length - withoutUnused.Length;
+            if (excludedUnusedCount != unused.Count)
+            {
+                throw new InvalidOperationException(
+                    $"Expected to exclude {unused.Count} unused story assets, "
+                    + $"but found {excludedUnusedCount} among bundle roots.");
+            }
+            var included = withoutUnused
+                .Where(path =>
+                {
+                    var address = BundleAddress(definition.Id, path);
+                    var normalizedAddress = ContentAddressing
+                        .TechnicalAssetIdConvention
+                        .Canonicalize(address)
+                        .Replace('\\', '/')
+                        .Trim('/');
+                    return string.Equals(
+                        definition.ResolveArtAddress(address),
+                        normalizedAddress,
+                        StringComparison.OrdinalIgnoreCase);
+                })
+                .ToArray();
+            var excludedAliasCount = withoutUnused.Length - included.Length;
+            if (excludedUnusedCount > 0 || excludedAliasCount > 0)
+            {
+                Debug.Log(
+                    $"Excluded {excludedUnusedCount} authoring-unused and "
+                    + $"{excludedAliasCount} aliased story assets from bundle roots.");
+            }
+            return included;
+        }
+
+        internal static ContentFileSource[] FindContentFiles(ContentBuildPlan plan) =>
+            plan.Kind == ContentProjectKind.Story && UsesSimpleStoryLayout()
+                ? FindSimpleContentFiles(plan.DeliveryGroup)
+                : FindLegacyContentFiles();
+
+        internal static ContentFileSource[] FindContentFiles(string storyId) =>
+            UsesSimpleStoryLayout()
+                ? FindSimpleContentFiles(storyId)
+                : FindLegacyContentFiles();
+
+        internal static AssetBundleBuild BundleBuild(
+            ContentBuildPlan plan,
+            string bundleName,
+            string[] assets) =>
+            new()
+            {
+                assetBundleName = bundleName,
+                assetNames = assets,
+                addressableNames = plan.Kind == ContentProjectKind.Story
+                    && UsesSimpleStoryLayout()
+                    ? assets.Select(path => BundleAddress(plan.DeliveryGroup, path)).ToArray()
+                    : null,
+            };
+
+        internal static bool IsBundleSource(string path) =>
+            path.StartsWith(_legacyBundleRoot + "/", StringComparison.Ordinal)
+            || UsesSimpleStoryLayout()
+            && (path.StartsWith("Assets/", StringComparison.Ordinal)
+                && (path.EndsWith(".asset", StringComparison.OrdinalIgnoreCase)
+                    || _simpleBundleRoots.Any(root => path.StartsWith(
+                        root + "/",
+                        StringComparison.Ordinal))));
+
+        internal static string BundleAddress(string storyId, string sourcePath)
+        {
+            if (sourcePath.StartsWith(_legacyBundleRoot + "/", StringComparison.Ordinal))
+                return sourcePath;
+            if (string.Equals(
+                    sourcePath,
+                    $"Assets/{storyId}.asset",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                return ContentAddressing.ContentPackageConvention.DefinitionAsset(storyId);
+            }
+            if (sourcePath.StartsWith("Assets/Characters/", StringComparison.Ordinal))
+            {
+                var relative = sourcePath.Substring("Assets/Characters/".Length);
+                return string.Equals(
+                        relative,
+                        "sprite-trim-manifest.asset",
+                        StringComparison.OrdinalIgnoreCase)
+                    ? ContentAddressing.ContentAddressConvention
+                        .CharacterSpriteTrimManifest(storyId)
+                    : $"{ContentAddressing.ContentPackageConvention.StoryRoot(storyId)}"
+                      + $"/character/characters/{relative}";
+            }
+            if (sourcePath.StartsWith("Assets/Locations/", StringComparison.Ordinal))
+            {
+                return $"{ContentAddressing.ContentPackageConvention.StoryRoot(storyId)}"
+                       + "/location/locations/"
+                       + sourcePath.Substring("Assets/Locations/".Length);
+            }
+            if (sourcePath.StartsWith("Assets/Choices/", StringComparison.Ordinal))
+            {
+                return $"{ContentAddressing.ContentPackageConvention.StoryRoot(storyId)}"
+                       + "/choose/items/"
+                       + sourcePath.Substring("Assets/Choices/".Length);
+            }
+            if (sourcePath.StartsWith("Assets/Presentation/setting/", StringComparison.Ordinal))
+            {
+                return $"{ContentAddressing.ContentPackageConvention.ContentRoot(storyId)}"
+                       + "/application/setting/"
+                       + sourcePath.Substring("Assets/Presentation/setting/".Length);
+            }
+            if (sourcePath.StartsWith("Assets/Presentation/", StringComparison.Ordinal))
+            {
+                return $"{ContentAddressing.ContentPackageConvention.StoryRoot(storyId)}"
+                       + "/presentation/"
+                       + sourcePath.Substring("Assets/Presentation/".Length);
+            }
+            throw new InvalidOperationException(
+                $"Story bundle asset is outside the supported layout: {sourcePath}");
+        }
+
+        internal static string InkDirectory(string storyId) =>
+            UsesSimpleStoryLayout()
+                ? Absolute(_simpleInkRoot)
+                : Path.Combine(
+                    Application.streamingAssetsPath,
+                    "noveltexts",
+                    storyId);
+
+        internal static string InkPath(string storyId, string fileName) =>
+            Path.Combine(
+                InkDirectory(storyId),
+                fileName.Replace('/', Path.DirectorySeparatorChar));
+
+        internal static string SourcePath(string contentPath)
+        {
+            if (!UsesSimpleStoryLayout())
+            {
+                return Path.Combine(
+                    Application.streamingAssetsPath,
+                    contentPath.Replace('/', Path.DirectorySeparatorChar));
+            }
+            var parts = contentPath.Split('/');
+            if (parts.Length < 3)
+                return string.Empty;
+            var root = parts[0].ToLowerInvariant() switch
+            {
+                "noveltexts" => _simpleInkRoot,
+                "novelsvideos" => _simpleVideoRoot,
+                "novelsaudio" => _simpleAudioRoot,
+                _ => string.Empty,
+            };
+            return string.IsNullOrEmpty(root)
+                ? string.Empty
+                : Absolute(root + "/" + string.Join("/", parts.Skip(2)));
+        }
+
+        internal static string UnityAssetPath(string contentPath)
+        {
+            if (contentPath.StartsWith("Assets/", StringComparison.Ordinal))
+                return contentPath;
+            if (!UsesSimpleStoryLayout())
+                return "Assets/StreamingAssets/" + contentPath;
+            var absolute = SourcePath(contentPath).Replace('\\', '/');
+            var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
+                ?.Replace('\\', '/');
+            return !string.IsNullOrEmpty(projectRoot)
+                   && absolute.StartsWith(projectRoot + "/", StringComparison.OrdinalIgnoreCase)
+                ? absolute.Substring(projectRoot.Length + 1)
+                : string.Empty;
+        }
+
+        internal static string ContentPath(string assetPath)
+        {
+            if (IsBundleSource(assetPath))
+                return assetPath;
+            const string legacyStreamingRoot = "Assets/StreamingAssets/";
+            if (assetPath.StartsWith(
+                    legacyStreamingRoot,
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                var relative = assetPath.Substring(legacyStreamingRoot.Length);
+                if (IsMedia(relative))
+                    return relative;
+            }
+            if (UsesSimpleStoryLayout())
+            {
+                var storyId = CurrentStoryId();
+                if (assetPath.StartsWith(_simpleVideoRoot + "/", StringComparison.Ordinal))
+                {
+                    return $"novelsvideos/{storyId}/"
+                           + assetPath.Substring((_simpleVideoRoot + "/").Length);
+                }
+                if (assetPath.StartsWith(_simpleAudioRoot + "/", StringComparison.Ordinal))
+                {
+                    return $"novelsaudio/{storyId}/"
+                           + assetPath.Substring((_simpleAudioRoot + "/").Length);
+                }
+            }
+            throw new InvalidOperationException(
+                "В чанк можно добавить только Unity-ассет истории или её Video/Audio: "
+                + assetPath);
+        }
+
+        private static string[] FindAssets(string[] roots) =>
+            roots.Length == 0
+                ? Array.Empty<string>()
+                : AssetDatabase.FindAssets(string.Empty, roots)
                 .Select(AssetDatabase.GUIDToAssetPath)
                 .Where(path => !AssetDatabase.IsValidFolder(path))
                 .Where(path => !path.EndsWith(
@@ -218,5 +635,77 @@ namespace Novels.ContentSdk.Editor
                     StringComparison.OrdinalIgnoreCase))
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray();
+
+        private static ContentFileSource[] FindSimpleContentFiles(string storyId) =>
+            new[]
+                {
+                    (Root: _simpleInkRoot, Prefix: "noveltexts"),
+                    (Root: _simpleVideoRoot, Prefix: "novelsvideos"),
+                    (Root: _simpleAudioRoot, Prefix: "novelsaudio"),
+                }
+                .Where(value => Directory.Exists(value.Root))
+                .SelectMany(value => Directory.EnumerateFiles(
+                        value.Root,
+                        "*",
+                        SearchOption.AllDirectories)
+                    .Where(path => !path.EndsWith(
+                        ".meta",
+                        StringComparison.OrdinalIgnoreCase))
+                    .Select(path => new ContentFileSource(
+                        Path.GetFullPath(path),
+                        $"{value.Prefix}/{storyId}/"
+                        + Path.GetRelativePath(value.Root, path).Replace('\\', '/'))))
+                .OrderBy(value => value.ContentPath, StringComparer.Ordinal)
+                .ToArray();
+
+        private static ContentFileSource[] FindLegacyContentFiles()
+        {
+            if (!Directory.Exists(Application.streamingAssetsPath))
+                return Array.Empty<ContentFileSource>();
+            return Directory.EnumerateFiles(
+                    Application.streamingAssetsPath,
+                    "*",
+                    SearchOption.AllDirectories)
+                .Where(path => !path.EndsWith(
+                    ".meta",
+                    StringComparison.OrdinalIgnoreCase))
+                .Select(path => new ContentFileSource(
+                    path,
+                    Path.GetRelativePath(Application.streamingAssetsPath, path)
+                        .Replace('\\', '/')))
+                .OrderBy(value => value.ContentPath, StringComparer.Ordinal)
+                .ToArray();
+        }
+
+        private static bool UsesSimpleStoryLayout() =>
+            Directory.Exists(_simpleInkRoot);
+
+        private static bool IsMedia(string path) =>
+            path.StartsWith("novelsvideos/", StringComparison.OrdinalIgnoreCase)
+            || path.StartsWith("novelsaudio/", StringComparison.OrdinalIgnoreCase);
+
+        private static string CurrentStoryId()
+            => CurrentStoryDefinition().ToDefinition().Id;
+
+        private static Content.NovelContentAsset CurrentStoryDefinition()
+        {
+            var definitions = AssetDatabase.FindAssets("t:NovelContentAsset", new[] {"Assets"})
+                .Select(AssetDatabase.GUIDToAssetPath)
+                .Select(AssetDatabase.LoadAssetAtPath<Content.NovelContentAsset>)
+                .Where(value => value != null)
+                .ToArray();
+            if (definitions.Length != 1)
+            {
+                throw new InvalidOperationException(
+                    $"Expected one story definition, found {definitions.Length}.");
+            }
+            return definitions[0];
+        }
+
+        private static string Absolute(string assetPath) =>
+            Path.Combine(
+                Directory.GetParent(Application.dataPath)?.FullName
+                ?? throw new InvalidOperationException("Unity project root is unavailable."),
+                assetPath.Replace('/', Path.DirectorySeparatorChar));
     }
 }

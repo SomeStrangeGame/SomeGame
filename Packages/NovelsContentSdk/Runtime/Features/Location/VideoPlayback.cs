@@ -52,13 +52,16 @@ namespace Novels.Location
         private readonly Dependencies _ctx;
         private RenderTexture _renderTexture;
         private UniTaskCompletionSource _prepared;
+        private UniTaskCompletionSource _firstFrame;
         private UniTaskCompletionSource _completed;
         private string _error;
+        private bool _acceptFrames;
 
         internal VideoPlayback(Dependencies ctx)
         {
             _ctx = ctx;
             _ctx.VideoPlayer.prepareCompleted += OnPrepared;
+            _ctx.VideoPlayer.frameReady += OnFrameReady;
             _ctx.VideoPlayer.loopPointReached += OnCompleted;
             _ctx.VideoPlayer.errorReceived += OnFailed;
         }
@@ -71,18 +74,11 @@ namespace Novels.Location
             _completed = new UniTaskCompletionSource();
             _error = null;
 
-            _renderTexture = new RenderTexture(
-                request.Width,
-                request.Height,
-                16,
-                RenderTextureFormat.ARGB32);
-            _renderTexture.Create();
-            _ctx.SetTexture(_renderTexture);
-
             var videoPlayer = _ctx.VideoPlayer;
             videoPlayer.url = request.Url;
             videoPlayer.isLooping = request.Loop;
             videoPlayer.playbackSpeed = request.Speed;
+            videoPlayer.sendFrameReadyEvents = true;
             videoPlayer.Prepare();
 
             var timeout = UniTask.Delay(
@@ -105,8 +101,64 @@ namespace Novels.Location
                 return VideoPlaybackStatus.Failed;
             }
 
+            var renderSize = ResolveRenderSize(videoPlayer, request);
+            _renderTexture = new RenderTexture(
+                renderSize.x,
+                renderSize.y,
+                0,
+                RenderTextureFormat.ARGB32);
+            _renderTexture.Create();
+            _ctx.SetTexture(_renderTexture);
+            _firstFrame = new UniTaskCompletionSource();
+            _acceptFrames = true;
             videoPlayer.Play();
+
+            timeout = UniTask.Delay(
+                _preparationTimeoutMilliseconds,
+                cancellationToken: _ctx.CancellationToken);
+            completedTaskIndex = await UniTask.WhenAny(_firstFrame.Task, timeout);
+            _ctx.CancellationToken.ThrowIfCancellationRequested();
+            if (completedTaskIndex == 1)
+            {
+                _error = $"Video first frame timed out after "
+                    + $"{_preparationTimeoutMilliseconds} ms";
+                LogFailure(request.Url);
+                Stop();
+                return VideoPlaybackStatus.Failed;
+            }
+            if (_error != null)
+            {
+                Stop();
+                return VideoPlaybackStatus.Failed;
+            }
+
+            // VideoPlayer.frameReady means that the decoder produced a frame,
+            // but the target RenderTexture can still contain its initial black
+            // contents until Unity's video/render update finishes.  Do not let
+            // the UI crossfade to that texture before the render loop has had a
+            // chance to publish the decoded frame.
+            await UniTask.Yield(PlayerLoopTiming.LastPostLateUpdate,
+                _ctx.CancellationToken);
             return VideoPlaybackStatus.Ready;
+        }
+
+        private static Vector2Int ResolveRenderSize(
+            VideoPlayer videoPlayer,
+            VideoPlaybackRequest request)
+        {
+            var width = videoPlayer.width > 0
+                ? (int)Math.Min(videoPlayer.width, (uint)int.MaxValue)
+                : request.Width;
+            var height = videoPlayer.height > 0
+                ? (int)Math.Min(videoPlayer.height, (uint)int.MaxValue)
+                : request.Height;
+            width = Math.Max(1, width);
+            height = Math.Max(1, height);
+            var maximum = Math.Max(1, SystemInfo.maxTextureSize);
+            var scale = Math.Min(1f, maximum / (float)Math.Max(width, height));
+            return new Vector2Int(
+                Math.Max(1, Mathf.RoundToInt(width * scale)),
+                Math.Max(1, Mathf.RoundToInt(height * scale)));
         }
 
         internal async UniTask<VideoPlaybackStatus> WaitForCompletion()
@@ -119,6 +171,8 @@ namespace Novels.Location
 
         internal void Stop()
         {
+            _acceptFrames = false;
+            _firstFrame = null;
             if (_ctx.VideoPlayer != null)
             {
                 _ctx.VideoPlayer.Stop();
@@ -134,6 +188,12 @@ namespace Novels.Location
             _prepared?.TrySetResult();
         }
 
+        private void OnFrameReady(VideoPlayer source, long frameIndex)
+        {
+            if (_acceptFrames)
+                _firstFrame?.TrySetResult();
+        }
+
         private void OnCompleted(VideoPlayer source)
         {
             _completed?.TrySetResult();
@@ -144,6 +204,7 @@ namespace Novels.Location
             _error = message;
             LogFailure(source.url);
             _prepared?.TrySetResult();
+            _firstFrame?.TrySetResult();
             _completed?.TrySetResult();
         }
 
@@ -175,6 +236,7 @@ namespace Novels.Location
             }
 
             _ctx.VideoPlayer.prepareCompleted -= OnPrepared;
+            _ctx.VideoPlayer.frameReady -= OnFrameReady;
             _ctx.VideoPlayer.loopPointReached -= OnCompleted;
             _ctx.VideoPlayer.errorReceived -= OnFailed;
             Stop();

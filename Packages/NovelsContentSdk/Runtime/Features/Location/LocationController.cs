@@ -13,6 +13,7 @@ namespace Novels.Location
             public GameObject ScreenPrefab;
             public Camera TargetCamera;
             public Func<string, UniTask<Sprite>> GetSprite;
+            public Func<string, UniTask<Sprite>> GetFullQualitySprite;
             public Func<string, UniTask<string>> ResolveVideoUrl;
             public Sprite MissingBackground;
             public CancellationToken CancellationToken;
@@ -52,11 +53,13 @@ namespace Novels.Location
                     VideoPlayback = videoPlayback,
                     TargetCamera = _ctx.TargetCamera,
                     GetSprite = _ctx.GetSprite,
+                    GetFullQualitySprite = _ctx.GetFullQualitySprite,
                     ResolveVideoUrl = _ctx.ResolveVideoUrl,
                     MissingBackground = _ctx.MissingBackground,
                     CancellationToken = _ctx.CancellationToken,
                     CutSceneFallbackDelayMilliseconds =
                         _ctx.CutSceneFallbackDelayMilliseconds,
+                    OnError = _ctx.OnError,
                 });
         }
 
@@ -65,6 +68,8 @@ namespace Novels.Location
             StoryContracts.StoryBackgroundPresentation presentation,
             StoryContracts.PresentationMode mode)
             => _backgrounds.Set(assetName, presentation, mode);
+
+        public UniTask EnableFullQuality() => _backgrounds.EnableFullQuality();
 
         public UniTask SetCamera(
             StoryContracts.StoryCameraAction action,

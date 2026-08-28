@@ -15,6 +15,7 @@ namespace Bundles
         public BundleReleaseEntry[] bundles;
         public ContentFileEntry[] files;
         public ContentDeliveryGroupEntry[] deliveryGroups;
+        public ContentStreamingPlanEntry streamingPlan;
     }
 
     [Serializable]
@@ -46,6 +47,30 @@ namespace Bundles
         public long size;
     }
 
+    [Serializable]
+    public sealed class ContentStreamingPlanEntry
+    {
+        public ContentStreamingChunkEntry[] chunks;
+        public ContentStreamingMediaEntry[] media;
+    }
+
+    [Serializable]
+    public sealed class ContentStreamingChunkEntry
+    {
+        public int index;
+        public string bundle;
+        public string deliveryGroup;
+        public string[] assets;
+    }
+
+    [Serializable]
+    public sealed class ContentStreamingMediaEntry
+    {
+        public int order;
+        public string path;
+        public string deliveryGroup;
+    }
+
     public sealed class ContentReleaseSnapshot
     {
         private readonly IReadOnlyDictionary<string, BundleReleaseDescriptor> _bundlesByName;
@@ -69,6 +94,7 @@ namespace Bundles
             Bundles = Array.AsReadOnly(bundles);
             Files = Array.AsReadOnly(files);
             DeliveryGroups = Array.AsReadOnly(groups);
+            StreamingPlan = source.streamingPlan;
             _bundlesByName = new ReadOnlyDictionary<string, BundleReleaseDescriptor>(
                 bundles.ToDictionary(value => value.Name, StringComparer.OrdinalIgnoreCase));
             _filesByPath = new ReadOnlyDictionary<string, ContentFileDescriptor>(
@@ -82,6 +108,7 @@ namespace Bundles
         public IReadOnlyList<BundleReleaseDescriptor> Bundles { get; }
         public IReadOnlyList<ContentFileDescriptor> Files { get; }
         public IReadOnlyList<ContentDeliveryGroupDescriptor> DeliveryGroups { get; }
+        public ContentStreamingPlanEntry StreamingPlan { get; }
 
         public BundleReleaseDescriptor FindBundle(string name) =>
             name != null && _bundlesByName.TryGetValue(name, out var value) ? value : null;
@@ -172,9 +199,16 @@ namespace Bundles
                 throw new ContentIntegrityException("Content release JSON is empty.");
             try
             {
-                return UnityEngine.JsonUtility.FromJson<ContentReleaseDto>(json)
+                var release = UnityEngine.JsonUtility.FromJson<ContentReleaseDto>(json)
                     ?? throw new ContentIntegrityException(
                         "Content release JSON produced no document.");
+                // JsonUtility materializes an explicit JSON null nested object as an
+                // empty instance. Keep the optional plan absent for legacy/catalog
+                // releases, while partially populated malformed plans still reach
+                // the validator and fail closed.
+                if (IsEmptyStreamingPlan(release.streamingPlan))
+                    release.streamingPlan = null;
+                return release;
             }
             catch (ContentIntegrityException)
             {
@@ -187,6 +221,11 @@ namespace Bundles
                     exception);
             }
         }
+
+        private static bool IsEmptyStreamingPlan(ContentStreamingPlanEntry plan) =>
+            plan != null
+            && (plan.chunks == null || plan.chunks.Length == 0)
+            && (plan.media == null || plan.media.Length == 0);
 
         public static ContentReleaseDto DeserializeAndValidate(
             string json,

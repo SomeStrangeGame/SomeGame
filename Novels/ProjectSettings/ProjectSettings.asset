@@ -847,6 +847,7 @@ PlayerSettings:
   webEnableSubmoduleStrippingCompatibility: 0
   scriptingDefineSymbols:
     Android: INK_RUNTIME;INK_EDITOR
+    Standalone: INK_RUNTIME;INK_EDITOR
     WebGL: INK_RUNTIME;INK_EDITOR
   additionalCompilerArguments: {}
   platformArchitecture: {}

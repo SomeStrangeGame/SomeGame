@@ -16,14 +16,12 @@ namespace Novels
             internal Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
             internal Bundles.IContentSource ContentSource;
-            internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
         private readonly ApplicationEnvironment _environment;
         private readonly Bundles.IContentSource _contentSource;
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Action<Diagnostics.NovelError> _onError;
-        private readonly Action<StoryProcessor.StorySourceLocation> _onStorySourceChanged;
         private readonly Bundles.Entity _catalogBundles;
         private readonly DisposableSlot<NovelRuntime> _activeNovel;
         private readonly CatalogFlow _catalogFlow;
@@ -36,7 +34,6 @@ namespace Novels
                 ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
             _onLog = ctx.OnLog;
             _onError = ctx.OnError;
-            _onStorySourceChanged = ctx.OnStorySourceChanged;
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _catalogBundles = CreateBundles(
                 new Bundles.PrefixedContentSource(
@@ -89,17 +86,19 @@ namespace Novels
                 Content = content,
                 PersistentDataPath = _environment.PersistentDataPath,
                 TargetCamera = _environment.TargetCamera,
+                AudioMixer = _environment.AudioMixer,
                 FallbackAssets = _environment.FallbackAssets,
                 RuntimeTuning = _environment.RuntimeTuning,
                 SelectEpisode = definition =>
-                    _catalogFlow.SelectEpisode(definition, catalog.Screen),
+                    _catalogFlow.SelectEpisode(
+                        definition,
+                        catalog.Screen),
                 PrepareNovelContent = contentId =>
-                    contentDeliveryFlow.PrepareStory(bootstrap, contentId),
+                    contentDeliveryFlow.PrepareStoryInitial(bootstrap, contentId),
                 HidePreparationScreen = bootstrap.Hide,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _onLog,
                 OnError = _onError,
-                OnStorySourceChanged = _onStorySourceChanged,
             });
             _activeNovel.Replace(novel);
             var storyReleaseLoaded = false;
@@ -143,7 +142,6 @@ namespace Novels
             }
             finally
             {
-                _onStorySourceChanged?.Invoke(default);
                 _activeNovel.Clear(novel);
             }
         }

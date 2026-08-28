@@ -67,6 +67,13 @@ namespace Cache
                 File.Delete(file);
         }
 
+        public void DeleteDirectory(string path)
+        {
+            var directory = GetLocalPath(path, false);
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, true);
+        }
+
         public void PruneDirectory(string directoryPath, string keepFileName)
         {
             var directory = GetLocalPath(directoryPath, false);

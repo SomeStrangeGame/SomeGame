@@ -43,8 +43,20 @@ namespace Novels.ContentAddressing
         public static string ContentBundle(string contentId) =>
             $"novels_content_{BundleToken(contentId)}";
 
+        public static string StoryChunkBundle(string contentId, int index) =>
+            $"{ContentBundle(contentId)}_chunk_{RequireIndex(index)}";
+
         public static string StoryDeliveryGroup(string contentId) =>
             RequireId(contentId, nameof(contentId));
+
+        public static string StoryChunkDeliveryGroup(string contentId, int index) =>
+            $"{RequireId(contentId, nameof(contentId))}-chunk-{RequireIndex(index)}";
+
+        public static string StoryMediaDeliveryGroup(string contentId, int index) =>
+            $"{RequireId(contentId, nameof(contentId))}-media-{RequireIndex(index)}";
+
+        public static string StoryMediaDeliveryGroup(string contentId) =>
+            $"{RequireId(contentId, nameof(contentId))}-media";
 
         public static string ContentPayload(string sha256) =>
             $"Files/{RequireId(sha256, nameof(sha256))}.bin";
@@ -61,6 +73,10 @@ namespace Novels.ContentAddressing
             }
             return result.ToString();
         }
+
+        private static int RequireIndex(int value) => value >= 0
+            ? value
+            : throw new ArgumentOutOfRangeException(nameof(value));
 
         private static string RequireId(string value, string parameterName)
         {

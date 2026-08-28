@@ -14,19 +14,24 @@ namespace Novels.Character
 
         internal CharacterSpriteResolver(
             string contentPrefix,
+            Func<string, string> resolveArtAddress,
             Content.CharacterAssetProfile profile,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<string, UniTask<Sprite>> getFullQualitySprite,
             Func<UniTask<CharacterSpriteTrimManifest>> getSpriteTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
         {
             _profile = profile ?? throw new ArgumentNullException(nameof(profile));
             _appearances = new CharacterAppearanceStore();
-            var addresses = new ContentAddressing.ContentAddresses(contentPrefix);
+            var addresses = new ContentAddressing.ContentAddresses(
+                contentPrefix,
+                resolveArtAddress);
             _sprites = new CharacterSpriteSetLoader(
                 profile,
                 addresses,
                 getSprite,
+                getFullQualitySprite,
                 getSpriteTrimManifest,
                 missingCharacter,
                 cancellationToken);
@@ -46,6 +51,10 @@ namespace Novels.Character
 
         internal void ClearAccessories() =>
             _appearances.ClearAccessories(_profile.MainCharacterAssetId);
+
+        internal void ClearLoadedSprites() => _sprites.ClearLoadedSprites();
+
+        internal void EnableFullQuality() => _sprites.EnableFullQuality();
 
         internal UniTask<CharacterSpriteSet> Resolve(
             StoryContracts.CharacterRenderRequest request,

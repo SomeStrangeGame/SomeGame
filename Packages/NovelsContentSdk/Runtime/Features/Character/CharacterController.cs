@@ -12,8 +12,10 @@ namespace Novels.Character
         {
             public GameObject ScreenPrefab;
             public string ContentPrefix;
+            public Func<string, string> ResolveArtAddress;
             public Content.CharacterAssetProfile AssetProfile;
             public Func<string, UniTask<Sprite>> GetSprite;
+            public Func<string, UniTask<Sprite>> GetFullQualitySprite;
             public Func<UniTask<CharacterSpriteTrimManifest>> GetSpriteTrimManifest;
             public Sprite MissingCharacter;
             public CancellationToken CancellationToken;
@@ -37,8 +39,10 @@ namespace Novels.Character
                 ?? throw new ArgumentNullException(nameof(ctx.AssetProfile));
             _spriteResolver = new CharacterSpriteResolver(
                 ctx.ContentPrefix,
+                ctx.ResolveArtAddress,
                 _assetProfile,
                 ctx.GetSprite,
+                ctx.GetFullQualitySprite,
                 ctx.GetSpriteTrimManifest,
                 ctx.MissingCharacter,
                 ctx.CancellationToken);
@@ -84,6 +88,23 @@ namespace Novels.Character
                 _mainCharacterClothes,
                 _mainCharacterHair,
                 _mainCharacterAccessory));
+        }
+
+        public async UniTask EnableFullQuality()
+        {
+            if (_lastRenderRequest == null)
+                return;
+            _spriteResolver.EnableFullQuality();
+            _spriteResolver.ClearLoadedSprites();
+            var version = ++_wardrobePreviewVersion;
+            var sprites = await _spriteResolver.Resolve(
+                _lastRenderRequest,
+                _mainCharacterView,
+                _mainCharacterClothes,
+                _mainCharacterHair,
+                _mainCharacterAccessory);
+            if (version == _wardrobePreviewVersion)
+                Apply(sprites);
         }
 
         public UniTask<Sprite> LoadWardrobeThumbnail(

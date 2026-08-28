@@ -59,6 +59,7 @@ namespace Novels.ContentSdk.Editor
             {
                 ValidateStoryCard(story.Id, report);
                 ValidateStorySources(story, report);
+                ValidateArtAliases(report);
             }
             else if (kind == ContentProjectKind.Catalog)
                 ValidateCatalog(report);
@@ -170,20 +171,31 @@ namespace Novels.ContentSdk.Editor
             Content.NovelDefinition definition,
             ValidationReport report)
         {
-            foreach (var episode in definition.Episodes)
+            var path = ContentAssets.InkPath(definition.Prefix, definition.StoryPath);
+            if (!File.Exists(path))
             {
-                var path = Path.Combine(
-                    Application.streamingAssetsPath,
-                    "noveltexts",
-                    definition.Prefix,
-                    episode.StoryPath.Replace('/', Path.DirectorySeparatorChar));
-                if (!File.Exists(path))
-                {
-                    report.Error(
-                        "STORY_SOURCE_FILE_MISSING",
-                        "Ink story source does not exist.",
-                        path);
-                }
+                report.Error(
+                    "STORY_SOURCE_FILE_MISSING",
+                    "Compiled Ink story does not exist.",
+                    path);
+            }
+        }
+
+        private static void ValidateArtAliases(ValidationReport report)
+        {
+            var path = FindDefinitions().SingleOrDefault();
+            if (string.IsNullOrEmpty(path))
+                return;
+            var asset = AssetDatabase.LoadAssetAtPath<Content.NovelContentAsset>(path);
+            if (asset == null)
+                return;
+            try
+            {
+                ArtAliasAuthoring.Validate(asset);
+            }
+            catch (Exception exception)
+            {
+                report.Error("STORY_ART_ALIASES_INVALID", exception.Message, path);
             }
         }
 
@@ -214,7 +226,7 @@ namespace Novels.ContentSdk.Editor
             {
                 report.Error(
                     "CONTENT_ASSETS_MISSING",
-                    "Assets/RemoteAssets contains no bundle assets.");
+                    "The project contains no bundle assets.");
             }
             var labels = AssetDatabase.GetAllAssetBundleNames()
                 .Where(name => AssetDatabase

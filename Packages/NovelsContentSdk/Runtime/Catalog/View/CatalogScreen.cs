@@ -12,7 +12,6 @@ namespace Novels.Catalog.View
         [SerializeField] private CatalogCarousel _carousel;
 
         private readonly Dictionary<string, Card> _cards = new();
-
         public void SetTitle(string text)
         {
             _title.text = text ?? string.Empty;
@@ -38,5 +37,6 @@ namespace Novels.Catalog.View
             card.gameObject.SetActive(true);
             _carousel.Register(card, isEnabled, onClick);
         }
+
     }
 }

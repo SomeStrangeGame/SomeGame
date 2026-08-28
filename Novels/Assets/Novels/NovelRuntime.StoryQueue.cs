@@ -10,14 +10,12 @@ namespace Novels
         private static StoryProcessor.Entity CreateStoryProcessor(
             IBaseDisposable owner,
             string storyText,
-            string initialState,
-            string sourceMapText)
+            string initialState)
         {
             return new StoryProcessor.Entity(new StoryProcessor.Entity.Ctx
             {
                 StoryText = storyText,
                 InitialState = initialState,
-                SourceMapText = sourceMapText,
             }).AddTo(owner);
         }
 

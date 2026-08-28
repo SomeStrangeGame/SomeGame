@@ -40,11 +40,9 @@ namespace Novels.ContentSdk.Editor
                 .ToArray() ?? Array.Empty<string>();
             foreach (var path in assets)
             {
-                if (!path.StartsWith(
-                        "Assets/RemoteAssets/",
-                        StringComparison.Ordinal))
+                if (!ContentAssets.IsBundleSource(path))
                 {
-                    errors.Add($"Root asset is outside Assets/RemoteAssets: {path}");
+                    errors.Add($"Unsupported root bundle asset: {path}");
                 }
             }
 

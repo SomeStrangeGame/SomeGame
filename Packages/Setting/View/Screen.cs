@@ -24,11 +24,11 @@ namespace Setting.View
                 button = Instantiate(_buttonPrefab, _buttonPrefab.transform.parent);
 
             _buttons[id] = button;
-            button.GetComponentInChildren<Text>(true).text = text;
+            var label = button.GetComponentInChildren<Text>(true);
+            label.text = text;
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() => onClick.Invoke());
             button.gameObject.SetActive(true);
         }
     }
 }
-

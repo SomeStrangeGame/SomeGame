@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -7,17 +8,31 @@ namespace Bundles
 {
     internal sealed class ContentDeliveryCoordinator
     {
+        private sealed class Operation
+        {
+            internal UniTask Task;
+            internal readonly Dictionary<int, ContentProgressReporter<ContentDeliveryProgress>>
+                Progress = new();
+        }
+
         private readonly ContentFileStore _files;
         private readonly BundlePayloadLoader _bundles;
         private readonly ContentStoragePlanner _storage;
         private readonly int _maximumParallelDownloads;
+        private readonly CancellationToken _cancellationToken;
+        private readonly SemaphoreSlim _downloadSlots;
         private readonly Action<(UnityEngine.LogType type, string message)> _onLog;
+        private readonly Dictionary<string, Operation> _operations = new(
+            StringComparer.OrdinalIgnoreCase);
+        private readonly object _gate = new();
+        private int _nextSubscriberId;
 
         internal ContentDeliveryCoordinator(
             ContentFileStore files,
             BundlePayloadLoader bundles,
             ContentStoragePlanner storage,
             int maximumParallelDownloads,
+            CancellationToken cancellationToken,
             Action<(UnityEngine.LogType type, string message)> onLog)
         {
             _files = files ?? throw new ArgumentNullException(nameof(files));
@@ -26,6 +41,10 @@ namespace Bundles
             _maximumParallelDownloads = maximumParallelDownloads > 0
                 ? maximumParallelDownloads
                 : throw new ArgumentOutOfRangeException(nameof(maximumParallelDownloads));
+            _downloadSlots = new SemaphoreSlim(
+                _maximumParallelDownloads,
+                _maximumParallelDownloads);
+            _cancellationToken = cancellationToken;
             _onLog = onLog;
         }
 
@@ -66,6 +85,59 @@ namespace Bundles
                 .ToArray();
             var lease = await _storage.Reserve(payloads)
                 .AttachExternalCancellation(cancellationToken);
+            var reporter = new ContentProgressReporter<ContentDeliveryProgress>(
+                onProgress,
+                _onLog);
+            Operation operation;
+            int subscriberId;
+            var operationKey = $"{session.ReleaseId}:{group.Id}";
+            lock (_gate)
+            {
+                subscriberId = ++_nextSubscriberId;
+                if (!_operations.TryGetValue(operationKey, out operation))
+                {
+                    operation = new Operation();
+                    _operations.Add(operationKey, operation);
+                    operation.Progress.Add(subscriberId, reporter);
+                    operation.Task = DownloadGroup(
+                            operationKey,
+                            operation,
+                            session,
+                            group,
+                            files,
+                            bundles)
+                        .Preserve();
+                }
+                else
+                {
+                    operation.Progress.Add(subscriberId, reporter);
+                }
+            }
+            try
+            {
+                await operation.Task.AttachExternalCancellation(cancellationToken);
+                return lease;
+            }
+            catch
+            {
+                lease.Dispose();
+                throw;
+            }
+            finally
+            {
+                lock (_gate)
+                    operation.Progress.Remove(subscriberId);
+            }
+        }
+
+        private async UniTask DownloadGroup(
+            string operationKey,
+            Operation operation,
+            ContentReleaseSession session,
+            ContentDeliveryGroupDescriptor group,
+            ContentFileDescriptor[] files,
+            BundleReleaseDescriptor[] bundles)
+        {
             var itemCount = bundles.Length + files.Length;
             var nextItem = -1;
             var progress = new ContentDeliveryProgressTracker(
@@ -74,7 +146,7 @@ namespace Bundles
                     .Concat(files.Select(value => value.Size))
                     .ToArray(),
                 group.Size,
-                onProgress,
+                value => ReportProgress(operation, value),
                 _onLog);
             progress.PublishInitial();
             try
@@ -84,12 +156,17 @@ namespace Bundles
                     .Select(_ => DownloadWorker())
                     .ToArray();
                 await UniTask.WhenAll(workers);
-                return lease;
             }
-            catch
+            finally
             {
-                lease.Dispose();
-                throw;
+                lock (_gate)
+                {
+                    if (_operations.TryGetValue(operationKey, out var current)
+                        && ReferenceEquals(current, operation))
+                    {
+                        _operations.Remove(operationKey);
+                    }
+                }
             }
 
             async UniTask DownloadWorker()
@@ -99,28 +176,47 @@ namespace Bundles
                     var index = Interlocked.Increment(ref nextItem);
                     if (index >= itemCount)
                         return;
-                    cancellationToken.ThrowIfCancellationRequested();
-                    if (index < bundles.Length)
+                    _cancellationToken.ThrowIfCancellationRequested();
+                    await _downloadSlots.WaitAsync(_cancellationToken);
+                    try
                     {
-                        var bundle = bundles[index];
-                        await _bundles.Prepare(
-                                session,
-                                bundle,
-                                bytes => progress.ReportBytes(index, bytes),
-                                cancellationToken);
+                        if (index < bundles.Length)
+                        {
+                            var bundle = bundles[index];
+                            await _bundles.Prepare(
+                                    session,
+                                    bundle,
+                                    bytes => progress.ReportBytes(index, bytes),
+                                    _cancellationToken);
+                        }
+                        else
+                        {
+                            var file = files[index - bundles.Length];
+                            await _files.ResolveUrl(
+                                    session,
+                                    file.Path,
+                                    bytes => progress.ReportBytes(index, bytes),
+                                    _cancellationToken);
+                        }
+                        progress.Complete(index);
                     }
-                    else
+                    finally
                     {
-                        var file = files[index - bundles.Length];
-                        await _files.ResolveUrl(
-                                session,
-                                file.Path,
-                                bytes => progress.ReportBytes(index, bytes),
-                                cancellationToken);
+                        _downloadSlots.Release();
                     }
-                    progress.Complete(index);
                 }
             }
+        }
+
+        private void ReportProgress(
+            Operation operation,
+            ContentDeliveryProgress progress)
+        {
+            ContentProgressReporter<ContentDeliveryProgress>[] reporters;
+            lock (_gate)
+                reporters = operation.Progress.Values.ToArray();
+            foreach (var reporter in reporters)
+                reporter.Report(progress);
         }
     }
 }

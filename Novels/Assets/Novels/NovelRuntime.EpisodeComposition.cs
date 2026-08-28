@@ -10,9 +10,8 @@ namespace Novels
         private async UniTask<EpisodeRunResult> RunEpisode(PreparedEpisode state)
         {
             var cancellationToken = state.CancellationToken;
-            var storyData = await _priorityLoader.Run(() => state.EpisodePreloading
+            var storyText = await _priorityLoader.Run(() => state.EpisodePreloading
                 .AttachExternalCancellation(cancellationToken));
-            var storyText = storyData.StoryText;
             var initialState = _progress.GetEntryState(_episode);
             ReplayValidator.ValidateOrDiscard(
                 state.SaveSystem,
@@ -23,7 +22,7 @@ namespace Novels
                 Bundles = state.StoryAssets,
                 PriorityLoader = _priorityLoader,
                 Addresses = state.Addresses,
-                BundleName = _definition.BundleName,
+                BundleName = _assetBundleName,
                 Fallbacks = _ctx.FallbackAssets,
                 CancellationToken = cancellationToken,
             }).Load();
@@ -37,8 +36,7 @@ namespace Novels
             var storyProcessor = CreateStoryProcessor(
                 state.EpisodeScope,
                 storyText,
-                initialState,
-                storyData.SourceMapText);
+                initialState);
             var storyCommands = new StoryCommands.Entity();
             var presentation = CreateEpisodePresentation(state, assets, loading);
             var storyQueue = CreateStoryQueue(
@@ -52,7 +50,7 @@ namespace Novels
             {
                 ReadNext = storyProcessor.ReadNext,
                 ExportStoryState = storyProcessor.ExportState,
-                IsEpisodeEnd = source => IsEpisodeEnd(source, _episode.EndMarker),
+                IsEpisodeEnd = source => IsEpisodeEnd(source, _definition.EndMarker),
                 ParseStep = storyCommands.ParseStep,
                 BuildQueue = storyQueue.TryBuild,
                 CompleteQueue = storyQueue.TryComplete,
@@ -61,7 +59,6 @@ namespace Novels
                 HideLoading = presentation.Loading.Hide,
                 CancellationToken = cancellationToken,
                 OnError = ReportError,
-                OnStorySourceChanged = _ctx.OnStorySourceChanged,
             }).AddTo(state.EpisodeScope);
             state.EpisodeRuntime.Configure(
                 novelProcess.Run,
@@ -74,18 +71,42 @@ namespace Novels
             string episodeAssetPath)
         {
             var cancellationToken = state.CancellationToken;
-            return await _priorityLoader.Run(() => state.StoryAssets
-                .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _definition.BundleName,
-                    episodeAssetPath))
+            return await _priorityLoader.Run(() => GetStorySprite(
+                    state,
+                    episodeAssetPath)
                 .AttachExternalCancellation(cancellationToken));
         }
+
+        private async UniTask<Sprite> GetFullCharacterSprite(
+            PreparedEpisode state,
+            string episodeAssetPath)
+        {
+            var cancellationToken = state.CancellationToken;
+            return await _priorityLoader.Run(() => GetFullStorySprite(
+                    state,
+                    episodeAssetPath)
+                .AttachExternalCancellation(cancellationToken));
+        }
+
+        private UniTask<Sprite> GetStorySprite(
+            PreparedEpisode state,
+            string assetPath) => _streaming != null
+            ? _streaming.GetSprite(assetPath)
+            : state.StoryAssets.TryGetBundledSprite(
+                new Bundles.BundleAssetAddress(_assetBundleName, assetPath));
+
+        private UniTask<Sprite> GetFullStorySprite(
+            PreparedEpisode state,
+            string assetPath) => _streaming != null
+            ? _streaming.GetFullSprite(assetPath)
+            : state.StoryAssets.TryGetBundledSprite(
+                new Bundles.BundleAssetAddress(_definition.BundleName, assetPath));
 
         private async UniTask<Character.CharacterSpriteTrimManifest>
             GetCharacterSpriteTrimManifest(PreparedEpisode state)
         {
             var cancellationToken = state.CancellationToken;
-            var bundle = await state.StoryAssets.GetAssetBundle(_definition.BundleName);
+            var bundle = await state.StoryAssets.GetAssetBundle(_assetBundleName);
             var address = state.Addresses.CharacterSpriteTrimManifest();
             return await bundle
                 .LoadAssetAsync<Character.CharacterSpriteTrimManifest>(address)

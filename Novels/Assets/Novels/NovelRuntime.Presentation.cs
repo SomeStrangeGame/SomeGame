@@ -29,6 +29,7 @@ namespace Novels
                     state.EpisodeScope,
                     assets.Character,
                     assetName => GetCharacterSprite(state, assetName),
+                    assetName => GetFullCharacterSprite(state, assetName),
                     () => GetCharacterSpriteTrimManifest(state),
                     _ctx.FallbackAssets.Character,
                     cancellationToken),
@@ -36,13 +37,16 @@ namespace Novels
                 Location = CreateLocation(
                     state.EpisodeScope,
                     assets.Location,
-                    assetName => _priorityLoader.Run(() => state.StoryAssets
-                        .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                            _definition.BundleName,
-                            state.Addresses.LocationImage(assetName)))
+                    assetName => _priorityLoader.Run(() => GetStorySprite(
+                            state,
+                            state.Addresses.LocationImage(assetName))
                         .AttachExternalCancellation(cancellationToken)),
                     assetName => state.StoryMedia.ResolveVideoUrl(
                         _definition.ResolveVideoId(assetName)),
+                    assetName => _priorityLoader.Run(() => GetFullStorySprite(
+                            state,
+                            state.Addresses.LocationImage(assetName))
+                        .AttachExternalCancellation(cancellationToken)),
                     _ctx.FallbackAssets.Background,
                     cancellationToken),
                 Notification = CreateNotification(
@@ -61,7 +65,7 @@ namespace Novels
             return new Audio.AudioController(new Audio.AudioController.Dependencies
             {
                 ResolveAudioUrl = resolveAudioUrl,
-                AudioMixer = _audioMixer,
+                AudioMixer = _ctx.AudioMixer,
                 CancellationToken = cancellationToken,
 
                 OnLog = _ctx.OnLog,
@@ -87,6 +91,7 @@ namespace Novels
             IBaseDisposable owner,
             GameObject screenPrefab,
             Func<string, UniTask<Sprite>> getSprite,
+            Func<string, UniTask<Sprite>> getFullQualitySprite,
             Func<UniTask<Character.CharacterSpriteTrimManifest>> getSpriteTrimManifest,
             Sprite missingCharacter,
             CancellationToken cancellationToken)
@@ -96,13 +101,16 @@ namespace Novels
                 {
                     ScreenPrefab = screenPrefab,
                     ContentPrefix = _definition.Prefix,
+                    ResolveArtAddress = _definition.ResolveArtAddress,
                     AssetProfile = _definition.CharacterAssets,
                     GetSprite = getSprite,
+                    GetFullQualitySprite = getFullQualitySprite,
                     GetSpriteTrimManifest = getSpriteTrimManifest,
                     MissingCharacter = missingCharacter,
                     CancellationToken = cancellationToken,
                 }).AddTo(owner);
             character.Init();
+            _activeCharacter = character;
             return character;
         }
 
@@ -120,10 +128,9 @@ namespace Novels
             string assetName)
         {
             var cancellationToken = state.CancellationToken;
-            var sprite = await _priorityLoader.Run(() => state.StoryAssets
-                .TryGetBundledSprite(new Bundles.BundleAssetAddress(
-                    _definition.BundleName,
-                    state.Addresses.ChooseItem(assetName)))
+            var sprite = await _priorityLoader.Run(() => GetStorySprite(
+                    state,
+                    state.Addresses.ChooseItem(assetName))
                 .AttachExternalCancellation(cancellationToken));
             return sprite != null ? sprite : _ctx.FallbackAssets.Background;
         }
@@ -150,6 +157,7 @@ namespace Novels
             GameObject screenPrefab,
             Func<string, UniTask<Sprite>> getSprite,
             Func<string, UniTask<string>> resolveVideoUrl,
+            Func<string, UniTask<Sprite>> getFullQualitySprite,
             Sprite missingBackground,
             CancellationToken cancellationToken)
         {
@@ -159,6 +167,7 @@ namespace Novels
                     ScreenPrefab = screenPrefab,
                     TargetCamera = _ctx.TargetCamera,
                     GetSprite = getSprite,
+                    GetFullQualitySprite = getFullQualitySprite,
                     ResolveVideoUrl = resolveVideoUrl,
                     MissingBackground = missingBackground,
                     CancellationToken = cancellationToken,
@@ -167,6 +176,7 @@ namespace Novels
                     OnError = ReportError,
                 }).AddTo(owner);
             location.Init();
+            _activeLocation = location;
             return location;
         }
 

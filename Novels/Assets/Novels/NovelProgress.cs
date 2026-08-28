@@ -121,10 +121,12 @@ namespace Novels
 
         private void Save() => _write(_key, Encode());
 
-        private string ContentVersion => string.Join(
+        private string ContentVersion => _definition.ContentVersion;
+
+        private string LegacyContentVersion => string.Join(
             "|",
             _definition.Episodes.Select(episode =>
-                $"{episode.Id}:{episode.ContentVersion}"));
+                $"{episode.Id}:{_definition.ContentVersion}"));
 
         private byte[] Encode()
         {
@@ -150,7 +152,7 @@ namespace Novels
             if (!reader.ReadBytes(_magic.Length).SequenceEqual(_magic)
                 || reader.ReadByte() != _formatVersion
                 || !string.Equals(reader.ReadString(), _definition.Id, StringComparison.Ordinal)
-                || !string.Equals(reader.ReadString(), ContentVersion, StringComparison.Ordinal))
+                || !MatchesContentVersion(reader.ReadString()))
             {
                 throw new InvalidDataException("Novel progress envelope is incompatible.");
             }
@@ -169,5 +171,9 @@ namespace Novels
             if (stream.Position != stream.Length)
                 throw new InvalidDataException("Novel progress has trailing data.");
         }
+
+        private bool MatchesContentVersion(string value) =>
+            string.Equals(value, ContentVersion, StringComparison.Ordinal)
+            || string.Equals(value, LegacyContentVersion, StringComparison.Ordinal);
     }
 }

@@ -14,82 +14,207 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _id: zdm
   _mainCharacter: "\u041D\u0443\u0440"
-  _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
+  _contentVersion: 1
+  _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
+  _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
   _episodes:
   - _id: s01e01
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 1"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e01.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Кровь на священных песках"
+    _description: "Обвинённая в убийстве жрица покидает родной дом и отправляется к Фараону искать справедливости. Но путь спасения оборачивается сплошной полосой из предательства и обмана."
   - _id: s01e02
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 2"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e02.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Друг или враг?"
+    _description: "Все надежды и мечты разрушены. Получится ли приспособиться к новому витку жизни?"
   - _id: s01e03
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 3"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e03.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Вопросы"
+    _description: "Вокруг одни вопросы и ни одного ответа."
   - _id: s01e04
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 4"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e04.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Обещание"
+    _description: "Назад нельзя, только вперёд."
   - _id: s01e05
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 5"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e05.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Последствия решений"
+    _description: "Гелиополь открывает свои двери."
   - _id: s01e06
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 6"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e06.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Тень за спиной"
+    _description: "Маски сброшены."
   - _id: s01e07
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 7"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e07.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Новые знакомства"
+    _description: "Один секрет раскрыт, но новые уже ждут за порогом."
   - _id: s01e08
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 8"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMs01e08.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Первая часть правды"
+    _description: "Вы скованы обещанием в золотой клетке. Что предпримете теперь?"
   - _id: s01e09
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 9"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMS01e09.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Сделка"
+    _description: "Когда боги молчат, остаётся надежда только на хаос."
   - _id: s01e10
-    _title: "\u0421\u0435\u0437\u043E\u043D 1, \u044D\u043F\u0438\u0437\u043E\u0434 10"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: "\u041A\u041E\u041D\u0415\u0426 \u0421\u0415\u0420\u0418\u0418"
-    _sourcePath: ZDMS01e10.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Лицом к лицу"
+    _description: "Пора платить по счетам."
   - _id: s02e01
-    _title: "\u0421\u0435\u0437\u043E\u043D 2, \u044D\u043F\u0438\u0437\u043E\u0434 1"
-    _storyPath: ZDM.ink.json
-    _contentVersion: 1
-    _endMarker: ""
-    _sourcePath: ZDMS02e01.ink
-    _silentAudioIds: ["\u0442\u0438\u0448\u0438\u043D\u0430"]
+    _title: "Путь Ба"
+    _description: "Добро пожаловать в Дуат."
+  _artAliases:
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/улыбка.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/лёгкая улыбка.png"
+  - _alias: "story/character/characters/анпу/view/emotions/боль.png"
+    _target: "story/character/characters/гор/view/emotions/боль.png"
+  - _alias: "story/character/characters/анпу/view/emotions/грусть.png"
+    _target: "story/character/characters/гор/view/emotions/грусть.png"
+  - _alias: "story/character/characters/анпу/view/emotions/задумчивость.png"
+    _target: "story/character/characters/гор/view/emotions/задумчивость.png"
+  - _alias: "story/character/characters/анпу/view/emotions/закатил глаза.png"
+    _target: "story/character/characters/гор/view/emotions/закатил глаза.png"
+  - _alias: "story/character/characters/анпу/view/emotions/закатить глаза.png"
+    _target: "story/character/characters/гор/view/emotions/закатил глаза.png"
+  - _alias: "story/character/characters/анпу/view/emotions/злость.png"
+    _target: "story/character/characters/гор/view/emotions/злость.png"
+  - _alias: "story/character/characters/анпу/view/emotions/лёгкая улыбка.png"
+    _target: "story/character/characters/гор/view/emotions/лёгкая улыбка.png"
+  - _alias: "story/character/characters/анпу/view/emotions/недоверие.png"
+    _target: "story/character/characters/гор/view/emotions/недоверие.png"
+  - _alias: "story/character/characters/анпу/view/emotions/недовольство.png"
+    _target: "story/character/characters/гор/view/emotions/недовольство.png"
+  - _alias: "story/character/characters/анпу/view/emotions/недоумение.png"
+    _target: "story/character/characters/гор/view/emotions/недоумение.png"
+  - _alias: "story/character/characters/анпу/view/emotions/отвращение.png"
+    _target: "story/character/characters/гор/view/emotions/отвращение.png"
+  - _alias: "story/character/characters/анпу/view/emotions/подсветка глаз.png"
+    _target: "story/character/characters/гор/view/emotions/подсветка глаз.png"
+  - _alias: "story/character/characters/анпу/view/emotions/прищур.png"
+    _target: "story/character/characters/гор/view/emotions/прищур.png"
+  - _alias: "story/character/characters/анпу/view/emotions/радость.png"
+    _target: "story/character/characters/гор/view/emotions/радость.png"
+  - _alias: "story/character/characters/анпу/view/emotions/раздражение.png"
+    _target: "story/character/characters/гор/view/emotions/недовольство.png"
+  - _alias: "story/character/characters/анпу/view/emotions/решительность.png"
+    _target: "story/character/characters/гор/view/emotions/решительность.png"
+  - _alias: "story/character/characters/анпу/view/emotions/светящиеся глаза.png"
+    _target: "story/character/characters/гор/view/emotions/сияющие глаза.png"
+  - _alias: "story/character/characters/анпу/view/emotions/сияющие глаза.png"
+    _target: "story/character/characters/гор/view/emotions/сияющие глаза.png"
+  - _alias: "story/character/characters/анпу/view/emotions/скепсис.png"
+    _target: "story/character/characters/гор/view/emotions/скепсис.png"
+  - _alias: "story/character/characters/анпу/view/emotions/смущение.png"
+    _target: "story/character/characters/гор/view/emotions/смущение.png"
+  - _alias: "story/character/characters/анпу/view/emotions/снисхождение.png"
+    _target: "story/character/characters/гор/view/emotions/снисхождение.png"
+  - _alias: "story/character/characters/анпу/view/emotions/сон.png"
+    _target: "story/character/characters/гор/view/emotions/сон.png"
+  - _alias: "story/character/characters/анпу/view/emotions/удивление.png"
+    _target: "story/character/characters/гор/view/emotions/удивление.png"
+  - _alias: "story/character/characters/анпу/view/emotions/флирт.png"
+    _target: "story/character/characters/гор/view/emotions/флирт.png"
+  - _alias: "story/character/characters/анпу/view/emotions/хитрая улыбка.png"
+    _target: "story/character/characters/гор/view/emotions/хитрая улыбка.png"
+  - _alias: "story/character/characters/анпу/view/emotions/хитрая ухмылка.png"
+    _target: "story/character/characters/гор/view/emotions/хитрая улыбка.png"
+  - _alias: "story/character/characters/анпу/view/emotions/ярость.png"
+    _target: "story/character/characters/гор/view/emotions/ярость.png"
+  - _alias: "story/character/characters/анпу/view/main.png"
+    _target: "story/character/characters/гор/view/main.png"
+  - _alias: "story/character/characters/анпу/view/взлохмаченный.png"
+    _target: "story/character/characters/гор/view/взлохмаченный.png"
+  - _alias: "story/character/characters/анпу/view/силуэт.png"
+    _target: "story/character/characters/гор/view/силуэт.png"
+  - _alias: "story/character/characters/бастет/view/женщина.png"
+    _target: "story/character/characters/бастет/view/main.png"
+  - _alias: "story/character/characters/воин/view/emotions/недовольство.png"
+    _target: "story/character/characters/воин/view/emotions/злость.png"
+  - _alias: "story/character/characters/гор/view/emotions/закатить глаза.png"
+    _target: "story/character/characters/гор/view/emotions/закатил глаза.png"
+  - _alias: "story/character/characters/гор/view/emotions/раздражение.png"
+    _target: "story/character/characters/гор/view/emotions/недовольство.png"
+  - _alias: "story/character/characters/гор/view/emotions/светящиеся глаза.png"
+    _target: "story/character/characters/гор/view/emotions/сияющие глаза.png"
+  - _alias: "story/character/characters/гор/view/emotions/хитрая ухмылка.png"
+    _target: "story/character/characters/гор/view/emotions/хитрая улыбка.png"
+  - _alias: "story/character/characters/гор/view/анпу.png"
+    _target: "story/character/characters/гор/view/main.png"
+  - _alias: "story/character/characters/гор/view/незнакомец.png"
+    _target: "story/character/characters/гор/view/main.png"
+  - _alias: "story/character/characters/горожанка/view/emotions/недовольство.png"
+    _target: "story/character/characters/горожанка/view/emotions/злость.png"
+  - _alias: "story/character/characters/джосер/view/emotions/легкая улыбка.png"
+    _target: "story/character/characters/джосер/view/emotions/лёгкая улыбка.png"
+  - _alias: "story/character/characters/джосер/view/emotions/недоверчивость.png"
+    _target: "story/character/characters/джосер/view/emotions/недоверие.png"
+  - _alias: "story/character/characters/джосер/view/emotions/раздражение.png"
+    _target: "story/character/characters/джосер/view/emotions/недовольство.png"
+  - _alias: "story/character/characters/захра/view/emotions/закатила глаза.png"
+    _target: "story/character/characters/захра/view/emotions/недовольство.png"
+  - _alias: "story/character/characters/захра/view/emotions/лёгкая улыбка.png"
+    _target: "story/character/characters/захра/view/emotions/радость.png"
+  - _alias: "story/character/characters/захра/view/emotions/счастье.png"
+    _target: "story/character/characters/захра/view/emotions/радость.png"
+  - _alias: "story/character/characters/контар/view/в накидке.png"
+    _target: "story/character/characters/контар/view/накидка.png"
+  - _alias: "story/character/characters/куибила/view/emotions/недоверчивость.png"
+    _target: "story/character/characters/куибила/view/emotions/недоверие.png"
+  - _alias: "story/character/characters/куибила/view/emotions/недовольно.png"
+    _target: "story/character/characters/куибила/view/emotions/недовольство.png"
+  - _alias: "story/character/characters/рамос/view/emotions/закатить глаза.png"
+    _target: "story/character/characters/рамос/view/emotions/закатил глаза.png"
+  - _alias: "story/character/characters/рамос/view/emotions/размышление.png"
+    _target: "story/character/characters/рамос/view/emotions/задумчивость.png"
+  - _alias: "story/character/characters/стражники/view/emotions/грусть.png"
+    _target: "story/character/characters/стражник/view/emotions/грусть.png"
+  - _alias: "story/character/characters/стражники/view/emotions/недоверие.png"
+    _target: "story/character/characters/стражник/view/emotions/недоверие.png"
+  - _alias: "story/character/characters/стражники/view/main.png"
+    _target: "story/character/characters/стражник/view/main.png"
+  - _alias: "story/character/characters/тёмная фигура/view/emotions/злобный смех.png"
+    _target: "story/character/characters/тёмная фигура/view/emotions/зловещий смех.png"
+  - _alias: "story/character/characters/тёмная фигура/view/emotions/зловещая улыбка.png"
+    _target: "story/character/characters/тёмная фигура/view/emotions/злобный оскал.png"
+  - _alias: "story/character/characters/тёмная фигура/view/emotions/открытая пасть.png"
+    _target: "story/character/characters/тёмная фигура/view/emotions/злобный оскал.png"
+  - _alias: "story/character/characters/тёмная фигура/view/emotions/ужасное лицо.png"
+    _target: "story/character/characters/тёмная фигура/view/emotions/злобный оскал.png"
+  - _alias: "story/character/characters/maincharacter/view/голубой лотос/emotions/задумчиво.png"
+    _target: "story/character/characters/maincharacter/view/голубой лотос/emotions/задумчивость.png"
+  - _alias: "story/character/characters/maincharacter/view/голубой лотос/emotions/закатить глаза.png"
+    _target: "story/character/characters/maincharacter/view/голубой лотос/emotions/закатила глаза.png"
+  - _alias: "story/character/characters/maincharacter/view/голубой лотос/emotions/испуг.png"
+    _target: "story/character/characters/maincharacter/view/голубой лотос/emotions/страх.png"
+  - _alias: "story/character/characters/maincharacter/view/голубой лотос/emotions/недоверчивость.png"
+    _target: "story/character/characters/maincharacter/view/голубой лотос/emotions/недоверие.png"
+  - _alias: "story/character/characters/maincharacter/view/голубой лотос/emotions/улыбка.png"
+    _target: "story/character/characters/maincharacter/view/голубой лотос/emotions/лёгкая улыбка.png"
+  - _alias: "story/character/characters/maincharacter/view/голубой лотос/emotions/ухмылка.png"
+    _target: "story/character/characters/maincharacter/view/голубой лотос/emotions/хитрая улыбка.png"
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/задумчиво.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/задумчивость.png"
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/закатить глаза.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/закатила глаза.png"
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/испуг.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/страх.png"
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/легкая улыбка.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/лёгкая улыбка.png"
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/недоверчивость.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/недоверие.png"
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/слезы.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/слёзы.png"
+  - _alias: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/ухмылка.png"
+    _target: "story/character/characters/maincharacter/view/жёлтый лотос/emotions/хитрая улыбка.png"
+  - _alias: "story/character/characters/maincharacter/view/розовый лотос/emotions/задумчиво.png"
+    _target: "story/character/characters/maincharacter/view/розовый лотос/emotions/задумчивость.png"
+  - _alias: "story/character/characters/maincharacter/view/розовый лотос/emotions/закатить глаза.png"
+    _target: "story/character/characters/maincharacter/view/розовый лотос/emotions/закатила глаза.png"
+  - _alias: "story/character/characters/maincharacter/view/розовый лотос/emotions/испуг.png"
+    _target: "story/character/characters/maincharacter/view/розовый лотос/emotions/страх.png"
+  - _alias: "story/character/characters/maincharacter/view/розовый лотос/emotions/недоверчивость.png"
+    _target: "story/character/characters/maincharacter/view/розовый лотос/emotions/недоверие.png"
+  - _alias: "story/character/characters/maincharacter/view/розовый лотос/emotions/улыбка.png"
+    _target: "story/character/characters/maincharacter/view/розовый лотос/emotions/лёгкая улыбка.png"
+  - _alias: "story/character/characters/maincharacter/view/розовый лотос/emotions/ухмылка.png"
+    _target: "story/character/characters/maincharacter/view/розовый лотос/emotions/хитрая улыбка.png"
+  - _alias: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/задумчиво.png"
+    _target: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/задумчивость.png"
+  - _alias: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/закатить глаза.png"
+    _target: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/закатила глаза.png"
+  - _alias: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/испуг.png"
+    _target: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/страх.png"
+  - _alias: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/недоверчивость.png"
+    _target: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/недоверие.png"
+  - _alias: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/улыбка.png"
+    _target: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/лёгкая улыбка.png"
+  - _alias: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/ухмылка.png"
+    _target: "story/character/characters/maincharacter/view/сиреневый лотос/emotions/хитрая улыбка.png"

@@ -45,9 +45,11 @@ namespace Novels.Character
             if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
             {
                 return await Get(_addresses.CharacterHair(
-                           name, value, _profile.FrontLayer, _profile.DefaultHairColor))
+                           name, value, _profile.FrontLayer,
+                           _profile.Defaults(name).HairColor))
                     ?? await Get(_addresses.CharacterHair(
-                        name, value, _profile.BackLayer, _profile.DefaultHairColor))
+                        name, value, _profile.BackLayer,
+                        _profile.Defaults(name).HairColor))
                     ?? _fallback;
             }
             if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)

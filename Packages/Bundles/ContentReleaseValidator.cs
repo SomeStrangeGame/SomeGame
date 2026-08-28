@@ -159,6 +159,7 @@ namespace Bundles
                 throw new ContentIntegrityException(
                     "Content release has no delivery groups.");
             }
+            ValidateStreamingPlan(release.streamingPlan, bundleNames, filePaths, groupIds);
             var expectedReleaseId = ContentReleaseFingerprint.Compute(release);
             if (!string.Equals(
                     release.releaseId,
@@ -167,6 +168,51 @@ namespace Bundles
             {
                 throw new ContentIntegrityException(
                     $"Content release ID '{release.releaseId}' does not match its payload.");
+            }
+        }
+
+        private static void ValidateStreamingPlan(
+            ContentStreamingPlanEntry plan,
+            ISet<string> bundleNames,
+            ISet<string> filePaths,
+            ISet<string> groupIds)
+        {
+            if (plan == null)
+                return;
+            if (plan.chunks == null || plan.chunks.Length == 0)
+            {
+                throw new ContentIntegrityException(
+                    "Streaming plan must contain at least one art chunk.");
+            }
+            var expectedChunk = 0;
+            foreach (var chunk in plan.chunks ?? Array.Empty<ContentStreamingChunkEntry>())
+            {
+                if (chunk == null
+                    || chunk.index != expectedChunk++
+                    || string.IsNullOrWhiteSpace(chunk.bundle)
+                    || !bundleNames.Contains(chunk.bundle)
+                    || string.IsNullOrWhiteSpace(chunk.deliveryGroup)
+                    || !groupIds.Contains(chunk.deliveryGroup)
+                    || chunk.assets == null
+                    || chunk.assets.Length == 0)
+                {
+                    throw new ContentIntegrityException(
+                        "Streaming chunks must be contiguous and reference known payloads.");
+                }
+            }
+            var previousMediaOrder = -1;
+            foreach (var media in plan.media ?? Array.Empty<ContentStreamingMediaEntry>())
+            {
+                if (media == null
+                    || media.order < 0
+                    || media.order < previousMediaOrder
+                    || !filePaths.Contains(media.path)
+                    || !groupIds.Contains(media.deliveryGroup))
+                {
+                    throw new ContentIntegrityException(
+                        "Streaming media order references an unknown payload.");
+                }
+                previousMediaOrder = media.order;
             }
         }
 

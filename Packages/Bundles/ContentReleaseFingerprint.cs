@@ -31,6 +31,20 @@ namespace Bundles
             lines.AddRange((release.deliveryGroups ?? Array.Empty<ContentDeliveryGroupEntry>())
                 .OrderBy(value => value?.id, StringComparer.Ordinal)
                 .Select(value => $"G:{value?.id}:{value?.payloadCount}:{value?.size}"));
+            if (release.streamingPlan != null)
+            {
+                lines.AddRange((release.streamingPlan.chunks
+                        ?? Array.Empty<ContentStreamingChunkEntry>())
+                    .OrderBy(value => value?.index)
+                    .Select(value =>
+                        $"K:{value?.index}:{value?.bundle}:{value?.deliveryGroup}:"
+                        + string.Join(",", value?.assets ?? Array.Empty<string>())));
+                lines.AddRange((release.streamingPlan.media
+                        ?? Array.Empty<ContentStreamingMediaEntry>())
+                    .OrderBy(value => value?.order)
+                    .Select(value =>
+                        $"M:{value?.order}:{value?.path}:{value?.deliveryGroup}"));
+            }
             return ContentHash.ComputeSha256(
                 Encoding.UTF8.GetBytes(string.Join("\n", lines)));
         }

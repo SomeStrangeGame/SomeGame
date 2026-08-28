@@ -65,6 +65,46 @@ namespace Novels.Location.View
             Layout.SetImage(sprite);
         }
 
+        public void ClearImage()
+        {
+            Layout.ClearImage();
+        }
+
+        public async UniTask CrossfadeImage(
+            Sprite sprite,
+            CancellationToken cancellationToken)
+        {
+            if (sprite == null)
+                throw new ArgumentNullException(nameof(sprite));
+            if (_image.sprite == null || !_image.enabled || !_image.gameObject.activeInHierarchy)
+            {
+                SetImage(sprite);
+                return;
+            }
+
+            var previous = Instantiate(_image, _image.transform.parent);
+            previous.name = $"{_image.name} (Quality Crossfade)";
+            previous.raycastTarget = false;
+            previous.transform.SetSiblingIndex(_image.transform.GetSiblingIndex() + 1);
+            var fade = previous.GetComponent<CanvasGroup>()
+                ?? previous.gameObject.AddComponent<CanvasGroup>();
+            SetImage(sprite);
+            try
+            {
+                await global::UITransitions.Transition.Fade(
+                    fade,
+                    1f,
+                    0f,
+                    _showHideImageDuration,
+                    cancellationToken);
+            }
+            finally
+            {
+                if (previous != null)
+                    Destroy(previous.gameObject);
+            }
+        }
+
         public void ShowImageImmediate()
         {
             _imageCanvasGroup.alpha = 1f;
@@ -115,11 +155,76 @@ namespace Novels.Location.View
         {
             _videoImage.texture = renderTexture;
             _video.targetTexture = renderTexture;
+            Layout.SetVideoTexture(renderTexture);
+            ApplyVideoAspect();
+        }
+
+        private void OnRectTransformDimensionsChange()
+        {
+            ApplyVideoAspect();
+        }
+
+        private void ApplyVideoAspect()
+        {
+            var texture = _videoImage == null ? null : _videoImage.texture;
+            if (texture == null || texture.width <= 0 || texture.height <= 0)
+            {
+                if (_videoImage != null)
+                    _videoImage.uvRect = new Rect(0f, 0f, 1f, 1f);
+                return;
+            }
+            var rect = _videoImage.rectTransform.rect;
+            if (rect.width <= 0f || rect.height <= 0f)
+                return;
+
+            var sourceAspect = (float)texture.width / texture.height;
+            var targetAspect = rect.width / rect.height;
+            if (sourceAspect > targetAspect)
+            {
+                var visibleWidth = targetAspect / sourceAspect;
+                _videoImage.uvRect = new Rect(
+                    (1f - visibleWidth) * 0.5f,
+                    0f,
+                    visibleWidth,
+                    1f);
+                return;
+            }
+            var visibleHeight = sourceAspect / targetAspect;
+            _videoImage.uvRect = new Rect(
+                0f,
+                (1f - visibleHeight) * 0.5f,
+                1f,
+                visibleHeight);
         }
 
         public void SetEnabledVideo(bool state)
         {
             _videoImage.enabled = state;
+            if (!state)
+                SetVideoAlpha(0f);
+        }
+
+        public async UniTask CrossfadeToVideo(CancellationToken cancellationToken)
+        {
+            SetVideoAlpha(0f);
+            _videoImage.enabled = true;
+            cancellationToken.ThrowIfCancellationRequested();
+            var elapsed = 0f;
+            while (elapsed < _showHideImageDuration)
+            {
+                await UniTask.Yield(cancellationToken);
+                elapsed += Time.deltaTime;
+                SetVideoAlpha(Mathf.Clamp01(elapsed / _showHideImageDuration));
+            }
+            SetVideoAlpha(1f);
+            _image.enabled = false;
+        }
+
+        private void SetVideoAlpha(float alpha)
+        {
+            var color = _videoImage.color;
+            color.a = alpha;
+            _videoImage.color = color;
         }
 
         public void ResetCamera()
@@ -190,7 +295,7 @@ namespace Novels.Location.View
 
         public async UniTask SetDialogue(TextAlignment aligment, CancellationToken cancellationToken)
         {
-            if (_image.sprite == null) return;
+            if (!Layout.HasVisual) return;
 
             var current = _image.transform.localPosition;
             var target = Layout.DialoguePosition(aligment, _dialogOffset);
@@ -199,7 +304,7 @@ namespace Novels.Location.View
 
         public void SetDialogueImmediate(TextAlignment aligment)
         {
-            if (_image.sprite == null) return;
+            if (!Layout.HasVisual) return;
 
             MoveImmediate(
                 _image.transform,
