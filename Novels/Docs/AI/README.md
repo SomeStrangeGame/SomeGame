@@ -33,6 +33,7 @@ runtime `write-lock` по правилам координации.
 | Импорт PNG, настройки текстур, размер контента | [ContentAuthoringGuide.md](guides/ContentAuthoringGuide.md), [ContentSizeOptimization.md](plans/ContentSizeOptimization.md), [ContentSizeBaseline.md](plans/ContentSizeBaseline.md) как датированный baseline |
 | Валидация, AssetBundle, release, publish | [ContentPipeline.md](guides/ContentPipeline.md), [ManualContentChecklist.md](guides/ManualContentChecklist.md) для визуальной приёмки |
 | Player build или платформенная сборка | [ContentPipeline.md](guides/ContentPipeline.md), затем актуальный build-скрипт и его локальный README |
+| Unity не запускается, Licensing Client, `Connection Lost`, protocol/mutex/IPC | [UnityLicensingTroubleshooting.md](guides/UnityLicensingTroubleshooting.md), затем свежие Editor/licensing-логи |
 | Изменение общего SDK или межпроектного контракта | [ParallelRefactoringCoordination.md](rules/ParallelRefactoringCoordination.md), [ContentPipeline.md](guides/ContentPipeline.md), [MultiProjectSplitPlan.md](architecture/MultiProjectSplitPlan.md) |
 | Текущий рефакторинг архитектуры | [UnityRefactoringPlan.md](plans/UnityRefactoringPlan.md), [UnityProjectContext.md](architecture/UnityProjectContext.md) |
 | Ручной Play Mode/content smoke | [ManualContentChecklist.md](guides/ManualContentChecklist.md) |
@@ -50,6 +51,8 @@ runtime `write-lock` по правилам координации.
 - [InkSyntax.md](guides/InkSyntax.md) — поддерживаемый сценарный синтаксис.
 - [ManualContentChecklist.md](guides/ManualContentChecklist.md) — ручная визуальная и
   смысловая приёмка после автоматической проверки.
+- [UnityLicensingTroubleshooting.md](guides/UnityLicensingTroubleshooting.md) —
+  evidence-first диагностика и безопасное восстановление Unity Licensing на macOS.
 - [ProjectOverview.md](architecture/ProjectOverview.md) — runtime flow и владение.
 - [UnityProjectContext.md](architecture/UnityProjectContext.md) — краткий технический вход.
 - [MultiProjectSplitPlan.md](architecture/MultiProjectSplitPlan.md) — границы Game, SDK,
