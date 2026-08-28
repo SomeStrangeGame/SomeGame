@@ -37,7 +37,7 @@ runtime `write-lock` по правилам координации.
 | Изменение общего SDK или межпроектного контракта | [ParallelRefactoringCoordination.md](rules/ParallelRefactoringCoordination.md), [ContentPipeline.md](guides/ContentPipeline.md), [MultiProjectSplitPlan.md](architecture/MultiProjectSplitPlan.md) |
 | Текущий рефакторинг архитектуры | [UnityRefactoringPlan.md](plans/UnityRefactoringPlan.md), [UnityProjectContext.md](architecture/UnityProjectContext.md) |
 | Ручной Play Mode/content smoke | [ManualContentChecklist.md](guides/ManualContentChecklist.md) |
-| Расследование прежнего решения или регрессии | соответствующий `work/parallel/ParallelWork.<scope>.md` или `archive/parallel-work/ParallelWork.<scope>.md`, [RefactoringHistory.md](archive/reports/RefactoringHistory.md), релевантная запись `CoordinationRuntime/HANDOFF.md` |
+| Расследование прежнего решения или регрессии | соответствующий `work/parallel/ParallelWork.<scope>.md` или `archive/parallel-work/ParallelWork.<scope>.md`, [RefactoringHistory.md](archive/reports/RefactoringHistory.md), релевантный датированный `archive/reports/CoordinationHandoffHistory-*.md` |
 
 ## Действующие контракты и руководства
 
@@ -95,6 +95,8 @@ runtime `write-lock` по правилам координации.
 - [RefactoringHistory.md](archive/reports/RefactoringHistory.md) — архив архитектурных волн;
 - [TZMImportReport.md](archive/reports/TZMImportReport.md) — датированный отчёт импорта TZM;
 - [ZDMContentGapReport.md](archive/reports/ZDMContentGapReport.md) — датированный gap-report ZDM;
+- `archive/reports/CoordinationHandoffHistory-*.md` — завершённая история
+  межчатовых передач; читать только для конкретного расследования;
 - `CoordinationRuntime/agents/*.md` — runtime-записи отдельных задач.
 
 Они читаются только при расследовании истории конкретного файла, решения,

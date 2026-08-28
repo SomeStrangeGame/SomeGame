@@ -1,6 +1,6 @@
 # Agent: bundle-audit
 
-- Статус: ready-for-integration
+- Статус: completed
 - Задача: перенести Catalog size/content audit в общий Content SDK
 - Область:
   - `Packages/NovelsContentSdk/Editor/ContentBundleAudit.cs`
@@ -12,3 +12,4 @@
   - собственные runtime coordination files
 - Создано UTC: 2026-08-24T10:21:44Z
 - Завершено UTC: 2026-08-24T10:25:30Z
+- Результат: реализация присутствует в `main`; статус закрыт аудитом 2026-08-28
