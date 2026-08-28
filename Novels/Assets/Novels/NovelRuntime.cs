@@ -17,7 +17,6 @@ namespace Novels
             internal CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
-            internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
             internal Bundles.Entity Bundles;
             internal Catalog.NovelCatalogEntry Content;
             internal string PersistentDataPath;
@@ -81,8 +80,6 @@ namespace Novels
             _assetBundleName = hasStreamingPlan
                 ? chunks[0].bundle
                 : _ctx.Content.ContentBundleName;
-            StreamingExperimentDiagnostics.SetQuality(
-                hasStreamingPlan ? "Chunk 0" : "Full");
             _definition = await LoadContent(
                 storyAssets,
                 _ctx.Content,
@@ -142,7 +139,6 @@ namespace Novels
                 _activeLocation.EnableFullQuality().Forget();
             if (_activeCharacter != null)
                 _activeCharacter.EnableFullQuality().Forget();
-            StreamingExperimentDiagnostics.SetQuality($"Chunk {index}");
         }
 
         internal UniTask FlushSaveAsync()

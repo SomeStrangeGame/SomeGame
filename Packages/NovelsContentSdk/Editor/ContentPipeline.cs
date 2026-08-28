@@ -21,11 +21,7 @@ namespace Novels.ContentSdk.Editor
         {
             var plan = ContentValidator.Validate();
             var target = ContentPlatform.Resolve(platform);
-            var streamingExperiment = plan.Kind == ContentProjectKind.Story
-                && string.Equals(
-                    Environment.GetEnvironmentVariable("NOVELS_STREAMING_EXPERIMENT"),
-                    "1",
-                    StringComparison.Ordinal);
+            var streaming = plan.Kind == ContentProjectKind.Story;
             Directory.CreateDirectory(_outputPath);
             RecreateDirectory(_stagingPath);
             RecreateDirectory(Path.Combine(
@@ -34,8 +30,8 @@ namespace Novels.ContentSdk.Editor
                 ContentPlatform.Name(target)));
             try
             {
-                var files = BuildFilePayloads(plan, streamingExperiment);
-                BuildTargetRelease(plan, files, target, streamingExperiment);
+                var files = BuildFilePayloads(plan, streaming);
+                BuildTargetRelease(plan, files, target, streaming);
                 Debug.Log(
                     $"Atomic content '{plan.DeliveryGroup}' built for "
                     + $"{platform} to {Path.GetFullPath(_outputPath)}");
@@ -50,7 +46,7 @@ namespace Novels.ContentSdk.Editor
 
         private static ContentFileEntry[] BuildFilePayloads(
             ContentBuildPlan plan,
-            bool streamingExperiment)
+            bool streaming)
         {
             var result = new List<ContentFileEntry>();
             foreach (var file in ContentAssets.FindContentFiles(plan))
@@ -77,7 +73,7 @@ namespace Novels.ContentSdk.Editor
                     deliveryGroup = DeliveryGroupForFile(
                         plan,
                         relative,
-                        streamingExperiment),
+                        streaming),
                 });
             }
             return result.ToArray();
@@ -93,21 +89,18 @@ namespace Novels.ContentSdk.Editor
             }
 
             // Authoring sources stay in the project for build-time analysis.
-            // Runtime needs only compiled Ink and its analytics source map.
+            // Runtime needs only compiled Ink.
             return relativePath.EndsWith(
                     ".ink.json",
-                    StringComparison.OrdinalIgnoreCase)
-                || relativePath.EndsWith(
-                    ".source-map.json",
                     StringComparison.OrdinalIgnoreCase);
         }
 
         private static string DeliveryGroupForFile(
             ContentBuildPlan plan,
             string relativePath,
-            bool streamingExperiment)
+            bool streaming)
         {
-            if (!streamingExperiment)
+            if (!streaming)
                 return plan.DeliveryGroup;
             if (relativePath.StartsWith("noveltexts/", StringComparison.OrdinalIgnoreCase))
             {
@@ -127,13 +120,13 @@ namespace Novels.ContentSdk.Editor
             ContentBuildPlan plan,
             ContentFileEntry[] files,
             BuildTarget target,
-            bool streamingExperiment)
+            bool streaming)
         {
             var platform = ContentPlatform.Name(target);
             var staging = Path.Combine(_stagingPath, platform);
             Directory.CreateDirectory(staging);
-            var assets = ContentAssets.FindBundleAssets();
-            if (streamingExperiment)
+            var assets = ContentAssets.FindBundleAssets(plan);
+            if (streaming)
             {
                 BuildStreamingTargetRelease(plan, files, target, platform, staging, assets);
                 return;
@@ -193,7 +186,7 @@ namespace Novels.ContentSdk.Editor
             string staging,
             string[] assets)
         {
-            var streaming = ExperimentalStreamingPlan.Create(
+            var streaming = StoryStreamingPlan.Create(
                 plan.DeliveryGroup,
                 assets,
                 files.Select(value => value.path).ToArray());
@@ -416,6 +409,50 @@ namespace Novels.ContentSdk.Editor
                 .Distinct(StringComparer.Ordinal)
                 .OrderBy(path => path, StringComparer.Ordinal)
                 .ToArray();
+        }
+
+        internal static string[] FindBundleAssets(ContentBuildPlan plan)
+        {
+            var assets = FindBundleAssets();
+            if (plan.Kind != ContentProjectKind.Story)
+                return assets;
+
+            var authoring = CurrentStoryDefinition();
+            var definition = authoring.ToDefinition();
+            var unused = StoryChunkAuthoring.UnusedPaths(authoring);
+            var withoutUnused = assets
+                .Where(path => !unused.Contains(path))
+                .ToArray();
+            var excludedUnusedCount = assets.Length - withoutUnused.Length;
+            if (excludedUnusedCount != unused.Count)
+            {
+                throw new InvalidOperationException(
+                    $"Expected to exclude {unused.Count} unused story assets, "
+                    + $"but found {excludedUnusedCount} among bundle roots.");
+            }
+            var included = withoutUnused
+                .Where(path =>
+                {
+                    var address = BundleAddress(definition.Id, path);
+                    var normalizedAddress = ContentAddressing
+                        .TechnicalAssetIdConvention
+                        .Canonicalize(address)
+                        .Replace('\\', '/')
+                        .Trim('/');
+                    return string.Equals(
+                        definition.ResolveArtAddress(address),
+                        normalizedAddress,
+                        StringComparison.OrdinalIgnoreCase);
+                })
+                .ToArray();
+            var excludedAliasCount = withoutUnused.Length - included.Length;
+            if (excludedUnusedCount > 0 || excludedAliasCount > 0)
+            {
+                Debug.Log(
+                    $"Excluded {excludedUnusedCount} authoring-unused and "
+                    + $"{excludedAliasCount} aliased story assets from bundle roots.");
+            }
+            return included;
         }
 
         internal static ContentFileSource[] FindContentFiles(ContentBuildPlan plan) =>
@@ -646,6 +683,9 @@ namespace Novels.ContentSdk.Editor
             || path.StartsWith("novelsaudio/", StringComparison.OrdinalIgnoreCase);
 
         private static string CurrentStoryId()
+            => CurrentStoryDefinition().ToDefinition().Id;
+
+        private static Content.NovelContentAsset CurrentStoryDefinition()
         {
             var definitions = AssetDatabase.FindAssets("t:NovelContentAsset", new[] {"Assets"})
                 .Select(AssetDatabase.GUIDToAssetPath)
@@ -657,7 +697,7 @@ namespace Novels.ContentSdk.Editor
                 throw new InvalidOperationException(
                     $"Expected one story definition, found {definitions.Length}.");
             }
-            return definitions[0].ToDefinition().Id;
+            return definitions[0];
         }
 
         private static string Absolute(string assetPath) =>

@@ -101,6 +101,7 @@ namespace Novels
                 {
                     ScreenPrefab = screenPrefab,
                     ContentPrefix = _definition.Prefix,
+                    ResolveArtAddress = _definition.ResolveArtAddress,
                     AssetProfile = _definition.CharacterAssets,
                     GetSprite = getSprite,
                     GetFullQualitySprite = getFullQualitySprite,

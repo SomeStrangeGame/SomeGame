@@ -7,6 +7,7 @@ namespace Novels.Content
     public sealed class NovelDefinition
     {
         private readonly IReadOnlyDictionary<string, string> _videoAliases;
+        private readonly IReadOnlyDictionary<string, string> _artAliases;
 
         public NovelDefinition(
             string id,
@@ -16,7 +17,8 @@ namespace Novels.Content
             IEnumerable<string> silentAudioIds,
             EpisodeDefinition episode,
             IEnumerable<VideoAliasDefinition> videoAliases = null,
-            IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null)
+            IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null,
+            IEnumerable<ArtAliasDefinition> artAliases = null)
             : this(
                 id,
                 mainCharacter,
@@ -25,7 +27,8 @@ namespace Novels.Content
                 silentAudioIds,
                 new[] { episode },
                 videoAliases,
-                characterDefaults)
+                characterDefaults,
+                artAliases)
         {
         }
 
@@ -37,7 +40,8 @@ namespace Novels.Content
             IEnumerable<string> silentAudioIds,
             IEnumerable<EpisodeDefinition> episodes,
             IEnumerable<VideoAliasDefinition> videoAliases = null,
-            IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null)
+            IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null,
+            IEnumerable<ArtAliasDefinition> artAliases = null)
         {
             Id = Require(id, nameof(id));
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
@@ -82,6 +86,16 @@ namespace Novels.Content
             }
             VideoAliases = Array.AsReadOnly(aliases);
             _videoAliases = BuildVideoAliases(aliases);
+            var artAliasArray = (artAliases ?? Array.Empty<ArtAliasDefinition>())
+                .ToArray();
+            if (artAliasArray.Any(alias => alias == null))
+            {
+                throw new ArgumentException(
+                    "Art aliases must not contain null values.",
+                    nameof(artAliases));
+            }
+            ArtAliases = Array.AsReadOnly(artAliasArray);
+            _artAliases = BuildArtAliases(artAliasArray);
         }
 
         public string Id { get; }
@@ -95,6 +109,7 @@ namespace Novels.Content
         public CharacterAssetProfile CharacterAssets { get; }
         public IReadOnlyList<EpisodeDefinition> Episodes { get; }
         public IReadOnlyList<VideoAliasDefinition> VideoAliases { get; }
+        public IReadOnlyList<ArtAliasDefinition> ArtAliases { get; }
 
         public string ResolveVideoId(string value)
         {
@@ -102,6 +117,24 @@ namespace Novels.Content
             while (_videoAliases.TryGetValue(result, out var target))
                 result = target;
             return result;
+        }
+
+        public string ResolveArtAddress(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return string.Empty;
+            var address = ContentAddressing.TechnicalAssetIdConvention
+                .Canonicalize(value)
+                .Replace('\\', '/')
+                .Trim('/');
+            var contentPrefix = ContentAddressing.ContentPackageConvention
+                .ContentRoot(Id) + "/";
+            if (!address.StartsWith(contentPrefix, StringComparison.OrdinalIgnoreCase))
+                return value;
+            var relative = address.Substring(contentPrefix.Length);
+            while (_artAliases.TryGetValue(relative, out var target))
+                relative = target;
+            return contentPrefix + relative;
         }
 
         private static IReadOnlyDictionary<string, string> BuildVideoAliases(
@@ -126,11 +159,71 @@ namespace Novels.Content
             return result;
         }
 
+        private static IReadOnlyDictionary<string, string> BuildArtAliases(
+            IEnumerable<ArtAliasDefinition> aliases)
+        {
+            var result = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var alias in aliases)
+            {
+                if (!result.TryAdd(alias.Alias, alias.Target))
+                    throw new ArgumentException($"Duplicate art alias '{alias.Alias}'.");
+            }
+            foreach (var alias in result.Keys)
+            {
+                var visited = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var current = alias;
+                while (result.TryGetValue(current, out current))
+                {
+                    if (!visited.Add(current))
+                        throw new ArgumentException($"Art alias cycle contains '{current}'.");
+                }
+            }
+            return result;
+        }
+
         private static string Require(string value, string parameterName)
         {
             if (string.IsNullOrWhiteSpace(value))
                 throw new ArgumentException("Content value must not be empty.", parameterName);
             return value;
+        }
+    }
+
+    public sealed class ArtAliasDefinition
+    {
+        public ArtAliasDefinition(string alias, string target)
+        {
+            Alias = Normalize(alias, nameof(alias));
+            Target = Normalize(target, nameof(target));
+            if (string.Equals(Alias, Target, StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Art alias must differ from its target.");
+        }
+
+        public string Alias { get; }
+        public string Target { get; }
+
+        private static string Normalize(string value, string parameterName)
+        {
+            var result = ContentAddressing.TechnicalAssetIdConvention
+                .Canonicalize(value)
+                .Replace('\\', '/')
+                .Trim('/');
+            if (!result.StartsWith("story/", StringComparison.Ordinal)
+                || !result.EndsWith(".png", StringComparison.Ordinal))
+            {
+                throw new ArgumentException(
+                    "Art alias paths must start with 'story/' and end with '.png'.",
+                    parameterName);
+            }
+            if (result.Split('/').Any(part => string.IsNullOrEmpty(part)
+                    || part == "."
+                    || part == ".."))
+            {
+                throw new ArgumentException(
+                    "Art alias paths must not contain empty or relative segments.",
+                    parameterName);
+            }
+            return result;
         }
     }
 

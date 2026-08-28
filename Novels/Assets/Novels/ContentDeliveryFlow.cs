@@ -21,9 +21,9 @@ namespace Novels
             Bootstrap.BootstrapController bootstrap,
             string contentId)
         {
-            return PrepareGroup(
-                bootstrap,
-                ContentAddressing.ContentPackageConvention.StoryDeliveryGroup(contentId));
+            var group = ContentAddressing.ContentPackageConvention
+                .StoryDeliveryGroup(contentId);
+            return PrepareGroup(bootstrap, group);
         }
 
         internal UniTask<Bundles.ContentDeliveryLease> PrepareStoryInitial(
@@ -48,9 +48,12 @@ namespace Novels
             bootstrap.ShowLoading(message);
             return await _bundles.PrepareDeliveryGroup(
                 group,
-                progress => bootstrap.ShowLoading(
-                    $"{message} {progress.CompletedItems}/{progress.TotalItems} "
-                    + $"({progress.Ratio:P0})"),
+                progress =>
+                {
+                    bootstrap.ShowLoading(
+                        $"{message} {progress.CompletedItems}/{progress.TotalItems} "
+                        + $"({progress.Ratio:P0})");
+                },
                 _cancellationToken);
         }
     }

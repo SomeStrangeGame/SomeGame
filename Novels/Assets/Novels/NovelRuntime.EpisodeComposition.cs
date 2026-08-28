@@ -10,9 +10,8 @@ namespace Novels
         private async UniTask<EpisodeRunResult> RunEpisode(PreparedEpisode state)
         {
             var cancellationToken = state.CancellationToken;
-            var storyData = await _priorityLoader.Run(() => state.EpisodePreloading
+            var storyText = await _priorityLoader.Run(() => state.EpisodePreloading
                 .AttachExternalCancellation(cancellationToken));
-            var storyText = storyData.StoryText;
             var initialState = _progress.GetEntryState(_episode);
             ReplayValidator.ValidateOrDiscard(
                 state.SaveSystem,
@@ -37,8 +36,7 @@ namespace Novels
             var storyProcessor = CreateStoryProcessor(
                 state.EpisodeScope,
                 storyText,
-                initialState,
-                storyData.SourceMapText);
+                initialState);
             var storyCommands = new StoryCommands.Entity();
             var presentation = CreateEpisodePresentation(state, assets, loading);
             var storyQueue = CreateStoryQueue(
@@ -61,7 +59,6 @@ namespace Novels
                 HideLoading = presentation.Loading.Hide,
                 CancellationToken = cancellationToken,
                 OnError = ReportError,
-                OnStorySourceChanged = _ctx.OnStorySourceChanged,
             }).AddTo(state.EpisodeScope);
             state.EpisodeRuntime.Configure(
                 novelProcess.Run,

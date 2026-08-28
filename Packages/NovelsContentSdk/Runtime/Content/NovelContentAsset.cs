@@ -35,6 +35,16 @@ namespace Novels.Content
         }
 
         [Serializable]
+        private struct ArtAliasEntry
+        {
+            [SerializeField] private string _alias;
+            [SerializeField] private string _target;
+
+            internal readonly ArtAliasDefinition ToDefinition() =>
+                new(_alias, _target);
+        }
+
+        [Serializable]
         private struct CharacterDefaultEntry
         {
             [SerializeField] private string _character;
@@ -60,6 +70,7 @@ namespace Novels.Content
         [SerializeField] private string[] _silentAudioIds;
         [SerializeField] private EpisodeEntry[] _episodes;
         [SerializeField] private VideoAliasEntry[] _videoAliases;
+        [SerializeField] private ArtAliasEntry[] _artAliases;
         [SerializeField] private CharacterDefaultEntry[] _characterDefaults;
         [SerializeField, HideInInspector] private string _authoringRootInkGuid;
         [SerializeField, HideInInspector] private int _authoringChunkSizeMiB;
@@ -79,7 +90,9 @@ namespace Novels.Content
                 (_videoAliases ?? Array.Empty<VideoAliasEntry>())
                     .Select(alias => alias.ToDefinition()),
                 (_characterDefaults ?? Array.Empty<CharacterDefaultEntry>())
-                    .Select(value => value.ToDefinition()));
+                    .Select(value => value.ToDefinition()),
+                (_artAliases ?? Array.Empty<ArtAliasEntry>())
+                    .Select(alias => alias.ToDefinition()));
         }
     }
 }

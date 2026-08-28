@@ -62,12 +62,17 @@ namespace Novels.Character
                     LoadHair(name, hair, presentation, appearance),
                     LoadAccessories(name, accessory, presentation, appearance));
             var sprites = new CharacterSpriteSet(
-                mainBody,
-                emotion,
+                mainBody.Sprite,
+                emotion.Sprite,
                 clothesSprite,
                 hairSprites,
                 accessorySprites,
-                Layouts(mainBody, emotion, clothesSprite, hairSprites, accessorySprites));
+                Layouts(
+                    mainBody.Sprite,
+                    emotion.Sprite,
+                    clothesSprite,
+                    hairSprites,
+                    accessorySprites));
             if (await RequiresFallback(
                     name,
                     view,
@@ -78,6 +83,21 @@ namespace Novels.Character
                     appearance,
                     sprites))
                 return MissingCharacter();
+            if (mainBody.HasSameAddress(emotion))
+            {
+                return new CharacterSpriteSet(
+                    mainBody.Sprite,
+                    null,
+                    clothesSprite,
+                    hairSprites,
+                    accessorySprites,
+                    Layouts(
+                        mainBody.Sprite,
+                        null,
+                        clothesSprite,
+                        hairSprites,
+                        accessorySprites));
+            }
             return sprites;
         }
 
@@ -179,29 +199,33 @@ namespace Novels.Character
             return Array.Exists(sprites, sprite => sprite != null);
         }
 
-        private async UniTask<Sprite> LoadMainBody(
+        private async UniTask<AddressedSprite> LoadMainBody(
             string name,
             string view,
             StoryContracts.CharacterPresentation presentation)
         {
-            var sprite = await GetSprite(_addresses.CharacterMainBody(name, view, null));
+            var sprite = await GetAddressedSprite(
+                _addresses.CharacterMainBody(name, view, null));
             if (presentation.IsChild)
             {
                 view = $"{view}/{_profile.ChildView}";
-                sprite = await GetSprite(_addresses.CharacterMainBody(name, view, null)) ?? sprite;
+                var childSprite = await GetAddressedSprite(
+                    _addresses.CharacterMainBody(name, view, null));
+                if (childSprite.Sprite != null)
+                    sprite = childSprite;
             }
             foreach (var candidate in presentation.AssetCandidates)
             {
-                var candidateSprite = await GetSprite(
+                var candidateSprite = await GetAddressedSprite(
                     _addresses.CharacterMainBody(name, view, candidate));
-                if (candidateSprite == null)
+                if (candidateSprite.Sprite == null)
                     continue;
                 return candidateSprite;
             }
             return sprite;
         }
 
-        private async UniTask<Sprite> LoadEmotion(
+        private async UniTask<AddressedSprite> LoadEmotion(
             string name,
             string view,
             StoryContracts.CharacterPresentation presentation,
@@ -214,8 +238,10 @@ namespace Novels.Character
                 view = $"{view}/{_profile.ChildView}";
             var (candidate, sprite) = await FindCandidate(
                 presentation.AssetCandidates,
-                value => GetSprite(_addresses.CharacterEmotion(name, view, value)));
-            if (sprite != null)
+                value => GetAddressedSprite(
+                    _addresses.CharacterEmotion(name, view, value)),
+                value => value.Sprite != null);
+            if (sprite.Sprite != null)
             {
                 if (!presentation.IsChild)
                     appearance.Emotion = candidate;
@@ -224,7 +250,8 @@ namespace Novels.Character
 
             // Adult appearance state must not leak into the child asset tree.
             // Missing authored adult variants keep the last resolvable emotion.
-            return await GetSprite(_addresses.CharacterEmotion(name, view, inheritedEmotion));
+            return await GetAddressedSprite(
+                _addresses.CharacterEmotion(name, view, inheritedEmotion));
         }
 
         private async UniTask<Sprite> LoadClothes(
@@ -236,10 +263,10 @@ namespace Novels.Character
         {
             if (presentation.IsChild)
             {
-                clothes = null;
                 appearance.Clothes = null;
+                return null;
             }
-            else if (presentation.RemoveClothes)
+            if (presentation.RemoveClothes)
             {
                 appearance.Clothes = null;
             }
@@ -266,9 +293,9 @@ namespace Novels.Character
             if (presentation.IsChild)
             {
                 appearance.Hair = null;
-                hair = null;
+                return default;
             }
-            else if (presentation.RemoveHair)
+            if (presentation.RemoveHair)
             {
                 appearance.Hair = null;
             }
@@ -281,12 +308,10 @@ namespace Novels.Character
                 appearance.Hair = candidate;
                 return candidateSprites;
             }
-            var resolved = presentation.IsChild
-                ? null
-                : appearance.Hair
-                    ?? (string.IsNullOrWhiteSpace(hair)
-                        ? _profile.Defaults(name).Hair
-                        : hair);
+            var resolved = appearance.Hair
+                ?? (string.IsNullOrWhiteSpace(hair)
+                    ? _profile.Defaults(name).Hair
+                    : hair);
             return await LoadHairLayers(name, resolved);
         }
 
@@ -296,7 +321,12 @@ namespace Novels.Character
             StoryContracts.CharacterPresentation presentation,
             CharacterAppearanceState appearance)
         {
-            if (presentation.IsChild || presentation.RemoveAccessory)
+            if (presentation.IsChild)
+            {
+                appearance.Accessories = null;
+                return default;
+            }
+            if (presentation.RemoveAccessory)
                 appearance.Accessories = null;
             var (candidate, candidateSprites) = await FindCandidate(
                 presentation.AssetCandidates,
@@ -396,6 +426,9 @@ namespace Novels.Character
                 ? layout
                 : default;
 
+        private async UniTask<AddressedSprite> GetAddressedSprite(string path) =>
+            new(path, await GetSprite(path));
+
         private async UniTask<Sprite> GetSprite(string path)
         {
             if (string.IsNullOrWhiteSpace(path))
@@ -413,6 +446,23 @@ namespace Novels.Character
                 _trimLayouts[sprite] = layout;
             }
             return sprite;
+        }
+
+        private readonly struct AddressedSprite
+        {
+            internal readonly string Address;
+            internal readonly Sprite Sprite;
+
+            internal AddressedSprite(string address, Sprite sprite)
+            {
+                Address = address;
+                Sprite = sprite;
+            }
+
+            internal bool HasSameAddress(AddressedSprite other) =>
+                Sprite != null
+                && other.Sprite != null
+                && string.Equals(Address, other.Address, StringComparison.Ordinal);
         }
     }
 }

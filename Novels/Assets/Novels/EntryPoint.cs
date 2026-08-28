@@ -23,11 +23,6 @@ namespace Novels
 
         private ApplicationRuntime _runtime;
         private CancellationTokenSource _sessionCancellation;
-        private StorySourceOverlay _storySourceOverlay;
-        private int _cacheGeneration;
-        private bool _restartRequested;
-        private bool _coldRestartRequested;
-
         private void OnEnable()
         {
             try
@@ -36,12 +31,6 @@ namespace Novels
                 PlayerLoopHelper.Initialize(ref playerLoop);
                 var runtimeTuning = NovelRuntimeSettings.Load();
                 Application.targetFrameRate = runtimeTuning.TargetFrameRate;
-                _storySourceOverlay = GetComponent<StorySourceOverlay>()
-                    ?? gameObject.AddComponent<StorySourceOverlay>();
-                _storySourceOverlay.Configure(
-                    () => RequestRestart(true),
-                    () => RequestRestart(false));
-
                 _sessionCancellation = new CancellationTokenSource();
                 var environment = new ApplicationEnvironment(
                     _sessionCancellation.Token,
@@ -58,8 +47,7 @@ namespace Novels
                         _fallbackLocation,
                         _fallbackCharacter,
                         _fallbackNotification),
-                    runtimeTuning,
-                    _cacheGeneration);
+                    runtimeTuning);
                 _runtime = new ApplicationRuntime(new ApplicationRuntime.Dependencies
                 {
                     Environment = environment,
@@ -72,7 +60,6 @@ namespace Novels
                             logs.Log("[Novels]", data);
                     },
                     OnError = ReportError,
-                    OnStorySourceChanged = _storySourceOverlay.Show,
                 });
                 Run(_runtime, _sessionCancellation.Token).Forget();
             }
@@ -87,36 +74,6 @@ namespace Novels
             }
         }
 
-        private void Update()
-        {
-            if (!_restartRequested)
-                return;
-            _restartRequested = false;
-            var coldRestart = _coldRestartRequested;
-            _coldRestartRequested = false;
-            DisposeSession();
-            if (coldRestart)
-            {
-                ClearRemoteContentCache();
-                _cacheGeneration++;
-            }
-            StreamingExperimentDiagnostics.Reset();
-            OnEnable();
-        }
-
-        private void RequestRestart(bool cold)
-        {
-            _restartRequested = true;
-            _coldRestartRequested |= cold;
-        }
-
-        private static void ClearRemoteContentCache()
-        {
-            var cache = new Cache.Entity(Application.persistentDataPath);
-            cache.DeleteDirectory("RemoteContent");
-            cache.DeleteDirectory("ContentStaging");
-        }
-
         private Bundles.IContentSource CreateContentSource(
             CancellationToken cancellationToken,
             Bundles.ContentDeliveryOptions options)
@@ -125,24 +82,6 @@ namespace Novels
             var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
                 ?? throw new InvalidOperationException("Unity project root cannot be resolved.");
             var contentRoot = Path.Combine(projectRoot, "Build", "LocalContent");
-            var simulatedMegabits = Environment.GetEnvironmentVariable(
-                "NOVELS_SIMULATED_MBITS");
-            if (Bundles.ThrottledFileSystemContentSource.TryParseMegabits(
-                    simulatedMegabits,
-                    out var megabits))
-            {
-                return new Bundles.ThrottledFileSystemContentSource(
-                    contentRoot,
-                    megabits,
-                    Bundles.ThrottledFileSystemContentSource.ParseMilliseconds(
-                        Environment.GetEnvironmentVariable(
-                            "NOVELS_SIMULATED_LATENCY_MS"),
-                        120),
-                    Bundles.ThrottledFileSystemContentSource.ParseMilliseconds(
-                        Environment.GetEnvironmentVariable(
-                            "NOVELS_SIMULATED_JITTER_MS"),
-                        30));
-            }
             return new Bundles.FileSystemContentSource(
                 contentRoot,
                 cancellationToken,
@@ -199,7 +138,6 @@ namespace Novels
                 _sessionCancellation?.Dispose();
                 _sessionCancellation = null;
                 _runtime = null;
-                _storySourceOverlay?.Show(default);
             }
         }
 

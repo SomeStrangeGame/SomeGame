@@ -190,7 +190,7 @@ namespace Novels.Location
         private async UniTask ShowSolidColor(StoryContracts.PresentationMode mode)
         {
             _ctx.VideoPlayback.Stop();
-            _ctx.Screen.SetImage(null);
+            _ctx.Screen.ClearImage();
             _ctx.Screen.SetEnabledImage(false);
             _ctx.Screen.SetEnabledVideo(false);
             await Show(mode);

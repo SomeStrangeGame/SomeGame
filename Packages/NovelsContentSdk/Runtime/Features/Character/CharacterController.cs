@@ -12,6 +12,7 @@ namespace Novels.Character
         {
             public GameObject ScreenPrefab;
             public string ContentPrefix;
+            public Func<string, string> ResolveArtAddress;
             public Content.CharacterAssetProfile AssetProfile;
             public Func<string, UniTask<Sprite>> GetSprite;
             public Func<string, UniTask<Sprite>> GetFullQualitySprite;
@@ -38,6 +39,7 @@ namespace Novels.Character
                 ?? throw new ArgumentNullException(nameof(ctx.AssetProfile));
             _spriteResolver = new CharacterSpriteResolver(
                 ctx.ContentPrefix,
+                ctx.ResolveArtAddress,
                 _assetProfile,
                 ctx.GetSprite,
                 ctx.GetFullQualitySprite,

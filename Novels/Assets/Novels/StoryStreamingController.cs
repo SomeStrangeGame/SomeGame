@@ -137,16 +137,12 @@ namespace Novels
                 for (var index = 0; index < count; index++)
                 {
                     _cancellationToken.ThrowIfCancellationRequested();
-                    StreamingExperimentDiagnostics.SetQueue(
-                        QueueLabel(chunks, media, index));
                     var chunkPreparation = index < chunks.Length
                         ? EnsureChunk(index)
                         : UniTask.CompletedTask;
                     var mediaPreparation = PrepareMediaGroup(media, index);
                     await UniTask.WhenAll(chunkPreparation, mediaPreparation);
                 }
-                StreamingExperimentDiagnostics.SetQueue("complete");
-                StreamingExperimentDiagnostics.SetQuality("Full");
                 _storyDownloadComplete = true;
                 _progressOverlay.Complete();
             }
@@ -226,7 +222,6 @@ namespace Novels
         {
             _chunkProgress[index] = progress;
             ReportStoryProgress(progress);
-            StreamingExperimentDiagnostics.ReportDelivery(progress);
             if (_blockingChunks.Contains(index))
                 _downloadOverlay.Report(progress);
         }
@@ -265,11 +260,7 @@ namespace Novels
         {
             var lease = await _bundles.PrepareDeliveryGroup(
                 media.deliveryGroup,
-                progress =>
-                {
-                    ReportStoryProgress(progress);
-                    StreamingExperimentDiagnostics.ReportDelivery(progress);
-                },
+                ReportStoryProgress,
                 _cancellationToken);
             lease.AddTo(this);
         }
@@ -323,23 +314,6 @@ namespace Novels
                 .Normalize(NormalizationForm.FormC)
                 .Trim()
                 .ToLowerInvariant();
-
-        private static string QueueLabel(
-            IReadOnlyList<Bundles.ContentStreamingChunkEntry> chunks,
-            IReadOnlyList<Bundles.ContentStreamingMediaEntry> media,
-            int index)
-        {
-            var values = new List<string>(4);
-            for (var offset = 0; offset < 2; offset++)
-            {
-                var current = index + offset;
-                if (current < chunks.Count)
-                    values.Add($"chunk-{current}");
-                if (media.Any(value => value.order == current))
-                    values.Add($"media-{current}");
-            }
-            return string.Join(" → ", values);
-        }
 
         protected override void OnDispose()
         {

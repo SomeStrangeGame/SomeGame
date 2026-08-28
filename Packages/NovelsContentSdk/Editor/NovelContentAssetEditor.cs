@@ -119,6 +119,15 @@ namespace Novels.ContentSdk.Editor
             if (EditorGUI.EndChangeCheck())
                 InvalidateVideoPosterIds();
             EditorGUILayout.PropertyField(
+                serializedObject.FindProperty("_artAliases"),
+                new GUIContent("Алиасы арта"),
+                true);
+            EditorGUILayout.HelpBox(
+                "Пути задаются относительно content/<story-id>: "
+                + "например story/choose/items/старое.png. "
+                + "Alias может отсутствовать физически, target обязан существовать.",
+                MessageType.Info);
+            EditorGUILayout.PropertyField(
                 serializedObject.FindProperty("_characterDefaults"),
                 true);
             serializedObject.ApplyModifiedProperties();
@@ -229,7 +238,7 @@ namespace Novels.ContentSdk.Editor
                     .Where(entry => !unusedPaths.Contains(entry.Path))
                     .ToArray();
                 var chunkSizeMiB = StoryChunkAuthoring.ChunkSizeMiB(definition);
-                var layout = ExperimentalStreamingPlan.CreateChunkLayout(
+                var layout = StoryStreamingPlan.CreateChunkLayout(
                     chunkEntries,
                     (long)chunkSizeMiB * 1024L * 1024L);
                 StoryChunkAuthoring.WriteLayout(
@@ -421,7 +430,7 @@ namespace Novels.ContentSdk.Editor
                 }
                 else
                 {
-                    layout = ExperimentalStreamingPlan.CreateChunkLayout(
+                    layout = StoryStreamingPlan.CreateChunkLayout(
                         _usageEntries
                             .Where(entry => !unusedPaths.Contains(entry.Path))
                             .ToArray(),
@@ -1076,6 +1085,7 @@ namespace Novels.ContentSdk.Editor
 
         internal static string Validate(Content.NovelContentAsset definition)
         {
+            var aliasCount = ArtAliasAuthoring.Validate(definition);
             if (!TryReadLayout(definition, out var layout))
                 throw new InvalidOperationException("Разметка чанков ещё не создана.");
             var availableArt = new HashSet<string>(
@@ -1122,6 +1132,7 @@ namespace Novels.ContentSdk.Editor
                 !assignedArt.Contains(path) && !unusedArt.Contains(path));
             return $"Разметка корректна. Чанков: {layout.chunks.Length}, "
                 + $"назначено объектов: {assigned.Length}, "
+                + $"алиасов арта: {aliasCount}, "
                 + $"не используется Unity-ассетов: {unusedArt.Count}, "
                 + $"не распределено Unity-ассетов: {unassigned}.";
         }
@@ -1224,5 +1235,41 @@ namespace Novels.ContentSdk.Editor
 
         private static string ContentPath(string assetPath)
             => ContentAssets.ContentPath(assetPath);
+    }
+
+    internal static class ArtAliasAuthoring
+    {
+        internal static int Validate(Content.NovelContentAsset authoring)
+        {
+            if (authoring == null)
+                throw new ArgumentNullException(nameof(authoring));
+            var definition = authoring.ToDefinition();
+            if (definition.ArtAliases.Count == 0)
+                return 0;
+
+            var unused = StoryChunkAuthoring.UnusedPaths(authoring);
+            var available = new HashSet<string>(
+                ContentAssets.FindBundleAssets()
+                    .Where(path => !unused.Contains(path))
+                    .Select(path => ContentAddressing.TechnicalAssetIdConvention
+                        .Canonicalize(ContentAssets.BundleAddress(definition.Id, path))
+                        .Replace('\\', '/')
+                        .Trim('/')),
+                StringComparer.OrdinalIgnoreCase);
+            var contentPrefix = ContentAddressing.ContentPackageConvention
+                .ContentRoot(definition.Id) + "/";
+            foreach (var alias in definition.ArtAliases)
+            {
+                var finalTarget = definition.ResolveArtAddress(
+                    contentPrefix + alias.Target);
+                if (!available.Contains(finalTarget))
+                {
+                    throw new InvalidOperationException(
+                        $"Art alias target is missing or unused: "
+                        + $"{alias.Alias} -> {finalTarget}");
+                }
+            }
+            return definition.ArtAliases.Count;
+        }
     }
 }

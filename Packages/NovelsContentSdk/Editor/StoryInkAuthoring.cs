@@ -20,7 +20,7 @@ namespace Novels.ContentSdk.Editor
                 .FindContentFiles(runtimeDefinition.Id)
                 .Select(value => value.ContentPath)
                 .ToArray();
-            return ExperimentalStreamingPlan.CreateLinearUsageReport(
+            return StoryStreamingPlan.CreateLinearUsageReport(
                 sourcePath,
                 ContentAssets.FindBundleAssets(),
                 files,

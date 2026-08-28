@@ -9,8 +9,6 @@ namespace Novels.Location.View
 {
     public class LocationScreen : MonoBehaviour
     {
-        private static LocationScreen _debugInstance;
-
         public enum Effect
         {
             Light,
@@ -62,41 +60,14 @@ namespace Novels.Location.View
         public VideoPlayer VideoPlayer => _video;
         private LocationLayout Layout => _layout ??= new LocationLayout(_image);
 
-        private void Awake()
-        {
-            _debugInstance = this;
-        }
-
-        private void OnDestroy()
-        {
-            if (_debugInstance == this)
-                _debugInstance = null;
-        }
-
-        public static string GetPresentationDebugSnapshot()
-        {
-            if (_debugInstance == null)
-                return "Location · no screen";
-            var screen = _debugInstance;
-            var sprite = screen._image.sprite;
-            var texture = sprite == null ? null : sprite.texture;
-            var videoTexture = screen._videoImage.texture;
-            var rect = screen._image.rectTransform.rect;
-            var videoAlpha = screen._videoImage.color.a;
-            return $"Location · sprite {(sprite == null ? "null" : sprite.name)} "
-                + $"{(texture == null ? "-" : $"{texture.width}x{texture.height}")} · "
-                + $"img e:{screen._image.enabled} a:{screen._imageCanvasGroup.alpha:F1} "
-                + $"go:{screen._image.gameObject.activeInHierarchy} "
-                + $"rect:{rect.width:F0}x{rect.height:F0} · "
-                + $"video e:{screen._videoImage.enabled} a:{videoAlpha:F1} "
-                + $"rt:{(videoTexture == null ? "null" : $"{videoTexture.width}x{videoTexture.height}")} "
-                + $"p:{screen._video.isPrepared}/{screen._video.isPlaying} "
-                + $"f:{screen._video.frame}";
-        }
-
         public void SetImage(Sprite sprite)
         {
             Layout.SetImage(sprite);
+        }
+
+        public void ClearImage()
+        {
+            Layout.ClearImage();
         }
 
         public async UniTask CrossfadeImage(
@@ -184,6 +155,7 @@ namespace Novels.Location.View
         {
             _videoImage.texture = renderTexture;
             _video.targetTexture = renderTexture;
+            Layout.SetVideoTexture(renderTexture);
             ApplyVideoAspect();
         }
 
@@ -323,7 +295,7 @@ namespace Novels.Location.View
 
         public async UniTask SetDialogue(TextAlignment aligment, CancellationToken cancellationToken)
         {
-            if (_image.sprite == null) return;
+            if (!Layout.HasVisual) return;
 
             var current = _image.transform.localPosition;
             var target = Layout.DialoguePosition(aligment, _dialogOffset);
@@ -332,7 +304,7 @@ namespace Novels.Location.View
 
         public void SetDialogueImmediate(TextAlignment aligment)
         {
-            if (_image.sprite == null) return;
+            if (!Layout.HasVisual) return;
 
             MoveImmediate(
                 _image.transform,

@@ -77,7 +77,7 @@ namespace Novels.ContentSdk.Editor
         public string[] assets = Array.Empty<string>();
     }
 
-    internal static class ExperimentalStreamingPlan
+    internal static class StoryStreamingPlan
     {
         private const long _defaultChunkSourceBytes = 16L * 1024L * 1024L;
         private static readonly HashSet<string> _technicalAssetTokens = new(
@@ -261,7 +261,8 @@ namespace Novels.ContentSdk.Editor
                     storyText,
                     path,
                     usage,
-                    definition.MainCharacter);
+                    definition.MainCharacter,
+                    definition.CharacterAssets);
                 var isDynamic = dynamicUse < directUse;
                 var firstUse = Math.Min(dynamicUse, directUse);
                 return new StoryAssetUsageEntry(
@@ -362,6 +363,7 @@ namespace Novels.ContentSdk.Editor
             internal bool TryFirstAssetUse(
                 string assetPath,
                 string mainCharacter,
+                Content.CharacterAssetProfile profile,
                 out int firstUse)
             {
                 if (TryLocationName(assetPath, out var location))
@@ -383,6 +385,20 @@ namespace Novels.ContentSdk.Editor
                         StringComparison.OrdinalIgnoreCase)
                     ? Canonicalize(mainCharacter)
                     : asset.Character;
+                var defaults = profile.Defaults(asset.Character);
+                var defaultSelector = asset.Category switch
+                {
+                    CharacterAssetCategory.Clothes => defaults.Clothes,
+                    CharacterAssetCategory.Hair => defaults.Hair,
+                    CharacterAssetCategory.Accessory => defaults.Accessory,
+                    _ => string.Empty,
+                };
+                var matchesDefault = !asset.IsChild
+                                     && !string.IsNullOrWhiteSpace(defaultSelector)
+                                     && string.Equals(
+                                         asset.Selector,
+                                         Canonicalize(defaultSelector),
+                                         StringComparison.OrdinalIgnoreCase);
                 firstUse = int.MaxValue;
                 foreach (var use in _characters)
                 {
@@ -399,13 +415,19 @@ namespace Novels.ContentSdk.Editor
                             asset.Character,
                             "maincharacter",
                             StringComparison.OrdinalIgnoreCase)
+                          // The main-character view is selected before the story
+                          // and is not repeated in child dialogue arguments.
+                          // Every child body variant must therefore follow the
+                          // first child use, regardless of the selected view.
+                          || asset.IsChild && use.IsChild
                           || use.Candidates.Contains(
                               asset.Selector,
                               StringComparer.OrdinalIgnoreCase)
                         : use.Candidates.Contains(
                             asset.Selector,
                             StringComparer.OrdinalIgnoreCase);
-                    if (matches && use.LineNumber < firstUse)
+                    if ((matches || (matchesDefault && !use.IsChild))
+                        && use.LineNumber < firstUse)
                         firstUse = use.LineNumber;
                 }
                 return true;
@@ -610,13 +632,18 @@ namespace Novels.ContentSdk.Editor
             string storyText,
             string assetPath,
             StoryUsageIndex usage,
-            string mainCharacter)
+            string mainCharacter,
+            Content.CharacterAssetProfile profile)
         {
             if (IsBootstrapAsset(assetPath))
                 return -1;
             if (IsLegacyPresentationStoryArt(assetPath))
                 return int.MaxValue;
-            if (usage.TryFirstAssetUse(assetPath, mainCharacter, out var firstUse))
+            if (usage.TryFirstAssetUse(
+                    assetPath,
+                    mainCharacter,
+                    profile,
+                    out var firstUse))
                 return firstUse;
 
             var token = MostSpecificAssetToken(assetPath);
@@ -692,18 +719,14 @@ namespace Novels.ContentSdk.Editor
             for (var index = 0; index < lines.Length; index++)
             {
                 var line = lines[index].Value.Trim();
-                if (!line.StartsWith("гардероб", StringComparison.Ordinal))
+                if (!TryWardrobeScope(line, out var character, out var category))
                     continue;
-                var category = WardrobeCategory(line);
-                if (string.IsNullOrEmpty(category))
-                    continue;
-                var character = WardrobeCharacter(line);
                 for (var choiceIndex = index + 1;
                      choiceIndex < lines.Length;
                      choiceIndex++)
                 {
                     var choiceLine = lines[choiceIndex].Value.Trim();
-                    if (choiceLine == "-")
+                    if (choiceLine.StartsWith("-", StringComparison.Ordinal))
                         break;
                     var choice = Regex.Match(choiceLine, @"^[+*].*?\[([^\]]+)\]");
                     if (!choice.Success)
@@ -743,6 +766,28 @@ namespace Novels.ContentSdk.Editor
                 }
             }
             return result.ToArray();
+        }
+
+        private static bool TryWardrobeScope(
+            string line,
+            out string character,
+            out string category)
+        {
+            if (line.StartsWith("гардероб", StringComparison.Ordinal))
+            {
+                character = WardrobeCharacter(line);
+                category = WardrobeCategory(line);
+                return !string.IsNullOrEmpty(category);
+            }
+
+            // Extra wardrobe choices can live behind an Ink gather without
+            // repeating the Wardrobe command (for example, "доп_причёски").
+            var branch = Regex.Match(line, @"^-\s*\(([^)]+)\)");
+            category = branch.Success
+                ? WardrobeCategory(branch.Groups[1].Value)
+                : string.Empty;
+            character = "maincharacter";
+            return !string.IsNullOrEmpty(category);
         }
 
         private static int ToLineNumber(string text, int position)
