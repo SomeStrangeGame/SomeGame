@@ -13,9 +13,9 @@
 ## Где начинать чтение
 
 1. [ProjectOverview.md](ProjectOverview.md) — runtime, владение и структура кода.
-2. [ContentPipeline.md](ContentPipeline.md) — валидация, AssetBundle и Player-сборки.
-3. [InkSyntax.md](InkSyntax.md) — поддерживаемые сценарные команды.
-4. [RefactoringHistory.md](RefactoringHistory.md) — история решений и прежние проверки.
+2. [ContentPipeline.md](../guides/ContentPipeline.md) — валидация, AssetBundle и Player-сборки.
+3. [InkSyntax.md](../guides/InkSyntax.md) — поддерживаемые сценарные команды.
+4. [RefactoringHistory.md](../archive/reports/RefactoringHistory.md) — история решений и прежние проверки.
 5. [MultiProjectSplitPlan.md](MultiProjectSplitPlan.md) — актуальный план разделения на Game, SDK, Catalog и проекты историй.
 
 ## Рабочие ограничения

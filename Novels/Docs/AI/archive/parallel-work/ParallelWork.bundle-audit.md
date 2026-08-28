@@ -1,6 +1,7 @@
 # Parallel work: bundle audit
 
-- Статус: ready-for-integration
+- Статус: integrated
+- Архивировано аудитом: 2026-08-28; реализация присутствует в `main` (`f849ff22`) или его истории
 - Ветка: `grandChange`
 - Базовый commit: `c6c7853b`
 - Ответственный поток: перенос контроля размера и состава в общий Content SDK
@@ -13,7 +14,7 @@
 - `Packages/NovelsContentSdk/Editor/ContentPipeline.cs`
 - `Projects/novels-catalog/Assets/Editor/**`
 - `Projects/novels-catalog/README.md`
-- `Novels/Docs/AI/ParallelWork.bundle-audit.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.bundle-audit.md`
 
 ## Не изменять
 

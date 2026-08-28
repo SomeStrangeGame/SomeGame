@@ -9,19 +9,19 @@
 
 ## Разрешённая область
 
-- `Novels/Docs/AI/ParallelWork.content-authoring.md`
-- `Novels/Docs/AI/ContentAuthoringGuide.md`;
-- `Novels/Docs/AI/ContentSizeBaseline.md`;
-- `Novels/Docs/AI/ContentSizeOptimization.md`;
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.content-authoring.md`
+- `Novels/Docs/AI/guides/ContentAuthoringGuide.md`;
+- `Novels/Docs/AI/plans/ContentSizeBaseline.md`;
+- `Novels/Docs/AI/plans/ContentSizeOptimization.md`;
 - после согласования границ — локальная документация и безопасные исправления
   данных в `Projects/novels-tzm/**` и `Projects/novels-zdm/**`.
 
 ## Не изменять
 
-- `Novels/Docs/AI/ParallelRefactoringCoordination.md` без изменения общего
+- `Novels/Docs/AI/rules/ParallelRefactoringCoordination.md` без изменения общего
   архитектурного контракта;
-- `Novels/Docs/AI/ParallelWork.pipeline.md`;
-- `Novels/Docs/AI/ContentPipeline.md`;
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.pipeline.md`;
+- `Novels/Docs/AI/guides/ContentPipeline.md`;
 - `Packages/NovelsContentSdk/**`;
 - `Tools/novels-tools/**`;
 - текущие незакоммиченные изменения конфигураций, bundle labels и README,

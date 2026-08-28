@@ -1,6 +1,7 @@
 # Parallel work: tzm-video-crf18
 
-- Статус: ready-for-integration
+- Статус: integrated
+- Архивировано аудитом: 2026-08-28; реализация присутствует в `main` (`f849ff22`) или его истории
 - Ветка: grandChange
 - Базовый commit: c6c7853b
 - Ответственный поток: tzm-video-crf18

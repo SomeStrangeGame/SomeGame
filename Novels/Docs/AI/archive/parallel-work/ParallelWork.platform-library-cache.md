@@ -1,6 +1,7 @@
 # Parallel work: platform Library cache
 
-- Статус: ready-for-integration
+- Статус: integrated
+- Архивировано аудитом: 2026-08-28; реализация присутствует в `main` (`f849ff22`) или его истории
 - Ветка: main
 - Базовый commit: `42e57290434e151ea8add0b330eb10394fad3d10`
 - Ответственный поток: основной чат Novels
@@ -10,7 +11,7 @@
 
 - `Tools/novels-tools/novels-content`
 - `Tools/novels-tools/README.md`
-- `Novels/Docs/AI/ContentPipeline.md`
+- `Novels/Docs/AI/guides/ContentPipeline.md`
 - собственные coordination-файлы
 
 ## Не изменять

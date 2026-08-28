@@ -11,7 +11,7 @@
 - `Projects/novels-catalog/README.md`
 - `Projects/novels-catalog/Assets/Editor/**`
 - `Projects/novels-catalog/Assets/RemoteAssets/catalog/screen.prefab`
-- `Novels/Docs/AI/ParallelWork.catalog.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.catalog.md`
 
 ## Не изменять
 

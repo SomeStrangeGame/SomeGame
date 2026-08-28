@@ -1,6 +1,7 @@
 # Parallel work: catalog-carousel-hotfix
 
-- Статус: ready-for-integration
+- Статус: integrated
+- Архивировано аудитом: 2026-08-28; реализация присутствует в `main` (`f849ff22`) или его истории
 - Ветка: `main`
 - Базовый commit: `42e57290434e151ea8add0b330eb10394fad3d10`
 - Ответственный поток: исправление CanvasGroup карточки Catalog

@@ -1,6 +1,7 @@
 # Parallel work: catalog-simplification
 
-- Статус: ready-for-integration
+- Статус: integrated
+- Архивировано аудитом: 2026-08-28; реализация присутствует в `main` (`f849ff22`) или его истории
 - Ветка: `main`
 - Базовый commit: `0477677f4c1196737dddf2594594e8329d4c563e`
 - Ответственный поток: упрощение Catalog без изменений prefab
@@ -15,7 +16,7 @@
 - `Projects/novels-catalog/Packages/manifest.json`
 - `Projects/novels-catalog/Packages/packages-lock.json`
 - `Projects/novels-catalog/README.md`
-- `Novels/Docs/AI/ParallelRefactoringCoordination.md` — только фиксация нового
+- `Novels/Docs/AI/rules/ParallelRefactoringCoordination.md` — только фиксация нового
   registry-контракта
 - собственные coordination files
 

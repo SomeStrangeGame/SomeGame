@@ -10,7 +10,7 @@
 
 - `Packages/NovelsContentSdk/**`
 - `Tools/novels-tools/**`
-- `Novels/Docs/AI/ContentPipeline.md`
+- `Novels/Docs/AI/guides/ContentPipeline.md`
 - минимальные изменения общих конфигурационных контрактов в
   `Projects/novels-*/Config/**`
 

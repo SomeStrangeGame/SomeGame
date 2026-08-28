@@ -1,7 +1,7 @@
 # План упрощения Novels
 
 Этот файл содержит только актуальную работу. Завершённые архитектурные волны
-описаны в [RefactoringHistory.md](RefactoringHistory.md).
+описаны в [RefactoringHistory.md](../archive/reports/RefactoringHistory.md).
 
 ## Цель
 
@@ -18,8 +18,8 @@ EntryPoint
 ```
 
 Подробная карта ответственности находится в
-[ProjectOverview.md](ProjectOverview.md), а сборка контента — в
-[ContentPipeline.md](ContentPipeline.md).
+[ProjectOverview.md](../architecture/ProjectOverview.md), а сборка контента — в
+[ContentPipeline.md](../guides/ContentPipeline.md).
 
 ## Текущая волна
 

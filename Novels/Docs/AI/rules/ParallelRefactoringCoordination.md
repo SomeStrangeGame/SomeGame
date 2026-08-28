@@ -44,7 +44,7 @@
 Каждый параллельный поток создаёт рядом отдельный файл:
 
 ```text
-Novels/Docs/AI/ParallelWork.<scope>.md
+Novels/Docs/AI/work/parallel/ParallelWork.<scope>.md
 ```
 
 Примеры:
@@ -157,7 +157,7 @@ ParallelWork.bundle-audit.md
 - Packages/NovelsContentSdk/Editor/ContentBundleAudit.cs
 - Packages/NovelsContentSdk/Editor/ContentPipeline.cs
 - Projects/novels-catalog/Assets/Editor/**
-- Novels/Docs/AI/ParallelWork.bundle-audit.md
+- Novels/Docs/AI/archive/parallel-work/ParallelWork.bundle-audit.md
 
 Не разрешено:
 - остальные Packages/**
@@ -211,7 +211,7 @@ ParallelWork.bundle-audit.md
 Единственный координатор ведёт файл:
 
 ```text
-Novels/Docs/AI/ParallelWork.queue.md
+Novels/Docs/AI/archive/parallel-work/ParallelWork.queue.md
 ```
 
 Рабочие потоки этот файл не редактируют. Они только обновляют собственные
@@ -398,7 +398,7 @@ agent-запись, активные Unity/build/shell-процессы, зая�
 
 - `Packages/NovelsContentSdk/**`;
 - `Tools/novels-tools/**`;
-- `Novels/Docs/AI/ContentPipeline.md`;
+- `Novels/Docs/AI/guides/ContentPipeline.md`;
 - общие JSON-контракты и формат `release.json`.
 
 Этот поток не должен массово переименовывать или пересериализовывать контент
@@ -489,7 +489,9 @@ Tools/novels-tools/novels-content publish <destination-directory>
 4. Внести общее изменение в потоке shared pipeline.
 5. Сначала проверить каталог или маленький fixture.
 6. Затем последовательно проверить TZM и ZDM.
-7. Зафиксировать результат в `ParallelWork.pipeline.md`.
+7. Зафиксировать результат в
+   `work/parallel/ParallelWork.pipeline.md` либо переместить завершённый статус
+   в `archive/parallel-work/` после интеграции.
 
 ## Передача результата на интеграцию
 
