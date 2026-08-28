@@ -1345,3 +1345,584 @@ Pending / risks:
 Suggested next step:
 - При следующем playback проверить bubble, notification и settings text; новых
   authoring-шагов не требуется.
+
+## 2026-08-27T17:46:23Z — tzm-exclude-unused-bundle — ready-for-integration
+
+Task: Исключить authoring-группу `Не используется` из обычного story bundle
+без удаления или дополнительного сжатия арта.
+
+Changed:
+- `Packages/NovelsContentSdk/Editor/ContentPipeline.cs`: story build вычитает
+  `StoryChunkAuthoring.UnusedPaths` из bundle roots и проверяет точное число
+  исключений.
+- `Novels/Docs/AI/ContentAuthoringGuide.md`: зафиксировано, что группа не
+  публикуется среди roots обычного story bundle.
+- Собственный status-файл содержит scope, результат и ограничения проверки.
+
+Validation:
+- Static TZM audit: roots 555 → 499; 56/56 unused GUID разрешены; missing и
+  overlap — 0; serialized dependencies на них вне `tzm.asset` — 0.
+- Unity Bee/Roslyn: `Novels.ContentSdk.Editor.dll` скомпилирован успешно.
+- `novels-content doctor` и `git diff --check`: успешно.
+- Полный `validate tzm` остановлен после повторяющегося Licensing handshake
+  `Unsupported protocol version '1.18.0'`; `build tzm editor` не запускался.
+
+Pending / risks:
+- После восстановления Unity Licensing Client нужно выполнить последовательные
+  `validate tzm` и `build tzm editor`, подтвердить 499 roots и измерить
+  фактический bundle size.
+- Арт, import settings, `tzm.asset` и ZDM не изменялись.
+
+Suggested next step:
+- Завершить отложенный TZM build, затем отдельной безопасной партией
+  канонизировать exact duplicates Choices и очевидные опечатки/синонимы
+  персонажей; неоднозначные character/layer duplicates оставить на ручную
+  проверку.
+
+## 2026-08-28T06:53:16Z — tzm-art-aliases — ready-for-integration
+
+Task: Добавить story-level Art Aliases и канонизировать только безопасные
+exact-byte дубликаты TZM без изменения Ink и без неоднозначного пункта 7.
+
+Changed:
+- `NovelContentAsset` / `NovelDefinition`: добавлены 17 story-relative Art
+  Aliases, нормализация, duplicate/self/cycle checks и runtime resolver.
+- `ContentAddresses`, `NovelRuntime` и Character runtime: Choice, Location и
+  Character sprite разрешают alias до фактической загрузки.
+- Editor pipeline/validation: bundle roots оставляют только canonical target;
+  отсутствующий или unused конечный target останавливает validation.
+- `Projects/novels-tzm/Assets/tzm.asset`: добавлены aliases, chunk assignments
+  переведены 414 → 408.
+- Удалено 17 exact-byte alias-source PNG и 17 `.meta` (3 Choices, 14
+  Characters); source PNG уменьшены на 2 772 637 байт.
+- Character trim manifest: после доказанного совпадения geometry/hash удалены
+  14 alias-записей, 435 → 421.
+- Authoring guide документирует формат `story/...`, отсутствие физического
+  alias-source и требования к character trim metadata.
+
+Validation:
+- Static TZM audit: 17 уникальных aliases, все конечные targets существуют,
+  все sources удалены; 408 уникальных chunk GUID и 56 unused GUID разрешаются.
+- SHA-256 snapshot всех 20 файлов `Assets/Ink`: идентичен до и после работы.
+- Неоднозначные different-character, `front/back`, `main/emotion` и
+  `main/view` exact pairs физически сохранены.
+- `Novels.ContentAddressing.csproj` и `Novels.Content.csproj`: build succeeded,
+  0 warnings / 0 errors.
+- `novels-content doctor` и `git diff --check`: успешно.
+
+Pending / risks:
+- Unity, `validate tzm` и `build tzm editor` не запускались по прямому
+  ограничению пользователя после падения Licensing Client.
+- Restore generated Character/Editor projects зависал и был отменён; требуется
+  штатная Unity compile/validation после восстановления лицензии.
+- Static expectation: 538 source roots, 482 published roots после вычитания 56
+  unused; подтвердить фактической сборкой.
+
+Suggested next step:
+- После восстановления Unity последовательно выполнить refresh/compile,
+  `validate tzm` и `build tzm editor`; пункт 7 оставлять нетронутым до отдельного
+  решения пользователя.
+
+## 2026-08-28T07:26:54Z — tzm-hair-bundle — ready-for-integration
+
+Task: Исправить расчёт и состав hair assets TZM; для exact front/back пар
+оставить только front.
+
+Changed:
+- `ExperimentalStreamingPlan.cs`: дополнительные Ink gather-ветки гардероба
+  входят в usage report, а дефолтные character clothes/hair/accessory получают
+  первое взрослое появление персонажа.
+- `Projects/novels-tzm/Assets/tzm.asset`: `Ободок`, `Бант`, `Мальвинка` и
+  defaults назначены ранним чанкам; 19 неиспользуемых hair PNG перенесены в
+  `Не используется`; итог 12 чанков / 410 GUID и 75 unused GUID.
+- `Projects/novels-tzm/Assets/Characters/**`: удалены три exact-byte
+  maincharacter hair back PNG/meta, front сохранены; trim manifest 421 → 418.
+- `ContentAuthoringGuide.md`: описаны ветки/defaults и правило не создавать
+  alias между совпадающими front/back слоями.
+
+Validation:
+- Три пары: одинаковые SHA-256, размеры, importer settings, crop и trim hash.
+- Static content audit: 35 hair PNG = 16 chunk + 19 unused, unassigned 0;
+  missing/duplicate/unused overlap 0; source/published roots 535/460.
+- Unity Roslyn изменённого planner и `Novels.Content.csproj`: успешно.
+- `novels-content doctor`, SHA-256 всех 20 Ink-файлов и `git diff --check`:
+  успешно; Ink побайтово не изменён.
+
+Pending / risks:
+- Unity/validate/build не запускались по прямому ограничению после сбоя
+  Licensing Client; фактический новый bundle size не измерен.
+- Статическая оценка опубликованных волос: BC3 6,87 MiB, Android ASTC 6×6
+  3,06 MiB, iOS ASTC 8×8 1,72 MiB; экономия против прежних 38 roots — примерно
+  9,81 / 4,37 / 2,47 MiB до bundle-level compression.
+
+Suggested next step:
+- После восстановления лицензии выполнить Unity refresh, `validate tzm` и
+  `build tzm editor`; проверить начало s01e01 и первое появление Алексы.
+
+## 2026-08-28T08:30:21Z — tzm-semantic-art-aliases — ready-for-integration
+
+Task: Канонизировать оставшиеся шесть exact-byte Character duplicates TZM
+через aliases и убрать повторную отрисовку совпадающих main/emotion.
+
+Changed:
+- `CharacterSpriteSetLoader.cs`: сохраняет разрешённые адреса main/emotion,
+  проверяет fallback на полном наборе и не возвращает второй emotion-слой,
+  когда адрес совпадает с main.
+- `Projects/novels-tzm/Assets/tzm.asset`: добавлены шесть aliases; canonical
+  GUID перенесены в ранние чанки, assignments 410 → 406.
+- `Projects/novels-tzm/Assets/Characters/**`: удалены шесть exact-byte
+  alias-source PNG/meta (8 925 949 байт), пустая папка `царь` и её folder
+  meta; trim manifest 418 → 412.
+- `ContentAuthoringGuide.md`: зафиксировано явное смысловое решение для
+  different-character/main-emotion/main-view aliases и runtime de-dup слоя.
+
+Validation:
+- Шесть пар: SHA-256, importer settings, original size, crop и trimmed hash
+  совпадали до удаления.
+- Static aliases/chunks: 23 aliases, targets 23/23, sources 0/23; 12 чанков /
+  406 GUID, unused 75; duplicates, missing, overlap, self и cycles — 0.
+- Unity Roslyn `Novels.ContentAddressing`, `Novels.Content`,
+  `Novels.Character`: успешно; `novels-content doctor` и
+  `git diff --check`: успешно.
+- Все 20 файлов `Assets/Ink` имеют исходные SHA-256; Ink не изменён.
+
+Pending / risks:
+- Unity Editor, `validate tzm`, bundle build и Play Mode не запускались по
+  прямому ограничению после сбоя Licensing Client.
+- После восстановления лицензии нужно подтвердить 529 source / 454 published
+  roots и визуально проверить Царя, Атлана, Фила и подростка Алексу.
+
+Suggested next step:
+- Выполнить Unity refresh/compile, `validate tzm`, `build tzm editor`, затем
+  короткий playback smoke указанных персонажей.
+
+## 2026-08-28T08:43:43Z — zdm-art-aliases — ready-for-integration
+
+Task: Актуализировать ZDM по схеме exact-art aliases и удалить проверенные
+пустые каталоги TZM.
+
+Changed:
+- `Projects/novels-zdm/.../definition/zdm.asset`: добавлены 58 Art Aliases,
+  ведущих в 45 canonical targets.
+- `Projects/novels-zdm/.../story/character/**`: удалены 58 exact-byte
+  alias-source PNG/meta (18 256 737 байт), пустые деревья Анпу и Стражников;
+  trim manifest 455 → 397.
+- `Projects/novels-tzm/Assets/Characters/maincharacter/hairs/back/**`:
+  удалены три ранее проверенных пустых каталога, ставший пустым `back` и четыре
+  неиспользуемых folder meta.
+
+Validation:
+- Все 58 ZDM-пар совпадают по SHA-256, importer settings и trim geometry;
+  sources отсутствуют, targets существуют, deleted GUID refs/self/cycles — 0.
+- 397 character PNG = 397 trim entries; safe exact duplicates после миграции —
+  0. Сохранены 25 exact-byte пар с отличающимся `wrap mode`.
+- Пустых каталогов Assets TZM/ZDM нет; Ink snapshots TZM/ZDM не изменились.
+- `novels-content doctor` и `git diff --check`: успешно.
+
+Pending / risks:
+- Unity, `validate zdm` и bundle build не запускались по ограничению после сбоя
+  Licensing Client.
+
+Suggested next step:
+- После восстановления лицензии выполнить Unity refresh/compile,
+  `validate zdm`, `build zdm editor` и playback smoke Гора/Анпу/Стражников.
+
+## 2026-08-28T09:03:44Z — zdm-wrap-mode-normalization — ready-for-integration
+
+Task: Привести ZDM character texture wrap mode к эталону TZM и завершить
+alias-канонизацию оставшихся exact duplicates.
+
+Changed:
+- 194 ZDM character PNG importer records с `0/0/0` нормализованы в
+  `wrapU/V/W = 1/1/1` (`Clamp`); в итоговом дереве все 448 PNG единообразны.
+- `zdm.asset`: добавлены ещё 25 Art Aliases; итог 83 aliases / 69 targets.
+- Удалены 25 alias-source PNG/meta ещё на 2 173 892 байта; trim manifest
+  397 → 372.
+- `ContentAuthoringGuide.md`: эталон TZM Clamp закреплён для story art всех
+  content-проектов; Presentation-specific настройки исключены.
+
+Validation:
+- В 188 surviving изменённых PNG meta меняются только wrapU/V/W; отличающихся
+  от `1/1/1` текущих ZDM PNG нет.
+- Exact-byte duplicate groups: 0; 83 alias-пары совпадают по SHA-256,
+  нормализованным importer settings и trim geometry.
+- 372 character PNG = 372 trim entries; missing targets, sources, deleted GUID
+  refs, self/cycles и пустые каталоги — 0.
+- Ink snapshots TZM/ZDM неизменны; `novels-content doctor` и
+  `git diff --check` успешны.
+
+Pending / risks:
+- Unity/reimport, `validate zdm` и bundle build не запускались из-за сбоя
+  Licensing Client.
+
+Suggested next step:
+- После восстановления лицензии выполнить Unity refresh/reimport,
+  `validate zdm`, `build zdm editor` и playback smoke внешности главной
+  героини.
+
+## 2026-08-28T09:14:56Z — bundle-size-rebuild — ready-with-limitations
+
+Task: Последовательно пересобрать TZM/ZDM Editor/Mac bundles после текущей
+серии content-оптимизаций и измерить фактическую экономию.
+
+Changed:
+- Штатные build/composed artifacts TZM и ZDM обновлены командами
+  `novels-content build <story> editor`.
+- `ContentSizeBaseline.md`: добавлена фактическая Editor/Mac delta bundles и
+  полного delivery.
+- `ParallelWork.bundle-size-rebuild.md`: сохранены версии, хеши и ограничения
+  проверки.
+
+Validation:
+- Обе Unity batchmode-команды: exit code 0; content bundle audit прошёл для
+  454 TZM и 452 ZDM root assets.
+- TZM bundle: 188 315 864 B → 130 621 560 B, −57 694 304 B (−30,637%).
+- ZDM bundle: 149 133 366 B → 132 260 907 B, −16 872 459 B (−11,314%).
+- Итого bundles: 337 449 230 B → 262 882 467 B, −74 566 763 B
+  (−71,112 MiB; −22,097%).
+- Project output и composed story output совпадают по размеру и SHA-256;
+  `novels-content doctor` и `git diff --check` успешны.
+- Ink snapshot, проверенный до и после Unity build, не изменился; Unity-only
+  whitespace в 51 TZM video `.meta` возвращён к исходному тексту.
+
+Pending / risks:
+- Пересобран только Editor/Mac target; Android и iOS в этой итерации не
+  обновлялись.
+- Runtime/Play Mode smoke не выполнялся. В Unity log есть неблокирующий
+  `Curl error 60`, но batchmode завершился успешно и audit прошёл.
+
+Suggested next step:
+- Перед мобильным release отдельно и последовательно пересобрать Android/iOS;
+  затем выполнить короткий playback smoke TZM/ZDM.
+
+## 2026-08-28T09:22:35Z — tzm-streaming-throttle-launch — ready-with-limitations
+
+Task: Пересобрать актуальный TZM streaming release и открыть Novels Editor с
+симуляцией канала 20 Мбит/с для ручной проверки доставки чанков.
+
+Changed:
+- Generated TZM Editor/Mac streaming release пересобран с
+  `NOVELS_STREAMING_EXPERIMENT=1` и скомпонован в `Novels/Build/LocalContent`.
+- `ParallelWork.tzm-streaming-throttle-launch.md`: зафиксированы актуальный
+  состав release и параметры запуска.
+- Production source, Ink и authoring assets намеренно не изменялись.
+
+Validation:
+- Build exit code 0; все 12 chunk bundle audits успешны.
+- Release содержит `chunk-0..11`, 51 media entry в 12 media-группах;
+  отдельного preview-бандла в актуальном контракте нет, стартовый — chunk 0.
+- Project/composed release совпадают; Ink snapshot до/после идентичен;
+  `git diff --check` успешен.
+- Unity Editor 6000.3.11f1 открыт на `Novels`; процесс подтвердил
+  `NOVELS_SIMULATED_MBITS=20`, latency/jitter 0 и streaming flag 1.
+- Import/compile завершены, сцена `Assets/Novels/Novels.unity` загружена,
+  C# compilation errors отсутствуют.
+
+Pending / risks:
+- Ручной Play Mode сценарий `TZM -> Cold App/Warm` ещё не выполнен.
+- Неблокирующие Unity Services TLS/403 warnings остаются в Editor log.
+
+Suggested next step:
+- В открытом Editor нажать Play, войти в TZM и сравнить Cold App/Warm по HUD.
+
+## 2026-08-28T09:27:58Z — novels-throttle-5-relaunch — ready-with-limitations
+
+Task: Переоткрыть основной Novels Unity Editor, изменив симуляцию канала с
+20 на 5 Мбит/с.
+
+Changed:
+- Предыдущий Novels Unity process завершён; новый Editor открыт с тем же
+  streaming release и новым process environment.
+- `ParallelWork.novels-throttle-5-relaunch.md`: записаны параметры и проверки.
+- Content release, production source и Ink не изменялись.
+
+Validation:
+- Новый Unity PID 23418 открыл проект `Novels` и сцену
+  `Assets/Novels/Novels.unity`.
+- Process environment: `NOVELS_SIMULATED_MBITS=5`, latency/jitter 0,
+  `NOVELS_STREAMING_EXPERIMENT=1`.
+- Initial refresh/compile завершён; C# compilation errors отсутствуют;
+  `git diff --check` успешен.
+
+Pending / risks:
+- Ручной Play Mode сценарий остаётся пользователю.
+- Неблокирующие Unity Services TLS/403 warnings остаются в Editor log.
+
+Suggested next step:
+- В открытом Editor нажать Play и повторить TZM Cold App/Warm на 5 Мбит/с.
+
+## 2026-08-28T09:43:48Z — debug-hud-initial-chunk-progress — ready-with-limitations
+
+Task: Восстановить meaningful delivery-данные debug HUD во время стартовой
+загрузки chunk-0.
+
+Changed:
+- `Novels/Assets/Novels/ContentDeliveryFlow.cs`: начальный progress callback
+  теперь обновляет и bootstrap text, и `StreamingExperimentDiagnostics`;
+  перед загрузкой выставляются `Preparing` и `chunk-<index>`.
+- `ParallelWork.debug-hud-initial-chunk-progress.md`: записаны причина,
+  реализация и проверки.
+- Content release, Ink, bundles и authoring assets не изменялись.
+
+Validation:
+- Unity Editor 6000.3.11f1 initial refresh/compile: C# errors отсутствуют.
+- Editor открыт на Novels с 5 Мбит/с, latency/jitter 0 и streaming flag 1.
+- `novels-content doctor` и `git diff --check`: успешно; focused source diff
+  содержит только `ContentDeliveryFlow.cs`.
+
+Pending / risks:
+- Визуальный runtime smoke требует ручного `Play -> TZM -> Cold App` в
+  оставленном открытым Editor.
+- `dotnet --no-restore` неприменим без Unity-generated NuGet assets; это не
+  Unity compile failure.
+
+Suggested next step:
+- На стартовой загрузке TZM проверить строку
+  `Preparing · tzm-chunk-0 · <percent> · <MiB/s>` и `Queue · chunk-0`.
+
+## 2026-08-28T09:55:18Z — video-solid-color-null-fix — ready-with-limitations
+
+Task: Исправить падение TZM после гардероба при подготовке видео «Причал».
+
+Changed:
+- `LocationLayout.cs`: добавлена безопасная очистка sprite без layout-расчёта.
+- `LocationScreen.cs`: добавлена явная операция `ClearImage`.
+- `BackgroundPresentationController.cs`: `ShowSolidColor` использует
+  `ClearImage` вместо запрещённого `SetImage(null)`.
+- Ink, story assets, bundles и delivery-разметка не изменялись.
+
+Validation:
+- Unity Roslyn по актуальному `Novels.Location.rsp`: успешно.
+- В runtime больше нет `SetImage(null)`; scoped `git diff --check`: успешно.
+- `dotnet --no-restore` не стартует без Unity-generated `project.assets.json`;
+  это ограничение fallback-проверки, а не C# compile failure.
+
+Pending / risks:
+- Открытый Editor PID 29694 не выполнил refresh внешнего package после
+  падения; программное меню заблокировано macOS Assistive Access.
+- Нужен ручной `Exit Play Mode -> refresh/recompile -> TZM -> Гардероб ->
+  Причал`; второй Unity не запускался.
+
+Suggested next step:
+- Повторить начало TZM в уже открытом Editor; ожидается однотонный переход,
+  подготовка `причал.mp4` и продолжение истории без `ArgumentNullException`.
+
+## 2026-08-28T10:07:24Z — video-camera-without-poster-fix — ready-with-limitations
+
+Task: Исправить второе падение на «Причале» при camera action поверх видео без
+PNG-постера.
+
+Changed:
+- `LocationLayout.cs`: video RenderTexture теперь настраивает геометрию общего
+  visual container; camera travel считается по фактической ширине контейнера,
+  а доступность visual учитывает Sprite или видео.
+- `LocationScreen.cs`: video texture передаётся layout; dialogue alignment
+  использует общий visual-контракт.
+- Ink, story assets, prefab и bundles не изменялись.
+
+Validation:
+- Stack trace и Editor log: видео успешно показано, падение происходило на
+  следующей Ink-команде `Камера: слева направо`.
+- `причал.mp4` имеет размер 2160×1920; новые расчёты используют размеры его
+  RenderTexture.
+- Unity Roslyn по `Novels.Location.rsp`: успешно.
+- Открытый Unity Editor PID 29694 скомпилировал `Novels.Location.dll` и
+  выполнил Domain Reload без новых C#-ошибок; scoped `git diff --check` успешен.
+
+Pending / risks:
+- Нужен повторный Play Mode smoke исходного маршрута; управление Play Mode
+  остаётся ручным.
+
+Suggested next step:
+- В открытом Editor снова пройти `TZM -> Гардероб -> Причал` и проверить
+  `слева направо`, затем две команды `справа налево -> слева направо`.
+
+## 2026-08-28T10:34:00Z — tzm-child-character-streaming-fix — yielded
+
+Task: Вернуть маленькую Салли на репликах `Салли (маленькая)` в TZM.
+
+Changed:
+- `ExperimentalStreamingPlan.cs`: child body главной героини теперь получает
+  first use по первой детской реплике независимо от выбранного до истории view.
+- `tzm.asset`: четыре child body GUID для вариантов внешности возвращены во
+  второй authoring chunk перед первыми детскими эмоциями.
+- Ink не изменялся.
+
+Validation:
+- Unity Roslyn по актуальному `Novels.ContentSdk.Editor.rsp`: успешно.
+- Все четыре child body GUID присутствуют в `tzm.asset` ровно по одному разу;
+  scoped `git diff --check` успешен.
+
+Pending / risks:
+- Локальные bundles ещё не пересобраны: Play Mode остановлен, но основной
+  Editor не выполняет auto-refresh внешних package/authoring changes; macOS
+  также запрещает автоматическое управление меню через Assistive Access.
+- Нужно закрыть основной Unity, выполнить последовательный batch build, затем
+  снова открыть Editor на 5 Мбит/с и повторить TZM до `s01e01.ink:421`.
+
+Suggested next step:
+- Пользователь закрывает Unity; задача снова входит в FIFO, выполняет batch
+  build и повторно открывает проект без параллельного второго экземпляра.
+
+## 2026-08-28T10:41:14Z — tzm-child-character-streaming-fix — ready-with-limitations
+
+Task: Завершить сборку исправления маленькой Салли и открыть тестовый Editor.
+
+Changed:
+- Штатный `novels-content build tzm editor` успешно пересобрал и скомпоновал
+  TZM streaming release `dadf0907cad0ac641810e21c3d8ef5d16ee68ed93accf7508088bf308d82ec19`.
+- Четыре child body всех внешностей находятся в `tzm-chunk-1` перед детскими
+  эмоциями; project/composed release идентичны.
+- Unity-generated trailing whitespace в 51 video `.meta` удалён без изменения
+  содержательных importer settings.
+
+Validation:
+- 12 bundle audits и batchmode: success, exit code 0.
+- Новый `chunk-1`: 11 509 814 B, version
+  `00edc30fc881466debcfd65a48c8f424`.
+- Основной Unity Editor PID 40245 открыт с 5 Мбит/с, latency/jitter 0 и
+  streaming experiment 1; initial refresh/domain reload без C# errors.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Финальный визуальный smoke строки `s01e01.ink:421` остаётся пользователю.
+
+Suggested next step:
+- В Editor запустить TZM Cold App и убедиться, что на строке 421 показана
+  маленькая Салли выбранной внешности, а не взрослый fallback.
+
+## 2026-08-28T10:48:00Z — child-character-adult-layers-fix — yielded
+
+Task: Убрать взрослую одежду с уже корректно загруженной маленькой Салли.
+
+Changed:
+- `CharacterSpriteSetLoader.cs`: child presentation теперь немедленно
+  возвращает пустые clothes, hair и accessory layers после очистки взрослого
+  appearance state; взрослые defaults больше не подставляются.
+- Ink, story authoring и content bundles не изменялись.
+
+Validation:
+- Unity Roslyn по актуальному `Novels.Character.rsp`: успешно.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Открытый Editor находится в Play Mode и использует старый domain; нужен
+  ручной Exit/Close, затем повторный запуск на 5 Мбит/с.
+
+Suggested next step:
+- Пользователь закрывает Unity; задача повторно открывает основной Editor и
+  оставляет финальный визуальный smoke строки 409 пользователю.
+
+## 2026-08-28T11:00:22Z — child-character-adult-layers-fix — ready-with-limitations
+
+Task: Подтвердить применение runtime-исправления без закрытия Editor.
+
+Validation:
+- Открытый Unity автоматически обновил `Novels.Character.dll` в 13:48 local,
+  выполнил два успешных domain reload и не сообщил C# errors.
+- Полный перезапуск и пересборка content bundles не потребовались.
+
+Pending / risks:
+- Финальный визуальный smoke детской реплики остаётся пользователю.
+
+Suggested next step:
+- Повторить строку 409 в текущем Editor; детская Салли должна отображаться без
+  adult clothes/hair/accessory layers.
+
+## 2026-08-28T11:35:54Z — remove-streaming-test-harness — ready-with-limitations
+
+Task: Удалить временную тестовую обвязку streaming, сохранив production
+доставку чанков и ранее исправленное поведение контента.
+
+Changed:
+- `Novels/Assets/Novels/**`: удалены debug HUD, Cold/Warm restart, поколения
+  кэша, source-location callback и диагностические streaming hooks; production
+  bootstrap/story download progress сохранены.
+- `Packages/Bundles/ThrottledFileSystemContentSource.*`: удалён Editor-only
+  эмулятор скорости, latency и jitter.
+- `Packages/NovelsContentSdk/Editor/ContentPipeline.cs`: story streaming стал
+  штатным для всех Story-сборок без environment flag; runtime больше не
+  публикует source map, который использовался только HUD.
+- `ExperimentalStreamingPlan.*` переименован в `StoryStreamingPlan.*` без
+  изменения алгоритма chunk usage/layout.
+- `LocationScreen.cs`: удалён только глобальный debug snapshot; исправления
+  video layout/camera и ClearImage сохранены.
+- Ink, authoring assets и content bundles не изменялись этой задачей.
+
+Validation:
+- Unity Roslyn: `Bundles`, `Novels.Location`, `Novels` и
+  `Novels.ContentSdk.Editor` успешно, C# errors отсутствуют.
+- Поиск production C#: ссылок на HUD, diagnostics, throttle/env flags,
+  cache-generation и experimental planner name нет.
+- `git diff --check`: успешно.
+- Unity batch refresh не дошёл до импорта: Licensing Client IPC завершился
+  таймаутом; зависший процесс остановлен.
+
+Pending / risks:
+- После восстановления Unity Licensing нужен обычный refresh/domain reload.
+- Следующая Story content build впервые проверит штатный streaming без flag и
+  создаст release без runtime source-map payload.
+
+Suggested next step:
+- Открыть Novels обычным способом без специальных env vars, дождаться compile,
+  затем при следующем изменении контента выполнить `build tzm editor`.
+
+## 2026-08-28T12:10:00Z — tzm-default-editor-launch — yielded
+
+Task: Пересобрать TZM Editor content и открыть Novels Editor без ограничения
+сети.
+
+Changed:
+- Production source и Ink не изменялись.
+- Запущенная без `NOVELS_*` env vars TZM build выполнила полный initial import,
+  успешно скомпилировала scripts и начала bundle compression.
+- Batch PID 46007 остановлен после подтверждённого бесконечного licensing
+  reconnect; stale `Projects/novels-tzm/Temp/UnityLockfile` удалён.
+- Novels Editor PID 51354 открыт обычным запуском без network throttle.
+
+Validation:
+- TZM import: 576 actual imports, C# compile errors в логе отсутствуют.
+- Unity Package Manager IPC вне sandbox подключается успешно.
+- Старый целостный composed release остаётся в
+  `Novels/Build/LocalContent/stories/tzm/Remote/Mac/release.json`.
+
+Pending / risks:
+- Новая bundle-сборка не завершена: Unity Licensing Client отклоняет handshake
+  с `Unsupported protocol version '1.18.0'` и теряет entitlement
+  `com.unity.editor.headless`.
+- Пользователь исправляет Unity/Hub licensing; до этого повторять build нельзя.
+
+Suggested next step:
+- После подтверждения исправленной лицензии заново войти в FIFO, закрыть
+  оставшийся Editor при необходимости, повторить `build tzm editor`, затем
+  открыть Novels Editor без специальных env vars.
+
+## 2026-08-28T12:13:00Z — tzm-default-editor-launch — completed
+
+Task: После исправления лицензии завершить TZM Editor build и открыть Novels
+Editor без ограничения сети.
+
+Changed:
+- `novels-content build tzm editor` успешно пересобрал и скомпоновал release
+  `236af7315c7d977ad8d575ec01c732a9cd0211e6744f202a7f548be8ef32de57`.
+- Release содержит 12 bundles / 12 chunks / 51 media entries и не содержит
+  runtime source-map payload.
+- Unity-generated trailing whitespace в 51 video `.meta` механически удалён;
+  содержательные importer settings не менялись.
+- Novels Editor PID 52402 открыт обычным запуском без `NOVELS_*` env vars.
+
+Validation:
+- Content build exit code 0; composed output находится в
+  `Novels/Build/LocalContent`.
+- Novels initial refresh/domain reload завершены, сцена
+  `Assets/Novels/Novels.unity` загружена, C# compile errors отсутствуют.
+- Licensing access token успешно обновлён; остаются прежние неблокирующие
+  Unity Services TLS/403 warnings.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Runtime/visual smoke выполняет пользователь в открытом Editor.
+
+Suggested next step:
+- Нажать Play и проверить TZM на обычной локальной скорости без debug HUD и
+  Cold/Warm controls.
