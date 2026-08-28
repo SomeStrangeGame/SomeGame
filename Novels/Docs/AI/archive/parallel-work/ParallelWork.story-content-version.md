@@ -17,7 +17,7 @@
 - `Novels/Assets/Novels/NovelProgress.cs`
 - `Projects/novels-tzm/Assets/RemoteAssets/content/tzm/definition/tzm.asset`
 - `Projects/novels-zdm/Assets/RemoteAssets/content/zdm/definition/zdm.asset`
-- `Novels/Docs/AI/ParallelWork.story-content-version.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.story-content-version.md`
 - собственные файлы в `Novels/Docs/AI/CoordinationRuntime/`
 
 ## Не изменять

@@ -1,0 +1,84 @@
+# Agent: story-streaming-chunks
+
+- Status: completed; passive bottom story progress overlay compiled and committed
+- Task: implement final-like preview/chunk delivery and predictive media prefetch
+- Branch: `experiment/story-preview-streaming`
+- Worktree: `/Users/iantonishin/Documents/Codex/SomeGame-story-preview-experiment`
+- Scope: `Packages/Bundles/**`, `Packages/NovelsContentSdk/Editor/**`, `Novels/Assets/Novels/**`, experimental TZM build outputs and own status
+- Contract: `chunk-0..N` without preview; media remains files and is scheduled ahead; demand misses show blocking blurred progress/ETA overlay
+- Result: block 1 committed as `67c9d862`
+- Result: blocks 1-2 committed as `67c9d862`, `0ea26631`
+- Result: blocks 1-3 committed through `3c91f2ef`
+- Result: TZM streaming release `b3cddd9d...` built: preview + 13 chunks + 51 media groups
+- Result: final documentation commit `8aeed0f1`
+- Pending: manual cold/warm PlayMode smoke; standalone validation blocked by local Unity Licensing Client protocol mismatch
+- Pending: rebuild TZM after numeric variant ordering hotfix; do not hold write-lock while waiting for user
+- Result: hotfix `9ee0f93d`; release `c5dbae5c...`; first location confirmed in chunk-0/preview
+- Pending: compile and replay character selection after replacing single-await Preserve with multi-waiter completion source
+- Result: multi-waiter hotfix compiled and committed as `051267a3`
+- Pending: rebuild after ranking main-character `main.png` by authored view name
+- Result: planner hotfix `afad5963`; release `8d48546d...`; all four initial bodies in chunk-0
+- Pending: rebuild after replacing filename-only ranking with meaningful path-token ranking
+- Result: generic path-token planner `7a101010`; release `a8616482...`; full initial wardrobe set in chunk-0
+- Pending: rebuild with runtime default hair `распущенные/блонд` forced into preview
+- Result: runtime-default planner `eb25f4c1`; release `8956b712...`; default hair in chunk-0
+- Result: quality upgrade hotfix `14d7e004`; cloned CanvasGroup is reused and character resolves full sprites after chunk readiness
+- Result: preview handoff hotfix `dde2e8fb`; preview bundle unloads with live objects retained before chunk-0 opens
+- Result: Unicode routing hotfix `f8eba6ca`; streaming keys normalize macOS NFD and runtime NFC paths
+- Result: poster/HUD hotfix `951d0762`; poster appears before media wait, video crossfades, OnGUI scales to resolution
+- Result: HUD API compatibility hotfix `0ec26ede`; reusable GUIContent replaces unavailable GUIContent.Temp
+- Result: video readiness hotfix `5eff606c`; poster remains until VideoPlayer emits the first rendered frame
+- Result: render publication hotfix `0a6334ca`; crossfade waits through `LastPostLateUpdate` after `frameReady`
+- Result: stale-frame hotfix `aefce6a7`; callbacks are accepted only after prepare and immediately before play
+- Result: throughput HUD hotfix `62075ea9`; concurrent delivery groups keep independent samples
+- Result: diagnostic HUD `d8935b90`; reports live sprite, Image, CanvasGroup, RawImage, RenderTexture and VideoPlayer state
+- Result: background lifecycle fix `031f1587`; current image remains visible until next sprite resolves
+- Result: semantic startup planner `6d0aac45`; chunk-0 includes the initial wardrobe and first playable hotel scene without a size boundary
+- Result: TZM Editor streaming release `7920d114...` built and composed: preview 13.7 MiB, chunk-0 64.2 MiB / 427 assets, 13 art chunks total; wardrobe and `номер в отеле.png` verified in chunk-0
+- Pending: manual cold PlayMode smoke at simulated 5 Mbit/s; temporary location diagnostic remains until confirmation
+- Result: video crossfade hotfix `97fb5da3`; RawImage alpha replaces unstable runtime CanvasGroup and compiles successfully
+- Result: preview-free granular streaming `ff918449`; demand misses show blurred byte progress and smoothed ETA
+- Result: loading overlay contrast hotfix `10be5be3`; explicit RGBA textures replace unreliable GUI.color tint
+- Result: TZM release `a4307e72...`; 82 art chunks, median 2.1 MiB, max 12.7 MiB, no preview bundle
+- Pending: repeat cold PlayMode smoke through the first hotel bubble
+- Pending: verify loading overlay visually and remove temporary location diagnostic after confirmation
+- Pending: distinguish bundled Setting screen from demand-wait overlay before editing
+- Result: start-screen font hotfix `dead3aa8`; screenshot was Setting screen at Ink line 30, not demand overlay
+- Pending: Unity compile and visual replay; open Editor did not refresh after the source edit
+- Result: UI ownership/material probe `cc0e849c`; failed font workaround removed
+- Pending: Unity Assets/Refresh and screenshot with new Setting/Canvas HUD lines
+- Result: fallback prefab implementation `3be8eb6e`; OnGUI demand overlay removed
+- Pending: manual Cold App visual smoke at first art demand miss
+- Active block: promote dependencies of bootstrap assets into chunk-0, rebuild TZM, verify loading screen visuals
+- Expected files: `Packages/NovelsContentSdk/Editor/ExperimentalStreamingPlan.cs`, experimental TZM release outputs, own coordination records
+- Result: planner fix committed as `246c02c8`; Unity Editor compilation succeeded
+- Pending: close the open Game Editor, reacquire FIFO/write-lock, rebuild TZM and verify loading prefab/background/header are all in chunk-0
+- Result: TZM release `22a45a54...` rebuilt; loading prefab/background/header confirmed together in chunk-0
+- Result: Game Editor PID 63847 opened with 5 Mbit/s, 120 ms latency and 30 ms jitter simulation
+- Pending: user Cold App smoke through New Game and first demand wait
+- Active block: correct fallback prefab vertical rows, then apply video aspect-fill without distortion
+- Expected files: `StoryDownloadFallbackPrefabBuilder.cs`, fallback prefab, `LocationScreen.cs`, own coordination records
+- Result: fallback rows commit `37947469`; video aspect-fill commit `22fb5877`
+- Pending: manual replay of a demand wait and the Santorini video frame
+- Active block: replace 1/12 pixelated snapshot with staged quarter-resolution blur
+- Expected files: `StoryDownloadOverlay.cs`, own coordination records
+- Result: smooth snapshot commit `a3e2039e`; Unity compile succeeded
+- Pending: visual replay of the next demand wait
+- Active block: shared download-all controller, fallback button, episode selection button
+- Expected files: `Packages/Bundles/**`, `Novels/Assets/Novels/**`, Catalog runtime UI, own coordination records
+- Result: shared Catalog action/API commit `18374908`; Game integration commit `4de440c9`
+- Pending: visual Cold App smoke for both button placements and aggregated progress
+- Queued block: deduplicate concurrent media delivery and stop blocking bubble on video readiness
+- Expected files: `Packages/Bundles/**`, Location/media presentation runtime, own coordination records
+- Result: delivery dedupe/global slots commit `217d44d8`; non-blocking looping video commit `cc569ae2`
+- Pending: Cold App replay through `s01e01.ink:87` at 5 Mbit/s
+- Queued block: remove both manual full-story download actions and expose automatic aggregate progress in a separate non-interactive bottom prefab overlay
+- Expected files: Catalog runtime UI/API, `StoryDownloadScreen.cs`, `StoryDownloadOverlay.cs`, `StoryStreamingController.cs`, new story progress overlay scripts/prefab/editor builder, own coordination records
+- Result: manual download-all action and both runtime buttons removed; passive aggregate progress view/controller and deterministic prefab builder added in source
+- Pending: stop Play Mode, reacquire FIFO/write-lock, refresh Unity, let builder create prefab/metas, compile and commit
+- Result: first Unity compile succeeded; builder directory creation fixed after its initial missing-path exception
+- Pending: user Assets/Refresh, then verify generated prefab and commit
+- Result: commit `357d9705`; manual full-story controls removed, passive bottom prefab reports aggregate automatic streaming progress
+- Validation: final Unity `Tundra build success`; prefab imported with all serialized references; staged diff check passed
+- Pending: manual visual smoke in Play Mode only
+- Updated UTC: 2026-08-26T11:10:43Z

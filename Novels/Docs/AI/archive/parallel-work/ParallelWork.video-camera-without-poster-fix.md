@@ -10,7 +10,7 @@
 
 - `Packages/NovelsContentSdk/Runtime/Features/Location/View/LocationLayout.cs`
 - `Packages/NovelsContentSdk/Runtime/Features/Location/View/LocationScreen.cs`
-- `Novels/Docs/AI/ParallelWork.video-camera-without-poster-fix.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.video-camera-without-poster-fix.md`
 - собственные записи `Novels/Docs/AI/CoordinationRuntime/**`
 
 ## Не изменять

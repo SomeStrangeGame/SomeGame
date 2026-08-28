@@ -11,7 +11,7 @@
 - `Packages/NovelsContentSdk/Runtime/Features/Location/BackgroundPresentationController.cs`
 - `Packages/NovelsContentSdk/Runtime/Features/Location/View/LocationScreen.cs`
 - `Packages/NovelsContentSdk/Runtime/Features/Location/View/LocationLayout.cs`
-- `Novels/Docs/AI/ParallelWork.video-solid-color-null-fix.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.video-solid-color-null-fix.md`
 - собственные записи `Novels/Docs/AI/CoordinationRuntime/**`
 
 ## Не изменять

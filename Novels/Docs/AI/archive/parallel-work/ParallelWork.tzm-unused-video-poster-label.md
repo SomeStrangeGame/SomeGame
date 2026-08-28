@@ -10,7 +10,7 @@
 
 - `Packages/NovelsContentSdk/Editor/NovelContentAssetEditor.cs`
 - `Novels/Docs/AI/ContentAuthoringGuide.md`
-- `Novels/Docs/AI/ParallelWork.tzm-unused-video-poster-label.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.tzm-unused-video-poster-label.md`
 - собственные coordination-файлы и новая запись в
   `Novels/Docs/AI/CoordinationRuntime/HANDOFF.md`
 

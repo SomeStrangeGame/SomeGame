@@ -5,6 +5,561 @@
 добавьте новую запись в конец файла по формату из
 `../ParallelRefactoringCoordination.md`.
 
+## 2026-08-26T17:30:00Z — ink-tools-window-merge — completed
+
+Task: Объединить отдельные Ink compiler и asset-order окна.
+
+Changed:
+- Единственное окно `Novels/Content/Ink Tools` принимает root `.ink` через
+  drag-and-drop.
+- В нём находятся `Скомпилировать` (JSON + source map) и `Рассчитать ассеты`
+  (по соседнему compiled JSON), а также прежняя таблица/фильтр.
+- Отдельный `StoryInkCompilerWindow` и его menu entries удалены.
+- Commit: `bfee19aa`.
+
+Validation:
+- Unity Editor restart: `Tundra build success`, 4 items updated, новых C#
+  errors нет; Editor PID 97689.
+- `git diff --check`: успешно.
+- Удалённые пользователем TZM generated JSON/map и legacy JSON не
+  восстанавливались и в commit не включались.
+
+Pending / risks:
+- Пользователь должен перетащить `tzm.ink`, нажать `Скомпилировать`, затем
+  `Рассчитать ассеты`; это заново создаст отсутствующие generated artifacts.
+
+Suggested next step:
+- Выполнить первый compile из единого окна и проверить result box/Console.
+
+## 2026-08-26T17:05:00Z — ink-compiler-drag-drop — completed
+
+Task: Упростить выбор корневого Ink в отдельном compiler window до явного
+drag-and-drop.
+
+Changed:
+- Удалены filesystem scan, INCLUDE/sibling эвристики, popup и refresh action.
+- Добавлено одно сериализуемое `DefaultAsset`-поле; принимается только реальный
+  project asset с расширением `.ink`.
+- Компиляция и безопасная парная запись JSON/source map не менялись.
+- Commit: `a665877a`.
+
+Validation:
+- Unity 6000.3.11f1 content build exit code 0, новых C# errors нет; TZM release
+  скомпонован.
+- Экспериментальный Editor открыт, PID 97120.
+- `git diff --check`: успешно; пользовательские ProjectSettings не включены.
+
+Pending / risks:
+- Нужен ручной drag `tzm.ink` и первый клик `Скомпилировать`.
+
+Suggested next step:
+- В `Novels/Content/Ink Compiler` перетащить `tzm.ink`, нажать кнопку и
+  проверить созданные пути в result box.
+
+## 2026-08-26T16:40:00Z — ink-compiler-window — completed
+
+Task: Добавить отдельное окно компиляции корневого Ink в compiled JSON и
+source map рядом с исходником.
+
+Changed:
+- Добавлен `StoryInkCompilerWindow`: `Novels/Content/Ink Compiler` и context
+  menu `Assets/Novels/Open Ink Compiler`.
+- Корневые Ink определяются по `INCLUDE` или существующему sibling `.ink.json`;
+  при нескольких кандидатах отображается popup.
+- Одна кнопка компилирует официальный Ink Compiler один раз и создаёт
+  `<root>.json` плюс `<root>.json.source-map.json`.
+- Оба temporary-файла готовятся до обновления; при ошибке прежние артефакты
+  восстанавливаются из backup.
+- Commit: `920bb263`.
+
+Validation:
+- TZM discovery возвращает ровно `tzm.ink`.
+- Unity 6000.3.11f1 content build exit code 0, новых C# errors нет; release
+  скомпонован.
+- Экспериментальный Editor открыт, PID 96705.
+- `git diff --check`: успешно; пользовательские ProjectSettings не включены.
+
+Pending / risks:
+- Нужен первый ручной клик `Скомпилировать` и смысловое сравнение новых
+  артефактов с загруженными пользователем перед дальнейшей перепаковкой.
+
+Suggested next step:
+- Открыть `Novels/Content/Ink Compiler`, убедиться, что выбран `tzm.ink`, и
+  нажать `Скомпилировать`; затем проверить Console/result box.
+
+## 2026-08-26T16:10:00Z — story-source-map-builder — completed
+
+Task: Вернуть генерацию Ink source map и добавить действие в asset-order
+EditorWindow.
+
+Changed:
+- В `NovelsContentSdk.Editor` восстановлен `StorySourceMapBuilder`: sibling
+  root `.ink` компилируется Ink Compiler с INCLUDE handler, runtime containers
+  обходятся по `debugMetadata`, затем map атомарно заменяется через `.tmp`.
+- В `Story Asset Order` добавлена кнопка `Рассчитать source map`, notification
+  с количеством записей и Console log с путём результата.
+- Editor assembly явно ссылается на Ink Libraries и StoryProcessor.
+- Commit: `50863b27`.
+
+Validation:
+- Первая batch-компиляция выявила и зафиксировала конфликт `Path` типов.
+- Финальная Unity 6000.3.11f1 content build завершилась с exit code 0, новых C#
+  errors нет; TZM release скомпонован.
+- Экспериментальный TZM Editor снова открыт, PID 95335.
+- `git diff --check`: успешно; пользовательские ProjectSettings не включены.
+
+Pending / risks:
+- Нужен ручной клик кнопки для сравнения вновь рассчитанной карты с текущей;
+  при ошибке старая карта сохраняется.
+
+Suggested next step:
+- Открыть `Story Asset Order`, нажать `Рассчитать source map` и проверить
+  notification/Console, затем использовать карту для человекочитаемой строки
+  вместо offset `Первое`.
+
+## 2026-08-26T15:35:00Z — story-asset-order-compiled-ink — completed
+
+Task: Переключить asset-order window с authoring `.ink` на compiled
+`*.ink.json`.
+
+Changed:
+- Автопоиск окна использует маску `*.ink.json`.
+- Legacy `tzm.json` и `*.source-map.json` в selector не попадают.
+- UI явно называет выбранный файл `Compiled Ink`.
+- Commit: `2c3d2107`.
+
+Validation:
+- В TZM маска возвращает ровно `tzm.ink.json`; source map найден отдельно и
+  исключён из выбора.
+- `git diff --check`: успешно; пользовательские ProjectSettings не включены.
+
+Pending / risks:
+- Открытый Editor не обновил внешний local-package автоматически; нужен
+  `Assets/Refresh` или перезапуск перед визуальной проверкой.
+
+Suggested next step:
+- Обновить Assets, открыть окно и нажать `Рассчитать` для `tzm.ink.json`.
+
+## 2026-08-26T15:15:00Z — story-asset-order-window-ux — completed
+
+Task: Убрать зависимость asset-order window от Project selection и запускать
+расчёт только явной кнопкой.
+
+Changed:
+- Окно само ищет все `.ink` под `Assets`; один выбирается автоматически,
+  несколько доступны через popup.
+- Расчёт запускается только кнопкой `Рассчитать`; список можно пересканировать
+  кнопкой `Обновить`.
+- Окно доступно через `Novels/Content/Story Asset Order` и Project context menu
+  `Assets/Novels/Open Story Asset Order`.
+- Report анализирует именно выбранный Ink-файл, без объединения остальных.
+- Commit: `aa148123`.
+
+Validation:
+- В TZM автоматически обнаруживаются 8 Ink-файлов.
+- Unity 6000.3.11f1: content build exit code 0, новых C# errors нет.
+- `git diff --check`: успешно; ProjectSettings пользователя не включён.
+
+Pending / risks:
+- Нужна ручная визуальная проверка popup и таблицы в открытом Editor.
+
+Suggested next step:
+- Открыть окно, выбрать `s01e01.ink`, нажать `Рассчитать` и проверить первые
+  результаты перед подключением отчёта к chunk planner.
+
+## 2026-08-26T14:55:00Z — story-asset-order-window — completed
+
+Task: Добавить отдельное Unity-окно линейного порядка первого использования
+ассетов без моделирования развилок.
+
+Changed:
+- `ExperimentalStreamingPlan` предоставляет единый first-use report для art,
+  video и audio, используя тот же линейный Ink-анализ, что streaming planner.
+- Добавлен `StoryAssetOrderWindow`, доступный по правому клику на Ink-файле или
+  папке истории: `Assets/Novels/Show Linear Asset Order`.
+- Окно показывает порядок, тип, позицию первого использования, source size,
+  путь, поиск и отдельно помечает `Not found`.
+- Commit: `2726e973`.
+
+Validation:
+- Unity 6000.3.11f1: TZM Editor content build exit code 0, новых C# errors нет.
+- TZM release успешно скомпонован; `git diff --check` успешно.
+- Пользовательский ProjectSettings не включён.
+
+Pending / risks:
+- Позиция первого использования сейчас является детерминированным offset в
+  линейно склеенном Ink; ветки намеренно не моделируются.
+- Нужна ручная визуальная проверка окна в открытом TZM Editor.
+
+Suggested next step:
+- Открыть окно на `noveltexts/tzm`, проверить первые строки и затем использовать
+  этот report как вход для новой стратегии нарезки чанков.
+
+## 2026-08-26T14:30:00Z — runtime-ink-whitelist — completed
+
+Task: Упростить novel text release filter до явного whitelist.
+
+Changed:
+- В `noveltexts/` публикуются только `.ink.json` и `.source-map.json`.
+- Удалены проверки типа authoring-файла, поиск sibling и чтение/сравнение JSON.
+- Commit: `416bbde3`.
+
+Validation:
+- TZM Editor streaming release успешно пересобран.
+- Manifest содержит ровно `tzm.ink.json` и
+  `tzm.ink.json.source-map.json`; исходники `.ink` и `tzm.json` сохранены в
+  authoring-проекте, но не опубликованы.
+- `git diff --check`: успешно; пользовательский ProjectSettings не включён.
+
+Pending / risks:
+- Whitelist является строгим контрактом: новый runtime-файл другого типа в
+  `noveltexts/` потребуется явно добавить в pipeline.
+
+Suggested next step:
+- Продолжить оптимизацию размера art chunks по фактическому manifest и
+  временной близости использования assets.
+
+## 2026-08-26T14:10:00Z — runtime-ink-payload-filter — completed
+
+Task: Не публиковать authoring Ink и подтверждённый legacy JSON-дубликат в
+runtime release, сохранив compiled Ink и source map для аналитики.
+
+Changed:
+- `ContentPipeline` исключает `.ink` только внутри `noveltexts/`.
+- Обычный `<story>.json` исключается лишь при наличии идентичного
+  `<story>.ink.json`; compiled JSON и `.source-map.json` всегда сохраняются.
+- Commit: `68351108`.
+
+Validation:
+- TZM Editor streaming build завершился успешно, release `11bd2918...`.
+- В release под `noveltexts/` ровно `tzm.ink.json` и
+  `tzm.ink.json.source-map.json`; source map присутствует.
+- Все восемь исходных `.ink` остаются в authoring-проекте.
+- Text payload уменьшен с 2,542,580 до 1,579,177 bytes: −963,403 bytes.
+- `git diff --check`: успешно; пользовательский ProjectSettings не включён.
+
+Pending / risks:
+- Нет. Правило намеренно консервативно сохраняет любой plain JSON, если его
+  содержимое отличается от sibling `.ink.json`.
+
+Suggested next step:
+- При следующей сборке других историй проверить их manifest; общий pipeline
+  применит то же правило без project-specific hardcode.
+
+## 2026-08-26T13:10:00Z — player-build-publish — completed
+
+Task: Зафиксировать и отправить в main систему автоматических Player-сборок.
+
+Changed:
+- Commit `f849ff22` содержит только функциональные файлы Remote/Embedded
+  матрицы, build identity, встроенного content source и Windows content target.
+- Тяжёлые артефакты `Build/` и чужие streaming-изменения не включались.
+
+Validation:
+- `git diff --cached --check`: успешно до commit.
+- `origin/main` подтверждён на `f849ff229eb1e56b89af2bac9e4fd12cbb927e83`.
+
+Pending / risks:
+- В рабочем дереве остаются независимые координационные изменения других задач.
+
+Suggested next step:
+- Продолжать работу от `origin/main` / `f849ff22`.
+
+## 2026-08-26T11:49:00Z — macos-embedded-build — completed
+
+Task: Собрать macOS Player со встроенными бандлами всех историй.
+
+Changed:
+- Пересобраны LocalContent Catalog, TZM и ZDM для Mac bundle key.
+- Собран versioned universal macOS Embedded Player.
+- `PlayerBuildAutomation.cs`: автоматический build number теперь также
+  записывается в `PlayerSettings.macOS.buildNumber` и восстанавливается после
+  сборки.
+
+Validation:
+- Unity build: exit code 0, `Embedded Player build completed`, 2100.4 MiB.
+- Mach-O: universal `arm64` + `x86_64`.
+- Info.plist: version `2026.08.26`, build `3498463`.
+- В StreamingAssets найдены Catalog, TZM и ZDM Mac releases.
+- `git diff --check`: успешно; `.gitignore` не менялся.
+
+Pending / risks:
+- Приложение подписано ad-hoc, не notarized; ручной runtime smoke не выполнялся.
+
+Suggested next step:
+- Запустить `.app`, выбрать обе истории и проверить первый экран каждой.
+
+## 2026-08-26T11:35:30Z — player-build-matrix — completed
+
+Task: Автоматизировать версию и дать Android, iOS, Windows и macOS одинаковые
+Remote/Embedded варианты Player-сборки, не меняя `.gitignore`.
+
+Changed:
+- `PlayerBuildAutomation.cs`: build identity применяется к PlayerSettings на
+  время сборки и восстанавливается после неё; Embedded принимает release/dev.
+- `build-player.sh`: единая реализация четырёх платформ и двух режимов.
+- `build-player-matrix.sh`: сборка всех восьми артефактов под одной версией.
+- Старые Remote/Embedded скрипты оставлены как совместимые оболочки.
+
+Validation:
+- `zsh -n` и `git diff --check`: успешно.
+- Unity 6000.3.11f1 batch compile: `Tundra build success`, exit code 0.
+- `.gitignore` не менялся; артефакты остаются намеренно игнорируемыми.
+
+Pending / risks:
+- На текущей установке найден только MacStandaloneSupport. Для полной матрицы
+  Unity Hub должен установить Android, iOS и Windows Build Support.
+
+Suggested next step:
+- После установки модулей запустить `Novels/Tools/build-player-matrix.sh`.
+
+## 2026-08-26T11:10:43Z — story-streaming-chunks — yielded parallel media fix
+
+Task: Устранить трёхсекундное ожидание бабла на фоне и безопасно загружать
+ближайшие art/media параллельно.
+
+Changed:
+- `ContentDeliveryCoordinator`: одинаковые release/group используют одну
+  preserved download-operation с несколькими progress subscribers; каждый
+  потребитель сохраняет независимый storage lease. Общий SemaphoreSlim
+  ограничивает все группы runtime-настройкой MaximumParallelDownloads.
+- `StoryStreamingController`: art chunk и соответствующая media group одного
+  шага готовятся параллельно. Commit `217d44d8`.
+- `BackgroundPresentationController`: обычное looping video разрешается,
+  подготавливается и crossfade-ится после возврата из background operation;
+  статический poster и следующий bubble больше не ждут видео. Cut-scenes
+  сохраняют блокирующую семантику. Commit `cc569ae2`.
+
+Validation:
+- Исходный Editor.log подтвердил `Already continuation registered` при
+  одновременном predictive/on-demand запросе media-1.
+- Unity 6000.3.11f1: финальные две компиляции `Tundra build success`, новых C#
+  errors нет.
+- `git diff --check`: успешно; ProjectSettings пользователя не включён.
+
+Pending / risks:
+- Нужен повторный Cold App replay до `s01e01.ink:87` при 5 Mbit/s: бабл должен
+  появиться сразу на poster, video — плавно позже; предупреждение double-await
+  не должно повториться.
+
+Suggested next step:
+- В открытом Editor нажать Cold App и повторить сцену номера в отеле, затем
+  проверить Console на отсутствие `Predictive story streaming stopped`.
+
+## 2026-08-26T10:31:51Z — story-streaming-chunks — yielded download-all controls
+
+Task: Добавить единое действие `Скачать всю историю` в demand-wait overlay и
+экран выбора эпизодов.
+
+Changed:
+- `Packages/Bundles/Entity.cs`: чтение размера delivery group для общего
+  byte-progress.
+- Catalog runtime: `CatalogAction`, optional secondary action в controller и
+  runtime-кнопка в `CatalogScreen`. Commit `18374908`.
+- Game runtime: `StoryStreamingController` агрегирует art+video+audio groups,
+  публикует состояния `Скачать` / `Загрузка N%` / `История загружена` /
+  `Продолжить загрузку`; тот же action подключён к выбору эпизодов и fallback
+  download screen. Commit `4de440c9`.
+
+Validation:
+- Unity 6000.3.11f1: после исправления nullable method group получен
+  `Tundra build success`, 113 items updated, новых C# errors нет.
+- `git diff --check`: успешно; ProjectSettings пользователя не включён.
+- Bundled prefabs не менялись: обе кнопки создаются runtime, content rebuild не
+  требуется.
+
+Pending / risks:
+- Нужен визуальный Cold App smoke обоих размещений. Предиктивная очередь как и
+  раньше стартует автоматически; явное нажатие включает общий пользовательский
+  прогресс и retry после временной остановки.
+
+Suggested next step:
+- Cold App → TZM: проверить кнопку выбора эпизода; затем на demand miss проверить
+  ту же кнопку, общий процент и финальное `История загружена`.
+
+## 2026-08-26T10:07:00Z — story-streaming-chunks — yielded smooth backdrop
+
+Task: Убрать крупноблочную пикселизацию размытого фона demand-wait overlay.
+
+Changed:
+- `StoryDownloadOverlay.cs`: snapshot повышен с 1/12 до 1/4 разрешения экрана
+  и уменьшается двумя bilinear-ступенями через временный half-resolution RT.
+- Commit: `a3e2039e`.
+
+Validation:
+- Unity 6000.3.11f1: `Tundra build success`, новых C# errors нет.
+- `git diff --check`: успешно; ProjectSettings пользователя не включён.
+
+Pending / risks:
+- Нужен визуальный replay следующего demand wait; transient RT освобождается в
+  `finally`.
+
+Suggested next step:
+- Повторить Cold App или дождаться следующего отсутствующего чанка и проверить,
+  что фон остаётся мягким без крупных квадратов.
+
+## 2026-08-26T10:03:00Z — story-streaming-chunks — yielded UI/video fixes
+
+Task: Исправить наложение строк fallback download screen и искажение
+пропорций фонового видео.
+
+Changed:
+- `StoryDownloadFallbackPrefabBuilder.cs` и fallback `screen.prefab`: title,
+  progress, details и remaining получили непересекающиеся вертикальные rect.
+  Commit `37947469`.
+- `LocationScreen.cs`: RawImage использует centered aspect-fill UV crop и
+  пересчитывается при назначении texture/изменении rect. Commit `22fb5877`.
+
+Validation:
+- Unity 6000.3.11f1: `Tundra build success`, 9 items updated, новых C# errors
+  нет.
+- PrefabImporter успешно импортировал fallback prefab.
+- `git diff --check`: успешно; пользовательский ProjectSettings не включён.
+
+Pending / risks:
+- Нужен ручной визуальный replay demand wait и видео Santorini; aspect-fill
+  сохраняет геометрию ценой симметричного crop по длинной оси.
+
+Suggested next step:
+- Повторить Cold App, проверить читаемые строки окна; затем дойти до видео и
+  подтвердить отсутствие сплющивания.
+
+## 2026-08-26T09:49:00Z — story-streaming-chunks — yielded rebuilt release
+
+Task: Пересобрать TZM после bootstrap dependency closure и подготовить ручную
+проверку штатного Loading screen.
+
+Changed:
+- Experimental TZM Editor output и composed Game LocalContent пересобраны.
+- Release ID: `22a45a544f9a9ae4429a6a4f7c4d532712fe5798e80fe44e43c49cc3d153c594`.
+
+Validation:
+- `NOVELS_STREAMING_EXPERIMENT=1 novels-content build tzm editor`: успешно.
+- `loading/screen-variant.prefab`, `loading/background.png` и
+  `loading/header.png` находятся только в chunk-0.
+- 82 art chunks, 51 media groups; chunk-0 — 7,621,847 bytes / 73 explicit
+  assets; полный art bundle payload — 244,239,004 bytes.
+- Game Editor PID 63847 открыт с 5 Mbit/s, latency 120 ms, jitter 30 ms.
+- Рабочее дерево содержит только прежний пользовательский
+  `Novels/ProjectSettings/ProjectSettings.asset`.
+
+Pending / risks:
+- Нужен ручной Cold App smoke: каталог → TZM → New Game; проверить штатный
+  Loading screen и затем первое fallback demand-wait окно.
+
+Suggested next step:
+- Нажать Cold App и пройти старт истории; прислать screenshot, если Loading
+  screen снова отображается некорректно.
+
+## 2026-08-26T09:40:30Z — story-streaming-chunks — yielded planner fix
+
+Task: Исправить белый штатный Loading screen, чьи PNG-зависимости были
+разнесены с prefab по разным streaming chunks.
+
+Changed:
+- `Packages/NovelsContentSdk/Editor/ExperimentalStreamingPlan.cs`: bootstrap
+  теперь включает dependency closure bootstrap-ассетов, отфильтрованный по
+  ассетам текущей истории; обязательные sprites стартовых UI-prefab попадут с
+  ними в chunk-0.
+- Commit: `246c02c8`.
+
+Validation:
+- Текущий release подтвердил причину: `loading/screen-variant.prefab` находился
+  в chunk-0, а `loading/background.png` и `loading/header.png` — в chunk-51.
+- Unity 6000.3.11f1: `Tundra build success`, новых C# errors нет.
+- `git diff --check`: успешно; пользовательский
+  `Novels/ProjectSettings/ProjectSettings.asset` не включён.
+
+Pending / risks:
+- TZM ещё не пересобран: основной Game Editor открыт пользователем, второй
+  Unity запускать нельзя.
+
+Suggested next step:
+- После закрытия Editor снова получить FIFO/write-lock, выполнить TZM Editor
+  streaming build и проверить по release.json, что loading prefab/background/
+  header находятся в chunk-0; затем повторить Cold App smoke.
+
+## 2026-08-26T09:35:00Z — story-streaming-chunks — yielded fallback prefab
+
+Task: Заменить нестабильное OnGUI-окно demand wait на штатный fallback uGUI
+prefab.
+
+Changed:
+- `StoryDownloadOverlay.cs`: оставлен controller прогресса, ETA и размытого
+  snapshot; OnGUI и runtime color textures удалены.
+- `StoryDownloadScreen.cs`: отдельный uGUI view для CanvasGroup, RawImage,
+  progress fill и двух строк состояния.
+- `Resources/Fallbacks/StoryDownload/screen.prefab`: fallback Canvas с
+  затемнением, размытой подложкой, тёмной панелью, progress bar и текстом.
+- `StoryDownloadFallbackPrefabBuilder.cs`: детерминированная пересборка prefab
+  через меню `Novels/Rebuild Story Download Fallback` и создание при отсутствии.
+- Временный Setting/Canvas probe и не подтвердившийся font workaround удалены.
+- Commit: `3be8eb6e`.
+
+Validation:
+- Unity 6000.3.11f1: `Tundra build success`, новых C# errors нет.
+- PrefabImporter успешно импортировал `screen.prefab`; все пять serialized
+  view references ненулевые.
+- `git diff HEAD^ --check`: успешно.
+- Пользовательский `Novels/ProjectSettings/ProjectSettings.asset` не включён.
+
+Pending / risks:
+- Нужен ручной Cold App visual smoke на первом реальном art demand miss.
+
+Suggested next step:
+- Cold App → TZM → пройти до недостающего art chunk; ожидается тёмное
+  масштабируемое окно поверх размытого текущего кадра с progress и ETA.
+
+## 2026-08-26T09:12:00Z — story-streaming-chunks — yielded UI probe
+
+Task: Различить Setting screen, Loading screen и demand overlay для белой
+плашки без текста.
+
+Changed:
+- `Packages/Setting/View/Screen.cs`, `Packages/Setting/Entity.cs`: временный
+  snapshot active Graphic, rect, alpha, material и shader.
+- `Novels/Assets/Novels/StorySourceOverlay.cs`: HUD показывает Setting snapshot
+  и активные Canvas/sorting order/CanvasGroup alpha.
+- Не подтвердившаяся подмена шрифта из `dead3aa8` удалена.
+- Commit: `cc0e849c`.
+
+Validation:
+- Первая версия probe поймала и затем исправила compile boundary между
+  `Novels` и `Setting.View`; вызов перенесён через `Setting.Entity`.
+- Scoped `git diff --check`: успешно.
+
+Pending / risks:
+- Unity не выполнил второй Refresh после исправления source; Editor.log всё ещё
+  содержит устаревшую ошибку первой версии probe. Нужен ручной Assets/Refresh
+  либо перезапуск Editor/Play Mode, затем новый screenshot HUD.
+
+Suggested next step:
+- После Refresh прислать HUD со строками `Setting` и `Canvas`; по ним определить
+  конкретный Graphic/Canvas и заменить probe финальной правкой.
+
+## 2026-08-26T09:00:00Z — story-streaming-chunks — yielded
+
+Task: Исправить белый прямоугольник без текста на старте TZM streaming smoke.
+
+Changed:
+- `Packages/Setting/View/Screen.cs`: legacy UI стартового экрана теперь
+  использует встроенный `LegacyRuntime.ttf`, а не десериализованный из story
+  AssetBundle шрифт; исправление зафиксировано commit `dead3aa8`.
+
+Validation:
+- Сопоставление HUD `s01e01.ink:30` и Ink: кадр сделан до выбора `Играть`, то
+  есть видимый прямоугольник принадлежит Setting screen, не demand overlay.
+- Состав release: setting prefab и Liberation Sans находятся в `chunk-0`.
+- `git diff --check -- Packages/Setting/View/Screen.cs`: успешно.
+
+Pending / risks:
+- Открытый Unity Editor не выполнил refresh после изменения (Editor.log не
+  обновлялся); компиляция и визуальный replay остаются за следующим запуском.
+
+Suggested next step:
+- Перезапустить Play Mode после компиляции и проверить наличие заголовка и
+  кнопки `Новая игра`, затем пройти до реального demand wait.
+
 ## 2026-08-24 — coordination-runtime — completed
 
 Task: Дополнить существующую координацию атомарной FIFO-очередью, handoff и
@@ -1926,3 +2481,1127 @@ Pending / risks:
 Suggested next step:
 - Нажать Play и проверить TZM на обычной локальной скорости без debug HUD и
   Cold/Warm controls.
+## 2026-08-25T08:43:50Z — story-streaming-experiment — completed
+
+Task: Подготовить в отдельной ветке тест preview/full streaming, симуляцию сети
+и диагностический HUD, затем собрать TZM Editor-контент.
+
+Changed:
+- Worktree `/Users/iantonishin/Documents/Codex/SomeGame-story-preview-experiment`,
+  branch `experiment/story-preview-streaming`, commit `949587ec`.
+- Экспериментальный build flag создаёт preview/full-бандлы и отдельную
+  `<story>-media` delivery-группу; production contract без flag не меняется.
+- Runtime запускает историю на preview и догружает full-арт в фоне.
+- Editor поддерживает `NOVELS_SIMULATED_MBITS`; OnGUI HUD показывает Ink,
+  FPS, frame time, RAM, tier, прогресс/скорость и даёт `Cold App`/`Warm`.
+
+Validation:
+- `novels-content doctor`: passed.
+- TZM Editor build: passed; release `c74e1cd2...` composed locally.
+- Preview group 36 297 428 B; full-art 246 683 737 B; media 287 268 760 B.
+- Main Novels Unity batch compile: passed; C# errors absent.
+- TZM authoring art/meta unchanged; `git diff --check`: passed.
+
+Pending / risks:
+- Preview пока уменьшает весь текущий art-бандл, а не только будущий chunk 0.
+- Уже показанный Sprite не обновляется мгновенно; full применяется при следующих
+  загрузках визуальных ассетов.
+- Нужен ручной Play Mode замер Legacy/Warm/Cold с выбранной скоростью сети.
+
+Suggested next step:
+- Открыть экспериментальный worktree с `NOVELS_SIMULATED_MBITS=20`, пройти TZM
+  и сравнить первый вход, `Warm` и `Cold App` по HUD.
+
+## 2026-08-25T09:56:32Z — story-streaming-experiment — completed hotfix
+
+Task: Исправить `FileNotFoundException` на `stories/zdm/card.json` при запуске
+экспериментальной Editor-версии.
+
+Changed:
+- В изолированный worktree добавлены проверенные Editor outputs ZDM.
+- Catalog Editor bundle пересобран; локальная композиция повторно собрана как
+  Catalog + TZM experiment + ZDM.
+
+Validation:
+- Все catalog release, TZM/ZDM card, cover и Mac release существуют и непусты.
+- Catalog содержит `tzm` и `zdm`; итоговая локальная композиция 854 МБ.
+- Catalog Unity build завершён успешно, compile/build errors отсутствуют.
+
+Pending / risks:
+- Требуется только повторный Play Mode запуск в уже открытом Editor.
+
+Suggested next step:
+- Выйти из Play Mode и войти снова; перезапуск Unity не требуется.
+
+## 2026-08-25T10:20:42Z — background-quality-crossfade — completed
+
+Task: Плавно заменить уже показанный preview-фон на full после завершения
+фоновой загрузки, без пересборки контента.
+
+Changed:
+- Commit `be60e0f3` в `experiment/story-preview-streaming`.
+- `NovelRuntime` уведомляет активный Location о готовности full-бандла.
+- Location хранит идентификатор текущего фона, повторно загружает full Sprite и
+  применяет его только если фоновая команда всё ещё актуальна.
+- `LocationScreen` создаёт временный runtime Image и выполняет crossfade.
+- Во время видео обновляется скрытый poster; после cutscene возвращается full.
+
+Validation:
+- Открытый Unity Editor автоматически пересобрал `Novels.Location.dll` и
+  `Novels.dll`: Tundra build success, C# errors absent.
+- Scoped `git diff --check`: passed.
+- Content bundles, releases, prefabs и serialized fields не изменялись.
+
+Pending / risks:
+- Нужен ручной Play Mode visual smoke; live-upgrade персонажей остаётся
+  отдельным блоком.
+
+Suggested next step:
+- Повторить сценарий Preview → Full на статическом фоне и на cutscene-video.
+
+## 2026-08-25T10:27:41Z — native-video-render-texture — completed
+
+Task: Устранить размытие видео, вызванное RenderTexture размером с preview
+poster (~256 px) вместо native MP4.
+
+Changed:
+- Commit `fbbf846c` в `experiment/story-preview-streaming`.
+- `VideoPlayback` теперь сначала выполняет `Prepare()`, читает native
+  `VideoPlayer.width/height`, затем создаёт RenderTexture.
+- Размер безопасно ограничивается `SystemInfo.maxTextureSize`; fallback на
+  poster используется только при отсутствии video metadata.
+- Depth-buffer RenderTexture уменьшен с 16 до 0 как ненужный для UI-видео.
+
+Validation:
+- Исходный `номер в отеле.mp4`: 2160x1920, H.264, ~4.6 Mbps.
+- Scoped `git diff --check`: passed.
+- Unity compile ожидает возврата фокуса открытому Editor; content rebuild не
+  требуется.
+
+Pending / risks:
+- Нужен повторный визуальный Play Mode smoke после автоматической recompilation.
+
+Suggested next step:
+- Вернуться в Unity, дождаться compile, снова запустить Play Mode и проверить
+  `Номер в отеле` на preview tier.
+
+## 2026-08-25T09:30:22Z — webgl-local-prototype — ready-for-integration
+
+Task: Реализовать в отдельной ветке строго локальный persistent WebGL prototype.
+
+Changed:
+- Worktree `/Users/iantonishin/Documents/Codex/SomeGame-webgl-local-prototype`,
+  branch `prototype/webgl-local-platform`, commit `cfb92896`.
+- WebGL content target, local account, local analytics и WebGL-safe storage.
+- Одна Editor-команда строит контент/player, запускает localhost и открывает
+  настоящий WebGL-клиент в браузере.
+
+Validation:
+- Content doctor, shell syntax и `git diff --check`: passed.
+- Unity batch compile не состоялся из-за несовместимой версии локального Unity
+  Licensing Client; C# compilation не начиналась.
+
+Pending / risks:
+- После восстановления Unity license требуется compile и первый полный WebGL
+  build/browser smoke; Android/iOS production delivery не изменялась.
+
+Suggested next step:
+- Открыть worktree в Unity и выполнить
+  `Novels > Prototype > Build & Preview WebGL`.
+
+## 2026-08-25T10:45:00Z — story-streaming-cold-cache — completed
+
+Task: Сделать кнопку Cold App настоящей симуляцией чистого payload-кеша.
+
+Changed:
+- `Packages/Cache/Entity.cs`: добавлена безопасная очистка относительного
+  каталога внутри `CachedFiles`.
+- `Novels/Assets/Novels/EntryPoint.cs`: после завершения текущей сессии Cold
+  App удаляет `RemoteContent` и `ContentStaging`, сохраняя игровые сейвы.
+
+Validation:
+- Unity Editor автоматически перекомпилировал и перезагрузил assemblies;
+  C#-ошибок в новых строках лога нет.
+- `git diff --check -- Packages/Cache/Entity.cs
+  Novels/Assets/Novels/EntryPoint.cs`: успешно.
+- Commit: `372f7423`.
+
+Pending / risks:
+- Финальное подтверждение сетевого сценария требует один раз нажать Cold App:
+  preview и full TZM должны появиться в логе как новые downloads.
+- Автогенерируемый `Novels/Novels.slnx` остался чужим незакоммиченным
+  изменением и не включён в commit.
+
+Suggested next step:
+- В Play Mode нажать Cold App и проверить повторную загрузку preview с
+  установленным `NOVELS_SIMULATED_MBITS`.
+
+## 2026-08-25T11:16:00Z — story-streaming-chunks — completed block 1
+
+Task: Ввести экспериментальный контракт predictive delivery plan и сборку
+именованных `preview`, `chunk-0..N` без отрицательных номеров.
+
+Changed:
+- `Packages/Bundles/ContentRelease*`: optional streaming plan, fingerprint и
+  validation.
+- `Packages/NovelsContentSdk/Editor/ExperimentalStreamingPlan.cs`: build-time
+  порядок арта и media по первому упоминанию в Ink.
+- `ContentPipeline.cs`: feature-flag сборка preview только из chunk-0 и
+  последовательных полноразмерных chunk bundles.
+- `ContentPackageConvention.cs`: стабильные имена chunk/media payload groups.
+
+Validation:
+- Открытый Unity Editor: Tundra build success, assemblies reloaded, C# errors
+  отсутствуют.
+- Scoped `git diff --check`: passed.
+- Commit: `67c9d862`.
+
+Pending / risks:
+- Runtime scheduler и asset routing ещё не подключены; экспериментальный
+  контент этим контрактом пока не пересобирался.
+
+Suggested next step:
+- Отдельным lock-блоком подключить runtime scheduler и загрузку chunk-0..N.
+
+## 2026-08-25T11:30:00Z — story-streaming-chunks — completed block 2
+
+Task: Подключить непрерывную runtime-очередь чанков, predictive media prefetch
+и live-upgrade текущего арта.
+
+Changed:
+- `StoryStreamingController.cs`: очередь `chunk-0 → media → chunk-1`,
+  приоритетная догрузка запрошенного чанка и asset-to-bundle routing.
+- `NovelRuntime*`: scheduler запускается до окна выбора эпизода; фоны, choose
+  и character sprites получают правильный chunk bundle.
+- Character runtime: сброс preview sprite cache и повторное разрешение текущих
+  слоёв после готовности очередного full-чанка.
+- Media scope принимает предрассчитанные individual media delivery groups.
+
+Validation:
+- Unity Editor: Tundra build success, assemblies reloaded, новых C# errors нет.
+- Scoped `git diff --check`: passed.
+- Commit: `0ea26631`.
+
+Pending / risks:
+- Нужна экспериментальная TZM rebuild, после которой runtime контракт можно
+  проверить в Play Mode.
+- Diagnostics пока показывает активную группу, но не всю ожидающую очередь.
+
+Suggested next step:
+- Отдельным lock-блоком расширить HUD/network simulation, затем собрать TZM.
+
+## 2026-08-25T11:40:00Z — story-streaming-chunks — completed block 3
+
+Task: Сделать Editor-сеть и HUD ближе к реальному streaming-клиенту.
+
+Changed:
+- `ThrottledFileSystemContentSource`: bandwidth + configurable latency/jitter.
+- `EntryPoint`: defaults 120 ms latency and 30 ms jitter при включённом
+  `NOVELS_SIMULATED_MBITS`; overrides через environment.
+- HUD показывает ближайшую очередь `chunk/media`, а не только active group.
+
+Validation:
+- Unity Editor assemblies reloaded, новых C# errors нет.
+- Scoped `git diff --check`: passed.
+- Commit: `3c91f2ef`.
+
+Pending / risks:
+- Требуется TZM content rebuild и end-to-end cold test.
+
+Suggested next step:
+- Получить эксклюзивный Unity/build slot и собрать TZM Editor experiment.
+
+## 2026-08-25T11:45:00Z — story-streaming-chunks — ready-for-integration
+
+Task: Реализовать приближённый к production прототип `preview` + последовательных
+art-чанков и предиктивной догрузки отдельных video/audio файлов.
+
+Changed:
+- Commits `67c9d862`, `0ea26631`, `3c91f2ef`, `8aeed0f1` в ветке
+  `experiment/story-preview-streaming`.
+- `Packages/Bundles/**`, `Packages/NovelsContentSdk/Editor/**`: optional
+  streaming plan, build-time Ink analysis, preview/chunk/media release contract.
+- `Novels/Assets/Novels/**`: непрерывный scheduler, priority demand load,
+  background/character live upgrade, latency/jitter simulation и HUD queue.
+- `Novels/Docs/AI/ParallelWork.story-streaming-experiment.md`: результаты.
+
+Validation:
+- `novels-content doctor`: успешно.
+- `NOVELS_STREAMING_EXPERIMENT=1 novels-content build tzm editor`: успешно.
+- Release `b3cddd9d...`: preview 1.71 MiB, preview group 4.14 MiB,
+  13 art-чанков и 51 media delivery group.
+- Unity bundle build скомпилировал assemblies без C# ошибок.
+
+Pending / risks:
+- Ручной cold/warm PlayMode smoke остаётся за пользователем.
+- Повторный standalone `validate` завис на локальном Unity Licensing Client:
+  `Unsupported protocol version '1.18.0'`; это не ошибка release/content build.
+- Не включать эксперимент в production без `NOVELS_STREAMING_EXPERIMENT=1` и
+  сравнительных замеров.
+- Пользовательские изменения `Novels.slnx` и `ProjectSettings.asset` сохранены
+  и не включены в commits.
+
+Suggested next step:
+- Открыть `Novels` этого worktree с `NOVELS_SIMULATED_MBITS=5`, нажать
+  `Cold App`, проверить старт через preview, очередь и live upgrade.
+
+## 2026-08-25T12:14:00Z — story-streaming-chunks — completed hotfix
+
+Task: Исправить отказ Catalog на optional `streamingPlan: null` и чёрный экран
+TZM, вызванный попаданием первого фона в `chunk-1`.
+
+Changed:
+- `ContentReleaseCodec` нормализует только полностью пустой optional plan в
+  `null`; частично повреждённые планы по-прежнему отклоняет validator.
+- `ExperimentalStreamingPlan` распознаёт любое числовое имя variant-файла как
+  имя родительского ассета и NFC-нормализует токен.
+- Commit: `9ee0f93d`.
+
+Validation:
+- Unity assemblies скомпилированы в ходе TZM build без C# errors.
+- `NOVELS_STREAMING_EXPERIMENT=1 novels-content build tzm editor`: успешно.
+- Release `c5dbae5c...`: 13 chunks, 51 media groups.
+- Первый Ink-фон `гардероб суша день.png` подтверждён в `chunk-0` и preview.
+- Preview bundle 9 496 365 B; preview delivery group 12 038 945 B.
+
+Pending / risks:
+- Требуется ручное подтверждение первого кадра в PlayMode на 5 Мбит/с.
+- Увеличение preview — осознанная цена покрытия ранних candidate-наборов.
+
+Suggested next step:
+- Выполнить Cold App и открыть TZM; первый фон должен появиться до загрузки
+  `chunk-1`.
+
+## 2026-08-25T12:21:00Z — story-streaming-chunks — completed runtime hotfix
+
+Task: Исправить падение загрузки многослойного персонажа при конкурентном
+ожидании одного streaming chunk.
+
+Changed:
+- `StoryStreamingController` заменил single-await preserved task на общий
+  `UniTaskCompletionSource` с безопасным fan-out результата, ошибки и cancel.
+- Commit: `051267a3`.
+
+Validation:
+- Unity Tundra compile после изменения: success, C# errors отсутствуют.
+- Новая PlayMode-сессия запущена; старые `Already continuation registered`
+  находятся до domain reload и после него не повторялись.
+
+Pending / risks:
+- Пользователь повторяет исходный маршрут выбора внешности/причёски/одежды.
+
+Suggested next step:
+- Подтвердить показ персонажа и отсутствие `QUEUE_EXECUTION_FAILED`.
+
+## 2026-08-25T12:58:00Z — story-streaming-chunks — completed planner hotfix
+
+Task: Убрать блокировку первого гардероба на позднем `chunk-6`.
+
+Changed:
+- Для `maincharacter/view/<variant>/main.png` planner использует authored view
+  name как Ink-token вместо отсутствующего в сценарии `maincharacter`.
+- Commit: `afad5963`.
+
+Validation:
+- TZM Editor streaming build: success, release `8d48546d...`.
+- Все четыре стартовых тела героини подтверждены в `chunk-0`.
+- Preview bundle 9 660 424 B; preview group 12 203 004 B.
+- C# compile errors отсутствуют.
+
+Pending / risks:
+- Требуется ручной replay первого гардероба на 5 Мбит/с.
+
+Suggested next step:
+- Cold App → TZM → первый выбор внешности; UI не должен ждать `chunk-6`.
+
+## 2026-08-25T13:11:00Z — story-streaming-chunks — completed path-token fix
+
+Task: Устранить позднюю загрузку стартовых hair/clothes/body слоёв без
+добавления отдельных эвристик для каждого типа арта.
+
+Changed:
+- Planner ранжирует арт по всем содержательным сегментам пути и игнорирует
+  технические сегменты дерева.
+- Commit: `7a101010`.
+
+Validation:
+- TZM Editor build: success, release `a8616482...`.
+- В `chunk-0` подтверждены 4 тела, 3 стартовых наряда и существующие front/back
+  слои причёсок `за плечами`, `пучок`, `афрокосички`.
+- Preview bundle 13 189 767 B; preview group 15 732 347 B.
+- C# compile errors отсутствуют.
+
+Pending / risks:
+- Ручной replay первого гардероба на 5 Мбит/с.
+- Более полное candidate-покрытие увеличило cold preview примерно до 25 секунд.
+
+Suggested next step:
+- Cold App → TZM → пройти три последовательных wardrobe выбора.
+
+## 2026-08-25T13:23:00Z — story-streaming-chunks — completed defaults fix
+
+Task: Включить не упомянутые в Ink, но обязательные runtime default assets в
+preview.
+
+Changed:
+- Planner принудительно относит default hair `распущенные/блонд` главной
+  героини к стартовому чанку.
+- Commit: `eb25f4c1`.
+
+Validation:
+- TZM Editor build: success, release `8956b712...`.
+- Существующий front-слой default hair подтверждён в `chunk-0`; back-слоя в
+  authoring tree нет.
+- Preview bundle 13 237 389 B; preview group 15 779 969 B.
+- C# compile errors отсутствуют.
+
+Pending / risks:
+- Ручной replay первого гардероба на 5 Мбит/с.
+
+Suggested next step:
+- Cold App → TZM → выбрать внешность; запрос позднего чанка не должен
+  блокировать UI.
+
+## 2026-08-25T13:38:00Z — story-streaming-chunks — completed runtime quality hotfix
+
+Task: Исправить ошибку CanvasGroup при live-upgrade фона и оставшийся мутным
+персонаж после загрузки полноразмерного чанка.
+
+Changed:
+- `LocationScreen.CrossfadeImage`: переиспользует CanvasGroup, уже склонированный
+  вместе с Image, вместо попытки добавить запрещённый второй компонент.
+- Character runtime: отдельный full-quality sprite provider; после готовности
+  чанка текущие слои повторно разрешаются из полноразмерного bundle.
+- Commit: `14d7e004`.
+
+Validation:
+- Scoped `git diff --check`: passed.
+- Компиляция отложена до следующего выхода/входа в Play Mode открытого Editor.
+
+Pending / risks:
+- Повторить текущую сцену после domain reload: фон и персонаж должны стать
+  резкими, ошибки CanvasGroup/ArgumentNullException не должны повториться.
+
+Suggested next step:
+- Остановить и снова запустить Play Mode, затем пройти до того же кадра.
+
+## 2026-08-25T14:05:00Z — story-streaming-chunks — completed preview handoff hotfix
+
+Task: Исправить конфликт одновременно загруженных preview и chunk-0
+AssetBundle с одинаковым набором authored assets.
+
+Changed:
+- `Bundles.Scope`: точечное освобождение одного принадлежащего scope бандла.
+- `StoryStreamingController`: после скачивания chunk-0 выгружает контейнер
+  preview через `Unload(false)`, сохраняя уже созданные preview-спрайты, затем
+  открывает full-quality chunk и переключает маршрутизацию запросов.
+- Commit: `dde2e8fb`.
+
+Validation:
+- Release `8956b712...`: preview `3ccc2975...` и chunk-0 `47c7f9f3...`
+  подтверждены как разные payload с одинаковым authored asset set.
+- Scoped `git diff --check`: passed.
+- Runtime replay требует domain reload открытого Unity Editor.
+
+Pending / risks:
+- Повторить Cold App после выхода/входа в Play Mode; сообщение `same files is
+  already loaded` не должно повториться, фон и персонаж должны обновиться.
+
+Suggested next step:
+- Перезапустить Play Mode и проверить переход preview → chunk-0.
+
+## 2026-08-25T14:18:00Z — story-streaming-chunks — completed Unicode routing hotfix
+
+Task: Исправить запрос персонажа к выгруженному preview после успешной
+загрузки chunk-0.
+
+Changed:
+- `StoryStreamingController.Canonicalize`: streaming plan и runtime asset paths
+  приводятся к Unicode NFC перед сопоставлением.
+- Commit: `f8eba6ca`.
+
+Validation:
+- Стек подтвердил ошибочную unknown-asset ветку для full-quality main body.
+- Release содержит macOS NFD-путь `европейская`, а runtime addressing
+  канонизирует selector в NFC.
+- Scoped `git diff --check`: passed.
+
+Pending / risks:
+- Требуется новый domain reload и ручной replay текущего кадра.
+
+Suggested next step:
+- Перезапустить Play Mode; после готовности chunk-0 персонаж должен обновиться
+  без обращения к `novels_content_tzm_preview`.
+
+## 2026-08-25T14:35:00Z — story-streaming-chunks — completed poster/HUD hotfix
+
+Task: Устранить чёрный экран во время ожидания фонового видео и сделать
+экспериментальную OnGUI-панель адаптивной к разрешению.
+
+Changed:
+- `BackgroundPresentationController`: сначала показывает доступный poster,
+  затем ждёт/готовит видео.
+- `LocationScreen`: готовое видео плавно проявляется поверх poster и только
+  после fade отключает статический Image.
+- `StorySourceOverlay`: масштабирует шрифты, отступы, ширину и кнопки по
+  reference 465x1024; высота панели рассчитывается по полному тексту.
+- Commit: `951d0762`.
+
+Validation:
+- Лог и Ink line 84 подтвердили ожидание `номер в отеле.mp4` после скрытия
+  предыдущего фона как причину чёрного экрана на line 87.
+- Scoped `git diff --check`: passed.
+- Runtime replay требует domain reload открытого Unity Editor.
+
+Pending / risks:
+- Проверить poster → video transition и HUD на 1920x1080 Portrait после
+  остановки/повторного запуска Play Mode.
+
+Suggested next step:
+- Warm restart после domain reload; пройти от гардероба к дисклеймеру.
+
+## 2026-08-25T14:43:00Z — story-streaming-chunks — completed HUD compile hotfix
+
+Task: Исправить `CS0117` для недоступного `GUIContent.Temp`.
+
+Changed:
+- `StorySourceOverlay`: один кэшируемый `GUIContent` обновляется вместе с
+  текстом и используется для расчёта высоты.
+- Commit: `0ec26ede`.
+
+Validation:
+- Исходная ошибка локализована в `StorySourceOverlay.cs:102`.
+- Scoped `git diff --check`: passed.
+- Unity Editor ещё не записал новый compile cycle после внешней правки.
+
+Pending / risks:
+- Дождаться автоматического refresh/compile Editor и проверить Play Mode.
+
+Suggested next step:
+- Вернуть фокус Unity или повторно войти в Play Mode для refresh.
+
+## 2026-08-25T15:05:00Z — story-streaming-chunks — completed first-frame hotfix
+
+Task: Устранить чёрный RenderTexture между готовностью VideoPlayer и первым
+декодированным кадром.
+
+Changed:
+- `VideoPlayback`: включает frame-ready events, ждёт первый реальный кадр до
+  статуса Ready; при десятисекундном таймауте сохраняется poster fallback.
+- Commit: `5eff606c`.
+
+Validation:
+- Свежий лог подтвердил успешный `ShowStatic` и последующую загрузку chunk-1;
+  chunk-1 не является зависимостью стартовой локации.
+- Runtime flow подтвердил, что прежний `Ready` возвращался сразу после
+  `VideoPlayer.Play()`, до появления данных в RenderTexture.
+- Scoped `git diff --check`: passed.
+
+Pending / risks:
+- Требуется domain reload и ручная проверка poster → first frame → crossfade.
+
+Suggested next step:
+- Перезапустить Play Mode и повторить переход после гардероба.
+
+## 2026-08-25T15:07:00Z — story-streaming-chunks — completed render publication hotfix
+
+Task: Устранить сохраняющийся чёрный экран после стартового гардероба.
+
+Changed:
+- `VideoPlayback`: после `VideoPlayer.frameReady` ждёт фазу
+  `LastPostLateUpdate`, чтобы декодированный кадр успел попасть в целевой
+  `RenderTexture` до начала UI crossfade.
+- Commit: `0a6334ca`.
+
+Validation:
+- Первый кадр исходного `номер в отеле.mp4` извлечён через ffmpeg и не является
+  чёрным.
+- Scoped `git diff --check`: passed.
+- Unity batch compile не начался: локальный LicensingClient не создал IPC
+  channel за 60 секунд; процесс остановлен, write-lock не удерживается.
+
+Pending / risks:
+- Требуется обычный запуск Editor, domain reload и ручной replay перехода
+  гардероб → строка 84 → дисклеймер.
+
+Suggested next step:
+- Открыть Unity и повторить Cold App; контентные бандлы пересобирать не нужно.
+
+## 2026-08-25T15:19:00Z — story-streaming-chunks — yielded manual replay
+
+Task: Запустить экспериментальный Unity Editor с ограничением сети 5 Мбит/с.
+
+Changed:
+- Рабочее дерево не изменялось.
+- Editor запущен с `NOVELS_SIMULATED_MBITS=5`, latency 120 ms и jitter 30 ms.
+
+Validation:
+- Процесс Unity успешно стартовал и продолжает работать.
+
+Pending / risks:
+- Editor занят ручной пользовательской проверкой; другим Unity/build задачам
+  необходимо дождаться его закрытия.
+
+Suggested next step:
+- Выполнить Cold App и пройти стартовый гардероб до дисклеймера.
+
+## 2026-08-25T15:37:00Z — story-streaming-chunks — yielded stale-frame replay
+
+Task: Исправить повторный чёрный экран и неверную скорость HUD.
+
+Changed:
+- `VideoPlayback`: first-frame completion создаётся после `Prepare()` и
+  принимает callbacks только между `Play()` и `Stop()`; commit `aefce6a7`.
+- `StreamingExperimentDiagnostics`: throughput хранится отдельно для каждой
+  параллельной delivery group; commit `62075ea9`.
+
+Validation:
+- Scoped `git diff --check`: passed.
+- Unity Editor выполнил два domain reload без `CS`/compilation errors.
+- Editor повторно запущен с 5 Mbit/s, 120 ms latency, 30 ms jitter.
+
+Pending / risks:
+- Требуется ручной Cold App replay стартового перехода.
+
+Suggested next step:
+- Пройти стартовый гардероб; ожидается poster, затем video crossfade без
+  чёрного кадра, HUD около 0.6 MiB/s на одной активной загрузке.
+
+## 2026-08-25T15:41:00Z — story-streaming-chunks — yielded location diagnostics
+
+Task: Инструментировать повторяющийся чёрный экран без изменения presentation flow.
+
+Changed:
+- `LocationScreen`: read-only snapshot текущих sprite/Image/CanvasGroup,
+  RawImage/RenderTexture и VideoPlayer.
+- `StorySourceOverlay`: показывает snapshot четвёртой строкой HUD.
+- Commit: `d8935b90`.
+
+Validation:
+- Scoped `git diff --check`: passed.
+- Unity выполнил domain reload без compilation errors.
+- Editor открыт с 5 Mbit/s, 120 ms latency, 30 ms jitter.
+
+Pending / risks:
+- Диагностика временная и должна быть удалена после подтверждения причины.
+
+Suggested next step:
+- Cold App, пройти до чёрного экрана и передать снимок полной строки Location.
+
+## 2026-08-25T15:46:00Z — story-streaming-chunks — yielded load-before-hide replay
+
+Task: Исправить подтверждённый чёрный экран между гардеробом и новой локацией.
+
+Changed:
+- `BackgroundPresentationController`: для обычной локации сначала разрешает
+  следующий sprite, сохраняя текущий фон активным, затем выполняет hide/show.
+- Solid-color переходы сохраняют прежнюю семантику.
+- Commit: `031f1587`.
+
+Validation:
+- Диагностический снимок подтвердил старый sprite при `alpha=0`, `go=false`,
+  отключённом video и отсутствующем RenderTexture.
+- Scoped `git diff --check`: passed.
+- Unity выполнил domain reload без compilation errors.
+- Editor открыт с профилем 5 Mbit/s.
+
+Pending / risks:
+- Требуется ручной Cold App replay; diagnostic HUD удалить после подтверждения.
+
+Suggested next step:
+- До разрешения `номер в отеле` должен оставаться виден фон гардероба, затем
+  произойти короткий переход на новый poster/video без чёрного ожидания.
+
+## 2026-08-26T08:27:00Z — story-streaming-chunks — yielded preview-free waits
+
+Task: Удалить preview bundle, сильнее раздробить TZM art и показывать понятное
+блокирующее ожидание при demand miss.
+
+Changed:
+- Commit `ff918449`: streaming release содержит только `chunk-0..N`; preview
+  DTO/fingerprint/validator/addressing/build/runtime path удалены.
+- Default source target уменьшен с 96 до 16 MiB; startup art снова подчиняется
+  лимиту, bootstrap и Ink остаются в `chunk-0`.
+- `StoryDownloadOverlay`: после порога 0,7 с показывает уменьшенный размытый
+  снимок текущего кадра, байтовый progress и сглаженный ETA; после 100% —
+  `Подготавливаем продолжение…`.
+- Overlay подключён только к обязательным art-запросам; background prefetch сам
+  игру не перекрывает.
+
+Validation:
+- Unity 6000.3.11f1: `Tundra build success`, новых C# errors нет.
+- TZM Editor build: release `a4307e72140063fe3abae81f68d2bc6090c10006e8b320ffc0c80cbe712c31c3`.
+- Manifest: 82 art bundles, preview=0, median 2,1 MiB, max 12,7 MiB,
+  `noveltexts/**` находится в `tzm-chunk-0`.
+- Scoped `git diff --check`: passed.
+- Пользовательский `Novels/ProjectSettings/ProjectSettings.asset` сохранён и
+  не включён в commit.
+
+Pending / risks:
+- Нужен ручной Cold App smoke: визуально проверить blur/progress/ETA и
+  продолжение очереди после обязательного чанка.
+- Автоматический Play Mode не включён: macOS запретил synthetic keystroke.
+- Временная строка location diagnostics остаётся до подтверждения нового smoke.
+
+Suggested next step:
+- В открытом Editor нажать Play → Cold App → TZM, пройти первый гардероб и
+  проверить окно на первом demand miss.
+
+## 2026-08-26T08:45:00Z — story-streaming-chunks — yielded overlay contrast hotfix
+
+Task: Исправить белое нечитаемое окно обязательной загрузки.
+
+Changed:
+- `StoryDownloadOverlay`: затемнение, panel, track и fill используют собственные
+  RGBA textures вместо глобального `GUI.color`; content color задаётся явно.
+- Safe area явно преобразуется из bottom-left координат Unity в top-left
+  координаты OnGUI.
+- Commit: `10be5be3`.
+
+Validation:
+- Исходный screenshot подтвердил белый panel при корректном размере окна и
+  отсутствии Console exception.
+- Unity: `Tundra build success`, domain reload завершён, C# errors нет.
+- Scoped `git diff --check`: passed.
+
+Pending / risks:
+- Требуется повторный Play Mode visual smoke на первом demand miss.
+
+Suggested next step:
+- Снова запустить Play Mode/Cold App; ожидается тёмное центральное окно с
+  белым текстом и синей шкалой.
+
+## 2026-08-26T10:57:14Z — windows-player-build — ready-for-integration
+
+Task: Собрать с main полностью автономную тестовую Windows-версию.
+
+Changed:
+- Content SDK/CLI поддерживают Windows bundle target с platform key `Win`.
+- `EntryPoint` при `NOVELS_EMBEDDED_CONTENT` читает локальный
+  `StreamingAssets/NovelContent` без HTTP.
+- Добавлен `Novels/Tools/build-embedded-test-player.sh`; remote build script
+  также теперь понимает Windows/Win64.
+
+Validation:
+- Catalog/TZM/ZDM Windows content builds: passed.
+- Unity Windows development Player: Success, PE32+ x86-64, 2139,3 MiB.
+- В Player встроено 1,9 ГБ контента и три `Remote/Win/release.json`.
+- `git diff --check` и shell syntax: passed.
+
+Pending / risks:
+- Нужен launch smoke на реальной Windows; macOS `.exe` не запускает.
+
+Suggested next step:
+- Перенести целиком `Novels/Build/Players/WindowsOffline` на Windows и
+  запустить `Novels.exe` с отключённой сетью.
+
+## 2026-08-26T11:43:00Z — story-streaming-chunks — yielded awaiting Unity import
+
+Task: Убрать ручную загрузку всей истории и заменить её пассивным нижним
+индикатором автоматической последовательной загрузки.
+
+Changed:
+- Catalog action API и обе runtime-кнопки удаления всей истории удалены.
+- `StoryStreamingController` публикует общий byte-progress art/media в новый
+  `StoryStreamingProgressOverlay`.
+- Добавлены view/controller и deterministic editor-builder отдельного нижнего
+  prefab overlay.
+
+Validation:
+- `rg` подтвердил отсутствие `CatalogAction`, `DownloadAll` и
+  `SecondaryAction` в C# runtime.
+- `git diff --check`: успешно.
+
+Pending / risks:
+- Unity открыт в Play Mode и не импортировал новые скрипты; macOS запретил
+  UI automation для Assets/Refresh. Prefab и `.meta` ещё не сгенерированы,
+  компиляция и commit отложены до остановки Play Mode.
+
+Suggested next step:
+- Остановить Play Mode; затем этому потоку повторно получить FIFO/write-lock,
+  дождаться импорта, проверить prefab references и Unity compile.
+
+## 2026-08-26T11:51:00Z — story-streaming-chunks — yielded awaiting refresh
+
+Task: Завершить импорт нижнего prefab-индикатора загрузки истории.
+
+Changed:
+- Unity импортировал новые C# scripts и `.meta`; первая компиляция прошла.
+- Builder дополнен созданием отсутствующей Resources folder chain.
+- Физическая папка fallback создана, чтобы prefab path был валиден.
+
+Validation:
+- Unity: `Tundra build success`, 12 items updated.
+- Первичный `[DidReloadScripts]` выявил только отсутствующую папку; исправление
+  ещё не подхвачено Editor, поскольку он не выполняет Refresh без фокуса.
+
+Pending / risks:
+- Нужен ручной `Assets → Refresh`; затем проверить prefab и повторную compile.
+
+Suggested next step:
+- В открытом Unity выполнить `Assets → Refresh`, после чего возобновить поток.
+
+## 2026-08-26T11:55:00Z — story-streaming-chunks — completed
+
+Task: Убрать ручную полную загрузку истории и показывать автоматический общий
+прогресс отдельным нижним prefab overlay.
+
+Changed:
+- Удалены `CatalogAction`, secondary Catalog button и кнопка из demand-wait
+  overlay; эпизодный экран снова содержит только выбор эпизода.
+- `StoryStreamingController` продолжает автоматическую последовательную
+  art/media очередь и агрегирует её byte-progress.
+- Добавлены `StoryStreamingProgressOverlay`, screen view, Resources prefab и
+  deterministic editor-builder. Commit `357d9705`.
+
+Validation:
+- Unity 6000.3.11f1: финальный `Tundra build success`, новых C# errors нет.
+- PrefabImporter успешно импортировал prefab; `_canvasGroup`, `_progressFill`
+  и `_label` ненулевые, sorting order 90, raycasts выключены.
+- `git diff --cached --check`: успешно.
+- Пользовательский `Novels/ProjectSettings/ProjectSettings.asset` не включён.
+
+Pending / risks:
+- Нужен только визуальный Play Mode smoke: компактная нижняя полоса должна
+  показывать `Загрузка истории · N%`, а после завершения — кратко
+  `История доступна офлайн` и скрыться.
+
+Suggested next step:
+- Запустить Play Mode/Cold App и визуально проверить нижнюю полосу на нескольких
+  разрешениях; bundle rebuild не требуется.
+
+## 2026-08-26T12:19:00Z — tzm-video-30fps — completed
+
+Task: Уменьшить FPS TZM-видео до 30, не меняя разрешение и пропорции.
+
+Changed:
+- 37 исходных роликов с 60 FPS перекодированы в H.264, 30 FPS, CRF 18,
+  `yuv420p`, faststart, без аудио. 14 уже 30-FPS файлов не изменялись.
+- Commit: `a5dbfd2b`.
+- TZM Editor streaming release пересобран и composed; release ID
+  `3ac58d77fdbc8eff66c4f6dabc84d4f2e7c559b9e81b88dbad5e4d610b991ab5`.
+
+Validation:
+- Все 51 исходных и release media-файла: 30 FPS, один видеопоток, ни одной
+  аудиодорожки; ширина и высота совпадают с исходными.
+- Media payload: 287,268,760 -> 263,354,915 bytes, экономия 23,913,845 bytes
+  (8.3%, около 22.8 MiB).
+- Unity content build и compose: успешно.
+- Пользовательский `Novels/ProjectSettings/ProjectSettings.asset` не включён.
+
+Pending / risks:
+- Рекомендуется короткий визуальный smoke динамичных сцен; CRF 18 сохранён,
+  но плавность теперь намеренно ограничена 30 FPS.
+
+Suggested next step:
+- Открыть Game Editor и проверить `причал.mp4`, `мотоцикл в движении.mp4` и
+  `метеорит.mp4` как наиболее динамичные ролики.
+
+## 2026-08-28T00:00:00Z — character-layering-rules — completed
+
+Task: Сделать правила модульной отрисовки персонажей доступными всем чатам
+репозитория.
+
+Changed:
+- `AGENTS.md`: добавлено обязательное чтение character-art спецификации.
+- `Novels/Docs/AI/CharacterLayeringRules.md`: зафиксированы правила общей базы,
+  волос, одежды, эмоций, регистрации слоёв и обратной сборки.
+
+Validation:
+- `git diff --check -- AGENTS.md Novels/Docs/AI/CharacterLayeringRules.md` —
+  успешно.
+
+Pending / risks:
+- Нет.
+
+Suggested next step:
+- Использовать документ как quality gate для всех новых character-art задач.
+
+## 2026-08-28T01:00:00Z — ai-docs-index — completed
+
+Task: Сделать общую AI-документацию доступной всем чатам по типу задачи.
+
+Changed:
+- `AGENTS.md`: общий индекс стал обязательной первой точкой входа.
+- `Novels/Docs/AI/README.md`: документы разделены на обязательное ядро,
+  действующие руководства, планы/измерения и историю; добавлена маршрутизация
+  по типам задач и правила поддержания структуры.
+
+Validation:
+- `git diff --check -- AGENTS.md Novels/Docs/AI/README.md` — успешно.
+- Все относительные Markdown-ссылки из нового индекса существуют.
+
+Pending / risks:
+- Физическое перемещение исторических документов не выполнялось, чтобы не
+  ломать ссылки; кандидаты на архив явно обозначены в индексе.
+
+Suggested next step:
+- Новым чатам начинать с `Novels/Docs/AI/README.md` и читать только обязательный
+  набор для своей задачи.
+
+## 2026-08-28T02:00:00Z — ai-docs-physical-layout — completed
+
+Task: Физически структурировать AI-документацию и обновить действующие ссылки.
+
+Changed:
+- `Novels/Docs/AI/rules/`: обязательные правила.
+- `Novels/Docs/AI/guides/`: тематические authoring/pipeline/Ink/checklist
+  руководства.
+- `Novels/Docs/AI/architecture/`: обзор и архитектурные границы.
+- `Novels/Docs/AI/plans/`: текущие планы и датированные измерения.
+- `Novels/Docs/AI/work/parallel/`: статусы `ready-for-integration` и очередь.
+- `Novels/Docs/AI/archive/parallel-work/`: integrated/completed статусы.
+- `Novels/Docs/AI/archive/reports/`: исторические отчёты.
+- `AGENTS.md`, `Novels/Docs/AI/README.md` и внутренние ссылки обновлены.
+
+Validation:
+- 38 документов физически распределены по новым каталогам.
+- Проверка всех относительных Markdown-ссылок: 0 отсутствующих целей.
+- Поиск старых действующих путей вне исторического `CoordinationRuntime`: 0.
+- Scoped `git diff --check` для документации: успешно.
+- Общий `git diff --check` по-прежнему видит только прежние trailing spaces в
+  пользовательском `Novels/ProjectSettings/ProjectSettings.asset`; файл не
+  изменялся этой задачей.
+
+Pending / risks:
+- Исторические пути внутри `HANDOFF.md` и завершённых runtime agent-записей
+  намеренно не переписывались: они описывают состояние на момент записи.
+
+Suggested next step:
+- Использовать `Novels/Docs/AI/README.md` как единственную точку маршрутизации
+  документации.
+
+## 2026-08-28T03:00:00Z — parallel-work-archive-audit — completed
+
+Task: Проверить старые `ready-for-integration` документы и архивировать
+подтверждённо завершённые.
+
+Changed:
+- 17 статусов, чья реализация присутствует в `main` (`f849ff22`) или его
+  истории, помечены `integrated` и перенесены в
+  `Novels/Docs/AI/archive/parallel-work/`.
+- `Novels/Docs/AI/work/parallel/ParallelWork.queue.md` сокращён до одной
+  реальной незавершённой интеграции.
+- `Novels/Docs/AI/README.md` уточняет различие work и archive.
+
+Validation:
+- Текущий `main`: `f849ff22`.
+- Реализация audit, Catalog carousel, trim manifest, platform Library cache,
+  ContentBuildPlan, story-global layout и Player/Windows tooling подтверждена
+  текущими файлами и историей `main`.
+- `cfb92896` не является предком HEAD и остаётся отдельным WebGL prototype.
+- Проверка Markdown-ссылок: 0 отсутствующих целей.
+- Scoped `git diff --check` документации: успешно.
+
+Pending / risks:
+- `ParallelWork.webgl-local-prototype.md`: Unity compilation и browser smoke не
+  выполнены; commit находится только в `prototype/webgl-local-platform`.
+
+Suggested next step:
+- Восстановить Unity license, проверить WebGL prototype и принять решение об
+  интеграции либо закрытии эксперимента.
+
+## 2026-08-28T04:00:00Z — ai-docs-publish-main — yielded
+
+Task: Опубликовать новую структуру AI-документации в `main`.
+
+Changed:
+- Создан локальный commit `da753b93` (`docs(ai): structure shared project guidance`).
+- В commit включены только `AGENTS.md` и структурированная документация
+  `Novels/Docs/AI` без `CoordinationRuntime` и пользовательских Unity settings.
+
+Validation:
+- Удалённый `main` перед commit подтверждён на `f849ff22` через HTTPS.
+- Staged `git diff --check`: успешно.
+
+Pending / risks:
+- Push не выполнен: защитный механизм требует отдельного подтверждения
+  публикации внутренних архитектурных и координационных документов в GitHub
+  `SomeStrangeGame/SomeGame`, branch `main`.
+
+Suggested next step:
+- После явного подтверждения повторить HTTPS push `da753b93` в `main`.
+
+## 2026-08-28T04:10:00Z — ai-docs-publish-main — yielded credentials
+
+Task: После явного разрешения пользователя отправить `da753b93` в GitHub
+`SomeStrangeGame/SomeGame`, branch `main`.
+
+Changed:
+- Рабочее дерево не изменялось; локальный commit остаётся `da753b93`.
+
+Validation:
+- Перед push удалённый `main` подтверждён на `f849ff22`.
+- Пользователь явно разрешил публикацию внутренних документов.
+
+Pending / risks:
+- HTTPS push завершился `could not read Username for 'https://github.com'`.
+- SSH ранее завершился `Permission denied (publickey)`.
+
+Suggested next step:
+- Настроить GitHub write credentials (SSH key или credential helper/token),
+  затем повторить push `da753b93:refs/heads/main`.
+
+## 2026-08-28T04:20:00Z — ai-docs-publish-main — completed
+
+Task: Опубликовать новую структуру AI-документации в GitHub main.
+
+Changed:
+- Commit `da753b93` отправлен в `SomeStrangeGame/SomeGame`, branch `main`.
+
+Validation:
+- `~/.ssh/SomeGame_ssh` успешно авторизуется как `MisterPureshechka`.
+- Удалённый `refs/heads/main` после push равен
+  `da753b93981e00a529801736a3c40d7b473196b4`.
+- Чужие локальные изменения остались вне commit.
+
+Pending / risks:
+- Нет для публикации документации.
+
+Suggested next step:
+- При желании добавить `~/.ssh/config` для автоматического выбора
+  `SomeGame_ssh` при следующих командах Git.
+
+## 2026-08-28T12:05:00Z — asset-scope-protocol — completed
+
+Task: Уточнить протокол комплектации арта после ошибочного расширения списка
+фонов эпизода.
+
+Changed:
+- `guides/ContentAuthoringGuide.md`: утверждённый asset list закреплён как
+  граница задачи; промежуточные точки, ракурсы и состояния не создают новые
+  обязательные ассеты без явного согласования.
+- `guides/ManualContentChecklist.md`: добавлена проверка пропусков, лишних
+  обязательных ассетов и основания для каждого самостоятельного фона.
+
+Validation:
+- `git diff --check` для двух изменённых руководств: успешно.
+- Ручная сверка: правило распространяется на фоны, персонажные слои, аудио и
+  видео; черновики отделены от обязательной комплектации.
+
+Pending / risks:
+- Существующий экспериментальный набор из девяти фонов не переклассифицирован
+  автоматически; его обязательная часть должна быть приведена к утверждённому
+  списку отдельно.
+
+Suggested next step:
+- Перед следующей генерацией зафиксировать таблицу `asset list -> файл` для
+  первого эпизода и согласовать её с автором.
+
+## 2026-08-28T12:20:00Z — asset-scope-publish — completed
+
+Task: Опубликовать правки протокола комплектации в `main`.
+
+Changed:
+- Commit `77adad49` содержит только `ContentAuthoringGuide.md` и
+  `ManualContentChecklist.md`.
+- Commit отправлен в `origin/main`.
+
+Validation:
+- Перед commit локальный `HEAD` совпадал с `origin/main` на `60a13762`.
+- `git diff --cached --check`: успешно; в commit два файла и 34 добавленные
+  строки.
+- Push: `60a13762..77adad49 main -> main`.
+
+Pending / risks:
+- Чужие локальные изменения рабочего дерева сохранены и не включены в commit.
+
+Suggested next step:
+- Использовать утверждённый asset list перед следующей генерацией арта.
+
+## 2026-08-28T12:40:00Z — unity-licensing-protocol — completed
+
+Task: Добавить общий протокол диагностики и восстановления Unity Licensing.
+
+Changed:
+- `guides/UnityLicensingTroubleshooting.md`: добавлены evidence-first baseline,
+  классификация IPC/license/network причин, безопасное восстановление,
+  критерии проверки и профилактика.
+- `README.md`: добавлены маршрут для licensing-сбоев и ссылка среди действующих
+  руководств.
+
+Validation:
+- `git diff --check` для индекса и нового руководства: успешно.
+- Ссылки и ключевые симптомы проверены через `rg`; новый файл непустой.
+- Исторический конфликт protocol `1.17.4` / `1.18` отмечен как пример, а не
+  универсальная причина.
+
+Pending / risks:
+- Протокол не автоматизирует завершение процессов и удаление sockets: точные
+  PID/пути должны подтверждаться заново при каждом инциденте.
+
+Suggested next step:
+- При следующем licensing-сбое следовать новому руководству и записать свежие
+  версии, логи и результат в handoff.
+
+## 2026-08-28T13:00:00Z — unity-licensing-publish — completed
+
+Task: Опубликовать Unity Licensing troubleshooting protocol в `main`.
+
+Changed:
+- Commit `a737fa3d` содержит индекс AI-документации и новый
+  `UnityLicensingTroubleshooting.md`.
+- Commit отправлен в `origin/main`.
+
+Validation:
+- Перед commit локальный `HEAD` совпадал с `origin/main` на `77adad49`.
+- `git diff --cached --check`: успешно после удаления лишней пустой строки.
+- В commit ровно два файла и 148 добавленных строк.
+- Push: `77adad49..a737fa3d main -> main`.
+
+Pending / risks:
+- Чужие локальные изменения рабочего дерева сохранены и не включены в commit.
+
+Suggested next step:
+- Использовать новый guide при следующем licensing-инциденте.
+
+## 2026-08-28T13:40:00Z — parallel-root-dedup — completed
+
+Task: Убрать вторую корневую структуру `ParallelWork.*.md`.
+
+Changed:
+- 30 корневых status-файлов перемещены в `archive/parallel-work/` после
+  подтверждения, что все упомянутые в них commits входят в текущий `main`.
+- Самоссылки внутри перемещённых записей обновлены на архивные пути.
+- `work/parallel/` оставлен единственным местом для незавершённой работы.
+
+Validation:
+- Корневых `ParallelWork.*.md`: 0.
+- `work/parallel`: только queue и WebGL prototype; совпадающих имён с архивом
+  нет.
+- `archive/parallel-work`: 51 запись.
+- Старых корневых путей в действующих rules/guides/plans/architecture и самих
+  status-файлах нет; исторические упоминания в runtime-журнале сохранены.
+- `git diff --check`: успешно для содержательных файлов после освобождения
+  runtime lock.
+
+Pending / risks:
+- WebGL prototype остаётся единственной незавершённой parallel-задачей.
+
+Suggested next step:
+- Зафиксировать перемещения вместе с проверенными completed coordination-
+  записями отдельным commit, не включая устаревший Windows agent-status.
+
+## 2026-08-28T14:05:00Z — ai-docs-runtime-cleanup — completed locally
+
+Task: Зафиксировать очищенную ParallelWork-структуру и завершённые runtime-
+записи.
+
+Changed:
+- Подготовлены к одному commit 30 переносов из корня в
+  `archive/parallel-work/`, completed agent-записи, полный handoff и штатное
+  завершение runtime-состояния `story-streaming-experiment`.
+- WebGL и устаревший Windows agent-status намеренно исключены.
+
+Validation:
+- Корневых `ParallelWork.*.md`: 0; в `work/parallel` только queue и WebGL.
+- Старых путей в действующей документации нет; `git diff --check` успешно.
+- Staging проверяется по точному списку перед commit.
+
+Pending / risks:
+- WebGL остаётся ready-for-integration и не входит в cleanup commit.
+- Windows agent-status требует отдельного исправления владельцем или
+  подтверждённого архивного решения.
+
+Suggested next step:
+- После commit при явном запросе пользователя отправить его в `main`.

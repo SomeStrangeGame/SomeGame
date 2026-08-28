@@ -17,7 +17,7 @@
 - `Novels/Assets/Novels/NovelRuntime.NovelPreparation.cs`
 - `Projects/novels-tzm/Assets/RemoteAssets/content/tzm/definition/tzm.asset`
 - `Projects/novels-zdm/Assets/RemoteAssets/content/zdm/definition/zdm.asset`
-- `Novels/Docs/AI/ParallelWork.episode-schema-dedup.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.episode-schema-dedup.md`
 
 ## Не изменять
 

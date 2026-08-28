@@ -12,7 +12,7 @@
 - `Packages/NovelsContentSdk/Editor/**`
 - `Novels/Assets/Novels/**`
 - `Novels/Assets/Editor/**`
-- `Novels/Docs/AI/ParallelWork.story-streaming-experiment.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.story-streaming-experiment.md`
 - `Projects/novels-tzm/Assets/Editor/**`
 - экспериментальные build-артефакты TZM вне Git
 

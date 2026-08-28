@@ -13,7 +13,7 @@
 - `Packages/NovelsContentSdk/Editor/Novels.ContentSdk.Editor.asmdef`
 - `Projects/novels-tzm/Assets/tzm.asset`
 - `Novels/Docs/AI/ContentAuthoringGuide.md`
-- `Novels/Docs/AI/ParallelWork.tzm-precise-usage-order.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.tzm-precise-usage-order.md`
 - собственные coordination-файлы и новая запись в `Novels/Docs/AI/CoordinationRuntime/HANDOFF.md`
 
 ## Не изменять

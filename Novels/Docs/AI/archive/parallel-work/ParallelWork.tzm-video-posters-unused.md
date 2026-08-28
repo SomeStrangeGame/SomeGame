@@ -13,7 +13,7 @@
 - `Packages/NovelsContentSdk/Runtime/Features/Location/BackgroundPresentationController.cs`
 - `Projects/novels-tzm/Assets/tzm.asset`
 - `Novels/Docs/AI/ContentAuthoringGuide.md`
-- `Novels/Docs/AI/ParallelWork.tzm-video-posters-unused.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.tzm-video-posters-unused.md`
 - собственные coordination-файлы и новая запись в `Novels/Docs/AI/CoordinationRuntime/HANDOFF.md`
 
 ## Не изменять

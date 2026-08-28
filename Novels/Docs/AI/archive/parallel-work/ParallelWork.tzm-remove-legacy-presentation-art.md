@@ -13,7 +13,7 @@
 - `Projects/novels-tzm/Assets/Presentation/location/locations/**`
 - `Projects/novels-tzm/Assets/Presentation/location/locations.meta`
 - `Novels/Docs/AI/ContentAuthoringGuide.md`
-- `Novels/Docs/AI/ParallelWork.tzm-remove-legacy-presentation-art.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.tzm-remove-legacy-presentation-art.md`
 - собственные coordination-файлы и новая запись в `Novels/Docs/AI/CoordinationRuntime/HANDOFF.md`
 - Git index и отдельный commit текущего блока
 

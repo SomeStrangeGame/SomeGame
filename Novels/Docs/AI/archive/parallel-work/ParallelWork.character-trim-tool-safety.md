@@ -10,7 +10,7 @@
 
 - `Packages/NovelsContentSdk/Editor/CharacterSpriteAlphaTrim.cs`
 - `Novels/Docs/AI/ContentAuthoringGuide.md`
-- `Novels/Docs/AI/ParallelWork.character-trim-tool-safety.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.character-trim-tool-safety.md`
 - собственные coordination-файлы и append-only запись в `CoordinationRuntime/HANDOFF.md`
 
 ## Не изменять

@@ -17,7 +17,7 @@
 - `Novels/Assets/Novels/NovelRuntime.NovelPreparation.cs`
 - `Projects/novels-tzm/Assets/RemoteAssets/content/tzm/definition/tzm.asset`
 - `Projects/novels-zdm/Assets/RemoteAssets/content/zdm/definition/zdm.asset`
-- `Novels/Docs/AI/ParallelWork.story-path-convention.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.story-path-convention.md`
 
 ## Не изменять
 

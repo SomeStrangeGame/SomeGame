@@ -10,7 +10,7 @@
 
 - `Packages/NovelsContentSdk/Editor/ContentPipeline.cs`
 - `Novels/Docs/AI/ContentAuthoringGuide.md`
-- `Novels/Docs/AI/ParallelWork.tzm-exclude-unused-bundle.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.tzm-exclude-unused-bundle.md`
 - собственные coordination-файлы и новая append-only запись в
   `Novels/Docs/AI/CoordinationRuntime/HANDOFF.md`
 - игнорируемые generated build outputs/logs TZM

@@ -11,7 +11,7 @@
 - `Packages/NovelsContentSdk/Editor/ExperimentalStreamingPlan.cs`
 - `Projects/novels-tzm/Assets/tzm.asset`
 - `Novels/Docs/AI/ContentAuthoringGuide.md`
-- `Novels/Docs/AI/ParallelWork.tzm-exclude-legacy-presentation-art.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.tzm-exclude-legacy-presentation-art.md`
 - собственные coordination-файлы и новая запись в `Novels/Docs/AI/CoordinationRuntime/HANDOFF.md`
 
 ## Не изменять

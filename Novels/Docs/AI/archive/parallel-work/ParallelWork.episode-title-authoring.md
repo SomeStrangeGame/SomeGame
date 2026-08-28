@@ -11,7 +11,7 @@
 - `Packages/NovelsContentSdk/Editor/StoryInkAuthoring.cs`
 - `Projects/novels-tzm/Assets/RemoteAssets/content/tzm/definition/tzm.asset`
 - `Projects/novels-zdm/Assets/RemoteAssets/content/zdm/definition/zdm.asset`
-- `Novels/Docs/AI/ParallelWork.episode-title-authoring.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.episode-title-authoring.md`
 - собственные файлы в `Novels/Docs/AI/CoordinationRuntime/`
 
 ## Не изменять

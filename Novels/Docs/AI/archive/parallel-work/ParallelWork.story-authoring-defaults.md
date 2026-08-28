@@ -30,7 +30,7 @@
 - `Packages/Bundles/ContentReleaseValidator.cs`
 - `Projects/novels-tzm/Assets/RemoteAssets/content/tzm/definition/tzm.asset`
 - `Projects/novels-zdm/Assets/RemoteAssets/content/zdm/definition/zdm.asset`
-- `Novels/Docs/AI/ParallelWork.story-authoring-defaults.md`
+- `Novels/Docs/AI/archive/parallel-work/ParallelWork.story-authoring-defaults.md`
 
 ## Не изменять
 
