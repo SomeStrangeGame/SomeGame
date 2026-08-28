@@ -435,32 +435,6 @@ MonoBehaviour:
     _cropWidth: 490
     _cropHeight: 978
     _trimmedSha256: 4a805bc0ee72a3e7d854ae6836f669591803988846eddc2823af1a81105e9a40
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/hairs/back/\u0437\u0430
-      \u043F\u043B\u0435\u0447\u0430\u043C\u0438/\u0431\u043B\u043E\u043D\u0434.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 238
-    _cropY: 900
-    _cropWidth: 507
-    _cropHeight: 716
-    _trimmedSha256: 7a5394021f3b276ffd5ea63dd696b801124b43b2fc1ca6c3b6c01dfb7a151ed8
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/hairs/back/\u0441
-      \u0447\u0451\u043B\u043A\u043E\u0439/\u0431\u043B\u043E\u043D\u0434.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 74
-    _cropY: 399
-    _cropWidth: 961
-    _cropHeight: 1213
-    _trimmedSha256: b4b3b6ab8f45e9f9ce7566feb9d685fa0fabbdb69874f6be3cdc9e850f647f81
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/hairs/back/\u0441\u0438\u0440\u0435\u043D\u0430/\u0431\u043B\u043E\u043D\u0434.png"
-    _originalWidth: 1360
-    _originalHeight: 1920
-    _cropX: 158
-    _cropY: 688
-    _cropWidth: 1181
-    _cropHeight: 977
-    _trimmedSha256: 79711aaae0cbc336bb5f8c82c9f541524a37b76fa998a08dc10ac58d3a5425bc
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/hairs/front/\u0430\u0444\u0440\u043E\u043A\u043E\u0441\u0438\u0447\u043A\u0438/\u0431\u043B\u043E\u043D\u0434.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -685,23 +659,7 @@ MonoBehaviour:
     _cropWidth: 145
     _cropHeight: 162
     _trimmedSha256: 70a97f124f7d08606c7741d524c8ad988e6770b8f495f1444b51180b871c4be6
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 465
-    _cropY: 1066
-    _cropWidth: 145
-    _cropHeight: 162
-    _trimmedSha256: 70a97f124f7d08606c7741d524c8ad988e6770b8f495f1444b51180b871c4be6
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 463
-    _cropY: 1067
-    _cropWidth: 151
-    _cropHeight: 155
-    _trimmedSha256: 0f5140128d7f401ee9c540a6c721843ccca0fda741ce3ffc925c087abeb1ed94
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
     _originalWidth: 1080
     _originalHeight: 1920
     _cropX: 463
@@ -832,14 +790,6 @@ MonoBehaviour:
     _cropWidth: 204
     _cropHeight: 287
     _trimmedSha256: f8198f8684827776dc7abf903711a2771fd050cfbe8f83f6fa71c7b2f734ed34
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 469
-    _cropY: 1279
-    _cropWidth: 204
-    _cropHeight: 287
-    _trimmedSha256: ec3b331df7d1f748e985a79a106076e2c918b59b0b9f8bab22a6ccfc92992868
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -936,23 +886,7 @@ MonoBehaviour:
     _cropWidth: 146
     _cropHeight: 160
     _trimmedSha256: dc011b0bf4deaf3401a9b8668eac88e18acb15653e51650891d8ce17f496e122
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 463
-    _cropY: 1066
-    _cropWidth: 146
-    _cropHeight: 160
-    _trimmedSha256: dc011b0bf4deaf3401a9b8668eac88e18acb15653e51650891d8ce17f496e122
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 463
-    _cropY: 1066
-    _cropWidth: 147
-    _cropHeight: 162
-    _trimmedSha256: 807b107c1050a365c192c868178368b05c1a1e131d3b1860a2d388858aefb63c
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
     _originalWidth: 1080
     _originalHeight: 1920
     _cropX: 463
@@ -1083,14 +1017,6 @@ MonoBehaviour:
     _cropWidth: 202
     _cropHeight: 265
     _trimmedSha256: 9e668153ad05135333629cfbf53d46c97348f77a4d2583193336c9f131c1e122
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 311
-    _cropY: 0
-    _cropWidth: 365
-    _cropHeight: 1541
-    _trimmedSha256: a5d586d45cf321e3d8797146e87814d8bf63e66887d2abef847942fcc32a457a
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -1187,23 +1113,7 @@ MonoBehaviour:
     _cropWidth: 145
     _cropHeight: 156
     _trimmedSha256: 05c09054f4030d012c7a045843c4bb71e04ceff582556a9d1a23ee2e4c62320f
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 462
-    _cropY: 1066
-    _cropWidth: 145
-    _cropHeight: 156
-    _trimmedSha256: 05c09054f4030d012c7a045843c4bb71e04ceff582556a9d1a23ee2e4c62320f
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 461
-    _cropY: 1066
-    _cropWidth: 152
-    _cropHeight: 157
-    _trimmedSha256: d16aa4386553888765d9666a5215d33154ed033eb83a953cdc9e07be5e00d4bd
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
     _originalWidth: 1080
     _originalHeight: 1920
     _cropX: 461
@@ -1334,14 +1244,6 @@ MonoBehaviour:
     _cropWidth: 204
     _cropHeight: 284
     _trimmedSha256: 93ef497ceb03b1b1ee904c3bf5efb1f8619848f577a51801ccc42483a0a21c38
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 471
-    _cropY: 1279
-    _cropWidth: 204
-    _cropHeight: 283
-    _trimmedSha256: 23a09b4ea90e57930c2e2949a7b0ea4b653f40ddc249577dfc71a33a72e32662
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -1438,23 +1340,7 @@ MonoBehaviour:
     _cropWidth: 148
     _cropHeight: 159
     _trimmedSha256: 5e03a8b86715d6e44fd3ba18224179582de17bc4807d1d2804a04fb70a8ea4b8
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 462
-    _cropY: 1065
-    _cropWidth: 148
-    _cropHeight: 159
-    _trimmedSha256: 5e03a8b86715d6e44fd3ba18224179582de17bc4807d1d2804a04fb70a8ea4b8
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 460
-    _cropY: 1065
-    _cropWidth: 151
-    _cropHeight: 165
-    _trimmedSha256: 5813448652638bba86884f6641e5fbbe2e448bdc0fc40f20ba211848906da298
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
     _originalWidth: 1080
     _originalHeight: 1920
     _cropX: 460
@@ -1585,14 +1471,6 @@ MonoBehaviour:
     _cropWidth: 204
     _cropHeight: 287
     _trimmedSha256: 5ff3ec132933302bd7f285c24c822a2c425cfe729e1db2f5bc0061e79af097fa
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 469
-    _cropY: 1278
-    _cropWidth: 204
-    _cropHeight: 287
-    _trimmedSha256: 066fd6d8e0e5d86fffb0f407ba31a80efa5b05ab19ff39a70ba19e2b169c6b96
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -2028,15 +1906,6 @@ MonoBehaviour:
     _cropWidth: 365
     _cropHeight: 619
     _trimmedSha256: 40623b86ee93eb808cc55dcb5ee48181273b63a44d5d7d8689d2204fa9d9168b
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/emotions/\u0441
-      \u0443\u043B\u044B\u0431\u043A\u043E\u0439.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 198
-    _cropY: 896
-    _cropWidth: 427
-    _cropHeight: 619
-    _trimmedSha256: 54a9ed8b3ebef3268a07a67dca58c3d448aab9e317e8c251a4583fa88cd89564
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/emotions/\u0441\u043A\u0435\u043F\u0441\u0438\u0441.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -2142,14 +2011,6 @@ MonoBehaviour:
     _cropWidth: 994
     _cropHeight: 1635
     _trimmedSha256: 1fad5db463b1def6131cdf5ac4e91028300ac498163165635af50401cd4ce15a
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/\u043F\u043E\u0434\u0440\u043E\u0441\u0442\u043E\u043A.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 67
-    _cropY: 0
-    _cropWidth: 994
-    _cropHeight: 1635
-    _trimmedSha256: 1fad5db463b1def6131cdf5ac4e91028300ac498163165635af50401cd4ce15a
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/\u0441\u0432\u0435\u0442\u044F\u0449\u0438\u0435\u0441\u044F
       \u0433\u043B\u0430\u0437\u0430.png"
     _originalWidth: 1080
@@ -2193,15 +2054,6 @@ MonoBehaviour:
     _cropWidth: 282
     _cropHeight: 287
     _trimmedSha256: 5cd113cac79073c8a36277e0ea41b4267191d759635085dfa3c6d04f979e80d2
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0431\u0430\u0440\u0431\u0430\u0440\u0430/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F
-      \u0443\u043B\u044B\u0431\u043A\u0430.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 356
-    _cropY: 1173
-    _cropWidth: 283
-    _cropHeight: 287
-    _trimmedSha256: 42e7e52e4285143e77588c5cba49cad3adf5640cb7d3142a27f94974668c8e6d
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0431\u0430\u0440\u0431\u0430\u0440\u0430/view/emotions/\u0445\u0438\u0442\u0440\u043E\u0441\u0442\u044C.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -3389,14 +3241,6 @@ MonoBehaviour:
     _cropWidth: 737
     _cropHeight: 1580
     _trimmedSha256: d2a8413c0a3cf3c08987b86f7438fc1abcf741cf92d8bf21feeebd477f502182
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0444\u0438\u043B/view/\u0437\u043B\u043E\u0441\u0442\u044C.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 196
-    _cropY: 0
-    _cropWidth: 737
-    _cropHeight: 1580
-    _trimmedSha256: d2a8413c0a3cf3c08987b86f7438fc1abcf741cf92d8bf21feeebd477f502182
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0444\u0438\u043B/view/\u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -3516,15 +3360,6 @@ MonoBehaviour:
     _cropHeight: 241
     _trimmedSha256: b3ebe7432aa186a26ea487286ce5e8ba65468818b65f38899f0f69f6db68b6d9
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0446\u0430\u0440\u044C
-      \u0430\u0442\u043B\u0430\u043D ii/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
-    _originalWidth: 1080
-    _originalHeight: 1920
-    _cropX: 93
-    _cropY: 0
-    _cropWidth: 916
-    _cropHeight: 1720
-    _trimmedSha256: bcd023a80ef244e28a67d8a48525cd3f37040700e8f7713f82cead16160b88ac
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0446\u0430\u0440\u044C
       \u0430\u0442\u043B\u0430\u043D ii/view/main.png"
     _originalWidth: 1080
     _originalHeight: 1920
@@ -3553,30 +3388,6 @@ MonoBehaviour:
     _trimmedSha256: 09fc50cf2a741610e4a0b5ca7ce86aee86bd5baeaeaf95c3f1e5cefd5feaf6c2
   - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0446\u0430\u0440\u044C
       \u0442\u0430\u0434\u0434\u0435\u0443\u0441/view/main.png"
-    _originalWidth: 2000
-    _originalHeight: 2000
-    _cropX: 0
-    _cropY: 0
-    _cropWidth: 1788
-    _cropHeight: 2000
-    _trimmedSha256: 3eb8cd92b2507e860b4d7dbbc9554947e7421df2df1af1e9e89a16f05508a72a
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0446\u0430\u0440\u044C/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
-    _originalWidth: 2000
-    _originalHeight: 2000
-    _cropX: 916
-    _cropY: 1493
-    _cropWidth: 199
-    _cropHeight: 230
-    _trimmedSha256: 1a84ecf3e52e1e04fa94b7c08e480e6c19e1a24ae616ec97559a4977eee93c13
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0446\u0430\u0440\u044C/view/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
-    _originalWidth: 2000
-    _originalHeight: 2000
-    _cropX: 912
-    _cropY: 1489
-    _cropWidth: 202
-    _cropHeight: 233
-    _trimmedSha256: 09fc50cf2a741610e4a0b5ca7ce86aee86bd5baeaeaf95c3f1e5cefd5feaf6c2
-  - _assetAddress: "Assets/RemoteAssets/content/tzm/story/character/characters/\u0446\u0430\u0440\u044C/view/main.png"
     _originalWidth: 2000
     _originalHeight: 2000
     _cropX: 0

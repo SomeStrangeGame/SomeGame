@@ -70,6 +70,53 @@ MonoBehaviour:
     _target: "\u0441\u0432\u0435\u0442\u044F\u0449\u0438\u0439\u0441\u044F \u043C\u0435\u0442\u0435\u043E\u0440\u0438\u0442"
   - _alias: "\u044F\u0445\u0442\u0430 \u0432 \u0434\u0432\u0438\u0436\u0435\u043D\u0438\u0438"
     _target: "\u044F\u0445\u0442\u0430 \u0434\u0435\u043D\u044C"
+  _artAliases:
+  - _alias: "story/choose/items/\u0440\u0438\u0441\u0443\u043D\u043E\u043A.png"
+    _target: "story/choose/items/\u0434\u0435\u0442\u0441\u043A\u0438\u0439 \u0440\u0438\u0441\u0443\u043D\u043E\u043A.png"
+  - _alias: "story/choose/items/\u0440\u044B\u0431\u0430 \u0432 \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u043C \u0441\u043E\u0443\u0441\u0435.png"
+    _target: "story/choose/items/\u0441\u0451\u043C\u0433\u0430 \u0432 \u0441\u043B\u0438\u0432\u043E\u0447\u043D\u043E\u043C \u0441\u043E\u0443\u0441\u0435.png"
+  - _alias: "story/choose/items/\u043A\u0440\u0443\u0430\u0441\u0441\u0430\u043D \u0441 \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u043E\u043C.png"
+    _target: "story/choose/items/\u043A\u0440\u0443\u0430\u0441\u0441\u0430\u043D\u044B \u0441 \u0448\u043E\u043A\u043E\u043B\u0430\u0434\u043E\u043C.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
+    _target: "story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
+    _target: "story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
+    _target: "story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u0438\u0435.png"
+    _target: "story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
+    _target: "story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
+    _target: "story/character/characters/maincharacter/view/\u0430\u0437\u0438\u0430\u0442\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
+    _target: "story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
+    _target: "story/character/characters/maincharacter/view/\u0430\u0444\u0440\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
+    _target: "story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+  - _alias: "story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
+    _target: "story/character/characters/maincharacter/view/\u0435\u0432\u0440\u043E\u043F\u0435\u0439\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C1.png"
+    _target: "story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0440\u0430\u0434\u043E\u0441\u0442\u044C.png"
+  - _alias: "story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u04351.png"
+    _target: "story/character/characters/maincharacter/view/\u043B\u0430\u0442\u0438\u043D\u043E\u0430\u043C\u0435\u0440\u0438\u043A\u0430\u043D\u0441\u043A\u0430\u044F/child/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/emotions/\u0441 \u0443\u043B\u044B\u0431\u043A\u043E\u0439.png"
+    _target: "story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/emotions/\u0443\u043B\u044B\u0431\u043A\u0430.png"
+  - _alias: "story/character/characters/\u0431\u0430\u0440\u0431\u0430\u0440\u0430/view/emotions/\u0445\u0438\u0442\u0440\u0430\u044F \u0443\u043B\u044B\u0431\u043A\u0430.png"
+    _target: "story/character/characters/\u0431\u0430\u0440\u0431\u0430\u0440\u0430/view/emotions/\u0445\u0438\u0442\u0440\u043E\u0441\u0442\u044C.png"
+  - _alias: "story/character/characters/\u0446\u0430\u0440\u044C/view/main.png"
+    _target: "story/character/characters/\u0446\u0430\u0440\u044C \u0442\u0430\u0434\u0434\u0435\u0443\u0441/view/main.png"
+  - _alias: "story/character/characters/\u0446\u0430\u0440\u044C/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _target: "story/character/characters/\u0446\u0430\u0440\u044C \u0442\u0430\u0434\u0434\u0435\u0443\u0441/view/emotions/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+  - _alias: "story/character/characters/\u0446\u0430\u0440\u044C/view/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+    _target: "story/character/characters/\u0446\u0430\u0440\u044C \u0442\u0430\u0434\u0434\u0435\u0443\u0441/view/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
+  - _alias: "story/character/characters/\u0446\u0430\u0440\u044C \u0430\u0442\u043B\u0430\u043D ii/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
+    _target: "story/character/characters/\u0446\u0430\u0440\u044C \u0430\u0442\u043B\u0430\u043D ii/view/main.png"
+  - _alias: "story/character/characters/\u0444\u0438\u043B/view/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+    _target: "story/character/characters/\u0444\u0438\u043B/view/main.png"
+  - _alias: "story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/\u043F\u043E\u0434\u0440\u043E\u0441\u0442\u043E\u043A.png"
+    _target: "story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/\u0430\u043B\u0435\u043A\u0441\u0430.png"
   _characterDefaults:
   - _character: "\u0421\u0430\u043B\u043B\u0438"
     _clothes: "\u043F\u043E\u0432\u0441\u0435\u0434\u043D\u0435\u0432\u043D\u0430\u044F
@@ -100,10 +147,13 @@ MonoBehaviour:
     - d3ebf3bbbaba34aaea785f0ef83f29df
     - 920abeb4596ce47ef930b1be025dc84c
     - 060e35d54fe1543c58644c9d55c67420
-    - 595185834012b4ffa993e6f98b1390bd
     - 6a453b81027e948e9b21e0d3920c0a27
     - a07b8782f3a649258ea6c57b0d36598f
     - 53002f57956664688a25b21b5e71cfa0
+    - 529325137477844e798455871591a599
+    - 934017cf7874e4365a58b8d197907de8
+    - a0e04ea26e03848e19f1d478f0b60411
+    - a69baaf98e920427c9e920efea59488e
     - a9652fdf4a30a4df8a2aa829935ef24b
     - a6813f21c4eef46a0a74b726b6380e4b
     - 447b99c86744b4b0481a36799db78de0
@@ -158,7 +208,6 @@ MonoBehaviour:
     - 257b85a95757e4224b83a8bf53f2569e
   - _assetGuids:
     - 482ec770277374f24b3bf3936fb4e0fd
-    - c591e28f704d4a0b86f3291dc7be5468
     - f43f064c2fd6d45a688401bd9ccaa4d4
     - bbf941bdff36d4e0e9ccad309bc6a16a
     - f16356f6304184107a938f8b5f674b6b
@@ -182,15 +231,19 @@ MonoBehaviour:
     - 150e442818c3a25ed0b1249f1e64074f
     - 0c578988f28194a49811d0dfd0d4c43a
     - 2a899a1491bef465a9d60a6f175cfb31
-    - d50b13433d994e3f8cc69a28fcc3cdb9
-    - 2d340e66170c477fb195220d771daf2d
-    - 09e6e73f072043d8a80477f2d7b345c2
-    - e430d5e410f34abf9ab09ef882a97fc4
+    - 456209d0d98bb4cc19b8d06cbd9fab27
+    - ae73413a278f54ebfac3159d3e0f4997
+    - 3389c1585b1404d5983a8b50fddb1ba9
+    - dfe79a98dafe44c3a859aa3b26e64ae0
+    - 9ae2b95495d354f06a2e62531071e347
+    - f23a8a8455bff4c69b7c422a40ae7830
+    - e188f0c4d3fe844fa879cf2febf88427
+    - 5c8b8105642c54f8485da76cb46c7755
     - d84a16b5937c4e20af6281d079b5ce43
-    - e7e02076d80c4bfdae1526f0a44e3684
-    - f09a509518b846b481f60f7236dec90d
-    - 98457f4fe6a04653872db5eef0ac93c9
-    - af53a5ded3a6486497b952e253419023
+    - 7004e8355cec8422aa16c6da8f463fe2
+    - a5327127835b142f1b2bbfc5a9164384
+    - a1736008dd4ca4e739ce4079bfd52962
+    - 2c434ff823de746999cf4ceb70a60d5f
     - 7d7c7f26625e347ecaa680a63fb3e938
     - 3baad40f844d44bf590c5b8c96a58bd1
     - e09db5bef6553466e86bdf6536d97ff7
@@ -202,10 +255,6 @@ MonoBehaviour:
     - 9e2c29f34fe394f74be66649659de13d
     - 03106cb54bb064487b1e8eb5f164106d
     - 2a177596bd87c450a82431c7321b15fd
-    - 3a6cd401f82b457e91d3047ac5be6298
-    - 4b7de512093c468fa2e4158bd6cf7309
-    - 5c8ef6231a4d4790b3f5269ce7d0841a
-    - 6d9fa7342b5e4801c4a637adf8e1952b
     - 8117866b4139e468f998323206750614
     - 86d58f182eaef446da0e9f504f1738dc
     - 7a216de55e38245f7ad70e609b875861
@@ -246,8 +295,9 @@ MonoBehaviour:
     - 56e3536c682a7432eb43bb5302257db4
     - 0f53632de79fa4d6291f41f3141e0c4b
     - 78e8237bf098b4a56a2c24e292cfead7
+    - 3913ee9562b7f432d81f38a8d90e09f9
+    - 7e40c9ba13d547e2a8f1b692c5d30486
     - 5a2d529c119bc46eba7beb93f8b60fbd
-    - 1559db73e418448aabef4d3bde2385b0
     - 9de147f938290474d8a21f6c007a3365
     - 0284b44df88254814a4168723d2f984b
     - 00c70a2d4611c4782adf2bb498608f5a
@@ -279,8 +329,6 @@ MonoBehaviour:
     - 57688606b821b4cab88512fd24040aff
     - 226f02c48f9b5463f8bbadff8efad848
     - 094127caafc194dd194c2aabe12871aa
-    - f3c4926240f92458b9e3ce243d245450
-    - 6445ec5c9891b45d1968b24a31768795
     - 0f7e9e78741844389b313525a270f359
     - bd097007850f476db27c92d9e9cf15d4
     - c90aeeef99374d48948cc652e020ccca
@@ -297,7 +345,6 @@ MonoBehaviour:
     - bebffefe14a7a468f966a6b1e6db507b
     - 6e225465dc70941eb846d15a2711637e
     - ca61aa237cdbd4787849964f8a846787
-    - 073fa1c695e84327bd0849a62c5e17f3
     - 61d52e7392c0a44b9b06f91f95577daf
     - 13cdad698e8054c5e9e1659181cfc865
     - b252c8d5f9c2c4f2fae83834f95147c3
@@ -311,7 +358,7 @@ MonoBehaviour:
     - b384f81b319894d46a25e8dc2e458239
     - 4a1c73ce2373f4ff980e84d88d165fe5
     - 5771866c32fba416bbbf5b107e10a359
-    - d62e9b413c8f4057a521df946eb30728
+    - a2f827f1076d741ee98984693229f356
     - e654e9717232444dbb59b0844dd620df
     - 264570e36f5994e2da01c752cf0a747a
     - 6982abd6b04d0498ca96e096b0dd2769
@@ -320,7 +367,6 @@ MonoBehaviour:
     - 698d024cd922c4672ad11a8242921ddd
     - b8edb2ba4770b463fb05e21f49f4dc2c
     - b2af86132a674446fbfd928e5b22e6ef
-    - a2f827f1076d741ee98984693229f356
     - 0810d655335de4563ad4bf7d278f053a
     - cbd4768f18a004cafbd7a74858e7f6be
     - 03e00a466862c43fbb99a8d0180a1dd1
@@ -424,7 +470,6 @@ MonoBehaviour:
     - d2c3b552ea45a474a84d06e3fd1aa4c6
     - 94e966572b9d34340ba64bea0fd86422
     - bb44b8aeaa5ce4f32b0b078cfd367679
-    - 529325137477844e798455871591a599
     - dd4c02167fe1040239f6cfda018d9db3
     - fdb4e89dcb8ef4ed887521576d80054d
     - bae7b5380cc444a4eade6965f5bf7921
@@ -471,13 +516,11 @@ MonoBehaviour:
     - ccf938bc4be4f4cbcb89f4e1beaa646e
     - 43a1c53951995492993764de6adf654e
     - 23490e42f4e78793d77bc0a08ee84b5d
-    - a65f3cd4aea18c9823ac3a162616a96f
     - cea178b2d6cdfdbd147b0c757d00d2f3
     - 80f2e13c699d3092934cf51666b1da50
     - fd7ca4028cfd1d99701f0d53d8014abb
     - 50446a5e6343b46e0b02abc95d8e92ed
     - 6ef68272759ba44c78c5d44db99dadd5
-    - cd1fc6abaed614664b79af6c4b367af2
     - d58173881510949798ba83f9cfab3315
     - e7dc1a39d66ee4acfbd2245ccc1cccdf
     - 243ad44fb09a8497ca86feb15317422f
@@ -568,3 +611,22 @@ MonoBehaviour:
   - 99f73ffb5daf04cf3a61046820ae7afa
   - 51531eef83d134a72bc9fe041f10cc5c
   - 49c20ea945a4748d5924b8d53321839b
+  - 67c2442ee640e4a15999e797b9f8a4c7
+  - 62e398b8ae913420aa616b33f4e4dbb3
+  - 11205436e02ac4eab86a1a1adb25d08d
+  - 61fe7693609324fc5b1d2c6ef7e833d4
+  - 791d2ea7a3b2a4654a9a9ea849987200
+  - 53999d9b918d548f99afc9e7f657b302
+  - 96e7f1564066c4765b9bd14edf460c4e
+  - cb197583b161b424f8c619590de4e27c
+  - 5ca88463127db428ca4d99bb007e3223
+  - 5ce3132df2adf4d5b9f07bac81f51c15
+  - 6ec19cd6767ab4b36a74057b51b42392
+  - 7faf679551cd34b2db48cbd0f0920c27
+  - 5945fea8cbc024d8a9ea4ecd5d617dcc
+  - 72c64db46093b4792beb0e2d4548030a
+  - 22228ff184cf4420497f81dea09a6405
+  - 858f91bf8bf024d00b5d46c1fef69502
+  - a63d17f42b1944059e86c0b3d7251f48
+  - 885c8a4bcbae24dc6a589a6c039225bd
+  - 071536022ce0e4949b1ec3d856668178
