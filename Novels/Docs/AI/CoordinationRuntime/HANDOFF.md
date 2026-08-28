@@ -41,3 +41,22 @@ handoff читается только при расследовании конк
   историю без конкретной причины.
 - Для WebGL продолжить единственную запись из `work/parallel/` после проверки
   лицензии.
+
+## 2026-08-28T13:31:00Z — character-hairstyle-protocol — completed
+
+Task: дополнить общий протокол правилами проектирования причёсок.
+
+Changed:
+- `Novels/Docs/AI/rules/CharacterLayeringRules.md`: добавлены утверждение
+  причёски на собранном персонаже, контроль естественного объёма, обязательное
+  проектирование front/back и общее превью состава эпизода.
+
+Validation:
+- `git diff --check -- Novels/Docs/AI/rules/CharacterLayeringRules.md` — успешно.
+- Commit `1671fd66` содержит только канонический документ правил.
+
+Pending / risks:
+- Публикация `main` в `origin/main` выполняется в этой же задаче.
+
+Suggested next step:
+- Использовать обновлённый порядок до производства игровых alpha-слоёв.
