@@ -60,3 +60,30 @@ Pending / risks:
 
 Suggested next step:
 - Использовать обновлённый порядок до производства игровых alpha-слоёв.
+
+## 2026-08-28T13:48:00Z — gpl-project-bootstrap — completed
+
+Task: создать атомарный Unity-проект истории «Голос подо льдом».
+
+Changed:
+- `Projects/novels-gpl/**`: Unity 6000.3.11f1 story-project с ID `gpl`,
+  карточкой, обложкой, definition, Ink первого эпизода и пустыми каталогами
+  для последовательного наполнения.
+- `Novels/Docs/AI/work/parallel/ParallelWork.gpl-project-bootstrap.md`:
+  зафиксированы scope и проверки проекта.
+
+Validation:
+- `Tools/novels-tools/novels-content doctor` — успешно.
+- Unity import и компиляция runtime/editor assemblies — успешно.
+- `Tools/novels-tools/novels-content validate gpl` — успешно.
+- `git diff --check -- Projects/novels-gpl` — успешно.
+
+Pending / risks:
+- В Ink пока включён только пролог без ссылок на незавершённый арт; дальнейшие
+  сцены добавлять синхронно с утверждённым episode asset list.
+- Локальный commit нового проекта потребуется опубликовать отдельно, если это
+  не будет сделано в текущем пользовательском запросе.
+
+Suggested next step:
+- Начать с полного переноса текста эпизода 1 в Ink либо с первого утверждённого
+  фона и затем персонажных alpha-слоёв.
