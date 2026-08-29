@@ -15,7 +15,7 @@ namespace Novels.ContentSdk.Editor
         private const string _locationSegment = "/location/locations/";
         private const string _characterSegment = "/character/characters/";
 
-        public override uint GetVersion() => 5;
+        public override uint GetVersion() => 6;
 
         private void OnPreprocessTexture()
         {
@@ -35,7 +35,7 @@ namespace Novels.ContentSdk.Editor
                     StringComparison.Ordinal)
                 || assetPath.IndexOf(_characterSegment, StringComparison.Ordinal) >= 0)
                 importer.alphaIsTransparency = true;
-            ConfigureMobile(importer, "Android", TextureImporterFormat.ASTC_6x6);
+            ConfigureMobile(importer, "Android", TextureImporterFormat.ASTC_8x8);
             ConfigureMobile(importer, "iPhone", TextureImporterFormat.ASTC_8x8);
         }
 
