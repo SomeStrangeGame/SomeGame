@@ -6,6 +6,16 @@
 Более ранняя история находится в
 [`CoordinationHandoffHistory-through-2026-08-28.md`](../archive/reports/CoordinationHandoffHistory-through-2026-08-28.md).
 
+## 2026-08-29T13:45:16Z — git-publish-workflow — completed
+
+Task: закрепить безопасную публикацию атомарных commits в Git.
+Changed: добавлен `Tools/somegame git-publish`; integration, automation и memory
+docs описывают clean-tree/fetch/no-force/final-SHA contract.
+Validation: runner tests 10/10, docs-check и реальная публикация passed;
+`bac3e19e` подтверждён как локальный и `origin/main` SHA.
+Pending / risks: none. Suggested next step: использовать команду вместо ручной
+последовательности fetch/divergence/push.
+
 Завершённые docs/memory изменения 2026-08-29 сохранены в
 [`CoordinationHandoffHistory-2026-08-29-docs-memory.md`](../archive/reports/CoordinationHandoffHistory-2026-08-29-docs-memory.md).
 
