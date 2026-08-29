@@ -1,0 +1,20 @@
+{
+  "name": "com.inkle.ink-unity-integration",
+  "version": "1.2.2-somegame.1",
+  "displayName": "Ink",
+  "description": "Unity integration for ink, pinned with the SomeGame domain-reload compilation recovery patch.",
+  "unity": "2018.4",
+  "keywords": [
+    "ink",
+    "inky",
+    "inkle",
+    "story",
+    "narrative"
+  ],
+  "author": {
+    "name": "Inkle",
+    "email": "info@inklestudios.com",
+    "url": "https://www.inklestudios.com/"
+  },
+  "_fingerprint": "770b372042728fc9df9d26ae19287cf6145d47a5"
+}
