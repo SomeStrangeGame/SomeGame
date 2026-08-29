@@ -24,6 +24,24 @@ Runner не создаёт отдельный coordination contract: право 
 и dependency-free tooling tests. Read-only относительно tracked sources и не
 требует lock.
 
+### `git-publish`
+
+Безопасно публикует уже подготовленную последовательность атомарных commits:
+
+```bash
+Tools/somegame git-publish --agent-id <lock-owner> \
+  [--ssh-key <local-key-path>]
+```
+
+По умолчанию цель — `origin/main`. Runner проверяет точного lock owner, текущую
+ветку и чистоту дерева; разрешены только три собственных untracked runtime-
+файла: agent, request и owner. Затем выполняются `fetch`, проверка divergence,
+обычный push без force и сравнение SHA локального `HEAD` с remote branch.
+Remote-ahead история, staged runtime record, любой посторонний dirty path,
+ошибка авторизации или несовпадение SHA останавливают workflow. Runner не делает
+автоматические pull/rebase/merge и не сохраняет ключ: `--ssh-key` лишь передаёт
+существующий локальный путь в `ssh-add`.
+
 ### `content-gate`
 
 Запускает существующий changed-path `novels-content verify` для одной платформы.
@@ -72,7 +90,7 @@ sockets, license или caches автоматически. Обнаруженн�
 
 ## Lock policy
 
-`content-gate`, `editor-gate`, `player-build`, `android-smoke` и licensing
+`git-publish`, `content-gate`, `editor-gate`, `player-build`, `android-smoke` и licensing
 recovery сравнивают `--agent-id` с
 `Docs/AI/CoordinationRuntime/active/write-lock/owner.md`. Несовпадение или
 отсутствие lock завершаются до запуска внешнего процесса.

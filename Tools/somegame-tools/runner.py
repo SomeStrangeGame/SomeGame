@@ -88,6 +88,107 @@ def require_lock(agent_id: str | None) -> None:
         raise WorkflowError("lock_not_owned", f"write-lock owner is {owner!r}, expected {agent_id!r}")
 
 
+def coordination_runtime_allowlist(agent_id: str, root: Path = ROOT) -> set[str]:
+    owner_path = root / "Docs/AI/CoordinationRuntime/active/write-lock/owner.md"
+    text = owner_path.read_text(encoding="utf-8")
+    request_match = re.search(r"^- Request:\s*`?([^`\n]+)`?", text, re.M)
+    if not request_match:
+        raise WorkflowError("lock_request_missing", "write-lock owner has no Request field")
+    request = request_match.group(1).strip()
+    paths = {
+        "Docs/AI/CoordinationRuntime/active/write-lock/owner.md",
+        f"Docs/AI/CoordinationRuntime/requests/{request}/request.md",
+        f"Docs/AI/CoordinationRuntime/agents/{agent_id}.md",
+    }
+    missing = [value for value in paths if not (root / value).is_file()]
+    if missing:
+        raise WorkflowError("coordination_record_missing", "Required coordination record is missing",
+                            details=missing)
+    return paths
+
+
+def unexpected_git_status(lines: Iterable[str], allowed_paths: set[str]) -> list[str]:
+    unexpected: list[str] = []
+    for line in lines:
+        if not line:
+            continue
+        path = line[3:]
+        paths = [value.strip() for value in path.split(" -> ")]
+        if line[:2] != "??" or any(value not in allowed_paths for value in paths):
+            unexpected.append(line)
+    return unexpected
+
+
+def git_output(*parts: str, timeout: float = 30) -> str:
+    try:
+        result = subprocess.run(["git", *parts], cwd=ROOT, capture_output=True, text=True,
+                                timeout=timeout, check=False,
+                                env={**os.environ, "GIT_TERMINAL_PROMPT": "0"})
+    except subprocess.TimeoutExpired as exc:
+        raise WorkflowError("git_timeout", f"git {' '.join(parts)} timed out") from exc
+    if result.returncode:
+        raise WorkflowError("git_failed", f"git {' '.join(parts)} failed",
+                            details=(result.stderr or result.stdout).strip()[-2000:])
+    return result.stdout.strip()
+
+
+def git_publish(args: argparse.Namespace) -> dict[str, Any]:
+    require_lock(args.agent_id)
+    allowed = coordination_runtime_allowlist(args.agent_id)
+    branch = git_output("branch", "--show-current")
+    if branch != args.branch:
+        raise WorkflowError("wrong_branch", f"current branch is {branch!r}, expected {args.branch!r}")
+    status_lines = git_output("status", "--porcelain=v1", "--untracked-files=all").splitlines()
+    unexpected = unexpected_git_status(status_lines, allowed)
+    if unexpected:
+        raise WorkflowError("worktree_not_clean", "Commit or remove non-coordination changes before publishing",
+                            details=unexpected[:40])
+
+    logs: list[str] = []
+    if args.ssh_key:
+        key = Path(args.ssh_key).expanduser().resolve()
+        if not key.is_file():
+            raise WorkflowError("ssh_key_missing", f"SSH key does not exist: {key}")
+        added = run_logged(["ssh-add", str(key)], timeout=min(args.timeout, 30),
+                           log=LOG_ROOT / f"git-publish-{utc_stamp()}-ssh-add.log")
+        logs.append(added["log"])
+        if added["returncode"]:
+            raise WorkflowError("ssh_add_failed", "Could not add the requested SSH key",
+                                details=added["tail"])
+
+    env = {**os.environ, "GIT_TERMINAL_PROMPT": "0"}
+    fetched = run_logged(["git", "fetch", args.remote, args.branch], timeout=args.timeout,
+                         log=LOG_ROOT / f"git-publish-{utc_stamp()}-fetch.log", env=env)
+    logs.append(fetched["log"])
+    if fetched["returncode"]:
+        raise WorkflowError("fetch_failed", "git fetch failed", details=fetched["tail"])
+    counts = git_output("rev-list", "--left-right", "--count",
+                        f"HEAD...{args.remote}/{args.branch}").split()
+    if len(counts) != 2:
+        raise WorkflowError("divergence_unreadable", "Could not parse Git divergence", details=counts)
+    ahead, behind = (int(value) for value in counts)
+    if behind:
+        raise WorkflowError("remote_ahead", "Remote contains commits missing locally; integrate them manually",
+                            details={"ahead": ahead, "behind": behind})
+    local_sha = git_output("rev-parse", "HEAD")
+    pushed = ahead > 0
+    if pushed:
+        result = run_logged(["git", "push", args.remote, f"HEAD:{args.branch}"], timeout=args.timeout,
+                            log=LOG_ROOT / f"git-publish-{utc_stamp()}-push.log", env=env)
+        logs.append(result["log"])
+        if result["returncode"]:
+            raise WorkflowError("push_failed", "git push failed", details=result["tail"])
+    remote_sha = git_output("ls-remote", "--heads", args.remote, f"refs/heads/{args.branch}",
+                            timeout=args.timeout).split()
+    remote_sha = remote_sha[0] if remote_sha else ""
+    if remote_sha != local_sha:
+        raise WorkflowError("remote_sha_mismatch", "Remote branch does not match local HEAD",
+                            details={"local": local_sha, "remote": remote_sha})
+    return {"ok": True, "workflow": "git-publish", "remote": args.remote,
+            "branch": args.branch, "localSha": local_sha, "remoteSha": remote_sha,
+            "aheadBefore": ahead, "pushed": pushed, "logs": logs}
+
+
 def prepare_unity_lifecycle(close_hub: bool, timeout: float = 30) -> list[int]:
     processes = unity_processes()
     if processes.editors:
@@ -432,6 +533,9 @@ def android_smoke(args: argparse.Namespace) -> dict[str, Any]:
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__); sub = p.add_subparsers(dest="workflow", required=True)
     docs = sub.add_parser("docs-check"); docs.add_argument("--timeout", type=float, default=120)
+    publish = sub.add_parser("git-publish"); publish.add_argument("--agent-id", required=True)
+    publish.add_argument("--remote", default="origin"); publish.add_argument("--branch", default="main")
+    publish.add_argument("--ssh-key"); publish.add_argument("--timeout", type=float, default=120)
     content = sub.add_parser("content-gate"); content.add_argument("--agent-id", required=True)
     content.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
     content.add_argument("--target", help="Explicit catalog or story id; bypasses broad dirty-tree planning")
@@ -467,7 +571,8 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = parser().parse_args(); started = time.monotonic()
-    handlers = {"docs-check": docs_check, "content-gate": content_gate, "player-build": player_build,
+    handlers = {"docs-check": docs_check, "git-publish": git_publish,
+                "content-gate": content_gate, "player-build": player_build,
                 "licensing-preflight": licensing_preflight, "editor-gate": editor_gate,
                 "android-smoke": android_smoke}
     try:

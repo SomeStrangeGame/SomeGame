@@ -80,7 +80,26 @@ Suggested next step: <действие или none>
 3. Выполнить minimal plan/verify, затем только оставшиеся Editor/Player/manual
    gates.
 4. Зафиксировать evidence и реальные ограничения.
-5. Только после общей проверки переводить scope в `integrated` и архивировать.
+5. Разбить проверенный diff на атомарные commits; каждый commit должен иметь
+   одну цель и не захватывать чужой или generated scope.
+6. Пока собственные agent/request/write-lock records остаются untracked,
+   опубликовать commits канонической командой:
+
+   ```bash
+   Tools/somegame git-publish --agent-id <lock-owner> \
+     [--ssh-key <local-key-path>]
+   ```
+
+   Команда публикует `HEAD` в `origin/main`, только если remote не впереди и
+   дерево чисто кроме собственных runtime records. Она не выполняет
+   pull/rebase/merge/force-push; расхождение разбирается отдельным явным scope.
+   SSH-ключ остаётся локальным и никогда не добавляется в commit.
+7. Сверить возвращённые `localSha` и `remoteSha`, записать evidence в handoff,
+   завершить agent record и удалить только собственные request/write-lock.
+8. Если итоговая handoff/agent запись образует отдельный commit, получить новую
+   короткую FIFO-заявку и повторить ту же команду; не оставлять документированный
+   результат только локально.
+9. Только после подтверждённого remote SHA считать публикацию завершённой.
 
 Если интеграционный случай здесь не покрыт, остановить изменение контракта,
 зафиксировать риск в handoff и дополнить этот действующий протокол.

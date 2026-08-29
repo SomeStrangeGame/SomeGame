@@ -48,6 +48,20 @@ class RunnerTests(unittest.TestCase):
         args = runner.parser().parse_args(["content-gate", "--agent-id", "a", "--target", "catalog"])
         self.assertEqual("catalog", args.target)
 
+    def test_git_publish_parser_has_safe_defaults(self):
+        args = runner.parser().parse_args(["git-publish", "--agent-id", "a"])
+        self.assertEqual(("origin", "main", None), (args.remote, args.branch, args.ssh_key))
+
+    def test_git_publish_allows_only_untracked_own_runtime_records(self):
+        allowed = {"owner.md", "request.md", "agent.md"}
+        lines = ["?? owner.md", "?? request.md", "?? agent.md", " M tracked.md", "?? other.md"]
+        self.assertEqual([" M tracked.md", "?? other.md"],
+                         runner.unexpected_git_status(lines, allowed))
+
+    def test_git_publish_rejects_staged_runtime_record(self):
+        self.assertEqual(["A  owner.md"],
+                         runner.unexpected_git_status(["A  owner.md"], {"owner.md"}))
+
 
 if __name__ == "__main__":
     unittest.main()

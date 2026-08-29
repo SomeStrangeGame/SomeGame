@@ -5,6 +5,7 @@ JSON. Полные логи сохраняются в ignored `Novels/Build/Logs
 
 ```bash
 Tools/somegame docs-check
+Tools/somegame git-publish --agent-id <lock-owner> [--ssh-key <local-key-path>]
 Tools/somegame licensing-preflight
 Tools/somegame licensing-preflight --recover --agent-id <lock-owner> --confirm-pid <exact-pid>
 Tools/somegame content-gate --agent-id <lock-owner> --platform editor
@@ -17,6 +18,11 @@ Tools/somegame android-smoke --agent-id <lock-owner> --apk <path> \
 
 `docs-check` и read-only `licensing-preflight` не требуют lock. Остальные
 команды fail-closed проверяют точного владельца repository write-lock.
+`git-publish` публикует только текущий `HEAD` в `origin/main`: требует правильную
+ветку, чистое дерево кроме собственных untracked coordination records, делает
+`fetch`, запрещает автоматическую интеграцию remote-ahead истории и никогда не
+использует force-push. `--ssh-key` только добавляет локальный ключ в SSH-agent;
+ключ и его содержимое в репозиторий не записываются.
 `docs-check` выполняет scoped diff-check только для AI docs и общего tooling;
 чужие Unity-generated whitespace изменения не маскируют результат.
 `content-gate --target <id>` выполняет один явно выбранный atomic build и нужен
