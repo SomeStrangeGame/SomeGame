@@ -94,6 +94,17 @@ Suggested next step: интегрировать adapter отдельным code 
 
 ## Ready for integration
 
+## 2026-08-29T13:36:18Z — full-tree-integration — blocked-on-push-auth
+
+Task: разбить всё dirty tree на атомарные commits и отправить в `origin/main`.
+Changed: создано 8 scoped commits от docs/tooling/Ink до runtime/GPL/settings;
+generated duplicate Ink JSON сохранены в ignored `Build/IntegrationDiscarded`.
+Validation: docs/tooling tests, doctor и scoped diff-check passed; свежие Unity/
+Android gates перечислены выше. Hub PID 40613 не закрывался без разрешения.
+Pending / risks: fetch/push блокирует GitHub SSH `Permission denied (publickey)`;
+`gh` отсутствует. Нужна рабочая SSH- или HTTPS-аутентификация, затем fetch/rebase/push.
+Suggested next step: настроить GitHub auth и выполнить `git fetch origin main`.
+
 ### ink-domain-reload-fix
 
 - Ink Unity Integration v1.2.2 закреплён локально в
