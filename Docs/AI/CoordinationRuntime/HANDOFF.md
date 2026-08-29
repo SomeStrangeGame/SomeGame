@@ -94,16 +94,16 @@ Suggested next step: интегрировать adapter отдельным code 
 
 ## Ready for integration
 
-## 2026-08-29T13:36:18Z — full-tree-integration — blocked-on-push-auth
+## 2026-08-29T13:36:18Z — full-tree-integration — completed
 
 Task: разбить всё dirty tree на атомарные commits и отправить в `origin/main`.
 Changed: создано 8 scoped commits от docs/tooling/Ink до runtime/GPL/settings;
 generated duplicate Ink JSON сохранены в ignored `Build/IntegrationDiscarded`.
 Validation: docs/tooling tests, doctor и scoped diff-check passed; свежие Unity/
 Android gates перечислены выше. Hub PID 40613 не закрывался без разрешения.
-Pending / risks: fetch/push блокирует GitHub SSH `Permission denied (publickey)`;
-`gh` отсутствует. Нужна рабочая SSH- или HTTPS-аутентификация, затем fetch/rebase/push.
-Suggested next step: настроить GitHub auth и выполнить `git fetch origin main`.
+Pending / risks: manual visual gates из отдельных ready scopes остаются
+platform-specific evidence; общий push выполнен без закрытия работающего Hub.
+Suggested next step: none. GitHub push `86c2002f..21d1859e` completed.
 
 ### ink-domain-reload-fix
 
