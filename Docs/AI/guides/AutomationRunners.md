@@ -1,0 +1,81 @@
+# Bounded automation runners
+
+Каноническая точка входа для повторяемых локальных операций:
+
+```bash
+Tools/somegame <workflow> [options]
+```
+
+Runner не создаёт отдельный coordination contract: право на тяжёлую операцию и
+порядок ожидания определяет
+[UnityConcurrency.md](../rules/UnityConcurrency.md), а канонические content-
+команды и их семантику — [ContentPipeline.md](ContentPipeline.md).
+
+Каждый workflow имеет конечный timeout, выполняет polling внутри процесса,
+пишет полный timestamped лог в ignored `Novels/Build/Logs/automation` и
+возвращает один компактный JSON. Чат ждёт завершения команды и не интерпретирует
+неизменившиеся промежуточные состояния.
+
+## Команды
+
+### `docs-check`
+
+Проверяет Markdown links/anchors, лимиты core/memory/handoff, `git diff --check`
+и dependency-free tooling tests. Read-only относительно tracked sources и не
+требует lock.
+
+### `content-gate`
+
+Запускает существующий changed-path `novels-content verify` для одной платформы.
+Требует `--agent-id` текущего lock owner. В очень грязном рабочем дереве
+`--target <catalog|story-id>` запускает ровно один явный atomic build вместо
+широкого changed-path plan.
+
+Batch/Editor start при работающем Unity Hub fail-closed. Явный `--close-hub`
+штатно отправляет `TERM` только main Hub PID и ждёт process barrier.
+
+### `editor-gate`
+
+Подключается к открытому Editor либо запускает ровно один через
+`--start-editor`, поднимает persistent MCP helper и выполняет один
+`editor-check`. Перед Console/hierarchy/compile helper bounded ждёт реального
+`editor_status=ready`, а финальный `up_to_date` из `recompile` не требует
+дополнительного status polling. Compile и filtered EditMode suite включаются флагами. Запущенные
+runner’ом helper и Editor завершаются в cleanup; `--no-stop-editor` применяется
+только при явной необходимости оставить запущенный им Editor.
+
+### `player-build`
+
+Последовательно собирает content для одной платформы и ровно один Player
+`Remote|Embedded`, используя `Novels/Tools/build-player.sh`. Полная matrix не
+является default. `--skip-content-build` допустим только для уже проверенного
+актуального `Build/LocalContent`.
+
+### `android-smoke`
+
+Принимает точные APK, serial и package ID; install/launch выполняются через ADB.
+Runner ждёт упорядоченные `[NOVELS_SMOKE]` events одного `runId`, foreground
+activity и отсутствие blocking markers. Package ID не угадывается. Screenshot,
+полный logcat и activity dump сохраняются только при failure; приложение всегда
+останавливается через `am force-stop`, AVD остаётся запущенным.
+
+### `licensing-preflight`
+
+Без `--recover` только фиксирует Editor/Hub/Licensing PID, свежие conflict
+markers и точные sockets. `--recover` требует lock, отсутствие Editor и
+подтверждённый конфликт; отправляет только `TERM` exact main Hub/Licensing
+Client PID, явно перечисленным через `--confirm-pid`. Runner никогда не удаляет
+sockets, license или caches автоматически. Обнаруженный stale socket только
+попадает в evidence; его ручное удаление требует отдельного подтверждения по
+[licensing-протоколу](UnityLicensingTroubleshooting.md).
+После recovery исходную Unity-команду разрешено повторить ровно один раз.
+
+## Lock policy
+
+`content-gate`, `editor-gate`, `player-build`, `android-smoke` и licensing
+recovery сравнивают `--agent-id` с
+`Docs/AI/CoordinationRuntime/active/write-lock/owner.md`. Несовпадение или
+отсутствие lock завершаются до запуска внешнего процесса.
+
+Реальный live gate выполняется только когда этого требует задача. Unit/static
+проверка runner не запускает Unity, build, ADB install или recovery.
