@@ -40,8 +40,10 @@ namespace Novels.Catalog
                 _screen.AddOrUpdateCard(
                     item.Id,
                     item.Title,
+                    item.Genre,
                     item.Description,
                     item.Status,
+                    item.ActionLabel,
                     item.IsEnabled,
                     item.Cover,
                     () => selection.TrySetResult(item));

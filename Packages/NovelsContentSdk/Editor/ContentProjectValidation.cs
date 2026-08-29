@@ -278,9 +278,7 @@ namespace Novels.ContentSdk.Editor
             try
             {
                 var value = JsonUtility.FromJson<Metadata>(File.ReadAllText(path));
-                var expectedSchemaVersion = kind == ContentProjectKind.Catalog
-                    ? 2
-                    : 1;
+                const int expectedSchemaVersion = 2;
                 if (value == null || value.schemaVersion != expectedSchemaVersion)
                 {
                     report.Error(

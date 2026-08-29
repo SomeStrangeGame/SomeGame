@@ -5,13 +5,15 @@ namespace Novels.Catalog
 {
     public readonly struct CatalogText
     {
-        public CatalogText(string title, string description)
+        public CatalogText(string title, string genre, string description)
         {
             Title = title ?? string.Empty;
+            Genre = genre ?? string.Empty;
             Description = description ?? string.Empty;
         }
 
         public string Title { get; }
+        public string Genre { get; }
         public string Description { get; }
     }
 
@@ -20,17 +22,20 @@ namespace Novels.Catalog
     {
         [SerializeField] private string _contentId;
         [SerializeField] private string _title;
+        [SerializeField] private string _genre;
         [SerializeField] private string _description;
         [SerializeField] private bool _disabled;
 
         public NovelCatalogEntry(
             string contentId,
             string title,
+            string genre,
             string description,
             bool isEnabled = true)
         {
             _contentId = contentId ?? throw new ArgumentNullException(nameof(contentId));
             _title = title ?? string.Empty;
+            _genre = genre ?? string.Empty;
             _description = description ?? string.Empty;
             _disabled = !isEnabled;
         }
@@ -41,6 +46,6 @@ namespace Novels.Catalog
             ContentAddressing.ContentPackageConvention.ContentBundle(_contentId);
         public string ContentAssetName =>
             ContentAddressing.ContentPackageConvention.DefinitionAsset(_contentId);
-        public CatalogText Text => new(_title, _description);
+        public CatalogText Text => new(_title, _genre, _description);
     }
 }

@@ -15,10 +15,11 @@ namespace Novels.Catalog.Contracts
     [Serializable]
     public sealed class StoryCard
     {
-        public int schemaVersion = 1;
+        public int schemaVersion = 2;
         public string minimumClientVersion;
         public string storyId;
         public string title;
+        public string genre;
         public string description;
         public string cover = "cover.webp";
     }
@@ -47,7 +48,7 @@ namespace Novels.Catalog.Contracts
         public static StoryCard DeserializeCard(string json, string expectedStoryId)
         {
             var value = Deserialize<StoryCard>(json, "story card");
-            RequireSchema(value.schemaVersion, 1, "story card");
+            RequireSchema(value.schemaVersion, 2, "story card");
             value.storyId = RequireCanonicalStoryId(value.storyId);
             var expected = RequireCanonicalStoryId(expectedStoryId);
             if (!string.Equals(value.storyId, expected, StringComparison.Ordinal))
@@ -57,6 +58,9 @@ namespace Novels.Catalog.Contracts
             }
             if (string.IsNullOrWhiteSpace(value.title))
                 throw new InvalidOperationException($"Story '{expected}' has no title.");
+            if (string.IsNullOrWhiteSpace(value.genre))
+                throw new InvalidOperationException($"Story '{expected}' has no genre.");
+            value.genre = value.genre.Trim();
             if (string.IsNullOrWhiteSpace(value.cover))
                 throw new InvalidOperationException($"Story '{expected}' has no cover path.");
             value.cover = value.cover.Trim();

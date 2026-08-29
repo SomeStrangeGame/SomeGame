@@ -25,6 +25,8 @@ namespace Novels.Catalog.View
         private bool _snapping;
         private Vector2 _viewportSize;
 
+        public event Action<Card, int, int> FocusChanged;
+
         public void Register(Card card, bool canOpen, Action open)
         {
             var item = Find(card);
@@ -42,7 +44,10 @@ namespace Novels.Catalog.View
             if (_focusedCard == null)
                 Focus(card, true);
             else
+            {
                 UpdateCardVisuals();
+                NotifyFocusChanged();
+            }
         }
 
         public void OnBeginDrag(PointerEventData eventData)
@@ -66,7 +71,7 @@ namespace Novels.Catalog.View
                 RefreshLayout();
 
             if (_dragging)
-                _focusedCard = FindNearestCard();
+                SetFocusedCard(FindNearestCard());
             else if (_snapping)
                 MoveFocusedCardToCenter();
 
@@ -86,12 +91,18 @@ namespace Novels.Catalog.View
                 item.Open?.Invoke();
         }
 
+        public void ActivateFocused()
+        {
+            if (_focusedCard != null)
+                SelectOrOpen(_focusedCard);
+        }
+
         private void Focus(Card card, bool immediately)
         {
             if (card == null)
                 return;
 
-            _focusedCard = card;
+            SetFocusedCard(card);
             _scrollRect.StopMovement();
             _snapping = !immediately;
             if (immediately)
@@ -99,6 +110,25 @@ namespace Novels.Catalog.View
                 Center(card, 1f);
                 UpdateCardVisuals();
             }
+        }
+
+        private bool SetFocusedCard(Card card)
+        {
+            if (_focusedCard == card)
+                return false;
+            _focusedCard = card;
+            NotifyFocusChanged();
+            return true;
+        }
+
+        private void NotifyFocusChanged()
+        {
+            if (_focusedCard == null)
+                return;
+            FocusChanged?.Invoke(
+                _focusedCard,
+                _items.FindIndex(item => item.Card == _focusedCard),
+                _items.Count);
         }
 
         private void MoveFocusedCardToCenter()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -50,12 +51,15 @@ namespace Novels
             internal Bundles.Entity Bundles;
             internal Bundles.IContentSource RootContentSource;
             internal PriorityLoader PriorityLoader;
+            internal string PersistentDataPath;
             internal string ClientVersion;
             internal CancellationToken CancellationToken;
             internal Action<(LogType type, string message)> OnLog;
+            internal Diagnostics.SmokeTelemetry SmokeTelemetry;
         }
 
         private readonly Dependencies _ctx;
+        private readonly Cache.Entity _progressCache;
 
         internal CatalogFlow(Dependencies ctx)
         {
@@ -66,12 +70,17 @@ namespace Novels
                 throw new ArgumentNullException(nameof(ctx.RootContentSource));
             if (ctx.PriorityLoader == null)
                 throw new ArgumentNullException(nameof(ctx.PriorityLoader));
+            if (string.IsNullOrWhiteSpace(ctx.PersistentDataPath))
+                throw new ArgumentException(
+                    "Persistent data path must not be empty.",
+                    nameof(ctx.PersistentDataPath));
             if (string.IsNullOrWhiteSpace(ctx.ClientVersion))
             {
                 throw new ArgumentException(
                     "Client version must not be empty.",
                     nameof(ctx.ClientVersion));
             }
+            _progressCache = new Cache.Entity(ctx.PersistentDataPath);
         }
 
         internal async UniTask<LoadedCatalog> LoadWithRetry(
@@ -85,6 +94,7 @@ namespace Novels
                 Bundles.ContentDeliveryLease deliveryLease = null;
                 try
                 {
+                    _ctx.SmokeTelemetry?.Emit("catalog.loading");
                     bootstrap.ShowLoading(loading);
                     await _ctx.Bundles.LoadReleaseAsync(
                         _ctx.ClientVersion,
@@ -93,6 +103,11 @@ namespace Novels
                     deliveryLease = await PrepareApplicationContent(bootstrap, loading);
                     var resources = await Load(deliveryLease);
                     _ctx.Bundles.ActivateRelease();
+                    _ctx.SmokeTelemetry?.Emit(
+                        "catalog.ready",
+                        ("storyCount", resources.Entries.Count.ToString()),
+                        ("releaseId", _ctx.Bundles.ReleaseId),
+                        ("deliveryMode", _ctx.Bundles.DeliveryMode.ToString()));
                     return resources;
                 }
                 catch (OperationCanceledException)
@@ -105,6 +120,9 @@ namespace Novels
                     || exception is Bundles.ContentIntegrityException)
                 {
                     deliveryLease?.Dispose();
+                    _ctx.SmokeTelemetry?.Emit(
+                        "catalog.load_failed",
+                        ("exceptionType", exception.GetType().Name));
                     _ctx.OnLog?.Invoke((
                         LogType.Warning,
                         $"Catalog loading failed: {exception}"));
@@ -129,11 +147,18 @@ namespace Novels
             var items = entries.Select(entry =>
             {
                 var text = entry.Text;
+                var started = HasStarted(entry.ContentId);
                 return new Catalog.CatalogItem(
                     entry.ContentId,
                     text.Title,
-                    text.Description,
-                    ApplicationTexts.ContentAvailable,
+                    genre: text.Genre,
+                    description: text.Description,
+                    status: started
+                        ? ApplicationTexts.ContinueContent
+                        : ApplicationTexts.ContentAvailable,
+                    actionLabel: started
+                        ? ApplicationTexts.ContinueContent
+                        : ApplicationTexts.OpenContent,
                     cover: catalog.Covers.TryGetValue(entry.ContentId, out var cover)
                         ? cover
                         : null);
@@ -142,10 +167,15 @@ namespace Novels
             var selected = await selection.Select(
                 ApplicationTexts.CatalogTitle,
                 items);
-            return entries.First(entry => string.Equals(
+            MarkStarted(selected.Id);
+            var content = entries.First(entry => string.Equals(
                 entry.ContentId,
                 selected.Id,
                 StringComparison.OrdinalIgnoreCase));
+            _ctx.SmokeTelemetry?.Emit(
+                "story.selected",
+                ("contentId", content.ContentId));
+            return content;
         }
 
         internal async UniTask<Content.EpisodeDefinition> SelectEpisode(
@@ -156,18 +186,41 @@ namespace Novels
                 .Select(episode => new Catalog.CatalogItem(
                     episode.Id,
                     episode.Title,
-                    episode.Description,
-                    status: ApplicationTexts.ContentAvailable))
+                    description: episode.Description,
+                    status: ApplicationTexts.ContentAvailable,
+                    actionLabel: ApplicationTexts.OpenContent))
                 .ToArray();
             using var selection = CreateSelection(screen);
             var selected = await selection.Select(
                 ApplicationTexts.ChooseEpisode,
                 items);
-            return definition.Episodes.First(episode => string.Equals(
-                episode.Id,
+            var episode = definition.Episodes.First(candidate => string.Equals(
+                candidate.Id,
                 selected.Id,
                 StringComparison.OrdinalIgnoreCase));
+            _ctx.SmokeTelemetry?.Emit(
+                "episode.selected",
+                ("contentId", definition.Id),
+                ("episodeId", episode.Id));
+            return episode;
         }
+
+        private bool HasStarted(string contentId)
+        {
+            if (_progressCache.Exists(StartedKey(contentId)))
+                return true;
+            var directory = _progressCache.GetLocalPath(
+                $"Saves/{Uri.EscapeDataString(contentId)}",
+                false);
+            return Directory.Exists(directory)
+                && Directory.EnumerateFiles(directory, "*", SearchOption.AllDirectories).Any();
+        }
+
+        private void MarkStarted(string contentId) =>
+            _progressCache.WriteBytes(StartedKey(contentId), new byte[] { 1 });
+
+        private static string StartedKey(string contentId) =>
+            $"Saves/{Uri.EscapeDataString(contentId)}/Started";
 
         private async UniTask<Bundles.ContentDeliveryLease> PrepareApplicationContent(
             Bootstrap.BootstrapController bootstrap,
@@ -231,6 +284,7 @@ namespace Novels
                     entries.Add(new Catalog.NovelCatalogEntry(
                         card.storyId,
                         card.title,
+                        card.genre,
                         card.description));
                 }
             }

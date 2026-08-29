@@ -18,6 +18,7 @@ namespace Novels.Catalog.View
 
         public void Bind(
             string title,
+            string genre,
             string description,
             string status,
             Sprite cover)
@@ -32,8 +33,8 @@ namespace Novels.Catalog.View
             _description.text = description ?? string.Empty;
             _description.gameObject.SetActive(
                 !string.IsNullOrWhiteSpace(description));
-            _status.text = status ?? string.Empty;
-            _status.gameObject.SetActive(!string.IsNullOrWhiteSpace(status));
+            _status.text = JoinMetadata(genre, status);
+            _status.gameObject.SetActive(!string.IsNullOrWhiteSpace(_status.text));
         }
 
         public void SetClick(Action onClick)
@@ -51,6 +52,15 @@ namespace Novels.Catalog.View
             if (_canvasGroup == null)
                 _canvasGroup = gameObject.AddComponent<CanvasGroup>();
             _canvasGroup.alpha = opacity;
+        }
+
+        private static string JoinMetadata(string genre, string status)
+        {
+            if (string.IsNullOrWhiteSpace(genre))
+                return status ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(status))
+                return genre;
+            return $"{genre} · {status}";
         }
     }
 }

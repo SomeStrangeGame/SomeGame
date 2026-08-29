@@ -9,6 +9,8 @@ namespace Novels
         internal const string Retry = "Повторить";
         internal const string ChooseEpisode = "Выберите эпизод";
         internal const string ContentAvailable = "Доступно";
+        internal const string OpenContent = "Открыть";
+        internal const string ContinueContent = "Продолжить";
         internal const string PreparingContent = "Подготовка истории";
     }
 }
