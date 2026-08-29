@@ -12,10 +12,48 @@ VALIDATE_METHOD=Novels.ContentSdk.Editor.AtomicContentBuild.Validate
 usage() {
   print 'Usage:'
   print '  novels-content doctor'
+  print '  novels-content plan [base-ref]'
+  print '  novels-content verify [editor|android|ios] [base-ref]'
   print '  novels-content validate <catalog|story-id|all>'
   print '  novels-content build <catalog|story-id|all> <editor|windows|android|ios>'
   print '  novels-content trim-sprites <story-id|all> <report|apply> [padding]'
   print '  novels-content publish <destination-directory>'
+}
+
+verification_plan() {
+  local base=${1:-}
+  local arguments=(--compact)
+  [[ -z "$base" ]] || arguments+=(--base "$base")
+  python3 "$TOOL_DIR/verification.py" $arguments
+}
+
+verify_changed() {
+  local platform=${1:-editor} base=${2:-}
+  [[ "$platform" == editor || "$platform" == android || "$platform" == ios ]] || {
+    print -u2 "Unknown verification platform: $platform"
+    return 2
+  }
+  local plan=$(verification_plan "$base")
+  print -r -- "$plan"
+  local targets=$(print -r -- "$plan" | python3 -c 'import json,sys; print("\n".join(json.load(sys.stdin)["content_targets"]))')
+  local helper_tests=$(print -r -- "$plan" | python3 -c 'import json,sys; print("1" if json.load(sys.stdin)["run_helper_tests"] else "0")')
+  local automation_tests=$(print -r -- "$plan" | python3 -c 'import json,sys; print("1" if json.load(sys.stdin)["run_automation_tests"] else "0")')
+
+  if [[ "$helper_tests" == 1 ]]; then
+    python3 -m unittest discover -s "$REPOSITORY_ROOT/Tools/unity-mcp-helper/tests" -v
+  fi
+  if [[ "$automation_tests" == 1 ]]; then
+    python3 -m unittest discover -s "$REPOSITORY_ROOT/Tools/somegame-tools/tests" -v
+  fi
+  if [[ -n "$targets" ]]; then
+    doctor
+    local id
+    for id in ${(f)targets}; do
+      run_unity "$id" "$BUILD_METHOD" "$platform"
+    done
+    compose
+  fi
+  python3 -c 'import json,sys; p=json.loads(sys.argv[1]); print(json.dumps({"ok":True,"platform":sys.argv[2],"contentTargets":p["content_targets"],"helperTests":p["run_helper_tests"],"automationTests":p["run_automation_tests"],"editorCheckRequired":p["editor_compile"],"playerBuildRequired":p["player_build"],"manualVisualGate":p["manual_visual_gate"]},separators=(",",":")))' "$plan" "$platform"
 }
 
 project_path() {
@@ -204,6 +242,8 @@ publish() {
 
 case ${1:-} in
   doctor) doctor ;;
+  plan) verification_plan "${2:-}" ;;
+  verify) verify_changed "${2:-editor}" "${3:-}" ;;
   validate) validate "${2:-}" ;;
   build) build "${2:-}" "${3:-}" ;;
   trim-sprites) trim_sprites "${2:-}" "${3:-report}" "${4:-4}" ;;

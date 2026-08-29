@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "protocolVersion": "2025-06-18",
+  "serverName": "unity-mcp",
+  "tools": {
+    "editor_status": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "get_scene_hierarchy": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "console": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "recompile": {"access": "write", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "recompile_status": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "list_tests": {"access": "read", "timeoutSec": 60, "arguments": {"type": "object"}},
+    "run_tests": {"access": "write", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "test_status": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}}
+  }
+}
