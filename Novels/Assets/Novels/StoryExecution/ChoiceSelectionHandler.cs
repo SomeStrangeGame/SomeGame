@@ -25,9 +25,17 @@ namespace Novels.StoryExecution
             var options = _request.Choices.Select(choice =>
                 new WardrobeContracts.WardrobeOption(choice.Id, choice.Text)).ToArray();
             return new WardrobeContracts.WardrobePresentation(
+                _request.Services.MainCharacter,
+                GetWardrobeCategory(),
                 GetWardrobeTitle(),
                 _request.Dialogue.ChoiceConfirmationText,
                 options,
+                category => _request.Services.Character.LoadWardrobeCategory(
+                    ToChoiceAction(category)),
+                (category, value) => _request.Services.Character.LoadWardrobeThumbnail(
+                    ToChoiceAction(category), value),
+                (category, value) => _request.Services.Character.PreviewWardrobeChoice(
+                    ToChoiceAction(category), value),
                 id =>
                 {
                     var choice = GetChoice(id);
@@ -81,6 +89,32 @@ namespace Novels.StoryExecution
             return WardrobeContracts.WardrobeLabels.Clothes;
         }
 
+        private WardrobeContracts.WardrobeCategory GetWardrobeCategory()
+        {
+            if ((_request.Dialogue.ChoiceActions
+                    & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+                return WardrobeContracts.WardrobeCategory.Appearance;
+            if ((_request.Dialogue.ChoiceActions
+                    & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                return WardrobeContracts.WardrobeCategory.Hair;
+            if ((_request.Dialogue.ChoiceActions
+                    & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                return WardrobeContracts.WardrobeCategory.Accessory;
+            return WardrobeContracts.WardrobeCategory.Clothes;
+        }
+
+        private static StoryContracts.StoryChoiceAction ToChoiceAction(
+            WardrobeContracts.WardrobeCategory category) => category switch
+            {
+                WardrobeContracts.WardrobeCategory.Appearance =>
+                    StoryContracts.StoryChoiceAction.SelectAppearance,
+                WardrobeContracts.WardrobeCategory.Hair =>
+                    StoryContracts.StoryChoiceAction.SelectHair,
+                WardrobeContracts.WardrobeCategory.Accessory =>
+                    StoryContracts.StoryChoiceAction.SelectAccessory,
+                _ => StoryContracts.StoryChoiceAction.SelectClothes,
+            };
+
         internal void ApplySaved(StoryContracts.StoryDecision decision)
         {
             if (!decision.HasChoice)
@@ -101,6 +135,7 @@ namespace Novels.StoryExecution
             ApplyActions(choice);
             _request.Services.Save.SaveDecision(StoryContracts.StoryDecision.Choice(id));
             _request.Services.Story.SetChoice(id);
+            _request.Services.OnChoiceSelected?.Invoke(id);
             _request.Completed.TrySetResult();
         }
 

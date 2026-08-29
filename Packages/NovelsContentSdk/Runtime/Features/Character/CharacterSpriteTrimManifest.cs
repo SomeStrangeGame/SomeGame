@@ -59,9 +59,9 @@ namespace Novels.Character
             return _byAddress.TryGetValue(assetAddress, out layout);
         }
 
-#if UNITY_EDITOR
         public IReadOnlyList<CharacterSpriteTrimEntry> Entries => _entries;
 
+#if UNITY_EDITOR
         public void ReplaceEntries(IEnumerable<CharacterSpriteTrimEntry> entries)
         {
             _entries.Clear();

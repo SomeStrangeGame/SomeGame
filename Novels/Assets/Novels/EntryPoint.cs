@@ -22,6 +22,7 @@ namespace Novels
         [SerializeField] private GameObject _fallbackNotification;
 
         private ApplicationRuntime _runtime;
+        private Diagnostics.SmokeTelemetry _smokeTelemetry;
         private CancellationTokenSource _sessionCancellation;
         private void OnEnable()
         {
@@ -48,29 +49,37 @@ namespace Novels
                         _fallbackCharacter,
                         _fallbackNotification),
                     runtimeTuning);
+                Action<(LogType type, string message)> onLog = data =>
+                {
+                    using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
+                        logs.Log("[Novels]", data);
+                };
+                _smokeTelemetry = new Diagnostics.SmokeTelemetry(onLog);
                 _runtime = new ApplicationRuntime(new ApplicationRuntime.Dependencies
                 {
                     Environment = environment,
                     ContentSource = CreateContentSource(
                         _sessionCancellation.Token,
                         runtimeTuning.ContentDelivery),
-                    OnLog = data =>
-                    {
-                        using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
-                            logs.Log("[Novels]", data);
-                    },
+                    OnLog = onLog,
                     OnError = ReportError,
+                    SmokeTelemetry = _smokeTelemetry,
                 });
+                _smokeTelemetry.Emit(
+                    "app.started",
+                    ("appVersion", Application.version),
+                    ("platform", Application.platform.ToString()),
+                    ("contentPlatform", environment.ContentPlatform));
                 Run(_runtime, _sessionCancellation.Token).Forget();
             }
             catch (Exception exception)
             {
-                DisposeSession();
                 ReportError(new Diagnostics.NovelError(
                     Diagnostics.NovelErrorCodes.InitializationFailed,
                     Diagnostics.NovelErrorSeverity.Fatal,
                     "Novel initialization failed.",
                     exception: exception));
+                DisposeSession();
             }
         }
 
@@ -83,15 +92,26 @@ namespace Novels
             var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
                 ?? throw new InvalidOperationException("Unity project root cannot be resolved.");
             var contentRoot = Path.Combine(projectRoot, "Build", "LocalContent");
-#else
-            var contentRoot = Path.Combine(
-                Application.streamingAssetsPath,
-                "NovelContent");
-#endif
             return new Bundles.FileSystemContentSource(
                 contentRoot,
                 cancellationToken,
                 options.LocalRequestPolicy);
+#else
+            var contentRoot = Path.Combine(
+                Application.streamingAssetsPath,
+                "NovelContent");
+#if UNITY_ANDROID
+            return new Bundles.StreamingAssetsContentSource(
+                contentRoot,
+                cancellationToken,
+                options.LocalRequestPolicy);
+#else
+            return new Bundles.FileSystemContentSource(
+                contentRoot,
+                cancellationToken,
+                options.LocalRequestPolicy);
+#endif
+#endif
 #else
             var configuration = ContentRuntimeConfiguration.Load();
             return new Bundles.HttpContentSource(
@@ -129,6 +149,7 @@ namespace Novels
 
         private void DisposeSession()
         {
+            _smokeTelemetry?.Emit("app.stopped");
             _sessionCancellation?.Cancel();
             try
             {
@@ -144,6 +165,7 @@ namespace Novels
                 _sessionCancellation?.Dispose();
                 _sessionCancellation = null;
                 _runtime = null;
+                _smokeTelemetry = null;
             }
         }
 
@@ -179,6 +201,14 @@ namespace Novels
 
         private void ReportError(Diagnostics.NovelError error)
         {
+            _smokeTelemetry?.Emit(
+                "error",
+                ("code", error.Code),
+                ("severity", error.Severity.ToString()),
+                ("contentId", error.Context.ContentId),
+                ("episodeId", error.Context.EpisodeId),
+                ("releaseId", error.Context.ReleaseId),
+                ("deliveryMode", error.Context.DeliveryMode));
             var logType = error.Severity == Diagnostics.NovelErrorSeverity.Warning
                 ? LogType.Warning
                 : LogType.Error;

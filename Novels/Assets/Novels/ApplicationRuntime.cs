@@ -15,6 +15,7 @@ namespace Novels
             internal ApplicationEnvironment Environment;
             internal Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
+            internal Diagnostics.SmokeTelemetry SmokeTelemetry;
             internal Bundles.IContentSource ContentSource;
         }
 
@@ -22,6 +23,7 @@ namespace Novels
         private readonly Bundles.IContentSource _contentSource;
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Action<Diagnostics.NovelError> _onError;
+        private readonly Diagnostics.SmokeTelemetry _smokeTelemetry;
         private readonly Bundles.Entity _catalogBundles;
         private readonly DisposableSlot<NovelRuntime> _activeNovel;
         private readonly CatalogFlow _catalogFlow;
@@ -34,6 +36,7 @@ namespace Novels
                 ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
             _onLog = ctx.OnLog;
             _onError = ctx.OnError;
+            _smokeTelemetry = ctx.SmokeTelemetry;
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _catalogBundles = CreateBundles(
                 new Bundles.PrefixedContentSource(
@@ -45,9 +48,11 @@ namespace Novels
                 Bundles = _catalogBundles,
                 RootContentSource = _contentSource,
                 PriorityLoader = new PriorityLoader(_defaultThreadPriority),
+                PersistentDataPath = _environment.PersistentDataPath,
                 ClientVersion = _environment.ClientVersion,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _onLog,
+                SmokeTelemetry = _smokeTelemetry,
             });
             _activeNovel = new DisposableSlot<NovelRuntime>().AddTo(this);
         }
@@ -62,6 +67,9 @@ namespace Novels
                 var content = await _catalogFlow.SelectContent(catalog);
                 if (!await RunStory(content, catalog, bootstrap))
                     return;
+                _smokeTelemetry?.Emit(
+                    "catalog.returned",
+                    ("contentId", content.ContentId));
                 bootstrap.Hide();
             }
         }
@@ -99,6 +107,7 @@ namespace Novels
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _onLog,
                 OnError = _onError,
+                SmokeTelemetry = _smokeTelemetry,
             });
             _activeNovel.Replace(novel);
             var storyReleaseLoaded = false;
@@ -113,6 +122,12 @@ namespace Novels
                         ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion);
                     storyReleaseLoaded = true;
                     storyBundles.ActivateRelease();
+                    _smokeTelemetry?.Emit(
+                        "release.activated",
+                        ("scope", "story"),
+                        ("contentId", content.ContentId),
+                        ("releaseId", storyBundles.ReleaseId),
+                        ("deliveryMode", storyBundles.DeliveryMode.ToString()));
                     result = await novel.Init();
                 }
                 catch (Exception exception) when (

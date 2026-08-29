@@ -42,9 +42,16 @@ namespace Editor
                 OpenSceneMode.Single);
             BuildReport report;
             var buildIdentity = ApplyBuildIdentity(arguments);
+            var isDevelopmentBuild = arguments.Contains("-developmentBuild");
+            var useCustomKeystore = PlayerSettings.Android.useCustomKeystore;
             IsEmbeddedPlayerBuild = true;
             try
             {
+                if (isDevelopmentBuild && EditorUserBuildSettings.activeBuildTarget
+                    == BuildTarget.Android)
+                {
+                    PlayerSettings.Android.useCustomKeystore = false;
+                }
                 report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
                 {
                     scenes = EditorBuildSettings.scenes
@@ -53,7 +60,7 @@ namespace Editor
                         .ToArray(),
                     locationPathName = Path.GetFullPath(output),
                     target = EditorUserBuildSettings.activeBuildTarget,
-                    options = arguments.Contains("-developmentBuild")
+                    options = isDevelopmentBuild
                         ? BuildOptions.Development
                         : BuildOptions.None,
                     extraScriptingDefines = new[] {"NOVELS_EMBEDDED_CONTENT"},
@@ -62,6 +69,7 @@ namespace Editor
             finally
             {
                 buildIdentity.Restore();
+                PlayerSettings.Android.useCustomKeystore = useCustomKeystore;
                 IsEmbeddedPlayerBuild = false;
             }
             if (report.summary.result != BuildResult.Succeeded)

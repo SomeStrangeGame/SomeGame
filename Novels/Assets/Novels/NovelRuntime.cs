@@ -17,6 +17,7 @@ namespace Novels
             internal CancellationToken CancellationToken;
             public Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
+            internal Diagnostics.SmokeTelemetry SmokeTelemetry;
             internal Bundles.Entity Bundles;
             internal Catalog.NovelCatalogEntry Content;
             internal string PersistentDataPath;
@@ -127,7 +128,13 @@ namespace Novels
                 result = EpisodeRunResult.Cancelled();
             }
             if (result.Status == EpisodeRunStatus.Completed)
+            {
                 _progress.Complete(_episode, result.ContinuationState);
+                _ctx.SmokeTelemetry?.Emit(
+                    "episode.completed",
+                    ("contentId", _definition.Id),
+                    ("episodeId", _episode.Id));
+            }
             return result.Status == EpisodeRunStatus.Failed && result.Error.HasValue
                 ? EpisodeRunResult.Failed(WithContext(result.Error.Value))
                 : result;

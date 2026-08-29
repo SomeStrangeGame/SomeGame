@@ -4,6 +4,12 @@ using UnityEngine;
 
 namespace Novels.OptionSelection
 {
+    public enum OptionListLayout
+    {
+        Default,
+        Wardrobe,
+    }
+
     public sealed class OptionListController
     {
         private readonly CancellationToken _cancellationToken;
@@ -14,7 +20,10 @@ namespace Novels.OptionSelection
             _cancellationToken = cancellationToken;
         }
 
-        public void Init(string name)
+        public void Init(
+            string name,
+            OptionListLayout layout = OptionListLayout.Default,
+            System.Action<int> selectTab = null)
         {
             var prefab = Resources.Load<OptionListScreen>("OptionListScreen");
             if (prefab == null)
@@ -24,6 +33,7 @@ namespace Novels.OptionSelection
             }
             _screen = Object.Instantiate(prefab);
             _screen.name = name;
+            _screen.ConfigureLayout(layout, selectTab);
         }
 
         public void Present(OptionListPresentation presentation) =>

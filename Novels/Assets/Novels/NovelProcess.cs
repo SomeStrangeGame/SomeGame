@@ -31,6 +31,7 @@ namespace Novels
 
             internal Func<StoryContracts.StoryDecision?> GetNextSavedDecision;
             internal Func<UniTask> HideLoading;
+            internal Action OnReady;
             internal CancellationToken CancellationToken;
 
             internal Action<Diagnostics.NovelError> OnError;
@@ -47,6 +48,7 @@ namespace Novels
         {
             await _dependencies.HideLoading()
                 .AttachExternalCancellation(_dependencies.CancellationToken);
+            _dependencies.OnReady?.Invoke();
 
             while (!IsDisposed)
             {

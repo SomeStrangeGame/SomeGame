@@ -107,6 +107,14 @@ namespace Novels
                     GetFullQualitySprite = getFullQualitySprite,
                     GetSpriteTrimManifest = getSpriteTrimManifest,
                     MissingCharacter = missingCharacter,
+                    OnFallback = (characterId, reason) =>
+                        _ctx.SmokeTelemetry?.Emit(
+                            "fallback.used",
+                            ("assetType", "character"),
+                            ("contentId", _definition.Id),
+                            ("episodeId", _episode?.Id),
+                            ("characterId", characterId),
+                            ("reason", reason)),
                     CancellationToken = cancellationToken,
                 }).AddTo(owner);
             character.Init();

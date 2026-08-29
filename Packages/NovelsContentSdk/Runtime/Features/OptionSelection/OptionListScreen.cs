@@ -30,6 +30,10 @@ namespace Novels.OptionSelection
 
         private static readonly Color CardColor = new(0.24f, 0.27f, 0.32f, 0.96f);
         private static readonly Color SelectedColor = new(0.20f, 0.55f, 0.78f, 1f);
+        private static readonly Color WardrobePanelColor = new(0.035f, 0.065f, 0.12f, 0.97f);
+        private static readonly Color WardrobeAccentColor = new(0.12f, 0.52f, 0.92f, 1f);
+        private static readonly string[] WardrobeTabs =
+            { "Лицо", "Волосы", "Одежда", "Аксессуары" };
 
         private readonly List<CardView> _cards = new();
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -45,6 +49,24 @@ namespace Novels.OptionSelection
         private int _presentationVersion;
         private int _initialSlot;
         private bool _needsCentering;
+        private bool _wardrobeLayout;
+        private RectTransform _panel;
+        private RectTransform _collapseRect;
+        private Text _wardrobeHeader;
+        private Text _collapseLabel;
+        private Button _previous;
+        private Button _next;
+        private GameObject _wardrobeBackdrop;
+        private Action<int> _selectWardrobeTab;
+
+        public void ConfigureLayout(OptionListLayout layout, Action<int> selectWardrobeTab = null)
+        {
+            if (layout != OptionListLayout.Wardrobe || _wardrobeLayout)
+                return;
+            _wardrobeLayout = true;
+            _selectWardrobeTab = selectWardrobeTab;
+            BuildWardrobeLayout();
+        }
 
         private void Awake()
         {
@@ -57,6 +79,8 @@ namespace Novels.OptionSelection
         {
             _scroll.onValueChanged.RemoveListener(OnScrollChanged);
             _confirm.onClick.RemoveListener(Confirm);
+            if (_wardrobeBackdrop != null)
+                Destroy(_wardrobeBackdrop);
         }
 
         private void OnScrollChanged(Vector2 _) => SelectClosestCard();
@@ -68,8 +92,15 @@ namespace Novels.OptionSelection
             _presentationVersion++;
             ClearCards();
             _title.text = presentation.Title;
+            if (_wardrobeHeader != null)
+                _wardrobeHeader.text = DisplayName(presentation.Header);
             _confirmLabel.text = presentation.ConfirmationText;
             _confirm.interactable = presentation.Items.Length > 0;
+            SetWardrobeTab(presentation.ActiveTab);
+            if (_previous != null)
+                _previous.interactable = presentation.Items.Length > 1;
+            if (_next != null)
+                _next.interactable = presentation.Items.Length > 1;
 
             var copies = presentation.Items.Length > 1 ? 3 : 1;
             for (var copy = 0; copy < copies; copy++)
@@ -90,6 +121,9 @@ namespace Novels.OptionSelection
         public void ShowImmediate()
         {
             gameObject.SetActive(true);
+            if (_wardrobeBackdrop != null)
+                _wardrobeBackdrop.SetActive(true);
+            SetWardrobeExpanded(true);
             if (_needsCentering)
             {
                 LayoutRebuilder.ForceRebuildLayoutImmediate(_content);
@@ -105,6 +139,8 @@ namespace Novels.OptionSelection
             if (_canvasGroup == null)
                 return;
             _canvasGroup.alpha = 0f;
+            if (_wardrobeBackdrop != null)
+                _wardrobeBackdrop.SetActive(false);
             gameObject.SetActive(false);
         }
 
@@ -169,6 +205,17 @@ namespace Novels.OptionSelection
             var item = _presentation.Items[index];
             _selection.text = item.Text;
             _presentation.Preview?.Invoke(item.Id).Forget();
+        }
+
+        private void SelectRelative(int direction)
+        {
+            var itemCount = _presentation?.Items.Length ?? 0;
+            if (itemCount == 0)
+                return;
+            var index = (_selectedIndex + direction + itemCount) % itemCount;
+            SelectItem(index);
+            if (_cards.Count >= itemCount * 2)
+                CenterCard(itemCount + index);
         }
 
         private void Confirm()
@@ -241,6 +288,205 @@ namespace Novels.OptionSelection
             var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(
                 _viewport, _cards[slot].Rect);
             ShiftContent(-bounds.center.x);
+        }
+
+        private void BuildWardrobeLayout()
+        {
+            _panel = _title.transform.parent as RectTransform;
+            if (_panel == null)
+                return;
+
+            BuildWardrobeBackdrop();
+            var panelImage = _panel.GetComponent<Image>();
+            if (panelImage != null)
+                panelImage.color = WardrobePanelColor;
+            _panel.anchoredPosition = new Vector2(0f, 330f);
+            _panel.sizeDelta = new Vector2(-48f, 620f);
+
+            _title.fontSize = 34;
+            _title.rectTransform.anchoredPosition = new Vector2(0f, -48f);
+            _title.rectTransform.sizeDelta = new Vector2(-80f, 54f);
+            SetRect(_viewport, Vector2.zero, Vector2.one,
+                new Vector2(150f, 178f), new Vector2(-150f, -190f));
+
+            BuildWardrobeHeader();
+            BuildWardrobeTabs();
+            BuildWardrobeArrows();
+            BuildCollapseButton();
+        }
+
+        private void BuildWardrobeBackdrop()
+        {
+            var backdrop = new GameObject(
+                "WardrobeBackdrop",
+                typeof(RectTransform),
+                typeof(Canvas),
+                typeof(CanvasScaler),
+                typeof(CanvasRenderer),
+                typeof(Image));
+            _wardrobeBackdrop = backdrop;
+            var rect = backdrop.GetComponent<RectTransform>();
+            SetRect(rect, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
+            var canvas = backdrop.GetComponent<Canvas>();
+            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            canvas.overrideSorting = true;
+            canvas.sortingOrder = -8;
+            var scaler = backdrop.GetComponent<CanvasScaler>();
+            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            scaler.referenceResolution = new Vector2(1080f, 1920f);
+            backdrop.GetComponent<Image>().color = new Color(0.018f, 0.055f, 0.105f, 1f);
+
+            var glow = CreateImage(
+                "WardrobeBackdropGlow",
+                backdrop.transform,
+                new Color(0.04f, 0.30f, 0.48f, 0.42f));
+            SetRect(glow.rectTransform,
+                new Vector2(0.18f, 0.18f),
+                new Vector2(0.82f, 0.92f),
+                Vector2.zero,
+                Vector2.zero);
+            glow.raycastTarget = false;
+            backdrop.SetActive(false);
+        }
+
+        private void BuildWardrobeHeader()
+        {
+            var image = CreateImage(
+                "WardrobeHeader",
+                transform,
+                new Color(0.035f, 0.075f, 0.14f, 0.96f));
+            var rect = image.rectTransform;
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
+            rect.anchoredPosition = new Vector2(0f, -92f);
+            rect.sizeDelta = new Vector2(620f, 92f);
+            _wardrobeHeader = CreateText(
+                "CharacterName",
+                image.transform,
+                42,
+                TextAnchor.MiddleCenter);
+            SetRect(_wardrobeHeader.rectTransform, Vector2.zero, Vector2.one,
+                new Vector2(24f, 8f), new Vector2(-24f, -8f));
+        }
+
+        private void BuildWardrobeTabs()
+        {
+            var bar = new GameObject(
+                "WardrobeTabs",
+                typeof(RectTransform),
+                typeof(HorizontalLayoutGroup));
+            bar.transform.SetParent(_panel, false);
+            var rect = bar.GetComponent<RectTransform>();
+            rect.anchorMin = new Vector2(0f, 1f);
+            rect.anchorMax = new Vector2(1f, 1f);
+            rect.anchoredPosition = new Vector2(0f, -120f);
+            rect.sizeDelta = new Vector2(-48f, 72f);
+            var layout = bar.GetComponent<HorizontalLayoutGroup>();
+            layout.spacing = 8f;
+            layout.childControlWidth = true;
+            layout.childControlHeight = true;
+            layout.childForceExpandWidth = true;
+            layout.childForceExpandHeight = true;
+
+            for (var index = 0; index < WardrobeTabs.Length; index++)
+            {
+                var tabIndex = index;
+                var button = CreateButton(
+                    $"WardrobeTab_{index}",
+                    bar.transform,
+                    new Color(0.08f, 0.13f, 0.21f, 0.96f),
+                    out var label);
+                label.text = WardrobeTabs[index];
+                label.fontSize = 24;
+                label.raycastTarget = false;
+                SetRect(label.rectTransform, Vector2.zero, Vector2.one,
+                    new Vector2(6f, 4f), new Vector2(-6f, -4f));
+                button.onClick.AddListener(() => _selectWardrobeTab?.Invoke(tabIndex));
+            }
+        }
+
+        private void SetWardrobeTab(int activeTab)
+        {
+            if (!_wardrobeLayout || _panel == null)
+                return;
+            var tabs = _panel.Find("WardrobeTabs");
+            if (tabs == null)
+                return;
+            for (var index = 0; index < tabs.childCount; index++)
+            {
+                var image = tabs.GetChild(index).GetComponent<Image>();
+                if (image != null)
+                {
+                    image.color = index == activeTab
+                        ? WardrobeAccentColor
+                        : new Color(0.08f, 0.13f, 0.21f, 0.96f);
+                }
+            }
+        }
+
+        private void BuildWardrobeArrows()
+        {
+            _previous = CreateButton(
+                "Previous",
+                _panel,
+                new Color(0.06f, 0.16f, 0.28f, 0.98f),
+                out var previousLabel);
+            previousLabel.text = "‹";
+            previousLabel.fontSize = 64;
+            PositionWardrobeArrow(_previous, -390f);
+            _previous.onClick.AddListener(() => SelectRelative(-1));
+
+            _next = CreateButton(
+                "Next",
+                _panel,
+                new Color(0.06f, 0.16f, 0.28f, 0.98f),
+                out var nextLabel);
+            nextLabel.text = "›";
+            nextLabel.fontSize = 64;
+            PositionWardrobeArrow(_next, 390f);
+            _next.onClick.AddListener(() => SelectRelative(1));
+        }
+
+        private static void PositionWardrobeArrow(Button button, float x)
+        {
+            var rect = button.GetComponent<RectTransform>();
+            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
+            rect.anchoredPosition = new Vector2(x, 52f);
+            rect.sizeDelta = new Vector2(92f, 120f);
+        }
+
+        private void BuildCollapseButton()
+        {
+            var button = CreateButton(
+                "Collapse",
+                transform,
+                new Color(0.035f, 0.075f, 0.14f, 0.98f),
+                out _collapseLabel);
+            _collapseLabel.text = "⌄";
+            _collapseLabel.fontSize = 52;
+            _collapseRect = button.GetComponent<RectTransform>();
+            _collapseRect.anchorMin = _collapseRect.anchorMax = new Vector2(0.5f, 0f);
+            _collapseRect.anchoredPosition = new Vector2(0f, 648f);
+            _collapseRect.sizeDelta = new Vector2(150f, 76f);
+            button.onClick.AddListener(() => SetWardrobeExpanded(_panel == null || !_panel.gameObject.activeSelf));
+        }
+
+        private void SetWardrobeExpanded(bool expanded)
+        {
+            if (!_wardrobeLayout || _panel == null)
+                return;
+            _panel.gameObject.SetActive(expanded);
+            if (_collapseRect != null)
+                _collapseRect.anchoredPosition = new Vector2(0f, expanded ? 648f : 58f);
+            if (_collapseLabel != null)
+                _collapseLabel.text = expanded ? "⌄" : "⌃";
+        }
+
+        private static string DisplayName(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+                return "Персонаж";
+            var trimmed = value.Trim();
+            return char.ToUpperInvariant(trimmed[0]) + trimmed.Substring(1);
         }
 
         private static Button CreateButton(

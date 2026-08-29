@@ -15,6 +15,9 @@ namespace Novels.StoryExecution
 
         internal void Present()
         {
+            _request.Services.OnDialogueReady?.Invoke(
+                _request.PresentationKind.ToString(),
+                _request.Choices.Length);
             switch (_request.PresentationKind)
             {
                 case BubbleContracts.BubblePresentationKind.Wardrobe:

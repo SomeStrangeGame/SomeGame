@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -18,6 +20,7 @@ namespace Novels.Character
             public Func<string, UniTask<Sprite>> GetFullQualitySprite;
             public Func<UniTask<CharacterSpriteTrimManifest>> GetSpriteTrimManifest;
             public Sprite MissingCharacter;
+            public Action<string, string> OnFallback;
             public CancellationToken CancellationToken;
         }
 
@@ -87,7 +90,7 @@ namespace Novels.Character
                 _mainCharacterView,
                 _mainCharacterClothes,
                 _mainCharacterHair,
-                _mainCharacterAccessory));
+                _mainCharacterAccessory), request);
         }
 
         public async UniTask EnableFullQuality()
@@ -104,7 +107,7 @@ namespace Novels.Character
                 _mainCharacterHair,
                 _mainCharacterAccessory);
             if (version == _wardrobePreviewVersion)
-                Apply(sprites);
+                Apply(sprites, _lastRenderRequest);
         }
 
         public UniTask<Sprite> LoadWardrobeThumbnail(
@@ -114,6 +117,22 @@ namespace Novels.Character
                 actions,
                 value,
                 _mainCharacterView);
+
+        public async UniTask<string[]> LoadWardrobeCategory(
+            StoryContracts.StoryChoiceAction actions)
+        {
+            var manifest = await _ctx.GetSpriteTrimManifest();
+            if (manifest == null)
+                return Array.Empty<string>();
+            var values = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var entry in manifest.Entries)
+            {
+                if (TryGetWardrobeValue(entry.AssetAddress, actions, out var value))
+                    values.Add(value);
+            }
+            return values.OrderBy(value => value, StringComparer.CurrentCultureIgnoreCase)
+                .ToArray();
+        }
 
         public async UniTask PreviewWardrobeChoice(
             StoryContracts.StoryChoiceAction actions,
@@ -132,7 +151,7 @@ namespace Novels.Character
                 _mainCharacterHair,
                 _mainCharacterAccessory);
             if (version == _wardrobePreviewVersion)
-                Apply(sprites);
+                Apply(sprites, request);
         }
 
         public UniTask Show(
@@ -177,8 +196,62 @@ namespace Novels.Character
                 SetMainCharacterAccessory(value);
         }
 
-        private void Apply(CharacterSpriteSet sprites)
+        private static bool TryGetWardrobeValue(
+            string address,
+            StoryContracts.StoryChoiceAction actions,
+            out string value)
         {
+            value = string.Empty;
+            if (string.IsNullOrWhiteSpace(address))
+                return false;
+            const string marker = "/maincharacter/";
+            var normalized = address.Replace('\\', '/');
+            var markerIndex = normalized.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
+            if (markerIndex < 0)
+                return false;
+            var parts = normalized.Substring(markerIndex + marker.Length).Split('/');
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+            {
+                if (parts.Length == 3
+                    && string.Equals(parts[0], "view", StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(parts[2], "main.png", StringComparison.OrdinalIgnoreCase))
+                    value = parts[1];
+            }
+            else if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+            {
+                if (parts.Length == 4
+                    && string.Equals(parts[0], "hairs", StringComparison.OrdinalIgnoreCase))
+                    value = parts[2];
+            }
+            else if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+            {
+                if (parts.Length == 3
+                    && string.Equals(parts[0], "clothes", StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(parts[2], "1.png", StringComparison.OrdinalIgnoreCase))
+                    value = parts[1];
+            }
+            else if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+            {
+                if (parts.Length == 3
+                    && string.Equals(parts[0], "accessories", StringComparison.OrdinalIgnoreCase)
+                    && parts[2].EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                {
+                    value = parts[2].Substring(0, parts[2].Length - 4);
+                }
+            }
+            return !string.IsNullOrWhiteSpace(value);
+        }
+
+        private void Apply(
+            CharacterSpriteSet sprites,
+            StoryContracts.CharacterRenderRequest request)
+        {
+            if (ReferenceEquals(sprites.MainBody, _ctx.MissingCharacter))
+            {
+                _ctx.OnFallback?.Invoke(
+                    request?.Name ?? string.Empty,
+                    "required_character_assets_missing");
+            }
             var layouts = sprites.TrimLayouts;
             _screen.SetMainBody(sprites.MainBody, layouts.MainBody);
             _screen.SetEmotion(sprites.Emotion, layouts.Emotion);

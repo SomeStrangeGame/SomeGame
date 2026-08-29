@@ -41,6 +41,18 @@ namespace Novels
                     Story = storyProcessor,
                     Wait = seconds => Wait(seconds, cancellationToken),
                     LoadChooseThumbnail = loadChooseThumbnail,
+                    OnDialogueReady = (presentationKind, choiceCount) =>
+                        _ctx.SmokeTelemetry?.Emit(
+                            "dialogue.ready",
+                            ("contentId", _definition.Id),
+                            ("episodeId", _episode.Id),
+                            ("presentation", presentationKind),
+                            ("choiceCount", choiceCount.ToString())),
+                    OnChoiceSelected = choiceId => _ctx.SmokeTelemetry?.Emit(
+                        "choice.selected",
+                        ("contentId", _definition.Id),
+                        ("episodeId", _episode.Id),
+                        ("choiceId", choiceId.ToString())),
                 });
         }
 

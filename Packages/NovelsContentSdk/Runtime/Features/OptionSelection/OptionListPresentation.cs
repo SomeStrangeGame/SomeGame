@@ -24,7 +24,9 @@ namespace Novels.OptionSelection
             OptionListItem[] items,
             Func<int, UniTask<Sprite>> loadThumbnail,
             Func<int, UniTask> preview,
-            Action<int> confirm)
+            Action<int> confirm,
+            string header = null,
+            int activeTab = -1)
         {
             Title = title ?? string.Empty;
             ConfirmationText = confirmationText ?? string.Empty;
@@ -33,6 +35,8 @@ namespace Novels.OptionSelection
                 ?? throw new ArgumentNullException(nameof(loadThumbnail));
             Preview = preview;
             Confirm = confirm ?? throw new ArgumentNullException(nameof(confirm));
+            Header = header ?? string.Empty;
+            ActiveTab = activeTab;
         }
 
         public string Title { get; }
@@ -41,5 +45,7 @@ namespace Novels.OptionSelection
         public Func<int, UniTask<Sprite>> LoadThumbnail { get; }
         public Func<int, UniTask> Preview { get; }
         public Action<int> Confirm { get; }
+        public string Header { get; }
+        public int ActiveTab { get; }
     }
 }

@@ -20,6 +20,8 @@ namespace Novels.StoryQueue
             internal StoryProcessor.Entity Story;
             internal Func<float, UniTask> Wait;
             internal Func<string, UniTask<UnityEngine.Sprite>> LoadChooseThumbnail;
+            internal Action<string, int> OnDialogueReady;
+            internal Action<int> OnChoiceSelected;
         }
 
         private readonly StoryCommandQueueBuilder _storyCommandQueueBuilder;
