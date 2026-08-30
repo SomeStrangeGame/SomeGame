@@ -61,7 +61,11 @@ namespace Novels.Character
             string mainCharacterView,
             string mainCharacterClothes,
             string mainCharacterHair,
-            string mainCharacterAccessory)
+            string mainCharacterAccessory,
+            string wardrobeTarget,
+            string targetClothes,
+            string targetHair,
+            string targetAccessory)
         {
             var name = request.Name;
             var view = _profile.ViewRoot;
@@ -69,7 +73,8 @@ namespace Novels.Character
             var hair = string.Empty;
             var accessory = string.Empty;
             if (request.Role == StoryContracts.StorySpeakerRole.MainCharacter
-                || request.Role == StoryContracts.StorySpeakerRole.Wardrobe)
+                || (request.Role == StoryContracts.StorySpeakerRole.Wardrobe
+                    && string.IsNullOrWhiteSpace(wardrobeTarget)))
             {
                 name = _profile.MainCharacterAssetId;
                 view = mainCharacterView;
@@ -77,8 +82,18 @@ namespace Novels.Character
                 hair = mainCharacterHair;
                 accessory = mainCharacterAccessory;
             }
+            else if (request.Role == StoryContracts.StorySpeakerRole.Wardrobe)
+            {
+                name = wardrobeTarget;
+                clothes = targetClothes;
+                hair = targetHair;
+                accessory = targetAccessory;
+            }
             name ??= string.Empty;
             name = ContentAddressing.TechnicalAssetIdConvention.Canonicalize(name);
+            var appearance = request.Role == StoryContracts.StorySpeakerRole.Wardrobe
+                ? new CharacterAppearanceState()
+                : _appearances.Get(name);
             return _sprites.Load(
                 name,
                 view,
@@ -86,13 +101,14 @@ namespace Novels.Character
                 hair,
                 accessory,
                 request.Presentation,
-                _appearances.Get(name));
+                appearance);
         }
 
         internal UniTask<Sprite> LoadWardrobeThumbnail(
             StoryContracts.StoryChoiceAction actions,
             string value,
-            string mainCharacterView) =>
-            _thumbnails.Load(actions, value, mainCharacterView);
+            string mainCharacterView,
+            string character) =>
+            _thumbnails.Load(actions, value, mainCharacterView, character);
     }
 }

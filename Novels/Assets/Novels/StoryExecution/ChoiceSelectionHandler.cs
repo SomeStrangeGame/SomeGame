@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace Novels.StoryExecution
@@ -22,10 +23,15 @@ namespace Novels.StoryExecution
 
         internal WardrobeContracts.WardrobePresentation CreateWardrobePresentation()
         {
+            _request.Services.Character.SetWardrobeTarget(
+                _request.Dialogue.WardrobeTarget);
             var options = _request.Choices.Select(choice =>
                 new WardrobeContracts.WardrobeOption(choice.Id, choice.Text)).ToArray();
+            var sequencePages = CreateWardrobeSequencePages();
             return new WardrobeContracts.WardrobePresentation(
-                _request.Services.MainCharacter,
+                string.IsNullOrWhiteSpace(_request.Dialogue.WardrobeTarget)
+                    ? _request.Services.MainCharacter
+                    : _request.Dialogue.WardrobeTarget,
                 GetWardrobeCategory(),
                 GetWardrobeTitle(),
                 _request.Dialogue.ChoiceConfirmationText,
@@ -54,7 +60,68 @@ namespace Novels.StoryExecution
                 {
                     var choice = GetChoice(id);
                     Select(choice, id);
+                },
+                sequencePages.Length > 1,
+                false,
+                sequencePages,
+                selected =>
+                {
+                    if (selected == null || selected.Length == 0)
+                        return;
+                    _request.Services.WardrobeSequence.SetPending(selected.Skip(1));
+                    var choice = GetChoice(selected[0]);
+                    Select(choice, selected[0]);
                 });
+        }
+
+        private WardrobeContracts.WardrobeSequencePage[] CreateWardrobeSequencePages()
+        {
+            var pages = new List<WardrobeContracts.WardrobeSequencePage>
+            {
+                CreateWardrobeSequencePage(_request.Dialogue, _request.Choices),
+            };
+            var future = _request.Services.PeekWardrobeSteps?.Invoke()
+                ?? Array.Empty<StoryCommands.StoryStep>();
+            foreach (var step in future)
+            {
+                if (step.Command is not StoryCommands.DialogueStoryCommand dialogue
+                    || dialogue.Data.WardrobeTarget != _request.Dialogue.WardrobeTarget)
+                {
+                    break;
+                }
+                var category = GetWardrobeCategory(dialogue.Data);
+                if (pages.Any(page => page.Category == category))
+                    break;
+                pages.Add(CreateWardrobeSequencePage(dialogue.Data, step.Choices));
+            }
+            return pages.ToArray();
+        }
+
+        private WardrobeContracts.WardrobeSequencePage CreateWardrobeSequencePage(
+            StoryCommands.DialogueCommandData dialogue,
+            StoryContracts.StoryChoice[] choices)
+        {
+            var options = choices.Select(choice =>
+                new WardrobeContracts.WardrobeOption(choice.Id, choice.Text)).ToArray();
+            StoryContracts.StoryChoice FindChoice(int id)
+            {
+                foreach (var choice in choices)
+                {
+                    if (choice.Id == id)
+                        return choice;
+                }
+                throw new InvalidOperationException($"Choice '{id}' is unavailable.");
+            }
+            return new WardrobeContracts.WardrobeSequencePage(
+                GetWardrobeCategory(dialogue),
+                GetWardrobeTitle(dialogue),
+                options,
+                id => _request.Services.Character.LoadWardrobeThumbnail(
+                    dialogue.ChoiceActions,
+                    FindChoice(id).Text),
+                id => _request.Services.Character.PreviewWardrobeChoice(
+                    dialogue.ChoiceActions,
+                    FindChoice(id).Text));
         }
 
         internal ChooseContracts.ChoosePresentation CreateChoosePresentation()
@@ -74,30 +141,37 @@ namespace Novels.StoryExecution
         }
 
         private string GetWardrobeTitle()
+            => GetWardrobeTitle(_request.Dialogue);
+
+        private static string GetWardrobeTitle(StoryCommands.DialogueCommandData dialogue)
         {
-            if (!string.IsNullOrWhiteSpace(_request.Dialogue.Text))
-                return _request.Dialogue.Text;
-            if ((_request.Dialogue.ChoiceActions
+            if (!string.IsNullOrWhiteSpace(dialogue.Text))
+                return dialogue.Text;
+            if ((dialogue.ChoiceActions
                     & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
                 return WardrobeContracts.WardrobeLabels.Appearance;
-            if ((_request.Dialogue.ChoiceActions
+            if ((dialogue.ChoiceActions
                     & StoryContracts.StoryChoiceAction.SelectHair) != 0)
                 return WardrobeContracts.WardrobeLabels.Hair;
-            if ((_request.Dialogue.ChoiceActions
+            if ((dialogue.ChoiceActions
                     & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
                 return WardrobeContracts.WardrobeLabels.Accessory;
             return WardrobeContracts.WardrobeLabels.Clothes;
         }
 
         private WardrobeContracts.WardrobeCategory GetWardrobeCategory()
+            => GetWardrobeCategory(_request.Dialogue);
+
+        private static WardrobeContracts.WardrobeCategory GetWardrobeCategory(
+            StoryCommands.DialogueCommandData dialogue)
         {
-            if ((_request.Dialogue.ChoiceActions
+            if ((dialogue.ChoiceActions
                     & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
                 return WardrobeContracts.WardrobeCategory.Appearance;
-            if ((_request.Dialogue.ChoiceActions
+            if ((dialogue.ChoiceActions
                     & StoryContracts.StoryChoiceAction.SelectHair) != 0)
                 return WardrobeContracts.WardrobeCategory.Hair;
-            if ((_request.Dialogue.ChoiceActions
+            if ((dialogue.ChoiceActions
                     & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
                 return WardrobeContracts.WardrobeCategory.Accessory;
             return WardrobeContracts.WardrobeCategory.Clothes;
@@ -121,6 +195,7 @@ namespace Novels.StoryExecution
                 return;
             var choice = GetSavedChoice(decision.ChoiceId);
             ApplyActions(choice);
+            UnlockWardrobeChoices(choice, false);
             _request.Services.Story.SetChoice(choice.Id);
         }
 
@@ -130,19 +205,70 @@ namespace Novels.StoryExecution
             _request.Completed.TrySetResult();
         }
 
+        internal bool TryApplyQueuedWardrobeChoice()
+        {
+            if (_request.Dialogue.Presentation
+                    != StoryContracts.DialoguePresentation.Wardrobe
+                || !_request.Services.WardrobeSequence.TryTake(out var id))
+            {
+                return false;
+            }
+            var choice = GetChoice(id);
+            Select(choice, id);
+            return true;
+        }
+
         private void Select(StoryContracts.StoryChoice choice, int id)
         {
             ApplyActions(choice);
+            UnlockWardrobeChoices(choice, true);
             _request.Services.Save.SaveDecision(StoryContracts.StoryDecision.Choice(id));
             _request.Services.Story.SetChoice(id);
             _request.Services.OnChoiceSelected?.Invoke(id);
             _request.Completed.TrySetResult();
         }
 
+        private void UnlockWardrobeChoices(
+            StoryContracts.StoryChoice selectedChoice,
+            bool persist)
+        {
+            if (_request.Dialogue.ChoiceActions == StoryContracts.StoryChoiceAction.None)
+                return;
+            if (_request.Dialogue.Presentation != StoryContracts.DialoguePresentation.Wardrobe
+                && _request.Dialogue.Presentation != StoryContracts.DialoguePresentation.Choose)
+                return;
+            var character = string.IsNullOrWhiteSpace(_request.Dialogue.WardrobeTarget)
+                ? _request.Services.MainCharacter
+                : _request.Dialogue.WardrobeTarget;
+            var category = (byte)GetWardrobeCategory();
+            foreach (var choice in _request.Choices)
+            {
+                _request.Services.Save.UnlockWardrobeItem(
+                    character,
+                    category,
+                    choice.Text,
+                    false,
+                    false);
+            }
+            _request.Services.Save.UnlockWardrobeItem(
+                character,
+                category,
+                selectedChoice.Text,
+                persist);
+        }
+
         private void ApplyActions(StoryContracts.StoryChoice choice)
         {
             var actions = _request.Dialogue.ChoiceActions;
             var character = _request.Services.Character;
+            if (!string.IsNullOrWhiteSpace(_request.Dialogue.WardrobeTarget))
+            {
+                character.ApplyWardrobeSelection(
+                    _request.Dialogue.WardrobeTarget,
+                    actions,
+                    choice.Text);
+                return;
+            }
             if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
                 character.SetMainCharacterView(choice.Text);
             if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)

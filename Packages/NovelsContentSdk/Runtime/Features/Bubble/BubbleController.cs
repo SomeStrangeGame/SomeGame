@@ -13,6 +13,8 @@ namespace Novels.Bubble
         {
             public GameObject BubblePrefab;
             public CancellationToken CancellationToken;
+            public Action OpenWardrobe;
+            public Func<bool> CanOpenWardrobe;
         }
 
         private readonly Dependencies _ctx;
@@ -29,6 +31,7 @@ namespace Novels.Bubble
             var prefab = _ctx.BubblePrefab;
             var screenGO = GameObject.Instantiate(prefab);
             _screen = screenGO.GetComponent<View.BubbleScreen>();
+            _screen.ConfigureWardrobe(_ctx.OpenWardrobe);
             _screen.HideImmediate();
         }
 
@@ -91,6 +94,8 @@ namespace Novels.Bubble
                 Buttons = buttons,
                 OnBackgroundClick = buttons.Length == 0 ? presentation.OnBackgroundClick : null
             });
+            _screen.SetWardrobeAvailable(
+                buttons.Length == 0 && (_ctx.CanOpenWardrobe?.Invoke() ?? false));
         }
 
         protected override void OnDispose()

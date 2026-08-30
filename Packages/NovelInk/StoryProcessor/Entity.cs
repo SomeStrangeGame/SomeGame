@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using Disposable;
 using Ink.Runtime;
 
@@ -29,6 +30,36 @@ namespace Novels.StoryProcessor
         }
 
         public string ExportState() => _story.state.ToJson();
+
+        public StoryCommands.StoryStep[] PeekConsecutiveWardrobeSteps(
+            Func<string, StoryContracts.StoryChoice[], StoryCommands.StoryStepResult> parseStep,
+            int maximum = 3)
+        {
+            if (parseStep == null || maximum <= 0 || _story.currentChoices.Count == 0)
+                return Array.Empty<StoryCommands.StoryStep>();
+
+            var preview = new Story(_ctx.StoryText);
+            preview.state.LoadJson(_story.state.ToJson());
+            var result = new List<StoryCommands.StoryStep>();
+            for (var index = 0; index < maximum && preview.currentChoices.Count > 0; index++)
+            {
+                preview.ChooseChoiceIndex(0);
+                if (!preview.canContinue)
+                    break;
+                var source = preview.Continue().Trim();
+                var choices = GetChoices(preview);
+                var parsed = parseStep(source, choices);
+                if (!parsed.IsSuccess
+                    || parsed.Step.Command is not StoryCommands.DialogueStoryCommand dialogue
+                    || dialogue.Data.Presentation
+                        != StoryContracts.DialoguePresentation.Wardrobe)
+                {
+                    break;
+                }
+                result.Add(parsed.Step);
+            }
+            return result.ToArray();
+        }
 
         public StoryReadResult ReadNext()
         {
@@ -82,8 +113,11 @@ namespace Novels.StoryProcessor
         }
 
         private StoryContracts.StoryChoice[] GetChoices()
+            => GetChoices(_story);
+
+        private static StoryContracts.StoryChoice[] GetChoices(Story story)
         {
-            var currentChoices = _story.currentChoices;
+            var currentChoices = story.currentChoices;
             var result = new StoryContracts.StoryChoice[currentChoices.Count];
 
             for (var index = 0; index < currentChoices.Count; index++)

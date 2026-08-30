@@ -27,9 +27,11 @@ namespace Novels.Save
         private StoryContracts.StoryDecision[] _initialDecisions =
             Array.Empty<StoryContracts.StoryDecision>();
         private int _initialDecisionPosition;
+        private readonly List<SaveDataCodec.WardrobeItem> _wardrobeItems = new();
         private readonly SaveWriter _writer;
 
         public bool ContainAnySave => _initialDecisions.Length > 0;
+        public bool HasUnlockedWardrobeItems => _wardrobeItems.Count > 0;
 
         public SaveSystem(Dependencies ctx)
         {
@@ -45,6 +47,7 @@ namespace Novels.Save
             _save.Clear();
             _initialDecisions = Array.Empty<StoryContracts.StoryDecision>();
             _initialDecisionPosition = 0;
+            _wardrobeItems.Clear();
             try
             {
                 var data = _ctx.ReadBytes(_ctx.SaveChoiceFileName);
@@ -59,6 +62,7 @@ namespace Novels.Save
                 }
 
                 _save = decoded.Decisions.ToList();
+                _wardrobeItems.AddRange(decoded.WardrobeItems);
             }
             catch (FileNotFoundException)
             {
@@ -130,7 +134,98 @@ namespace Novels.Save
             _writer.Enqueue(SaveDataCodec.Encode(
                 _ctx.ContentId,
                 _ctx.ContentVersion,
-                _save.ToArray()));
+                _save.ToArray(),
+                _wardrobeItems.ToArray()));
+        }
+
+        public void UnlockWardrobeItem(
+            string character,
+            byte category,
+            string value,
+            bool persist,
+            bool equip = true)
+        {
+            character = character?.Trim() ?? string.Empty;
+            value = value?.Trim() ?? string.Empty;
+            if (character.Length == 0 || value.Length == 0)
+                return;
+            var existing = _wardrobeItems.FindIndex(item =>
+                    item.Category == category
+                    && string.Equals(item.Character, character, StringComparison.OrdinalIgnoreCase)
+                    && string.Equals(item.Value, value, StringComparison.OrdinalIgnoreCase));
+            if (equip)
+            {
+                for (var index = 0; index < _wardrobeItems.Count; index++)
+                {
+                    var item = _wardrobeItems[index];
+                    if (item.Category == category
+                        && string.Equals(item.Character, character, StringComparison.OrdinalIgnoreCase)
+                        && item.Equipped)
+                    {
+                        _wardrobeItems[index] = new SaveDataCodec.WardrobeItem(
+                            item.Character, item.Category, item.Value, false);
+                    }
+                }
+            }
+            var updated = new SaveDataCodec.WardrobeItem(
+                character, category, value, equip);
+            if (existing >= 0)
+                _wardrobeItems[existing] = updated;
+            else
+                _wardrobeItems.Add(updated);
+            if (persist)
+                EnqueueCurrentSave();
+        }
+
+        public string[] GetUnlockedWardrobeItems(
+            string character,
+            byte category) =>
+            _wardrobeItems
+                .Where(item => item.Category == category
+                    && string.Equals(item.Character, character, StringComparison.OrdinalIgnoreCase))
+                .Select(item => item.Value)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(value => value, StringComparer.CurrentCultureIgnoreCase)
+                .ToArray();
+
+        public string GetEquippedWardrobeItem(
+            string character,
+            byte category) =>
+            _wardrobeItems.FirstOrDefault(item => item.Equipped
+                && item.Category == category
+                && string.Equals(item.Character, character, StringComparison.OrdinalIgnoreCase))
+                .Value ?? string.Empty;
+
+        public void RemoveUnavailableWardrobeItems(
+            string character,
+            byte category,
+            IEnumerable<string> availableValues,
+            bool persist)
+        {
+            character = character?.Trim() ?? string.Empty;
+            if (character.Length == 0)
+                return;
+            var available = new HashSet<string>(
+                availableValues ?? Array.Empty<string>(),
+                StringComparer.OrdinalIgnoreCase);
+            var removed = _wardrobeItems.RemoveAll(item =>
+                item.Category == category
+                && string.Equals(
+                    item.Character,
+                    character,
+                    StringComparison.OrdinalIgnoreCase)
+                && !available.Contains(item.Value));
+            if (removed > 0 && persist)
+                EnqueueCurrentSave();
+        }
+
+        private void EnqueueCurrentSave()
+        {
+            _writer.Enqueue(SaveDataCodec.Encode(
+                _ctx.ContentId,
+                _ctx.ContentVersion,
+                _save.ToArray(),
+                _wardrobeItems.ToArray()));
         }
 
         public void Clear()
@@ -139,6 +234,7 @@ namespace Novels.Save
             _save.Clear();
             _initialDecisions = Array.Empty<StoryContracts.StoryDecision>();
             _initialDecisionPosition = 0;
+            _wardrobeItems.Clear();
         }
 
         public UniTask FlushAsync()

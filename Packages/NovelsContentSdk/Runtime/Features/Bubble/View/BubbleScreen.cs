@@ -99,8 +99,36 @@ namespace Novels.Bubble.View
 
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
+        [SerializeField] private bool _forceLayoutRebuildAfterContentChange;
 
         private readonly List<Button> _buttonPool = new();
+        private Button _wardrobeButton;
+
+        public void ConfigureWardrobe(Action openWardrobe)
+        {
+            if (openWardrobe == null || _wardrobeButton != null)
+                return;
+            _wardrobeButton = Instantiate(_bubblesView.ButtonPrefab, _canvasGroup.transform);
+            _wardrobeButton.name = "WardrobeButton";
+            _wardrobeButton.GetComponentInChildren<Text>(true).text = "Гардероб";
+            var rect = _wardrobeButton.transform as RectTransform;
+            if (rect != null)
+            {
+                rect.anchorMin = new Vector2(1f, 1f);
+                rect.anchorMax = new Vector2(1f, 1f);
+                rect.pivot = new Vector2(1f, 1f);
+                rect.anchoredPosition = new Vector2(-24f, -24f);
+            }
+            _wardrobeButton.onClick.RemoveAllListeners();
+            _wardrobeButton.onClick.AddListener(() => openWardrobe());
+            _wardrobeButton.gameObject.SetActive(false);
+        }
+
+        public void SetWardrobeAvailable(bool available)
+        {
+            if (_wardrobeButton != null)
+                _wardrobeButton.gameObject.SetActive(available);
+        }
 
         public void ShowImmediate()
         {
@@ -178,6 +206,14 @@ namespace Novels.Bubble.View
                 _buttonPool[index].onClick.RemoveAllListeners();
                 _buttonPool[index].gameObject.SetActive(false);
             }
+
+            if (_forceLayoutRebuildAfterContentChange)
+            {
+                Canvas.ForceUpdateCanvases();
+                if (root.transform is RectTransform rootRect)
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(rootRect);
+            }
+
             BindBackground(ctx.OnBackgroundClick);
         }
 

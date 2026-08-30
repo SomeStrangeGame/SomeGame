@@ -18,6 +18,7 @@ namespace Novels
             public Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
+            internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
             internal Bundles.Entity Bundles;
             internal Catalog.NovelCatalogEntry Content;
             internal string PersistentDataPath;

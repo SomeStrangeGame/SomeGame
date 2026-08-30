@@ -8,7 +8,8 @@ namespace Novels.StoryCommands
             StoryContracts.DialoguePresentation presentation,
             StoryContracts.StoryChoiceAction choiceActions,
             string choiceConfirmationText,
-            StoryContracts.CharacterPresentation character)
+            StoryContracts.CharacterPresentation character,
+            string wardrobeTarget)
         {
             Speaker = speaker ?? string.Empty;
             Text = text ?? string.Empty;
@@ -16,6 +17,7 @@ namespace Novels.StoryCommands
             ChoiceActions = choiceActions;
             ChoiceConfirmationText = choiceConfirmationText ?? string.Empty;
             Character = character;
+            WardrobeTarget = wardrobeTarget ?? string.Empty;
         }
 
         public string Speaker { get; }
@@ -24,6 +26,7 @@ namespace Novels.StoryCommands
         public StoryContracts.StoryChoiceAction ChoiceActions { get; }
         public string ChoiceConfirmationText { get; }
         public StoryContracts.CharacterPresentation Character { get; }
+        public string WardrobeTarget { get; }
     }
 
     public sealed class BackgroundCommandData

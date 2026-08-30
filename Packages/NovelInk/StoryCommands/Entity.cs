@@ -90,7 +90,7 @@ namespace Novels.StoryCommands
                         name,
                         text,
                         StoryCommandMapper.ParsePresentation(name, arguments),
-                        StoryCommandMapper.ParseChoiceActions(arguments),
+                        StoryCommandMapper.ParseChoiceActions(name, arguments),
                         StoryCommandMapper.ParseChoiceConfirmation(name, arguments),
                         StoryCommandMapper.ParseCharacterPresentation(name, arguments)));
                 }
@@ -99,7 +99,7 @@ namespace Novels.StoryCommands
                     name,
                     text,
                     StoryContracts.DialoguePresentation.Narrator,
-                    StoryCommandMapper.ParseChoiceActions(arguments),
+                    StoryCommandMapper.ParseChoiceActions(name, arguments),
                     string.Empty,
                     StoryCommandMapper.ParseCharacterPresentation(
                         string.Empty,
@@ -125,7 +125,7 @@ namespace Novels.StoryCommands
                     name,
                     dialogueText,
                     StoryCommandMapper.ParsePresentation(name, arguments),
-                    StoryCommandMapper.ParseChoiceActions(arguments),
+                    StoryCommandMapper.ParseChoiceActions(name, arguments),
                     StoryCommandMapper.ParseChoiceConfirmation(name, arguments),
                     StoryCommandMapper.ParseCharacterPresentation(name, arguments)));
             }

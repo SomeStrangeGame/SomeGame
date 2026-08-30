@@ -33,6 +33,29 @@ namespace Novels.WardrobeContracts
         public string Text { get; }
     }
 
+    public sealed class WardrobeSequencePage
+    {
+        public WardrobeSequencePage(
+            WardrobeCategory category,
+            string title,
+            WardrobeOption[] options,
+            Func<int, UniTask<Sprite>> loadThumbnail,
+            Func<int, UniTask> preview)
+        {
+            Category = category;
+            Title = title ?? string.Empty;
+            Options = options ?? Array.Empty<WardrobeOption>();
+            LoadThumbnail = loadThumbnail ?? throw new ArgumentNullException(nameof(loadThumbnail));
+            Preview = preview ?? throw new ArgumentNullException(nameof(preview));
+        }
+
+        public WardrobeCategory Category { get; }
+        public string Title { get; }
+        public WardrobeOption[] Options { get; }
+        public Func<int, UniTask<Sprite>> LoadThumbnail { get; }
+        public Func<int, UniTask> Preview { get; }
+    }
+
     public sealed class WardrobePresentation
     {
         public WardrobePresentation(
@@ -46,7 +69,13 @@ namespace Novels.WardrobeContracts
             Func<WardrobeCategory, string, UniTask> previewCategory,
             Func<int, UniTask<Sprite>> loadThumbnail,
             Func<int, UniTask> preview,
-            Action<int> confirm)
+            Action<int> confirm,
+            bool allowCategoryBrowsing = false,
+            bool freeMode = false,
+            WardrobeSequencePage[] sequencePages = null,
+            Action<int[]> confirmSequence = null,
+            WardrobeCategory[] availableCategories = null,
+            Func<WardrobeCategory, string> getSelectedCategoryValue = null)
         {
             CharacterName = characterName ?? string.Empty;
             Category = category;
@@ -65,6 +94,12 @@ namespace Novels.WardrobeContracts
                 ?? throw new ArgumentNullException(nameof(loadThumbnail));
             Preview = preview ?? throw new ArgumentNullException(nameof(preview));
             Confirm = confirm ?? throw new ArgumentNullException(nameof(confirm));
+            AllowCategoryBrowsing = allowCategoryBrowsing;
+            FreeMode = freeMode;
+            SequencePages = sequencePages ?? Array.Empty<WardrobeSequencePage>();
+            ConfirmSequence = confirmSequence;
+            AvailableCategories = availableCategories;
+            GetSelectedCategoryValue = getSelectedCategoryValue;
         }
 
         public string Title { get; }
@@ -78,5 +113,11 @@ namespace Novels.WardrobeContracts
         public Func<int, UniTask<Sprite>> LoadThumbnail { get; }
         public Func<int, UniTask> Preview { get; }
         public Action<int> Confirm { get; }
+        public bool AllowCategoryBrowsing { get; }
+        public bool FreeMode { get; }
+        public WardrobeSequencePage[] SequencePages { get; }
+        public Action<int[]> ConfirmSequence { get; }
+        public WardrobeCategory[] AvailableCategories { get; }
+        public Func<WardrobeCategory, string> GetSelectedCategoryValue { get; }
     }
 }

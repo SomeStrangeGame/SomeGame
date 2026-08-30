@@ -20,6 +20,8 @@ namespace Novels.StoryQueue
             internal StoryProcessor.Entity Story;
             internal Func<float, UniTask> Wait;
             internal Func<string, UniTask<UnityEngine.Sprite>> LoadChooseThumbnail;
+            internal Func<StoryCommands.StoryStep[]> PeekWardrobeSteps;
+            internal StoryExecution.WardrobeSequenceState WardrobeSequence;
             internal Action<string, int> OnDialogueReady;
             internal Action<int> OnChoiceSelected;
         }
@@ -31,6 +33,7 @@ namespace Novels.StoryQueue
 
         internal StoryQueueBuilder(Dependencies dependencies)
         {
+            dependencies.WardrobeSequence ??= new StoryExecution.WardrobeSequenceState();
             _storyCommandQueueBuilder = new StoryCommandQueueBuilder(dependencies);
             _dialogueQueueBuilder = new DialogueQueueBuilder(dependencies);
         }

@@ -12,6 +12,30 @@ PrefabInstance:
       propertyPath: m_Name
       value: screen-variant
       objectReference: {fileID: 0}
+    - target: {fileID: 2630654022111875827, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
+      propertyPath: _forceLayoutRebuildAfterContentChange
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 288571441097553914, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
+      propertyPath: m_IgnoreLayout
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8363784844573292568, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
+      propertyPath: m_IgnoreLayout
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7537868155567287178, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
+      propertyPath: m_IgnoreLayout
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2532921780545384257, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
+      propertyPath: m_IgnoreLayout
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3523349230733127951, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
+      propertyPath: m_IgnoreLayout
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8316904409407908245, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
       propertyPath: m_Pivot.x
       value: 0

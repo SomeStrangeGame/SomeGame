@@ -26,7 +26,12 @@ namespace Novels.OptionSelection
             Func<int, UniTask> preview,
             Action<int> confirm,
             string header = null,
-            int activeTab = -1)
+            int activeTab = -1,
+            bool tabsInteractable = true,
+            int[] interactableTabs = null,
+            int? initialItemId = null,
+            int[] tabItemCounts = null,
+            bool previewInitialItem = false)
         {
             Title = title ?? string.Empty;
             ConfirmationText = confirmationText ?? string.Empty;
@@ -37,6 +42,11 @@ namespace Novels.OptionSelection
             Confirm = confirm ?? throw new ArgumentNullException(nameof(confirm));
             Header = header ?? string.Empty;
             ActiveTab = activeTab;
+            TabsInteractable = tabsInteractable;
+            InteractableTabs = interactableTabs;
+            InitialItemId = initialItemId;
+            TabItemCounts = tabItemCounts;
+            PreviewInitialItem = previewInitialItem;
         }
 
         public string Title { get; }
@@ -47,5 +57,10 @@ namespace Novels.OptionSelection
         public Action<int> Confirm { get; }
         public string Header { get; }
         public int ActiveTab { get; }
+        public bool TabsInteractable { get; }
+        public int[] InteractableTabs { get; }
+        public int? InitialItemId { get; }
+        public int[] TabItemCounts { get; }
+        public bool PreviewInitialItem { get; }
     }
 }

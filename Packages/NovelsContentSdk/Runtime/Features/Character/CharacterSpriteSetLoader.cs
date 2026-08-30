@@ -54,6 +54,27 @@ namespace Novels.Character
         {
             if (_trimManifestLoad != null)
                 _trimManifest = await _trimManifestLoad;
+            var wholeVariant = await LoadWholeVariant(
+                name,
+                view,
+                clothes,
+                presentation,
+                appearance);
+            if (wholeVariant != null)
+            {
+                return new CharacterSpriteSet(
+                    wholeVariant,
+                    null,
+                    null,
+                    new CharacterHairSprites(null, null),
+                    new CharacterAccessorySprites(null, null, null),
+                    Layouts(
+                        wholeVariant,
+                        null,
+                        null,
+                        default,
+                        default));
+            }
             var (mainBody, emotion, clothesSprite, hairSprites, accessorySprites) =
                 await UniTask.WhenAll(
                     LoadMainBody(name, view, presentation),
@@ -108,6 +129,66 @@ namespace Novels.Character
         }
 
         internal void EnableFullQuality() => _fullQualityAvailable = true;
+
+        private async UniTask<Sprite> LoadWholeVariant(
+            string name,
+            string view,
+            string clothes,
+            StoryContracts.CharacterPresentation presentation,
+            CharacterAppearanceState appearance)
+        {
+            if (presentation.IsChild || presentation.RemoveClothes)
+                return null;
+
+            var defaults = _profile.Defaults(name);
+            var resolvedClothes = appearance.Clothes
+                ?? (string.IsNullOrWhiteSpace(clothes) ? defaults.Clothes : clothes);
+            if (string.IsNullOrWhiteSpace(resolvedClothes))
+                return null;
+
+            if (presentation.AssetCandidates.Length > 0)
+            {
+                var (candidate, sprite) = await FindCandidate(
+                    presentation.AssetCandidates,
+                    value => GetSprite(_addresses.CharacterWholeVariant(
+                        name,
+                        view,
+                        resolvedClothes,
+                        value)));
+                if (sprite != null)
+                {
+                    appearance.Emotion = candidate;
+                    return sprite;
+                }
+
+                // A requested expression or pose must never snap a whole-character
+                // outfit back to a different authored outfit. Use this outfit's
+                // neutral whole variant when the exact combination is absent.
+                appearance.Emotion = null;
+                return await GetSprite(_addresses.CharacterWholeVariant(
+                    name,
+                    view,
+                    resolvedClothes,
+                    null));
+            }
+
+            if (!string.IsNullOrWhiteSpace(appearance.Emotion))
+            {
+                var inherited = await GetSprite(_addresses.CharacterWholeVariant(
+                    name,
+                    view,
+                    resolvedClothes,
+                    appearance.Emotion));
+                if (inherited != null)
+                    return inherited;
+            }
+
+            return await GetSprite(_addresses.CharacterWholeVariant(
+                name,
+                view,
+                resolvedClothes,
+                null));
+        }
 
         private async UniTask<bool> RequiresFallback(
             string name,

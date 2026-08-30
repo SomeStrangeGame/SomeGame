@@ -8,6 +8,18 @@ namespace Novels
 {
     internal partial class NovelRuntime
     {
+        private readonly struct EpisodeStoryData
+        {
+            internal EpisodeStoryData(string storyText, string sourceMapText)
+            {
+                StoryText = storyText;
+                SourceMapText = sourceMapText;
+            }
+
+            internal string StoryText { get; }
+            internal string SourceMapText { get; }
+        }
+
         private sealed class PreparedEpisode
         {
             internal PreparedEpisode(
@@ -17,7 +29,7 @@ namespace Novels
                 Bundles.Scope storyAssets,
                 Bundles.MediaScope storyMedia,
                 Loading.Entity mainLoading,
-                UniTask<string> episodePreloading)
+                UniTask<EpisodeStoryData> episodePreloading)
             {
                 SaveSystem = saveSystem;
                 Addresses = addresses;
@@ -38,7 +50,7 @@ namespace Novels
             internal Bundles.Scope StoryAssets { get; }
             internal Bundles.MediaScope StoryMedia { get; }
             internal Loading.Entity MainLoading { get; }
-            internal UniTask<string> EpisodePreloading { get; }
+            internal UniTask<EpisodeStoryData> EpisodePreloading { get; }
         }
 
         private async UniTask<(PreparedEpisode episode, SettingSelection selection)>
@@ -119,13 +131,48 @@ namespace Novels
             return (episode, selection);
         }
 
-        private async UniTask<string> PreloadEpisode(
+        private async UniTask<EpisodeStoryData> PreloadEpisode(
             ContentAddressing.ContentAddresses addresses,
             CancellationToken cancellationToken)
         {
-            return await _ctx.Bundles.GetText(
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+            var result = await UniTask.WhenAll(
+                _ctx.Bundles.GetText(addresses.NovelText(_definition.StoryPath))
+                    .AttachExternalCancellation(cancellationToken),
+                TryLoadStorySourceMap(addresses, cancellationToken));
+            return new EpisodeStoryData(result.Item1, result.Item2);
+#else
+            var storyText = await _ctx.Bundles.GetText(
                     addresses.NovelText(_definition.StoryPath))
                 .AttachExternalCancellation(cancellationToken);
+            return new EpisodeStoryData(storyText, string.Empty);
+#endif
         }
+
+#if UNITY_EDITOR || DEVELOPMENT_BUILD
+        private async UniTask<string> TryLoadStorySourceMap(
+            ContentAddressing.ContentAddresses addresses,
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+                return await _ctx.Bundles
+                    .GetText(addresses.NovelSourceMap(_definition.StoryPath))
+                    .AttachExternalCancellation(cancellationToken);
+            }
+            catch (System.OperationCanceledException)
+                when (cancellationToken.IsCancellationRequested)
+            {
+                throw;
+            }
+            catch (System.Exception exception)
+            {
+                _ctx.OnLog?.Invoke((
+                    LogType.Warning,
+                    $"Story source overlay is unavailable: {exception.Message}"));
+                return string.Empty;
+            }
+        }
+#endif
     }
 }

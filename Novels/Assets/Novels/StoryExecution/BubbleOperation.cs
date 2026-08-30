@@ -27,6 +27,8 @@ namespace Novels.StoryExecution
                     _request.Completed.TrySetResult();
                     return UniTask.CompletedTask;
                 }
+                if (_choices.TryApplyQueuedWardrobeChoice())
+                    return UniTask.CompletedTask;
                 _router.Present();
                 return UniTask.CompletedTask;
             }

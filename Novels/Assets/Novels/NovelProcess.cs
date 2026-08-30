@@ -35,6 +35,7 @@ namespace Novels
             internal CancellationToken CancellationToken;
 
             internal Action<Diagnostics.NovelError> OnError;
+            internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
         private readonly Dependencies _dependencies;
@@ -55,6 +56,7 @@ namespace Novels
                 await UniTask.Yield(_dependencies.CancellationToken);
 
                 var readResult = _dependencies.ReadNext();
+                _dependencies.OnStorySourceChanged?.Invoke(readResult.SourceLocation);
                 if (readResult.Status == StoryProcessor.StoryReadStatus.Completed)
                 {
                     if (_dependencies.CompleteQueue(out var finalQueue))

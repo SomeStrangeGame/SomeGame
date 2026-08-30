@@ -56,7 +56,6 @@ namespace Novels.OptionSelection
         private Text _collapseLabel;
         private Button _previous;
         private Button _next;
-        private GameObject _wardrobeBackdrop;
         private Action<int> _selectWardrobeTab;
 
         public void ConfigureLayout(OptionListLayout layout, Action<int> selectWardrobeTab = null)
@@ -79,8 +78,6 @@ namespace Novels.OptionSelection
         {
             _scroll.onValueChanged.RemoveListener(OnScrollChanged);
             _confirm.onClick.RemoveListener(Confirm);
-            if (_wardrobeBackdrop != null)
-                Destroy(_wardrobeBackdrop);
         }
 
         private void OnScrollChanged(Vector2 _) => SelectClosestCard();
@@ -96,11 +93,25 @@ namespace Novels.OptionSelection
                 _wardrobeHeader.text = DisplayName(presentation.Header);
             _confirmLabel.text = presentation.ConfirmationText;
             _confirm.interactable = presentation.Items.Length > 0;
+            UpdateWardrobeTabLabels(presentation);
             SetWardrobeTab(presentation.ActiveTab);
+            SetWardrobeTabsInteractable(
+                presentation.TabsInteractable,
+                presentation.InteractableTabs);
             if (_previous != null)
                 _previous.interactable = presentation.Items.Length > 1;
             if (_next != null)
                 _next.interactable = presentation.Items.Length > 1;
+
+            if (_wardrobeLayout)
+            {
+                if (presentation.Items.Length == 0)
+                    return;
+                SelectItem(
+                    FindInitialItemIndex(presentation),
+                    presentation.PreviewInitialItem);
+                return;
+            }
 
             var copies = presentation.Items.Length > 1 ? 3 : 1;
             for (var copy = 0; copy < copies; copy++)
@@ -113,16 +124,29 @@ namespace Novels.OptionSelection
 
             if (presentation.Items.Length == 0)
                 return;
-            _initialSlot = copies == 1 ? 0 : presentation.Items.Length;
+            var initialIndex = FindInitialItemIndex(presentation);
+            _initialSlot = copies == 1
+                ? initialIndex
+                : presentation.Items.Length + initialIndex;
             _needsCentering = true;
-            SelectItem(0);
+            SelectItem(initialIndex, false);
+        }
+
+        private static int FindInitialItemIndex(OptionListPresentation presentation)
+        {
+            if (!presentation.InitialItemId.HasValue)
+                return 0;
+            for (var index = 0; index < presentation.Items.Length; index++)
+            {
+                if (presentation.Items[index].Id == presentation.InitialItemId.Value)
+                    return index;
+            }
+            return 0;
         }
 
         public void ShowImmediate()
         {
             gameObject.SetActive(true);
-            if (_wardrobeBackdrop != null)
-                _wardrobeBackdrop.SetActive(true);
             SetWardrobeExpanded(true);
             if (_needsCentering)
             {
@@ -139,8 +163,6 @@ namespace Novels.OptionSelection
             if (_canvasGroup == null)
                 return;
             _canvasGroup.alpha = 0f;
-            if (_wardrobeBackdrop != null)
-                _wardrobeBackdrop.SetActive(false);
             gameObject.SetActive(false);
         }
 
@@ -164,7 +186,7 @@ namespace Novels.OptionSelection
             SetRect(thumbnail.rectTransform, Vector2.zero, Vector2.one,
                 new Vector2(12f, 72f), new Vector2(-12f, -12f));
 
-            card.onClick.AddListener(() => SelectItem(itemIndex));
+            card.onClick.AddListener(() => SelectItem(itemIndex, true, true));
             _cards.Add(new CardView(
                 itemIndex,
                 card.GetComponent<Image>(),
@@ -190,11 +212,19 @@ namespace Novels.OptionSelection
             }
         }
 
-        private void SelectItem(int index)
+        private void SelectItem(
+            int index,
+            bool preview = true,
+            bool forcePreview = false)
         {
-            if (_presentation == null || index < 0 || index >= _presentation.Items.Length
-                || _selectedIndex == index)
+            if (_presentation == null || index < 0 || index >= _presentation.Items.Length)
                 return;
+            if (_selectedIndex == index)
+            {
+                if (preview && forcePreview)
+                    _presentation.Preview?.Invoke(_presentation.Items[index].Id).Forget();
+                return;
+            }
             _selectedIndex = index;
             foreach (var card in _cards)
             {
@@ -204,7 +234,8 @@ namespace Novels.OptionSelection
             }
             var item = _presentation.Items[index];
             _selection.text = item.Text;
-            _presentation.Preview?.Invoke(item.Id).Forget();
+            if (preview)
+                _presentation.Preview?.Invoke(item.Id).Forget();
         }
 
         private void SelectRelative(int direction)
@@ -296,57 +327,27 @@ namespace Novels.OptionSelection
             if (_panel == null)
                 return;
 
-            BuildWardrobeBackdrop();
             var panelImage = _panel.GetComponent<Image>();
             if (panelImage != null)
                 panelImage.color = WardrobePanelColor;
-            _panel.anchoredPosition = new Vector2(0f, 330f);
-            _panel.sizeDelta = new Vector2(-48f, 620f);
+            _panel.anchoredPosition = new Vector2(0f, 220f);
+            _panel.sizeDelta = new Vector2(-48f, 440f);
 
-            _title.fontSize = 34;
-            _title.rectTransform.anchoredPosition = new Vector2(0f, -48f);
-            _title.rectTransform.sizeDelta = new Vector2(-80f, 54f);
-            SetRect(_viewport, Vector2.zero, Vector2.one,
-                new Vector2(150f, 178f), new Vector2(-150f, -190f));
+            _title.fontSize = 28;
+            _title.rectTransform.anchoredPosition = new Vector2(0f, -150f);
+            _title.rectTransform.sizeDelta = new Vector2(-160f, 48f);
+            _selection.fontSize = 40;
+            _selection.rectTransform.anchoredPosition = new Vector2(0f, 190f);
+            _selection.rectTransform.sizeDelta = new Vector2(-260f, 70f);
+            _viewport.gameObject.SetActive(false);
+            var confirmRect = _confirm.GetComponent<RectTransform>();
+            confirmRect.anchoredPosition = new Vector2(0f, 62f);
+            confirmRect.sizeDelta = new Vector2(440f, 86f);
 
             BuildWardrobeHeader();
             BuildWardrobeTabs();
             BuildWardrobeArrows();
             BuildCollapseButton();
-        }
-
-        private void BuildWardrobeBackdrop()
-        {
-            var backdrop = new GameObject(
-                "WardrobeBackdrop",
-                typeof(RectTransform),
-                typeof(Canvas),
-                typeof(CanvasScaler),
-                typeof(CanvasRenderer),
-                typeof(Image));
-            _wardrobeBackdrop = backdrop;
-            var rect = backdrop.GetComponent<RectTransform>();
-            SetRect(rect, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero);
-            var canvas = backdrop.GetComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.overrideSorting = true;
-            canvas.sortingOrder = -8;
-            var scaler = backdrop.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1080f, 1920f);
-            backdrop.GetComponent<Image>().color = new Color(0.018f, 0.055f, 0.105f, 1f);
-
-            var glow = CreateImage(
-                "WardrobeBackdropGlow",
-                backdrop.transform,
-                new Color(0.04f, 0.30f, 0.48f, 0.42f));
-            SetRect(glow.rectTransform,
-                new Vector2(0.18f, 0.18f),
-                new Vector2(0.82f, 0.92f),
-                Vector2.zero,
-                Vector2.zero);
-            glow.raycastTarget = false;
-            backdrop.SetActive(false);
         }
 
         private void BuildWardrobeHeader()
@@ -378,8 +379,8 @@ namespace Novels.OptionSelection
             var rect = bar.GetComponent<RectTransform>();
             rect.anchorMin = new Vector2(0f, 1f);
             rect.anchorMax = new Vector2(1f, 1f);
-            rect.anchoredPosition = new Vector2(0f, -120f);
-            rect.sizeDelta = new Vector2(-48f, 72f);
+            rect.anchoredPosition = new Vector2(0f, -64f);
+            rect.sizeDelta = new Vector2(-48f, 104f);
             var layout = bar.GetComponent<HorizontalLayoutGroup>();
             layout.spacing = 8f;
             layout.childControlWidth = true;
@@ -396,7 +397,7 @@ namespace Novels.OptionSelection
                     new Color(0.08f, 0.13f, 0.21f, 0.96f),
                     out var label);
                 label.text = WardrobeTabs[index];
-                label.fontSize = 24;
+                label.fontSize = 21;
                 label.raycastTarget = false;
                 SetRect(label.rectTransform, Vector2.zero, Vector2.one,
                     new Vector2(6f, 4f), new Vector2(-6f, -4f));
@@ -419,6 +420,54 @@ namespace Novels.OptionSelection
                     image.color = index == activeTab
                         ? WardrobeAccentColor
                         : new Color(0.08f, 0.13f, 0.21f, 0.96f);
+                }
+            }
+        }
+
+        private void UpdateWardrobeTabLabels(OptionListPresentation presentation)
+        {
+            if (!_wardrobeLayout || _panel == null)
+                return;
+            var tabs = _panel.Find("WardrobeTabs");
+            if (tabs == null)
+                return;
+            for (var index = 0; index < tabs.childCount; index++)
+            {
+                var label = tabs.GetChild(index).Find("Label")?.GetComponent<Text>();
+                if (label == null)
+                    continue;
+                var count = presentation.TabItemCounts != null
+                    && index < presentation.TabItemCounts.Length
+                        ? presentation.TabItemCounts[index]
+                        : index == presentation.ActiveTab
+                            ? presentation.Items.Length
+                            : -1;
+                label.text = count >= 0
+                    ? $"{WardrobeTabs[index]}\n{count}"
+                    : WardrobeTabs[index];
+            }
+        }
+
+        private void SetWardrobeTabsInteractable(
+            bool interactable,
+            int[] interactableTabs)
+        {
+            if (!_wardrobeLayout || _panel == null)
+                return;
+            var tabs = _panel.Find("WardrobeTabs");
+            if (tabs == null)
+                return;
+            for (var index = 0; index < tabs.childCount; index++)
+            {
+                var tab = tabs.GetChild(index);
+                var available = interactableTabs == null
+                    || Array.IndexOf(interactableTabs, index) >= 0;
+                tab.gameObject.SetActive(available);
+                var button = tab.GetComponent<Button>();
+                if (button != null)
+                {
+                    button.interactable = interactable
+                        && available;
                 }
             }
         }
@@ -450,8 +499,8 @@ namespace Novels.OptionSelection
         {
             var rect = button.GetComponent<RectTransform>();
             rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(x, 52f);
-            rect.sizeDelta = new Vector2(92f, 120f);
+            rect.anchoredPosition = new Vector2(x, -30f);
+            rect.sizeDelta = new Vector2(92f, 112f);
         }
 
         private void BuildCollapseButton()
@@ -465,7 +514,7 @@ namespace Novels.OptionSelection
             _collapseLabel.fontSize = 52;
             _collapseRect = button.GetComponent<RectTransform>();
             _collapseRect.anchorMin = _collapseRect.anchorMax = new Vector2(0.5f, 0f);
-            _collapseRect.anchoredPosition = new Vector2(0f, 648f);
+            _collapseRect.anchoredPosition = new Vector2(0f, 468f);
             _collapseRect.sizeDelta = new Vector2(150f, 76f);
             button.onClick.AddListener(() => SetWardrobeExpanded(_panel == null || !_panel.gameObject.activeSelf));
         }
@@ -476,7 +525,7 @@ namespace Novels.OptionSelection
                 return;
             _panel.gameObject.SetActive(expanded);
             if (_collapseRect != null)
-                _collapseRect.anchoredPosition = new Vector2(0f, expanded ? 648f : 58f);
+                _collapseRect.anchoredPosition = new Vector2(0f, expanded ? 468f : 58f);
             if (_collapseLabel != null)
                 _collapseLabel.text = expanded ? "⌄" : "⌃";
         }

@@ -89,9 +89,12 @@ namespace Novels.ContentSdk.Editor
             }
 
             // Authoring sources stay in the project for build-time analysis.
-            // Runtime needs only compiled Ink.
+            // Development runtime also needs the compiled story's source map.
             return relativePath.EndsWith(
                     ".ink.json",
+                    StringComparison.OrdinalIgnoreCase)
+                || relativePath.EndsWith(
+                    ".ink.json.source-map.json",
                     StringComparison.OrdinalIgnoreCase);
         }
 

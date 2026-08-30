@@ -61,7 +61,10 @@ namespace Novels.StoryCommands
                     presentation,
                     choiceActions,
                     choiceConfirmationText,
-                    character));
+                    character,
+                    StoryContracts.StorySpeakers.IsWardrobe(speaker, out var target)
+                        ? target
+                        : string.Empty));
         }
 
         internal static StoryCommand CreateBackground(

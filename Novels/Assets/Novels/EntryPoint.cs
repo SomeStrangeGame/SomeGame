@@ -24,6 +24,8 @@ namespace Novels
         private ApplicationRuntime _runtime;
         private Diagnostics.SmokeTelemetry _smokeTelemetry;
         private CancellationTokenSource _sessionCancellation;
+        private StorySourceOverlay _storySourceOverlay;
+
         private void OnEnable()
         {
             try
@@ -32,6 +34,8 @@ namespace Novels
                 PlayerLoopHelper.Initialize(ref playerLoop);
                 var runtimeTuning = NovelRuntimeSettings.Load();
                 Application.targetFrameRate = runtimeTuning.TargetFrameRate;
+                _storySourceOverlay = GetComponent<StorySourceOverlay>()
+                    ?? gameObject.AddComponent<StorySourceOverlay>();
                 _sessionCancellation = new CancellationTokenSource();
                 var environment = new ApplicationEnvironment(
                     _sessionCancellation.Token,
@@ -64,6 +68,7 @@ namespace Novels
                     OnLog = onLog,
                     OnError = ReportError,
                     SmokeTelemetry = _smokeTelemetry,
+                    OnStorySourceChanged = _storySourceOverlay.Show,
                 });
                 _smokeTelemetry.Emit(
                     "app.started",
@@ -166,6 +171,7 @@ namespace Novels
                 _sessionCancellation = null;
                 _runtime = null;
                 _smokeTelemetry = null;
+                _storySourceOverlay?.Show(default);
             }
         }
 

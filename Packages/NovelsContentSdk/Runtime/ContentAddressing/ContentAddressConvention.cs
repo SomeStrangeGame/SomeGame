@@ -86,6 +86,18 @@ namespace Novels.ContentAddressing
                 value => $"{CharacterRoot(prefix)}/{Canonical(name)}/{NormalizeView(view)}"
                     + $"/emotions/{CharacterAssetNameConvention.NormalizeSelector(value)}.png");
 
+        public static string CharacterWholeVariant(
+            string prefix,
+            string name,
+            string view,
+            string clothes,
+            string candidate) =>
+            IsMissing(name) || IsMissing(clothes)
+                ? string.Empty
+                : $"{CharacterRoot(prefix)}/{Canonical(name)}/{NormalizeView(view)}"
+                    + $"/whole/{CharacterAssetNameConvention.NormalizeSelector(clothes)}"
+                    + $"/{NormalizeSelector(candidate, "Main")}.png";
+
         public static string CharacterClothes(
             string prefix,
             string name,

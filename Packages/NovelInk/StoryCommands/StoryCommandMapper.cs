@@ -44,6 +44,24 @@ namespace Novels.StoryCommands
             return result;
         }
 
+        internal static StoryContracts.StoryChoiceAction ParseChoiceActions(
+            string speaker,
+            string[] arguments)
+        {
+            var result = ParseChoiceActions(arguments);
+            if (result == StoryContracts.StoryChoiceAction.None
+                && StoryContracts.StorySpeakers.IsChoose(speaker)
+                && arguments.Length > 1
+                && string.Equals(
+                    arguments[1]?.Trim(),
+                    "Надеть",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                result = StoryContracts.StoryChoiceAction.SelectAccessory;
+            }
+            return result;
+        }
+
         internal static string ParseChoiceConfirmation(string speaker, string[] arguments)
         {
             return (StoryContracts.StorySpeakers.IsWardrobe(speaker)

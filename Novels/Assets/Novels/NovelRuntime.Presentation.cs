@@ -14,6 +14,7 @@ namespace Novels
             Loading.Entity loading)
         {
             var cancellationToken = state.CancellationToken;
+            var wardrobe = CreateWardrobe(state.EpisodeScope, cancellationToken);
             return new EpisodePresentation
             {
                 Loading = loading,
@@ -24,7 +25,9 @@ namespace Novels
                 Bubble = CreateBubble(
                     state.EpisodeScope,
                     assets.Bubble,
-                    cancellationToken),
+                    cancellationToken,
+                    wardrobe.OpenFree,
+                    () => state.SaveSystem.HasUnlockedWardrobeItems),
                 Character = CreateCharacter(
                     state.EpisodeScope,
                     assets.Character,
@@ -53,7 +56,7 @@ namespace Novels
                     state.EpisodeScope,
                     assets.Notification,
                     cancellationToken),
-                Wardrobe = CreateWardrobe(state.EpisodeScope, cancellationToken),
+                Wardrobe = wardrobe,
             };
         }
 
@@ -76,12 +79,16 @@ namespace Novels
         private Bubble.BubbleController CreateBubble(
             IBaseDisposable owner,
             GameObject bubblePrefab,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            Action openWardrobe,
+            Func<bool> canOpenWardrobe)
         {
             var bubble = new Bubble.BubbleController(new Bubble.BubbleController.Dependencies
             {
                 BubblePrefab = bubblePrefab,
                 CancellationToken = cancellationToken,
+                OpenWardrobe = openWardrobe,
+                CanOpenWardrobe = canOpenWardrobe,
             }).AddTo(owner);
             bubble.Init();
             return bubble;

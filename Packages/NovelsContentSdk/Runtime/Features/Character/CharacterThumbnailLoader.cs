@@ -30,14 +30,19 @@ namespace Novels.Character
         internal async UniTask<Sprite> Load(
             StoryContracts.StoryChoiceAction actions,
             string value,
-            string mainCharacterView)
+            string mainCharacterView,
+            string character)
         {
-            var name = _profile.MainCharacterAssetId;
+            var name = string.IsNullOrWhiteSpace(character)
+                ? _profile.MainCharacterAssetId
+                : ContentAddressing.TechnicalAssetIdConvention.Canonicalize(character);
             if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
             {
                 return await Get(_addresses.CharacterMainBody(
                     name,
-                    _profile.ViewPath(value),
+                    name == _profile.MainCharacterAssetId
+                        ? _profile.ViewPath(value)
+                        : _profile.ViewRoot,
                     null)) ?? _fallback;
             }
             if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
@@ -62,7 +67,12 @@ namespace Novels.Character
                         name, value, _profile.BackLayer))
                     ?? _fallback;
             }
-            return await Get(_addresses.CharacterMainBody(name, mainCharacterView, null))
+            return await Get(_addresses.CharacterMainBody(
+                    name,
+                    name == _profile.MainCharacterAssetId
+                        ? mainCharacterView
+                        : _profile.ViewRoot,
+                    null))
                 ?? _fallback;
         }
 

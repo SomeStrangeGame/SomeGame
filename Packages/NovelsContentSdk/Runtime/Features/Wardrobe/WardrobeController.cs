@@ -10,6 +10,12 @@ namespace Novels.Wardrobe
         private readonly OptionSelection.OptionListController _options;
         private WardrobeContracts.WardrobePresentation _presentation;
         private int _categoryVersion;
+        private Func<WardrobeContracts.WardrobePresentation> _createFreePresentation;
+        private Func<UniTask> _beforeOpenFree;
+        private Func<UniTask> _afterCloseFree;
+        private bool _freeOpen;
+        private readonly System.Collections.Generic.Dictionary<
+            WardrobeContracts.WardrobeCategory, int> _sequenceSelections = new();
 
         public WardrobeController(CancellationToken cancellationToken)
         {
@@ -29,13 +35,52 @@ namespace Novels.Wardrobe
             _presentation = presentation
                 ?? throw new System.ArgumentNullException(nameof(presentation));
             _categoryVersion++;
+            _sequenceSelections.Clear();
+            foreach (var page in presentation.SequencePages)
+            {
+                if (page.Options.Length > 0)
+                    _sequenceSelections[page.Category] = page.Options[0].Id;
+            }
             PresentStoryCategory();
+        }
+
+        public void ConfigureFree(
+            Func<WardrobeContracts.WardrobePresentation> createPresentation,
+            Func<UniTask> beforeOpen,
+            Func<UniTask> afterClose)
+        {
+            _createFreePresentation = createPresentation;
+            _beforeOpenFree = beforeOpen;
+            _afterCloseFree = afterClose;
+        }
+
+        public void OpenFree()
+        {
+            if (_createFreePresentation == null || _freeOpen)
+                return;
+            OpenFreeAsync().Forget();
+        }
+
+        private async UniTaskVoid OpenFreeAsync()
+        {
+            _freeOpen = true;
+            if (_beforeOpenFree != null)
+                await _beforeOpenFree();
+            _presentation = _createFreePresentation();
+            var version = ++_categoryVersion;
+            LoadCategory(_presentation.Category, version).Forget();
+            await Show(StoryContracts.PresentationMode.Immediate);
         }
 
         private void PresentStoryCategory()
         {
             _categoryVersion++;
             var presentation = _presentation;
+            if (presentation.SequencePages.Length > 1)
+            {
+                PresentSequencePage(presentation.SequencePages[0], true);
+                return;
+            }
             var items = new OptionSelection.OptionListItem[presentation.Options.Length];
             for (var index = 0; index < items.Length; index++)
             {
@@ -50,18 +95,38 @@ namespace Novels.Wardrobe
                 presentation.Preview,
                 presentation.Confirm,
                 presentation.CharacterName,
-                (int)presentation.Category));
+                (int)presentation.Category,
+                presentation.AllowCategoryBrowsing,
+                interactableTabs: presentation.AllowCategoryBrowsing
+                    ? GetAvailableTabIndices(presentation)
+                    : new[] { (int)presentation.Category },
+                previewInitialItem: true));
         }
 
         private void SelectCategory(int index)
         {
             if (_presentation == null
+                || !_presentation.AllowCategoryBrowsing
                 || index < 0
                 || index > (int)WardrobeContracts.WardrobeCategory.Accessory)
             {
                 return;
             }
             var category = (WardrobeContracts.WardrobeCategory)index;
+            if (!IsCategoryAvailable(category))
+                return;
+            if (_presentation.SequencePages.Length > 1)
+            {
+                foreach (var page in _presentation.SequencePages)
+                {
+                    if (page.Category == category)
+                    {
+                        PresentSequencePage(page, false);
+                        return;
+                    }
+                }
+                return;
+            }
             if (category == _presentation.Category)
             {
                 _categoryVersion++;
@@ -69,6 +134,61 @@ namespace Novels.Wardrobe
                 return;
             }
             LoadCategory(category, ++_categoryVersion).Forget();
+        }
+
+        private void PresentSequencePage(
+            WardrobeContracts.WardrobeSequencePage page,
+            bool previewInitialItem)
+        {
+            var items = new OptionSelection.OptionListItem[page.Options.Length];
+            for (var index = 0; index < items.Length; index++)
+                items[index] = new OptionSelection.OptionListItem(
+                    page.Options[index].Id,
+                    page.Options[index].Text);
+            _options.Present(new OptionSelection.OptionListPresentation(
+                page.Title,
+                _presentation.ConfirmationText,
+                items,
+                page.LoadThumbnail,
+                id =>
+                {
+                    _sequenceSelections[page.Category] = id;
+                    return page.Preview(id);
+                },
+                _ =>
+                {
+                    var selected = new int[_presentation.SequencePages.Length];
+                    for (var index = 0; index < selected.Length; index++)
+                    {
+                        var sequencePage = _presentation.SequencePages[index];
+                        selected[index] = _sequenceSelections[sequencePage.Category];
+                    }
+                    _presentation.ConfirmSequence?.Invoke(selected);
+                },
+                _presentation.CharacterName,
+                (int)page.Category,
+                true,
+                GetSequenceTabIndices(),
+                _sequenceSelections[page.Category],
+                GetSequenceTabItemCounts(),
+                previewInitialItem));
+        }
+
+        private int[] GetSequenceTabIndices()
+        {
+            var pages = _presentation.SequencePages;
+            var indices = new int[pages.Length];
+            for (var index = 0; index < pages.Length; index++)
+                indices[index] = (int)pages[index].Category;
+            return indices;
+        }
+
+        private int[] GetSequenceTabItemCounts()
+        {
+            var counts = new[] { -1, -1, -1, -1 };
+            foreach (var page in _presentation.SequencePages)
+                counts[(int)page.Category] = page.Options.Length;
+            return counts;
         }
 
         private async UniTaskVoid LoadCategory(
@@ -86,19 +206,71 @@ namespace Novels.Wardrobe
                 var items = new OptionSelection.OptionListItem[values.Length];
                 for (var index = 0; index < values.Length; index++)
                     items[index] = new OptionSelection.OptionListItem(index, values[index]);
+                int? initialItemId = null;
+                var selectedValue = source.GetSelectedCategoryValue?.Invoke(category);
+                if (!string.IsNullOrWhiteSpace(selectedValue))
+                {
+                    for (var index = 0; index < values.Length; index++)
+                    {
+                        if (string.Equals(
+                                values[index],
+                                selectedValue,
+                                StringComparison.OrdinalIgnoreCase))
+                        {
+                            initialItemId = index;
+                            break;
+                        }
+                    }
+                }
                 _options.Present(new OptionSelection.OptionListPresentation(
                     CategoryTitle(category),
                     "Применить",
                     items,
                     id => source.LoadCategoryThumbnail(category, values[id]),
                     id => source.PreviewCategory(category, values[id]),
-                    _ => PresentStoryCategory(),
+                    _ =>
+                    {
+                        if (source.FreeMode)
+                            CloseFree().Forget();
+                        else
+                            PresentStoryCategory();
+                    },
                     source.CharacterName,
-                    (int)category));
+                    (int)category,
+                    source.AllowCategoryBrowsing,
+                    GetAvailableTabIndices(source),
+                    initialItemId));
             }
             catch (OperationCanceledException)
             {
             }
+        }
+
+        private bool IsCategoryAvailable(
+            WardrobeContracts.WardrobeCategory category)
+        {
+            var categories = _presentation.AvailableCategories;
+            return categories == null || Array.IndexOf(categories, category) >= 0;
+        }
+
+        private static int[] GetAvailableTabIndices(
+            WardrobeContracts.WardrobePresentation presentation)
+        {
+            var categories = presentation.AvailableCategories;
+            if (categories == null)
+                return null;
+            var indices = new int[categories.Length];
+            for (var index = 0; index < categories.Length; index++)
+                indices[index] = (int)categories[index];
+            return indices;
+        }
+
+        private async UniTaskVoid CloseFree()
+        {
+            await Hide(StoryContracts.PresentationMode.Immediate);
+            if (_afterCloseFree != null)
+                await _afterCloseFree();
+            _freeOpen = false;
         }
 
         private static string CategoryTitle(

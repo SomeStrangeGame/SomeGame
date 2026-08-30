@@ -21,7 +21,33 @@ namespace Novels.StoryContracts
             || value == EpisodeDescription;
 
         public static bool IsWardrobe(string value) =>
-            value == Wardrobe || value == WardrobeRussian;
+            IsWardrobe(value, out _);
+
+        public static bool IsWardrobe(string value, out string target)
+        {
+            target = string.Empty;
+            if (string.Equals(value, Wardrobe, System.StringComparison.OrdinalIgnoreCase)
+                || string.Equals(value, WardrobeRussian, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            return TryGetTarget(value, Wardrobe, out target)
+                || TryGetTarget(value, WardrobeRussian, out target);
+        }
+
+        private static bool TryGetTarget(string value, string prefix, out string target)
+        {
+            target = string.Empty;
+            if (string.IsNullOrWhiteSpace(value)
+                || !value.StartsWith(prefix + " ", System.StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            target = value.Substring(prefix.Length).Trim();
+            return target.Length > 0;
+        }
 
         public static bool IsChoose(string value) =>
             value == Choose || value == ChooseRussian;

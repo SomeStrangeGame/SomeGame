@@ -1,8 +1,32 @@
 using System;
+using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 
 namespace Novels.StoryExecution
 {
+    internal sealed class WardrobeSequenceState
+    {
+        private readonly Queue<int> _pendingChoices = new();
+
+        internal void SetPending(System.Collections.Generic.IEnumerable<int> choices)
+        {
+            _pendingChoices.Clear();
+            foreach (var choice in choices)
+                _pendingChoices.Enqueue(choice);
+        }
+
+        internal bool TryTake(out int choice)
+        {
+            if (_pendingChoices.Count == 0)
+            {
+                choice = default;
+                return false;
+            }
+            choice = _pendingChoices.Dequeue();
+            return true;
+        }
+    }
+
     internal sealed class BubbleOperationRequest
     {
         internal BubbleOperationRequest(

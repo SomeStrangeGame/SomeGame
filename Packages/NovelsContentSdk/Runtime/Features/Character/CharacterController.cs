@@ -33,13 +33,30 @@ namespace Novels.Character
         private string _mainCharacterHair;
         private string _mainCharacterAccessory;
         private StoryContracts.CharacterRenderRequest _lastRenderRequest;
+        private bool _isVisible;
+        private StoryContracts.StoryCharacterPosition _visiblePosition;
+        private bool _wardrobeRestoreVisible;
+        private StoryContracts.StoryCharacterPosition _wardrobeRestorePosition;
+        private StoryContracts.CharacterRenderRequest _wardrobeRestoreRequest;
+        private string _wardrobeRestoreTarget;
         private int _wardrobePreviewVersion;
+        private string _wardrobeTarget;
+        private readonly Dictionary<string, WardrobeLook> _characterWardrobe =
+            new(StringComparer.OrdinalIgnoreCase);
+
+        private sealed class WardrobeLook
+        {
+            internal string Clothes;
+            internal string Hair;
+            internal string Accessory;
+        }
 
         public CharacterController(Dependencies ctx)
         {
             _ctx = ctx;
             _assetProfile = ctx.AssetProfile
                 ?? throw new ArgumentNullException(nameof(ctx.AssetProfile));
+            _mainCharacterView = _assetProfile.ViewRoot;
             _spriteResolver = new CharacterSpriteResolver(
                 ctx.ContentPrefix,
                 ctx.ResolveArtAddress,
@@ -90,7 +107,11 @@ namespace Novels.Character
                 _mainCharacterView,
                 _mainCharacterClothes,
                 _mainCharacterHair,
-                _mainCharacterAccessory), request);
+                _mainCharacterAccessory,
+                _wardrobeTarget,
+                TargetLook.Clothes,
+                TargetLook.Hair,
+                TargetLook.Accessory), request);
         }
 
         public async UniTask EnableFullQuality()
@@ -105,7 +126,11 @@ namespace Novels.Character
                 _mainCharacterView,
                 _mainCharacterClothes,
                 _mainCharacterHair,
-                _mainCharacterAccessory);
+                _mainCharacterAccessory,
+                _wardrobeTarget,
+                TargetLook.Clothes,
+                TargetLook.Hair,
+                TargetLook.Accessory);
             if (version == _wardrobePreviewVersion)
                 Apply(sprites, _lastRenderRequest);
         }
@@ -116,7 +141,58 @@ namespace Novels.Character
             _spriteResolver.LoadWardrobeThumbnail(
                 actions,
                 value,
-                _mainCharacterView);
+                _mainCharacterView,
+                _wardrobeTarget);
+
+        public void SetWardrobeTarget(string character)
+        {
+            _wardrobeTarget = character?.Trim() ?? string.Empty;
+        }
+
+        public void ApplyWardrobeSelection(
+            string character,
+            StoryContracts.StoryChoiceAction actions,
+            string value)
+        {
+            SetWardrobeTarget(character);
+            ApplyWardrobeChoice(actions, value);
+        }
+
+        public string GetCurrentWardrobeValue(
+            StoryContracts.StoryChoiceAction actions)
+        {
+            if (!string.IsNullOrWhiteSpace(_wardrobeTarget))
+            {
+                var look = TargetLook;
+                var defaults = _assetProfile.Defaults(_wardrobeTarget);
+                if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                    return look.Clothes ?? defaults.Clothes;
+                if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                    return look.Hair ?? defaults.Hair;
+                if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                    return look.Accessory ?? defaults.Accessory;
+                return string.Empty;
+            }
+
+            var mainDefaults = _assetProfile.Defaults(
+                _assetProfile.MainCharacterAssetId);
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
+            {
+                var prefix = $"{_assetProfile.ViewRoot}/";
+                return _mainCharacterView?.StartsWith(
+                        prefix,
+                        StringComparison.OrdinalIgnoreCase) == true
+                    ? _mainCharacterView.Substring(prefix.Length)
+                    : string.Empty;
+            }
+            if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                return _mainCharacterClothes ?? mainDefaults.Clothes;
+            if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                return _mainCharacterHair ?? mainDefaults.Hair;
+            if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                return _mainCharacterAccessory ?? mainDefaults.Accessory;
+            return string.Empty;
+        }
 
         public async UniTask<string[]> LoadWardrobeCategory(
             StoryContracts.StoryChoiceAction actions)
@@ -149,7 +225,11 @@ namespace Novels.Character
                 _mainCharacterView,
                 _mainCharacterClothes,
                 _mainCharacterHair,
-                _mainCharacterAccessory);
+                _mainCharacterAccessory,
+                _wardrobeTarget,
+                TargetLook.Clothes,
+                TargetLook.Hair,
+                TargetLook.Accessory);
             if (version == _wardrobePreviewVersion)
                 Apply(sprites, request);
         }
@@ -158,6 +238,8 @@ namespace Novels.Character
             StoryContracts.StoryCharacterPosition position,
             StoryContracts.PresentationMode mode)
         {
+            _isVisible = true;
+            _visiblePosition = position;
             if (mode == StoryContracts.PresentationMode.Animated)
                 return _screen.ShowImage(ToViewPosition(position), _ctx.CancellationToken);
             _screen.ShowImageImmediate(ToViewPosition(position));
@@ -166,10 +248,55 @@ namespace Novels.Character
 
         public UniTask Hide(StoryContracts.PresentationMode mode)
         {
+            _isVisible = false;
             if (mode == StoryContracts.PresentationMode.Animated)
                 return _screen.HideImage(_ctx.CancellationToken);
             _screen.HideImageImmediate();
             return UniTask.CompletedTask;
+        }
+
+        public async UniTask BeginWardrobePreview(string character)
+        {
+            _wardrobeRestoreVisible = _isVisible;
+            _wardrobeRestorePosition = _visiblePosition;
+            _wardrobeRestoreRequest = _lastRenderRequest;
+            _wardrobeRestoreTarget = _wardrobeTarget;
+            SetWardrobeTarget(character);
+            await SetImage(new StoryContracts.CharacterRenderRequest(
+                character,
+                StoryContracts.StorySpeakerRole.Wardrobe,
+                StoryContracts.StoryCharacterPosition.Center,
+                new StoryContracts.CharacterPresentation(
+                    false,
+                    false,
+                    false,
+                    false,
+                    string.Empty,
+                    null,
+                    StoryContracts.StoryCharacterVisibilityCommand.Unchanged,
+                    false,
+                    Array.Empty<string>())));
+            await Show(
+                StoryContracts.StoryCharacterPosition.Center,
+                StoryContracts.PresentationMode.Immediate);
+        }
+
+        public async UniTask EndWardrobePreview()
+        {
+            var restoreRequest = _wardrobeRestoreRequest;
+            SetWardrobeTarget(_wardrobeRestoreTarget);
+            if (restoreRequest != null)
+                await SetImage(restoreRequest);
+            if (_wardrobeRestoreVisible)
+            {
+                await Show(
+                    _wardrobeRestorePosition,
+                    StoryContracts.PresentationMode.Immediate);
+            }
+            else
+            {
+                await Hide(StoryContracts.PresentationMode.Immediate);
+            }
         }
 
         private static bool? ToViewPosition(StoryContracts.StoryCharacterPosition position)
@@ -186,6 +313,17 @@ namespace Novels.Character
             StoryContracts.StoryChoiceAction actions,
             string value)
         {
+            if (!string.IsNullOrWhiteSpace(_wardrobeTarget))
+            {
+                var look = TargetLook;
+                if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
+                    look.Clothes = value;
+                if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
+                    look.Hair = value;
+                if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
+                    look.Accessory = value;
+                return;
+            }
             if ((actions & StoryContracts.StoryChoiceAction.SelectAppearance) != 0)
                 SetMainCharacterView(value);
             if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
@@ -194,6 +332,20 @@ namespace Novels.Character
                 SetMainCharacterHair(value);
             if ((actions & StoryContracts.StoryChoiceAction.SelectAccessory) != 0)
                 SetMainCharacterAccessory(value);
+        }
+
+        private WardrobeLook TargetLook
+        {
+            get
+            {
+                if (string.IsNullOrWhiteSpace(_wardrobeTarget))
+                    return new WardrobeLook();
+                if (_characterWardrobe.TryGetValue(_wardrobeTarget, out var look))
+                    return look;
+                look = new WardrobeLook();
+                _characterWardrobe.Add(_wardrobeTarget, look);
+                return look;
+            }
         }
 
         private static bool TryGetWardrobeValue(

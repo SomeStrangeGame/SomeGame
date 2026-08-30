@@ -56,6 +56,14 @@ namespace Novels.ContentAddressing
             ResolveArt(ContentAddressConvention.CharacterEmotion(
                 ContentId, name, view, candidate));
 
+        public string CharacterWholeVariant(
+            string name,
+            string view,
+            string clothes,
+            string candidate) =>
+            ResolveArt(ContentAddressConvention.CharacterWholeVariant(
+                ContentId, name, view, clothes, candidate));
+
         public string CharacterClothes(string name, string candidate, int index) =>
             ResolveArt(ContentAddressConvention.CharacterClothes(
                 ContentId, name, candidate, index));
