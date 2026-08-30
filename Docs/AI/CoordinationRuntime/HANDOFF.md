@@ -6,13 +6,13 @@
 
 ## Ready for integration or validation
 
-- `android-remote-hosting`: production Android catalog/TZM/ZDM/GPL опубликованы
-  в `https://pureshechka.com/dev`; manifest-only дерево (110 файлов, 356 MiB)
-  прошло локальную SHA-256 и удалённую `rsync -acn --delete` сверки. По явному
-  подтверждению прежний `/dev` полностью заменён без server-side rollback.
-  Remote development APK (62,585,612 bytes) доступен как `Novels-remote.apk` в
-  `/DevBuilds`; HTTPS 200. Android smoke passed с `app.started`,
-  `catalog.loading`, `catalog.ready`; app force-stopped, AVD оставлен.
+- `gpl-vera-horizontal-flip`: все 9 исходных PNG Веры отражены горизонтально
+  без runtime-правок: master, две одежды, три эмоции и три цельные позы.
+  Холсты остались 1024×1536 RGBA, `.meta` и адреса не менялись; точная сверка
+  каждого результата с отражённым `HEAD`-источником passed 9/9. Визуально
+  взгляд и жесты теперь направлены внутрь кадра при правом размещении.
+  `novels-content validate gpl` и `build gpl editor` passed; LocalContent
+  обновлён. Нужен только игровой visual smoke при следующем запуске Novels.
 - `free-wardrobe-equipped-index`: свободная категория теперь открывается на
   фактически equipped значении из save, поэтому подпись compact carousel сразу
   соответствует волосам/одежде персонажа. Initial preview остаётся выключен:
