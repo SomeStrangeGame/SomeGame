@@ -1,5 +1,5 @@
 {
   "schemaVersion": 2,
   "minimumClientVersion": "0.2.0",
-  "stories": ["tzm", "zdm"]
+  "stories": ["tzm", "zdm", "gpl"]
 }
