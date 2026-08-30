@@ -25,14 +25,17 @@
   `IContentSource`; runtime не читает authoring assets напрямую.
 - Source: [MultiProjectSplitPlan.md](../architecture/MultiProjectSplitPlan.md).
 
-## ADR-004 — Whole-character variants
+## ADR-004 — Whole-character sources and deterministic runtime composition
 
-- Status: accepted; replaces layered face/hair/clothes composition.
-- Decision: production-вариант персонажа — один цельный полнофигурный sprite;
-  wardrobe/emotion выбирают один канонический address.
-- Migration: существующие layered TZM/ZDM остаются legacy-compatible до
-  интеграции one-address adapter; legacy-пути не являются разрешением создавать
-  новые модульные ассеты.
+- Status: accepted; independently generated modular parts remain forbidden.
+- Decision: production source-вариант персонажа всегда является одним цельным
+  полнофигурным sprite. Runtime вправе выбрать один канонический whole address
+  или детерминированную композицию технических слоёв, извлечённых из одного
+  согласованного набора. Для независимой смены одежды и эмоций общий слой
+  содержит голову/волосы, emotion — лицевую область, а clothes — видимую шею,
+  ворот, тело, руки, кисти, ноги и обувь.
+- Migration: whole-only и layered stories поддерживаются одним resolver;
+  независимо сгенерированные голова, тело, одежда или волосы не разрешены.
 - Source: [CharacterLayeringRules.md](../rules/CharacterLayeringRules.md).
 
 ## ADR-005 — One shared Unity resource

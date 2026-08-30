@@ -18,6 +18,18 @@
   GPL Ink и документационные контракты вошли в историю Git.
 - `git-publish` дважды подтвердил обычный push без force и совпадение local/remote
   SHA; итоговый snapshot до этой ротации — `b910242f`.
+- `android-embedded-run`: catalog/tzm/zdm Android content и Embedded development
+  APK 1,815,925,199 bytes, version 2026.08.30 (3503885), собраны; install,
+  foreground и ordered `app.started → catalog.loading → catalog.ready` прошли
+  на `Novels_Pixel_7_API_34`.
+- `agent-workflow-optimization`: добавлены `context`, changed-path `verify`,
+  `commit-plan`, `finish-check`, fingerprint cache и stale-state gates; tests
+  17/17, docs-check, шесть context types и cache/finish probes прошли.
+- `android-astc8`, Embedded runtime telemetry, catalog/wardrobe UI и
+  `character-whole-variants` интегрированы; соответствующие следующие проверки
+  остаются ручными visual/Android gates при очередном запуске.
+- Persistent editor gate отделён от process session, работает fail-closed по
+  Console/compiler errors; tooling tests 48/48 и live compile проходили.
 
 ## Сохранённые ограничения
 

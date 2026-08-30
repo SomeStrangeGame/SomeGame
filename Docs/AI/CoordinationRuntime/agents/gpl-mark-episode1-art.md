@@ -1,0 +1,35 @@
+# Agent: gpl-mark-episode1-art
+
+- Status: awaiting-user-approval
+- Task: создать и показать канонический полнофигурный мастер Марка для первого эпизода по утверждённому character-art protocol и стилю Леи.
+- Scope: `Projects/novels-gpl/Art/Mark/**`; собственные coordination records; shared `HANDOFF.md` только при завершении.
+- Expected files: прозрачный PNG нейтрального мастера Марка в станционном свитере и проверочное preview.
+- Base commit: `4bfd64af41d3`.
+- Validation: один персонаж в полный рост, чистый alpha, целые кисти/ступни, отсутствие текста/лишних предметов; визуальное сравнение со стилем Леи.
+- Result: создан `Variants/station_neutral.png` 1024×1536 RGBA; встроенная transparency дважды вернула RGB-шахматку, поэтому применён разрешённый protocol fallback через однотонный `#00FF00`, chromakey и despill. Контроль на светлой/тёмной подложке без зелёной каймы.
+- Resume: пользователь одобрил мастер командой «Продолжай»; следующий пилотный вариант — первое появление Марка с аварийным ломом.
+- Pilot result: создан `Variants/station_crowbar.png` 1024×1536 RGBA. Первая версия отклонена из-за identity drift; цельный вариант перегенерирован без наложения головы, alpha проверен на светлой/тёмной подложках, обновлены полнофигурный и лицевой contact sheets.
+- Pending: визуальное одобрение пилота; после него продолжить только сценарием необходимые варианты.
+- Resume: пользователь одобрил пилот командой «Продолжай»; следующий вариант — `station_hands_raised` после того, как Марк бросает лом.
+- Result: создан `Variants/station_hands_raised.png` 1024×1536 RGBA; обе пустые ладони и пальцы целиком, лом отсутствует, identity и alpha проверены на сравнительном и светлом/тёмном preview.
+- Pending: визуальное одобрение варианта; затем следующий сценарный selector Марка.
+- Resume: пользователь одобрил `station_hands_raised`; начата первая emotion-only вариация `station_suspicious` из нейтрального мастера.
+- Result: создан `Variants/station_suspicious.png` 1024×1536 RGBA; поза и одежда сохранены, изменено только сдержанное напряжение глаз/бровей/рта, alpha и лицо проверены на contact sheet.
+- Pending: визуальное одобрение; затем emotion-only `station_avoids_gaze`.
+- Revision: пользователь отклонил `station_suspicious` как слишком близкий к neutral; создаётся усиленный sibling `station_suspicious-v2` без перезаписи первой версии.
+- Result: создан `station_suspicious-v2.png` с читаемым прищуром, асимметрией бровей и скептическим ртом; 1024×1536 RGBA, alpha и identity проверены. Первая слабая версия сохранена до выбора пользователя.
+- Resume: пользователь одобрил v2; она назначается канонической `station_suspicious`, затем создаётся `station_avoids_gaze`.
+- Result: усиленная suspicious promoted to canonical; слабая версия вынесена из production-набора. Создан `station_avoids_gaze.png` 1024×1536 RGBA: взгляд вниз/в сторону, сжатая челюсть, скрытая тревога; identity/alpha проверены.
+- Pending: визуальное одобрение `station_avoids_gaze`; затем `station_demanding`.
+- Resume: пользователь одобрил `station_avoids_gaze`; создаётся emotion-only `station_demanding`.
+- Result: создан `station_demanding.png` 1024×1536 RGBA: прямой жёсткий взгляд, сведённые брови, рот приоткрыт на короткой команде; neutral body pose, identity и alpha проверены.
+- Pending: визуальное одобрение; затем финальная emotion-only `station_pale_fear`.
+- Resume: пользователь одобрил `station_demanding`; создаётся финальная emotion-only `station_pale_fear`.
+- Result: первая pale/fear попытка отклонена как слишком серая и паническая; цельный вариант перегенерирован. Финальный `station_pale_fear.png` 1024×1536 RGBA: умеренно расширенные глаза, едва приоткрытый рот, естественно побледневшее лицо; identity/alpha проверены.
+- Pending: визуальное одобрение; затем собрать итоговые full/face contact sheets всего набора Марка и подготовить список к Unity-import.
+- Resume: пользователь одобрил `station_pale_fear`; собираются итоговые контрольные листы всех семи production-вариантов.
+- Final result: 7 approved whole 1024×1536 RGBA variants (`neutral`, `crowbar`, `hands_raised`, `suspicious`, `avoids_gaze`, `demanding`, `pale_fear`); `mark-full-contact.png` and `mark-face-contact.png` assembled and visually checked. All sources report `hasAlpha: yes`.
+- Pending: отдельный integration scope должен перенести selectors в Unity и при необходимости добавить их в Ink. Следующий character-art scope — Vera master.
+- Extension: пользователь потребовал добавить Марку смену одежды до перехода к Вере. Сценарий требует выход к внешнему баку; создаётся цельный `polar_neutral` из канонического мастера.
+- Result: создан `Variants/polar_neutral.png` 1024×1536 RGBA — тёмная экспедиционная парка с опущенным капюшоном, утеплённые штаны, перчатки и полярные ботинки; identity, outfit contact, light/dark previews и alpha проверены. Итоговые sheets обновлены до 8 вариантов.
+- Pending: визуальное одобрение одежды; затем решить, нужны ли конкретной наружной сцене `polar` эмоция/поза, и только после этого перейти к Вере.

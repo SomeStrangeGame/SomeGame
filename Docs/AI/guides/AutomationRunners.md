@@ -84,9 +84,14 @@ Batch/Editor start при работающем Unity Hub fail-closed. Явный
 `--start-editor`, поднимает persistent MCP helper и выполняет один
 `editor-check`. Перед Console/hierarchy/compile helper bounded ждёт реального
 `editor_status=ready`, а финальный `up_to_date` из `recompile` не требует
-дополнительного status polling. Compile и filtered EditMode suite включаются флагами. Запущенные
+дополнительного status polling. При `--compile` gate не допускает ни новых, ни
+уже существовавших Console errors; для свежего Editor дополнительно проверяет
+принадлежащий этому запуску `Editor.log` на C# compiler errors. Поэтому
+`up_to_date` само по себе больше не является доказательством успешной
+компиляции. Compile и filtered EditMode suite включаются флагами. Запущенные
 runner’ом helper и Editor завершаются в cleanup; `--no-stop-editor` применяется
-только при явной необходимости оставить запущенный им Editor.
+только при явной необходимости оставить запущенный им Editor и отделяет его
+process session от lifecycle самой команды.
 
 ### `player-build`
 

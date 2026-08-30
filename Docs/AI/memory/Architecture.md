@@ -35,6 +35,9 @@ EntryPoint
 - Editor использует `Novels/Build/LocalContent`; Player использует тот же
   release-контракт через целевой content source.
 - `Choose` и `Wardrobe` — разные фичи, хотя переиспользуют option-list UI.
+- Генерация character-арта всегда начинается с цельного согласованного
+  персонажа; runtime может отрисовать образ одним PNG или комплектом игровых
+  слоёв. ТЗМ штатно использует слоёную runtime-композицию.
 
 Подробности: [ProjectOverview.md](../architecture/ProjectOverview.md),
 [MultiProjectSplitPlan.md](../architecture/MultiProjectSplitPlan.md) и
