@@ -6,12 +6,15 @@
 
 ## Ready for integration or validation
 
-- `gpl-android-emulator-smoke`: Embedded development APK 1,849,898,475 bytes
-  собран, установлен на `Novels_Pixel_7_API_34`; GPL s01e01 прошёл до line 145.
-  `episode.ready`, `dialogue.ready`, wardrobe choice passed, fallback markers
-  отсутствуют. На line 80 воспроизведён блокирующий визуальный баг fallback
-  bubble: реплика и три кнопки перекрываются. На line 132 только вкладка одежды,
-  medical/thermal preview и confirm работают. Evidence — automation logs/PNGs.
+- `fallback-bubble-android-layout`: Android overlap исправлен opt-in логикой
+  fallback bubble: дочерние тексты получают `preferredHeight` до rebuild
+  родителя; TZM/custom prefabs не менялись. Fresh Novels compile и Embedded APK
+  build/install passed. На line 80 три choices визуально идут ниже текста, на
+  line 132 single-category wardrobe работает. По просьбе пользователя прогон
+  остановлен на line 339/601; app force-stopped, AVD оставлен. Logcat без init,
+  content-preparation, null/missing-reference и fatal markers, но содержит один
+  `fallback.used` для Леи (`required_character_assets_missing`) — требует
+  адресного продолжения. Evidence и APK находятся в `Novels/Build/...`.
 - `free-wardrobe-equipped-index`: свободная категория теперь открывается на
   фактически equipped значении из save, поэтому подпись compact carousel сразу
   соответствует волосам/одежде персонажа. Initial preview остаётся выключен:

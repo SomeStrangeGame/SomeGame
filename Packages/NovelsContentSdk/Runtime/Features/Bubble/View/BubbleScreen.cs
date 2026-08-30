@@ -82,6 +82,20 @@ namespace Novels.Bubble.View
                     if (result) root = _root;
                     return result;
                 }
+
+                internal readonly void RebuildContentLayout()
+                {
+                    ResizeToPreferredHeight(_header);
+                    ResizeToPreferredHeight(_text);
+                }
+
+                private static void ResizeToPreferredHeight(Text text)
+                {
+                    var rectTransform = text.rectTransform;
+                    rectTransform.SetSizeWithCurrentAnchors(
+                        RectTransform.Axis.Vertical,
+                        text.preferredHeight);
+                }
             }
 
             [SerializeField] private GameObject _root;
@@ -210,6 +224,8 @@ namespace Novels.Bubble.View
             if (_forceLayoutRebuildAfterContentChange)
             {
                 Canvas.ForceUpdateCanvases();
+                foreach (var bubble in _bubblesView.BubblesPopUp)
+                    bubble.RebuildContentLayout();
                 if (root.transform is RectTransform rootRect)
                     LayoutRebuilder.ForceRebuildLayoutImmediate(rootRect);
             }
