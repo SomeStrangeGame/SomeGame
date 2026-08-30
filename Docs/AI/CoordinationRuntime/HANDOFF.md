@@ -6,13 +6,13 @@
 
 ## Ready for integration or validation
 
-- `gpl-lea-flashlight-outfits`: прежний `fallback.used` Леи устранён локальным
-  контентным исправлением: для термокомплекта и станционного комбинезона
-  добавлены цельные `flashlight`-варианты 1024×1536 RGBA. GPL validate/android
-  build и fresh Embedded APK passed; Android replay с выбранным термокомплектом
-  дошёл до `s01e01.ink:157`, показал корректную позу и не записал character
-  fallback/error markers. App force-stopped, AVD оставлен; evidence в
-  `Novels/Build/Logs/automation/gpl-lea-flashlight-*`.
+- `android-remote-hosting`: production Android catalog/TZM/ZDM/GPL опубликованы
+  в `https://pureshechka.com/dev`; manifest-only дерево (110 файлов, 356 MiB)
+  прошло локальную SHA-256 и удалённую `rsync -acn --delete` сверки. По явному
+  подтверждению прежний `/dev` полностью заменён без server-side rollback.
+  Remote development APK (62,585,612 bytes) доступен как `Novels-remote.apk` в
+  `/DevBuilds`; HTTPS 200. Android smoke passed с `app.started`,
+  `catalog.loading`, `catalog.ready`; app force-stopped, AVD оставлен.
 - `free-wardrobe-equipped-index`: свободная категория теперь открывается на
   фактически equipped значении из save, поэтому подпись compact carousel сразу
   соответствует волосам/одежде персонажа. Initial preview остаётся выключен:
