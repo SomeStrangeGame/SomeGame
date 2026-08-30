@@ -349,7 +349,9 @@ def run_compile(runtime: Path, project: Path, timeout: float, poll_interval: flo
     after_errors = result_value(after_console, "returned") or 0
     new_errors = max(0, int(after_errors) - int(before_errors))
     return {
-        "ok": new_errors == 0,
+        # Compilation is a gate, not a regression counter: errors that existed
+        # before the trigger still mean the project is not compilable.
+        "ok": int(after_errors) == 0,
         "trigger": trigger,
         "status": last_status,
         "polls": polls,

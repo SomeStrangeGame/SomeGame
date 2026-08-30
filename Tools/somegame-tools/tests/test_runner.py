@@ -71,6 +71,36 @@ class RunnerTests(unittest.TestCase):
         self.assertTrue(args.explain)
         self.assertIsNone(args.agent_id)
 
+    def test_editor_no_stop_uses_detached_process_session(self):
+        args = runner.parser().parse_args([
+            "editor-gate", "--agent-id", "a", "--no-stop-editor",
+        ])
+        self.assertFalse(args.stop_editor)
+        self.assertEqual(
+            {"start_new_session": True},
+            runner.editor_process_options(args.stop_editor))
+
+    def test_editor_default_keeps_managed_process_session(self):
+        args = runner.parser().parse_args(["editor-gate", "--agent-id", "a"])
+        self.assertTrue(args.stop_editor)
+        self.assertEqual(
+            {"start_new_session": False},
+            runner.editor_process_options(args.stop_editor))
+
+    def test_compiler_error_scan_detects_csharp_errors(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = Path(directory) / "Editor.log"
+            log.write_text(
+                "normal line\nAssets/Foo.cs(3,4): error CS0246: Missing type\n",
+                encoding="utf-8")
+            self.assertEqual(1, len(runner.compiler_error_lines(log)))
+
+    def test_compiler_error_scan_ignores_normal_log(self):
+        with tempfile.TemporaryDirectory() as directory:
+            log = Path(directory) / "Editor.log"
+            log.write_text("CompilationPipeline: compilation finished\n", encoding="utf-8")
+            self.assertEqual([], runner.compiler_error_lines(log))
+
 
 if __name__ == "__main__":
     unittest.main()

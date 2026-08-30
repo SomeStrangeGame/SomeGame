@@ -131,6 +131,18 @@ class HelperTests(unittest.TestCase):
         self.assertFalse(result["ok"])
         self.assertEqual(result["newConsoleErrors"], 2)
 
+    def test_compile_workflow_rejects_preexisting_errors(self):
+        responses = iter([
+            {"ok": True, "result": {"returned": 2}},
+            {"ok": True, "result": {"status": "up_to_date"}},
+            {"ok": True, "result": {"returned": 2}},
+        ])
+        result = run_compile(self.root, self.root, 1, 0.001,
+                             sender=lambda *_: next(responses), sleeper=lambda _: None)
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["newConsoleErrors"], 0)
+        self.assertEqual(result["consoleErrorsAfter"], 2)
+
     def test_compile_workflow_accepts_up_to_date_trigger_without_polling(self):
         calls = []
         responses = iter([

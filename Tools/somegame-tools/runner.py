@@ -51,6 +51,23 @@ def tail(path: Path, limit: int = 80) -> list[str]:
         return []
 
 
+COMPILER_ERROR_PATTERNS = (
+    re.compile(r"\berror\s+CS\d{4}\b", re.IGNORECASE),
+    re.compile(r"\bScripts have compiler errors\b", re.IGNORECASE),
+    re.compile(r"\bCompilation failed\b", re.IGNORECASE),
+)
+
+
+def compiler_error_lines(path: Path, limit: int = 40) -> list[str]:
+    """Return bounded compiler failures from a log owned by this gate run."""
+    try:
+        lines = path.read_text(encoding="utf-8", errors="replace").splitlines()
+    except OSError:
+        return []
+    return [line[-1000:] for line in lines
+            if any(pattern.search(line) for pattern in COMPILER_ERROR_PATTERNS)][-limit:]
+
+
 def run_logged(command: list[str], *, timeout: float, log: Path,
                env: dict[str, str] | None = None) -> dict[str, Any]:
     log.parent.mkdir(parents=True, exist_ok=True)
@@ -493,6 +510,10 @@ def wait_for(path: Path, timeout: float) -> None:
     raise WorkflowError("startup_timeout", f"Timed out waiting for {path}")
 
 
+def editor_process_options(stop_editor: bool) -> dict[str, bool]:
+    return {"start_new_session": not stop_editor}
+
+
 def editor_gate(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
     project = (ROOT / args.project).resolve(); runtime = Path(args.runtime).resolve()
@@ -506,9 +527,15 @@ def editor_gate(args: argparse.Namespace) -> dict[str, Any]:
             preflight = licensing_preflight(argparse.Namespace(recover=False, agent_id=args.agent_id, timeout=10))
             if preflight["editors"]: raise WorkflowError("editor_already_running", "--start-editor requires no live Editor")
             editor_log.parent.mkdir(parents=True, exist_ok=True)
-            stream = editor_log.open("w", encoding="utf-8")
-            editor = subprocess.Popen([str(args.unity_editor), "-projectPath", str(project), "-logFile", str(editor_log)],
-                                      cwd=ROOT, stdout=stream, stderr=subprocess.STDOUT, text=True)
+            with editor_log.open("w", encoding="utf-8") as stream:
+                editor = subprocess.Popen(
+                    [str(args.unity_editor), "-projectPath", str(project),
+                     "-logFile", str(editor_log)],
+                    cwd=ROOT,
+                    stdout=stream,
+                    stderr=subprocess.STDOUT,
+                    text=True,
+                    **editor_process_options(args.stop_editor))
         wait_for(project / "Library/Pipeline/.unity-pipeline-port", args.startup_timeout)
         helper_log.parent.mkdir(parents=True, exist_ok=True)
         helper_stream = helper_log.open("w", encoding="utf-8")
@@ -521,10 +548,13 @@ def editor_gate(args: argparse.Namespace) -> dict[str, Any]:
         if args.compile: command.append("--compile")
         if args.test_filter: command += ["--test-filter", args.test_filter, "--filter-type", args.filter_type]
         result = run_logged(command, timeout=args.timeout + 30, log=LOG_ROOT / f"editor-gate-{utc_stamp()}.log")
-        return {"ok": result["returncode"] == 0, "workflow": "editor-gate",
+        compiler_errors = compiler_error_lines(editor_log) if args.compile and editor else []
+        ok = result["returncode"] == 0 and not compiler_errors
+        return {"ok": ok, "workflow": "editor-gate",
                 "project": str(project), "startedEditor": editor is not None,
                 "closedHubPids": closed_hub if args.start_editor else [],
-                "editorLog": str(editor_log) if editor else None, "helperLog": str(helper_log), **result}
+                "editorLog": str(editor_log) if editor else None, "helperLog": str(helper_log),
+                "compilerErrors": compiler_errors, **result}
     finally:
         if daemon and daemon.poll() is None:
             daemon.terminate()
