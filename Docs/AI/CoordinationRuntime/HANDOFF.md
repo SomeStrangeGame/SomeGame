@@ -6,13 +6,13 @@
 
 ## Ready for integration or validation
 
-- `gpl-episode2-script`: добавлен `s01e02` «Четвёртое дыхание» — 427 строк,
-  1,587 слов, четыре трёхвариантных выбора и callback на решение эпизода 1.
-  Episode подключён в root Ink/definition, content version = 2; compiled Ink и
-  source map содержат `GPLs01e02`. Первый GPL validate/editor build passed.
-  Финальный retry после copy-edit заблокирован duplicate Unity Licensing IPC,
-  content-ошибок не получено. Арт pending: `нижний пост`, `буровая камера`,
-  `лаборатория керна` и новый цельный персонаж Павел; Вера покрыта текущим art.
+- `gpl-episode2-art-integration-smoke`: интегрированы три новых фона 1664×936
+  (`нижний пост`, `буровая камера`, `лаборатория керна`) и цельный Павел
+  1024×1536 RGBA в `whole/drilling/main`; baked-checkerboard draft отклонён,
+  final имеет настоящий alpha. GPL validate/editor build и import passed.
+  Trim-report и Android GPL build после одного recovery повторили licensing
+  IPC failure (`disposed IServiceProvider`, missing channel); batch остановлен,
+  lockfile удалён. После восстановления Hub нужны Android build/APK/smoke.
 - `free-wardrobe-equipped-index`: свободная категория теперь открывается на
   фактически equipped значении из save, поэтому подпись compact carousel сразу
   соответствует волосам/одежде персонажа. Initial preview остаётся выключен:

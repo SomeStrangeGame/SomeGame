@@ -43,6 +43,11 @@ MonoBehaviour:
     _hair:
     _hairColor:
     _accessory:
+  - _character: "\u041F\u0430\u0432\u0435\u043B"
+    _clothes: drilling
+    _hair:
+    _hairColor:
+    _accessory:
   _authoringRootInkGuid: af7365bbae544310b53610ad5369daf2
   _authoringChunkSizeMiB: 16
   _authoringChunks: []
