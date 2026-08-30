@@ -6,15 +6,13 @@
 
 ## Ready for integration or validation
 
-- `fallback-bubble-android-layout`: Android overlap исправлен opt-in логикой
-  fallback bubble: дочерние тексты получают `preferredHeight` до rebuild
-  родителя; TZM/custom prefabs не менялись. Fresh Novels compile и Embedded APK
-  build/install passed. На line 80 три choices визуально идут ниже текста, на
-  line 132 single-category wardrobe работает. По просьбе пользователя прогон
-  остановлен на line 339/601; app force-stopped, AVD оставлен. Logcat без init,
-  content-preparation, null/missing-reference и fatal markers, но содержит один
-  `fallback.used` для Леи (`required_character_assets_missing`) — требует
-  адресного продолжения. Evidence и APK находятся в `Novels/Build/...`.
+- `gpl-lea-flashlight-outfits`: прежний `fallback.used` Леи устранён локальным
+  контентным исправлением: для термокомплекта и станционного комбинезона
+  добавлены цельные `flashlight`-варианты 1024×1536 RGBA. GPL validate/android
+  build и fresh Embedded APK passed; Android replay с выбранным термокомплектом
+  дошёл до `s01e01.ink:157`, показал корректную позу и не записал character
+  fallback/error markers. App force-stopped, AVD оставлен; evidence в
+  `Novels/Build/Logs/automation/gpl-lea-flashlight-*`.
 - `free-wardrobe-equipped-index`: свободная категория теперь открывается на
   фактически equipped значении из save, поэтому подпись compact carousel сразу
   соответствует волосам/одежде персонажа. Initial preview остаётся выключен:
