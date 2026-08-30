@@ -72,6 +72,9 @@ def classify(paths: list[str], release_stories: list[str] | None = None) -> Veri
         if path.startswith("Docs/AI/") or path in {"AGENTS.md", "README.md"}:
             categories.add("documentation")
             continue
+        if path in {".gitignore", ".gitattributes", ".editorconfig"}:
+            categories.add("repository-config")
+            continue
         docs_only = False
         if (path.startswith("Tools/unity-mcp-helper/") or path.startswith("Tools/novels-tools/") or
                 path == "Tools/somegame" or path.startswith("Tools/somegame-tools/")):

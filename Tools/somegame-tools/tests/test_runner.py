@@ -62,6 +62,15 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(["A  owner.md"],
                          runner.unexpected_git_status(["A  owner.md"], {"owner.md"}))
 
+    def test_context_parser_defaults_to_code(self):
+        args = runner.parser().parse_args(["context"])
+        self.assertEqual("code", args.task)
+
+    def test_verify_explain_does_not_require_agent(self):
+        args = runner.parser().parse_args(["verify", "--explain", "--paths", "Docs/AI/README.md"])
+        self.assertTrue(args.explain)
+        self.assertIsNone(args.agent_id)
+
 
 if __name__ == "__main__":
     unittest.main()

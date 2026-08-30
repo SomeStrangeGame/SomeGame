@@ -5,6 +5,11 @@ JSON. Полные логи сохраняются в ignored `Novels/Build/Logs
 
 ```bash
 Tools/somegame docs-check
+Tools/somegame context --task integration
+Tools/somegame verify --explain --base-ref origin/main
+Tools/somegame verify --agent-id <lock-owner> --base-ref origin/main
+Tools/somegame commit-plan
+Tools/somegame finish-check --agent-id <lock-owner>
 Tools/somegame git-publish --agent-id <lock-owner> [--ssh-key <local-key-path>]
 Tools/somegame licensing-preflight
 Tools/somegame licensing-preflight --recover --agent-id <lock-owner> --confirm-pid <exact-pid>
@@ -16,8 +21,11 @@ Tools/somegame android-smoke --agent-id <lock-owner> --apk <path> \
   --package-id <id-from-current-apk-or-player-settings>
 ```
 
-`docs-check` и read-only `licensing-preflight` не требуют lock. Остальные
-команды fail-closed проверяют точного владельца repository write-lock.
+`docs-check`, `context`, `verify --explain`, `commit-plan` и read-only
+`licensing-preflight` не требуют lock. Write workflows fail-closed проверяют
+точного владельца repository write-lock. `verify` исполняет
+минимальный changed-path plan, сохраняет полные логи и кэширует только полный
+успех; `finish-check` ничего не закрывает и сообщает blockers до завершения.
 `git-publish` публикует только текущий `HEAD` в `origin/main`: требует правильную
 ветку, чистое дерево кроме собственных untracked coordination records, делает
 `fetch`, запрещает автоматическую интеграцию remote-ahead истории и никогда не

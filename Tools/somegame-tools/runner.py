@@ -18,6 +18,8 @@ from typing import Any, Iterable
 
 
 ROOT = Path(__file__).resolve().parents[2]
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import task_workflows as taskflow
 LOG_ROOT = ROOT / "Novels/Build/Logs/automation"
 UNITY_EDITOR = Path("/Applications/Unity/Hub/Editor/6000.3.11f1/Unity.app/Contents/MacOS/Unity")
 MCP_CLI = Path.home() / ".unity/bin/unity"
@@ -239,9 +241,10 @@ def scan_markdown(root: Path) -> list[dict[str, str]]:
 
 def docs_check(args: argparse.Namespace) -> dict[str, Any]:
     failures = scan_markdown(ROOT)
+    failures.extend(taskflow.stale_context_failures(ROOT))
     limits = {
         "coordinationCore": (ROOT / "Docs/AI/rules/ParallelRefactoringCoordination.md", 140),
-        "handoff": (ROOT / "Docs/AI/CoordinationRuntime/HANDOFF.md", 200),
+        "handoff": (ROOT / "Docs/AI/CoordinationRuntime/HANDOFF.md", 120),
         "memoryProject": (ROOT / "Docs/AI/memory/Project.md", 200),
         "memoryArchitecture": (ROOT / "Docs/AI/memory/Architecture.md", 200),
     }
@@ -270,6 +273,101 @@ def docs_check(args: argparse.Namespace) -> dict[str, Any]:
             failures.append({"source": name, "target": result["log"], "reason": "command_failed"})
     return {"ok": not failures, "workflow": "docs-check", "lineCounts": counts,
             "failures": failures[:40], "failureCount": len(failures), "logs": logs}
+
+
+def context_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    payload = taskflow.context_snapshot(ROOT, args.task, args.base_ref)
+    payload["resume"] = args.resume
+    return payload
+
+
+def commit_plan_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    return taskflow.commit_plan(ROOT)
+
+
+def verification_commands(plan: dict[str, Any], args: argparse.Namespace) -> tuple[list[tuple[str, list[str]]], list[str]]:
+    commands: list[tuple[str, list[str]]] = [("diff-check", ["git", "diff", "--check"])]
+    pending: list[str] = []
+    if plan["run_helper_tests"]:
+        commands.append(("helper-tests", [sys.executable, "-m", "unittest", "discover", "-s",
+                         "Tools/unity-mcp-helper/tests", "-v"]))
+    if plan["run_automation_tests"]:
+        commands.append(("automation-tests", [sys.executable, "-m", "unittest", "discover", "-s",
+                         "Tools/somegame-tools/tests", "-v"]))
+    for target in plan["content_targets"]:
+        commands.append((f"content-{target}", [str(ROOT / "Tools/novels-tools/novels-content"),
+                         "build", target, args.platform]))
+    if plan["editor_compile"]:
+        pending.append("editor-gate --compile")
+    if plan["editmode_tests"]:
+        pending.append("editor-gate --test-filter <affected-suite>")
+    if plan["player_build"]:
+        pending.append("player-build --target <platform> --mode <Remote|Embedded>")
+    if plan["manual_visual_gate"]:
+        pending.append("bounded manual visual gate")
+    return commands, pending
+
+
+def verify_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    paths = args.paths if args.paths is not None else taskflow.git_paths(ROOT, args.base_ref)
+    plan = taskflow.verification_plan(ROOT, paths)
+    commands, pending = verification_commands(plan, args)
+    preview = {"ok": True, "workflow": "verify", "execute": not args.explain,
+               "plan": plan, "commands": [value for _, value in commands], "pending": pending}
+    if args.explain:
+        return preview
+    require_lock(args.agent_id)
+    static_failures = []
+    if "documentation" in plan["categories"]:
+        static_failures = [*scan_markdown(ROOT), *taskflow.stale_context_failures(ROOT)]
+    if static_failures:
+        return {"ok": False, "complete": False, "workflow": "verify",
+                "failedGate": "documentation-static", "failures": static_failures[:40]}
+    fingerprint = taskflow.cache_fingerprint(ROOT, "verify", paths,
+                                             {"platform": args.platform, "plan": plan})
+    if not args.no_cache and not args.release:
+        cached = taskflow.read_cache(ROOT, fingerprint)
+        if cached:
+            return {**cached, "cached": True, "fingerprint": fingerprint}
+    logs: list[str] = []
+    for name, command in commands:
+        result = run_logged(command, timeout=args.timeout,
+                            log=LOG_ROOT / f"verify-{utc_stamp()}-{name}.log")
+        logs.append(result["log"])
+        if result["returncode"]:
+            return {"ok": False, "complete": False, "workflow": "verify", "failedGate": name,
+                    "tail": result["tail"], "logs": logs, "fingerprint": fingerprint}
+    payload = {"ok": True, "complete": not pending, "workflow": "verify", "cached": False,
+               "fingerprint": fingerprint, "executedGates": [name for name, _ in commands],
+               "pending": pending, "logs": logs}
+    if payload["complete"] and not args.no_cache and not args.release:
+        payload["cachePath"] = taskflow.write_cache(ROOT, fingerprint, payload)
+    return payload
+
+
+def finish_check(args: argparse.Namespace) -> dict[str, Any]:
+    require_lock(args.agent_id)
+    state = taskflow.runtime_state(ROOT); plan = taskflow.commit_plan(ROOT)
+    handoff = (ROOT / "Docs/AI/CoordinationRuntime/HANDOFF.md").read_text(encoding="utf-8")
+    process_probe_error: str | None = None
+    try:
+        processes = unity_processes()
+    except (OSError, subprocess.SubprocessError) as exc:
+        processes = UnityProcesses([], [], [])
+        process_probe_error = str(exc)
+    blockers: list[str] = []
+    if args.agent_id not in handoff: blockers.append("handoff_missing_agent")
+    if processes.editors: blockers.append("unity_editor_running")
+    if process_probe_error: blockers.append("process_probe_unavailable")
+    agent = ROOT / f"Docs/AI/CoordinationRuntime/agents/{args.agent_id}.md"
+    if not agent.is_file(): blockers.append("agent_record_missing")
+    elif not re.search(r"^- Status:\s*(completed|integrated)\s*$",
+                       agent.read_text(encoding="utf-8"), re.M):
+        blockers.append("agent_not_completed")
+    return {"ok": not blockers, "workflow": "finish-check", "agentId": args.agent_id,
+            "coordination": state, "blockers": blockers, "commitPlan": plan,
+            "liveEditorPids": [item["pid"] for item in processes.editors],
+            "processProbeError": process_probe_error}
 
 
 def content_gate(args: argparse.Namespace) -> dict[str, Any]:
@@ -533,6 +631,15 @@ def android_smoke(args: argparse.Namespace) -> dict[str, Any]:
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__); sub = p.add_subparsers(dest="workflow", required=True)
     docs = sub.add_parser("docs-check"); docs.add_argument("--timeout", type=float, default=120)
+    context = sub.add_parser("context"); context.add_argument("--task", choices=tuple(taskflow.TASK_ROUTES), default="code")
+    context.add_argument("--resume", action="store_true"); context.add_argument("--base-ref")
+    verify = sub.add_parser("verify"); verify.add_argument("--agent-id")
+    verify.add_argument("--base-ref"); verify.add_argument("--paths", nargs="*")
+    verify.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
+    verify.add_argument("--explain", action="store_true"); verify.add_argument("--no-cache", action="store_true")
+    verify.add_argument("--release", action="store_true"); verify.add_argument("--timeout", type=float, default=3600)
+    sub.add_parser("commit-plan")
+    finish = sub.add_parser("finish-check"); finish.add_argument("--agent-id", required=True)
     publish = sub.add_parser("git-publish"); publish.add_argument("--agent-id", required=True)
     publish.add_argument("--remote", default="origin"); publish.add_argument("--branch", default="main")
     publish.add_argument("--ssh-key"); publish.add_argument("--timeout", type=float, default=120)
@@ -571,7 +678,9 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = parser().parse_args(); started = time.monotonic()
-    handlers = {"docs-check": docs_check, "git-publish": git_publish,
+    handlers = {"docs-check": docs_check, "context": context_workflow, "verify": verify_workflow,
+                "commit-plan": commit_plan_workflow, "finish-check": finish_check,
+                "git-publish": git_publish,
                 "content-gate": content_gate, "player-build": player_build,
                 "licensing-preflight": licensing_preflight, "editor-gate": editor_gate,
                 "android-smoke": android_smoke}

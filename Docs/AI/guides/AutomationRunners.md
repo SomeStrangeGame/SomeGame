@@ -18,6 +18,32 @@ Runner не создаёт отдельный coordination contract: право 
 
 ## Команды
 
+### `context`
+
+Объединяет task-plan и chat-resume. Read-only возвращает branch/HEAD, bounded
+dirty paths, FIFO/write-lock, незавершённые work/handoff summaries, минимальный
+набор документов, changed-path plan и следующую команду:
+
+```bash
+Tools/somegame context --task <docs|code|unity|content|art|integration>
+```
+
+### `verify`
+
+`--explain` только показывает лестницу gates. Без него требуется точный lock;
+дешёвые проверки выполняются первыми, content targets — последовательно.
+Editor/Player/manual gates без точных параметров остаются явным `pending`, а не
+считаются пройденными. Полностью успешное evidence кэшируется по входам,
+tooling, Unity/package/config и platform fingerprint в ignored
+`Library/SomeGameValidationCache`; `--release` и `--no-cache` обходят кэш.
+
+### `commit-plan` и `finish-check`
+
+`commit-plan` read-only предлагает группы dirty paths и отделяет generated
+artifacts; это рекомендация, не автоматический staging. `finish-check` требует
+lock owner и fail-closed проверяет agent/handoff, commit plan и реальные Editor
+процессы. Команды не создают commit и не освобождают lock.
+
 ### `docs-check`
 
 Проверяет Markdown links/anchors, лимиты core/memory/handoff, `git diff --check`
@@ -90,7 +116,8 @@ sockets, license или caches автоматически. Обнаруженн�
 
 ## Lock policy
 
-`git-publish`, `content-gate`, `editor-gate`, `player-build`, `android-smoke` и licensing
+`verify`, `finish-check`, `git-publish`, `content-gate`, `editor-gate`,
+`player-build`, `android-smoke` и licensing
 recovery сравнивают `--agent-id` с
 `Docs/AI/CoordinationRuntime/active/write-lock/owner.md`. Несовпадение или
 отсутствие lock завершаются до запуска внешнего процесса.

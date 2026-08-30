@@ -6,6 +6,11 @@
 
 ```bash
 Tools/somegame docs-check
+Tools/somegame context --task <docs|code|unity|content|art|integration>
+Tools/somegame verify --explain --base-ref origin/main
+Tools/somegame verify --agent-id <lock-owner> --base-ref origin/main
+Tools/somegame commit-plan
+Tools/somegame finish-check --agent-id <lock-owner>
 Tools/somegame git-publish --agent-id <lock-owner> [--ssh-key <local-key-path>]
 Tools/somegame licensing-preflight
 Tools/somegame content-gate --agent-id <lock-owner> --platform editor
@@ -24,6 +29,11 @@ write/Unity/ADB/Git workflows fail-closed проверяют точного lock
 records, fetch, отказ при remote-ahead, обычный push и финальная сверка SHA.
 Ключ задаётся только локальным `--ssh-key`; pull/rebase/merge/force-push команда
 не выполняет.
+
+`context` объединяет task-plan и chat-resume в одном read-only snapshot.
+`verify` исполняет changed-path plan и кэширует только полностью успешное
+evidence; `--release` и `--no-cache` обходят кэш. `commit-plan` только предлагает
+группы, а `finish-check` fail-closed проверяет handoff, lock и Editor-процессы.
 
 ## Выбор минимальной проверки
 

@@ -20,6 +20,11 @@ class VerificationPlannerTests(unittest.TestCase):
         self.assertFalse(plan.editor_compile)
         self.assertEqual(plan.content_targets, [])
 
+    def test_repository_metadata_is_static_only(self):
+        plan = classify([".gitignore"], ["tzm", "zdm"])
+        self.assertTrue(plan.static_only)
+        self.assertEqual(plan.categories, ["repository-config"])
+
     def test_story_change_selects_only_that_story(self):
         plan = classify(["Projects/novels-tzm/Assets/Ink/tzm.ink"], ["tzm", "zdm"])
         self.assertEqual(plan.content_targets, ["tzm"])
