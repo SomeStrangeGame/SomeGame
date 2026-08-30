@@ -6,6 +6,10 @@
 
 ## Ready for integration or validation
 
+- `publish-all-main`: весь dirty tree проверен и зафиксирован в commits
+  `128c8a61`, `3be89f0a`, `7ff0f257`, `7efb92d7`; content gates и Novels compile
+  passed. Push остановлен approval-защитой до явного подтверждения remote
+  `git@github.com:SomeStrangeGame/SomeGame.git` / `origin/main`.
 - `free-wardrobe-equipped-index`: свободная категория теперь открывается на
   фактически equipped значении из save, поэтому подпись compact carousel сразу
   соответствует волосам/одежде персонажа. Initial preview остаётся выключен:
