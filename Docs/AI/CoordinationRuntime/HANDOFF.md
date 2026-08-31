@@ -6,13 +6,13 @@
 
 ## Ready for integration or validation
 
-- `gpl-episode2-art-integration-smoke`: интегрированы три новых фона 1664×936
-  (`нижний пост`, `буровая камера`, `лаборатория керна`) и цельный Павел
-  1024×1536 RGBA в `whole/drilling/main`; baked-checkerboard draft отклонён,
-  final имеет настоящий alpha. GPL validate/editor build и import passed.
-  Trim-report и Android GPL build после одного recovery повторили licensing
-  IPC failure (`disposed IServiceProvider`, missing channel); batch остановлен,
-  lockfile удалён. После восстановления Hub нужны Android build/APK/smoke.
+- `gpl-episode2-art-integration-smoke`: commit `a92ba3f0` завершил арт эпизода:
+  три фона и четыре цельных Павла (`main`, раненый, с рычагом, двойник), Ink
+  selectors, meta и full/face dark/light contact sheets. Alpha/dimensions/GUID
+  и визуальные края passed. Повторный GPL validate заблокирован Unity licensing
+  (`LicenseClient-iantonishin` channel отсутствует, headless license не найден);
+  own batch остановлен, lockfile удалён. После восстановления Hub нужны validate,
+  compiled Ink, editor/android content, Embedded APK и episode-two smoke.
 - `free-wardrobe-equipped-index`: свободная категория теперь открывается на
   фактически equipped значении из save, поэтому подпись compact carousel сразу
   соответствует волосам/одежде персонажа. Initial preview остаётся выключен:
