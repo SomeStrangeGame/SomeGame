@@ -1,0 +1,143 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &7482665438728901581
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeFont
+      value:
+      objectReference: {fileID: 12800000, guid: 0125029842d6d993020c25af5bf725f6, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeFaceIcon
+      value:
+      objectReference: {fileID: 21300000, guid: 92a94a39b38394dbcb1cd9d1a4204af4, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeHairIcon
+      value:
+      objectReference: {fileID: 21300000, guid: af36bc920af024238a33b75e1904a262, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeTabSprite
+      value:
+      objectReference: {fileID: 21300000, guid: de5090e36907347e8abafb8c09e55635, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeClothesIcon
+      value:
+      objectReference: {fileID: 21300000, guid: a81d4b1b3b614431ca93e186e0993c75, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelSprite
+      value:
+      objectReference: {fileID: 21300000, guid: 4614223ce054f438ba764a1cde3fcfe7, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeButtonSprite
+      value:
+      objectReference: {fileID: 21300000, guid: d0c52da072adbfb14a08921a18cb1cc4, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeCancelSprite
+      value:
+      objectReference: {fileID: 21300000, guid: 9aed27b55fccb473c96b45c71e0f6a48, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeHeaderSprite
+      value:
+      objectReference: {fileID: 21300000, guid: 29aa75ad7f7cb4b36d54fc4ba0742662, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelColor.a
+      value: 0.98
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelColor.b
+      value: 0.95
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelColor.g
+      value: 0.97
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelColor.r
+      value: 0.96
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeAccentColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeAccentColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeAccentColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeAccessoryIcon
+      value:
+      objectReference: {fileID: 21300000, guid: 2c8cf834ddcf54889839bde348fba1ea, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeConfirmSprite
+      value:
+      objectReference: {fileID: 21300000, guid: ef40ca74fd26b4ff4a502fce28b10b30, type: 3}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeHeaderColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeHeaderColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeHeaderColor.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeHeaderColor.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeInactiveColor.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeInactiveColor.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeInactiveColor.g
+      value: 0.84
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeInactiveColor.r
+      value: 0.72
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeReferenceLayout
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelTextColor.b
+      value: 0.12
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelTextColor.g
+      value: 0.07
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobePanelTextColor.r
+      value: 0.04
+      objectReference: {fileID: 0}
+    - target: {fileID: 5177282153090127573, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: _wardrobeCharacterArrowSprite
+      value:
+      objectReference: {fileID: 21300000, guid: 77fc92391efe2484abd95440a39a66eb, type: 3}
+    - target: {fileID: 6187852746854906500, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
+      propertyPath: m_Name
+      value: screen-variant
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: c70fbd96d8d6443329e9d10a73f0428a, type: 3}
