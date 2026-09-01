@@ -86,3 +86,7 @@ biography answers was removed; system prompt now requires direct intent-sensitiv
 answers and includes greeting/novel-hero examples. Recompile completed with no new
 errors; gate only retained the earlier Console error. Awaiting manual two-prompt
 Play check (`Привет`, `Ты героиня новеллы?`). Emulator untouched.
+
+## 2026-09-01T09:16:23Z — full-tree-publish — ready-to-publish
+
+Task: publish the complete current tree as atomic commits. Changed: six new commits cover automation/protocols, local chat startup, shared wardrobe runtime, TZM wardrobe presentation, GPL episode three and runtime handoffs. Validation: docs-check, automation tests, catalog/TZM/ZDM/GPL editor content builds and a fresh Novels compile passed; wardrobe Play Mode visual gate was completed immediately before integration. Pending / risks: no affected EditMode test assembly exists; push to `origin/main` and SHA confirmation remain. Suggested next step: `Tools/somegame git-publish --agent-id full-tree-publish`.
