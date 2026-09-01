@@ -8,6 +8,13 @@ pipeline, ручной visual smoke и правила общей Unity-очер�
 [UnityConcurrency.md](../rules/UnityConcurrency.md). Этот guide только применяет
 его к Editor/MCP и не создаёт вторую lock policy.
 
+MCP и fallback helper подчиняются базовому требованию
+[Unity Personal](ContentPipeline.md#базовый-уровень-лицензии-unity). Нельзя
+вызывать, включать или использовать для диагностики Editor-команды, окна,
+настройки, сервисы и API, требующие Unity Pro или иной платной license
+entitlement. Неизвестная license-tier зависимость останавливает операцию до
+подтверждения совместимости или выбора Personal-совместимого маршрута.
+
 ## Текущий охват
 
 На 2026-08-29 Official Unity Pipeline `0.5.0-exp.1` установлен во всех текущих
@@ -59,7 +66,7 @@ project. В обоих режимах отсутствие точного owner 
    `CoordinationRuntime/HANDOFF.md` и проверить `git status --short`.
 2. Убедиться, что target project точный и содержит `Assets`,
    `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt` и ровно один
-   выбранный MCP provider.
+   выбранный MCP provider; выбранная MCP-операция доступна на Unity Personal.
 3. Для уже открытого Editor разрешён лёгкий read-only probe без захвата lock,
    если он не меняет Unity state и не запускает новый тяжёлый процесс.
 4. Перед запуском/остановкой Editor, Play Mode, compile, tests или любой

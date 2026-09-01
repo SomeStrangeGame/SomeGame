@@ -1,6 +1,9 @@
 # Workflow memory
 
 Все команды выполняются из корня `SomeGame` под требованиями общей очереди.
+Базовый поддерживаемый license tier — Unity Personal: проект, MCP, validation и
+build не используют функции, требующие Pro или иной платной entitlement.
+Каноническое правило: [ContentPipeline.md](../guides/ContentPipeline.md#базовый-уровень-лицензии-unity).
 
 ## Единый automation runner
 

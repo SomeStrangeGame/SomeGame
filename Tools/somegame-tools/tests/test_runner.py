@@ -29,6 +29,19 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual((True, []), runner.event_sequence_ok(events, ["app.started", "episode.ready"]))
         self.assertEqual((False, ["app.started"]), runner.event_sequence_ok(events, ["episode.ready", "app.started"]))
 
+    def test_android_sdk_controller_retry_is_documented_as_benign(self):
+        diagnostic = runner.KNOWN_BENIGN_ANDROID_DIAGNOSTICS[0]
+        self.assertEqual("127.0.0.1:1970", diagnostic["endpoint"])
+        self.assertFalse(diagnostic["affectsGate"])
+        proxifier_line = (
+            "qemu-system-aarch64 - 127.0.0.1:1970 error: "
+            "Could not connect to 127.0.0.1:1970 - connection failed with error 61"
+        )
+        self.assertFalse(runner.android_log_has_blocking_marker(proxifier_line))
+
+    def test_real_android_failure_remains_blocking(self):
+        self.assertTrue(runner.android_log_has_blocking_marker("FATAL EXCEPTION: main"))
+
     def test_markdown_scan_detects_broken_target(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); docs = root / "Docs/AI"; docs.mkdir(parents=True)

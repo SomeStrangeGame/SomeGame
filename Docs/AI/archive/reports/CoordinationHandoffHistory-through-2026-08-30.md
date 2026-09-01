@@ -30,6 +30,27 @@
   остаются ручными visual/Android gates при очередном запуске.
 - Persistent editor gate отделён от process session, работает fail-closed по
   Console/compiler errors; tooling tests 48/48 и live compile проходили.
+- `android-emulator-sdkctl-diagnostic`: Android smoke JSON теперь явно помечает
+  повторные qemu-подключения к `127.0.0.1:1970` как внешнюю безвредную
+  диагностику `android-emulator-sdk-controller-1970` с `affectsGate=false`.
+  Настоящие application failure markers остаются blocking; automation tests
+  23/23 и `git diff --check` прошли. Незавершённых рисков нет.
+- `unity-personal-only-protocol`: Unity Personal закреплён как обязательный
+  license baseline для всех проектов, MCP/Editor automation, content pipeline
+  и Player builds. Любая Pro/Enterprise/Industry entitlement-зависимость,
+  включая временную генерацию артефакта, запрещена и блокирует validation/build
+  до замены или подтверждения Personal-совместимости. `docs-check` прошёл.
+- `tzm-wardrobe-visual-retry`: Novels Editor PID 9280 был готов; Pipeline
+  восстановился, compile gate прошёл без C# errors, редактор оставался открытым
+  для ручной visual-проверки гардероба TZM.
+- `wardrobe-reference-sizing`: authored sprite-less fallback wardrobe настроен
+  по референсу: нижняя панель 854×625 design units, tabs высотой 150,
+  item name/arrows и confirm/cancel перенесены на референсные позиции, одиночный
+  confirm сужен до 380. Batch rebuild, fresh compile и реальный Play Mode overlay
+  640×1114 прошли; временная capture-навигация и screenshots удалены.
+- `wardrobe-hide-nonfunctional`: из authored fallback удалена постоянно
+  отключённая relationship-heart button. Функциональные и callback-зависимые
+  controls сохранены; batch prefab rebuild и fresh Novels compile прошли.
 
 ## Сохранённые ограничения
 

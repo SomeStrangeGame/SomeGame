@@ -16,6 +16,11 @@ Runner не создаёт отдельный coordination contract: право 
 возвращает один компактный JSON. Чат ждёт завершения команды и не интерпретирует
 неизменившиеся промежуточные состояния.
 
+Ни один workflow не вправе включать или вызывать license-tier-зависимую
+функциональность Unity. Канонический Personal-only контракт и fail-closed
+трактовка неизвестной зависимости заданы в
+[ContentPipeline.md](ContentPipeline.md#базовый-уровень-лицензии-unity).
+
 ## Команды
 
 ### `context`
@@ -106,7 +111,10 @@ process session от lifecycle самой команды.
 Runner ждёт упорядоченные `[NOVELS_SMOKE]` events одного `runId`, foreground
 activity и отсутствие blocking markers. Package ID не угадывается. Screenshot,
 полный logcat и activity dump сохраняются только при failure; приложение всегда
-останавливается через `am force-stop`, AVD остаётся запущенным.
+останавливается через `am force-stop`, AVD остаётся запущенным. Повторные
+соединения самого `qemu-system-aarch64` с `127.0.0.1:1970` классифицируются в
+JSON как `android-emulator-sdk-controller-1970` с `affectsGate=false`: это
+внешняя диагностика необязательного SDK Controller, а не ошибка приложения.
 
 ### `licensing-preflight`
 
@@ -118,6 +126,8 @@ sockets, license или caches автоматически. Обнаруженн�
 попадает в evidence; его ручное удаление требует отдельного подтверждения по
 [licensing-протоколу](UnityLicensingTroubleshooting.md).
 После recovery исходную Unity-команду разрешено повторить ровно один раз.
+Recovery восстанавливает только штатный Personal-совместимый запуск и не даёт
+права активировать, запрашивать или имитировать платный entitlement.
 
 ## Lock policy
 

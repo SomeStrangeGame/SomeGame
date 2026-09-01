@@ -18,6 +18,26 @@ Tools/novels-tools/novels-content build all android
 [UnityConcurrency.md](../rules/UnityConcurrency.md); повторения этого инварианта
 ниже являются локальными safety reminders, а не отдельными правилами очереди.
 
+## Базовый уровень лицензии Unity
+
+Все Unity-проекты репозитория, content pipeline, Editor-автоматизация и Player-
+сборки обязаны полностью работать на Unity Personal. Запрещены любые исходники,
+пакеты, сервисы, Project Settings, Build Profiles, Editor API, build-флаги и
+pre/post-build шаги, чья доступность или результат зависят от Unity Pro,
+Enterprise, Industry либо другой платной license entitlement.
+
+Запрет действует и временно: нельзя включать платную функцию для импорта,
+генерации, диагностики, конвертации или получения артефакта, а затем коммитить
+только её результат. Обычная функция Unity не становится запрещённой лишь
+потому, что Editor запущен под платной лицензией; критерием является её
+доступность и одинаковая семантика на Unity Personal.
+
+Если license-tier независимость операции не подтверждена, она считается
+запрещённой до проверки или замены на Personal-совместимый путь. Отсутствующий
+entitlement нельзя обходить, маскировать fallback-ом или принимать как
+environment-only limitation. Такая зависимость блокирует validation/build и
+фиксируется как дефект проекта или tooling.
+
 `build` хранит отдельный Unity `Library` для `editor`, `android` и `ios`.
 Активная платформа использует обычный `<project>/Library`, а неактивные кэши
 лежат в игнорируемом `<project>/Build/UnityLibraryCache`. Переключение — это
