@@ -13,11 +13,15 @@ namespace Novels.OptionSelection
     public sealed class OptionListController
     {
         private readonly CancellationToken _cancellationToken;
+        private readonly OptionListScreen _screenPrefab;
         private OptionListScreen _screen;
 
-        public OptionListController(CancellationToken cancellationToken)
+        public OptionListController(
+            CancellationToken cancellationToken,
+            OptionListScreen screenPrefab = null)
         {
             _cancellationToken = cancellationToken;
+            _screenPrefab = screenPrefab;
         }
 
         public void Init(
@@ -25,7 +29,9 @@ namespace Novels.OptionSelection
             OptionListLayout layout = OptionListLayout.Default,
             System.Action<int> selectTab = null)
         {
-            var prefab = Resources.Load<OptionListScreen>("OptionListScreen");
+            var prefab = _screenPrefab != null
+                ? _screenPrefab
+                : Resources.Load<OptionListScreen>("OptionListScreen");
             if (prefab == null)
             {
                 throw new System.InvalidOperationException(

@@ -102,16 +102,18 @@ namespace Novels.Character
         {
             _wardrobePreviewVersion++;
             _lastRenderRequest = request;
+            var renderTarget = GetRenderWardrobeTarget(request);
+            var renderLook = GetWardrobeLook(renderTarget);
             Apply(await _spriteResolver.Resolve(
                 request,
                 _mainCharacterView,
                 _mainCharacterClothes,
                 _mainCharacterHair,
                 _mainCharacterAccessory,
-                _wardrobeTarget,
-                TargetLook.Clothes,
-                TargetLook.Hair,
-                TargetLook.Accessory), request);
+                renderTarget,
+                renderLook?.Clothes,
+                renderLook?.Hair,
+                renderLook?.Accessory), request);
         }
 
         public async UniTask EnableFullQuality()
@@ -121,16 +123,18 @@ namespace Novels.Character
             _spriteResolver.EnableFullQuality();
             _spriteResolver.ClearLoadedSprites();
             var version = ++_wardrobePreviewVersion;
+            var renderTarget = GetRenderWardrobeTarget(_lastRenderRequest);
+            var renderLook = GetWardrobeLook(renderTarget);
             var sprites = await _spriteResolver.Resolve(
                 _lastRenderRequest,
                 _mainCharacterView,
                 _mainCharacterClothes,
                 _mainCharacterHair,
                 _mainCharacterAccessory,
-                _wardrobeTarget,
-                TargetLook.Clothes,
-                TargetLook.Hair,
-                TargetLook.Accessory);
+                renderTarget,
+                renderLook?.Clothes,
+                renderLook?.Hair,
+                renderLook?.Accessory);
             if (version == _wardrobePreviewVersion)
                 Apply(sprites, _lastRenderRequest);
         }
@@ -159,12 +163,22 @@ namespace Novels.Character
         }
 
         public string GetCurrentWardrobeValue(
+            StoryContracts.StoryChoiceAction actions) =>
+            GetCurrentWardrobeValue(_wardrobeTarget, actions);
+
+        public string GetCurrentWardrobeValue(
+            string character,
             StoryContracts.StoryChoiceAction actions)
         {
-            if (!string.IsNullOrWhiteSpace(_wardrobeTarget))
+            character = character?.Trim() ?? string.Empty;
+            if (!string.IsNullOrWhiteSpace(character))
             {
-                var look = TargetLook;
-                var defaults = _assetProfile.Defaults(_wardrobeTarget);
+                if (!_characterWardrobe.TryGetValue(character, out var look))
+                {
+                    look = new WardrobeLook();
+                    _characterWardrobe[character] = look;
+                }
+                var defaults = _assetProfile.Defaults(character);
                 if ((actions & StoryContracts.StoryChoiceAction.SelectClothes) != 0)
                     return look.Clothes ?? defaults.Clothes;
                 if ((actions & StoryContracts.StoryChoiceAction.SelectHair) != 0)
@@ -201,9 +215,17 @@ namespace Novels.Character
             if (manifest == null)
                 return Array.Empty<string>();
             var values = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var character = string.IsNullOrWhiteSpace(_wardrobeTarget)
+                ? _assetProfile.MainCharacterAssetId
+                : ContentAddressing.TechnicalAssetIdConvention.Canonicalize(
+                    _wardrobeTarget);
             foreach (var entry in manifest.Entries)
             {
-                if (TryGetWardrobeValue(entry.AssetAddress, actions, out var value))
+                if (TryGetWardrobeValue(
+                        entry.AssetAddress,
+                        character,
+                        actions,
+                        out var value))
                     values.Add(value);
             }
             return values.OrderBy(value => value, StringComparer.CurrentCultureIgnoreCase)
@@ -220,16 +242,18 @@ namespace Novels.Character
                 return;
 
             var version = ++_wardrobePreviewVersion;
+            var renderTarget = GetRenderWardrobeTarget(request);
+            var renderLook = GetWardrobeLook(renderTarget);
             var sprites = await _spriteResolver.Resolve(
                 request,
                 _mainCharacterView,
                 _mainCharacterClothes,
                 _mainCharacterHair,
                 _mainCharacterAccessory,
-                _wardrobeTarget,
-                TargetLook.Clothes,
-                TargetLook.Hair,
-                TargetLook.Accessory);
+                renderTarget,
+                renderLook?.Clothes,
+                renderLook?.Hair,
+                renderLook?.Accessory);
             if (version == _wardrobePreviewVersion)
                 Apply(sprites, request);
         }
@@ -261,6 +285,11 @@ namespace Novels.Character
             _wardrobeRestorePosition = _visiblePosition;
             _wardrobeRestoreRequest = _lastRenderRequest;
             _wardrobeRestoreTarget = _wardrobeTarget;
+            await SwitchWardrobePreview(character);
+        }
+
+        public async UniTask SwitchWardrobePreview(string character)
+        {
             SetWardrobeTarget(character);
             await SetImage(new StoryContracts.CharacterRenderRequest(
                 character,
@@ -348,16 +377,40 @@ namespace Novels.Character
             }
         }
 
+        private string GetRenderWardrobeTarget(
+            StoryContracts.CharacterRenderRequest request)
+        {
+            if (request?.Role == StoryContracts.StorySpeakerRole.Wardrobe)
+                return _wardrobeTarget;
+            if (request?.Role == StoryContracts.StorySpeakerRole.MainCharacter
+                || string.IsNullOrWhiteSpace(request?.Name)
+                || !_characterWardrobe.ContainsKey(request.Name))
+            {
+                return string.Empty;
+            }
+            return request.Name;
+        }
+
+        private WardrobeLook GetWardrobeLook(string character)
+        {
+            if (string.IsNullOrWhiteSpace(character))
+                return null;
+            return _characterWardrobe.TryGetValue(character, out var look)
+                ? look
+                : null;
+        }
+
         private static bool TryGetWardrobeValue(
             string address,
+            string character,
             StoryContracts.StoryChoiceAction actions,
             out string value)
         {
             value = string.Empty;
             if (string.IsNullOrWhiteSpace(address))
                 return false;
-            const string marker = "/maincharacter/";
             var normalized = address.Replace('\\', '/');
+            var marker = $"/{character}/";
             var markerIndex = normalized.IndexOf(marker, StringComparison.OrdinalIgnoreCase);
             if (markerIndex < 0)
                 return false;

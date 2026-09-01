@@ -188,6 +188,13 @@ namespace Novels.Save
                 .OrderBy(value => value, StringComparer.CurrentCultureIgnoreCase)
                 .ToArray();
 
+        public string[] GetWardrobeCharacters() =>
+            _wardrobeItems
+                .Select(item => item.Character)
+                .Where(character => !string.IsNullOrWhiteSpace(character))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
         public string GetEquippedWardrobeItem(
             string character,
             byte category) =>
@@ -227,6 +234,8 @@ namespace Novels.Save
                 _save.ToArray(),
                 _wardrobeItems.ToArray()));
         }
+
+        public void PersistWardrobe() => EnqueueCurrentSave();
 
         public void Clear()
         {

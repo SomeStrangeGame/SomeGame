@@ -12,12 +12,14 @@ namespace Novels
             GameObject bubble,
             GameObject location,
             GameObject character,
+            GameObject wardrobe,
             GameObject notification)
         {
             Loading = loading;
             Bubble = bubble;
             Location = location;
             Character = character;
+            Wardrobe = wardrobe;
             Notification = notification;
         }
 
@@ -25,6 +27,7 @@ namespace Novels
         internal GameObject Bubble { get; }
         internal GameObject Location { get; }
         internal GameObject Character { get; }
+        internal GameObject Wardrobe { get; }
         internal GameObject Notification { get; }
     }
 
@@ -60,7 +63,7 @@ namespace Novels
         internal async UniTask<EpisodeAssetSet> Load()
         {
             var assetName = ContentAddressing.ContentAssetNames.EpisodeScreen;
-            var (loading, bubble, location, character, notification) =
+            var (loading, bubble, location, character, wardrobe, notification) =
                 await UniTask.WhenAll(
                     LoadPrefab(
                         _ctx.Addresses.LoadingPrefab(assetName),
@@ -75,6 +78,9 @@ namespace Novels
                         _ctx.Addresses.CharacterPrefab(assetName),
                         _ctx.Fallbacks.CharacterScreen),
                     LoadPrefab(
+                        _ctx.Addresses.WardrobePrefab(assetName),
+                        null),
+                    LoadPrefab(
                         _ctx.Addresses.NotificationPrefab(assetName),
                         _ctx.Fallbacks.Notification));
             return new EpisodeAssetSet(
@@ -82,6 +88,7 @@ namespace Novels
                 bubble,
                 location,
                 character,
+                wardrobe,
                 notification);
         }
 

@@ -30,10 +30,10 @@ namespace Novels.OptionSelection
 
         private static readonly Color CardColor = new(0.24f, 0.27f, 0.32f, 0.96f);
         private static readonly Color SelectedColor = new(0.20f, 0.55f, 0.78f, 1f);
-        private static readonly Color WardrobePanelColor = new(0.035f, 0.065f, 0.12f, 0.97f);
-        private static readonly Color WardrobeAccentColor = new(0.12f, 0.52f, 0.92f, 1f);
         private static readonly string[] WardrobeTabs =
             { "Лицо", "Волосы", "Одежда", "Аксессуары" };
+        private static readonly string[] WardrobeTabIcons =
+            { "◉", "≋", "♙", "◇" };
 
         private readonly List<CardView> _cards = new();
         [SerializeField] private CanvasGroup _canvasGroup;
@@ -44,18 +44,37 @@ namespace Novels.OptionSelection
         [SerializeField] private Text _selection;
         [SerializeField] private Button _confirm;
         [SerializeField] private Text _confirmLabel;
+        [Header("Authored wardrobe fallback")]
+        [SerializeField] private GameObject _wardrobeRoot;
+        [SerializeField] private RectTransform _wardrobePanel;
+        [SerializeField] private Text _wardrobeTitle;
+        [SerializeField] private Text _wardrobeSelection;
+        [SerializeField] private Button _wardrobeConfirm;
+        [SerializeField] private Text _wardrobeConfirmLabel;
+        [SerializeField] private Text _wardrobeHeader;
+        [SerializeField] private Button[] _wardrobeTabs;
+        [SerializeField] private Text[] _wardrobeTabLabels;
+        [SerializeField] private Button _previous;
+        [SerializeField] private Button _next;
+        [SerializeField] private Button _previousCharacter;
+        [SerializeField] private Button _nextCharacter;
+        [SerializeField] private Button _cancel;
+        [SerializeField] private Button _collapse;
+        [SerializeField] private RectTransform _collapseRect;
+        [SerializeField] private Text _collapseLabel;
+        [SerializeField] private Button _wardrobeMode;
+        [SerializeField] private Color _wardrobeAccentColor =
+            new(0.04f, 0.58f, 0.92f, 1f);
+        [SerializeField] private Color _wardrobeInactiveColor =
+            new(0.02f, 0.28f, 0.65f, 1f);
         private OptionListPresentation _presentation;
         private int _selectedIndex = -1;
         private int _presentationVersion;
         private int _initialSlot;
         private bool _needsCentering;
         private bool _wardrobeLayout;
-        private RectTransform _panel;
-        private RectTransform _collapseRect;
-        private Text _wardrobeHeader;
-        private Text _collapseLabel;
-        private Button _previous;
-        private Button _next;
+        private GameObject _defaultPanel;
+        private UnityEngine.Events.UnityAction[] _wardrobeTabActions;
         private Action<int> _selectWardrobeTab;
 
         public void ConfigureLayout(OptionListLayout layout, Action<int> selectWardrobeTab = null)
@@ -64,7 +83,7 @@ namespace Novels.OptionSelection
                 return;
             _wardrobeLayout = true;
             _selectWardrobeTab = selectWardrobeTab;
-            BuildWardrobeLayout();
+            BindWardrobeLayout();
         }
 
         private void Awake()
@@ -78,6 +97,7 @@ namespace Novels.OptionSelection
         {
             _scroll.onValueChanged.RemoveListener(OnScrollChanged);
             _confirm.onClick.RemoveListener(Confirm);
+            UnbindWardrobeLayout();
         }
 
         private void OnScrollChanged(Vector2 _) => SelectClosestCard();
@@ -88,11 +108,11 @@ namespace Novels.OptionSelection
                 ?? throw new ArgumentNullException(nameof(presentation));
             _presentationVersion++;
             ClearCards();
-            _title.text = presentation.Title;
+            ActiveTitle.text = presentation.Title;
             if (_wardrobeHeader != null)
                 _wardrobeHeader.text = DisplayName(presentation.Header);
-            _confirmLabel.text = presentation.ConfirmationText;
-            _confirm.interactable = presentation.Items.Length > 0;
+            ActiveConfirmLabel.text = presentation.ConfirmationText;
+            ActiveConfirm.interactable = presentation.Items.Length > 0;
             UpdateWardrobeTabLabels(presentation);
             SetWardrobeTab(presentation.ActiveTab);
             SetWardrobeTabsInteractable(
@@ -102,6 +122,7 @@ namespace Novels.OptionSelection
                 _previous.interactable = presentation.Items.Length > 1;
             if (_next != null)
                 _next.interactable = presentation.Items.Length > 1;
+            UpdateWardrobeActions(presentation);
 
             if (_wardrobeLayout)
             {
@@ -233,7 +254,7 @@ namespace Novels.OptionSelection
                     : CardColor;
             }
             var item = _presentation.Items[index];
-            _selection.text = item.Text;
+            ActiveSelection.text = item.Text;
             if (preview)
                 _presentation.Preview?.Invoke(item.Id).Forget();
         }
@@ -254,7 +275,7 @@ namespace Novels.OptionSelection
             if (_presentation == null || _selectedIndex < 0
                 || _selectedIndex >= _presentation.Items.Length)
                 return;
-            _confirm.interactable = false;
+            ActiveConfirm.interactable = false;
             _presentation.Confirm(_presentation.Items[_selectedIndex].Id);
         }
 
@@ -321,119 +342,101 @@ namespace Novels.OptionSelection
             ShiftContent(-bounds.center.x);
         }
 
-        private void BuildWardrobeLayout()
+        private Text ActiveTitle => _wardrobeLayout ? _wardrobeTitle : _title;
+        private Text ActiveSelection => _wardrobeLayout ? _wardrobeSelection : _selection;
+        private Button ActiveConfirm => _wardrobeLayout ? _wardrobeConfirm : _confirm;
+        private Text ActiveConfirmLabel => _wardrobeLayout ? _wardrobeConfirmLabel : _confirmLabel;
+
+        private void BindWardrobeLayout()
         {
-            _panel = _title.transform.parent as RectTransform;
-            if (_panel == null)
-                return;
+            ValidateWardrobeLayout();
+            _defaultPanel = _title.transform.parent.gameObject;
+            _defaultPanel.SetActive(false);
+            _wardrobeRoot.SetActive(true);
 
-            var panelImage = _panel.GetComponent<Image>();
-            if (panelImage != null)
-                panelImage.color = WardrobePanelColor;
-            _panel.anchoredPosition = new Vector2(0f, 220f);
-            _panel.sizeDelta = new Vector2(-48f, 440f);
+            _wardrobeConfirm.onClick.AddListener(Confirm);
+            _previous.onClick.AddListener(SelectPrevious);
+            _next.onClick.AddListener(SelectNext);
+            _previousCharacter.onClick.AddListener(SelectPreviousCharacter);
+            _nextCharacter.onClick.AddListener(SelectNextCharacter);
+            _cancel.onClick.AddListener(CancelWardrobe);
+            _collapse.onClick.AddListener(ToggleWardrobePanel);
+            _wardrobeMode.onClick.AddListener(ToggleWardrobePanel);
 
-            _title.fontSize = 28;
-            _title.rectTransform.anchoredPosition = new Vector2(0f, -150f);
-            _title.rectTransform.sizeDelta = new Vector2(-160f, 48f);
-            _selection.fontSize = 40;
-            _selection.rectTransform.anchoredPosition = new Vector2(0f, 190f);
-            _selection.rectTransform.sizeDelta = new Vector2(-260f, 70f);
-            _viewport.gameObject.SetActive(false);
-            var confirmRect = _confirm.GetComponent<RectTransform>();
-            confirmRect.anchoredPosition = new Vector2(0f, 62f);
-            confirmRect.sizeDelta = new Vector2(440f, 86f);
-
-            BuildWardrobeHeader();
-            BuildWardrobeTabs();
-            BuildWardrobeArrows();
-            BuildCollapseButton();
-        }
-
-        private void BuildWardrobeHeader()
-        {
-            var image = CreateImage(
-                "WardrobeHeader",
-                transform,
-                new Color(0.035f, 0.075f, 0.14f, 0.96f));
-            var rect = image.rectTransform;
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 1f);
-            rect.anchoredPosition = new Vector2(0f, -92f);
-            rect.sizeDelta = new Vector2(620f, 92f);
-            _wardrobeHeader = CreateText(
-                "CharacterName",
-                image.transform,
-                42,
-                TextAnchor.MiddleCenter);
-            SetRect(_wardrobeHeader.rectTransform, Vector2.zero, Vector2.one,
-                new Vector2(24f, 8f), new Vector2(-24f, -8f));
-        }
-
-        private void BuildWardrobeTabs()
-        {
-            var bar = new GameObject(
-                "WardrobeTabs",
-                typeof(RectTransform),
-                typeof(HorizontalLayoutGroup));
-            bar.transform.SetParent(_panel, false);
-            var rect = bar.GetComponent<RectTransform>();
-            rect.anchorMin = new Vector2(0f, 1f);
-            rect.anchorMax = new Vector2(1f, 1f);
-            rect.anchoredPosition = new Vector2(0f, -64f);
-            rect.sizeDelta = new Vector2(-48f, 104f);
-            var layout = bar.GetComponent<HorizontalLayoutGroup>();
-            layout.spacing = 8f;
-            layout.childControlWidth = true;
-            layout.childControlHeight = true;
-            layout.childForceExpandWidth = true;
-            layout.childForceExpandHeight = true;
-
-            for (var index = 0; index < WardrobeTabs.Length; index++)
+            _wardrobeTabActions = new UnityEngine.Events.UnityAction[_wardrobeTabs.Length];
+            for (var index = 0; index < _wardrobeTabs.Length; index++)
             {
                 var tabIndex = index;
-                var button = CreateButton(
-                    $"WardrobeTab_{index}",
-                    bar.transform,
-                    new Color(0.08f, 0.13f, 0.21f, 0.96f),
-                    out var label);
-                label.text = WardrobeTabs[index];
-                label.fontSize = 21;
-                label.raycastTarget = false;
-                SetRect(label.rectTransform, Vector2.zero, Vector2.one,
-                    new Vector2(6f, 4f), new Vector2(-6f, -4f));
-                button.onClick.AddListener(() => _selectWardrobeTab?.Invoke(tabIndex));
+                _wardrobeTabActions[index] = () => _selectWardrobeTab?.Invoke(tabIndex);
+                _wardrobeTabs[index].onClick.AddListener(_wardrobeTabActions[index]);
             }
         }
 
+        private void UnbindWardrobeLayout()
+        {
+            if (!_wardrobeLayout || _wardrobeRoot == null)
+                return;
+            _wardrobeConfirm.onClick.RemoveListener(Confirm);
+            _previous.onClick.RemoveListener(SelectPrevious);
+            _next.onClick.RemoveListener(SelectNext);
+            _previousCharacter.onClick.RemoveListener(SelectPreviousCharacter);
+            _nextCharacter.onClick.RemoveListener(SelectNextCharacter);
+            _cancel.onClick.RemoveListener(CancelWardrobe);
+            _collapse.onClick.RemoveListener(ToggleWardrobePanel);
+            _wardrobeMode.onClick.RemoveListener(ToggleWardrobePanel);
+            if (_wardrobeTabActions == null)
+                return;
+            for (var index = 0; index < _wardrobeTabActions.Length; index++)
+                _wardrobeTabs[index].onClick.RemoveListener(_wardrobeTabActions[index]);
+        }
+
+        private void ValidateWardrobeLayout()
+        {
+            if (_wardrobeRoot == null || _wardrobePanel == null
+                || _wardrobeTitle == null || _wardrobeSelection == null
+                || _wardrobeConfirm == null || _wardrobeConfirmLabel == null
+                || _wardrobeHeader == null || _previous == null || _next == null
+                || _previousCharacter == null || _nextCharacter == null
+                || _cancel == null || _collapse == null || _collapseRect == null
+                || _collapseLabel == null || _wardrobeMode == null
+                || _wardrobeTabs == null || _wardrobeTabLabels == null
+                || _wardrobeTabs.Length != WardrobeTabs.Length
+                || _wardrobeTabLabels.Length != WardrobeTabs.Length)
+            {
+                throw new InvalidOperationException(
+                    "OptionListScreen fallback wardrobe prefab is not fully authored.");
+            }
+        }
+
+        private void SelectPrevious() => SelectRelative(-1);
+        private void SelectNext() => SelectRelative(1);
+        private void SelectPreviousCharacter() => _presentation?.PreviousCharacter?.Invoke();
+        private void SelectNextCharacter() => _presentation?.NextCharacter?.Invoke();
+        private void CancelWardrobe() => _presentation?.Cancel?.Invoke();
+        private void ToggleWardrobePanel() =>
+            SetWardrobeExpanded(_wardrobePanel == null || !_wardrobePanel.gameObject.activeSelf);
+
         private void SetWardrobeTab(int activeTab)
         {
-            if (!_wardrobeLayout || _panel == null)
+            if (!_wardrobeLayout || _wardrobeTabs == null)
                 return;
-            var tabs = _panel.Find("WardrobeTabs");
-            if (tabs == null)
-                return;
-            for (var index = 0; index < tabs.childCount; index++)
+            for (var index = 0; index < _wardrobeTabs.Length; index++)
             {
-                var image = tabs.GetChild(index).GetComponent<Image>();
+                var image = _wardrobeTabs[index].GetComponent<Image>();
                 if (image != null)
-                {
                     image.color = index == activeTab
-                        ? WardrobeAccentColor
-                        : new Color(0.08f, 0.13f, 0.21f, 0.96f);
-                }
+                        ? _wardrobeAccentColor
+                        : _wardrobeInactiveColor;
             }
         }
 
         private void UpdateWardrobeTabLabels(OptionListPresentation presentation)
         {
-            if (!_wardrobeLayout || _panel == null)
+            if (!_wardrobeLayout || _wardrobeTabLabels == null)
                 return;
-            var tabs = _panel.Find("WardrobeTabs");
-            if (tabs == null)
-                return;
-            for (var index = 0; index < tabs.childCount; index++)
+            for (var index = 0; index < _wardrobeTabLabels.Length; index++)
             {
-                var label = tabs.GetChild(index).Find("Label")?.GetComponent<Text>();
+                var label = _wardrobeTabLabels[index];
                 if (label == null)
                     continue;
                 var count = presentation.TabItemCounts != null
@@ -443,8 +446,8 @@ namespace Novels.OptionSelection
                             ? presentation.Items.Length
                             : -1;
                 label.text = count >= 0
-                    ? $"{WardrobeTabs[index]}\n{count}"
-                    : WardrobeTabs[index];
+                    ? $"{WardrobeTabIcons[index]}  {count}\n{WardrobeTabs[index]}"
+                    : $"{WardrobeTabIcons[index]}\n{WardrobeTabs[index]}";
             }
         }
 
@@ -452,80 +455,49 @@ namespace Novels.OptionSelection
             bool interactable,
             int[] interactableTabs)
         {
-            if (!_wardrobeLayout || _panel == null)
+            if (!_wardrobeLayout || _wardrobeTabs == null)
                 return;
-            var tabs = _panel.Find("WardrobeTabs");
-            if (tabs == null)
-                return;
-            for (var index = 0; index < tabs.childCount; index++)
+            for (var index = 0; index < _wardrobeTabs.Length; index++)
             {
-                var tab = tabs.GetChild(index);
                 var available = interactableTabs == null
                     || Array.IndexOf(interactableTabs, index) >= 0;
-                tab.gameObject.SetActive(available);
-                var button = tab.GetComponent<Button>();
-                if (button != null)
-                {
-                    button.interactable = interactable
-                        && available;
-                }
+                _wardrobeTabs[index].gameObject.SetActive(available);
+                _wardrobeTabs[index].interactable = interactable && available;
             }
         }
 
-        private void BuildWardrobeArrows()
+        private void UpdateWardrobeActions(OptionListPresentation presentation)
         {
-            _previous = CreateButton(
-                "Previous",
-                _panel,
-                new Color(0.06f, 0.16f, 0.28f, 0.98f),
-                out var previousLabel);
-            previousLabel.text = "‹";
-            previousLabel.fontSize = 64;
-            PositionWardrobeArrow(_previous, -390f);
-            _previous.onClick.AddListener(() => SelectRelative(-1));
+            if (!_wardrobeLayout)
+                return;
+            var canSwitchCharacter = presentation.PreviousCharacter != null
+                && presentation.NextCharacter != null;
+            if (_previousCharacter != null)
+                _previousCharacter.gameObject.SetActive(canSwitchCharacter);
+            if (_nextCharacter != null)
+                _nextCharacter.gameObject.SetActive(canSwitchCharacter);
 
-            _next = CreateButton(
-                "Next",
-                _panel,
-                new Color(0.06f, 0.16f, 0.28f, 0.98f),
-                out var nextLabel);
-            nextLabel.text = "›";
-            nextLabel.fontSize = 64;
-            PositionWardrobeArrow(_next, 390f);
-            _next.onClick.AddListener(() => SelectRelative(1));
-        }
-
-        private static void PositionWardrobeArrow(Button button, float x)
-        {
-            var rect = button.GetComponent<RectTransform>();
-            rect.anchorMin = rect.anchorMax = new Vector2(0.5f, 0.5f);
-            rect.anchoredPosition = new Vector2(x, -30f);
-            rect.sizeDelta = new Vector2(92f, 112f);
-        }
-
-        private void BuildCollapseButton()
-        {
-            var button = CreateButton(
-                "Collapse",
-                transform,
-                new Color(0.035f, 0.075f, 0.14f, 0.98f),
-                out _collapseLabel);
-            _collapseLabel.text = "⌄";
-            _collapseLabel.fontSize = 52;
-            _collapseRect = button.GetComponent<RectTransform>();
-            _collapseRect.anchorMin = _collapseRect.anchorMax = new Vector2(0.5f, 0f);
-            _collapseRect.anchoredPosition = new Vector2(0f, 468f);
-            _collapseRect.sizeDelta = new Vector2(150f, 76f);
-            button.onClick.AddListener(() => SetWardrobeExpanded(_panel == null || !_panel.gameObject.activeSelf));
+            var canCancel = presentation.Cancel != null;
+            if (_cancel != null)
+                _cancel.gameObject.SetActive(canCancel);
+            var confirmRect = _wardrobeConfirm.GetComponent<RectTransform>();
+            confirmRect.anchoredPosition = new Vector2(
+                canCancel ? -130f : 0f,
+                125f);
+            confirmRect.sizeDelta = new Vector2(
+                380f,
+                130f);
         }
 
         private void SetWardrobeExpanded(bool expanded)
         {
-            if (!_wardrobeLayout || _panel == null)
+            if (!_wardrobeLayout || _wardrobePanel == null)
                 return;
-            _panel.gameObject.SetActive(expanded);
+            _wardrobePanel.gameObject.SetActive(expanded);
             if (_collapseRect != null)
-                _collapseRect.anchoredPosition = new Vector2(0f, expanded ? 468f : 58f);
+                _collapseRect.anchoredPosition = new Vector2(
+                    0f,
+                    expanded ? 635f : 58f);
             if (_collapseLabel != null)
                 _collapseLabel.text = expanded ? "⌄" : "⌃";
         }

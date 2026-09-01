@@ -14,7 +14,10 @@ namespace Novels
             Loading.Entity loading)
         {
             var cancellationToken = state.CancellationToken;
-            var wardrobe = CreateWardrobe(state.EpisodeScope, cancellationToken);
+            var wardrobe = CreateWardrobe(
+                state.EpisodeScope,
+                assets.Wardrobe,
+                cancellationToken);
             return new EpisodePresentation
             {
                 Loading = loading,
@@ -214,9 +217,12 @@ namespace Novels
 
         private static Wardrobe.WardrobeController CreateWardrobe(
             IBaseDisposable owner,
+            GameObject screenPrefab,
             CancellationToken cancellationToken)
         {
-            var wardrobe = new Wardrobe.WardrobeController(cancellationToken)
+            var wardrobe = new Wardrobe.WardrobeController(
+                    cancellationToken,
+                    screenPrefab)
                 .AddTo(owner);
             wardrobe.Init();
             return wardrobe;

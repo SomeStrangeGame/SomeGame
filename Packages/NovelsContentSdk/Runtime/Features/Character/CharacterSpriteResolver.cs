@@ -89,6 +89,17 @@ namespace Novels.Character
                 hair = targetHair;
                 accessory = targetAccessory;
             }
+            else if (!string.IsNullOrWhiteSpace(wardrobeTarget)
+                     && string.Equals(
+                         ContentAddressing.TechnicalAssetIdConvention.Canonicalize(name),
+                         ContentAddressing.TechnicalAssetIdConvention.Canonicalize(
+                             wardrobeTarget),
+                         StringComparison.OrdinalIgnoreCase))
+            {
+                clothes = targetClothes;
+                hair = targetHair;
+                accessory = targetAccessory;
+            }
             name ??= string.Empty;
             name = ContentAddressing.TechnicalAssetIdConvention.Canonicalize(name);
             var appearance = request.Role == StoryContracts.StorySpeakerRole.Wardrobe

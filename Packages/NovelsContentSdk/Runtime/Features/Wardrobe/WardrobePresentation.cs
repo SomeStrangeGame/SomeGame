@@ -75,7 +75,13 @@ namespace Novels.WardrobeContracts
             WardrobeSequencePage[] sequencePages = null,
             Action<int[]> confirmSequence = null,
             WardrobeCategory[] availableCategories = null,
-            Func<WardrobeCategory, string> getSelectedCategoryValue = null)
+            Func<WardrobeCategory, string> getSelectedCategoryValue = null,
+            string characterTarget = null,
+            int characterCount = 1,
+            Func<int, UniTask<WardrobePresentation>> loadRelativeCharacter = null,
+            Action commitFreeSession = null,
+            Action cancelFreeSession = null,
+            int[] categoryItemCounts = null)
         {
             CharacterName = characterName ?? string.Empty;
             Category = category;
@@ -100,6 +106,12 @@ namespace Novels.WardrobeContracts
             ConfirmSequence = confirmSequence;
             AvailableCategories = availableCategories;
             GetSelectedCategoryValue = getSelectedCategoryValue;
+            CharacterTarget = characterTarget ?? string.Empty;
+            CharacterCount = Math.Max(1, characterCount);
+            LoadRelativeCharacter = loadRelativeCharacter;
+            CommitFreeSession = commitFreeSession;
+            CancelFreeSession = cancelFreeSession;
+            CategoryItemCounts = categoryItemCounts;
         }
 
         public string Title { get; }
@@ -119,5 +131,11 @@ namespace Novels.WardrobeContracts
         public Action<int[]> ConfirmSequence { get; }
         public WardrobeCategory[] AvailableCategories { get; }
         public Func<WardrobeCategory, string> GetSelectedCategoryValue { get; }
+        public string CharacterTarget { get; }
+        public int CharacterCount { get; }
+        public Func<int, UniTask<WardrobePresentation>> LoadRelativeCharacter { get; }
+        public Action CommitFreeSession { get; }
+        public Action CancelFreeSession { get; }
+        public int[] CategoryItemCounts { get; }
     }
 }

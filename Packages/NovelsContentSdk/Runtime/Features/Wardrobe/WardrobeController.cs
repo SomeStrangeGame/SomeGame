@@ -11,15 +11,21 @@ namespace Novels.Wardrobe
         private WardrobeContracts.WardrobePresentation _presentation;
         private int _categoryVersion;
         private Func<WardrobeContracts.WardrobePresentation> _createFreePresentation;
-        private Func<UniTask> _beforeOpenFree;
+        private Func<string, UniTask> _beforeOpenFree;
         private Func<UniTask> _afterCloseFree;
         private bool _freeOpen;
         private readonly System.Collections.Generic.Dictionary<
             WardrobeContracts.WardrobeCategory, int> _sequenceSelections = new();
 
-        public WardrobeController(CancellationToken cancellationToken)
+        public WardrobeController(
+            CancellationToken cancellationToken,
+            UnityEngine.GameObject screenPrefab = null)
         {
-            _options = new OptionSelection.OptionListController(cancellationToken);
+            _options = new OptionSelection.OptionListController(
+                cancellationToken,
+                screenPrefab == null
+                    ? null
+                    : screenPrefab.GetComponent<OptionSelection.OptionListScreen>());
         }
 
         public void Init()
@@ -46,7 +52,7 @@ namespace Novels.Wardrobe
 
         public void ConfigureFree(
             Func<WardrobeContracts.WardrobePresentation> createPresentation,
-            Func<UniTask> beforeOpen,
+            Func<string, UniTask> beforeOpen,
             Func<UniTask> afterClose)
         {
             _createFreePresentation = createPresentation;
@@ -64,9 +70,9 @@ namespace Novels.Wardrobe
         private async UniTaskVoid OpenFreeAsync()
         {
             _freeOpen = true;
-            if (_beforeOpenFree != null)
-                await _beforeOpenFree();
             _presentation = _createFreePresentation();
+            if (_beforeOpenFree != null)
+                await _beforeOpenFree(_presentation.CharacterTarget);
             var version = ++_categoryVersion;
             LoadCategory(_presentation.Category, version).Forget();
             await Show(StoryContracts.PresentationMode.Immediate);
@@ -224,14 +230,17 @@ namespace Novels.Wardrobe
                 }
                 _options.Present(new OptionSelection.OptionListPresentation(
                     CategoryTitle(category),
-                    "Применить",
+                    source.FreeMode ? "Готово" : "Применить",
                     items,
                     id => source.LoadCategoryThumbnail(category, values[id]),
                     id => source.PreviewCategory(category, values[id]),
                     _ =>
                     {
                         if (source.FreeMode)
+                        {
+                            source.CommitFreeSession?.Invoke();
                             CloseFree().Forget();
+                        }
                         else
                             PresentStoryCategory();
                     },
@@ -239,7 +248,50 @@ namespace Novels.Wardrobe
                     (int)category,
                     source.AllowCategoryBrowsing,
                     GetAvailableTabIndices(source),
-                    initialItemId));
+                    initialItemId,
+                    source.CategoryItemCounts,
+                    previousCharacter: source.CharacterCount > 1
+                        ? () => SelectRelativeCharacter(-1)
+                        : null,
+                    nextCharacter: source.CharacterCount > 1
+                        ? () => SelectRelativeCharacter(1)
+                        : null,
+                    cancel: source.FreeMode
+                        ? () =>
+                        {
+                            source.CancelFreeSession?.Invoke();
+                            CloseFree().Forget();
+                        }
+                        : null));
+            }
+            catch (OperationCanceledException)
+            {
+            }
+        }
+
+        private void SelectRelativeCharacter(int direction)
+        {
+            var source = _presentation;
+            if (source?.LoadRelativeCharacter == null || source.CharacterCount <= 1)
+                return;
+            SelectRelativeCharacterAsync(source, direction).Forget();
+        }
+
+        private async UniTaskVoid SelectRelativeCharacterAsync(
+            WardrobeContracts.WardrobePresentation source,
+            int direction)
+        {
+            var version = ++_categoryVersion;
+            try
+            {
+                var presentation = await source.LoadRelativeCharacter(direction);
+                if (version != _categoryVersion || source != _presentation
+                    || presentation == null)
+                {
+                    return;
+                }
+                _presentation = presentation;
+                LoadCategory(presentation.Category, ++_categoryVersion).Forget();
             }
             catch (OperationCanceledException)
             {

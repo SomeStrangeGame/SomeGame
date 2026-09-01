@@ -62,6 +62,11 @@ namespace Novels.ContentAddressing
             string assetName) =>
             PresentationPrefab(prefix, "character", assetName);
 
+        public static string WardrobePrefab(
+            string prefix,
+            string assetName) =>
+            PresentationPrefab(prefix, "wardrobe", assetName);
+
         public static string CharacterSpriteTrimManifest(string prefix) =>
             $"{ContentPackageConvention.StoryRoot(prefix)}/character/sprite-trim-manifest.asset";
 

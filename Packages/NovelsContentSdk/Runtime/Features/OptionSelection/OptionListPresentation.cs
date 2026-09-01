@@ -31,7 +31,10 @@ namespace Novels.OptionSelection
             int[] interactableTabs = null,
             int? initialItemId = null,
             int[] tabItemCounts = null,
-            bool previewInitialItem = false)
+            bool previewInitialItem = false,
+            Action previousCharacter = null,
+            Action nextCharacter = null,
+            Action cancel = null)
         {
             Title = title ?? string.Empty;
             ConfirmationText = confirmationText ?? string.Empty;
@@ -47,6 +50,9 @@ namespace Novels.OptionSelection
             InitialItemId = initialItemId;
             TabItemCounts = tabItemCounts;
             PreviewInitialItem = previewInitialItem;
+            PreviousCharacter = previousCharacter;
+            NextCharacter = nextCharacter;
+            Cancel = cancel;
         }
 
         public string Title { get; }
@@ -62,5 +68,8 @@ namespace Novels.OptionSelection
         public int? InitialItemId { get; }
         public int[] TabItemCounts { get; }
         public bool PreviewInitialItem { get; }
+        public Action PreviousCharacter { get; }
+        public Action NextCharacter { get; }
+        public Action Cancel { get; }
     }
 }

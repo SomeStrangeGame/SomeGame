@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -35,11 +37,11 @@ namespace Novels
                     presentation.Character,
                     save,
                     _definition.MainCharacter),
-                async () =>
+                async characterTarget =>
                 {
                     await presentation.Bubble.Hide(
                         StoryContracts.PresentationMode.Immediate);
-                    await presentation.Character.BeginWardrobePreview(string.Empty);
+                    await presentation.Character.BeginWardrobePreview(characterTarget);
                 },
                 async () =>
                 {
@@ -84,57 +86,217 @@ namespace Novels
         private static WardrobeContracts.WardrobePresentation CreateFreeWardrobePresentation(
             Character.CharacterController character,
             Save.SaveSystem save,
-            string characterName)
+            string characterName) =>
+            new FreeWardrobeSession(character, save, characterName).CreateInitial();
+
+        private sealed class FreeWardrobeSession
         {
-            character.SetWardrobeTarget(string.Empty);
-            var categories = System.Enum
-                .GetValues(typeof(WardrobeContracts.WardrobeCategory))
-                .Cast<WardrobeContracts.WardrobeCategory>()
-                .Where(category => save.GetUnlockedWardrobeItems(
-                    characterName,
-                    (byte)category).Length > 0)
-                .ToArray();
-            var initialCategory = categories.Contains(
-                WardrobeContracts.WardrobeCategory.Clothes)
-                    ? WardrobeContracts.WardrobeCategory.Clothes
-                    : categories.FirstOrDefault();
-            return new WardrobeContracts.WardrobePresentation(
-                characterName,
-                initialCategory,
-                WardrobeCategoryTitle(initialCategory),
-                "Применить",
-                System.Array.Empty<WardrobeContracts.WardrobeOption>(),
-                category => LoadUnlockedWardrobeItems(
-                    character,
-                    save,
-                    characterName,
-                    category),
-                (category, value) => character.LoadWardrobeThumbnail(
-                    ToChoiceAction(category),
-                    value),
-                (category, value) => character.PreviewWardrobeChoice(
-                        ToChoiceAction(category),
-                        value)
-                    .ContinueWith(() => save.UnlockWardrobeItem(
-                        characterName,
-                        (byte)category,
-                        value,
-                        true)),
-                _ => UniTask.FromResult<Sprite>(null),
-                _ => UniTask.CompletedTask,
-                _ => { },
-                true,
-                true,
-                availableCategories: categories,
-                getSelectedCategoryValue: category =>
+            private readonly Character.CharacterController _character;
+            private readonly Save.SaveSystem _save;
+            private readonly WardrobeCharacter[] _characters;
+            private readonly Dictionary<string, Dictionary<
+                WardrobeContracts.WardrobeCategory, string>> _original;
+            private readonly Dictionary<string, Dictionary<
+                WardrobeContracts.WardrobeCategory, string>> _pending;
+            private int _characterIndex;
+
+            internal FreeWardrobeSession(
+                Character.CharacterController character,
+                Save.SaveSystem save,
+                string mainCharacter)
+            {
+                _character = character;
+                _save = save;
+                var names = save.GetWardrobeCharacters()
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                names.RemoveAll(name => string.Equals(
+                    name, mainCharacter, StringComparison.OrdinalIgnoreCase));
+                names.Insert(0, mainCharacter);
+                _characters = names.Select(name => new WardrobeCharacter(
+                        name,
+                        string.Equals(name, mainCharacter, StringComparison.OrdinalIgnoreCase)
+                            ? string.Empty
+                            : name))
+                    .ToArray();
+                _original = CaptureSelections();
+                _pending = CloneSelections(_original);
+            }
+
+            internal WardrobeContracts.WardrobePresentation CreateInitial()
+            {
+                _characterIndex = 0;
+                return CreatePresentation();
+            }
+
+            private WardrobeContracts.WardrobePresentation CreatePresentation()
+            {
+                var current = _characters[_characterIndex];
+                var categories = GetCategories(current.Name);
+                var initialCategory = categories.Contains(
+                    WardrobeContracts.WardrobeCategory.Clothes)
+                        ? WardrobeContracts.WardrobeCategory.Clothes
+                        : categories.FirstOrDefault();
+                var counts = new[] { 0, 0, 0, 0 };
+                foreach (WardrobeContracts.WardrobeCategory category in
+                         Enum.GetValues(typeof(WardrobeContracts.WardrobeCategory)))
                 {
-                    var equipped = save.GetEquippedWardrobeItem(
-                        characterName,
-                        (byte)category);
-                    return string.IsNullOrWhiteSpace(equipped)
-                        ? character.GetCurrentWardrobeValue(ToChoiceAction(category))
-                        : equipped;
-                });
+                    counts[(int)category] = _save.GetUnlockedWardrobeItems(
+                        current.Name,
+                        (byte)category).Length;
+                }
+                return new WardrobeContracts.WardrobePresentation(
+                    current.Name,
+                    initialCategory,
+                    WardrobeCategoryTitle(initialCategory),
+                    "Готово",
+                    Array.Empty<WardrobeContracts.WardrobeOption>(),
+                    category => LoadUnlockedWardrobeItems(
+                        _character,
+                        _save,
+                        current.Name,
+                        category),
+                    (category, value) =>
+                    {
+                        _character.SetWardrobeTarget(current.Target);
+                        return _character.LoadWardrobeThumbnail(
+                            ToChoiceAction(category), value);
+                    },
+                    (category, value) =>
+                    {
+                        _pending[current.Name][category] = value;
+                        _character.SetWardrobeTarget(current.Target);
+                        return _character.PreviewWardrobeChoice(
+                            ToChoiceAction(category), value);
+                    },
+                    _ => UniTask.FromResult<Sprite>(null),
+                    _ => UniTask.CompletedTask,
+                    _ => { },
+                    true,
+                    true,
+                    availableCategories: categories,
+                    getSelectedCategoryValue: category =>
+                        _pending[current.Name][category],
+                    characterTarget: current.Target,
+                    characterCount: _characters.Length,
+                    loadRelativeCharacter: SwitchCharacter,
+                    commitFreeSession: Commit,
+                    cancelFreeSession: Cancel,
+                    categoryItemCounts: counts);
+            }
+
+            private async UniTask<WardrobeContracts.WardrobePresentation>
+                SwitchCharacter(int direction)
+            {
+                _characterIndex = (_characterIndex + direction + _characters.Length)
+                    % _characters.Length;
+                var current = _characters[_characterIndex];
+                ApplySelections(current, _pending[current.Name]);
+                await _character.SwitchWardrobePreview(current.Target);
+                return CreatePresentation();
+            }
+
+            private WardrobeContracts.WardrobeCategory[] GetCategories(string name) =>
+                Enum.GetValues(typeof(WardrobeContracts.WardrobeCategory))
+                    .Cast<WardrobeContracts.WardrobeCategory>()
+                    .Where(category => _save.GetUnlockedWardrobeItems(
+                        name, (byte)category).Length > 0)
+                    .ToArray();
+
+            private Dictionary<string, Dictionary<
+                WardrobeContracts.WardrobeCategory, string>> CaptureSelections()
+            {
+                var result = new Dictionary<string, Dictionary<
+                    WardrobeContracts.WardrobeCategory, string>>(
+                    StringComparer.OrdinalIgnoreCase);
+                foreach (var current in _characters)
+                {
+                    var selections = new Dictionary<
+                        WardrobeContracts.WardrobeCategory, string>();
+                    foreach (WardrobeContracts.WardrobeCategory category in
+                             Enum.GetValues(typeof(WardrobeContracts.WardrobeCategory)))
+                    {
+                        var equipped = _save.GetEquippedWardrobeItem(
+                            current.Name, (byte)category);
+                        selections[category] = string.IsNullOrWhiteSpace(equipped)
+                            ? _character.GetCurrentWardrobeValue(
+                                current.Target, ToChoiceAction(category))
+                            : equipped;
+                    }
+                    result[current.Name] = selections;
+                }
+                return result;
+            }
+
+            private static Dictionary<string, Dictionary<
+                WardrobeContracts.WardrobeCategory, string>> CloneSelections(
+                Dictionary<string, Dictionary<
+                    WardrobeContracts.WardrobeCategory, string>> source)
+            {
+                var result = new Dictionary<string, Dictionary<
+                    WardrobeContracts.WardrobeCategory, string>>(
+                    StringComparer.OrdinalIgnoreCase);
+                foreach (var pair in source)
+                {
+                    result[pair.Key] = new Dictionary<
+                        WardrobeContracts.WardrobeCategory, string>(pair.Value);
+                }
+                return result;
+            }
+
+            private void Commit()
+            {
+                foreach (var current in _characters)
+                {
+                    ApplySelections(current, _pending[current.Name]);
+                    foreach (var selection in _pending[current.Name])
+                    {
+                        if (string.IsNullOrWhiteSpace(selection.Value))
+                            continue;
+                        _save.UnlockWardrobeItem(
+                            current.Name,
+                            (byte)selection.Key,
+                            selection.Value,
+                            false);
+                    }
+                }
+                _save.PersistWardrobe();
+            }
+
+            private void Cancel()
+            {
+                foreach (var current in _characters)
+                    ApplySelections(current, _original[current.Name]);
+            }
+
+            private void ApplySelections(
+                WardrobeCharacter current,
+                Dictionary<WardrobeContracts.WardrobeCategory, string> selections)
+            {
+                foreach (var selection in selections)
+                {
+                    if (!string.IsNullOrWhiteSpace(selection.Value))
+                    {
+                        _character.ApplyWardrobeSelection(
+                            current.Target,
+                            ToChoiceAction(selection.Key),
+                            selection.Value);
+                    }
+                }
+            }
+
+            private readonly struct WardrobeCharacter
+            {
+                internal WardrobeCharacter(string name, string target)
+                {
+                    Name = name ?? string.Empty;
+                    Target = target ?? string.Empty;
+                }
+
+                internal string Name { get; }
+                internal string Target { get; }
+            }
         }
 
         private static string WardrobeCategoryTitle(
@@ -156,11 +318,6 @@ namespace Novels
             WardrobeContracts.WardrobeCategory category)
         {
             var available = await character.LoadWardrobeCategory(ToChoiceAction(category));
-            save.RemoveUnavailableWardrobeItems(
-                characterName,
-                (byte)category,
-                available,
-                true);
             var availableSet = new System.Collections.Generic.HashSet<string>(
                 available,
                 System.StringComparer.OrdinalIgnoreCase);
@@ -174,16 +331,27 @@ namespace Novels
             Save.SaveSystem save,
             string characterName)
         {
-            foreach (WardrobeContracts.WardrobeCategory category in
-                     System.Enum.GetValues(typeof(WardrobeContracts.WardrobeCategory)))
+            var characters = save.GetWardrobeCharacters()
+                .Concat(new[] { characterName })
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Distinct(StringComparer.OrdinalIgnoreCase);
+            foreach (var current in characters)
             {
-                var value = save.GetEquippedWardrobeItem(characterName, (byte)category);
-                if (!string.IsNullOrWhiteSpace(value))
+                var target = string.Equals(
+                    current, characterName, StringComparison.OrdinalIgnoreCase)
+                        ? string.Empty
+                        : current;
+                foreach (WardrobeContracts.WardrobeCategory category in
+                         Enum.GetValues(typeof(WardrobeContracts.WardrobeCategory)))
                 {
-                    character.ApplyWardrobeSelection(
-                        string.Empty,
-                        ToChoiceAction(category),
-                        value);
+                    var value = save.GetEquippedWardrobeItem(current, (byte)category);
+                    if (!string.IsNullOrWhiteSpace(value))
+                    {
+                        character.ApplyWardrobeSelection(
+                            target,
+                            ToChoiceAction(category),
+                            value);
+                    }
                 }
             }
         }
