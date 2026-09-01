@@ -44,21 +44,6 @@
 
 - `android-memory-full-smoke`: paused because the running Embedded APK contains stale content and does not recognize the episode end marker. Preliminary emulator stress data: GPL ~335 MiB PSS; TZM plateau ~374 MiB PSS / 464 MiB RSS; swap negligible. Emulator lacks ASTC8x8 and expands textures to RGBA. Resume after a full Embedded content rebuild and final episode pass begins.
 
-## 2026-08-31T15:39:00Z — mobile-character-chat-local-llm — ready-with-limitations
-
-Task: replace atomic character-chat demo replies with a bundled local mobile LLM.
-Changed: branch `codex/mobile-character-chat-prototype`, commits `7a3c7603`,
-`65cda450`, `8f89f27b`; Qwen2.5-1.5B-Instruct Q4_K_M, LLMUnity/LlamaLib,
-grounded Vera/Pavel prompts and Android disk-streaming extraction are integrated.
-Validation: real macOS native inference returned Vera's canonical identity; fresh
-Unity compile and Android Embedded build passed. Rebuilt APK (2,986,087,138 bytes)
-was installed and launched on clean ARM64 AVD `Novels_LLM_API_34`; `app.started`,
-`catalog.ready`, foreground activity and PID passed, baseline PSS was 219 MiB.
-Pending / risks: first local-LLM reply latency/RSS still needs an interactive smoke;
-bundled prototype APK is impractically large for distribution.
-Suggested next step: open character chat in the running emulator and benchmark the
-first reply before choosing downloadable weights or a smaller tuned model.
-
 ## 2026-09-01T06:49:10Z — tzm-wardrobe-fallback-isolation — manual gate
 
 TZM wardrobe variant и девять UI sprites временно помечены unused без удаления
@@ -75,18 +60,6 @@ sources. Editor release пересобран без `presentation/wardrobe`; Nov
 selection logic не менялись. Builder, scoped diff-check и fresh Novels compile
 passed; Editor оставлен открытым для portrait visual replay.
 
-## 2026-08-31T16:09:30Z — mobile-character-chat-editor-repro — paused
-
-Task: reproduce the character-chat fallback in the visible Unity Editor.
-State: reproduction confirmed `LLMUnityException: LLM caller not initialized`:
-the first `ClearHistory()` raced asynchronous LLMAgent startup, while the model
-loaded successfully immediately afterward. Backend now waits for both LLM readiness
-and non-null `llmAgent`. The per-query grounding prefix that forced repetitive
-biography answers was removed; system prompt now requires direct intent-sensitive
-answers and includes greeting/novel-hero examples. Recompile completed with no new
-errors; gate only retained the earlier Console error. Awaiting manual two-prompt
-Play check (`Привет`, `Ты героиня новеллы?`). Emulator untouched.
-
 ## 2026-09-01T09:16:23Z — full-tree-publish — ready-to-publish
 
-Task: publish the complete current tree as atomic commits. Changed: six new commits cover automation/protocols, local chat startup, shared wardrobe runtime, TZM wardrobe presentation, GPL episode three and runtime handoffs. Validation: docs-check, automation tests, catalog/TZM/ZDM/GPL editor content builds and a fresh Novels compile passed; wardrobe Play Mode visual gate was completed immediately before integration. Pending / risks: no affected EditMode test assembly exists; push to `origin/main` and SHA confirmation remain. Suggested next step: `Tools/somegame git-publish --agent-id full-tree-publish`.
+Task: publish the complete current tree as atomic commits. Changed: automation/protocols, shared wardrobe runtime, TZM wardrobe presentation, GPL episode three and runtime handoffs are separated into atomic commits. The experimental mobile character-chat branch, bundled Qwen model and LlamaLib binaries are intentionally excluded. Validation: docs-check, automation tests, catalog/TZM/ZDM/GPL editor content builds and a fresh Novels compile passed; wardrobe Play Mode visual gate was completed immediately before integration. Pending / risks: no affected EditMode test assembly exists; push to `origin/main` and SHA confirmation remain. Suggested next step: `Tools/somegame git-publish --agent-id full-tree-publish`.
