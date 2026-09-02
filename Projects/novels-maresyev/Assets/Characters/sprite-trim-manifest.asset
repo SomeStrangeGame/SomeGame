@@ -1,0 +1,286 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72e5e7b97f324d399b50316092795f4a, type: 3}
+  m_Name: sprite-trim-manifest
+  m_EditorClassIdentifier: Novels.Character::Novels.Character.CharacterSpriteTrimManifest
+  _entries:
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/maincharacter/clothes/\u041B\u0451\u0442\u043D\u0430\u044F
+      \u0444\u043E\u0440\u043C\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 243
+    _cropY: 72
+    _cropWidth: 495
+    _cropHeight: 1249
+    _trimmedSha256: 7d12ae4e7cd289bbdce7779b47db14e5bf19056952ebc7386c907953e71c0917
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/maincharacter/view/emotions/\u043E\u0431\u043B\u0435\u0433\u0447\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 416
+    _cropY: 1300
+    _cropWidth: 138
+    _cropHeight: 167
+    _trimmedSha256: 98c5f17146d5c0237343b5c443f47b6476f58386104f102b12a58f6f5082e72b
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/maincharacter/view/emotions/\u043E\u0442\u0447\u0430\u044F\u043D\u0438\u0435.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 416
+    _cropY: 1300
+    _cropWidth: 138
+    _cropHeight: 167
+    _trimmedSha256: 78c410b2df919853f4c2ebe2f6716ff1729cfcccb4cfa0ef3b173fa09d032702
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/maincharacter/view/emotions/\u0440\u0435\u0448\u0438\u043C\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 416
+    _cropY: 1300
+    _cropWidth: 138
+    _cropHeight: 167
+    _trimmedSha256: b75533cfe8f2aacea2f55492f593066a6ebc5066f497c6453d338c05b1a3d730
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/maincharacter/view/emotions/\u0442\u0440\u0435\u0432\u043E\u0433\u0430.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 416
+    _cropY: 1300
+    _cropWidth: 138
+    _cropHeight: 167
+    _trimmedSha256: 373b7b8e96bbff4135d1e90e71feb6a372dbc857dc6898a473112970373bd51b
+  - _assetAddress: Assets/RemoteAssets/content/maresyev/story/character/characters/maincharacter/view/main.png
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 397
+    _cropY: 1281
+    _cropWidth: 165
+    _cropHeight: 215
+    _trimmedSha256: 250c4427a3a9019deefba24a8c1f8755ddad2233ba796fc21a19f484f9dbcdde
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0432\u0440\u0430\u0447/clothes/\u041C\u0435\u0434\u0438\u0446\u0438\u043D\u0441\u043A\u0430\u044F
+      \u0444\u043E\u0440\u043C\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 271
+    _cropY: 107
+    _cropWidth: 474
+    _cropHeight: 1205
+    _trimmedSha256: bf452ad4ce91b78bd77d18ed4a34b330beeab8434501c2ede57f9a68f90122b3
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0432\u0440\u0430\u0447/view/emotions/\u0441\u0435\u0440\u044C\u0451\u0437\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 426
+    _cropY: 1285
+    _cropWidth: 140
+    _cropHeight: 182
+    _trimmedSha256: 490e518b6fd0df8d33dabc7367b3fae28f6707a15ad881da757963fcf859e2c2
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0432\u0440\u0430\u0447/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 407
+    _cropY: 1263
+    _cropWidth: 167
+    _cropHeight: 238
+    _trimmedSha256: 26cea586962f98600880e7cf732d293d3901a4310a07c7cb6f37a4ff256e2ae7
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0436\u0438\u0442\u0435\u043B\u044C
+      \u0434\u0435\u0440\u0435\u0432\u043D\u0438/clothes/\u0414\u0435\u0440\u0435\u0432\u0435\u043D\u0441\u043A\u0430\u044F
+      \u043E\u0434\u0435\u0436\u0434\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 245
+    _cropY: 109
+    _cropWidth: 515
+    _cropHeight: 1202
+    _trimmedSha256: f0cd3d4927771cf76e011cf7968152f9814a708a066b0a5764fae7b7fb9982a3
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0436\u0438\u0442\u0435\u043B\u044C
+      \u0434\u0435\u0440\u0435\u0432\u043D\u0438/view/emotions/\u0441\u043E\u0447\u0443\u0432\u0441\u0442\u0432\u0438\u0435.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 428
+    _cropY: 1262
+    _cropWidth: 148
+    _cropHeight: 186
+    _trimmedSha256: a9e2ce42668c013aa0892c699c9a877addc7614882ebdb3530e6002d43584409
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0436\u0438\u0442\u0435\u043B\u044C
+      \u0434\u0435\u0440\u0435\u0432\u043D\u0438/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 404
+    _cropY: 1239
+    _cropWidth: 190
+    _cropHeight: 244
+    _trimmedSha256: 20f50bd5bc90cabd72835cd7266e46addf8087a0724e2e14d3d9f7d15ee1c9d8
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440/clothes/\u041B\u0451\u0442\u043D\u0430\u044F
+      \u0444\u043E\u0440\u043C\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 254
+    _cropY: 75
+    _cropWidth: 488
+    _cropHeight: 1246
+    _trimmedSha256: acb4d27a6b01c859fff531e6036ffc730e71bb42a78ebf0d03b4a91953eee120
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440/view/emotions/\u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 429
+    _cropY: 1290
+    _cropWidth: 134
+    _cropHeight: 188
+    _trimmedSha256: b174fce57b3242f2fd247ee60c09e1bd3f1b5b8c6b4e64c989e9b257e692fd7c
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440/view/emotions/\u0442\u0440\u0435\u0431\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 429
+    _cropY: 1290
+    _cropWidth: 134
+    _cropHeight: 188
+    _trimmedSha256: 1c5cb06401fd617ac46d9c026ff1dfff6f662c39365178402dbb078670e60a3e
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0438\u043D\u0441\u0442\u0440\u0443\u043A\u0442\u043E\u0440/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 410
+    _cropY: 1267
+    _cropWidth: 165
+    _cropHeight: 246
+    _trimmedSha256: 0229b117b1786c58c942c8f3e8be4d0dc74ee79d44290055ccfd60b5f64c0557
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u043C\u0435\u0445\u0430\u043D\u0438\u043A/clothes/\u0422\u0435\u0445\u043D\u0438\u0447\u0435\u0441\u043A\u0438\u0439
+      \u043A\u043E\u043C\u0431\u0438\u043D\u0435\u0437\u043E\u043D/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 260
+    _cropY: 92
+    _cropWidth: 486
+    _cropHeight: 1215
+    _trimmedSha256: b4f90b25caa6466bebad4a57c14143751e2296a436503ab8196aeece13cee983
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u043C\u0435\u0445\u0430\u043D\u0438\u043A/view/emotions/\u0441\u043E\u0441\u0440\u0435\u0434\u043E\u0442\u043E\u0447\u0435\u043D\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 430
+    _cropY: 1285
+    _cropWidth: 136
+    _cropHeight: 176
+    _trimmedSha256: 68f33f34839a342557af5de68dd0a7dd7258cec4653bf5b293420a1f8745ba42
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u043C\u0435\u0445\u0430\u043D\u0438\u043A/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 412
+    _cropY: 1265
+    _cropWidth: 163
+    _cropHeight: 228
+    _trimmedSha256: a2c2539b8257a12208e7373f78933da63c20ee10060a4a5242aa5bd6232bcc91
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0441\u0430\u0448\u0430/clothes/\u0414\u0435\u0440\u0435\u0432\u0435\u043D\u0441\u043A\u0430\u044F
+      \u043E\u0434\u0435\u0436\u0434\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 273
+    _cropY: 119
+    _cropWidth: 475
+    _cropHeight: 1208
+    _trimmedSha256: fb79b7b66f6ab9acd54f15ff2634155af5affa65604406284c84981e24a2eb82
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0441\u0430\u0448\u0430/view/emotions/\u0440\u0435\u0448\u0438\u043C\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 447
+    _cropY: 1287
+    _cropWidth: 130
+    _cropHeight: 156
+    _trimmedSha256: 76597df08c39e2120dd5f667eea5fd2f099a33301e2886c5cbd4fcf64319eefe
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0441\u0430\u0448\u0430/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 430
+    _cropY: 1271
+    _cropWidth: 156
+    _cropHeight: 198
+    _trimmedSha256: fd8c694c3177fc7945da6d48e85b63599c24bc8ea1ebcaf4acca365a17112455
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0441\u0435\u0440\u0451\u0436\u0430/clothes/\u0414\u0435\u0440\u0435\u0432\u0435\u043D\u0441\u043A\u0430\u044F
+      \u043E\u0434\u0435\u0436\u0434\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 266
+    _cropY: 108
+    _cropWidth: 474
+    _cropHeight: 1199
+    _trimmedSha256: cf5e3e779134776449239910c02692141c6fd0ff1751159047e80d1d57473054
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0441\u0435\u0440\u0451\u0436\u0430/view/emotions/\u0442\u0440\u0435\u0432\u043E\u0433\u0430.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 419
+    _cropY: 1285
+    _cropWidth: 140
+    _cropHeight: 164
+    _trimmedSha256: 98473e623dc2bc006e782a4b99c445d7ed5a40309c6ce59ca337084df5f8ccd0
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0441\u0435\u0440\u0451\u0436\u0430/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 399
+    _cropY: 1267
+    _cropWidth: 170
+    _cropHeight: 210
+    _trimmedSha256: 028dbd1fd15b02ba12f333e1c897f186df6f828b65d2d526d8fffef69f3c1850
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0442\u043E\u0432\u0430\u0440\u0438\u0449
+      \u043F\u043E \u043F\u0430\u043B\u0430\u0442\u0435/clothes/\u0413\u043E\u0441\u043F\u0438\u0442\u0430\u043B\u044C\u043D\u0430\u044F
+      \u043E\u0434\u0435\u0436\u0434\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 279
+    _cropY: 123
+    _cropWidth: 447
+    _cropHeight: 1179
+    _trimmedSha256: cb90c9485a6335237bb2d8a4e48b2e58d0c475cec723e3993dec60b2f21b5baf
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0442\u043E\u0432\u0430\u0440\u0438\u0449
+      \u043F\u043E \u043F\u0430\u043B\u0430\u0442\u0435/view/emotions/\u043F\u043E\u0434\u0434\u0435\u0440\u0436\u043A\u0430.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 426
+    _cropY: 1282
+    _cropWidth: 132
+    _cropHeight: 169
+    _trimmedSha256: 15d41269ac924d0430eb0109957662464ee7dafda926fec4f3e87015b654da10
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0442\u043E\u0432\u0430\u0440\u0438\u0449
+      \u043F\u043E \u043F\u0430\u043B\u0430\u0442\u0435/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 409
+    _cropY: 1263
+    _cropWidth: 155
+    _cropHeight: 217
+    _trimmedSha256: 7b72162d2027ec7614383d007b480c0a3b910128e5502f5255b86b498a4bdbf1
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0447\u0438\u0441\u043B\u043E\u0432/clothes/\u041B\u0451\u0442\u043D\u0430\u044F
+      \u0444\u043E\u0440\u043C\u0430/1.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 286
+    _cropY: 77
+    _cropWidth: 472
+    _cropHeight: 1227
+    _trimmedSha256: a4cfa945a337040c9ee2efe256e1613e0545327509cdf26627470e6813eb703d
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0447\u0438\u0441\u043B\u043E\u0432/view/emotions/\u043E\u0434\u043E\u0431\u0440\u0435\u043D\u0438\u0435.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 447
+    _cropY: 1288
+    _cropWidth: 144
+    _cropHeight: 169
+    _trimmedSha256: c09077226fc1cf8a6ca5ada5375495f3b0e9c567925747134db4a50526c03a62
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0447\u0438\u0441\u043B\u043E\u0432/view/emotions/\u0442\u0440\u0435\u0431\u043E\u0432\u0430\u0442\u0435\u043B\u044C\u043D\u043E\u0441\u0442\u044C.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 447
+    _cropY: 1288
+    _cropWidth: 144
+    _cropHeight: 169
+    _trimmedSha256: 130d95f2e914605458e5694b59aa39d1fa2f5e939d23e23f90ee85bfe9a01cf1
+  - _assetAddress: "Assets/RemoteAssets/content/maresyev/story/character/characters/\u0447\u0438\u0441\u043B\u043E\u0432/view/main.png"
+    _originalWidth: 1024
+    _originalHeight: 1536
+    _cropX: 427
+    _cropY: 1269
+    _cropWidth: 173
+    _cropHeight: 217
+    _trimmedSha256: e81f3328fe0ef6fe3f8018fd0910ff4d5d41588ea5460ca6b8c5970ccf92da6d

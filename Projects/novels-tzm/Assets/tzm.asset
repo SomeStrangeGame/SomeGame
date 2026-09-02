@@ -113,7 +113,7 @@ MonoBehaviour:
     _target: "story/character/characters/\u0446\u0430\u0440\u044C \u0442\u0430\u0434\u0434\u0435\u0443\u0441/view/emotions/\u0440\u0430\u0437\u0434\u0440\u0430\u0436\u0435\u043D\u0438\u0435.png"
   - _alias: "story/character/characters/\u0446\u0430\u0440\u044C \u0430\u0442\u043B\u0430\u043D ii/view/emotions/\u0443\u0434\u0438\u0432\u043B\u0435\u043D\u0438\u0435.png"
     _target: "story/character/characters/\u0446\u0430\u0440\u044C \u0430\u0442\u043B\u0430\u043D ii/view/main.png"
-  - _alias: "story/character/characters/\u0444\u0438\u043B/view/\u0437\u043B\u043E\u0441\u0442\u044C.png"
+  - _alias: "story/character/characters/\u0444\u0438\u043B/view/\u043E\u0441\u043D\u043E\u0432\u043D\u043E\u0439.png"
     _target: "story/character/characters/\u0444\u0438\u043B/view/main.png"
   - _alias: "story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/\u043F\u043E\u0434\u0440\u043E\u0441\u0442\u043E\u043A.png"
     _target: "story/character/characters/\u0430\u043B\u0435\u043A\u0441\u0430/view/\u0430\u043B\u0435\u043A\u0441\u0430.png"
@@ -134,6 +134,20 @@ MonoBehaviour:
   _authoringChunks:
   - _assetGuids:
     - ea739ade0e5234bc48b0405870a1f9a5
+    - b60eda5783819455da204cb690085f53
+    - 3b8ee0f1d857f4438891020773732a2b
+    - 93fc9c21c22c54261a7428fee892c59b
+    - 68ec3a78bcdb74fe7b2c9e33cfabc3b4
+    - 8191f1f4887464276a2e3c5c43abd61e
+    - 9218f17ec7f7449c3ae752922bdb7c33
+    - 76816d4b7e06d4262a18ef14aaac3995
+    - 1fc75f351377f4f17828eb3cb803dc05
+    - d0c52da072adbfb14a08921a18cb1cc4
+    - 29aa75ad7f7cb4b36d54fc4ba0742662
+    - 9dbe3494ef1c944f490a726d37fae5eb
+    - e8ba4d2eca8474edbb9ceda038e71145
+    - e6ae9a9096a0e1be75af59555bb4c714
+    - 278968c108b6794225cb02d62c7c8477
     - 2e3e6b23cf4414b27a1f69ca3678d53d
     - 56817c1766d27460cba64f4d10be166f
     - 95bac5387bd52495aa7e61538051341a
@@ -141,6 +155,24 @@ MonoBehaviour:
     - 1fbd58184ef3915e93a9ee9bd3117825
     - 0e7a54d8dc3a641848a436d2157c087a
     - 0125029842d6d993020c25af5bf725f6
+    - 4bb1c2193bcf4b238a510594d07de05f
+    - ef40ca74fd26b4ff4a502fce28b10b30
+    - 9aed27b55fccb473c96b45c71e0f6a48
+    - 77fc92391efe2484abd95440a39a66eb
+    - 2c8cf834ddcf54889839bde348fba1ea
+    - a81d4b1b3b614431ca93e186e0993c75
+    - 92a94a39b38394dbcb1cd9d1a4204af4
+    - af36bc920af024238a33b75e1904a262
+    - 4614223ce054f438ba764a1cde3fcfe7
+    - a0f1e2d3c4b5478899aabbccddeeff01
+    - a0f1e2d3c4b5478899aabbccddeeff02
+    - a0f1e2d3c4b5478899aabbccddeeff03
+    - a0f1e2d3c4b5478899aabbccddeeff04
+    - a0f1e2d3c4b5478899aabbccddeeff05
+    - a0f1e2d3c4b5478899aabbccddeeff06
+    - a0f1e2d3c4b5478899aabbccddeeff07
+    - a0f1e2d3c4b5478899aabbccddeeff08
+    - a0f1e2d3c4b5478899aabbccddeeff09
     - 32f47428ea750deab33493f342016af0
     - 1e19c7a086b7842cda87639d203897a7
     - 33287640e346f444093c9b4490b5d8ee
@@ -555,15 +587,6 @@ MonoBehaviour:
     - a8d29e41ce8ef4ea7bb5dbbd2539d785
     - 43e93ae50ab4548f4929d946c5208325
   _authoringUnusedAssetGuids:
-  - 4bb1c2193bcf4b238a510594d07de05f
-  - ef40ca74fd26b4ff4a502fce28b10b30
-  - 9aed27b55fccb473c96b45c71e0f6a48
-  - 77fc92391efe2484abd95440a39a66eb
-  - 2c8cf834ddcf54889839bde348fba1ea
-  - a81d4b1b3b614431ca93e186e0993c75
-  - 92a94a39b38394dbcb1cd9d1a4204af4
-  - af36bc920af024238a33b75e1904a262
-  - 4614223ce054f438ba764a1cde3fcfe7
   - de5090e36907347e8abafb8c09e55635
   - 3c8ffaeb6f80340338e9212a9f9c7ec6
   - c3505462d8c59416aa68c067fb5e88e1

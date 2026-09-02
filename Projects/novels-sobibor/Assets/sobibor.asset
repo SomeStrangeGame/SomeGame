@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: sobibor
+  m_EditorClassIdentifier:
+  _id: sobibor
+  _mainCharacter: "Александр Печерский"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Назвать Собибор"
+    _description: "Осенью 1943 года Александр Печерский присоединяется к подполью узников Собибора, чтобы превратить обречённость в общий план сопротивления."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Александр Печерский"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Элеонора Печерская"
+    _clothes: "Довоенная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Леон Фельгендлер"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Шлёма Лейтман"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Эстер Рааб"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Йоганн Ниманн"
+    _clothes: "Служебная форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Александр Шубаев"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Аркадий Вайспапир"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Йегуда Лернер"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Зигфрид Грейтшус"
+    _clothes: "Служебная форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Клятт"
+    _clothes: "Служебная форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Борис Цыбульский"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Хаим Энгель"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Рудольф Бекман"
+    _clothes: "Служебная форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Карл Френцель"
+    _clothes: "Служебная форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Томас Блатт"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Сельма Вейнберг"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Люка"
+    _clothes: "Лагерная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid:
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

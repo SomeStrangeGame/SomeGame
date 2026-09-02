@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   _id: gpl
   _mainCharacter: "\u041B\u0435\u044F"
-  _contentVersion: 3
+  _contentVersion: 5
   _endMarker: "...: КОНЕЦ СЕРИИ"
   _silentAudioIds: []
   _episodes:
@@ -27,6 +27,12 @@ MonoBehaviour:
   - _id: s01e03
     _title: "Седьмой пульс"
     _description: "Лея и её спутники пытаются остановить сигнал бедствия, пока станция предсказывает их решения и создаёт новые копии."
+  - _id: s01e04
+    _title: "Чужой борт"
+    _description: "Пропавшая Сигрид возвращается на спасательном борту и приносит маршрут к станции, которой нет на современных картах."
+  - _id: s01e05
+    _title: "Нулевая станция"
+    _description: "Команда спускается к источнику хора и должна решить, что сохранить: память, связь или единственную ветвь будущего."
   _videoAliases: []
   _artAliases: []
   _characterDefaults:
@@ -48,6 +54,11 @@ MonoBehaviour:
     _accessory:
   - _character: "\u041F\u0430\u0432\u0435\u043B"
     _clothes: drilling
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Сигрид"
+    _clothes: rescue
     _hair:
     _hairColor:
     _accessory:

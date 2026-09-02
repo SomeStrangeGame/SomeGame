@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: deti
+  m_EditorClassIdentifier:
+  _id: deti
+  _mainCharacter: "Матрёна"
+  _contentVersion: 1
+  _endMarker:
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Пока все не пройдут"
+    _description: "Матрёна Вольская ведёт колонну детей из оккупированной Смоленщины к станции Торопец и добивается, чтобы истощённый эшелон приняли в Горьком."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Матрёна"
+    _clothes: "Походная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Батя"
+    _clothes: "Партизанская одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Варвара"
+    _clothes: "Походная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Екатерина"
+    _clothes: "Походная медицинская одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Старший мальчик"
+    _clothes: "Дорожная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Мальчик"
+    _clothes: "Дорожная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Девочка"
+    _clothes: "Дорожная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Железнодорожник"
+    _clothes: "Рабочая одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Телеграфистка"
+    _clothes: "Служебная одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Врач"
+    _clothes: "Медицинская одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: 002314b6a274045ae94b50ba42fb2514
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

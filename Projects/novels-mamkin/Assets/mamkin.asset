@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: mamkin
+  m_EditorClassIdentifier:
+  _id: mamkin
+  _mainCharacter: "Владимир"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Последний рейс"
+    _description: "В ночь с 10 на 11 апреля 1944 года Александр Мамкин вывозит из немецкого тыла десятерых воспитанников Полоцкого детского дома, их воспитательницу и двух раненых партизан."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Мамкин"
+    _clothes: flight
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Владимир"
+    _clothes: 1944
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Владимир 1979"
+    _clothes: 1979
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Валентина Степановна"
+    _clothes: wartime
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Толик"
+    _clothes: wartime
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Солдат"
+    _clothes: front
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: e1d8ff0c6fc34f9588f9eda0ae6e147f
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

@@ -1,0 +1,85 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: devyataev
+  m_EditorClassIdentifier:
+  _id: devyataev
+  _mainCharacter: Михаил
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ ИСТОРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Над Балтикой — домой"
+    _description: "8 февраля 1945 года десять советских заключённых захватывают на аэродроме Пенемюнде немецкий Heinkel He 111 и летят через линию фронта."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: Михаил
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Иван Кривоногов
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Владимир Соколов
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Владимир Немченко
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Фёдор Адамов
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Михаил Емец
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Иван Олейник
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Пётр Кутергин
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Николай Урбанович
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Трофим Сердюков
+    _clothes: лагерь
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: Красноармеец
+    _clothes: фронт
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: f2f887a7fcc734825acc0adefa211791
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

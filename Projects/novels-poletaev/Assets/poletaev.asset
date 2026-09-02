@@ -1,0 +1,57 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: poletaev
+  m_EditorClassIdentifier:
+  _id: poletaev
+  _mainCharacter: "Фёдор"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ"
+  _silentAudioIds:
+  - "выстрелы"
+  - "тишина"
+  _episodes:
+  - _id: s01e01
+    _title: "Имя на снегу"
+    _description: "Путь Фёдора Полетаева из Катино через фронт и плен — к итальянскому Сопротивлению и последнему бою у Канталупо."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Фёдор"
+    _clothes: timeline
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Мария Калинина"
+    _clothes: timeline
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Военнопленный"
+    _clothes: timeline
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Итальянский партизан"
+    _clothes: timeline
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Солдат восточной части"
+    _clothes: timeline
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: 8d9ffb326d3b4a91b4ac5fb8d3141d60
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

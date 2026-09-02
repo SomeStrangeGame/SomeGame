@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: okt
+  m_EditorClassIdentifier:
+  _id: okt
+  _mainCharacter: "Мария"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Боевая подруга"
+    _description: "Мария Октябрьская отдаёт сбережения на танк, добивается права стать его механиком-водителем и выходит на Западный фронт."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Мария"
+    _clothes: "Гражданская одежда"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Илья"
+    _clothes: "Форма политработника 1941"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Пётр"
+    _clothes: "Танковая форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Геннадий"
+    _clothes: "Танковая форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Михаил"
+    _clothes: "Танковая форма"
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: dfac575ed1eb415ba31cd407ec6928ad
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []
