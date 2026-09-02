@@ -1,0 +1,4 @@
+interface:
+  display_name: "SomeGame Workflow"
+  short_description: "Маршрутизация задач и проверок SomeGame"
+  default_prompt: "Use $somegame-workflow to handle this task in the SomeGame repository."

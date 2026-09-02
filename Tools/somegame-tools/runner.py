@@ -429,9 +429,10 @@ def player_build(args: argparse.Namespace) -> dict[str, Any]:
             return {"ok": False, "workflow": "player-build", "stage": "content", **built}
     command = [str(ROOT / "Novels/Tools/build-player.sh"), args.mode, args.target, str(output)]
     if args.mode == "Remote": command.append(args.remote_url)
-    elif args.development:
+    elif args.development or args.test_signing:
         command.append("")
     if args.development: command.append("--development")
+    if args.test_signing: command.append("--test-signing")
     built = run_logged(command, timeout=args.timeout, log=LOG_ROOT / f"player-{utc_stamp()}.log")
     logs.append(built["log"])
     exists = output.exists()
@@ -697,7 +698,10 @@ def parser() -> argparse.ArgumentParser:
     player.add_argument("--target", choices=("Android", "iOS", "Windows", "macOS"), required=True)
     player.add_argument("--mode", choices=("Remote", "Embedded"), required=True)
     player.add_argument("--output"); player.add_argument("--remote-url", default="https://pureshechka.com/dev")
-    player.add_argument("--development", action="store_true"); player.add_argument("--skip-content-build", action="store_true")
+    signing_mode = player.add_mutually_exclusive_group()
+    signing_mode.add_argument("--development", action="store_true")
+    signing_mode.add_argument("--test-signing", action="store_true")
+    player.add_argument("--skip-content-build", action="store_true")
     player.add_argument("--close-hub", action="store_true")
     player.add_argument("--timeout", type=float, default=7200)
     licensing = sub.add_parser("licensing-preflight"); licensing.add_argument("--agent-id")

@@ -1,0 +1,26 @@
+# Agent: android-test-apk-publish
+
+- Status: complete
+- Task: build a test-signed Android Remote release APK, publish a fresh Android-only content tree, and replace the obsolete hosted test artifacts.
+- Scope: generated `Novels/LocalSigning/**`, local Embedded evidence, generated Android-only `Build/LocalContent/**`, `Novels/Build/Players/automation/Android/Remote/Novels.apk`, owned build logs/staging, remote deletion of `/home/p/pureshecom/public_html/DevBuilds/Novels-remote.apk`, `/home/p/pureshecom/public_html/DevBuilds/Novels-dev.apk`, and `/home/p/pureshecom/public_html/dev/**`; atomic publication to `/home/p/pureshecom/public_html/DevBuilds/Novels-test.apk` and `/home/p/pureshecom/public_html/dev`; own coordination records and handoff; tracked source files are read-only.
+- Base commit: `69d77aa9c04d6b104acd5cea32c074b2778802ff`
+- Acceptance: obsolete hosted APKs and assets are removed, only fresh Android content is published, non-development Android Remote APK builds with test signing, uploads use temporary paths and atomic renames, and HTTPS exposes the new APK/content.
+- Validation: exact pre-delete inventory, licensing/process barrier, Android content and Remote Player build results, absence of foreign-platform bundles, APK signature/metadata/SHA-256, remote checksum/size, and HTTPS HEAD.
+- Requested UTC: 2026-09-01T16:20:37Z
+- Heartbeat UTC: 2026-09-01T16:20:37Z
+- Lock acquired UTC: 2026-09-01T16:40:43Z
+- Heartbeat UTC: 2026-09-01T16:40:43Z
+- APK built UTC: 2026-09-01T16:44:42Z
+- Artifact: `Novels/Build/Players/automation/Android/Embedded/Novels.apk`, 1866439736 bytes, version `2026.09.01` (`3507402`).
+- Signature: APK Signature Scheme v2 verified; single RSA-2048 signer `CN=SomeGame Test`; APK SHA-256 `b205639e68ddd628d6334158b060696a43118f9ae2924d57ce7703bf9d560ce7`.
+- Blocker: SSH host is reachable but rejects available public keys and requires the account password or another authorized credential. Upload has not started and no remote files changed.
+- Paused UTC: 2026-09-01T16:46:30Z
+- Credential resolved UTC: 2026-09-01T16:47:00Z — explicit local key `~/.ssh/sweb_novels` authenticates successfully.
+- Hosting constraint: only about 39 MiB free; the 1.87 GiB Embedded APK cannot fit. Resume with a test-signed Remote APK pointing to the existing `https://pureshechka.com/dev` content root; keep the Embedded APK local.
+- Requeued UTC: 2026-09-01T16:47:25Z
+- Heartbeat UTC: 2026-09-01T16:47:25Z
+- Scope expanded UTC: 2026-09-01T16:52:00Z — user explicitly authorized removal of old builds and assets; inventory found only `Novels-remote.apk`, `Novels-dev.apk`, and `dev` in the publishing scope.
+- Cleanup UTC: 2026-09-01T16:55:10Z — removed only the inventoried hosted artifacts.
+- Android content UTC: 2026-09-01T16:56:36Z — content gate passed; filtered publish tree is 929336 KiB with 48 Android bundle files, 198 common Files payloads, and zero Win/iOS/Mac files.
+- Remote APK UTC: 2026-09-01T16:58:54Z — 25,618,661 bytes, version `2026.09.01` (`3507417`), SHA-256 `75d6148d21714650587d916434ff7e5304223b3b5a0918e24bb93019b50cc102`, v2 test signature verified.
+- Published UTC: 2026-09-01T17:02:18Z — atomic `/dev` and `DevBuilds/Novels-test.apk` publication complete; remote checksum/size and HTTPS APK/catalog HEAD verified.

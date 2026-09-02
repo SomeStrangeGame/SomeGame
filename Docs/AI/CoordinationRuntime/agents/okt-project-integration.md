@@ -1,0 +1,32 @@
+# Agent: okt-project-integration
+
+- Status: completed
+- Task: integrate the completed «Боевая подруга» story and art as production-ready atomic content `okt`, register it in Catalog, and validate the playable path.
+- Base commit: `69d77aa9c04d6b104acd5cea32c074b2778802ff`
+- Scope:
+  - `Projects/novels-okt/**`
+  - `Projects/novels-catalog/Config/catalog.json`
+  - `Packages/NovelInk/StoryContracts/CharacterPresentation.cs`
+  - `Packages/NovelInk/StoryContracts/StorySyntax.cs`
+  - `Packages/NovelInk/StoryCommands/StoryCommandMapper.cs`
+  - `Packages/NovelsContentSdk/Runtime/Features/Character/CharacterSpriteResolver.cs`
+  - `Docs/AI/guides/InkSyntax.md`
+  - `Docs/AI/memory/Architecture.md`
+  - own coordination request, lock, agent record, and `Docs/AI/CoordinationRuntime/HANDOFF.md`
+- Contract: support an explicit, generic `переодеть <outfit>` character argument so authored whole-character variants can switch outfits without a fake player choice; preserve existing dialogue arguments and wardrobe choices.
+- Expected validation: Ink compile/traversal, `novels-content plan`, targeted `okt` and Catalog validation/build, shared Unity compile, asset/meta/GUID checks, and bounded runtime/visual smoke when available.
+- Started UTC: 2026-09-02T13:27:41Z
+- Heartbeat UTC: 2026-09-02T13:39:00Z
+- Waiting UTC: 2026-09-02T13:39:00Z — content gate found another worktree's Unity batch PID 56760 validating `novels-poletaev`; own lock released until the global process barrier clears.
+- Resumed UTC: 2026-09-02T13:56:22Z — global Editor/Hub process barrier is clear; queued again for targeted validation.
+- Validation UTC: 2026-09-02T13:58:29Z — targeted `okt` editor content gate passed and generated all Unity metadata plus compiled Ink/source map; Catalog gate deferred because another worktree started Novels Editor PID 63289.
+- Resumed UTC: 2026-09-02T14:02:33Z — global process barrier clear after `novels-zmt`; queued for Catalog and Novels gates.
+- Waiting UTC: 2026-09-02T14:03:50Z — a second `novels-zmt` batch PID 66623 won the global process race; own request/lock released again.
+- Resumed UTC: 2026-09-02T14:10:15Z — no Editor remains and licensing preflight returned `ok`; queued for final gates.
+- Waiting UTC: 2026-09-02T14:10:40Z — Catalog gate is correctly blocked by the still-running foreign Hub PID 66237; no `--close-hub` takeover attempted.
+- Resumed UTC: 2026-09-02T14:27:34Z — the global Editor/Hub process barrier is clear; queued again for final Catalog and Novels validation.
+- Waiting UTC: 2026-09-02T14:32:21Z — Catalog validation was blocked by another worktree's Hub PID 76121; own request and lock released without taking over the foreign process.
+- Resumed UTC: 2026-09-02T14:47:00Z — foreign Hub PID 76121 has exited; FIFO and global process barrier are clear for final validation.
+- Waiting UTC: 2026-09-02T14:47:04Z — the same foreign worktree immediately started Hub PID 81463 for another Novels gate; own request and lock released again.
+- Resumed UTC: 2026-09-02T14:52:56Z — Hub PID 81463 has exited and licensing preflight is clean; queued for final Catalog and Novels gates.
+- Completed UTC: 2026-09-02T15:03:31Z — `okt` and Catalog editor content gates passed, composed registry contains `okt`, fresh Novels compile passed, direct-outfit parser smoke and static asset/meta/GUID checks passed, docs-check passed. Manual full-story Play Mode replay remains an explicit visual limitation.

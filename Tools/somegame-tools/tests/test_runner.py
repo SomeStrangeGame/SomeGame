@@ -57,6 +57,21 @@ class RunnerTests(unittest.TestCase):
     def test_default_player_output_has_target_suffix(self):
         self.assertEqual("Novels.apk", runner.default_player_output("Android", "Embedded").name)
 
+    def test_player_parser_accepts_test_signing(self):
+        args = runner.parser().parse_args([
+            "player-build", "--agent-id", "a", "--target", "Android",
+            "--mode", "Embedded", "--test-signing",
+        ])
+        self.assertTrue(args.test_signing)
+        self.assertFalse(args.development)
+
+    def test_player_parser_rejects_development_with_test_signing(self):
+        with self.assertRaises(SystemExit):
+            runner.parser().parse_args([
+                "player-build", "--agent-id", "a", "--target", "Android",
+                "--mode", "Embedded", "--development", "--test-signing",
+            ])
+
     def test_content_gate_parser_accepts_explicit_target(self):
         args = runner.parser().parse_args(["content-gate", "--agent-id", "a", "--target", "catalog"])
         self.assertEqual("catalog", args.target)

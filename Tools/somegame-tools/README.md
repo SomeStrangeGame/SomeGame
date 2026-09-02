@@ -17,6 +17,7 @@ Tools/somegame content-gate --agent-id <lock-owner> --platform editor
 Tools/somegame content-gate --agent-id <lock-owner> --target catalog --platform editor --close-hub
 Tools/somegame editor-gate --agent-id <lock-owner> --project Novels --compile
 Tools/somegame player-build --agent-id <lock-owner> --target Android --mode Embedded --development
+Tools/somegame player-build --agent-id <lock-owner> --target Android --mode Embedded --test-signing
 Tools/somegame android-smoke --agent-id <lock-owner> --apk <path> \
   --package-id <id-from-current-apk-or-player-settings>
 ```
@@ -52,3 +53,9 @@ process barrier; helper-процессы отдельно не сигналят�
 `[NOVELS_SMOKE]` events и сохраняет screenshot/full logcat/activity только при
 failure. Для ручного сценария список ожидаемых событий меняется через
 `--required-events`.
+
+`player-build --test-signing` собирает обычный Android Player без
+`BuildOptions.Development`, но использует отдельный локальный ключ из
+`Novels/LocalSigning`. При первом запуске ключ и credentials создаются
+автоматически и игнорируются Git; production keystore и его настройки не
+изменяются. Режим несовместим с `--development` и другими платформами.

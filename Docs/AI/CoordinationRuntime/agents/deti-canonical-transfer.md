@@ -1,0 +1,21 @@
+# Agent: deti-canonical-transfer
+
+- Status: completed
+- Task: перенести законченную историю `deti` из Codex worktree `f505` в каноническую рабочую копию без перезаписи чужих dirty changes.
+- Scope:
+  - `Projects/novels-deti/**`
+  - `Projects/novels-catalog/Config/catalog.json`
+  - `Packages/NovelsContentSdk/Runtime/Features/Character/CharacterSpriteSetLoader.cs`
+  - `Docs/AI/guides/ContentAuthoringGuide.md`
+  - `Docs/AI/guides/InkSyntax.md`
+  - `Docs/AI/architecture/UnityProjectContext.md`
+  - `Docs/AI/memory/Architecture.md`
+  - own coordination records and `Docs/AI/CoordinationRuntime/HANDOFF.md`
+- Merge contract: сохранить все destination-only изменения и перенести только дельту `deti` относительно общего HEAD.
+- Base commit: `69d77aa9c04d6b104acd5cea32c074b2778802ff`.
+- Requested UTC: `2026-09-02T15:42:10Z`.
+- Lock acquired UTC: `2026-09-02T16:21:35Z`.
+- Result: `Projects/novels-deti/**` перенесён в canonical checkout побайтно без generated-кэшей; `deti` аддитивно зарегистрирован после `poletaev`; whole-outfit selector runtime и документация объединены с direct-outfit контрактом `okt`.
+- Validation: source parity для 167 файлов; 39 PNG (28 whole, 11 locations), zero missing meta и duplicate GUID; 810 source-map entries; `novels-content validate/build deti editor`, `validate/build catalog editor`, docs-check, scoped diff-check и fresh Novels compile passed. Release `4d3d578cfc0aa438536af5f18b4b08673903c2b5381020db297a6df4bcb98180` содержит 3 chunks и 40 root assets.
+- Limitation: bounded Play Mode visual replay всех сцен, эмоций и смены Матрёны на учительское платье не выполнялся.
+- Completed UTC: `2026-09-02T16:33:35Z`.

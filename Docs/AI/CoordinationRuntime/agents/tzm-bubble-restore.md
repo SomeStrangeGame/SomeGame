@@ -1,0 +1,22 @@
+# Agent: `tzm-bubble-restore`
+
+- Status: ready-for-manual-validation
+- Task: вернуть story-specific TZM bubble prefab в editor content для ручной проверки.
+- Scope: `Projects/novels-tzm/Assets/tzm.asset`, generated TZM editor release, own coordination records and shared handoff.
+- Contract: вернуть prefab `Presentation/bubble/screen-variant.prefab` и его шесть PNG-зависимостей из `authoring-unused` в chunk 0; wardrobe, Ink, runtime и prefab sources не менять; существующий dirty tree сохранить.
+- Base commit: `69d77aa9c04d6b104acd5cea32c074b2778802ff` plus preserved dirty tree.
+- Requested UTC: 2026-09-01T12:37:58Z
+- Checkpoint UTC: 2026-09-01T12:41:13Z
+- Result: TZM bubble prefab and its six PNG dependencies are restored to chunk 0 and removed from `authoring-unused`.
+- Validation: scoped `git diff --check` passed; each restored GUID occurs exactly once in `tzm.asset`.
+- Blocker: Novels Editor PID `66009` is open with its import worker. Protocol forbids a parallel TZM content build and forbids closing the user's Editor without explicit permission.
+- Resume UTC: 2026-09-01T12:42:34Z; user explicitly allowed closing the Editor.
+- Close attempt: a graceful AppleScript Quit was sent, but Novels Editor PID `66009` remained alive; macOS Accessibility prevents inspecting or answering the modal. No force-quit was used.
+- Resume UTC: 2026-09-01T12:55:14Z; user closed Unity manually. Queued behind active `tzm-ink-punctuation` so its overlapping TZM changes are preserved and compiled together.
+- Lock acquired UTC: 2026-09-01T12:58:57Z after `tzm-ink-punctuation` completed and released the queue.
+- TZM build: passed; Mac release contains the bubble prefab and six PNG dependencies.
+- First editor-gate: retryable `editor_not_ready` after attaching to an Editor that exited during the wait; no compiler errors, and no Unity process remains. Retrying from a confirmed cold state.
+- Completed UTC: 2026-09-01T13:14:47Z
+- Result: TZM Mac/editor release contains `story/presentation/bubble/screen-variant.prefab` and all six local PNG dependencies.
+- Validation: targeted TZM editor build passed; release address audit passed; cold Novels editor-gate with explicit `--start-editor --no-stop-editor --close-hub --compile` passed with `compilerErrors: []`.
+- Manual gate: Novels Editor PID `74751` is open for user Play Mode verification.

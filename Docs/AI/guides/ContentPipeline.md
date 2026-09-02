@@ -146,6 +146,12 @@ WIP в handoff и последовательно собирают только �
 keystore. Release build не должен автоматически понижаться до debug signing:
 ему нужны штатные пароли production keystore.
 
+Для локальной проверки release-конфигурации без production credentials
+используется явный `Tools/somegame player-build ... --test-signing`. Он не
+добавляет `BuildOptions.Development`, создаёт отдельный ключ только в ignored
+`Novels/LocalSigning/` и восстанавливает production signing settings после
+сборки. Такой APK предназначен для тестирования, а не публикации в store.
+
 ```bash
 version=$(date -u +%Y.%m.%d)
 build=$(( ($(date -u +%s) - 1577836800) / 60 ))

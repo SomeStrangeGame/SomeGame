@@ -38,15 +38,19 @@ production-вариант создаётся цельным полнофигур
 Описанные ниже каталоги `view/emotions/clothes/hairs/accessories`, aliases и
 команды очистки слоя фиксируют legacy-адресацию уже существующих TZM и ZDM и
 совместимость действующего runtime. Они не разрешают производить новые
-независимые слои. Переход whole-variant набора в runtime требует отдельного
-адаптера, который разрешает сочетание `pose + outfit + emotion` в один sprite
-address. Пока этот адаптер и его точная адресация не интегрированы:
+независимые слои. Для нового цельного набора runtime разрешает один sprite по
+адресу:
 
-- существующий legacy-арт не мигрируется и не перекладывается попутно;
-- новый цельный набор можно утвердить как source-art, но нельзя объявлять
-  runtime-ready или самостоятельно раскладывать по legacy-слотам;
-- задача runtime-интеграции отдельно фиксирует mapping, совместимость Ink/save
-  и миграцию конкретной истории.
+```text
+story/character/characters/<character>/view/whole/<outfit>/<variant>.png
+```
+
+Нейтральный вариант называется `main.png`. Первый кандидат в скобках после
+имени говорящего может выбрать authored outfit, если для него существует
+`main.png`, а следующий кандидат — emotion/pose внутри этого outfit. Если
+точного emotion/pose нет, runtime сохраняет выбранный outfit и показывает его
+нейтральный вариант. Существующий legacy-арт не мигрируется и продолжает
+разрешаться послойно.
 
 ## Первые пять минут
 
@@ -203,8 +207,11 @@ story/presentation/<feature>/screen-variant.prefab
 ```
 
 Эта таблица описывает совместимость существующего контента, а не файловую
-схему для новых whole variants. Канонический адрес цельного варианта должен
-быть определён runtime-adapter scope до первого интегрируемого набора.
+схему для новых whole variants. Их канонический адрес:
+
+```text
+story/character/characters/<character>/view/whole/<outfit>/<variant>.png
+```
 
 ### Art Aliases без изменения Ink
 
@@ -397,8 +404,8 @@ Tools/novels-tools/novels-content build zdm editor
 - не появился `Config/build.json`;
 - не вернулся ручной AssetBundle label;
 - source Ink, compiled story и source map согласованы;
-- новые ссылки на assets разрешаются; whole-variant набор не считается
-  runtime-ready без интегрированного one-address adapter;
+- новые ссылки на assets разрешаются; whole-variant набор имеет `main.png` для
+  каждого используемого outfit и варианты из Ink по каноническим адресам;
 - размер bundle сравнен с baseline из `ContentSizeBaseline.md`;
 - `git diff --check` проходит;
 - в статус-файле потока перечислены проверки и известные предупреждения.

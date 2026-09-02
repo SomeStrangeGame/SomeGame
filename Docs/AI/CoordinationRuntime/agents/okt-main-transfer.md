@@ -1,0 +1,23 @@
+# Agent: okt-main-transfer
+
+- Status: completed
+- Task: transfer the completed `okt` integration from worktree `5852` into the canonical checkout without overwriting unrelated dirty work.
+- Base commit: `69d77aa9c04d6b104acd5cea32c074b2778802ff`
+- Scope:
+  - `Projects/novels-okt/**`
+  - `Projects/novels-catalog/Config/catalog.json`
+  - `Packages/NovelInk/StoryContracts/CharacterPresentation.cs`
+  - `Packages/NovelInk/StoryContracts/StorySyntax.cs`
+  - `Packages/NovelInk/StoryCommands/StoryCommandMapper.cs`
+  - `Packages/NovelsContentSdk/Runtime/Features/Character/CharacterSpriteResolver.cs`
+  - `Docs/AI/guides/InkSyntax.md`
+  - `Docs/AI/memory/Architecture.md`
+  - `Docs/AI/CoordinationRuntime/agents/okt-*.md`
+  - `Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-01.md`
+  - own request, lock, agent record, and `Docs/AI/CoordinationRuntime/HANDOFF.md`
+- Merge contract: preserve destination-only edits in overlapping files and merge `okt` changes relative to the shared HEAD.
+- Started UTC: 2026-09-02T15:22:04Z
+- Completed UTC: 2026-09-02T15:50:27Z
+- Validation: transferred project matches worktree `5852` under an excluding rsync dry-run; Ink compile/traversal reports 0 warnings, 243 endings and 608 states; merged direct-outfit parser smoke passed while preserving the destination-only `стоп` contract; content doctor, docs-check, scoped diff, meta/GUID and catalog-order checks passed. Source worktree evidence additionally includes targeted `okt` and Catalog content-gates plus a fresh Novels Unity compile.
+- Limitation: no additional full-story Play Mode replay was run during this mechanical transfer.
+- Finish check: scoped work is complete; repository-level `finish-check` was blocked only by foreign Unity batch PID 2111 (`5a47`, Catalog) and 99600 (`3af1`, `novels-devyataev`). Neither process was touched.
