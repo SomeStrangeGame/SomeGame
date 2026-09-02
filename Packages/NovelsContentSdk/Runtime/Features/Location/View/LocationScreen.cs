@@ -369,6 +369,36 @@ namespace Novels.Location.View
             ResetEffect();
         }
 
+        public async UniTask PlayTimedEffect(
+            Effect effect,
+            int holdDurationMilliseconds,
+            CancellationToken cancellationToken)
+        {
+            ActivateEffect(effect);
+            try
+            {
+                await global::UITransitions.Transition.Fade(
+                    _effectCanvasGroup,
+                    0f,
+                    1f,
+                    _effectDuration,
+                    cancellationToken);
+                await UniTask.Delay(
+                    holdDurationMilliseconds,
+                    cancellationToken: cancellationToken);
+                await global::UITransitions.Transition.Fade(
+                    _effectCanvasGroup,
+                    1f,
+                    0f,
+                    _effectDuration,
+                    cancellationToken);
+            }
+            finally
+            {
+                ResetEffect();
+            }
+        }
+
         public void SetEffectImmediate(Effect effect)
         {
             ActivateEffect(effect);

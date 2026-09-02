@@ -80,6 +80,7 @@ namespace Novels.StoryCommands
             var position = ParseCharacterPosition(arguments);
             var visibility = ParseCharacterVisibility(arguments);
             var hasUnsupportedTimedChoice = false;
+            var requestedClothes = ParseRequestedClothes(arguments);
 
             for (var index = 0; index < arguments.Length; index++)
             {
@@ -90,6 +91,13 @@ namespace Novels.StoryCommands
                     continue;
                 if (index == displayNameIndex)
                     continue;
+                if (TryStripPrefix(
+                        argument,
+                        StoryContracts.StoryArguments.ChangeClothes,
+                        out _))
+                {
+                    continue;
+                }
                 if (TryStripPrefix(
                         argument,
                         StoryContracts.StoryArguments.Thoughts,
@@ -120,7 +128,24 @@ namespace Novels.StoryCommands
                 position,
                 visibility,
                 hasUnsupportedTimedChoice,
-                assetCandidates.ToArray());
+                assetCandidates.ToArray(),
+                requestedClothes);
+        }
+
+        private static string ParseRequestedClothes(string[] arguments)
+        {
+            foreach (var argument in arguments)
+            {
+                if (TryStripPrefix(
+                        argument,
+                        StoryContracts.StoryArguments.ChangeClothes,
+                        out var requestedClothes))
+                {
+                    return requestedClothes;
+                }
+            }
+
+            return string.Empty;
         }
 
         private static string ParseDisplayName(
@@ -211,7 +236,10 @@ namespace Novels.StoryCommands
                 ? StoryContracts.StoryBackgroundColor.White
                 : StoryContracts.StoryBackgroundColor.Black;
             var keepFinalVideoFrame = type == StoryContracts.StoryBackgroundType.CutScene
-                && HasArgument(arguments, StoryContracts.StoryArguments.EndCutScene);
+                && (HasArgument(arguments, StoryContracts.StoryArguments.EndCutScene)
+                    || HasArgument(
+                        arguments,
+                        StoryContracts.StoryArguments.EndCutSceneRussian));
 
             return new StoryContracts.StoryBackgroundPresentation(
                 type,

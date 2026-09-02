@@ -88,6 +88,7 @@ namespace Novels.StoryContracts
         public const string WhiteBackground = "white";
         public const string WhiteBackgroundRussian = "белый";
         public const string EndCutScene = "end";
+        public const string EndCutSceneRussian = "стоп";
         public const string RemoveClothes = "убрать одежду";
         public const string RemoveHair = "убрать причёску";
         public const string RemoveHairLegacy = "убрать прическу";
@@ -99,7 +100,7 @@ namespace Novels.StoryContracts
         public const string HideCharacter = "невидимка";
         public const string ShowCharacter = "убрать невидимку";
         public const string ShowCharacterLegacy = "снять невидимку";
-        // TODO: Replace this temporary dialogue control with wardrobe state handling.
+        // Prefix form: `переодеть <outfit>`.
         public const string ChangeClothes = "переодеть";
     }
 

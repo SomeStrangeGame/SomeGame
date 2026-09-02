@@ -13,7 +13,8 @@ namespace Novels.StoryContracts
             StoryCharacterPosition? position,
             StoryCharacterVisibilityCommand visibility,
             bool hasUnsupportedTimedChoice,
-            string[] assetCandidates)
+            string[] assetCandidates,
+            string requestedClothes = null)
         {
             IsChild = isChild;
             RemoveClothes = removeClothes;
@@ -24,6 +25,7 @@ namespace Novels.StoryContracts
             Visibility = visibility;
             HasUnsupportedTimedChoice = hasUnsupportedTimedChoice;
             AssetCandidates = assetCandidates ?? Array.Empty<string>();
+            RequestedClothes = requestedClothes?.Trim() ?? string.Empty;
         }
 
         public bool IsChild { get; }
@@ -39,6 +41,7 @@ namespace Novels.StoryContracts
         public bool HasUnsupportedTimedChoice { get; }
 
         public string[] AssetCandidates { get; }
+        public string RequestedClothes { get; }
     }
 
     public enum StoryCharacterVisibilityCommand

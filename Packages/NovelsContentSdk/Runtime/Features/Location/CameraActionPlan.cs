@@ -9,7 +9,7 @@ namespace Novels.Location
     internal enum CameraActionPresentation
     {
         Motion,
-        PersistentEffect,
+        TimedEffect,
         TransientEffect,
     }
 
@@ -18,16 +18,19 @@ namespace Novels.Location
         private CameraActionPlan(
             CameraActionPresentation presentation,
             View.LocationScreen.CameraEffect motion,
-            View.LocationScreen.Effect effect)
+            View.LocationScreen.Effect effect,
+            int effectHoldDurationMilliseconds)
         {
             Presentation = presentation;
             Motion = motion;
             Effect = effect;
+            EffectHoldDurationMilliseconds = effectHoldDurationMilliseconds;
         }
 
         internal CameraActionPresentation Presentation { get; }
         internal View.LocationScreen.CameraEffect Motion { get; }
         internal View.LocationScreen.Effect Effect { get; }
+        internal int EffectHoldDurationMilliseconds { get; }
 
         internal static bool TryCreate(
             StoryContracts.StoryCameraAction action,
@@ -36,7 +39,7 @@ namespace Novels.Location
             switch (action)
             {
                 case StoryContracts.StoryCameraAction.FadeIn:
-                    plan = PersistentEffect(View.LocationScreen.Effect.Dark);
+                    plan = TimedEffect(View.LocationScreen.Effect.Dark, 1000);
                     return true;
                 case StoryContracts.StoryCameraAction.PanLeftToRight:
                     plan = MotionPlan(View.LocationScreen.CameraEffect.LeftRight);
@@ -69,12 +72,14 @@ namespace Novels.Location
         }
 
         private static CameraActionPlan MotionPlan(View.LocationScreen.CameraEffect motion) =>
-            new(CameraActionPresentation.Motion, motion, default);
+            new(CameraActionPresentation.Motion, motion, default, 0);
 
-        private static CameraActionPlan PersistentEffect(View.LocationScreen.Effect effect) =>
-            new(CameraActionPresentation.PersistentEffect, default, effect);
+        private static CameraActionPlan TimedEffect(
+            View.LocationScreen.Effect effect,
+            int holdDurationMilliseconds) =>
+            new(CameraActionPresentation.TimedEffect, default, effect, holdDurationMilliseconds);
 
         private static CameraActionPlan TransientEffect(View.LocationScreen.Effect effect) =>
-            new(CameraActionPresentation.TransientEffect, default, effect);
+            new(CameraActionPresentation.TransientEffect, default, effect, 0);
     }
 }

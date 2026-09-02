@@ -12,6 +12,7 @@
 /[Uu]ser[Ss]ettings/
 *.log
 /Tools/release-content.env
+/LocalSigning/
 
 # Generated local content delivery output. Recreated by the content build pipeline.
 /Assets/StreamingAssets/Remote/

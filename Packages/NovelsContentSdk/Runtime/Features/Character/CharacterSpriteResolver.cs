@@ -105,6 +105,8 @@ namespace Novels.Character
             var appearance = request.Role == StoryContracts.StorySpeakerRole.Wardrobe
                 ? new CharacterAppearanceState()
                 : _appearances.Get(name);
+            if (!string.IsNullOrWhiteSpace(request.Presentation.RequestedClothes))
+                appearance.Clothes = request.Presentation.RequestedClothes;
             return _sprites.Load(
                 name,
                 view,

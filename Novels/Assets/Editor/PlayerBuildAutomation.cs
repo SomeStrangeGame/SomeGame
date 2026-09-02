@@ -43,10 +43,11 @@ namespace Editor
             BuildReport report;
             var buildIdentity = ApplyBuildIdentity(arguments);
             var isDevelopmentBuild = arguments.Contains("-developmentBuild");
-            var useCustomKeystore = PlayerSettings.Android.useCustomKeystore;
+            var signing = AndroidSigningSnapshot.Capture();
             IsEmbeddedPlayerBuild = true;
             try
             {
+                ApplyTestSigning(arguments, isDevelopmentBuild);
                 if (isDevelopmentBuild && EditorUserBuildSettings.activeBuildTarget
                     == BuildTarget.Android)
                 {
@@ -69,7 +70,7 @@ namespace Editor
             finally
             {
                 buildIdentity.Restore();
-                PlayerSettings.Android.useCustomKeystore = useCustomKeystore;
+                signing.Restore();
                 IsEmbeddedPlayerBuild = false;
             }
             if (report.summary.result != BuildResult.Succeeded)
@@ -112,10 +113,11 @@ namespace Editor
             BuildReport report;
             var buildIdentity = ApplyBuildIdentity(arguments);
             IsRemotePlayerBuild = true;
-            var useCustomKeystore = PlayerSettings.Android.useCustomKeystore;
+            var signing = AndroidSigningSnapshot.Capture();
             var stripEngineCode = PlayerSettings.stripEngineCode;
             try
             {
+                ApplyTestSigning(arguments, isDevelopmentBuild);
                 if (isDevelopmentBuild && EditorUserBuildSettings.activeBuildTarget
                     == BuildTarget.Android)
                 {
@@ -136,7 +138,7 @@ namespace Editor
             {
                 buildIdentity.Restore();
                 PlayerSettings.stripEngineCode = stripEngineCode;
-                PlayerSettings.Android.useCustomKeystore = useCustomKeystore;
+                signing.Restore();
                 IsRemotePlayerBuild = false;
             }
             if (report.summary.result != BuildResult.Succeeded)
@@ -190,6 +192,71 @@ namespace Editor
             return index >= 0 && index + 1 < arguments.Length
                 ? arguments[index + 1]
                 : string.Empty;
+        }
+
+        private static void ApplyTestSigning(string[] arguments, bool isDevelopmentBuild)
+        {
+            if (!arguments.Contains("-testSigning"))
+                return;
+            if (isDevelopmentBuild)
+                throw new InvalidOperationException("Test signing cannot be combined with a Development Build.");
+            if (EditorUserBuildSettings.activeBuildTarget != BuildTarget.Android)
+                throw new InvalidOperationException("Test signing is supported only for Android Player builds.");
+
+            var keystore = Environment.GetEnvironmentVariable("NOVELS_TEST_KEYSTORE_PATH");
+            var keystorePassword = Environment.GetEnvironmentVariable("NOVELS_TEST_KEYSTORE_PASSWORD");
+            var alias = Environment.GetEnvironmentVariable("NOVELS_TEST_KEYALIAS");
+            var aliasPassword = Environment.GetEnvironmentVariable("NOVELS_TEST_KEYALIAS_PASSWORD");
+            if (string.IsNullOrWhiteSpace(keystore) || !File.Exists(keystore)
+                || string.IsNullOrWhiteSpace(keystorePassword)
+                || string.IsNullOrWhiteSpace(alias)
+                || string.IsNullOrWhiteSpace(aliasPassword))
+            {
+                throw new InvalidOperationException(
+                    "Test signing requires a valid local keystore and all NOVELS_TEST_KEY* environment variables.");
+            }
+
+            PlayerSettings.Android.useCustomKeystore = true;
+            PlayerSettings.Android.keystoreName = Path.GetFullPath(keystore);
+            PlayerSettings.Android.keystorePass = keystorePassword;
+            PlayerSettings.Android.keyaliasName = alias;
+            PlayerSettings.Android.keyaliasPass = aliasPassword;
+            Debug.Log("Android test signing enabled for a non-development build.");
+        }
+
+        private readonly struct AndroidSigningSnapshot
+        {
+            private readonly bool _useCustomKeystore;
+            private readonly string _keystoreName;
+            private readonly string _keystorePass;
+            private readonly string _keyaliasName;
+            private readonly string _keyaliasPass;
+
+            private AndroidSigningSnapshot(bool useCustomKeystore, string keystoreName,
+                string keystorePass, string keyaliasName, string keyaliasPass)
+            {
+                _useCustomKeystore = useCustomKeystore;
+                _keystoreName = keystoreName;
+                _keystorePass = keystorePass;
+                _keyaliasName = keyaliasName;
+                _keyaliasPass = keyaliasPass;
+            }
+
+            internal static AndroidSigningSnapshot Capture() => new(
+                PlayerSettings.Android.useCustomKeystore,
+                PlayerSettings.Android.keystoreName,
+                PlayerSettings.Android.keystorePass,
+                PlayerSettings.Android.keyaliasName,
+                PlayerSettings.Android.keyaliasPass);
+
+            internal void Restore()
+            {
+                PlayerSettings.Android.useCustomKeystore = _useCustomKeystore;
+                PlayerSettings.Android.keystoreName = _keystoreName;
+                PlayerSettings.Android.keystorePass = _keystorePass;
+                PlayerSettings.Android.keyaliasName = _keyaliasName;
+                PlayerSettings.Android.keyaliasPass = _keyaliasPass;
+            }
         }
 
         private static BuildIdentitySnapshot ApplyBuildIdentity(string[] arguments)

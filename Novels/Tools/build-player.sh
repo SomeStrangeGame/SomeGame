@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if (( $# < 3 || $# > 5 )); then
-  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development]"
+  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development|--test-signing]"
   exit 2
 fi
 
@@ -30,8 +30,12 @@ case ${mode} in
   Remote|Embedded) ;;
   *) print -u2 "Mode must be Remote or Embedded: ${mode}"; exit 2 ;;
 esac
-if [[ -n ${development_argument} && ${development_argument} != --development ]]; then
+if [[ -n ${development_argument} && ${development_argument} != --development && ${development_argument} != --test-signing ]]; then
   print -u2 "Unknown option: ${development_argument}"
+  exit 2
+fi
+if [[ ${development_argument} == --test-signing && ${target} != Android ]]; then
+  print -u2 "Test signing is supported only for Android."
   exit 2
 fi
 if [[ ${mode} == Remote && ${remote_url} != http://* && ${remote_url} != https://* ]]; then
@@ -56,8 +60,39 @@ fi
 mkdir -p "${stage_root}/SomeGame/Packages" "${stage_project}" "${log_path:h}" "${output_path:h}"
 rsync -a --delete "${somegame_root}/Packages/" "${stage_root}/SomeGame/Packages/"
 rsync -a --delete \
-  --exclude Library --exclude Temp --exclude Logs --exclude Build --exclude .utmp \
+  --exclude Library --exclude Temp --exclude Logs --exclude Build --exclude LocalSigning --exclude .utmp \
   "${project_root}/" "${stage_project}/"
+
+if [[ ${development_argument} == --test-signing ]]; then
+  signing_root=${project_root}/LocalSigning
+  signing_env=${signing_root}/test-signing.env
+  signing_keystore=${signing_root}/test.keystore
+  mkdir -p "${signing_root}"
+  chmod 700 "${signing_root}"
+  if [[ ! -f ${signing_env} ]]; then
+    umask 077
+    signing_password="novels-test-$(uuidgen | tr -d '-')"
+    printf '%s\n' \
+      "NOVELS_TEST_KEYSTORE_PASSWORD=${signing_password}" \
+      "NOVELS_TEST_KEYALIAS=novels-test" \
+      "NOVELS_TEST_KEYALIAS_PASSWORD=${signing_password}" > "${signing_env}"
+  fi
+  source "${signing_env}"
+  : "${NOVELS_TEST_KEYSTORE_PASSWORD:?Missing test keystore password}"
+  : "${NOVELS_TEST_KEYALIAS:?Missing test key alias}"
+  : "${NOVELS_TEST_KEYALIAS_PASSWORD:?Missing test key alias password}"
+  keytool=${UNITY_JAVA_HOME:-/Applications/Unity/Hub/Editor/6000.3.11f1/PlaybackEngines/AndroidPlayer/OpenJDK}/bin/keytool
+  [[ -x ${keytool} ]] || { print -u2 "Android keytool is unavailable: ${keytool}"; exit 3 }
+  if [[ ! -f ${signing_keystore} ]]; then
+    "${keytool}" -genkeypair -v -keystore "${signing_keystore}" \
+      -storepass "${NOVELS_TEST_KEYSTORE_PASSWORD}" -alias "${NOVELS_TEST_KEYALIAS}" \
+      -keypass "${NOVELS_TEST_KEYALIAS_PASSWORD}" -keyalg RSA -keysize 2048 \
+      -validity 10000 -dname "CN=SomeGame Test, OU=Development, O=SomeGame, L=Moscow, C=RU"
+    chmod 600 "${signing_keystore}"
+  fi
+  export NOVELS_TEST_KEYSTORE_PATH=${signing_keystore}
+  export NOVELS_TEST_KEYSTORE_PASSWORD NOVELS_TEST_KEYALIAS NOVELS_TEST_KEYALIAS_PASSWORD
+fi
 
 if [[ ${mode} == Embedded ]]; then
   stage_content=${stage_project}/Assets/StreamingAssets/NovelContent
@@ -80,6 +115,7 @@ unity_arguments=(
 )
 [[ ${mode} == Remote ]] && unity_arguments+=(-remoteContentBaseUrl "${remote_url}")
 [[ ${development_argument} == --development ]] && unity_arguments+=(-developmentBuild)
+[[ ${development_argument} == --test-signing ]] && unity_arguments+=(-testSigning)
 
 set +e
 "${unity_executable}" "${unity_arguments[@]}"

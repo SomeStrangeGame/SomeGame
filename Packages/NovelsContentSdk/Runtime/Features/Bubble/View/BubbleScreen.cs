@@ -89,6 +89,17 @@ namespace Novels.Bubble.View
                     ResizeToPreferredHeight(_text);
                 }
 
+                internal readonly void SetTextSize(bool fit, int fontSize)
+                {
+                    _text.resizeTextForBestFit = fit;
+                    _text.fontSize = fontSize;
+                    if (fit)
+                    {
+                        _text.resizeTextMinSize = fontSize;
+                        _text.resizeTextMaxSize = fontSize;
+                    }
+                }
+
                 private static void ResizeToPreferredHeight(Text text)
                 {
                     var rectTransform = text.rectTransform;
@@ -114,6 +125,9 @@ namespace Novels.Bubble.View
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private bool _forceLayoutRebuildAfterContentChange;
+        [SerializeField] private int _dialogueTextSize = 32;
+        [SerializeField] private int _episodeEndTextSize = 24;
+        [SerializeField] private float _episodeEndButtonYOffset = -120f;
 
         private readonly List<Button> _buttonPool = new();
         private Button _wardrobeButton;
@@ -185,11 +199,18 @@ namespace Novels.Bubble.View
         public void SetBubbleScreen(BubbleCtx ctx)
         {
             _bubblesView.Root.SetActive(true);
+            var episodeEnd = string.Equals(
+                ctx.Text.Header,
+                "КОНЕЦ СЕРИИ",
+                StringComparison.OrdinalIgnoreCase);
 
             foreach (var bubble in _bubblesView.BubblesPopUp)
             {
                 bubble.IsCorrectType(ctx.Type);
                 bubble.SetText(ctx.Text.Header, ctx.Text.Text);
+                bubble.SetTextSize(
+                    episodeEnd,
+                    episodeEnd ? _episodeEndTextSize : _dialogueTextSize);
             }
 
             GameObject root = null;
@@ -209,6 +230,12 @@ namespace Novels.Bubble.View
 
                 var inSceneButton = _buttonPool[index];
                 inSceneButton.transform.SetParent(root.transform, false);
+                if (inSceneButton.transform is RectTransform buttonRect
+                    && _bubblesView.ButtonPrefab.transform is RectTransform prefabRect)
+                {
+                    buttonRect.anchoredPosition = prefabRect.anchoredPosition
+                        + (episodeEnd ? Vector2.up * _episodeEndButtonYOffset : Vector2.zero);
+                }
                 inSceneButton.GetComponentInChildren<Text>(true).text = button.Text;
                 inSceneButton.onClick.RemoveAllListeners();
                 inSceneButton.onClick.AddListener(() => button.OnClick.Invoke(button.Id));

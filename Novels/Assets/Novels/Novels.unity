@@ -357,11 +357,11 @@ MonoBehaviour:
   _audioMixer: {fileID: 24100000, guid: 204ee88a2e2cb4a8088452efc54aa66c, type: 2}
   _missingBackground: {fileID: 21300000, guid: 621ac610a1204d48aea925430b4b3de5, type: 3}
   _missingCharacter: {fileID: 21300000, guid: 6e95ef6c5687426c939909b1649aa33f, type: 3}
-  _fallbackLoading: {fileID: 5409107741591515597, guid: 355ef8307ed59470194f757c009dc90c, type: 3}
-  _fallbackBubble: {fileID: 78405242723852823, guid: 503babe37817e4a9d9d99964a6a299aa, type: 3}
-  _fallbackLocation: {fileID: 9001975096329965555, guid: be81cec141d6d46ecb2f11e66634105a, type: 3}
-  _fallbackCharacter: {fileID: 8502446724069655982, guid: ec9593597848345e48d6b54d9b9c0dbd, type: 3}
-  _fallbackNotification: {fileID: 4162418590130858810, guid: 48d8e65d6f0cc47e0ae010d03faa18d9, type: 3}
+  _fallbackLoading: {fileID: 3712146450823894313, guid: 1fd0099c961674062a0bcabdf3f7f907, type: 3}
+  _fallbackBubble: {fileID: 3712146450823894313, guid: 513fc0c5b09af4d9f8fc3bf5ce420c8e, type: 3}
+  _fallbackLocation: {fileID: 3712146450823894313, guid: c5f922207f0354fb4865d61908256617, type: 3}
+  _fallbackCharacter: {fileID: 3712146450823894313, guid: f5229a1934c0e49869f12b3adf69a449, type: 3}
+  _fallbackNotification: {fileID: 3712146450823894313, guid: 3f848d94f36894b3099c9736b9895daf, type: 3}
 --- !u!1 &1371491167
 GameObject:
   m_ObjectHideFlags: 0

@@ -148,6 +148,38 @@ namespace Novels.Character
 
             if (presentation.AssetCandidates.Length > 0)
             {
+                var outfitCandidate = presentation.AssetCandidates[0];
+                var neutralOutfit = await GetSprite(
+                    _addresses.CharacterWholeVariant(
+                        name,
+                        view,
+                        outfitCandidate,
+                        null));
+                if (neutralOutfit != null)
+                {
+                    resolvedClothes = outfitCandidate;
+                    appearance.Clothes = outfitCandidate;
+                    appearance.Emotion = null;
+                    for (var index = 1;
+                         index < presentation.AssetCandidates.Length;
+                         index++)
+                    {
+                        var emotionCandidate = presentation.AssetCandidates[index];
+                        var outfitExpression = await GetSprite(
+                            _addresses.CharacterWholeVariant(
+                                name,
+                                view,
+                                resolvedClothes,
+                                emotionCandidate));
+                        if (outfitExpression == null)
+                            continue;
+                        appearance.Emotion = emotionCandidate;
+                        return outfitExpression;
+                    }
+
+                    return neutralOutfit;
+                }
+
                 var (candidate, sprite) = await FindCandidate(
                     presentation.AssetCandidates,
                     value => GetSprite(_addresses.CharacterWholeVariant(

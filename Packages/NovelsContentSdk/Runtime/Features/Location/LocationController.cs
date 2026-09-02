@@ -102,11 +102,14 @@ namespace Novels.Location
                     else
                         await _screen.SetCamera(plan.Motion, _ctx.CancellationToken);
                     break;
-                case CameraActionPresentation.PersistentEffect:
+                case CameraActionPresentation.TimedEffect:
                     if (mode == StoryContracts.PresentationMode.Immediate)
-                        _screen.SetEffectImmediate(plan.Effect);
+                        _screen.ResetEffect();
                     else
-                        await _screen.SetEffect(plan.Effect, _ctx.CancellationToken);
+                        await _screen.PlayTimedEffect(
+                            plan.Effect,
+                            plan.EffectHoldDurationMilliseconds,
+                            _ctx.CancellationToken);
                     break;
                 case CameraActionPresentation.TransientEffect:
                     if (mode == StoryContracts.PresentationMode.Immediate)

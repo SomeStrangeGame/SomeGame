@@ -16,71 +16,10 @@ namespace Novels.Bootstrap.View
         {
             EnsureEventSystem();
             var prefab = Resources.Load<BootstrapScreen>(_resourcePath);
-            if (prefab != null)
-                return Instantiate(prefab);
-            return CreateGenerated();
-        }
-
-        public static BootstrapScreen CreateGenerated()
-        {
-            var root = CreateObject(
-                "BootstrapScreen",
-                typeof(Canvas),
-                typeof(CanvasScaler),
-                typeof(GraphicRaycaster),
-                typeof(BootstrapScreen));
-            var canvas = root.GetComponent<Canvas>();
-            root.transform.localScale = Vector3.one;
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 1000;
-            var scaler = root.GetComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(465f, 1024f);
-
-            var background = CreateObject("Background", typeof(Image));
-            background.transform.SetParent(root.transform, false);
-            Stretch(background.GetComponent<RectTransform>());
-            background.GetComponent<Image>().color = new Color32(30, 35, 45, 255);
-
-            var panel = CreateObject("Panel", typeof(VerticalLayoutGroup));
-            panel.transform.SetParent(background.transform, false);
-            var panelRect = panel.GetComponent<RectTransform>();
-            panelRect.anchorMin = panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            panelRect.sizeDelta = new Vector2(390f, 260f);
-            var layout = panel.GetComponent<VerticalLayoutGroup>();
-            layout.spacing = 28f;
-            layout.childAlignment = TextAnchor.MiddleCenter;
-            layout.childControlHeight = true;
-            layout.childControlWidth = true;
-            layout.childForceExpandHeight = false;
-
-            var message = CreateText("Message", 28);
-            message.transform.SetParent(panel.transform, false);
-            message.alignment = TextAnchor.MiddleCenter;
-            message.color = Color.white;
-            message.gameObject.AddComponent<LayoutElement>().preferredHeight = 120f;
-
-            var retryObject = CreateObject(
-                "Retry",
-                typeof(Image),
-                typeof(Button),
-                typeof(LayoutElement));
-            retryObject.transform.SetParent(panel.transform, false);
-            retryObject.GetComponent<Image>().color = new Color32(63, 94, 140, 255);
-            retryObject.GetComponent<LayoutElement>().preferredHeight = 76f;
-            var retryLabel = CreateText("Label", 24);
-            retryLabel.transform.SetParent(retryObject.transform, false);
-            Stretch(retryLabel.rectTransform);
-            retryLabel.alignment = TextAnchor.MiddleCenter;
-            retryLabel.color = Color.white;
-            retryLabel.raycastTarget = false;
-
-            var screen = root.GetComponent<BootstrapScreen>();
-            screen._message = message;
-            screen._retry = retryObject.GetComponent<Button>();
-            screen._retryLabel = retryLabel;
-            root.transform.localScale = Vector3.one;
-            return screen;
+            if (prefab == null)
+                throw new InvalidOperationException(
+                    $"Required bootstrap prefab is missing from Resources/{_resourcePath}.prefab.");
+            return Instantiate(prefab);
         }
 
         public void ShowLoading(string message)
@@ -109,33 +48,6 @@ namespace Novels.Bootstrap.View
                 typeof(EventSystem),
                 typeof(StandaloneInputModule));
             DontDestroyOnLoad(eventSystem);
-        }
-
-        private static GameObject CreateObject(
-            string name,
-            params Type[] components)
-        {
-            var types = new Type[components.Length + 1];
-            types[0] = typeof(RectTransform);
-            components.CopyTo(types, 1);
-            return new GameObject(name, types);
-        }
-
-        private static Text CreateText(string name, int size)
-        {
-            var text = CreateObject(name, typeof(CanvasRenderer), typeof(Text))
-                .GetComponent<Text>();
-            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.fontSize = size;
-            return text;
-        }
-
-        private static void Stretch(RectTransform rectTransform)
-        {
-            rectTransform.anchorMin = Vector2.zero;
-            rectTransform.anchorMax = Vector2.one;
-            rectTransform.offsetMin = Vector2.zero;
-            rectTransform.offsetMax = Vector2.zero;
         }
     }
 }
