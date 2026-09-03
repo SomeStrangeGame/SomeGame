@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: toybedtime
+  m_EditorClassIdentifier:
+  _id: toybedtime
+  _mainCharacter: "Лёва"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Игрушки идут домой"
+    _description: "Лёва освобождает дорожку к кровати, помогает игрушкам найти свои домики и ищет последний жёлтый кубик."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults: []
+  _authoringRootInkGuid: 9b5e10cb6eda465d91de2e391ec9b9ef
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []
