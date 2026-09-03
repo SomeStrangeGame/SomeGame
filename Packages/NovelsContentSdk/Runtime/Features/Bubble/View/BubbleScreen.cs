@@ -91,12 +91,21 @@ namespace Novels.Bubble.View
                     ResizeToPreferredHeight(_text);
                 }
 
-                internal readonly void PlaceButtons(IReadOnlyList<Button> buttons)
+                internal readonly void PlaceButtons(
+                    IReadOnlyList<Button> buttons,
+                    bool placeHorizontally)
                 {
                     var textRect = _text.rectTransform;
                     var nextTop = textRect.anchoredPosition.y
                         - textRect.rect.height
                         - _choiceSpacing;
+
+                    if (placeHorizontally)
+                    {
+                        PlaceButtonsHorizontally(buttons, textRect, nextTop);
+                        return;
+                    }
+
                     foreach (var button in buttons)
                     {
                         if (button.transform is not RectTransform buttonRect
@@ -121,6 +130,41 @@ namespace Novels.Bubble.View
                             - buttonRect.rect.height * (1f - buttonRect.pivot.y);
                         buttonRect.anchoredPosition = position;
                         nextTop -= buttonRect.rect.height + _choiceSpacing;
+                    }
+                }
+
+                private static void PlaceButtonsHorizontally(
+                    IReadOnlyList<Button> buttons,
+                    RectTransform textRect,
+                    float top)
+                {
+                    var activeButtons = new List<RectTransform>();
+                    var totalWidth = 0f;
+                    foreach (var button in buttons)
+                    {
+                        if (button.transform is not RectTransform buttonRect
+                            || !button.gameObject.activeSelf)
+                        {
+                            continue;
+                        }
+
+                        activeButtons.Add(buttonRect);
+                        totalWidth += buttonRect.rect.width;
+                    }
+
+                    totalWidth += Mathf.Max(0, activeButtons.Count - 1) * _choiceSpacing;
+                    var nextLeft = textRect.anchoredPosition.x - totalWidth * 0.5f;
+                    foreach (var buttonRect in activeButtons)
+                    {
+                        buttonRect.anchorMin = new Vector2(textRect.anchorMin.x, buttonRect.anchorMin.y);
+                        buttonRect.anchorMax = new Vector2(textRect.anchorMax.x, buttonRect.anchorMax.y);
+                        buttonRect.pivot = new Vector2(0.5f, buttonRect.pivot.y);
+
+                        var position = buttonRect.anchoredPosition;
+                        position.x = nextLeft + buttonRect.rect.width * 0.5f;
+                        position.y = top - buttonRect.rect.height * (1f - buttonRect.pivot.y);
+                        buttonRect.anchoredPosition = position;
+                        nextLeft += buttonRect.rect.width + _choiceSpacing;
                     }
                 }
 
@@ -149,6 +193,8 @@ namespace Novels.Bubble.View
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private bool _forceLayoutRebuildAfterContentChange;
+        [SerializeField] private bool _placeChoicesHorizontally;
+        [SerializeField] private bool _hideChoiceText;
 
         private readonly List<Button> _buttonPool = new();
         private Button _wardrobeButton;
@@ -274,21 +320,20 @@ namespace Novels.Bubble.View
                 foreach (var bubble in _bubblesView.BubblesPopUp)
                 {
                     if (bubble.TryGetRoot(ctx.Type, out _))
-                        bubble.PlaceButtons(_buttonPool);
+                        bubble.PlaceButtons(_buttonPool, _placeChoicesHorizontally);
                 }
             }
 
             BindBackground(ctx.OnBackgroundClick);
         }
 
-        private static void ConfigureChoiceButton(Button button, BubbleCtx.ButtonCtx context)
+        private void ConfigureChoiceButton(Button button, BubbleCtx.ButtonCtx context)
         {
             var text = button.GetComponentInChildren<Text>(true);
             text.text = context.Text;
+            text.gameObject.SetActive(!_hideChoiceText);
 
             var icon = button.GetComponentInChildren<ChoiceButtonIcon>(true);
-            if (icon == null && context.Icon != null)
-                icon = ChoiceButtonIcon.Create(button, text);
             icon?.SetSprite(context.Icon);
         }
 
