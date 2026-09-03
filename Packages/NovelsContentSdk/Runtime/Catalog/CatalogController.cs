@@ -7,6 +7,18 @@ using UnityEngine;
 
 namespace Novels.Catalog
 {
+    public readonly struct CatalogSelection
+    {
+        internal CatalogSelection(CatalogItem item, bool isSecondaryAction)
+        {
+            Item = item;
+            IsSecondaryAction = isSecondaryAction;
+        }
+
+        public CatalogItem Item { get; }
+        public bool IsSecondaryAction { get; }
+    }
+
     public sealed class CatalogController : BaseDisposable
     {
         private readonly GameObject _bundledPrefab;
@@ -26,12 +38,20 @@ namespace Novels.Catalog
             string title,
             IReadOnlyList<CatalogItem> items)
         {
+            var selection = await SelectAction(title, items);
+            return selection.Item;
+        }
+
+        public async UniTask<CatalogSelection> SelectAction(
+            string title,
+            IReadOnlyList<CatalogItem> items)
+        {
             if (items == null || items.Count == 0)
                 throw new InvalidOperationException("Catalog is empty.");
 
             EnsureScreen();
             _screen.SetTitle(title);
-            var selection = new UniTaskCompletionSource<CatalogItem>();
+            var selection = new UniTaskCompletionSource<CatalogSelection>();
             foreach (var item in items)
             {
                 if (item == null || string.IsNullOrWhiteSpace(item.Id))
@@ -44,9 +64,11 @@ namespace Novels.Catalog
                     item.Description,
                     item.Status,
                     item.ActionLabel,
+                    item.SecondaryActionLabel,
                     item.IsEnabled,
                     item.Cover,
-                    () => selection.TrySetResult(item));
+                    () => selection.TrySetResult(new CatalogSelection(item, false)),
+                    () => selection.TrySetResult(new CatalogSelection(item, true)));
             }
 
             try

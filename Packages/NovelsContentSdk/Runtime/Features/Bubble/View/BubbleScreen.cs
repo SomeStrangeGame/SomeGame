@@ -42,6 +42,8 @@ namespace Novels.Bubble.View
         [Serializable]
         private struct Bubbles
         {
+            private const float _choiceSpacing = 12f;
+
             [Serializable]
             internal struct BubblePopUp
             {
@@ -85,18 +87,39 @@ namespace Novels.Bubble.View
 
                 internal readonly void RebuildContentLayout()
                 {
-                    ResizeToPreferredHeight(_header);
                     ResizeToPreferredHeight(_text);
                 }
 
-                internal readonly void SetTextSize(bool fit, int fontSize)
+                internal readonly void PlaceButtons(IReadOnlyList<Button> buttons)
                 {
-                    _text.resizeTextForBestFit = fit;
-                    _text.fontSize = fontSize;
-                    if (fit)
+                    var textRect = _text.rectTransform;
+                    var nextTop = textRect.anchoredPosition.y
+                        - textRect.rect.height
+                        - _choiceSpacing;
+                    foreach (var button in buttons)
                     {
-                        _text.resizeTextMinSize = fontSize;
-                        _text.resizeTextMaxSize = fontSize;
+                        if (button.transform is not RectTransform buttonRect
+                            || !button.gameObject.activeSelf)
+                        {
+                            continue;
+                        }
+
+                        buttonRect.anchorMin = new Vector2(
+                            textRect.anchorMin.x,
+                            buttonRect.anchorMin.y);
+                        buttonRect.anchorMax = new Vector2(
+                            textRect.anchorMax.x,
+                            buttonRect.anchorMax.y);
+                        buttonRect.pivot = new Vector2(
+                            textRect.pivot.x,
+                            buttonRect.pivot.y);
+
+                        var position = buttonRect.anchoredPosition;
+                        position.x = textRect.anchoredPosition.x;
+                        position.y = nextTop
+                            - buttonRect.rect.height * (1f - buttonRect.pivot.y);
+                        buttonRect.anchoredPosition = position;
+                        nextTop -= buttonRect.rect.height + _choiceSpacing;
                     }
                 }
 
@@ -125,9 +148,6 @@ namespace Novels.Bubble.View
         [SerializeField] private float _showHideDuration;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private bool _forceLayoutRebuildAfterContentChange;
-        [SerializeField] private int _dialogueTextSize = 32;
-        [SerializeField] private int _episodeEndTextSize = 24;
-        [SerializeField] private float _episodeEndButtonYOffset = -120f;
 
         private readonly List<Button> _buttonPool = new();
         private Button _wardrobeButton;
@@ -199,18 +219,11 @@ namespace Novels.Bubble.View
         public void SetBubbleScreen(BubbleCtx ctx)
         {
             _bubblesView.Root.SetActive(true);
-            var episodeEnd = string.Equals(
-                ctx.Text.Header,
-                "КОНЕЦ СЕРИИ",
-                StringComparison.OrdinalIgnoreCase);
 
             foreach (var bubble in _bubblesView.BubblesPopUp)
             {
                 bubble.IsCorrectType(ctx.Type);
                 bubble.SetText(ctx.Text.Header, ctx.Text.Text);
-                bubble.SetTextSize(
-                    episodeEnd,
-                    episodeEnd ? _episodeEndTextSize : _dialogueTextSize);
             }
 
             GameObject root = null;
@@ -226,16 +239,18 @@ namespace Novels.Bubble.View
                 var button = buttons[index];
                 _bubblesView.ButtonPrefab.gameObject.SetActive(false);
                 if (index >= _buttonPool.Count)
-                    _buttonPool.Add(Instantiate(_bubblesView.ButtonPrefab, root.transform));
+                {
+                    var createdButton = Instantiate(
+                        _bubblesView.ButtonPrefab,
+                        root.transform);
+                    var layoutElement = createdButton.GetComponent<LayoutElement>()
+                        ?? createdButton.gameObject.AddComponent<LayoutElement>();
+                    layoutElement.ignoreLayout = true;
+                    _buttonPool.Add(createdButton);
+                }
 
                 var inSceneButton = _buttonPool[index];
                 inSceneButton.transform.SetParent(root.transform, false);
-                if (inSceneButton.transform is RectTransform buttonRect
-                    && _bubblesView.ButtonPrefab.transform is RectTransform prefabRect)
-                {
-                    buttonRect.anchoredPosition = prefabRect.anchoredPosition
-                        + (episodeEnd ? Vector2.up * _episodeEndButtonYOffset : Vector2.zero);
-                }
                 inSceneButton.GetComponentInChildren<Text>(true).text = button.Text;
                 inSceneButton.onClick.RemoveAllListeners();
                 inSceneButton.onClick.AddListener(() => button.OnClick.Invoke(button.Id));
@@ -255,6 +270,11 @@ namespace Novels.Bubble.View
                     bubble.RebuildContentLayout();
                 if (root.transform is RectTransform rootRect)
                     LayoutRebuilder.ForceRebuildLayoutImmediate(rootRect);
+                foreach (var bubble in _bubblesView.BubblesPopUp)
+                {
+                    if (bubble.TryGetRoot(ctx.Type, out _))
+                        bubble.PlaceButtons(_buttonPool);
+                }
             }
 
             BindBackground(ctx.OnBackgroundClick);

@@ -9,6 +9,7 @@ namespace Novels.Catalog
             string description = null,
             string status = null,
             string actionLabel = null,
+            string secondaryActionLabel = null,
             bool isEnabled = true,
             UnityEngine.Sprite cover = null)
         {
@@ -18,6 +19,7 @@ namespace Novels.Catalog
             Description = description;
             Status = status;
             ActionLabel = actionLabel;
+            SecondaryActionLabel = secondaryActionLabel;
             IsEnabled = isEnabled;
             Cover = cover;
         }
@@ -28,6 +30,7 @@ namespace Novels.Catalog
         public string Description { get; }
         public string Status { get; }
         public string ActionLabel { get; }
+        public string SecondaryActionLabel { get; }
         public bool IsEnabled { get; }
         public UnityEngine.Sprite Cover { get; }
     }

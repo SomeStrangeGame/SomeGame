@@ -17,12 +17,16 @@ namespace Novels.Catalog.View
 
         private readonly Dictionary<string, Card> _cards = new();
         private readonly Dictionary<Card, ItemViewModel> _models = new();
+        private Button _secondaryActionButton;
+        private Text _secondaryActionLabel;
+        private Action _secondaryAction;
         private Rect _appliedSafeArea;
 
         private void Awake()
         {
             _carousel.FocusChanged += OnFocusChanged;
             _actionButton.onClick.AddListener(_carousel.ActivateFocused);
+            CreateSecondaryActionButton();
             ApplySafeArea();
         }
 
@@ -49,9 +53,11 @@ namespace Novels.Catalog.View
             string description,
             string status,
             string actionLabel,
+            string secondaryActionLabel,
             bool isEnabled,
             Sprite cover,
-            Action onClick)
+            Action onClick,
+            Action onSecondaryClick)
         {
             _cardPrefab.gameObject.SetActive(false);
             if (!_cards.TryGetValue(id, out var card))
@@ -61,7 +67,11 @@ namespace Novels.Catalog.View
             }
 
             card.Bind(title, genre, description, status, cover);
-            _models[card] = new ItemViewModel(actionLabel, isEnabled);
+            _models[card] = new ItemViewModel(
+                actionLabel,
+                secondaryActionLabel,
+                isEnabled,
+                onSecondaryClick);
             card.gameObject.SetActive(true);
             _carousel.Register(card, isEnabled, onClick);
         }
@@ -72,7 +82,25 @@ namespace Novels.Catalog.View
                 return;
             _actionLabel.text = model.ActionLabel ?? string.Empty;
             _actionButton.interactable = model.CanOpen;
+            _secondaryAction = model.SecondaryAction;
+            _secondaryActionLabel.text = model.SecondaryActionLabel ?? string.Empty;
+            _secondaryActionButton.gameObject.SetActive(
+                model.CanOpen && !string.IsNullOrWhiteSpace(model.SecondaryActionLabel));
             _pageIndicator.text = BuildPageIndicator(index, count);
+        }
+
+        private void CreateSecondaryActionButton()
+        {
+            _secondaryActionButton = Instantiate(
+                _actionButton,
+                _actionButton.transform.parent);
+            _secondaryActionButton.name = "SecondaryActionButton";
+            _secondaryActionButton.onClick.RemoveAllListeners();
+            _secondaryActionButton.onClick.AddListener(() => _secondaryAction?.Invoke());
+            _secondaryActionLabel = _secondaryActionButton.GetComponentInChildren<Text>();
+            if (_secondaryActionLabel == null)
+                throw new InvalidOperationException("Catalog action button has no Text label.");
+            _secondaryActionButton.gameObject.SetActive(false);
         }
 
         private static string BuildPageIndicator(int focusedIndex, int count)
@@ -98,14 +126,22 @@ namespace Novels.Catalog.View
 
         private readonly struct ItemViewModel
         {
-            internal ItemViewModel(string actionLabel, bool canOpen)
+            internal ItemViewModel(
+                string actionLabel,
+                string secondaryActionLabel,
+                bool canOpen,
+                Action secondaryAction)
             {
                 ActionLabel = actionLabel;
+                SecondaryActionLabel = secondaryActionLabel;
                 CanOpen = canOpen;
+                SecondaryAction = secondaryAction;
             }
 
             internal string ActionLabel { get; }
+            internal string SecondaryActionLabel { get; }
             internal bool CanOpen { get; }
+            internal Action SecondaryAction { get; }
         }
 
     }

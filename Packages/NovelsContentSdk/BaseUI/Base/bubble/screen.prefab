@@ -1722,6 +1722,7 @@ MonoBehaviour:
     _backgroundButton: {fileID: 920034428511903397}
   _showHideDuration: 0.2
   _canvasGroup: {fileID: 6503039597023592230}
+  _forceLayoutRebuildAfterContentChange: 1
 --- !u!225 &6503039597023592230
 CanvasGroup:
   m_ObjectHideFlags: 0
@@ -2482,7 +2483,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0, y: 100}
+  m_AnchoredPosition: {x: 0, y: -80}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &1704159392972772367
@@ -3316,7 +3317,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.18, g: 0.2, b: 0.23, a: 0.96}
+  m_Color: {r: 0.25, g: 0.29, b: 0.35, a: 0.98}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
