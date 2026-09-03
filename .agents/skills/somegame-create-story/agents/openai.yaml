@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create SomeGame Story"
+  short_description: "Создание новой атомарной новеллы SomeGame"
+  default_prompt: "Use $somegame-create-story to create a new atomic story in SomeGame from my brief."
