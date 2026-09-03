@@ -1,3 +1,5 @@
+using Cysharp.Threading.Tasks;
+
 namespace Novels.StoryExecution
 {
     internal sealed class BubblePresentationRouter
@@ -13,7 +15,7 @@ namespace Novels.StoryExecution
             _choices = choices;
         }
 
-        internal void Present()
+        internal async UniTask Present()
         {
             _request.Services.OnDialogueReady?.Invoke(
                 _request.PresentationKind.ToString(),
@@ -38,7 +40,7 @@ namespace Novels.StoryExecution
                         _request.Dialogue.Presentation,
                         new BubbleContracts.BubbleText(
                             GetHeader(), _request.Dialogue.Text),
-                        _choices.CreatePresentations(),
+                        await _choices.CreatePresentations(),
                         _choices.CompleteWithoutChoice));
                     return;
             }

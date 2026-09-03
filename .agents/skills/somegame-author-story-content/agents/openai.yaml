@@ -1,0 +1,4 @@
+interface:
+  display_name: "Author SomeGame Story Content"
+  short_description: "Ink и runtime-контент истории SomeGame"
+  default_prompt: "Use $somegame-author-story-content to turn an approved story package and art manifest into validated SomeGame content."

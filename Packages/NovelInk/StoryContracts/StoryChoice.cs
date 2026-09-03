@@ -4,14 +4,16 @@ namespace Novels.StoryContracts
 {
     public readonly struct StoryChoice
     {
-        public StoryChoice(int id, string text)
+        public StoryChoice(int id, string text, string icon = null)
         {
             Id = id;
             Text = text ?? string.Empty;
+            Icon = icon ?? string.Empty;
         }
 
         public int Id { get; }
         public string Text { get; }
+        public string Icon { get; }
     }
 
     public readonly struct StoryDecision

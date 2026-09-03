@@ -18,19 +18,18 @@ namespace Novels.StoryExecution
                 _router = new BubblePresentationRouter(request, _choices);
             }
 
-            public UniTask Run(StoryExecutionContext context)
+            public async UniTask Run(StoryExecutionContext context)
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
                 if (context.Mode == QueueExecutionMode.Replay)
                 {
                     _choices.ApplySaved(context.SavedDecision);
                     _request.Completed.TrySetResult();
-                    return UniTask.CompletedTask;
+                    return;
                 }
                 if (_choices.TryApplyQueuedWardrobeChoice())
-                    return UniTask.CompletedTask;
-                _router.Present();
-                return UniTask.CompletedTask;
+                    return;
+                await _router.Present();
             }
         }
 

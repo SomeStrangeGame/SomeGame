@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Cysharp.Threading.Tasks;
 
 namespace Novels.StoryExecution
 {
@@ -13,12 +14,23 @@ namespace Novels.StoryExecution
             _request = request;
         }
 
-        internal BubbleContracts.BubbleChoice[] CreatePresentations()
+        internal async UniTask<BubbleContracts.BubbleChoice[]> CreatePresentations()
         {
-            return _request.Choices.Select(choice => new BubbleContracts.BubbleChoice(
-                choice.Id,
-                choice.Text,
-                id => Select(choice, id))).ToArray();
+            var result = new BubbleContracts.BubbleChoice[_request.Choices.Length];
+            for (var index = 0; index < _request.Choices.Length; index++)
+            {
+                var choice = _request.Choices[index];
+                var icon = string.IsNullOrWhiteSpace(choice.Icon)
+                    || _request.Services.LoadBubbleChoiceIcon == null
+                        ? null
+                        : await _request.Services.LoadBubbleChoiceIcon(choice.Icon);
+                result[index] = new BubbleContracts.BubbleChoice(
+                    choice.Id,
+                    choice.Text,
+                    id => Select(choice, id),
+                    icon);
+            }
+            return result;
         }
 
         internal WardrobeContracts.WardrobePresentation CreateWardrobePresentation()

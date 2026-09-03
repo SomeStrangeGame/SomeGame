@@ -123,10 +123,30 @@ namespace Novels.StoryProcessor
             for (var index = 0; index < currentChoices.Count; index++)
             {
                 var choice = currentChoices[index];
-                result[index] = new StoryContracts.StoryChoice(choice.index, choice.text);
+                result[index] = new StoryContracts.StoryChoice(
+                    choice.index,
+                    choice.text,
+                    GetChoiceIcon(choice.tags));
             }
 
             return result;
+        }
+
+        private static string GetChoiceIcon(System.Collections.Generic.IEnumerable<string> tags)
+        {
+            if (tags == null)
+                return string.Empty;
+
+            const string prefix = "choice_icon:";
+            foreach (var tag in tags)
+            {
+                if (string.IsNullOrWhiteSpace(tag))
+                    continue;
+                var value = tag.Trim();
+                if (value.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                    return value.Substring(prefix.Length).Trim();
+            }
+            return string.Empty;
         }
 
         public void SetChoice(int index)

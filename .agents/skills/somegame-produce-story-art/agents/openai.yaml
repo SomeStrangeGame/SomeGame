@@ -1,0 +1,4 @@
+interface:
+  display_name: "Produce SomeGame Story Art"
+  short_description: "Создание и проверка арта истории SomeGame"
+  default_prompt: "Use $somegame-produce-story-art to produce the approved art manifest and runtime-ready assets for a SomeGame story."

@@ -1,4 +1,5 @@
 using System;
+using UnityEngine;
 
 namespace Novels.BubbleContracts
 {
@@ -55,15 +56,17 @@ namespace Novels.BubbleContracts
 
     public readonly struct BubbleChoice
     {
-        public BubbleChoice(int id, string text, Action<int> onClick)
+        public BubbleChoice(int id, string text, Action<int> onClick, Sprite icon = null)
         {
             Id = id;
             Text = text ?? string.Empty;
             OnClick = onClick;
+            Icon = icon;
         }
 
         public int Id { get; }
         public string Text { get; }
         public Action<int> OnClick { get; }
+        public Sprite Icon { get; }
     }
 }

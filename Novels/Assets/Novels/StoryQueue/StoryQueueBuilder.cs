@@ -20,6 +20,7 @@ namespace Novels.StoryQueue
             internal StoryProcessor.Entity Story;
             internal Func<float, UniTask> Wait;
             internal Func<string, UniTask<UnityEngine.Sprite>> LoadChooseThumbnail;
+            internal Func<string, UniTask<UnityEngine.Sprite>> LoadBubbleChoiceIcon;
             internal Func<StoryCommands.StoryStep[]> PeekWardrobeSteps;
             internal StoryExecution.WardrobeSequenceState WardrobeSequence;
             internal Action<string, int> OnDialogueReady;

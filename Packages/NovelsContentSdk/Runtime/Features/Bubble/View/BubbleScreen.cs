@@ -31,6 +31,7 @@ namespace Novels.Bubble.View
                 public int Id;
                 public string Text;
                 public Action<int> OnClick;
+                public Sprite Icon;
             }
 
             public BubbleType Type;
@@ -251,7 +252,7 @@ namespace Novels.Bubble.View
 
                 var inSceneButton = _buttonPool[index];
                 inSceneButton.transform.SetParent(root.transform, false);
-                inSceneButton.GetComponentInChildren<Text>(true).text = button.Text;
+                ConfigureChoiceButton(inSceneButton, button);
                 inSceneButton.onClick.RemoveAllListeners();
                 inSceneButton.onClick.AddListener(() => button.OnClick.Invoke(button.Id));
                 inSceneButton.gameObject.SetActive(true);
@@ -278,6 +279,17 @@ namespace Novels.Bubble.View
             }
 
             BindBackground(ctx.OnBackgroundClick);
+        }
+
+        private static void ConfigureChoiceButton(Button button, BubbleCtx.ButtonCtx context)
+        {
+            var text = button.GetComponentInChildren<Text>(true);
+            text.text = context.Text;
+
+            var icon = button.GetComponentInChildren<ChoiceButtonIcon>(true);
+            if (icon == null && context.Icon != null)
+                icon = ChoiceButtonIcon.Create(button, text);
+            icon?.SetSprite(context.Icon);
         }
 
         private void BindBackground(Action onClick)

@@ -1,13 +1,14 @@
 ---
 name: somegame-create-story
-description: Design, author, illustrate, integrate, and validate a new atomic visual-novel story in SomeGame. Use when creating a new story project or taking a new story from brief to catalog-ready content; do not use for routine edits to an existing story.
+description: Orchestrate a new atomic SomeGame visual-novel story from author brief through design, project creation, art, playable content, catalog integration, and acceptance. Use for end-to-end creation or resuming an unfinished new story; do not use for routine edits to an existing story.
 ---
 
 # Create a SomeGame story
 
 Use this skill together with `$somegame-workflow`. Treat the current SomeGame
 documentation and tooling as authoritative; this skill adds story-production
-decisions and does not replace repository coordination or content contracts.
+decisions and does not replace repository coordination, project creation, or
+content contracts.
 
 ## Establish the brief
 
@@ -21,9 +22,9 @@ Before creating content, obtain these author decisions:
 
 Genre is mandatory author input. Do not choose, normalize, or silently change
 it, including in auto-approve mode. Factual basis is a separate axis, not a
-genre. Read [story design](references/story-design.md) for the narrative brief.
-When real people, places, organizations, or events materially affect the story,
-also read [historical integrity](references/historical-integrity.md).
+genre. When real people, places, organizations, or events materially affect the
+story, read [historical integrity](references/historical-integrity.md); this
+conditional responsibility remains here and is not a separate skill.
 
 Approval modes:
 
@@ -51,19 +52,28 @@ workflow before any file creation, art generation, build, test, or validation.
 
 ## Produce the story
 
-1. Create the premise, synopsis, dramatic structure, character arcs, scene
-   list, choices, consequences, and ending structure from the author brief.
+1. Invoke `$somegame-design-story` to turn the author brief into an approved
+   narrative package, scene matrix, choice/state graph, endings, continuity
+   constraints, and downstream art/media requirements.
 2. For factual stories, maintain claim evidence and clearly separate verified
    fact, inference, reconstruction, and invention.
-3. Derive an art manifest from actual scenes before generating assets. Read
-   [characters, costumes, and emotions](references/art-and-emotions.md).
-4. Create `Projects/novels-<storyId>` from the current canonical template and
-   keep it independent of other stories.
-5. Write Ink, connect only existing assets, and make costume and emotional
-   changes occur at their narrative moments.
-6. Add the story to the catalog only when its card and minimum playable content
-   exist. Preserve the author's intended catalog position unless asked to
-   choose one.
+3. Invoke `$somegame-create-unity-project` to create
+   `Projects/novels-<storyId>` from the current canonical template. Do not begin
+   project-bound authoring until that skill has configured a unique optional
+   Unity MCP server and proven a live connection to the exact new project path.
+   If its live MCP gate is blocked, hand off the scaffold as not ready instead
+   of silently continuing without MCP.
+4. Invoke `$somegame-produce-story-art` with the approved scene package. Its
+   manifest, identity masters, production assets, runtime addresses, contact
+   sheets, and visual evidence are the art handoff; do not author missing art
+   implicitly in a later stage.
+5. Invoke `$somegame-author-story-content` with the approved narrative package
+   and art handoff. Require coherent source Ink, metadata, selectors, compiled
+   story, source map, and target validation before continuing.
+6. Invoke `$somegame-accept-story` with every stage handoff. It owns catalog
+   registration, end-to-end audits, changed-path validation, runtime/manual
+   gates, and the final readiness status. Preserve the author's intended
+   catalog position.
 
 Do not generate speculative assets merely to fill a fixed matrix. Create only
 backgrounds, outfits, expressions, poses, media, and branches that the current
@@ -71,10 +81,9 @@ story uses or that the author explicitly requested.
 
 ## Validate and hand off
 
-Before declaring the story ready, read and apply the
-[acceptance checklist](references/acceptance-checklist.md). Use current
-SomeGame planning and validation commands to determine exact gates; do not
-invent a parallel build pipeline.
+Do not declare the story ready before `$somegame-accept-story` returns its
+evidence-backed status. Use current SomeGame planning and validation commands
+to determine exact gates; do not invent a parallel build pipeline.
 
 Report the branch, project and catalog paths, authored assets, factual or
 creative assumptions, validation evidence, manual visual checks, unresolved

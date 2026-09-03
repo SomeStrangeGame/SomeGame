@@ -46,6 +46,7 @@ namespace Novels
                 presentation,
                 cancellationToken,
                 assetName => GetChooseSprite(state, assetName),
+                assetName => GetBubbleChoiceIcon(state, assetName),
                 state.SaveSystem);
             var queueExecutor = new StoryExecution.StoryOperationExecutor();
             var novelProcess = new NovelProcess(new NovelProcess.Dependencies
@@ -82,6 +83,15 @@ namespace Novels
                     state,
                     episodeAssetPath)
                 .AttachExternalCancellation(cancellationToken));
+        }
+
+        private UniTask<Sprite> GetBubbleChoiceIcon(
+            PreparedEpisode state,
+            string assetName)
+        {
+            if (string.IsNullOrWhiteSpace(assetName))
+                return UniTask.FromResult<Sprite>(null);
+            return GetStorySprite(state, state.Addresses.ChooseItem(assetName));
         }
 
         private async UniTask<Sprite> GetFullCharacterSprite(

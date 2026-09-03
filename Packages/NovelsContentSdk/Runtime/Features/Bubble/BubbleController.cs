@@ -80,7 +80,8 @@ namespace Novels.Bubble
             {
                 Id = choice.Id,
                 Text = choice.Text,
-                OnClick = choice.OnClick
+                OnClick = choice.OnClick,
+                Icon = choice.Icon,
             }).ToArray();
             
             _screen.SetBubbleScreen(new View.BubbleScreen.BubbleCtx

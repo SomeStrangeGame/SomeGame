@@ -29,6 +29,7 @@ namespace Novels
             EpisodePresentation presentation,
             CancellationToken cancellationToken,
             System.Func<string, Cysharp.Threading.Tasks.UniTask<UnityEngine.Sprite>> loadChooseThumbnail,
+            System.Func<string, Cysharp.Threading.Tasks.UniTask<UnityEngine.Sprite>> loadBubbleChoiceIcon,
             Save.SaveSystem save)
         {
             RestoreWardrobe(presentation.Character, save, _definition.MainCharacter);
@@ -64,6 +65,7 @@ namespace Novels
                     Story = storyProcessor,
                     Wait = seconds => Wait(seconds, cancellationToken),
                     LoadChooseThumbnail = loadChooseThumbnail,
+                    LoadBubbleChoiceIcon = loadBubbleChoiceIcon,
                     PeekWardrobeSteps = () => storyProcessor.PeekConsecutiveWardrobeSteps(
                         new StoryCommands.Entity().ParseStep,
                         2),

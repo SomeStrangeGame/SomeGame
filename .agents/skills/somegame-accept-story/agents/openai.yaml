@@ -1,0 +1,4 @@
+interface:
+  display_name: "Accept SomeGame Story"
+  short_description: "Финальная приёмка истории SomeGame"
+  default_prompt: "Use $somegame-accept-story to validate a completed SomeGame story and determine whether it is ready for integration."

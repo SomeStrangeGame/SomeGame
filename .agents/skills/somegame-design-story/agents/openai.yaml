@@ -1,0 +1,4 @@
+interface:
+  display_name: "Design SomeGame Story"
+  short_description: "Проектирование сценария истории SomeGame"
+  default_prompt: "Use $somegame-design-story to turn my author brief into an approved narrative package for a SomeGame story."

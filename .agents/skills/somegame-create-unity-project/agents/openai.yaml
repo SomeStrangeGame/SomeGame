@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create SomeGame Unity Project"
+  short_description: "Создание Unity-проекта SomeGame с обязательным MCP"
+  default_prompt: "Use $somegame-create-unity-project to create a new Unity project in SomeGame and verify its Unity MCP connection."
