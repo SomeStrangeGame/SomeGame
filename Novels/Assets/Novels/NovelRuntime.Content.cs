@@ -9,6 +9,10 @@ namespace Novels
     {
         private const string _saveChoiceFileName = "SaveChoice";
 
+        internal static string SaveChoiceKey(string contentId, string episodeId) =>
+            $"Saves/{Uri.EscapeDataString(contentId)}/"
+            + $"{Uri.EscapeDataString(episodeId)}/{_saveChoiceFileName}";
+
         private async UniTask<Content.NovelDefinition> LoadContent(
             Bundles.Scope bundles,
             Catalog.NovelCatalogEntry entry,
@@ -36,8 +40,7 @@ namespace Novels
         private Save.SaveSystem CreateSaveSystem()
         {
             var cache = new Cache.Entity(_ctx.PersistentDataPath);
-            var saveKey = $"Saves/{Uri.EscapeDataString(_definition.Id)}/"
-                + $"{Uri.EscapeDataString(_episode.Id)}/{_saveChoiceFileName}";
+            var saveKey = SaveChoiceKey(_definition.Id, _episode.Id);
             var saveSystem = new Save.SaveSystem(new Save.SaveSystem.Dependencies
             {
                 SaveChoiceFileName = saveKey,

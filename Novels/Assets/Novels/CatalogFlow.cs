@@ -46,6 +46,20 @@ namespace Novels
             }
         }
 
+        internal readonly struct EpisodeLaunchSelection
+        {
+            internal EpisodeLaunchSelection(
+                Content.EpisodeDefinition episode,
+                bool startNew)
+            {
+                Episode = episode;
+                StartNew = startNew;
+            }
+
+            internal Content.EpisodeDefinition Episode { get; }
+            internal bool StartNew { get; }
+        }
+
         internal struct Dependencies
         {
             internal Bundles.Entity Bundles;
@@ -178,31 +192,47 @@ namespace Novels
             return content;
         }
 
-        internal async UniTask<Content.EpisodeDefinition> SelectEpisode(
+        internal async UniTask<EpisodeLaunchSelection> SelectEpisode(
             Content.NovelDefinition definition,
             GameObject screen)
         {
             var items = definition.Episodes
-                .Select(episode => new Catalog.CatalogItem(
-                    episode.Id,
-                    episode.Title,
-                    description: episode.Description,
-                    status: ApplicationTexts.ContentAvailable,
-                    actionLabel: ApplicationTexts.OpenContent))
+                .Select(episode =>
+                {
+                    var hasSave = _progressCache.Exists(
+                        NovelRuntime.SaveChoiceKey(definition.Id, episode.Id));
+                    return new Catalog.CatalogItem(
+                        episode.Id,
+                        episode.Title,
+                        description: episode.Description,
+                        status: hasSave
+                            ? ApplicationTexts.ContinueContent
+                            : ApplicationTexts.ContentAvailable,
+                        actionLabel: hasSave
+                            ? ApplicationTexts.ContinueContent
+                            : ApplicationTexts.NewGame,
+                        secondaryActionLabel: hasSave
+                            ? ApplicationTexts.StartAgain
+                            : null);
+                })
                 .ToArray();
             using var selection = CreateSelection(screen);
-            var selected = await selection.Select(
+            var selected = await selection.SelectAction(
                 ApplicationTexts.ChooseEpisode,
                 items);
             var episode = definition.Episodes.First(candidate => string.Equals(
                 candidate.Id,
-                selected.Id,
+                selected.Item.Id,
                 StringComparison.OrdinalIgnoreCase));
             _ctx.SmokeTelemetry?.Emit(
                 "episode.selected",
                 ("contentId", definition.Id),
                 ("episodeId", episode.Id));
-            return episode;
+            var hasSave = _progressCache.Exists(
+                NovelRuntime.SaveChoiceKey(definition.Id, episode.Id));
+            return new EpisodeLaunchSelection(
+                episode,
+                startNew: selected.IsSecondaryAction || !hasSave);
         }
 
         private bool HasStarted(string contentId)

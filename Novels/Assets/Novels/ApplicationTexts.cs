@@ -11,6 +11,8 @@ namespace Novels
         internal const string ContentAvailable = "Доступно";
         internal const string OpenContent = "Открыть";
         internal const string ContinueContent = "Продолжить";
+        internal const string NewGame = "Новая игра";
+        internal const string StartAgain = "Начать заново";
         internal const string PreparingContent = "Подготовка истории";
     }
 }

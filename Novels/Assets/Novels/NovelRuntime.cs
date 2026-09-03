@@ -28,7 +28,7 @@ namespace Novels
             internal NovelRuntimeTuning RuntimeTuning;
             internal Func<
                 Content.NovelDefinition,
-                UniTask<Content.EpisodeDefinition>>
+                UniTask<CatalogFlow.EpisodeLaunchSelection>>
                 SelectEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
                 PrepareNovelContent;
@@ -109,7 +109,8 @@ namespace Novels
                 _definition.EndMarker,
                 _definition.SilentAudioIds,
                 _progress.PlayableEpisodes);
-            _episode = await _ctx.SelectEpisode(playableDefinition);
+            var launch = await _ctx.SelectEpisode(playableDefinition);
+            _episode = launch.Episode;
             _progress.Begin(_episode);
             var episodeRuntime = new EpisodeRuntime(_ctx.CancellationToken).AddTo(this);
 
@@ -117,11 +118,11 @@ namespace Novels
             try
             {
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
-                var prepared = await PrepareApplication(storyAssets, episodeRuntime);
-                if (prepared.selection == SettingSelection.NewGame)
-                    prepared.episode.SaveSystem.Clear();
+                var prepared = await PrepareEpisode(storyAssets, episodeRuntime);
+                if (launch.StartNew)
+                    prepared.SaveSystem.Clear();
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
-                result = await RunEpisode(prepared.episode);
+                result = await RunEpisode(prepared);
             }
             catch (OperationCanceledException)
                 when (_ctx.CancellationToken.IsCancellationRequested)

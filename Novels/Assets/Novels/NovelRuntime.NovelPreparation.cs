@@ -53,8 +53,7 @@ namespace Novels
             internal UniTask<EpisodeStoryData> EpisodePreloading { get; }
         }
 
-        private async UniTask<(PreparedEpisode episode, SettingSelection selection)>
-            PrepareApplication(
+        private async UniTask<PreparedEpisode> PrepareEpisode(
             Bundles.Scope storyAssets,
             EpisodeRuntime episodeRuntime)
         {
@@ -104,21 +103,6 @@ namespace Novels
                 episodeRuntime.CancellationToken).Preserve();
             await mainLoading.Show().AttachExternalCancellation(_ctx.CancellationToken);
 
-            var settingsAddress = new Bundles.BundleAssetAddress(
-                _assetBundleName,
-                addresses.SettingPrefab(BootstrapAddresses.ScreenAssetName));
-            var settingsScreen = await _priorityLoader.Run(() => storyAssets
-                .GetBundledPrefab(settingsAddress)
-                .AttachExternalCancellation(_ctx.CancellationToken));
-            var settingProcess = new SettingProcess(new SettingProcess.Dependencies
-            {
-                BundledPrefab = settingsScreen,
-                ShowLoading = mainLoading.Show,
-                HideLoading = mainLoading.Hide,
-                ContainAnySave = () => saveSystem.ContainAnySave,
-                NovelTitle = _ctx.Content.Text.Title,
-                CancellationToken = _ctx.CancellationToken,
-            }).AddTo(this);
             var episode = new PreparedEpisode(
                 saveSystem,
                 addresses,
@@ -127,8 +111,7 @@ namespace Novels
                 storyMedia,
                 mainLoading,
                 episodePreloading);
-            var selection = await settingProcess.ShowSettingProcess();
-            return (episode, selection);
+            return episode;
         }
 
         private async UniTask<EpisodeStoryData> PreloadEpisode(
