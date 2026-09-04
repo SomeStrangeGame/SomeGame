@@ -1,5 +1,13 @@
 # Current cross-chat handoff
 
+## 2026-09-04T17:27:20Z — scp1198-story — completed
+
+Task: publish the user-authorized current children catalog prefab change before starting the SCP-1198 story.
+Changed: normalized Unity YAML trailing whitespace and committed the exact prefab scope as `0feaa7b4`.
+Validation: scoped diff check passed; aggregate verify was environmentally blocked at catalog build by existing MCP processes holding its database read-only; prior handoff records successful builds of this prefab. Canonical publish confirmed matching local/remote SHA `0feaa7b40acb6c289f04121cf157e49e68c9c16f`.
+Pending / risks: none for publication; story creation proceeds separately on `codex/story-scp1198-silence`.
+Suggested next step: create the clean story branch and run the `$somegame-create-story` workflow.
+
 ## 2026-09-04T17:05:00Z — tzm-choose-publish — ready-for-integration
 
 Task: publish the completed TZM story-local Choose implementation and bundle-registration fix.
