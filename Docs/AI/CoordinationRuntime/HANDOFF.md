@@ -1,5 +1,13 @@
 # Current cross-chat handoff
 
+## 2026-09-04T17:05:00Z — tzm-choose-publish — ready-for-integration
+
+Task: publish the completed TZM story-local Choose implementation and bundle-registration fix.
+Changed: committed the exact shared/runtime/TZM scope as `dab0e623`; the foreign dirty `catalog/children/screen.prefab` was temporarily stashed and restored unchanged.
+Validation: prior TZM editor content build and fresh Novels compile passed; canonical `git-publish` confirmed local and remote SHA `dab0e62341df1e330aa3513224d1eaded8a2baf1`.
+Pending / risks: final aesthetic review of the story-local screen remains with the user; no known integration blocker.
+Suggested next step: replay the first multi-object TZM choice from a fresh run and iterate only on prefab styling if requested.
+
 ## 2026-09-04T17:02:00Z — tzm-choose-bundle-fix — completed
 
 Task: fix the reproduced TZM Choose screen falling back despite the authored prefab existing.
