@@ -23,6 +23,28 @@ Runner не создаёт отдельный coordination contract: право 
 
 ## Команды
 
+### Lifecycle и локальные пресеты
+
+`start-task` создаёт собственные coordination records и атомарно получает lock
+только для первой FIFO-заявки. `finish-task` запускает проверки точных
+`--paths`, обновляет agent/handoff и освобождает только собственные request/lock;
+pending runtime gates требуют явного `--allow-pending`.
+
+```bash
+Tools/somegame start-task --agent-id <id> --task <summary> --scope <exact-scope>
+Tools/somegame tooling-tests
+Tools/somegame story-check --agent-id <lock-owner> --target <story-id> [--build]
+Tools/somegame android-dev-cycle --agent-id <lock-owner> --package-id <id>
+Tools/somegame clean-generated --agent-id <lock-owner> --project <project> [--apply]
+Tools/somegame finish-task --agent-id <lock-owner> --paths <owned-path...> \
+  --summary <result> [--allow-pending]
+```
+
+`tooling-tests` не запускает Unity. `story-check` ограничен одним atomic story.
+`android-dev-cycle` последовательно выполняет существующие Player build и ADB
+smoke contracts. `clean-generated` fail-closed принимает только точный Unity
+project внутри репозитория; без `--apply` это обязательный dry-run.
+
 ### `context`
 
 Объединяет task-plan и chat-resume. Read-only возвращает branch/HEAD, bounded

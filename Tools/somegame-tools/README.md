@@ -6,6 +6,9 @@ JSON. Полные логи сохраняются в ignored `Novels/Build/Logs
 ```bash
 Tools/somegame docs-check
 Tools/somegame context --task integration
+Tools/somegame start-task --agent-id <id> --task <summary> --scope <exact-scope>
+Tools/somegame tooling-tests
+Tools/somegame story-check --agent-id <lock-owner> --target <story-id> [--build]
 Tools/somegame verify --explain --base-ref origin/main
 Tools/somegame verify --agent-id <lock-owner> --base-ref origin/main
 Tools/somegame commit-plan
@@ -20,7 +23,27 @@ Tools/somegame player-build --agent-id <lock-owner> --target Android --mode Embe
 Tools/somegame player-build --agent-id <lock-owner> --target Android --mode Embedded --test-signing
 Tools/somegame android-smoke --agent-id <lock-owner> --apk <path> \
   --package-id <id-from-current-apk-or-player-settings>
+Tools/somegame android-dev-cycle --agent-id <lock-owner> --package-id <id>
+Tools/somegame clean-generated --agent-id <lock-owner> --project <exact-project> [--apply]
+Tools/somegame finish-task --agent-id <lock-owner> --paths <owned-path...> \
+  --summary <result> [--allow-pending]
 ```
+
+`start-task` идемпотентно создаёт собственные agent/request records и получает
+lock только в первой позиции FIFO. `finish-task` выполняет scoped static/unit
+gates, пишет компактный handoff, завершает agent и освобождает только собственные
+request/lock; незаданные runtime/manual gates блокируют release без
+`--allow-pending`.
+
+`tooling-tests` объединяет unit suites трёх локальных инструментов.
+`story-check` валидирует одну атомарную историю, а с `--build` выполняет её
+целевую platform-сборку. `android-dev-cycle` последовательно объединяет Embedded
+Android Player build и smoke одного APK. `clean-generated` принимает точный
+Unity project, по умолчанию только показывает разрешённые generated-каталоги и
+удаляет их лишь с `--apply`.
+
+Для zsh completion добавьте каталог `Tools` в `fpath`, затем выполните
+`autoload -Uz compinit && compinit`; файл называется `somegame-completion.zsh`.
 
 `docs-check`, `context`, `verify --explain`, `commit-plan` и read-only
 `licensing-preflight` не требуют lock. Write workflows fail-closed проверяют

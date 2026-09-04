@@ -7,6 +7,7 @@ import argparse
 import json
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -106,7 +107,8 @@ def run_logged(command: list[str], *, timeout: float, log: Path,
             "log": str(log), "tail": tail(log, 40) if returncode else []}
 
 
-def lock_owner(root: Path = ROOT) -> str | None:
+def lock_owner(root: Path | None = None) -> str | None:
+    root = ROOT if root is None else root
     owner = root / "Docs/AI/CoordinationRuntime/active/write-lock/owner.md"
     if not owner.is_file():
         return None
@@ -144,7 +146,8 @@ def require_lock(agent_id: str | None) -> None:
         raise WorkflowError("lock_not_owned", f"write-lock owner is {owner!r}, expected {agent_id!r}")
 
 
-def coordination_runtime_allowlist(agent_id: str, root: Path = ROOT) -> set[str]:
+def coordination_runtime_allowlist(agent_id: str, root: Path | None = None) -> set[str]:
+    root = ROOT if root is None else root
     owner_path = root / "Docs/AI/CoordinationRuntime/active/write-lock/owner.md"
     text = owner_path.read_text(encoding="utf-8")
     request_match = re.search(r"^- Request:\s*`?([^`\n]+)`?", text, re.M)
@@ -381,6 +384,103 @@ def queue_prune_workflow(args: argparse.Namespace) -> dict[str, Any]:
             "agent": request["agent"], "agentStatus": request["agentStatus"]}
 
 
+def atomic_write(path: Path, content: str) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(content, encoding="utf-8")
+    temporary.replace(path)
+
+
+def start_task(args: argparse.Namespace) -> dict[str, Any]:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", args.agent_id):
+        raise WorkflowError("invalid_agent_id", "--agent-id must use lowercase letters, digits and hyphens")
+    scope = args.scope.strip()
+    if not scope:
+        raise WorkflowError("scope_required", "--scope must be non-empty")
+    runtime = ROOT / "Docs/AI/CoordinationRuntime"
+    existing = sorted((runtime / "requests").glob(f"*-{args.agent_id}/request.md"))
+    if len(existing) > 1:
+        raise WorkflowError("duplicate_requests", "Multiple requests already exist", details=[str(p) for p in existing])
+    request_id = existing[0].parent.name if existing else f"{utc_stamp()}-{args.agent_id}"
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    agent_path = runtime / "agents" / f"{args.agent_id}.md"
+    request_path = runtime / "requests" / request_id / "request.md"
+    if not agent_path.exists():
+        atomic_write(agent_path, f"# Agent: `{args.agent_id}`\n\n- Status: queued\n- Task: {args.task}\n- Scope: {scope}\n- Base commit: `{git_output('rev-parse', 'HEAD')}`.\n- Requested UTC: `{stamp}`.\n")
+    if not request_path.exists():
+        atomic_write(request_path, f"# Write request: `{args.agent_id}`\n\n- Agent: `{args.agent_id}`\n- Status: queued\n- Requested UTC: `{stamp}`\n- Scope: {scope}\n- Purpose: {args.task}\n")
+    state = taskflow.runtime_state(ROOT)
+    position = next((item["position"] for item in state["requests"] if item["id"] == request_id), None)
+    if state["lockOwner"] == args.agent_id:
+        return {"ok": True, "workflow": "start-task", "agentId": args.agent_id,
+                "requestId": request_id, "position": position, "acquired": True, "idempotent": True}
+    if state["lockOwner"] is not None or position != 1:
+        return {"ok": True, "workflow": "start-task", "agentId": args.agent_id,
+                "requestId": request_id, "position": position, "acquired": False,
+                "blockedReason": state["blockedReason"]}
+    lock_dir = runtime / "active/write-lock"
+    try:
+        lock_dir.mkdir(parents=False)
+    except FileExistsError:
+        raise WorkflowError("lock_race", "write-lock appeared while acquiring")
+    atomic_write(lock_dir / "owner.md", f"# Write lock\n\n- Agent: `{args.agent_id}`\n- Request: `{request_id}`\n- Acquired UTC: `{stamp}`\n- Heartbeat UTC: `{stamp}`\n- Scope: {scope}\n")
+    current = agent_path.read_text(encoding="utf-8")
+    atomic_write(agent_path, re.sub(r"^- Status:\s*queued$", "- Status: active", current, count=1, flags=re.M))
+    state = taskflow.runtime_state(ROOT)
+    if state["lockOwner"] != args.agent_id or state["firstRequest"] != request_id:
+        raise WorkflowError("lock_verification_failed", "Acquired lock did not match FIFO head")
+    return {"ok": True, "workflow": "start-task", "agentId": args.agent_id,
+            "requestId": request_id, "position": 1, "acquired": True, "idempotent": False}
+
+
+def tooling_tests(args: argparse.Namespace) -> dict[str, Any]:
+    suites = ("novels-tools", "unity-mcp-helper", "somegame-tools")
+    logs: list[str] = []
+    for suite in suites:
+        result = run_logged([sys.executable, "-m", "unittest", "discover", "-s", f"Tools/{suite}/tests", "-v"],
+                            timeout=args.timeout, log=LOG_ROOT / f"tooling-tests-{utc_stamp()}-{suite}.log")
+        logs.append(result["log"])
+        if result["returncode"]:
+            return {"ok": False, "workflow": "tooling-tests", "failedSuite": suite,
+                    "tail": result["tail"], "logs": logs}
+    return {"ok": True, "workflow": "tooling-tests", "suites": list(suites), "logs": logs}
+
+
+def story_check(args: argparse.Namespace) -> dict[str, Any]:
+    require_lock(args.agent_id)
+    target = args.target.strip()
+    project = ROOT / "Projects" / f"novels-{target}"
+    if not target or not project.is_dir() or target in {"catalog", "all"}:
+        raise WorkflowError("story_missing", f"Atomic story project does not exist: {target!r}")
+    command = [str(ROOT / "Tools/novels-tools/novels-content"),
+               "build" if args.build else "validate", target]
+    if args.build:
+        command.append(args.platform)
+    result = run_logged(command, timeout=args.timeout, log=LOG_ROOT / f"story-check-{utc_stamp()}-{target}.log")
+    return {"ok": result["returncode"] == 0, "workflow": "story-check", "target": target,
+            "mode": "build" if args.build else "validate", **result}
+
+
+GENERATED_DIR_NAMES = ("Library", "Temp", "Logs")
+
+
+def clean_generated(args: argparse.Namespace) -> dict[str, Any]:
+    require_lock(args.agent_id)
+    root = ROOT.resolve()
+    target = (root / args.project).resolve()
+    if target == root or root not in target.parents or not (target / "ProjectSettings").is_dir():
+        raise WorkflowError("invalid_project", "--project must name an exact Unity project inside SomeGame")
+    candidates = [target / name for name in GENERATED_DIR_NAMES]
+    candidates += [target / "Build/UnityLibraryCache", target / "Build/Logs"]
+    existing = [path for path in candidates if path.exists()]
+    if args.apply:
+        for path in existing:
+            shutil.rmtree(path)
+    return {"ok": True, "workflow": "clean-generated", "project": str(target.relative_to(root)),
+            "dryRun": not args.apply, "paths": [str(path.relative_to(root)) for path in existing],
+            "removedCount": len(existing) if args.apply else 0}
+
+
 def commit_plan_workflow(args: argparse.Namespace) -> dict[str, Any]:
     return taskflow.commit_plan(ROOT)
 
@@ -505,11 +605,16 @@ def player_build(args: argparse.Namespace) -> dict[str, Any]:
         if built["returncode"]:
             return {"ok": False, "workflow": "player-build", "stage": "content", **built}
     command = [str(ROOT / "Novels/Tools/build-player.sh"), args.mode, args.target, str(output)]
+    has_catalog_variant = args.catalog_variant != "default"
     if args.mode == "Remote": command.append(args.remote_url)
-    elif args.development or args.test_signing:
+    elif args.development or args.test_signing or has_catalog_variant:
         command.append("")
     if args.development: command.append("--development")
     if args.test_signing: command.append("--test-signing")
+    if has_catalog_variant and not (args.development or args.test_signing):
+        command.append("")
+    if has_catalog_variant:
+        command.append(f"--catalog-variant={args.catalog_variant}")
     built = run_logged(command, timeout=args.timeout, log=LOG_ROOT / f"player-{utc_stamp()}.log")
     logs.append(built["log"])
     exists = output.exists()
@@ -751,6 +856,77 @@ def android_smoke(args: argparse.Namespace) -> dict[str, Any]:
     return summary
 
 
+def android_dev_cycle(args: argparse.Namespace) -> dict[str, Any]:
+    require_lock(args.agent_id)
+    build_args = argparse.Namespace(
+        agent_id=args.agent_id, close_hub=args.close_hub, output=args.output,
+        target="Android", mode="Embedded", remote_url="", development=False,
+        test_signing=args.test_signing, skip_content_build=args.skip_content_build,
+        timeout=args.build_timeout,
+    )
+    built = player_build(build_args)
+    if not built["ok"]:
+        return {"ok": False, "workflow": "android-dev-cycle", "stage": "build", "build": built}
+    smoke_args = argparse.Namespace(
+        agent_id=args.agent_id, apk=built["output"], package_id=args.package_id,
+        serial=args.serial, adb=args.adb, timeout=args.smoke_timeout,
+        install_timeout=args.install_timeout, poll_interval=args.poll_interval,
+        required_events=args.required_events,
+    )
+    smoked = android_smoke(smoke_args)
+    return {"ok": smoked["ok"], "workflow": "android-dev-cycle",
+            "stage": "complete" if smoked["ok"] else "smoke", "build": built, "smoke": smoked}
+
+
+def finish_task(args: argparse.Namespace) -> dict[str, Any]:
+    require_lock(args.agent_id)
+    paths = args.paths or []
+    if not paths:
+        raise WorkflowError("paths_required", "finish-task requires exact --paths")
+    plan = taskflow.verification_plan(ROOT, paths)
+    verify_args = argparse.Namespace(paths=paths, platform=args.platform)
+    commands, pending = verification_commands(plan, verify_args)
+    logs: list[str] = []
+    for name, command in commands:
+        result = run_logged(command, timeout=args.timeout,
+                            log=LOG_ROOT / f"finish-task-{utc_stamp()}-{name}.log")
+        logs.append(result["log"])
+        if result["returncode"]:
+            return {"ok": False, "workflow": "finish-task", "released": False,
+                    "failedGate": name, "tail": result["tail"], "logs": logs, "pending": pending}
+    if pending and not args.allow_pending:
+        return {"ok": False, "workflow": "finish-task", "released": False,
+                "error": {"code": "pending_gates", "details": pending}, "logs": logs}
+    runtime = ROOT / "Docs/AI/CoordinationRuntime"
+    owner = runtime / "active/write-lock/owner.md"
+    owner_text = owner.read_text(encoding="utf-8")
+    request_match = re.search(r"^- Request:\s*`?([^`\n]+)`?", owner_text, re.M)
+    if not request_match:
+        raise WorkflowError("lock_request_missing", "write-lock owner has no Request field")
+    request_id = request_match.group(1).strip()
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    agent_path = runtime / "agents" / f"{args.agent_id}.md"
+    agent_text = agent_path.read_text(encoding="utf-8")
+    agent_text = re.sub(r"^- Status:\s*\S+", "- Status: completed", agent_text, count=1, flags=re.M)
+    agent_text += f"\n- Completed UTC: `{stamp}`.\n- Validation: finish-task passed; logs: {len(logs)}; pending: {pending or 'none'}.\n"
+    atomic_write(agent_path, agent_text)
+    handoff_path = runtime / "HANDOFF.md"
+    handoff = handoff_path.read_text(encoding="utf-8")
+    entry = (f"\n## {stamp} — {args.agent_id} — completed\n\n"
+             f"Task: {args.summary}\nChanged: {', '.join(paths)}\n"
+             f"Validation: finish-task passed ({len(logs)} gates).\n"
+             f"Pending / risks: {', '.join(pending) if pending else 'none'}\nSuggested next step: none\n")
+    atomic_write(handoff_path, handoff.rstrip() + "\n" + entry)
+    request_dir = runtime / "requests" / request_id
+    (request_dir / "request.md").unlink()
+    request_dir.rmdir()
+    owner.unlink()
+    owner.parent.rmdir()
+    return {"ok": True, "workflow": "finish-task", "agentId": args.agent_id,
+            "released": True, "executedGates": [name for name, _ in commands],
+            "pending": pending, "logs": logs}
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__); sub = p.add_subparsers(dest="workflow", required=True)
     docs = sub.add_parser("docs-check"); docs.add_argument("--timeout", type=float, default=120)
@@ -759,6 +935,9 @@ def parser() -> argparse.ArgumentParser:
     context.add_argument("--paths", nargs="*", help="Exact task-owned paths for scoped planning")
     queue_status = sub.add_parser("queue-status"); queue_status.add_argument("--agent-id")
     queue_prune = sub.add_parser("queue-prune"); queue_prune.add_argument("--request", required=True)
+    start = sub.add_parser("start-task"); start.add_argument("--agent-id", required=True)
+    start.add_argument("--task", required=True); start.add_argument("--scope", required=True)
+    tooling = sub.add_parser("tooling-tests"); tooling.add_argument("--timeout", type=float, default=180)
     verify = sub.add_parser("verify"); verify.add_argument("--agent-id")
     verify.add_argument("--base-ref"); verify.add_argument("--paths", nargs="*")
     verify.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
@@ -766,6 +945,13 @@ def parser() -> argparse.ArgumentParser:
     verify.add_argument("--release", action="store_true"); verify.add_argument("--timeout", type=float, default=3600)
     sub.add_parser("commit-plan")
     finish = sub.add_parser("finish-check"); finish.add_argument("--agent-id", required=True)
+    finish_task_parser = sub.add_parser("finish-task")
+    finish_task_parser.add_argument("--agent-id", required=True)
+    finish_task_parser.add_argument("--paths", nargs="+", required=True)
+    finish_task_parser.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
+    finish_task_parser.add_argument("--summary", required=True)
+    finish_task_parser.add_argument("--allow-pending", action="store_true")
+    finish_task_parser.add_argument("--timeout", type=float, default=3600)
     publish = sub.add_parser("git-publish"); publish.add_argument("--agent-id", required=True)
     publish.add_argument("--remote", default="origin"); publish.add_argument("--branch", default="main")
     publish.add_argument("--ssh-key"); publish.add_argument("--timeout", type=float, default=120)
@@ -774,6 +960,10 @@ def parser() -> argparse.ArgumentParser:
     content.add_argument("--target", help="Explicit catalog or story id; bypasses broad dirty-tree planning")
     content.add_argument("--close-hub", action="store_true")
     content.add_argument("--base-ref"); content.add_argument("--timeout", type=float, default=3600)
+    story = sub.add_parser("story-check"); story.add_argument("--agent-id", required=True)
+    story.add_argument("--target", required=True); story.add_argument("--build", action="store_true")
+    story.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
+    story.add_argument("--timeout", type=float, default=3600)
     player = sub.add_parser("player-build"); player.add_argument("--agent-id", required=True)
     player.add_argument("--target", choices=("Android", "iOS", "Windows", "macOS"), required=True)
     player.add_argument("--mode", choices=("Remote", "Embedded"), required=True)
@@ -783,6 +973,7 @@ def parser() -> argparse.ArgumentParser:
     signing_mode.add_argument("--test-signing", action="store_true")
     player.add_argument("--skip-content-build", action="store_true")
     player.add_argument("--close-hub", action="store_true")
+    player.add_argument("--catalog-variant", choices=("default", "children"), default="default")
     player.add_argument("--timeout", type=float, default=7200)
     licensing = sub.add_parser("licensing-preflight"); licensing.add_argument("--agent-id")
     licensing.add_argument("--recover", action="store_true"); licensing.add_argument("--confirm-pid", type=int, action="append")
@@ -802,6 +993,16 @@ def parser() -> argparse.ArgumentParser:
     smoke.add_argument("--timeout", type=float, default=180); smoke.add_argument("--install-timeout", type=float, default=180)
     smoke.add_argument("--poll-interval", type=float, default=2)
     smoke.add_argument("--required-events", default="app.started,catalog.loading,catalog.ready,story.selected,release.activated,episode.selected,episode.ready,dialogue.ready")
+    cycle = sub.add_parser("android-dev-cycle"); cycle.add_argument("--agent-id", required=True)
+    cycle.add_argument("--package-id", required=True); cycle.add_argument("--serial", default="emulator-5554")
+    cycle.add_argument("--adb", default="adb"); cycle.add_argument("--output")
+    cycle.add_argument("--test-signing", action="store_true"); cycle.add_argument("--skip-content-build", action="store_true")
+    cycle.add_argument("--close-hub", action="store_true"); cycle.add_argument("--build-timeout", type=float, default=7200)
+    cycle.add_argument("--smoke-timeout", type=float, default=180); cycle.add_argument("--install-timeout", type=float, default=180)
+    cycle.add_argument("--poll-interval", type=float, default=2)
+    cycle.add_argument("--required-events", default="app.started,catalog.loading,catalog.ready")
+    clean = sub.add_parser("clean-generated"); clean.add_argument("--agent-id", required=True)
+    clean.add_argument("--project", required=True); clean.add_argument("--apply", action="store_true")
     return p
 
 
@@ -810,13 +1011,15 @@ def main() -> int:
     global ACTIVE_AGENT_ID
     ACTIVE_AGENT_ID = getattr(args, "agent_id", None)
     handlers = {"docs-check": docs_check, "context": context_workflow, "verify": verify_workflow,
+                "start-task": start_task, "tooling-tests": tooling_tests,
                 "queue-status": queue_status_workflow,
                 "queue-prune": queue_prune_workflow,
-                "commit-plan": commit_plan_workflow, "finish-check": finish_check,
+                "commit-plan": commit_plan_workflow, "finish-check": finish_check, "finish-task": finish_task,
                 "git-publish": git_publish,
-                "content-gate": content_gate, "player-build": player_build,
+                "content-gate": content_gate, "story-check": story_check, "player-build": player_build,
                 "licensing-preflight": licensing_preflight, "editor-gate": editor_gate,
-                "android-smoke": android_smoke}
+                "android-smoke": android_smoke, "android-dev-cycle": android_dev_cycle,
+                "clean-generated": clean_generated}
     try:
         payload = handlers[args.workflow](args); payload["durationSeconds"] = round(time.monotonic() - started, 3)
         emit(payload); return 0 if payload.get("ok") else 1

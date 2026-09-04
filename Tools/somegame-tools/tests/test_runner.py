@@ -65,6 +65,13 @@ class RunnerTests(unittest.TestCase):
         self.assertTrue(args.test_signing)
         self.assertFalse(args.development)
 
+    def test_player_parser_accepts_children_catalog_variant(self):
+        args = runner.parser().parse_args([
+            "player-build", "--agent-id", "a", "--target", "Android",
+            "--mode", "Embedded", "--catalog-variant", "children",
+        ])
+        self.assertEqual("children", args.catalog_variant)
+
     def test_player_parser_rejects_development_with_test_signing(self):
         with self.assertRaises(SystemExit):
             runner.parser().parse_args([
@@ -198,6 +205,57 @@ class RunnerTests(unittest.TestCase):
             log = Path(directory) / "Editor.log"
             log.write_text("CompilationPipeline: compilation finished\n", encoding="utf-8")
             self.assertEqual([], runner.compiler_error_lines(log))
+
+    def test_repeating_workflow_parsers(self):
+        start = runner.parser().parse_args([
+            "start-task", "--agent-id", "my-task", "--task", "Do work", "--scope", "Tools/x"])
+        self.assertEqual("my-task", start.agent_id)
+        story = runner.parser().parse_args([
+            "story-check", "--agent-id", "a", "--target", "tzm", "--build", "--platform", "android"])
+        self.assertTrue(story.build)
+        cycle = runner.parser().parse_args([
+            "android-dev-cycle", "--agent-id", "a", "--package-id", "com.example.game"])
+        self.assertEqual("emulator-5554", cycle.serial)
+        clean = runner.parser().parse_args([
+            "clean-generated", "--agent-id", "a", "--project", "Novels"])
+        self.assertFalse(clean.apply)
+
+    def test_clean_generated_is_dry_run_by_default(self):
+        previous_root = runner.ROOT
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            project = root / "Projects/novels-test"
+            (project / "ProjectSettings").mkdir(parents=True)
+            (project / "Library").mkdir()
+            lock = root / "Docs/AI/CoordinationRuntime/active/write-lock"
+            lock.mkdir(parents=True)
+            (lock / "owner.md").write_text("- Agent: `a`\n", encoding="utf-8")
+            try:
+                runner.ROOT = root
+                args = runner.parser().parse_args([
+                    "clean-generated", "--agent-id", "a", "--project", "Projects/novels-test"])
+                result = runner.clean_generated(args)
+                self.assertTrue(result["dryRun"])
+                self.assertTrue((project / "Library").is_dir())
+            finally:
+                runner.ROOT = previous_root
+
+    def test_clean_generated_rejects_repository_root(self):
+        previous_root = runner.ROOT
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "ProjectSettings").mkdir()
+            lock = root / "Docs/AI/CoordinationRuntime/active/write-lock"
+            lock.mkdir(parents=True)
+            (lock / "owner.md").write_text("- Agent: `a`\n", encoding="utf-8")
+            try:
+                runner.ROOT = root
+                args = runner.parser().parse_args([
+                    "clean-generated", "--agent-id", "a", "--project", "."])
+                with self.assertRaises(runner.WorkflowError):
+                    runner.clean_generated(args)
+            finally:
+                runner.ROOT = previous_root
 
 
 if __name__ == "__main__":
