@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: busya-lake-blanket
+  m_EditorClassIdentifier:
+  _id: busya-lake-blanket
+  _mainCharacter: "Буся"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Одеяло из отражений"
+    _description: "Буся, Шелестик и Тёплик помогают озеру собрать мягкое одеяло из облаков, звёзд и добрых слов."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Буся"
+    _clothes: bedtime
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Шелестик"
+    _clothes: bedtime
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Тёплик"
+    _clothes: bedtime
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: 3fa79fac007944049a4d54555790aa53
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []
