@@ -1,0 +1,29 @@
+# Agent: `busya-lake-blanket-story`
+
+- Status: completed
+- Task: создать и принять новую интерактивную сказку для детей 3 лет, читаемую вместе с мамой или папой.
+- Scope: `Projects/novels-busya-lake-blanket/**`, `Projects/novels-catalog/Config/catalog.json`, локальная MCP-конфигурация нового проекта, собственные coordination records и handoff.
+- Contract: атомарная история `busya-lake-blanket`, один эпизод примерно на 15 минут, короткие реплики, совместные жесты, два смысловых выбора без неправильных ответов и один тёплый финал с отражением выбранного состояния.
+- Working title: `Капелька Буся и одеяло для озера`.
+- Genre: `уютная сказка перед сном` (формулировка автора; исправлена очевидная пропущенная первая буква).
+- Factual basis: полностью вымышленная история.
+- Audience: дети 3 лет и читающие вместе с ними мама или папа.
+- Boundaries: без злодеев, страха, угроз, потери родителей, наказания, стыда, опасных действий, рекламы и заимствованных персонажей.
+- Approval mode: `auto-approve`.
+- Base: `d9b89d91ebf22fdb074e2f050ed6759ca402352d` (`origin/main`), branch `codex/story-busya-lake-blanket`.
+- Requested UTC: `2026-09-04T12:12:08Z`.
+- Planned validation: narrative, visual and full-text originality gates; child-safety/reachability audit; mandatory exact-project Unity MCP live/restart proof; story/catalog validation and editor builds; scoped diff review and final acceptance.
+- Narrative originality: two earlier concepts rejected for material public similarities; final lake-blanket concept passed iteration 1 with low residual trope-level similarity only. This is a risk screen, not legal clearance.
+- Progress: clean branch created from published `origin/main`; source/config surface copied from `Projects/novels-content-template` without generated caches; project identity updated; local optional MCP server `unity_novels_busya_lake_blanket` added with the literal target path.
+- User approval UTC 2026-09-04T12:15:38Z: closing Unity Hub was authorized for the exact-project MCP gate.
+- Completion UTC 2026-09-04T13:51:08Z: `ready-for-integration`.
+- Content: complete one-episode 3+ bedtime story with three original characters, three locations, two image-led two-way choices, parent/child actions, branch-state recall and one warm reachable ending. Narrative, complete Ink, each character and non-character art have explicit `passed` originality evidence.
+- Build validation: exact-project Unity MCP/restart/compile gate passed; story and catalog validation plus editor/android builds passed; `novels-content verify android origin/main`, `Tools/somegame docs-check` and `git diff --check` passed.
+- Android artifact: `Novels/Build/Players/automation/Android/Embedded/Novels.apk`, build UTC `2026-09-04T13:32:12Z`, SHA-256 `ec4d8733ab66bde2467927cdf3d18b1373753c8bb6b62ccfe686eba390a58ac0`, size 2232653865 bytes, package `com.UnityTechnologies.com.unity.template.urpblank`, version `2026.09.04` (`3511531`).
+- Runtime identity: story release `662605990fc350485c11623907edfc06fcb086646be8123496105c99cde67dbe`; ADB `emulator-5554`, model `sdk_gphone64_arm64`, Android API 34.
+- Runtime coverage: real catalog-to-story launch; save/continue observed after application restart/update; route A `Круглое облако` + `Добрые слова`; route B `Длинное облако` + `Мягкое прикосновение`; both produced independent `episode.completed` and `catalog.returned` markers. No `fallback.used`, crash, ANR or Unity error for `busya-lake-blanket`.
+- Manual visual coverage: catalog card, Busya/Shelistik character rendering, all three backgrounds, both choice screens and all four choice sprites inspected. Evidence: `Novels/Build/Logs/automation/busya-choice-one-final.png`, `busya-choice-two-final.png`, `busya-run-b-choice-two.png`, `busya-acceptance-final.log` and earlier scoped screenshots in the same ignored directory.
+- Git: branch/base relationship verified at `d9b89d91ebf22fdb074e2f050ed6759ca402352d`; no story commit, push, merge or branch deletion was performed because no explicit publication authority was given for the story branch.
+- Polish completion UTC 2026-09-04T14:35:00Z: character and narrator dialogue now share the warm light authored Bubble style; character viewport scale is `0.48` with a lower `-230` placement; three reader prompts use child-friendly singular address (`Повтори`, `Попробуй`, `Выбери`). Fresh story validation, Android content build and Android Embedded Player build passed after one scoped licensing recovery.
+- Fresh artifact: `Novels/Build/Players/automation/Android/Embedded/Novels.apk`, build local `2026-09-04T17:26:29+0300`, SHA-256 `08c3a593d2976c465b792f064e5669ba705051a7d7e307da9081ed1caf9169e0`, size 2235901560 bytes. Runtime release `b1b27b40f170b6212a12c8f891ab3e1c3fbd50dbe0793c233cbb3b8dcf767da5` on `emulator-5554`, model `sdk_gphone64_arm64`, API 34.
+- Fresh focused runtime: real catalog launch, narrator/Busya/Shelistik left/right presentation, both choice screens and route `Круглое облако` + `Добрые слова` through the final good-night line passed visually; no `fallback.used`, crash or ANR. Strict full re-acceptance remains blocked on a second fresh `Длинное облако` + `Мягкое прикосновение` replay because the catalog returned to the adjacent child story during that retry; the same route passed on the preceding APK and story topology/branch prose did not change, but that evidence is stale under the acceptance skill.

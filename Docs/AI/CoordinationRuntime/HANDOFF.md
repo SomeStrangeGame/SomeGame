@@ -1,5 +1,42 @@
 # Current cross-chat handoff
 
+## 2026-09-04T15:43:00Z — catalog-prefab-publish — ready-for-integration
+
+Task: publish every current substantive change, including completed foreign streams, to canonical `origin/main` and switch the checkout to `main`.
+Changed: atomic commits prepared for repeatable tooling (`ff28e737`), genre-specific catalog builds (`bfe90a15`), the authored children's catalog prefab variant (`1bf35074`) and the Busya story (`b98805ca`); completed coordination evidence is included separately.
+Validation: full integration verify passed diff, automation and all 15 content gates; licensing preflight found no conflict markers; fresh Novels compile passed without compiler errors. The user's final prefab has action-label Y=`7.9` and button height `96`.
+Pending / risks: strict second-route fresh replay for Busya remains an acceptance limitation recorded below; it does not block the already passed content/build/runtime evidence. Publication and local switch to `main` are the remaining steps.
+
+## 2026-09-04T15:23:00Z — children-catalog-button-label — ready-for-integration
+
+Task: visually center the action text inside the taller illustrated child catalog button.
+Changed: the child prefab variant adds a Y=-7 optical offset to the stretched, center-aligned button label; fallback and runtime code are unchanged.
+Validation: Android catalog build, test-signed Embedded APK and emulator smoke through `catalog.ready` passed. Portrait evidence: `Novels/Build/Logs/automation/children-catalog-button-label-centered.png`.
+Pending / risks: none; final aesthetic approval remains with the user.
+
+## 2026-09-04T15:18:00Z — children-catalog-button-height — ready-for-integration
+
+Task: make the children's catalog action button less vertically compressed.
+Changed: child prefab variant overrides the inherited action-button preferred height from 64 to 96; fallback, runtime layout code and other catalog variants are unchanged.
+Validation: Android catalog build, test-signed Embedded APK build and emulator smoke through `catalog.ready` passed. Portrait evidence: `Novels/Build/Logs/automation/children-catalog-button-height.png`.
+Pending / risks: none; final aesthetic approval remains with the user.
+
+## 2026-09-04T15:13:00Z — children-catalog-flavor — ready-for-integration
+
+Task: make the authored children catalog selectable as an application flavor and validate it in a portrait Player.
+Changed: canonical `Tools/somegame player-build` accepts `--catalog-variant children`; Player build automation adds `NOVELS_CHILDREN_CATALOG`, which selects `Assets/RemoteAssets/catalog/children/screen.prefab`. Default builds retain the existing catalog. The child variant now uses authored background, illustrated sliced story panel and illustrated sliced action button; fallback is unchanged and no runtime UI/prefab construction was added.
+Validation: runner tests 30/30, full changed-path verify (automation plus catalog and all 15 story content gates), fresh Novels compile, Android catalog bundle 215.3 KiB, test-signed Embedded Android build and emulator smoke `app.started -> catalog.loading -> catalog.ready` passed. Final portrait evidence: `Novels/Build/Logs/automation/children-catalog-authored-ui-final-v2.png`; APK: `Novels/Build/Players/children-catalog/Novels.apk`.
+Pending / risks: no automated failures. Final aesthetic approval remains with the user; APK is intentionally a large Embedded validation artifact.
+Suggested next step: integrate/commit the scoped source and prefab changes, or iterate visually from the captured frame.
+
+## 2026-09-04T14:03:00Z — children-catalog-prefab — ready-for-integration
+
+Task: create the children's-story catalog skin as an authored prefab variant of the neutral catalog fallback.
+Changed: added `catalog/children/screen.prefab`, a genuine serialized variant of `fallback.prefab`, plus an authored portrait storybook background and child-specific card/dot/button palette overrides. No runtime UI or prefab construction was added; foreign `catalog.json` changes were preserved.
+Validation: fresh uncached scoped `diff-check` and `content-catalog` passed. Unity imported both prefab and sprite; catalog bundle is 469.1 KiB under the 500 KiB hard limit.
+Pending / risks: the variant is available as a catalog asset but app-flavor selection of this address is a separate integration concern; final Player portrait visual gate remains for the child application flavor.
+Suggested next step: wire the child application flavor to `Assets/RemoteAssets/catalog/children/screen.prefab`, then capture a Player screenshot.
+
 Только актуальное незавершённое состояние. Предыдущий snapshot: Git commit `f691f613`; история: [`CoordinationHandoffHistory-2026-09-04.md`](../archive/reports/CoordinationHandoffHistory-2026-09-04.md).
 
 ## Ready for integration or validation
@@ -17,8 +54,17 @@
 
 ## Active validation handoff
 
+- `busya-lake-blanket-story` — polish implementation complete, strict re-acceptance blocked on one fresh replay: warm light authored Bubble styling now covers narrator and character variants, all characters render at viewport scale `0.48` with `-230` lower placement, and reader prompts use singular child address. Story validation, Android content build and Embedded Player build passed. Fresh APK `Novels/Build/Players/automation/Android/Embedded/Novels.apk` (local `2026-09-04T17:26:29+0300`, SHA-256 `08c3a593d2976c465b792f064e5669ba705051a7d7e307da9081ed1caf9169e0`, 2235901560 bytes), release `b1b27b40f170b6212a12c8f891ab3e1c3fbd50dbe0793c233cbb3b8dcf767da5`, was launched through the real catalog on `emulator-5554` (`sdk_gphone64_arm64`, API 34). Narrator, Busya and Shelistik presentations, both choice screens, and `Круглое облако` + `Добрые слова` through the final good-night line passed with no `fallback.used`, crash or ANR. A fresh `Длинное облако` + `Мягкое прикосновение` replay is still required by strict acceptance because its prior successful evidence belongs to the preceding APK. Branch remains uncommitted/unpublished.
 - `fallback-hint-placement` and `fallback-choice-contrast`: scoped checks and fresh Novels compile passed; user portrait visual gates remain.
 - `tzm-episode1-android-smoke`: episode completed without crash/ANR; 35 Sally fallback markers, final-screen overlap, and one hung standalone validation remain recorded in the archived handoff.
 - `gpl-episode3-full-smoke`: paused at episode 3 line 257 after episodes 1–2 completed; resume under FIFO/emulator scope.
 - `android-memory-full-smoke`: paused because the APK content was stale; rebuild before resuming the final pass.
 - Remaining wardrobe, bubble, character-offset and story-continuity items retain their detailed evidence and pending visual gates in the archived 2026-09-04 handoff.
+
+## 2026-09-04T13:50:20Z — repeating-operations-suite — completed
+
+Task: Добавлены семь bounded workflow для повторяемых операций
+Changed: Tools/somegame-tools/runner.py, Tools/somegame-tools/tests/test_runner.py, Tools/somegame-tools/README.md, Tools/somegame-completion.zsh, Docs/AI/guides/AutomationRunners.md
+Validation: finish-task passed (2 gates).
+Pending / risks: none
+Suggested next step: none
