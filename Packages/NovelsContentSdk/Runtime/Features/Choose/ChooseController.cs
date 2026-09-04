@@ -2,6 +2,7 @@ using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
+using UnityEngine;
 
 namespace Novels.Choose
 {
@@ -9,9 +10,15 @@ namespace Novels.Choose
     {
         private readonly OptionSelection.OptionListController _options;
 
-        public ChooseController(CancellationToken cancellationToken)
+        public ChooseController(
+            CancellationToken cancellationToken,
+            GameObject screenPrefab = null)
         {
-            _options = new OptionSelection.OptionListController(cancellationToken);
+            _options = new OptionSelection.OptionListController(
+                cancellationToken,
+                screenPrefab == null
+                    ? null
+                    : screenPrefab.GetComponent<OptionSelection.OptionListScreen>());
         }
 
         public void Init()

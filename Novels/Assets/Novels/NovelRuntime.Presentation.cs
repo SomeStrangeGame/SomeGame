@@ -39,7 +39,10 @@ namespace Novels
                     () => GetCharacterSpriteTrimManifest(state),
                     _ctx.FallbackAssets.Character,
                     cancellationToken),
-                Choose = CreateChoose(state.EpisodeScope, cancellationToken),
+                Choose = CreateChoose(
+                    state.EpisodeScope,
+                    assets.Choose,
+                    cancellationToken),
                 Location = CreateLocation(
                     state.EpisodeScope,
                     assets.Location,
@@ -134,9 +137,13 @@ namespace Novels
 
         private static Choose.ChooseController CreateChoose(
             IBaseDisposable owner,
+            GameObject screenPrefab,
             CancellationToken cancellationToken)
         {
-            var choose = new Choose.ChooseController(cancellationToken).AddTo(owner);
+            var choose = new Choose.ChooseController(
+                    cancellationToken,
+                    screenPrefab)
+                .AddTo(owner);
             choose.Init();
             return choose;
         }

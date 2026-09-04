@@ -36,6 +36,9 @@ namespace Novels.ContentAddressing
         public string ChooseItem(string assetName) =>
             ResolveArt(ContentAddressConvention.ChooseItem(ContentId, assetName));
 
+        public string ChoosePrefab(string assetName) =>
+            ContentAddressConvention.ChoosePrefab(ContentId, assetName);
+
         public string LocationPrefab(string assetName) =>
             ContentAddressConvention.LocationPrefab(ContentId, assetName);
 

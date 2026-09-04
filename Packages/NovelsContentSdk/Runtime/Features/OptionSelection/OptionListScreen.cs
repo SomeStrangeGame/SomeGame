@@ -29,8 +29,6 @@ namespace Novels.OptionSelection
             internal Image Thumbnail { get; }
         }
 
-        private static readonly Color CardColor = new(0.20f, 0.22f, 0.25f, 0.90f);
-        private static readonly Color SelectedColor = new(0.38f, 0.40f, 0.43f, 0.96f);
         private static readonly string[] WardrobeTabs =
             { "Лицо", "Волосы", "Одежда", "Аксессуары" };
         private static readonly string[] WardrobeTabIcons =
@@ -46,6 +44,12 @@ namespace Novels.OptionSelection
         [SerializeField] private Button _confirm;
         [SerializeField] private Text _confirmLabel;
         [SerializeField] private float _snapSpeed = 12f;
+        [Header("Optional default choice theme")]
+        [SerializeField] private Sprite _cardSprite;
+        [SerializeField] private Color _cardColor =
+            new(0.20f, 0.22f, 0.25f, 0.90f);
+        [SerializeField] private Color _selectedCardColor =
+            new(0.38f, 0.40f, 0.43f, 0.96f);
         [Header("Authored wardrobe fallback")]
         [SerializeField] private GameObject _wardrobeRoot;
         [SerializeField] private RectTransform _wardrobePanel;
@@ -257,7 +261,10 @@ namespace Novels.OptionSelection
 
         private void CreateCard(int itemIndex, OptionListItem item)
         {
-            var card = CreateButton($"Option_{item.Id}", _content, CardColor, out var label);
+            var card = CreateButton($"Option_{item.Id}", _content, _cardColor, out var label);
+            var cardImage = card.GetComponent<Image>();
+            cardImage.sprite = _cardSprite;
+            cardImage.type = _cardSprite == null ? Image.Type.Simple : Image.Type.Sliced;
             var rect = card.GetComponent<RectTransform>();
             rect.sizeDelta = new Vector2(640f, 700f);
             var layout = card.gameObject.AddComponent<LayoutElement>();
@@ -276,7 +283,7 @@ namespace Novels.OptionSelection
             card.onClick.AddListener(() => FocusCard(cardSlot, true));
             _cards.Add(new CardView(
                 itemIndex,
-                card.GetComponent<Image>(),
+                cardImage,
                 rect,
                 thumbnail));
         }
@@ -316,8 +323,8 @@ namespace Novels.OptionSelection
             foreach (var card in _cards)
             {
                 card.Background.color = card.ItemIndex == index
-                    ? SelectedColor
-                    : CardColor;
+                    ? _selectedCardColor
+                    : _cardColor;
             }
             var item = _presentation.Items[index];
             ActiveSelection.text = item.Text;

@@ -47,6 +47,11 @@ namespace Novels.ContentAddressing
             string assetName) =>
             StoryAsset(prefix, "choose/items", assetName);
 
+        public static string ChoosePrefab(
+            string prefix,
+            string assetName) =>
+            PresentationPrefab(prefix, "choose", assetName);
+
         public static string LocationPrefab(
             string prefix,
             string assetName) =>

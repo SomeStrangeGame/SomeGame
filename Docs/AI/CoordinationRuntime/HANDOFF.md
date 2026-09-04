@@ -1,5 +1,29 @@
 # Current cross-chat handoff
 
+## 2026-09-04T17:02:00Z — tzm-choose-bundle-fix — completed
+
+Task: fix the reproduced TZM Choose screen falling back despite the authored prefab existing.
+Changed: added Choose prefab GUID `0776b1eb8b974ca0a6801754339c42bf` to the explicit `_authoringChunks._assetGuids` list in `Projects/novels-tzm/Assets/tzm.asset`; rebuilt TZM editor content and reopened Novels on the fresh LocalContent.
+Validation: the failure mechanism was confirmed by the prefab importing successfully while its GUID was absent from the only bundle inclusion manifest; `novels-content build tzm editor` passed after registration. Unity Editor PID 62721 is open for the exact visual reproduction.
+Pending / risks: user must restart/replay the choice in the newly opened Editor to confirm the styled prefab visually; Editor is intentionally left open without a write-lock.
+Suggested next step: click Play and replay `s01e01.ink:211`; the screen should now use the white/cyan TZM prefab rather than grayscale fallback.
+
+## 2026-09-04T16:58:00Z — tzm-choose-visual — completed
+
+Task: open the current TZM Choose implementation for manual visual review.
+Changed: launched `/Users/iantonishin/Fork/SomeGame/Novels` in a persistent Unity 6000.3.11f1 window and brought it to the foreground; no source or asset changes.
+Validation: live Editor PID 61516 targets the exact Novels project. Automatic Play remains unavailable without macOS Accessibility permission.
+Pending / risks: user must click the visible Play button; Editor is intentionally left open without retaining the repository write-lock.
+Suggested next step: click Play and navigate to the first TZM multi-object choice.
+
+## 2026-09-04T16:56:00Z — tzm-choose-screen-v2 — ready-for-integration
+
+Task: add canonical story-local Choose presentation and author the first TZM-specific object-choice screen from the approved reference.
+Changed: story bundles may now provide `presentation/choose/screen-variant.prefab`; runtime loads it with null-to-shared-fallback compatibility and injects it into `ChooseController`. TZM adds a prefab variant using its existing white/cyan sliced panel and blue gradient button, plus an optional themed card sprite/color while retaining the shared multi-object carousel and snap behavior.
+Validation: scoped diff check passed; `novels-content build tzm editor` succeeded and imported the new prefab GUID; fresh Novels Unity compile passed without compiler errors.
+Pending / risks: portrait Play Mode review of one multi-object choice remains; visual spacing and final decorative art may need iteration after the first screenshot. Foreign dirty `catalog/children/screen.prefab` remains untouched.
+Suggested next step: open the freshly composed editor content in Novels, reach the first TZM Choose, and review carousel/card/panel proportions.
+
 ## 2026-09-04T16:48:00Z — tzm-choice-snap-publish — ready-for-integration
 
 Task: publish the completed shared Choose carousel snap behavior to canonical `origin/main`.
