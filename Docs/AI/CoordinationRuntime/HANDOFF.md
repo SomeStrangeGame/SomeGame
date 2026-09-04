@@ -1,5 +1,13 @@
 # Current cross-chat handoff
 
+## 2026-09-04T17:42:30Z — scp1198-silence-story — blocked
+
+Task: create the atomic commercial horror story `Тише, Нина` based on SCP-1198.
+Changed: created clean branch `codex/story-scp1198-silence`; scaffolded `Projects/novels-scp1198-silence` from the canonical template without generated caches; set project identity and added local optional MCP server `unity_novels_scp1198_silence` for the literal project path.
+Validation: Unity 6000.3.11f1 PID `68835` and Official Pipeline 0.5.0-exp.1 resolved to the exact project; two bounded 300-second live `editor-check --compile` attempts failed `editor_not_ready`. Unity log records licensing IPC timeouts; Pipeline never exposed a server port. The exact Editor and helper were stopped afterward.
+Pending / risks: mandatory exact-project MCP readiness/restart proof is missing, so `$somegame-create-unity-project` blocks all downstream character, art, Ink and acceptance stages.
+Suggested next step: restore healthy Unity Personal licensing IPC, reopen only the new project, then rerun the MCP live/restart gate.
+
 ## 2026-09-04T17:27:20Z — scp1198-story — completed
 
 Task: publish the user-authorized current children catalog prefab change before starting the SCP-1198 story.
