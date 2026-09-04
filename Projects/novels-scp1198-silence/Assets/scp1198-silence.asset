@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: scp1198-silence
+  m_EditorClassIdentifier:
+  _id: scp1198-silence
+  _mainCharacter: "Нина"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Тише, Нина"
+    _description: "После контакта с SCP-1198 Нина должна раскрыть правду о стёртом эксперименте, пока её собственные звуки не превратились в чужой голос."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Нина"
+    _clothes: facility
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Кирилл"
+    _clothes: orderly
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: d4b237eae32114f1eb74a203f205bddd
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []
