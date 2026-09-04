@@ -6,7 +6,7 @@
 
 - `tzm-choose-screen`: shared sprite-free `OptionListScreen` fallback now uses a large grayscale multi-object carousel with partially visible neighbors, a separate compact lower panel, selected-item label and flat gray confirmation button. Single-item selection stays centered; existing swipe/tap wrapping and confirmation semantics are unchanged. Unity import/compile, all 14 editor content builds and scoped diff-check passed; targeted test suite is not present, portrait runtime visual review remains optional.
 - `catalog-prefab-inheritance`: authored neutral grayscale `catalog/fallback.prefab`; runtime `screen.prefab` is its genuine serialized Prefab Variant with only current blue/white overrides. Fresh uncached catalog build and scoped checks passed.
-- `catalog-prefab-publish`: integrating all current substantive workspace changes, including foreign task changes, by explicit user request. Full repository verification and canonical publication are pending.
+- `publish-current-ui-for-story`: current completed Choose fallback changes were committed as `a596ffe8`, coordination state as `f6e64fc3`, and canonically published to `origin/main`; local and remote SHA matched at `f6e64fc3d6b739b91a0377151992f9da43580cb8`. Fresh scoped verify reached the catalog build but was blocked because that Unity project was open; prior owner evidence records successful Unity compile and all 14 editor content builds.
 
 ## Blocked / limitations
 
