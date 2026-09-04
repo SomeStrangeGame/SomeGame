@@ -4,7 +4,7 @@
 
 Task: make the authored neutral fallback the default catalog, remove the redundant neutral variant, and publish the complete restart/episode-flow change.
 Changed: default `CatalogAddresses.ScreenAssetName` now points to `catalog/fallback.prefab`; redundant `catalog/screen.prefab` and its meta are removed. The fallback remains the authored working catalog and direct base of `children/screen.prefab`. The same integration includes the authored restart confirmation and direct story-to-episode launch without the episode-selection screen.
-Validation: Unity Personal licensing preflight passed; fresh catalog editor content build and fresh Novels Editor compile passed; scoped `git diff --check` passed. A repeated aggregate verify reached the already-passed catalog gate but was blocked by existing catalog MCP processes reporting that the project was open.
+Validation: Unity Personal licensing preflight passed; fresh catalog editor content build and fresh Novels Editor compile passed; scoped `git diff --check` passed. A repeated aggregate verify reached the already-passed catalog gate but was blocked by existing catalog MCP processes reporting that the project was open. Feature commit `9fe5c051` was published to `origin/main`; local and remote matched at `9fe5c051496aa84b41a69efecb3d684fbaf08369`.
 Pending / risks: multi-episode continuation selection was not replayed end-to-end on device; final visual approval remains with the user.
 
 ## 2026-09-04T16:14:00Z — catalog-restart-popup — ready-for-integration
