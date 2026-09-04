@@ -1,5 +1,21 @@
 # Current cross-chat handoff
 
+## 2026-09-04T16:43:00Z — tzm-choice-carousel-play — completed
+
+Task: open the Novels Unity project for the user's manual TZM carousel review.
+Changed: launched Unity 6000.3.11f1 with `/Users/iantonishin/Fork/SomeGame/Novels` as a persistent GUI window; no source or asset changes.
+Validation: Editor PID 57735 is live and the project previously completed a fresh compile without compiler errors. macOS denied synthetic Cmd+P because Accessibility permission is disabled, so Play Mode must be started with the visible Play button.
+Pending / risks: Unity is intentionally left open at the user's request; no write-lock is retained.
+Suggested next step: click Play in Unity, open TZM, and reach the multi-object choice.
+
+## 2026-09-04T16:39:00Z — tzm-choice-carousel-snap — ready-for-integration
+
+Task: make the shared multi-object Choose fallback stop with the nearest object centered, matching the catalog carousel interaction.
+Changed: `OptionListScreen` now catches begin/end drag on its `ScrollRect`, stops inertia on release, normalizes infinite-carousel copies, and exponentially snaps the nearest card to the exact viewport center; tapping a side card also focuses and centers it. Wardrobe behavior and fallback visuals are unchanged.
+Validation: scoped `git diff --check` passed and a fresh Novels Editor compile passed without compiler errors. Aggregate verify reached `content-catalog` but could not run because many pre-existing catalog MCP helper processes keep that project open/read-only.
+Pending / risks: runtime swipe feel was not replayed manually; catalog content-build remains an environmental limitation unrelated to the changed shared C# file.
+Suggested next step: manually swipe the TZM multi-object choice once in Play Mode and confirm the nearest card settles at center.
+
 ## 2026-09-04T16:20:00Z — catalog-fallback-publish — ready-for-integration
 
 Task: make the authored neutral fallback the default catalog, remove the redundant neutral variant, and publish the complete restart/episode-flow change.

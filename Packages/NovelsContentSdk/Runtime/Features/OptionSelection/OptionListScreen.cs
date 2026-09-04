@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace Novels.OptionSelection
@@ -44,6 +45,7 @@ namespace Novels.OptionSelection
         [SerializeField] private Text _selection;
         [SerializeField] private Button _confirm;
         [SerializeField] private Text _confirmLabel;
+        [SerializeField] private float _snapSpeed = 12f;
         [Header("Authored wardrobe fallback")]
         [SerializeField] private GameObject _wardrobeRoot;
         [SerializeField] private RectTransform _wardrobePanel;
@@ -96,11 +98,14 @@ namespace Novels.OptionSelection
         private int _presentationVersion;
         private int _initialSlot;
         private bool _needsCentering;
+        private bool _snapping;
+        private int _snapSlot = -1;
         private bool _wardrobeLayout;
         private GameObject _defaultPanel;
         private UnityEngine.Events.UnityAction[] _wardrobeTabActions;
         private Action<int> _selectWardrobeTab;
         private int _activeWardrobeTab;
+        private EventTrigger _dragTrigger;
 
         public void ConfigureLayout(OptionListLayout layout, Action<int> selectWardrobeTab = null)
         {
@@ -115,6 +120,7 @@ namespace Novels.OptionSelection
         {
             _scroll.onValueChanged.AddListener(OnScrollChanged);
             _confirm.onClick.AddListener(Confirm);
+            BindCarouselDrag();
             HideImmediate();
         }
 
@@ -126,6 +132,43 @@ namespace Novels.OptionSelection
         }
 
         private void OnScrollChanged(Vector2 _) => SelectClosestCard();
+
+        private void BindCarouselDrag()
+        {
+            _dragTrigger = _scroll.gameObject.AddComponent<EventTrigger>();
+            AddDragTrigger(EventTriggerType.BeginDrag, BeginCarouselDrag);
+            AddDragTrigger(EventTriggerType.EndDrag, EndCarouselDrag);
+        }
+
+        private void AddDragTrigger(
+            EventTriggerType eventType,
+            UnityEngine.Events.UnityAction<BaseEventData> callback)
+        {
+            var entry = new EventTrigger.Entry { eventID = eventType };
+            entry.callback.AddListener(callback);
+            _dragTrigger.triggers.Add(entry);
+        }
+
+        private void BeginCarouselDrag(BaseEventData eventData)
+        {
+            if (_wardrobeLayout)
+                return;
+            _snapping = false;
+            _snapSlot = -1;
+        }
+
+        private void EndCarouselDrag(BaseEventData eventData)
+        {
+            if (_wardrobeLayout || _cards.Count == 0)
+                return;
+            FocusCard(FindClosestCardSlot());
+        }
+
+        private void LateUpdate()
+        {
+            if (_snapping)
+                MoveFocusedCardToCenter();
+        }
 
         public void SetPresentation(OptionListPresentation presentation)
         {
@@ -229,7 +272,8 @@ namespace Novels.OptionSelection
             SetRect(thumbnail.rectTransform, Vector2.zero, Vector2.one,
                 new Vector2(28f, 28f), new Vector2(-28f, -28f));
 
-            card.onClick.AddListener(() => SelectItem(itemIndex, true, true));
+            var cardSlot = _cards.Count;
+            card.onClick.AddListener(() => FocusCard(cardSlot, true));
             _cards.Add(new CardView(
                 itemIndex,
                 card.GetComponent<Image>(),
@@ -307,6 +351,8 @@ namespace Novels.OptionSelection
             _cards.Clear();
             _scroll.velocity = Vector2.zero;
             _needsCentering = false;
+            _snapping = false;
+            _snapSlot = -1;
             for (var index = _content.childCount - 1; index >= 0; index--)
             {
                 var child = _content.GetChild(index).gameObject;
@@ -319,6 +365,13 @@ namespace Novels.OptionSelection
         {
             if (_cards.Count == 0)
                 return;
+            var closestIndex = FindClosestCardSlot();
+            SelectItem(_cards[closestIndex].ItemIndex);
+            WrapCarousel(closestIndex);
+        }
+
+        private int FindClosestCardSlot()
+        {
             var closestIndex = 0;
             var closestDistance = float.MaxValue;
             for (var index = 0; index < _cards.Count; index++)
@@ -331,19 +384,59 @@ namespace Novels.OptionSelection
                 closestDistance = distance;
                 closestIndex = index;
             }
-            SelectItem(_cards[closestIndex].ItemIndex);
-            WrapCarousel(closestIndex);
+            return closestIndex;
+        }
+
+        private void FocusCard(int slot, bool forcePreview = false)
+        {
+            if (slot < 0 || slot >= _cards.Count)
+                return;
+            _scroll.StopMovement();
+            slot = NormalizeCarouselSlot(slot);
+            SelectItem(_cards[slot].ItemIndex, true, forcePreview);
+            _snapSlot = slot;
+            _snapping = true;
+        }
+
+        private void MoveFocusedCardToCenter()
+        {
+            if (_snapSlot < 0 || _snapSlot >= _cards.Count)
+            {
+                _snapping = false;
+                return;
+            }
+            var offset = CardCenter(_snapSlot);
+            if (Mathf.Abs(offset) < 0.5f)
+            {
+                ShiftContent(-offset);
+                _snapping = false;
+                return;
+            }
+            var amount = 1f - Mathf.Exp(-_snapSpeed * Time.unscaledDeltaTime);
+            ShiftContent(-offset * amount);
         }
 
         private void WrapCarousel(int closestSlot)
         {
+            NormalizeCarouselSlot(closestSlot);
+        }
+
+        private int NormalizeCarouselSlot(int slot)
+        {
             var itemCount = _presentation?.Items.Length ?? 0;
             if (itemCount <= 1)
-                return;
-            if (closestSlot < itemCount)
+                return slot;
+            if (slot < itemCount)
+            {
                 ShiftContent(-GetCycleWidth(itemCount));
-            else if (closestSlot >= itemCount * 2)
+                return slot + itemCount;
+            }
+            if (slot >= itemCount * 2)
+            {
                 ShiftContent(GetCycleWidth(itemCount));
+                return slot - itemCount;
+            }
+            return slot;
         }
 
         private float GetCycleWidth(int itemCount) =>
@@ -359,10 +452,12 @@ namespace Novels.OptionSelection
 
         private void CenterCard(int slot)
         {
-            var bounds = RectTransformUtility.CalculateRelativeRectTransformBounds(
-                _viewport, _cards[slot].Rect);
-            ShiftContent(-bounds.center.x);
+            ShiftContent(-CardCenter(slot));
         }
+
+        private float CardCenter(int slot) =>
+            RectTransformUtility.CalculateRelativeRectTransformBounds(
+                _viewport, _cards[slot].Rect).center.x;
 
         private Text ActiveTitle => _wardrobeLayout ? _wardrobeTitle : _title;
         private Text ActiveSelection => _wardrobeLayout ? _wardrobeSelection : _selection;
