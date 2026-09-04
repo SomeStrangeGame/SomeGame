@@ -4,12 +4,12 @@
 
 ## Ready for integration or validation
 
+- `tzm-choose-screen`: shared sprite-free `OptionListScreen` fallback now uses a large grayscale multi-object carousel with partially visible neighbors, a separate compact lower panel, selected-item label and flat gray confirmation button. Single-item selection stays centered; existing swipe/tap wrapping and confirmation semantics are unchanged. Unity import/compile, all 14 editor content builds and scoped diff-check passed; targeted test suite is not present, portrait runtime visual review remains optional.
 - `catalog-prefab-inheritance`: authored neutral grayscale `catalog/fallback.prefab`; runtime `screen.prefab` is its genuine serialized Prefab Variant with only current blue/white overrides. Fresh uncached catalog build and scoped checks passed.
 - `catalog-prefab-publish`: integrating all current substantive workspace changes, including foreign task changes, by explicit user request. Full repository verification and canonical publication are pending.
 
 ## Blocked / limitations
 
-- `tzm-choose-screen`: paused for visual approval; experimental edits were reverted. Resume only after approval of the shared fallback direction.
 - `catalog-playmode-review`: paused until manual visual review is explicitly resumed.
 - `gpl-catalog-registration`, `gpl-lea-layered-rework`, `gpl-mark-integration`, `gpl-vera-integration`: content/build checks passed; bounded in-game visual gates remain.
 - `tzm-wardrobe-runtime`: implementation and content checks passed; user portrait visual check remains.
