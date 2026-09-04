@@ -31,12 +31,43 @@ current repository documents and `Tools/somegame` output for exact commands.
 - No accidental bulk emotion/outfit matrix or unexplained production asset was
   added.
 
+## Originality evidence
+
+- Narrative design has a `passed` originality result with sources, findings,
+  iterations, revisions, limitations, and final risk/confidence.
+- Every character package has a separate `passed` visual-originality result.
+- The non-character art manifest has a `passed` visual-originality result.
+- The complete source Ink, not only its outline, has a `passed` text-originality
+  result before final compilation.
+- Licensed, public-domain, adapted, and homage material has explicit provenance
+  and required attribution/rights handling.
+- Any material post-review change returned to its owning skill for a fresh
+  review; acceptance did not recreate or waive missing evidence.
+
 ## Validation and handoff
 
 - Run static checks before only the gates required by the changed-path plan.
 - Validate the story, build required editor content, and validate/build the
   catalog when it changed.
-- Distinguish automated, runtime, platform, and manual visual evidence.
+- Build a fresh Android Embedded APK from final content and record its path,
+  timestamp, cryptographic hash, package name, and story/release identity.
+- Record the exact emulator/device model, Android API level, and ADB serial;
+  install that APK and launch it through the real catalog-to-story flow.
+- Use the smallest replay/checkpoint set that covers every episode, every
+  semantically distinct branch, and every reachable ending; record the tested
+  paths, choices, and endings.
+- Confirm ordered smoke/runtime markers, no crash or ANR, no unexpected error or
+  `fallback.used`, correct selectors/assets, transitions, and save/resume state.
+- Capture relevant logs and screenshots or equivalent observations for key
+  visual scenes. Editor Play Mode is not runtime acceptance evidence; Unity
+  Editor is only a technical build/compile mechanism here.
+- Treat emulator evidence as stale after any material Ink, compiled content,
+  asset, selector, catalog, or APK change. Missing, incomplete, or stale
+  evidence makes acceptance `blocked`, never `ready-with-limitations`.
+- Return defects to the owning production skill; acceptance does not fix or
+  waive them.
+- Distinguish automated, build, emulator-runtime, platform, and manual visual
+  evidence.
 - Review the scoped diff and report assumptions, reconstructions, skipped
   gates, warnings, and unresolved risks.
 - Do not merge, publish, or delete the story branch without explicit authority.

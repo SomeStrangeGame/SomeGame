@@ -86,16 +86,22 @@ def run_logged(command: list[str], *, timeout: float, log: Path,
         output.flush()
         process = subprocess.Popen(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT,
                                    text=True, env=env)
-        try:
-            returncode = process.wait(timeout=timeout)
-        except subprocess.TimeoutExpired:
-            process.terminate()
+        deadline = time.monotonic() + timeout
+        while True:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                process.terminate()
+                try:
+                    process.wait(timeout=10)
+                except subprocess.TimeoutExpired:
+                    process.kill(); process.wait(timeout=5)
+                raise WorkflowError("timeout", f"Command timed out after {timeout:g}s",
+                                    details={"command": command, "log": str(log)})
             try:
-                process.wait(timeout=10)
+                returncode = process.wait(timeout=min(60, remaining))
+                break
             except subprocess.TimeoutExpired:
-                process.kill(); process.wait(timeout=5)
-            raise WorkflowError("timeout", f"Command timed out after {timeout:g}s",
-                                details={"command": command, "log": str(log)})
+                refresh_lock_heartbeat()
     return {"returncode": returncode, "durationSeconds": round(time.monotonic() - started, 3),
             "log": str(log), "tail": tail(log, 40) if returncode else []}
 
@@ -106,6 +112,28 @@ def lock_owner(root: Path = ROOT) -> str | None:
         return None
     match = re.search(r"^- Agent:\s*`?([^`\n]+)`?", owner.read_text(encoding="utf-8"), re.M)
     return match.group(1).strip() if match else None
+
+
+ACTIVE_AGENT_ID: str | None = None
+
+
+def refresh_lock_heartbeat(root: Path = ROOT) -> bool:
+    """Refresh only the current workflow owner's lease during a long command."""
+    if not ACTIVE_AGENT_ID:
+        return False
+    owner = root / "Docs/AI/CoordinationRuntime/active/write-lock/owner.md"
+    if lock_owner(root) != ACTIVE_AGENT_ID or not owner.is_file():
+        return False
+    text = owner.read_text(encoding="utf-8")
+    stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    updated, count = re.subn(r"^- Heartbeat UTC:\s*`?[^`\n]+`?\s*$",
+                             f"- Heartbeat UTC: `{stamp}`", text, count=1, flags=re.M)
+    if count != 1:
+        return False
+    temporary = owner.with_suffix(".tmp")
+    temporary.write_text(updated, encoding="utf-8")
+    temporary.replace(owner)
+    return True
 
 
 def require_lock(agent_id: str | None) -> None:
@@ -302,9 +330,55 @@ def docs_check(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def context_workflow(args: argparse.Namespace) -> dict[str, Any]:
-    payload = taskflow.context_snapshot(ROOT, args.task, args.base_ref)
+    payload = taskflow.context_snapshot(ROOT, args.task, args.base_ref, args.paths, args.resume)
     payload["resume"] = args.resume
     return payload
+
+
+def queue_status_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    state = taskflow.runtime_state(ROOT)
+    process_error = None
+    try:
+        processes = unity_processes()
+    except (OSError, RuntimeError) as exc:
+        processes = UnityProcesses([], [], [])
+        process_error = str(exc)
+    position = next((value["position"] for value in state["requests"]
+                     if value["agent"] == args.agent_id), None) if args.agent_id else None
+    is_owner = bool(args.agent_id and state["lockOwner"] == args.agent_id)
+    state["agentPosition"] = position
+    state["isOwner"] = is_owner
+    state["canAcquire"] = bool(position == 1 and state["lockOwner"] is None)
+    state["canProceed"] = is_owner and state["ownerConsistent"] and not state["lockStale"]
+    state["longWaitingRequests"] = [value["id"] for value in state["requests"] if value["longWaiting"]]
+    state["recoverableOrphans"] = [value["id"] for value in state["requests"]
+                                    if value["recoverableOrphan"]]
+    state["heavyProcesses"] = ({
+        "editors": processes.editors, "hubs": processes.hubs, "licensing": processes.licensing}
+        if process_error is None else None)
+    state["processProbe"] = "available" if process_error is None else "unavailable"
+    if process_error is not None:
+        state["processProbeError"] = process_error
+    state["needsDeveloperDecision"] = bool(
+        state["lockOwner"] and (state["lockStale"] or not state["ownerConsistent"]))
+    return {"ok": True, "workflow": "queue-status", "coordination": state}
+
+
+def queue_prune_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    state = taskflow.runtime_state(ROOT)
+    request = next((value for value in state["requests"] if value["id"] == args.request), None)
+    if request is None:
+        raise WorkflowError("request_missing", "Exact FIFO request does not exist", details=args.request)
+    if not request["recoverableOrphan"]:
+        raise WorkflowError("request_not_recoverable",
+                            "Request is not a terminal orphan; developer-reviewed recovery is required",
+                            details=request)
+    request_dir = ROOT / "Docs/AI/CoordinationRuntime/requests" / args.request
+    request_file = request_dir / "request.md"
+    request_file.unlink()
+    request_dir.rmdir()
+    return {"ok": True, "workflow": "queue-prune", "removedRequest": args.request,
+            "agent": request["agent"], "agentStatus": request["agentStatus"]}
 
 
 def commit_plan_workflow(args: argparse.Namespace) -> dict[str, Any]:
@@ -312,7 +386,10 @@ def commit_plan_workflow(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def verification_commands(plan: dict[str, Any], args: argparse.Namespace) -> tuple[list[tuple[str, list[str]]], list[str]]:
-    commands: list[tuple[str, list[str]]] = [("diff-check", ["git", "diff", "--check"])]
+    diff_check = ["git", "diff", "--check"]
+    if args.paths is not None:
+        diff_check.extend(["--", *args.paths])
+    commands: list[tuple[str, list[str]]] = [("diff-check", diff_check)]
     pending: list[str] = []
     if plan["run_helper_tests"]:
         commands.append(("helper-tests", [sys.executable, "-m", "unittest", "discover", "-s",
@@ -679,6 +756,9 @@ def parser() -> argparse.ArgumentParser:
     docs = sub.add_parser("docs-check"); docs.add_argument("--timeout", type=float, default=120)
     context = sub.add_parser("context"); context.add_argument("--task", choices=tuple(taskflow.TASK_ROUTES), default="code")
     context.add_argument("--resume", action="store_true"); context.add_argument("--base-ref")
+    context.add_argument("--paths", nargs="*", help="Exact task-owned paths for scoped planning")
+    queue_status = sub.add_parser("queue-status"); queue_status.add_argument("--agent-id")
+    queue_prune = sub.add_parser("queue-prune"); queue_prune.add_argument("--request", required=True)
     verify = sub.add_parser("verify"); verify.add_argument("--agent-id")
     verify.add_argument("--base-ref"); verify.add_argument("--paths", nargs="*")
     verify.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
@@ -727,7 +807,11 @@ def parser() -> argparse.ArgumentParser:
 
 def main() -> int:
     args = parser().parse_args(); started = time.monotonic()
+    global ACTIVE_AGENT_ID
+    ACTIVE_AGENT_ID = getattr(args, "agent_id", None)
     handlers = {"docs-check": docs_check, "context": context_workflow, "verify": verify_workflow,
+                "queue-status": queue_status_workflow,
+                "queue-prune": queue_prune_workflow,
                 "commit-plan": commit_plan_workflow, "finish-check": finish_check,
                 "git-publish": git_publish,
                 "content-gate": content_gate, "player-build": player_build,

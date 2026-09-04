@@ -27,15 +27,41 @@ Runner не создаёт отдельный coordination contract: право 
 
 Объединяет task-plan и chat-resume. Read-only возвращает branch/HEAD, bounded
 dirty paths, FIFO/write-lock, незавершённые work/handoff summaries, минимальный
-набор документов, changed-path plan и следующую команду:
+набор документов с fingerprint, changed-path plan и следующую команду:
 
 ```bash
-Tools/somegame context --task <docs|code|unity|content|art|integration>
+Tools/somegame context --task <inspect|docs|code|unity|content|art|integration> \
+  [--resume] [--paths <task-owned-path> ...]
 ```
+
+`inspect` не добавляет тематических документов. Точные `--paths` строят plan
+только по scope задачи, но полный dirty snapshot сохраняется для обнаружения
+конфликтов. `--resume` разрешает в том же чате не перечитывать документ, если
+его fingerprint, task type и scope не изменились.
+
+### `queue-status`
+
+Read-only снимок FIFO и process barrier:
+
+```bash
+Tools/somegame queue-status [--agent-id <agent>]
+```
+
+Возвращает позицию агента, возраст request и heartbeat, `lockStale`, долгие
+ожидания и recoverable orphaned-заявки, проверку
+совпадения первой заявки с owner, точную причину ожидания и Unity/Hub/Licensing
+процессы. Команда ничего не очищает и не получает lock. При долгом запуске
+любой bounded workflow с `--agent-id` автоматически обновляет heartbeat своего
+lock не реже раза в минуту; чужой lock она изменить не может.
+
+`Tools/somegame queue-prune --request <exact-id>` удаляет только точную заявку,
+не связанную с текущим lock, чей agent record уже имеет терминальный статус.
+Для active/queued владельца и неоднозначного состояния команда fail-closed.
 
 ### `verify`
 
-`--explain` только показывает лестницу gates. Без него требуется точный lock;
+`--explain` только показывает лестницу gates. `--paths` ограничивает planner и
+`git diff --check` файлами владельца. Без него требуется точный lock;
 дешёвые проверки выполняются первыми, content targets — последовательно.
 Editor/Player/manual gates без точных параметров остаются явным `pending`, а не
 считаются пройденными. Полностью успешное evidence кэшируется по входам,

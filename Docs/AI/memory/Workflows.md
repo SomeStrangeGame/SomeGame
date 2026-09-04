@@ -9,7 +9,9 @@ build не используют функции, требующие Pro или и
 
 ```bash
 Tools/somegame docs-check
-Tools/somegame context --task <docs|code|unity|content|art|integration>
+Tools/somegame context --task <inspect|docs|code|unity|content|art|integration> [--resume] [--paths <owned> ...]
+Tools/somegame queue-status [--agent-id <agent>]
+Tools/somegame queue-prune --request <exact-terminal-orphan-id>
 Tools/somegame verify --explain --base-ref origin/main
 Tools/somegame verify --agent-id <lock-owner> --base-ref origin/main
 Tools/somegame commit-plan
@@ -33,7 +35,12 @@ records, fetch, отказ при remote-ahead, обычный push и фина�
 Ключ задаётся только локальным `--ssh-key`; pull/rebase/merge/force-push команда
 не выполняет.
 
-`context` объединяет task-plan и chat-resume в одном read-only snapshot.
+`context` объединяет task-plan и chat-resume в одном read-only snapshot;
+task-owned `--paths` не позволяют чужому dirty tree расширять plan, а
+fingerprints позволяют не перечитывать неизменившиеся документы при resume.
+`queue-status` одним read-only снимком объясняет FIFO/lease/process blocker;
+долгие runner-команды владельца автоматически поддерживают heartbeat lock.
+`queue-prune` удаляет только точную terminal orphan-заявку вне текущего lock.
 `verify` исполняет changed-path plan и кэширует только полностью успешное
 evidence; `--release` и `--no-cache` обходят кэш. `commit-plan` только предлагает
 группы, а `finish-check` fail-closed проверяет handoff, lock и Editor-процессы.

@@ -54,7 +54,8 @@ workflow before any file creation, art generation, build, test, or validation.
 
 1. Invoke `$somegame-design-story` to turn the author brief into an approved
    narrative package, scene matrix, choice/state graph, endings, continuity
-   constraints, and downstream art/media requirements.
+   constraints, downstream art/media requirements, and a passed narrative
+   originality gate. Stop the workflow if that gate is blocked.
 2. For factual stories, maintain claim evidence and clearly separate verified
    fact, inference, reconstruction, and invention.
 3. Invoke `$somegame-create-unity-project` to create
@@ -63,17 +64,26 @@ workflow before any file creation, art generation, build, test, or validation.
    Unity MCP server and proven a live connection to the exact new project path.
    If its live MCP gate is blocked, hand off the scaffold as not ready instead
    of silently continuing without MCP.
-4. Invoke `$somegame-produce-story-art` with the approved scene package. Its
-   manifest, identity masters, production assets, runtime addresses, contact
-   sheets, and visual evidence are the art handoff; do not author missing art
-   implicitly in a later stage.
-5. Invoke `$somegame-author-story-content` with the approved narrative package
-   and art handoff. Require coherent source Ink, metadata, selectors, compiled
-   story, source map, and target validation before continuing.
-6. Invoke `$somegame-accept-story` with every stage handoff. It owns catalog
+4. Invoke `$somegame-create-character` for each required cast member, using the
+   approved scene-derived character requirements. Its identity masters, used
+   appearance variants, runtime selectors, provenance, contact sheets, and
+   visual evidence form the character handoff. Require a passed visual-
+   originality result for every character before continuing.
+5. Invoke `$somegame-produce-story-art` with the approved scene package and
+   character handoff. It produces the remaining backgrounds, choice and
+   presentation art, and media without recreating character assets. Require its
+   visual-originality gate to pass before content authoring.
+6. Invoke `$somegame-author-story-content` with the approved narrative package,
+   character handoff, and remaining art handoff. Require coherent source Ink,
+   metadata, selectors, compiled story, source map, and target validation before
+   continuing. Its full-text originality gate must pass before final compilation
+   and acceptance. The episode must enter its first real scene directly rather
+   than presenting a one-option `Начать`, `Начать историю`, or `Играть` choice.
+7. Invoke `$somegame-accept-story` with every stage handoff. It owns catalog
    registration, end-to-end audits, changed-path validation, runtime/manual
-   gates, and the final readiness status. Preserve the author's intended
-   catalog position.
+   gates, originality-evidence audit, and the final readiness status. Preserve
+   the author's intended catalog position. It must fail closed rather than waive
+   a missing, incomplete, stale, or blocked originality result.
 
 Do not generate speculative assets merely to fill a fixed matrix. Create only
 backgrounds, outfits, expressions, poses, media, and branches that the current

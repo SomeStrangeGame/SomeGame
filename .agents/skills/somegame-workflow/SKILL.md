@@ -14,8 +14,9 @@ only project root. The parent `Fork` directory is not a workspace.
    `Docs/AI/rules/ParallelRefactoringCoordination.md` completely before project
    inspection, edits, Unity operations, validation, or builds.
 2. Run `Tools/somegame context --task <type>`, choosing the narrowest type:
-   `docs`, `code`, `unity`, `content`, `art`, or `integration`. Use `--resume`
-   when continuing an existing task.
+   `inspect`, `docs`, `code`, `unity`, `content`, `art`, or `integration`.
+   Pass exact task-owned `--paths` when known. Use `--resume` in the same chat
+   and reread only documents whose returned fingerprint changed.
 3. Read every document returned in `documents` completely. Treat those files
    and the current source/configuration as authoritative; do not copy their
    detailed rules into prompts or invent a parallel workflow.

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create SomeGame Character"
+  short_description: "Design, produce, and validate a story character"
+  default_prompt: "Create a production-ready character for this SomeGame story from the approved narrative requirements."

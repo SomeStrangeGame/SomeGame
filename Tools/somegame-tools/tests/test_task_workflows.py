@@ -3,6 +3,7 @@ import json
 import sys
 import tempfile
 import unittest
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -50,6 +51,56 @@ class TaskWorkflowTests(unittest.TestCase):
 
     def test_context_routes_fit_compact_budget(self):
         self.assertLessEqual(sum(len(value) for value in module.TASK_ROUTES.values()), 12)
+
+    def test_inspect_route_adds_no_topic_documents(self):
+        self.assertEqual([], module.TASK_ROUTES["inspect"])
+
+    def test_context_uses_owned_paths_and_resume_fingerprints(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            for value in module.BASE_DOCUMENTS:
+                path = root / value; path.parent.mkdir(parents=True, exist_ok=True)
+                path.write_text(value, encoding="utf-8")
+            runtime = root / "Docs/AI/CoordinationRuntime"
+            runtime.mkdir(parents=True)
+            (runtime / "HANDOFF.md").write_text("", encoding="utf-8")
+            (root / "Docs/AI/work/parallel").mkdir(parents=True)
+            module.verification_plan = lambda _root, paths: {
+                "categories": paths, "content_targets": [], "static_only": True,
+                "run_helper_tests": False, "run_automation_tests": False,
+                "editor_compile": False, "editmode_tests": False,
+                "player_build": False, "manual_visual_gate": False,
+            }
+            module.git_paths = lambda _root, base=None: ["foreign.md"]
+            module.command = lambda _root, *parts: "branch" if "branch" in parts else "abc"
+            result = module.context_snapshot(root, "inspect", owned_paths=["owned.md"], resume=True)
+            self.assertEqual("owned-paths", result["planningBasis"])
+            self.assertEqual("reuse-if-unchanged", result["documentMode"])
+            self.assertEqual(["owned.md"], result["plan"]["categories"])
+            self.assertEqual(["owned.md"], result["planPaths"])
+            self.assertEqual(["foreign.md"], result["git"]["dirtyPaths"])
+            self.assertEqual(set(module.BASE_DOCUMENTS), set(result["documentFingerprints"]))
+
+    def test_runtime_state_reports_stale_inconsistent_owner_and_positions(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); runtime = root / "Docs/AI/CoordinationRuntime"
+            lock = runtime / "active/write-lock"; requests = runtime / "requests"
+            agents = runtime / "agents"; lock.mkdir(parents=True); agents.mkdir(parents=True)
+            for stamp, agent in (("20260101T000000Z", "first"), ("20260101T000100Z", "second")):
+                path = requests / f"{stamp}-{agent}"; path.mkdir(parents=True)
+                (path / "request.md").write_text(
+                    f"- Agent: `{agent}`\n- Status: queued\n- Requested UTC: `2026-01-01T00:00:00Z`\n")
+                (agents / f"{agent}.md").write_text("- Status: queued\n")
+            (lock / "owner.md").write_text(
+                "- Agent: `second`\n- Request: `20260101T000100Z-second`\n"
+                "- Heartbeat UTC: `2026-01-01T00:00:00Z`\n")
+            state = module.runtime_state(root, datetime(2026, 1, 1, 0, 11, tzinfo=timezone.utc))
+            self.assertTrue(state["lockStale"])
+            self.assertFalse(state["ownerConsistent"])
+            self.assertEqual("inconsistent_lock", state["blockedReason"])
+            self.assertEqual([1, 2], [value["position"] for value in state["requests"]])
+            self.assertEqual([True, False], [value["longWaiting"] for value in state["requests"]])
+            self.assertEqual([False, False], [value["recoverableOrphan"] for value in state["requests"]])
 
 
 if __name__ == "__main__":

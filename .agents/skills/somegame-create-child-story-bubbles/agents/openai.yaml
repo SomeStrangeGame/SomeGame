@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Child Story Bubbles"
+  short_description: "Create warm illustrated Bubble UI for young children"
+  default_prompt: "Use $somegame-create-child-story-bubbles to create and validate story-local dialogue and illustrated choice bubbles for this children’s story."

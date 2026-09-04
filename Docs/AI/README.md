@@ -8,12 +8,17 @@
 После полного чтения этой страницы выполните read-only снимок:
 
 ```bash
-Tools/somegame context --task <docs|code|unity|content|art|integration>
+Tools/somegame context --task <inspect|docs|code|unity|content|art|integration> \
+  [--paths <task-owned-path> ...]
 ```
 
+`inspect` предназначен для узкой read-only инспекции без тематического workflow.
 Снимок показывает Git/FIFO, незавершённые риски, changed-path plan и минимальный
 список документов. Полностью прочитайте перечисленные `documents`, затем перед
-записью получите write-lock. Для длинного чата используйте `--resume`.
+записью получите write-lock. Передавайте точные `--paths`, когда scope уже
+известен: тогда plan не расширяется чужим dirty tree. Для продолжения того же
+scope используйте `--resume`; документы с неизменившимися fingerprint повторно
+читать не требуется.
 
 Если runner не запускается, прочитайте [coordination core](rules/ParallelRefactoringCoordination.md),
 [Project memory](memory/Project.md), [Architecture memory](memory/Architecture.md),

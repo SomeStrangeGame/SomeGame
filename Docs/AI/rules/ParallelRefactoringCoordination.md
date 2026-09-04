@@ -4,12 +4,17 @@
 Подробности выбираются адресно. Core и четыре адресных протокола являются
 единственным действующим coordination contract.
 
-## Перед любой работой
+## Перед работой с репозиторием
+
+Чисто разговорный/мета-вопрос без чтения файлов проекта, runtime probe или
+изменения state не инициализирует project workflow. При первом обращении к
+репозиторию применяется порядок ниже.
 
 1. Подтвердить, что workspace и cwd указывают на Git-корень `SomeGame`, а не
    на его родительскую папку `Fork`.
 2. Полностью прочитать `Docs/AI/README.md`, выполнить
-   `Tools/somegame context --task <type>` и прочитать перечисленные документы.
+   `Tools/somegame context --task <type> [--paths <owned> ...]` и прочитать
+   перечисленные документы.
    Если runner недоступен, использовать ручной fallback из индекса.
 3. Проверить показанный снимок полным `git status --short`; незнакомые изменения
    сохранить.
@@ -18,6 +23,10 @@
 6. Перед изменением файлов создать собственные agent/request records, стать
    первой FIFO-заявкой и атомарно получить `active/write-lock`, кроме правки,
    полностью удовлетворяющей docs-only fast path ниже.
+
+В том же непрерывном чате с неизменными task type и scope использовать
+`context --resume --paths <owned>`. Документ с тем же fingerprint повторно не
+читается; Git/FIFO/lock и актуальные task-owned paths проверяются всегда.
 
 ## Право записи
 
@@ -65,12 +74,17 @@ Editor допустим, если не меняет его state.
 
 Lock не удерживается во время ожидания пользователя или внешнего ресурса.
 Heartbeat обновляется не реже пяти минут; чужой stale lock не удаляется
-автоматически. Полный порядок: [UnityConcurrency.md](UnityConcurrency.md).
+автоматически. Долгие bounded-команды runner обновляют heartbeat владельца;
+`Tools/somegame queue-status` одним снимком показывает FIFO, lease,
+согласованность записей и process barrier. Полный порядок:
+[UnityConcurrency.md](UnityConcurrency.md).
 
 ## Проверки и токены
 
-- Сначала `Tools/novels-tools/novels-content plan [base-ref]`, затем только
-  минимальный changed-path gate.
+- Когда scope известен, `context` и `verify` получают точные task-owned
+  `--paths`; полный dirty tree используется только для обнаружения конфликтов,
+  но не расширяет validation plan. Без точного scope сначала выполняется
+  `Tools/novels-tools/novels-content plan [base-ref]`.
 - Для живого Editor использовать один persistent MCP `editor-check`, а не
   повторные status/Console/hierarchy циклы.
 - Успех передавать компактно; полные логи читать только при failure.

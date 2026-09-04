@@ -94,6 +94,76 @@ class RunnerTests(unittest.TestCase):
         args = runner.parser().parse_args(["context"])
         self.assertEqual("code", args.task)
 
+    def test_context_parser_accepts_owned_paths_and_inspect(self):
+        args = runner.parser().parse_args(["context", "--task", "inspect", "--resume",
+                                           "--paths", "Docs/AI/README.md"])
+        self.assertEqual(["Docs/AI/README.md"], args.paths)
+        self.assertTrue(args.resume)
+
+    def test_queue_status_parser_accepts_agent(self):
+        args = runner.parser().parse_args(["queue-status", "--agent-id", "agent-a"])
+        self.assertEqual("agent-a", args.agent_id)
+
+    def test_queue_prune_removes_only_terminal_orphan(self):
+        previous_root = runner.ROOT
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); runtime = root / "Docs/AI/CoordinationRuntime"
+            request = runtime / "requests/20260101T000000Z-done"
+            agent = runtime / "agents/done.md"
+            request.mkdir(parents=True); agent.parent.mkdir(parents=True)
+            (request / "request.md").write_text(
+                "- Agent: `done`\n- Status: queued\n- Requested UTC: `2026-01-01T00:00:00Z`\n")
+            agent.write_text("- Status: completed\n")
+            try:
+                runner.ROOT = root
+                args = runner.parser().parse_args([
+                    "queue-prune", "--request", "20260101T000000Z-done"])
+                result = runner.queue_prune_workflow(args)
+                self.assertTrue(result["ok"])
+                self.assertFalse(request.exists())
+            finally:
+                runner.ROOT = previous_root
+
+    def test_queue_status_degrades_when_process_probe_is_unavailable(self):
+        previous_root = runner.ROOT
+        previous_processes = runner.unity_processes
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); runtime = root / "Docs/AI/CoordinationRuntime"
+            (runtime / "requests").mkdir(parents=True)
+            try:
+                runner.ROOT = root
+                runner.unity_processes = lambda: (_ for _ in ()).throw(PermissionError("denied"))
+                result = runner.queue_status_workflow(runner.parser().parse_args(["queue-status"]))
+                self.assertTrue(result["ok"])
+                self.assertEqual("unavailable", result["coordination"]["processProbe"])
+                self.assertIsNone(result["coordination"]["heavyProcesses"])
+            finally:
+                runner.ROOT = previous_root
+                runner.unity_processes = previous_processes
+
+    def test_refresh_lock_heartbeat_only_for_owner(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); lock = root / "Docs/AI/CoordinationRuntime/active/write-lock"
+            lock.mkdir(parents=True); owner = lock / "owner.md"
+            owner.write_text("- Agent: `agent-a`\n- Heartbeat UTC: `2026-01-01T00:00:00Z`\n")
+            previous = runner.ACTIVE_AGENT_ID
+            try:
+                runner.ACTIVE_AGENT_ID = "agent-b"
+                self.assertFalse(runner.refresh_lock_heartbeat(root))
+                runner.ACTIVE_AGENT_ID = "agent-a"
+                self.assertTrue(runner.refresh_lock_heartbeat(root))
+                self.assertNotIn("2026-01-01T00:00:00Z", owner.read_text())
+            finally:
+                runner.ACTIVE_AGENT_ID = previous
+
+    def test_verify_scopes_diff_check_to_owned_paths(self):
+        args = runner.parser().parse_args(["verify", "--explain", "--paths", "owned.md"])
+        plan = {"run_helper_tests": False, "run_automation_tests": False,
+                "content_targets": [], "editor_compile": False, "editmode_tests": False,
+                "player_build": False, "manual_visual_gate": False}
+        commands, _ = runner.verification_commands(plan, args)
+        self.assertEqual(["git", "diff", "--check", "--", "owned.md"], commands[0][1])
+
     def test_verify_explain_does_not_require_agent(self):
         args = runner.parser().parse_args(["verify", "--explain", "--paths", "Docs/AI/README.md"])
         self.assertTrue(args.explain)
