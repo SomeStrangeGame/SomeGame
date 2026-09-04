@@ -9,7 +9,7 @@ namespace Novels.Catalog
             "Assets/RemoteAssets/catalog/children/screen.prefab";
 #else
         public const string ScreenAssetName =
-            "Assets/RemoteAssets/catalog/screen.prefab";
+            "Assets/RemoteAssets/catalog/fallback.prefab";
 #endif
     }
 }

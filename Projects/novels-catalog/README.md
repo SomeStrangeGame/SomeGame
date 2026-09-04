@@ -21,14 +21,13 @@
 
 ## Изменить внешний вид
 
-Откройте `Assets/RemoteAssets/catalog/screen.prefab` в Unity. Выключенный объект
+Откройте `Assets/RemoteAssets/catalog/fallback.prefab` в Unity. Выключенный объект
 `TEMPLATE - Story Card` служит шаблоном: приложение само создаёт из него
 карточки.
 
-`fallback.prefab` — нейтральная монохромная база без заголовка и навигации.
-Загружаемый `screen.prefab` является настоящим Unity Prefab Variant этой базы и
-задаёт оформление нынешнего каталога. Будущие жанровые варианты хранятся рядом
-в этом же Catalog-проекте и сохраняют общий набор компонентов и ссылок.
+`fallback.prefab` — нейтральный монохромный рабочий каталог без заголовка и
+навигации. Он загружается по умолчанию и одновременно служит общей базой для
+жанровых Prefab Variant в этом же Catalog-проекте.
 
 Детское оформление находится в `catalog/children/screen.prefab`. Это настоящий
 Prefab Variant того же `fallback.prefab`: он переопределяет только authored
@@ -44,7 +43,7 @@ Tools/somegame player-build --agent-id <agent> --target Android \
   --mode Embedded --catalog-variant children
 ```
 
-Без `--catalog-variant` Player продолжает загружать обычный `catalog/screen.prefab`.
+Без `--catalog-variant` Player загружает нейтральный `catalog/fallback.prefab`.
 
 Карточки расположены в горизонтальной карусели. Её можно листать свайпом,
 мышью или тачпадом. После прокрутки ближайшая карточка становится по центру;

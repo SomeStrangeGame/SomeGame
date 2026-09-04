@@ -1,5 +1,19 @@
 # Current cross-chat handoff
 
+## 2026-09-04T16:20:00Z — catalog-fallback-publish — ready-for-integration
+
+Task: make the authored neutral fallback the default catalog, remove the redundant neutral variant, and publish the complete restart/episode-flow change.
+Changed: default `CatalogAddresses.ScreenAssetName` now points to `catalog/fallback.prefab`; redundant `catalog/screen.prefab` and its meta are removed. The fallback remains the authored working catalog and direct base of `children/screen.prefab`. The same integration includes the authored restart confirmation and direct story-to-episode launch without the episode-selection screen.
+Validation: Unity Personal licensing preflight passed; fresh catalog editor content build and fresh Novels Editor compile passed; scoped `git diff --check` passed. A repeated aggregate verify reached the already-passed catalog gate but was blocked by existing catalog MCP processes reporting that the project was open.
+Pending / risks: multi-episode continuation selection was not replayed end-to-end on device; final visual approval remains with the user.
+
+## 2026-09-04T16:14:00Z — catalog-restart-popup — ready-for-integration
+
+Task: add restart-from-catalog confirmation and remove the intermediate episode-selection screen, implementing fallback before child styling.
+Changed: `fallback.prefab` now authors the secondary button and modal (`RestartConfirmation`) instead of runtime cloning; `children/screen.prefab` supplies only inherited illustrated overrides. Catalog selection carries restart intent, clears only the selected story directory on confirmation, and NovelRuntime opens the first episode for restart/new progress or the latest unlocked episode for continue without displaying an episode catalog.
+Validation: fallback editor catalog build, child Android catalog build, fresh Novels compile, Embedded child APK and catalog smoke passed. Device interaction verified cancel, confirm, save removal and direct `episode.ready` for `s01e01`; no `episode.selected` event occurred. Portrait evidence: `Novels/Build/Logs/automation/catalog-restart-popup-child.png`.
+Pending / risks: multi-episode continuation selection is structurally covered by choosing the last unlocked episode but was not replayed end-to-end on device; final visual approval remains with the user.
+
 ## 2026-09-04T15:43:00Z — catalog-prefab-publish — ready-for-integration
 
 Task: publish every current substantive change, including completed foreign streams, to canonical `origin/main` and switch the checkout to `main`.
@@ -42,7 +56,7 @@ Suggested next step: wire the child application flavor to `Assets/RemoteAssets/c
 ## Ready for integration or validation
 
 - `tzm-choose-screen`: shared sprite-free `OptionListScreen` fallback now uses a large grayscale multi-object carousel with partially visible neighbors, a separate compact lower panel, selected-item label and flat gray confirmation button. Single-item selection stays centered; existing swipe/tap wrapping and confirmation semantics are unchanged. Unity import/compile, all 14 editor content builds and scoped diff-check passed; targeted test suite is not present, portrait runtime visual review remains optional.
-- `catalog-prefab-inheritance`: authored neutral grayscale `catalog/fallback.prefab`; runtime `screen.prefab` is its genuine serialized Prefab Variant with only current blue/white overrides. Fresh uncached catalog build and scoped checks passed.
+- `catalog-prefab-inheritance`: superseded by `catalog-fallback-publish`; the authored neutral `catalog/fallback.prefab` is now both the runtime default and direct base of genre variants.
 - `publish-current-ui-for-story`: current completed Choose fallback changes were committed as `a596ffe8`, coordination state as `f6e64fc3`, and canonically published to `origin/main`; local and remote SHA matched at `f6e64fc3d6b739b91a0377151992f9da43580cb8`. Fresh scoped verify reached the catalog build but was blocked because that Unity project was open; prior owner evidence records successful Unity compile and all 14 editor content builds.
 
 ## Blocked / limitations

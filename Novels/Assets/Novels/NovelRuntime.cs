@@ -26,10 +26,7 @@ namespace Novels
             internal AudioMixer AudioMixer;
             internal FallbackAssets FallbackAssets;
             internal NovelRuntimeTuning RuntimeTuning;
-            internal Func<
-                Content.NovelDefinition,
-                UniTask<CatalogFlow.EpisodeLaunchSelection>>
-                SelectEpisode;
+            internal bool StartNew;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
                 PrepareNovelContent;
             internal Action HidePreparationScreen;
@@ -57,8 +54,6 @@ namespace Novels
                 throw new ArgumentException(
                     "Persistent data path must not be empty.",
                     nameof(ctx.PersistentDataPath));
-            if (ctx.SelectEpisode == null)
-                throw new ArgumentNullException(nameof(ctx.SelectEpisode));
             if (ctx.PrepareNovelContent == null)
                 throw new ArgumentNullException(nameof(ctx.PrepareNovelContent));
             if (ctx.HidePreparationScreen == null)
@@ -109,8 +104,8 @@ namespace Novels
                 _definition.EndMarker,
                 _definition.SilentAudioIds,
                 _progress.PlayableEpisodes);
-            var launch = await _ctx.SelectEpisode(playableDefinition);
-            _episode = launch.Episode;
+            _episode = playableDefinition.Episodes[
+                _ctx.StartNew ? 0 : playableDefinition.Episodes.Count - 1];
             _progress.Begin(_episode);
             var episodeRuntime = new EpisodeRuntime(_ctx.CancellationToken).AddTo(this);
 
@@ -119,7 +114,7 @@ namespace Novels
             {
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
                 var prepared = await PrepareEpisode(storyAssets, episodeRuntime);
-                if (launch.StartNew)
+                if (_ctx.StartNew)
                     prepared.SaveSystem.Clear();
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
                 result = await RunEpisode(prepared);

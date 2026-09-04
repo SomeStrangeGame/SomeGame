@@ -14,11 +14,14 @@ namespace Novels.Catalog.View
         [SerializeField] private Text _pageIndicator;
         [SerializeField] private Button _actionButton;
         [SerializeField] private Text _actionLabel;
+        [SerializeField] private Button _secondaryActionButton;
+        [SerializeField] private Text _secondaryActionLabel;
+        [SerializeField] private GameObject _restartConfirmation;
+        [SerializeField] private Button _restartCancelButton;
+        [SerializeField] private Button _restartConfirmButton;
 
         private readonly Dictionary<string, Card> _cards = new();
         private readonly Dictionary<Card, ItemViewModel> _models = new();
-        private Button _secondaryActionButton;
-        private Text _secondaryActionLabel;
         private Action _secondaryAction;
         private Rect _appliedSafeArea;
 
@@ -26,7 +29,10 @@ namespace Novels.Catalog.View
         {
             _carousel.FocusChanged += OnFocusChanged;
             _actionButton.onClick.AddListener(_carousel.ActivateFocused);
-            CreateSecondaryActionButton();
+            _secondaryActionButton.onClick.AddListener(ShowRestartConfirmation);
+            _restartCancelButton.onClick.AddListener(HideRestartConfirmation);
+            _restartConfirmButton.onClick.AddListener(ConfirmRestart);
+            HideRestartConfirmation();
             ApplySafeArea();
         }
 
@@ -86,21 +92,24 @@ namespace Novels.Catalog.View
             _secondaryActionLabel.text = model.SecondaryActionLabel ?? string.Empty;
             _secondaryActionButton.gameObject.SetActive(
                 model.CanOpen && !string.IsNullOrWhiteSpace(model.SecondaryActionLabel));
+            HideRestartConfirmation();
             _pageIndicator.text = BuildPageIndicator(index, count);
         }
 
-        private void CreateSecondaryActionButton()
+        private void ShowRestartConfirmation()
         {
-            _secondaryActionButton = Instantiate(
-                _actionButton,
-                _actionButton.transform.parent);
-            _secondaryActionButton.name = "SecondaryActionButton";
-            _secondaryActionButton.onClick.RemoveAllListeners();
-            _secondaryActionButton.onClick.AddListener(() => _secondaryAction?.Invoke());
-            _secondaryActionLabel = _secondaryActionButton.GetComponentInChildren<Text>();
-            if (_secondaryActionLabel == null)
-                throw new InvalidOperationException("Catalog action button has no Text label.");
-            _secondaryActionButton.gameObject.SetActive(false);
+            if (_secondaryAction != null)
+                _restartConfirmation.SetActive(true);
+        }
+
+        private void HideRestartConfirmation() =>
+            _restartConfirmation.SetActive(false);
+
+        private void ConfirmRestart()
+        {
+            var action = _secondaryAction;
+            HideRestartConfirmation();
+            action?.Invoke();
         }
 
         private static string BuildPageIndicator(int focusedIndex, int count)

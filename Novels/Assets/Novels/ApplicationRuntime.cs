@@ -67,19 +67,19 @@ namespace Novels
             bootstrap.Hide();
             while (!_environment.CancellationToken.IsCancellationRequested)
             {
-                var content = await _catalogFlow.SelectContent(catalog);
-                if (!await RunStory(content, catalog, bootstrap))
+                var launch = await _catalogFlow.SelectContent(catalog);
+                if (!await RunStory(launch.Content, launch.StartNew, bootstrap))
                     return;
                 _smokeTelemetry?.Emit(
                     "catalog.returned",
-                    ("contentId", content.ContentId));
+                    ("contentId", launch.Content.ContentId));
                 bootstrap.Hide();
             }
         }
 
         private async UniTask<bool> RunStory(
             Catalog.NovelCatalogEntry content,
-            CatalogFlow.LoadedCatalog catalog,
+            bool startNew,
             Bootstrap.BootstrapController bootstrap)
         {
             using var storyBundles = CreateBundles(
@@ -100,10 +100,7 @@ namespace Novels
                 AudioMixer = _environment.AudioMixer,
                 FallbackAssets = _environment.FallbackAssets,
                 RuntimeTuning = _environment.RuntimeTuning,
-                SelectEpisode = definition =>
-                    _catalogFlow.SelectEpisode(
-                        definition,
-                        catalog.Screen),
+                StartNew = startNew,
                 PrepareNovelContent = contentId =>
                     contentDeliveryFlow.PrepareStoryInitial(bootstrap, contentId),
                 HidePreparationScreen = bootstrap.Hide,
