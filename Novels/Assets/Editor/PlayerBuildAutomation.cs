@@ -64,7 +64,9 @@ namespace Editor
                     options = isDevelopmentBuild
                         ? BuildOptions.Development
                         : BuildOptions.None,
-                    extraScriptingDefines = new[] {"NOVELS_EMBEDDED_CONTENT"},
+                    extraScriptingDefines = GetExtraScriptingDefines(
+                        arguments,
+                        "NOVELS_EMBEDDED_CONTENT"),
                 });
             }
             finally
@@ -132,6 +134,7 @@ namespace Editor
                     options = isDevelopmentBuild
                         ? BuildOptions.Development
                         : BuildOptions.None,
+                    extraScriptingDefines = GetExtraScriptingDefines(arguments),
                 });
             }
             finally
@@ -192,6 +195,24 @@ namespace Editor
             return index >= 0 && index + 1 < arguments.Length
                 ? arguments[index + 1]
                 : string.Empty;
+        }
+
+        private static string[] GetExtraScriptingDefines(
+            string[] arguments,
+            params string[] required)
+        {
+            var catalogVariant = GetArgument(arguments, "-catalogVariant");
+            if (string.IsNullOrWhiteSpace(catalogVariant))
+                return required;
+            if (!string.Equals(
+                    catalogVariant,
+                    "children",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidOperationException(
+                    $"Unsupported catalog variant: {catalogVariant}.");
+            }
+            return required.Concat(new[] {"NOVELS_CHILDREN_CATALOG"}).ToArray();
         }
 
         private static void ApplyTestSigning(string[] arguments, bool isDevelopmentBuild)

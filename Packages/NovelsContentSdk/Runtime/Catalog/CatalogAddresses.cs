@@ -4,7 +4,12 @@ namespace Novels.Catalog
     {
         public const string BundleName =
             ContentAddressing.ContentPackageConvention.CatalogBundleName;
+#if NOVELS_CHILDREN_CATALOG
+        public const string ScreenAssetName =
+            "Assets/RemoteAssets/catalog/children/screen.prefab";
+#else
         public const string ScreenAssetName =
             "Assets/RemoteAssets/catalog/screen.prefab";
+#endif
     }
 }
