@@ -28,8 +28,8 @@ namespace Novels.OptionSelection
             internal Image Thumbnail { get; }
         }
 
-        private static readonly Color CardColor = new(0.24f, 0.27f, 0.32f, 0.96f);
-        private static readonly Color SelectedColor = new(0.20f, 0.55f, 0.78f, 1f);
+        private static readonly Color CardColor = new(0.20f, 0.22f, 0.25f, 0.90f);
+        private static readonly Color SelectedColor = new(0.38f, 0.40f, 0.43f, 0.96f);
         private static readonly string[] WardrobeTabs =
             { "Лицо", "Волосы", "Одежда", "Аксессуары" };
         private static readonly string[] WardrobeTabIcons =
@@ -216,21 +216,18 @@ namespace Novels.OptionSelection
         {
             var card = CreateButton($"Option_{item.Id}", _content, CardColor, out var label);
             var rect = card.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(240f, 270f);
+            rect.sizeDelta = new Vector2(640f, 700f);
             var layout = card.gameObject.AddComponent<LayoutElement>();
-            layout.preferredWidth = 240f;
-            layout.preferredHeight = 270f;
+            layout.preferredWidth = 640f;
+            layout.preferredHeight = 700f;
             label.text = item.Text;
-            label.fontSize = 28;
-            label.alignment = TextAnchor.LowerCenter;
-            SetRect(label.rectTransform, Vector2.zero, Vector2.one,
-                new Vector2(12f, 12f), new Vector2(-12f, -190f));
+            label.gameObject.SetActive(false);
 
-            var thumbnail = CreateImage("Thumbnail", card.transform, new Color(0f, 0f, 0f, 0.18f));
+            var thumbnail = CreateImage("Thumbnail", card.transform, Color.white);
             thumbnail.preserveAspect = true;
             thumbnail.raycastTarget = false;
             SetRect(thumbnail.rectTransform, Vector2.zero, Vector2.one,
-                new Vector2(12f, 72f), new Vector2(-12f, -12f));
+                new Vector2(28f, 28f), new Vector2(-28f, -28f));
 
             card.onClick.AddListener(() => SelectItem(itemIndex, true, true));
             _cards.Add(new CardView(
