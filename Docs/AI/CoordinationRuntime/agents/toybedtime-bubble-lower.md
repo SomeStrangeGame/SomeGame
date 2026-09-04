@@ -1,0 +1,22 @@
+# Agent: `toybedtime-bubble-lower`
+
+- Status: ready-for-integration
+- Task: опустить story-local Bubble toybedtime, чтобы он меньше закрывал фон.
+- Scope: `Projects/novels-toybedtime/Assets/Presentation/bubble/screen-variant.prefab`, `Docs/AI/CoordinationRuntime/HANDOFF.md`, own coordination records.
+- Contract: меняется только позиция общего Bubble Viewport внутри toybedtime; fallback, shared runtime, sprites и другие истории неизменны.
+- Validation: prefab serialization/diff audit, toybedtime content validation/build, Player visual replay ordinary dialogue and illustrated choice.
+- Base: `f691f613`.
+- Requested UTC: `2026-09-04T08:33:37Z`.
+- Acquired UTC: `2026-09-04T08:34:52Z`.
+- Completed UTC: `2026-09-04T08:44:09Z`.
+- Result: story-local Bubble Viewport toybedtime опущен с `Y=50` до `Y=-50`; вся композиция реплики/choice смещается вниз без изменения внутренних размеров.
+- Evidence: exact serialized RectTransform audit and scoped `git diff --check` passed; no Unity process or generated UnityLockfile remains.
+- Limitation: Unity content build did not complete. First sandbox attempt failed on a read-only database; escalated retry entered `AtomicContentBuild.BuildLocal` but emitted no further progress for over three minutes and was boundedly interrupted. Player visual replay therefore remains pending.
+- Pending: rebuild toybedtime and visually inspect ordinary dialogue plus line 43 choices before publication.
+- Resumed UTC: `2026-09-04T08:49:21Z`; user requested continuation of the pending build and emulator visual gate.
+- Resumed completion UTC: `2026-09-04T09:04:17Z`.
+- Final result: licensing IPC conflict recovered by TERM of confirmed non-Editor clients PID 4026/96412; editor and Android toybedtime content gates passed, then a fresh Embedded Android APK built and ran on `emulator-5554`.
+- Visual evidence: `Novels/Build/Logs/toybedtime-bubble-lower-runtime.png` at choice line 43 and `Novels/Build/Logs/toybedtime-bubble-lower-aftertap.png` at ordinary line 48 confirm the Bubble in the lower third with full cards and safe bottom margin.
+- Runtime evidence: no Novels failure markers or unexpected fallback entries in the fresh logcat sample; app force-stopped after validation, AVD left running.
+- Artifact: `Novels/Build/Players/toybedtime-bubble-lower/Novels.apk`.
+- Pending after resume: commit/publication not requested.
