@@ -1,5 +1,13 @@
 # Current cross-chat handoff
 
+## 2026-09-04T16:48:00Z — tzm-choice-snap-publish — ready-for-integration
+
+Task: publish the completed shared Choose carousel snap behavior to canonical `origin/main`.
+Changed: committed only the shared `OptionListScreen` snap implementation and its completed carousel records as `cc9e5f4e`; the foreign dirty `catalog/children/screen.prefab` was temporarily stashed and restored unchanged.
+Validation: scoped diff check and prior fresh Novels compile passed; canonical `git-publish` confirmed local and remote SHA `cc9e5f4ed23e4fb7d2c08fe08fe2c0762751f6ef`.
+Pending / risks: manual TZM swipe feel remains for visual approval; implementation of the story-local TZM Choose screen is the next independent scope.
+Suggested next step: inspect TZM presentation overrides and author the story-local Choose prefab without changing the shared fallback contract.
+
 ## 2026-09-04T16:43:00Z — tzm-choice-carousel-play — completed
 
 Task: open the Novels Unity project for the user's manual TZM carousel review.
