@@ -125,6 +125,14 @@ Suggested next step: wire the child application flavor to `Assets/RemoteAssets/c
 
 Только актуальное незавершённое состояние. Предыдущий snapshot: Git commit `f691f613`; история: [`CoordinationHandoffHistory-2026-09-04.md`](../archive/reports/CoordinationHandoffHistory-2026-09-04.md).
 
+## 2026-09-04T19:27:55Z — scp1198-silence-story — completed
+
+Task: complete the atomic commercial SCP-1198 horror story `Тише, Нина`.
+Changed: added the complete branching story project, original cover/character/location art, licensing and originality evidence, and catalog registration.
+Validation: story and catalog editor/Android content gates passed; fresh Embedded APK built; clean Pixel 7 API 34 replay reached every choice stage, an ending, `episode.completed`, and catalog return without fallback or fatal errors. The canonical finish wrapper was attempted for Android and Editor but hung in catalog `BuildLocal` after those same gates had independently passed.
+Pending / risks: aggregate finish/verify runner instability remains a tooling issue; product validation is complete.
+Suggested next step: publish the accepted commits to canonical `main`.
+
 ## Ready for integration or validation
 
 - `tzm-choose-screen`: shared sprite-free `OptionListScreen` fallback now uses a large grayscale multi-object carousel with partially visible neighbors, a separate compact lower panel, selected-item label and flat gray confirmation button. Single-item selection stays centered; existing swipe/tap wrapping and confirmation semantics are unchanged. Unity import/compile, all 14 editor content builds and scoped diff-check passed; targeted test suite is not present, portrait runtime visual review remains optional.
