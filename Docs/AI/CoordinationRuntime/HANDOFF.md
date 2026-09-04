@@ -5,7 +5,7 @@
 Task: publish every current substantive change, including completed foreign streams, to canonical `origin/main` and switch the checkout to `main`.
 Changed: atomic commits prepared for repeatable tooling (`ff28e737`), genre-specific catalog builds (`bfe90a15`), the authored children's catalog prefab variant (`1bf35074`) and the Busya story (`b98805ca`); completed coordination evidence is included separately.
 Validation: full integration verify passed diff, automation and all 15 content gates; licensing preflight found no conflict markers; fresh Novels compile passed without compiler errors. The user's final prefab has action-label Y=`7.9` and button height `96`.
-Pending / risks: strict second-route fresh replay for Busya remains an acceptance limitation recorded below; it does not block the already passed content/build/runtime evidence. Publication and local switch to `main` are the remaining steps.
+Pending / risks: strict second-route fresh replay for Busya remains an acceptance limitation recorded below; it does not block the already passed content/build/runtime evidence. Published to trusted `origin/main`; local and remote matched at `ce9c17fd34c359b950256e9850a2b26464f3b29a`, and the checkout is on `main`.
 
 ## 2026-09-04T15:23:00Z — children-catalog-button-label — ready-for-integration
 
