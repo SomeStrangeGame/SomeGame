@@ -51,3 +51,12 @@ Runtime acceptance found and closed two issues before this final evidence was re
 2. Three Ink choice groups lacked explicit gather markers, causing `ran out of content` after selection. All three gathers were added, recompiled and exercised past their former failure points.
 
 The final status recorded here applies only after both corrections and the subsequent rebuild.
+
+## Character facing correction
+
+Post-release art review on 2026-09-05 found that Nina's approved whole-image
+master faced screen-left, contrary to the project composition rule for a main
+character. The master was deterministically mirrored in place, preserving its
+Unity `.meta` identity, 1024 × 1536 canvas and alpha channel. Final visual review
+confirms Nina now faces screen-right. Kirill was inspected but not modified: as
+a secondary character, he already faces screen-left.
