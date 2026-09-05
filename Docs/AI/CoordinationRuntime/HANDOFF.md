@@ -70,3 +70,11 @@ Changed: Docs/AI/README.md, Docs/AI/rules/ParallelRefactoringCoordination.md, Do
 Validation: finish-task passed (1 gates).
 Pending / risks: none
 Suggested next step: none
+
+## 2026-09-05T14:55:28Z — publish-all-before-refactor-chats — completed
+
+Task: Published all current substantive changes to origin/main as three atomic commits; remote SHA 1c4c3bd029e12c749bac51b09b55569f6fb04c0a
+Changed: Tools/somegame-completion.zsh, Tools/somegame-tools/runner.py, Tools/somegame-tools/tests/test_runner.py, Docs/AI, .agents/skills
+Validation: finish-task passed (2 gates).
+Pending / risks: none
+Suggested next step: none
