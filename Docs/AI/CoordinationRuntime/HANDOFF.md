@@ -170,3 +170,11 @@ Changed: Docs/AI/CoordinationRuntime/agents/scp1198-silence-publish.md
 Validation: finish-task passed (1 gates).
 Pending / risks: none
 Suggested next step: none
+
+## 2026-09-05T08:19:09Z — scp1198-character-facing — completed
+
+Task: Corrected SCP-1198 composition: Nina now faces screen-right; Kirill remains screen-left. Preserved Nina's Unity meta identity, 1024x1536 RGBA canvas and alpha. Published product commit 37fcdb280007cb613229291c25264d287f8c9dae.
+Changed: Docs/AI/CoordinationRuntime/agents/scp1198-character-facing.md
+Validation: finish-task passed (1 gates).
+Pending / risks: none
+Suggested next step: none
