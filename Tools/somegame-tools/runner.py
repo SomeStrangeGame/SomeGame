@@ -973,7 +973,7 @@ def parser() -> argparse.ArgumentParser:
     signing_mode.add_argument("--test-signing", action="store_true")
     player.add_argument("--skip-content-build", action="store_true")
     player.add_argument("--close-hub", action="store_true")
-    player.add_argument("--catalog-variant", choices=("default", "children"), default="default")
+    player.add_argument("--catalog-variant", choices=("default", "children", "nochelessie", "scp"), default="default")
     player.add_argument("--timeout", type=float, default=7200)
     licensing = sub.add_parser("licensing-preflight"); licensing.add_argument("--agent-id")
     licensing.add_argument("--recover", action="store_true"); licensing.add_argument("--confirm-pid", type=int, action="append")

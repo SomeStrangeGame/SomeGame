@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if (( $# < 3 || $# > 6 )); then
-  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development|--test-signing] [--catalog-variant=children]"
+  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development|--test-signing] [--catalog-variant=children|nochelessie|scp]"
   exit 2
 fi
 
@@ -35,10 +35,10 @@ if [[ -n ${development_argument} && ${development_argument} != --development && 
   print -u2 "Unknown option: ${development_argument}"
   exit 2
 fi
-if [[ -n ${catalog_variant_argument} && ${catalog_variant_argument} != --catalog-variant=children ]]; then
-  print -u2 "Unknown catalog variant: ${catalog_variant_argument}"
-  exit 2
-fi
+case ${catalog_variant_argument} in
+  ""|--catalog-variant=children|--catalog-variant=nochelessie|--catalog-variant=scp) ;;
+  *) print -u2 "Unknown catalog variant: ${catalog_variant_argument}"; exit 2 ;;
+esac
 if [[ ${development_argument} == --test-signing && ${target} != Android ]]; then
   print -u2 "Test signing is supported only for Android."
   exit 2
@@ -121,7 +121,7 @@ unity_arguments=(
 [[ ${mode} == Remote ]] && unity_arguments+=(-remoteContentBaseUrl "${remote_url}")
 [[ ${development_argument} == --development ]] && unity_arguments+=(-developmentBuild)
 [[ ${development_argument} == --test-signing ]] && unity_arguments+=(-testSigning)
-[[ ${catalog_variant_argument} == --catalog-variant=children ]] && unity_arguments+=(-catalogVariant children)
+[[ -n ${catalog_variant_argument} ]] && unity_arguments+=(-catalogVariant "${catalog_variant_argument#--catalog-variant=}")
 
 set +e
 "${unity_executable}" "${unity_arguments[@]}"

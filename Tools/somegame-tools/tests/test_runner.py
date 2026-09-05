@@ -72,6 +72,20 @@ class RunnerTests(unittest.TestCase):
         ])
         self.assertEqual("children", args.catalog_variant)
 
+    def test_player_parser_accepts_scp_catalog_variant(self):
+        args = runner.parser().parse_args([
+            "player-build", "--agent-id", "a", "--target", "Android",
+            "--mode", "Embedded", "--catalog-variant", "scp",
+        ])
+        self.assertEqual("scp", args.catalog_variant)
+
+    def test_player_parser_accepts_nochelessie_catalog_variant(self):
+        args = runner.parser().parse_args([
+            "player-build", "--agent-id", "a", "--target", "Android",
+            "--mode", "Embedded", "--catalog-variant", "nochelessie",
+        ])
+        self.assertEqual("nochelessie", args.catalog_variant)
+
     def test_player_parser_rejects_development_with_test_signing(self):
         with self.assertRaises(SystemExit):
             runner.parser().parse_args([

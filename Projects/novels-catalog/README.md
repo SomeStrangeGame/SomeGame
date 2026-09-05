@@ -36,12 +36,34 @@ Prefab Variant того же `fallback.prefab`: он переопределяе�
 Фон и authored sliced-подложки карточки и кнопки хранятся рядом в
 `catalog/children/sprites/`.
 
+SCP-оформление находится в `catalog/scp/screen.prefab` и также напрямую
+наследует `fallback.prefab`. Его язык — тёмный графит, холодная голубая
+подсветка и сдержанный красный предупреждающий акцент; оригинальный фон
+акустической зоны хранится в `catalog/scp/sprites/`. В оформлении нет логотипа
+SCP, текста или изображений из конкретной статьи.
+
+Технический вариант «Ночелесья» находится в
+`catalog/nochelessie/screen.prefab` и напрямую наследует нейтральный fallback.
+Он фиксирует угольно-хвойную основу, янтарный интерактивный акцент и холодный
+лунный вторичный акцент. Production-фон и декоративные спрайты добавляются
+отдельным визуальным этапом, не меняя иерархию или runtime-контракт варианта.
+
 При сборке отдельного детского приложения вариант выбирается явно:
 
 ```bash
 Tools/somegame player-build --agent-id <agent> --target Android \
   --mode Embedded --catalog-variant children
+
+Tools/somegame player-build --agent-id <agent> --target Android \
+  --mode Embedded --catalog-variant scp
+
+Tools/somegame player-build --agent-id <agent> --target Android \
+  --mode Embedded --catalog-variant nochelessie
 ```
+
+Вариант `nochelessie` временно применяет к Android Player название
+«Ночелесье» и application ID `ru.nochelessie.novels`; после build исходные
+Player Settings восстанавливаются.
 
 Без `--catalog-variant` Player загружает нейтральный `catalog/fallback.prefab`.
 

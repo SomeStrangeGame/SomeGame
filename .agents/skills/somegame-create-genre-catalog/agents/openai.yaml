@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create Genre Catalog"
+  short_description: "Build authored genre catalog prefab variants"
+  default_prompt: "Use $somegame-create-genre-catalog to create a genre-specific catalog variant for SomeGame."

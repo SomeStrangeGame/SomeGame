@@ -204,15 +204,14 @@ namespace Editor
             var catalogVariant = GetArgument(arguments, "-catalogVariant");
             if (string.IsNullOrWhiteSpace(catalogVariant))
                 return required;
-            if (!string.Equals(
-                    catalogVariant,
-                    "children",
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                throw new InvalidOperationException(
-                    $"Unsupported catalog variant: {catalogVariant}.");
-            }
-            return required.Concat(new[] {"NOVELS_CHILDREN_CATALOG"}).ToArray();
+            if (string.Equals(catalogVariant, "children", StringComparison.OrdinalIgnoreCase))
+                return required.Concat(new[] {"NOVELS_CHILDREN_CATALOG"}).ToArray();
+            if (string.Equals(catalogVariant, "nochelessie", StringComparison.OrdinalIgnoreCase))
+                return required.Concat(new[] {"NOVELS_NOCHELESSIE_CATALOG"}).ToArray();
+            if (string.Equals(catalogVariant, "scp", StringComparison.OrdinalIgnoreCase))
+                return required.Concat(new[] {"NOVELS_SCP_CATALOG"}).ToArray();
+            throw new InvalidOperationException(
+                $"Unsupported catalog variant: {catalogVariant}.");
         }
 
         private static void ApplyTestSigning(string[] arguments, bool isDevelopmentBuild)
@@ -283,6 +282,8 @@ namespace Editor
         private static BuildIdentitySnapshot ApplyBuildIdentity(string[] arguments)
         {
             var snapshot = new BuildIdentitySnapshot(
+                PlayerSettings.productName,
+                PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android),
                 PlayerSettings.bundleVersion,
                 PlayerSettings.Android.bundleVersionCode,
                 PlayerSettings.iOS.buildNumber,
@@ -301,23 +302,40 @@ namespace Editor
             PlayerSettings.Android.bundleVersionCode = numericBuild;
             PlayerSettings.iOS.buildNumber = buildNumber;
             PlayerSettings.macOS.buildNumber = buildNumber;
+            var catalogVariant = GetArgument(arguments, "-catalogVariant");
+            if (string.Equals(
+                    catalogVariant,
+                    "nochelessie",
+                    StringComparison.OrdinalIgnoreCase))
+            {
+                PlayerSettings.productName = "Ночелесье";
+                PlayerSettings.SetApplicationIdentifier(
+                    NamedBuildTarget.Android,
+                    "ru.nochelessie.novels");
+            }
             Debug.Log($"Player build identity: version={version}, build={buildNumber}.");
             return snapshot;
         }
 
         private readonly struct BuildIdentitySnapshot
         {
+            private readonly string _productName;
+            private readonly string _androidApplicationIdentifier;
             private readonly string _version;
             private readonly int _androidBuild;
             private readonly string _iosBuild;
             private readonly string _macBuild;
 
             internal BuildIdentitySnapshot(
+                string productName,
+                string androidApplicationIdentifier,
                 string version,
                 int androidBuild,
                 string iosBuild,
                 string macBuild)
             {
+                _productName = productName;
+                _androidApplicationIdentifier = androidApplicationIdentifier;
                 _version = version;
                 _androidBuild = androidBuild;
                 _iosBuild = iosBuild;
@@ -326,6 +344,10 @@ namespace Editor
 
             internal void Restore()
             {
+                PlayerSettings.productName = _productName;
+                PlayerSettings.SetApplicationIdentifier(
+                    NamedBuildTarget.Android,
+                    _androidApplicationIdentifier);
                 PlayerSettings.bundleVersion = _version;
                 PlayerSettings.Android.bundleVersionCode = _androidBuild;
                 PlayerSettings.iOS.buildNumber = _iosBuild;

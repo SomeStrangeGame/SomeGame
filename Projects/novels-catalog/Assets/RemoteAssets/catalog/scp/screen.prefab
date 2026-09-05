@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1001 &6509184231760050112
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2981047793152356775, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Sprite
+      value:
+      objectReference: {fileID: 21300000, guid: d7f92112757c6425b830d9075b6ef41a, type: 3}
+    - target: {fileID: 2981047793152356775, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.82, 0.90, 0.94, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 7561120091293973524, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.025, 0.045, 0.060, 0.94)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8383563251787723355, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.035, 0.065, 0.082, 0.97)
+      objectReference: {fileID: 0}
+    - target: {fileID: 5670389368411258075, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.88, 0.97, 1, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 895797210284152474, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.68, 0.78, 0.82, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2444772523499946891, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.25, 0.82, 0.94, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 910000000000000013, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.24, 0.82, 0.94, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 910000000000000023, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.035, 0.20, 0.28, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 910000000000000024, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Colors.m_HighlightedColor
+      value: RGBA(0.12, 0.42, 0.52, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 910000000000000024, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Colors.m_PressedColor
+      value: RGBA(0.025, 0.12, 0.17, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 910000000000000025, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_PreferredHeight
+      value: 96
+      objectReference: {fileID: 0}
+    - target: {fileID: 910000000000000031, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 910000000000000033, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.88, 0.98, 1, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 920000000000000023, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.13, 0.16, 0.18, 0.98)
+      objectReference: {fileID: 0}
+    - target: {fileID: 920000000000000033, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.72, 0.80, 0.84, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 930000000000000003, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0, 0.01, 0.015, 0.88)
+      objectReference: {fileID: 0}
+    - target: {fileID: 930000000000000013, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.025, 0.055, 0.07, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 930000000000000033, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.84, 0.92, 0.95, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 930000000000000123, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.10, 0.14, 0.16, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 930000000000000223, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Color
+      value: RGBA(0.38, 0.055, 0.065, 1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8297047868520763657, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
+      propertyPath: m_Name
+      value: screen
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: bfa524dc0b9564b7e8dd0812f191d848, type: 3}
