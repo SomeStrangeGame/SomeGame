@@ -64,26 +64,52 @@ workflow before any file creation, art generation, build, test, or validation.
    Unity MCP server and proven a live connection to the exact new project path.
    If its live MCP gate is blocked, hand off the scaffold as not ready instead
    of silently continuing without MCP.
-4. Invoke `$somegame-create-character` for each required cast member, using the
-   approved scene-derived character requirements. Its identity masters, used
-   appearance variants, runtime selectors, provenance, contact sheets, and
-   visual evidence form the character handoff. Require a passed visual-
-   originality result for every character before continuing.
-5. Invoke `$somegame-produce-story-art` with the approved scene package and
+4. Before character production, derive an explicit appearance contract from the
+   approved scene matrix. For every cast member record:
+
+   - narrative role and default screen-facing direction: the protagonist faces
+     screen-right and supporting characters face screen-left, unless an
+     approved scene composition deliberately requires and documents an
+     exception;
+   - every emotion or materially different pose that is actually presented in
+     Ink, including the neutral state and the scene beats that use each state;
+   - every story-used outfit and outfit-condition change, with the scene where
+     it becomes active and the exact emotion/pose combinations required while
+     it remains active.
+
+   Keep facing direction, outfit, emotion, pose and condition as separate
+   dimensions. Do not assume that a base portrait can substitute for an
+   authored emotional beat, generate unused clothing, or expand the inventory
+   into a speculative Cartesian matrix.
+5. Invoke `$somegame-create-character` for each required cast member using that
+   appearance contract. Require an approved neutral identity master, one
+   coherent neutral reference for each used outfit, and only the whole-image or
+   layered combinations selected by the scene inventory. Its handoff must prove
+   identity continuity, the required facing direction, emotional readability,
+   outfit continuity, alpha edges and the chain `scene -> selector -> outfit ->
+   emotion/pose -> runtime address -> file` on full-body and face contact sheets.
+   Require a passed visual-originality result for every character before
+   continuing.
+6. Invoke `$somegame-produce-story-art` with the approved scene package and
    character handoff. It produces the remaining backgrounds, choice and
    presentation art, and media without recreating character assets. Require its
    visual-originality gate to pass before content authoring.
-6. Invoke `$somegame-author-story-content` with the approved narrative package,
+7. Invoke `$somegame-author-story-content` with the approved narrative package,
    character handoff, and remaining art handoff. Require coherent source Ink,
    metadata, selectors, compiled story, source map, and target validation before
-   continuing. Its full-text originality gate must pass before final compilation
+   continuing. Ink must select the authored emotion at each planned beat and
+   make every outfit change narratively explicit before using the new outfit
+   selector. Its full-text originality gate must pass before final compilation
    and acceptance. The episode must enter its first real scene directly rather
    than presenting a one-option `Начать`, `Начать историю`, or `Играть` choice.
-7. Invoke `$somegame-accept-story` with every stage handoff. It owns catalog
+8. Invoke `$somegame-accept-story` with every stage handoff. It owns catalog
    registration, end-to-end audits, changed-path validation, runtime/manual
-   gates, originality-evidence audit, and the final readiness status. Preserve
-   the author's intended catalog position. It must fail closed rather than waive
-   a missing, incomplete, stale, or blocked originality result.
+   gates, originality-evidence audit, and the final readiness status. Acceptance
+   must audit all used character selectors against the appearance contract and
+   visually confirm protagonist/right and supporting/left composition, emotion
+   readability, and outfit transitions in representative runtime scenes.
+   Preserve the author's intended catalog position. It must fail closed rather
+   than waive a missing, incomplete, stale, or blocked originality result.
 
 Do not generate speculative assets merely to fill a fixed matrix. Create only
 backgrounds, outfits, expressions, poses, media, and branches that the current
