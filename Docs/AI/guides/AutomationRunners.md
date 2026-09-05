@@ -90,6 +90,21 @@ Editor/Player/manual gates без точных параметров остают
 tooling, Unity/package/config и platform fingerprint в ignored
 `Library/SomeGameValidationCache`; `--release` и `--no-cache` обходят кэш.
 
+Перед запуском runner агент выбирает уровень проверки из
+[UnityConcurrency.md](../rules/UnityConcurrency.md#уровни-проверки):
+
+- быстрый уровень является default и ограничивается scoped diff, форматами,
+  shell/static/unit checks без запуска Unity;
+- стандартный запускается один раз на завершённый логический блок и добавляет
+  один compile с адресными tests;
+- релизный запускается только по прямому запросу или перед выпуском и включает
+  необходимые content/Player/device/visual gates.
+
+Наличие Unity-файла в diff не является само по себе разрешением повышать
+уровень. Связанные правки сначала пакетируются, затем получают один validation
+slot. Если пользователь исключил APK, эмулятор или иной gate, runner не должен
+запускать его косвенно через более широкий preset.
+
 ### `commit-plan` и `finish-check`
 
 `commit-plan` read-only предлагает группы dirty paths и отделяет generated
@@ -176,6 +191,12 @@ sockets, license или caches автоматически. Обнаруженн�
 После recovery исходную Unity-команду разрешено повторить ровно один раз.
 Recovery восстанавливает только штатный Personal-совместимый запуск и не даёт
 права активировать, запрашивать или имитировать платный entitlement.
+
+Если bounded Unity-команда не показывает прогресс в течение 1–2 минут, сначала
+запускается read-only `licensing-preflight`, не дожидаясь общего timeout.
+Повторяющиеся mutex markers означают подтверждённый licensing conflict:
+дочернюю Unity-команду останавливают, lock освобождают перед ожиданием решения,
+а recovery выполняют только по правилам точных PID и явного подтверждения.
 
 ## Lock policy
 

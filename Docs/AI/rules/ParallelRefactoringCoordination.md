@@ -91,7 +91,13 @@ Heartbeat обновляется не реже пяти минут; чужой s
 - Unity не запускается для docs/tooling scope, если plan этого не требует.
 - Memory bank используется по
   [MemoryBankProtocol.md](MemoryBankProtocol.md); runtime state туда не пишется.
-- Субагенты, фоновые jobs и параллельные worker-пулы в репозитории запрещены.
+- Субагенты, фоновые jobs и параллельные worker-пулы по умолчанию запрещены.
+  Явно заказанное одновременное создание нескольких новых историй может
+  использовать отдельный поток на каждый `storyId` по протоколу
+  [ParallelWorkDetails.md](ParallelWorkDetails.md): параллельны только
+  непересекающиеся story-local подготовка и правки, а запись под lock,
+  генераторы, Unity/import/build/test, Catalog, shared contracts, Git branch и
+  интеграция остаются последовательными.
 
 ## Завершение
 

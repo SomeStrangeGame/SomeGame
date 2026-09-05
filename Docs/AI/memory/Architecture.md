@@ -34,7 +34,9 @@ EntryPoint
 - Поддерживаемые content platforms: `editor`, `android`, `ios`.
 - Editor использует `Novels/Build/LocalContent`; Player использует тот же
   release-контракт через целевой content source.
-- `Choose` и `Wardrobe` — разные фичи, хотя переиспользуют option-list UI.
+- `Choose` и `Wardrobe` — разные фичи с независимыми fallback prefab и
+  story-local prefab variants; они переиспользуют только runtime option-list
+  логику, но не общую authored hierarchy.
 - Генерация character-арта всегда начинается с цельного согласованного
   персонажа; runtime может отрисовать образ одним PNG или комплектом игровых
   слоёв. ТЗМ штатно использует слоёную runtime-композицию.

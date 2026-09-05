@@ -55,6 +55,13 @@ Tools/novels-tools/novels-content verify editor [base-ref]
 `plan` определяет затронутые targets и ручные gates. `verify` выполняет только
 детерминированную часть. Unity/Player/manual gates не запускаются скрыто.
 
+При явно заказанном параллельном создании нескольких новых историй допускается
+отдельный поток на каждый `storyId`. Параллельны только подготовка и
+непересекающиеся story-local scopes; checkout writes проходят отдельными
+короткими FIFO-слотами, а Unity/import/build/test, Catalog, shared contracts,
+Git branch и финальная интеграция сериализованы. Канонические границы описаны в
+[ParallelWorkDetails.md](../rules/ParallelWorkDetails.md#несколько-новых-историй-одновременно).
+
 ## Контент
 
 ```bash

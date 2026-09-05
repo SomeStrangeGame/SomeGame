@@ -40,6 +40,20 @@ Work only in the canonical SomeGame checkout. Never create or use a separate
 worktree for story creation. A new story is developed on its own branch from an
 up-to-date `main`, normally `codex/story-<storyId>`.
 
+When the author explicitly requests multiple stories at once, the orchestrator
+may assign one independent worker to each approved `storyId`. Parallelize only
+research, narrative design, asset planning, and disjoint story-local work.
+Each worker owns exactly its `Projects/novels-<storyId>/**` plus explicitly
+listed story-local evidence paths, and must use its own FIFO request and short
+write-lock slots before changing the shared checkout. Do not create or switch
+per-story branches while workers overlap: the checkout branch and index are
+shared; use one orchestration branch from up-to-date `main` and form
+story-scoped commits sequentially during integration. Serialize project
+scaffolding commands, generators, Unity/MCP/import,
+builds, tests, Catalog registration, shared contracts, commits, and final
+integration. A worker that discovers a shared-contract dependency stops at a
+handoff rather than broadening its scope.
+
 Before switching or creating the branch, inspect the full dirty tree, active
 owners, FIFO, current branch, worktree path, and relationship to `origin/main`.
 If unrelated uncommitted work makes an in-place branch switch unsafe, stop and

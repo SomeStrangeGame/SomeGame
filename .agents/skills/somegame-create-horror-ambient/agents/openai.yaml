@@ -1,0 +1,4 @@
+interface:
+  display_name: "Horror Ambient"
+  short_description: "Создание давящего хоррор-эмбиента без резких звуков"
+  default_prompt: "Use $somegame-create-horror-ambient to create a dark, restrained horror ambient loop with subtle environmental details."

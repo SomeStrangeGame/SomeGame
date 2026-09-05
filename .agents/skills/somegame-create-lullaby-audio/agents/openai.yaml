@@ -1,0 +1,4 @@
+interface:
+  display_name: "SomeGame Lullaby Audio"
+  short_description: "Create gentle seamless lullaby loops"
+  default_prompt: "Use $somegame-create-lullaby-audio to create a short, soothing, seamlessly looped melody."
