@@ -83,3 +83,24 @@ contains every selector. Unity imported all nine PNGs and generated their
 compile gate passed without compiler errors after the conflicting Unity
 Licensing Client processes were recovered. The final Android story content
 build then passed with all emotion selectors and assets included.
+
+## Wardrobe package
+
+The 2026-09-05 wardrobe pass adds three whole-image patient states for Nina
+(`main`, `alarmed`, `exhausted`) and four whole-image protective states for
+Kirill (`main`, `concerned`, `resolute`, `urgent`). All are 1024 × 1536 RGBA.
+Nina remains screen-right and Kirill remains screen-left. A generated Kirill
+`protective/wary` draft was rejected before import because its gaze crossed
+toward screen-right.
+
+Ink now establishes both costume changes in the story: the archived first-cycle
+recording and protocol ending show Nina in patient clothing, while Kirill dons
+the protective coverall only after entering the exposed sector. Every added
+selector resolves to a production file; no unused outfit/emotion matrix was
+generated. Dark and light full-body proof sheets were visually reviewed for
+identity, clothing continuity, direction, anatomy, feet and alpha edges.
+Unity imported all seven PNGs and generated stable `.meta` files. The
+exact-project editor compile gate, Atomic Content SDK validation and Android
+story content build all passed. Compiled Ink contains both patient selectors
+and all eight protective presentation uses; each referenced appearance resolves
+to an approved 1024 × 1536 RGBA file.

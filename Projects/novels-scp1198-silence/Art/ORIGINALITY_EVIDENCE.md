@@ -28,7 +28,7 @@ Status applies to the final Ink source and approved art masters in this project.
 ### Nina Valeeva
 
 - Reviewed master: `Assets/Characters/maincharacter/view/whole/facility/main.png`.
-- Reviewed variants: `alarmed`, `suspicious`, `overwhelmed`, `determined` and `exhausted`, all identity-preserving derivatives of that master.
+- Reviewed variants: facility `alarmed`, `suspicious`, `overwhelmed`, `determined` and `exhausted`, plus patient `main`, `alarmed` and `exhausted`, all identity-preserving derivatives of that master.
 - Search field: female acoustic engineer, clinical-horror patient and facility researcher designs.
 - Finding: dark short hair, pale clinical clothing and an exhausted expression are generic genre conventions. The specific face, layered engineer/patient costume, asymmetrical equipment details and silhouette did not produce a material identity match.
 - Result: `passed`; low-to-moderate archetype risk, medium confidence.
@@ -36,12 +36,14 @@ Status applies to the final Ink source and approved art masters in this project.
 ### Kirill Savin
 
 - Reviewed master: `Assets/Characters/кирилл/view/whole/orderly/main.png`.
-- Reviewed variants: `concerned`, `wary`, `urgent` and `resolute`, all identity-preserving derivatives of that master.
+- Reviewed variants: orderly `concerned`, `wary`, `urgent` and `resolute`, plus protective `main`, `concerned`, `urgent` and `resolute`, all identity-preserving derivatives of that master.
 - Search field: middle-aged night orderly and grey-scrub horror-game characters.
 - Finding: practical scrubs and a tired face are generic occupational conventions; no material match was identified for the selected identity, costume construction or proportions.
 - Result: `passed`; low residual risk, medium confidence.
 
 The emotion review found no new costume, silhouette, prop or identity design beyond the already screened masters. Changes are limited to conventional facial affect required by the authored scenes, so the prior originality assessment remains applicable.
+
+The wardrobe review found only generic institutional patient clothing and generic sealed containment-response workwear. Their particular construction, palette, face identities and silhouettes showed no material match to a named character or protected costume. No insignia, logo, text, respirator, weapon or franchise-specific uniform element was introduced. Result: `passed`; low residual costume-similarity risk, medium confidence.
 
 ## Non-character production art — passed
 
