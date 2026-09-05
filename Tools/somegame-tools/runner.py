@@ -342,8 +342,70 @@ def scan_markdown(root: Path) -> list[dict[str, str]]:
     return failures
 
 
+def scan_skill_contracts(root: Path) -> list[dict[str, str]]:
+    """Validate local skill discovery metadata and cross-skill ownership invariants."""
+    failures: list[dict[str, str]] = []
+    skill_root = root / ".agents/skills"
+    skills: dict[str, str] = {}
+    for entry in sorted(skill_root.iterdir() if skill_root.is_dir() else []):
+        source = entry / "SKILL.md"
+        if not source.is_file():
+            continue
+        text = source.read_text(encoding="utf-8", errors="replace")
+        match = re.match(r"\A---\s*\n(.*?)\n---\s*\n", text, re.S)
+        if not match:
+            failures.append({"source": str(source.relative_to(root)), "target": "frontmatter",
+                             "reason": "missing_frontmatter"})
+            continue
+        fields: dict[str, str] = {}
+        for line in match.group(1).splitlines():
+            key, separator, value = line.partition(":")
+            if separator and key.strip() in {"name", "description"}:
+                fields[key.strip()] = value.strip().strip("'\"")
+        for required in ("name", "description"):
+            if not fields.get(required):
+                failures.append({"source": str(source.relative_to(root)), "target": required,
+                                 "reason": "missing_frontmatter_field"})
+        if fields.get("name") and fields["name"] != entry.name:
+            failures.append({"source": str(source.relative_to(root)), "target": entry.name,
+                             "reason": f"skill_name_mismatch:{fields['name']}"})
+        if "TODO" in text or "[TODO" in text:
+            failures.append({"source": str(source.relative_to(root)), "target": "TODO",
+                             "reason": "unfinished_placeholder"})
+        skills[entry.name] = text
+
+    required_references = {
+        "somegame-design-story": "OriginalityReviewProtocol.md",
+        "somegame-create-character": "OriginalityReviewProtocol.md",
+        "somegame-produce-story-art": "OriginalityReviewProtocol.md",
+        "somegame-author-story-content": "OriginalityReviewProtocol.md",
+        "somegame-accept-story": "OriginalityReviewProtocol.md",
+        "somegame-create-child-story-bubbles": "StoryBubblePresentation.md",
+        "somegame-create-scp-story-bubbles": "StoryBubblePresentation.md",
+    }
+    for name, reference in required_references.items():
+        if reference not in skills.get(name, ""):
+            failures.append({"source": f".agents/skills/{name}/SKILL.md", "target": reference,
+                             "reason": "missing_canonical_reference"})
+
+    acceptance = skills.get("somegame-accept-story", "")
+    orchestrator = skills.get("somegame-create-story", "")
+    if not re.search(r"exclusive owner of catalog registration", acceptance, re.I):
+        failures.append({"source": ".agents/skills/somegame-accept-story/SKILL.md",
+                         "target": "catalog registration", "reason": "catalog_owner_missing"})
+    if not ("$somegame-accept-story" in orchestrator and "catalog registration" in orchestrator):
+        failures.append({"source": ".agents/skills/somegame-create-story/SKILL.md",
+                         "target": "somegame-accept-story", "reason": "catalog_delegation_missing"})
+    all_skill_text = "\n".join(skills.values())
+    if re.search(r"(?:up to|at most|no more than) five (?:reviews|iterations)", all_skill_text, re.I):
+        failures.append({"source": ".agents/skills", "target": "OriginalityReviewProtocol.md",
+                         "reason": "duplicated_originality_iteration_contract"})
+    return failures
+
+
 def docs_check(args: argparse.Namespace) -> dict[str, Any]:
     failures = scan_markdown(ROOT)
+    failures.extend(scan_skill_contracts(ROOT))
     failures.extend(taskflow.stale_context_failures(ROOT))
     limits = {
         "coordinationCore": (ROOT / "Docs/AI/rules/ParallelRefactoringCoordination.md", 140),

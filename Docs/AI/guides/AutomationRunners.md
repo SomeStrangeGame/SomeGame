@@ -131,8 +131,10 @@ lock owner и fail-closed проверяет agent/handoff, commit plan и ре�
 ### `docs-check`
 
 Проверяет Markdown links/anchors, лимиты core/memory/handoff, `git diff --check`
-и dependency-free tooling tests. Read-only относительно tracked sources и не
-требует lock.
+и dependency-free tooling tests. Также без внешнего YAML-пакета проверяет
+frontmatter project-local skills, соответствие имени каталогу, обязательные
+канонические ссылки и ownership-инварианты originality/catalog/Bubble. Read-only
+относительно tracked sources и не требует lock.
 
 ### `git-publish`
 

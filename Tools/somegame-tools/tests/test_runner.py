@@ -49,6 +49,55 @@ class RunnerTests(unittest.TestCase):
             (docs / "test.md").write_text("[missing](nope.md)\n", encoding="utf-8")
             self.assertEqual("missing_target", runner.scan_markdown(root)[0]["reason"])
 
+    def test_skill_contract_scan_is_dependency_free(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); skills = root / ".agents/skills"
+            names = (
+                "somegame-design-story", "somegame-create-character",
+                "somegame-produce-story-art", "somegame-author-story-content",
+                "somegame-accept-story", "somegame-create-child-story-bubbles",
+                "somegame-create-scp-story-bubbles", "somegame-create-story",
+            )
+            for name in names:
+                folder = skills / name; folder.mkdir(parents=True)
+                reference = ("StoryBubblePresentation.md" if "bubbles" in name
+                             else "OriginalityReviewProtocol.md")
+                owner = ("Acceptance is the exclusive owner of catalog registration.\n"
+                         if name == "somegame-accept-story" else "")
+                orchestrator = ("$somegame-accept-story owns catalog registration.\n"
+                                if name == "somegame-create-story" else "")
+                (folder / "SKILL.md").write_text(
+                    f"---\nname: {name}\ndescription: Test skill.\n---\n{reference}\n{owner}{orchestrator}",
+                    encoding="utf-8")
+            self.assertEqual([], runner.scan_skill_contracts(root))
+
+    def test_skill_contract_scan_rejects_name_mismatch(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); folder = root / ".agents/skills/wrong"; folder.mkdir(parents=True)
+            (folder / "SKILL.md").write_text(
+                "---\nname: other\ndescription: Test skill.\n---\n", encoding="utf-8")
+            reasons = {item["reason"] for item in runner.scan_skill_contracts(root)}
+            self.assertIn("skill_name_mismatch:other", reasons)
+
+    def test_skill_contract_scan_rejects_duplicated_originality_loop(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); folder = root / ".agents/skills/example"; folder.mkdir(parents=True)
+            (folder / "SKILL.md").write_text(
+                "---\nname: example\ndescription: Test skill.\n---\nRun up to five reviews.\n",
+                encoding="utf-8")
+            reasons = {item["reason"] for item in runner.scan_skill_contracts(root)}
+            self.assertIn("duplicated_originality_iteration_contract", reasons)
+
+    def test_skill_contract_scan_requires_canonical_reference(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); folder = root / ".agents/skills/somegame-design-story"
+            folder.mkdir(parents=True)
+            (folder / "SKILL.md").write_text(
+                "---\nname: somegame-design-story\ndescription: Test skill.\n---\n",
+                encoding="utf-8")
+            reasons = {item["reason"] for item in runner.scan_skill_contracts(root)}
+            self.assertIn("missing_canonical_reference", reasons)
+
     def test_lock_owner_requires_exact_agent(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory); lock = root / "Docs/AI/CoordinationRuntime/active/write-lock"

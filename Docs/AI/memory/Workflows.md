@@ -44,6 +44,8 @@ fingerprints позволяют не перечитывать неизменив
 `verify` исполняет changed-path plan и кэширует только полностью успешное
 evidence; `--release` и `--no-cache` обходят кэш. `commit-plan` только предлагает
 группы, а `finish-check` fail-closed проверяет handoff, lock и Editor-процессы.
+`docs-check` включает dependency-free проверку Markdown и project-local skill
+contracts; отдельный `PyYAML` для проверки frontmatter не требуется.
 
 При создании новой истории все Unity/MCP live, import, content build, compile,
 tests, Player/APK и emulator/ADB операции откладываются до одного финального
