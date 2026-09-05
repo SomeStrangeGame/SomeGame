@@ -11,7 +11,9 @@
 | Runtime role | Project asset | Identity / composition lock | Technical acceptance |
 | --- | --- | --- | --- |
 | Main character | `Assets/Characters/maincharacter/view/whole/facility/main.png` | Nina Valeeva, 34, acoustic engineer; short dark hair, exhausted attentive expression, pale patient clothes under a dark facility jacket | 1024×1536 RGBA, transparent background, complete readable silhouette |
+| Main emotions | `Assets/Characters/maincharacter/view/whole/facility/{alarmed,suspicious,overwhelmed,determined,exhausted}.png` | Identity-preserving whole-image variants derived from Nina's approved master; screen-right facing and fixed pose | Five 1024×1536 RGBA variants; scene-wired in Ink |
 | Supporting character | `Assets/Characters/кирилл/view/whole/orderly/main.png` | Kirill Savin, 42, night orderly; close-cropped hair, tired face, practical grey scrubs and utility jacket | 1024×1536 RGBA, transparent background, complete readable silhouette |
+| Supporting emotions | `Assets/Characters/кирилл/view/whole/orderly/{concerned,wary,urgent,resolute}.png` | Identity-preserving whole-image variants derived from Kirill's approved master; screen-left facing and fixed pose | Four 1024×1536 RGBA variants; scene-wired in Ink |
 | Background | `Assets/Locations/acoustic-lab.png` | Empty acoustic laboratory, observation glass, waveform monitors and isolated chair | 1672×941 RGB, wide gameplay composition |
 | Background | `Assets/Locations/medical-corridor.png` | Sterile night corridor with glass isolation partition and distant emergency light | 1672×941 RGB, wide gameplay composition |
 | Background | `Assets/Locations/secure-archive.png` | Compact secure records room, racks, desk terminal and evidence staging space | 1672×941 RGB, wide gameplay composition |
@@ -22,6 +24,8 @@
 
 All approved raster assets were generated specifically for this story on 2026-09-04 with OpenAI's built-in image generation tool. No external image was supplied as a reference. Prompts described original people, locations and compositions and excluded text, logos, branded characters and named-artist or named-studio imitation.
 
-An attempted additional distressed Nina variant was rejected before import because its checkerboard background was painted into opaque pixels. It is not part of the project or runtime manifest. The two approved character masters are intentionally used as neutral whole-body variants; the story does not claim unsupported emotion variants.
+An attempted early distressed Nina variant and two later pilot edits were rejected before import because their checkerboard backgrounds were painted into opaque pixels. A determined pilot with changed global lighting was also rejected. None is part of the project or runtime manifest.
+
+The approved 2026-09-05 emotion package was produced through identity-preserving edits of the two masters. Because the generator did not reliably return true transparency, accepted edits were generated on uniform `#00FF00`, then received a deterministic chroma alpha mask and green despill. No head, body, clothing or hair layers were composited from unrelated images. Contact and alpha-proof sheets are `Art/nina-emotions-dark.png`, `Art/nina-emotions-faces-light.png`, `Art/kirill-emotions-dark.png` and `Art/kirill-emotions-light.png`.
 
 The files listed above are the approved identity and composition masters. Regeneration must retain these locks unless this manifest is deliberately revised and revalidated.

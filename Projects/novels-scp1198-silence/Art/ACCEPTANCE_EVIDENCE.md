@@ -60,3 +60,26 @@ character. The master was deterministically mirrored in place, preserving its
 Unity `.meta` identity, 1024 × 1536 canvas and alpha channel. Final visual review
 confirms Nina now faces screen-right. Kirill was inspected but not modified: as
 a secondary character, he already faces screen-left.
+
+## Emotion package
+
+The 2026-09-05 expansion adds five authored emotions for Nina (`alarmed`,
+`suspicious`, `overwhelmed`, `determined`, `exhausted`) and four for Kirill
+(`concerned`, `wary`, `urgent`, `resolute`) in addition to each neutral master.
+Every asset is a complete 1024 × 1536 RGBA figure. Nina remains screen-right;
+Kirill remains screen-left. Identity, hair, outfit, pose, scale and framing were
+compared on full-body and face contact sheets.
+
+The first transparent-background pilots were rejected because they contained a
+painted RGB checkerboard. Accepted variants were regenerated on uniform chroma
+green, masked deterministically and subjected to green despill. Light and dark
+proof sheets show clean silhouettes without the original green fringe.
+
+Ink now explicitly selects character presentation at 25 story beats, including
+24 uses of the new emotions. The master Ink
+was compiled with the repository's own `Ink-Libraries.dll`; the compiled JSON
+contains every selector. Unity imported all nine PNGs and generated their
+`.meta` files, preserving the existing two masters. The exact-project Pipeline
+compile gate passed without compiler errors after the conflicting Unity
+Licensing Client processes were recovered. The final Android story content
+build then passed with all emotion selectors and assets included.

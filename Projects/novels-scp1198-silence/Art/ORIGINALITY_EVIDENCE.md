@@ -28,6 +28,7 @@ Status applies to the final Ink source and approved art masters in this project.
 ### Nina Valeeva
 
 - Reviewed master: `Assets/Characters/maincharacter/view/whole/facility/main.png`.
+- Reviewed variants: `alarmed`, `suspicious`, `overwhelmed`, `determined` and `exhausted`, all identity-preserving derivatives of that master.
 - Search field: female acoustic engineer, clinical-horror patient and facility researcher designs.
 - Finding: dark short hair, pale clinical clothing and an exhausted expression are generic genre conventions. The specific face, layered engineer/patient costume, asymmetrical equipment details and silhouette did not produce a material identity match.
 - Result: `passed`; low-to-moderate archetype risk, medium confidence.
@@ -35,9 +36,12 @@ Status applies to the final Ink source and approved art masters in this project.
 ### Kirill Savin
 
 - Reviewed master: `Assets/Characters/кирилл/view/whole/orderly/main.png`.
+- Reviewed variants: `concerned`, `wary`, `urgent` and `resolute`, all identity-preserving derivatives of that master.
 - Search field: middle-aged night orderly and grey-scrub horror-game characters.
 - Finding: practical scrubs and a tired face are generic occupational conventions; no material match was identified for the selected identity, costume construction or proportions.
 - Result: `passed`; low residual risk, medium confidence.
+
+The emotion review found no new costume, silhouette, prop or identity design beyond the already screened masters. Changes are limited to conventional facial affect required by the authored scenes, so the prior originality assessment remains applicable.
 
 ## Non-character production art — passed
 
