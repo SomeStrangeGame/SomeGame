@@ -104,3 +104,32 @@ exact-project editor compile gate, Atomic Content SDK validation and Android
 story content build all passed. Compiled Ink contains both patient selectors
 and all eight protective presentation uses; each referenced appearance resolves
 to an approved 1024 × 1536 RGBA file.
+
+## Story-local Bubble presentation
+
+The 2026-09-05 UI pass adds a story-local Bubble prefab for all five dialogue
+states supported by the current runtime: narrator, main character, supporting
+character, hint/disclaimer and main-character thoughts. The presentation uses
+dark clinical panels, readable pale text, restrained teal borders and amber
+status accents. Choice labels remain visible and are placed vertically by the
+runtime, preserving wrapping and touch readability on portrait screens.
+
+All six authored UI sprites retain alpha and their expected import dimensions:
+character panel 1400×476, narrator panel 1400×616, choice button 900×288,
+header 684×216, pointer 256×204 and thought pointer 352×280. Runtime validation
+passed the exact-project Unity compile gate and Android story build. A fresh
+test-signed Embedded APK was built at
+`Novels/Build/Players/automation/Android/Embedded/Novels.apk` (2,254,619,468
+bytes) and installed on `Novels_Pixel_7_API_34` / `emulator-5554`.
+
+The real catalog flow opened `scp1198-silence`, restarted `s01e01`, displayed
+the narrator state, the first three-option choice and Nina's character state.
+Screenshots are `Novels/Build/Logs/automation/scp-bubble-dialogue.png`,
+`scp-bubble-choice.png` and `scp-bubble-character.png`. Visual review confirms
+complete borders, readable Cyrillic text, correct wrapping, unobstructed
+buttons and a pointer consistent with Nina's screen-right-facing composition.
+Fresh runtime telemetry reached `catalog.ready` with 15 stories,
+`dialogue.ready` with `choiceCount=3`, `choice.selected` and the subsequent
+character dialogue. No `fallback.used`, `INITIALIZATION_FAILED`, crash or ANR
+was present. EGL capability warnings are emulator-only diagnostics and did not
+affect rendering or input.

@@ -21,6 +21,7 @@
 | Background | `Assets/Locations/secure-archive.png` | Compact secure records room, racks, desk terminal and evidence staging space | 1672×941 RGB, wide gameplay composition |
 | Background | `Assets/Locations/final-junction.png` | Facility junction between server access and anechoic chamber, red alarm state | 1672×941 RGB, wide gameplay composition |
 | Cover | `Config/cover.png` | Nina isolated before a dark acoustic chamber, concentric waveform motif and red warning light | 1024×1536 RGB, title-free safe crop |
+| Dialogue UI | `Assets/Presentation/bubble/` | Original charcoal smoked-glass containment interface with restrained teal borders and amber status accents; no logos or copied SCP game/wiki chrome | Story-local prefab, six RGBA sprites with preserved nine-slice-friendly geometry, and bundled Cyrillic-capable font |
 
 ## Provenance
 
@@ -31,5 +32,12 @@ An attempted early distressed Nina variant and two later pilot edits were reject
 The approved 2026-09-05 emotion package was produced through identity-preserving edits of the two masters. Because the generator did not reliably return true transparency, accepted edits were generated on uniform `#00FF00`, then received a deterministic chroma alpha mask and green despill. No head, body, clothing or hair layers were composited from unrelated images. Contact and alpha-proof sheets are `Art/nina-emotions-dark.png`, `Art/nina-emotions-faces-light.png`, `Art/kirill-emotions-dark.png` and `Art/kirill-emotions-light.png`.
 
 The 2026-09-05 wardrobe package used the same identity-preserving whole-image process. Each outfit received one neutral reference before its used emotional states were derived. Proof sheets are `Art/nina-patient-wardrobe-{dark,light}.png` and `Art/kirill-protective-wardrobe-{dark,light}.png`. One protective `wary` draft was rejected and removed because Kirill's gaze crossed toward screen-right; it is not a runtime asset.
+
+The 2026-09-05 Bubble package was generated specifically for this story by
+identity-preserving edits of project-owned generic panel geometry. The edits
+replace the source treatment with a distinct charcoal, desaturated-teal and
+muted-amber containment design. Output dimensions and alpha were normalized
+deterministically for the existing sliced-sprite import contracts. No external
+UI, SCP logo, wiki skin, game HUD, text or franchise-specific insignia was used.
 
 The files listed above are the approved identity and composition masters. Regeneration must retain these locks unless this manifest is deliberately revised and revalidated.

@@ -53,3 +53,19 @@ The wardrobe review found only generic institutional patient clothing and generi
 - Result: `passed`; low-to-moderate genre-composition risk, medium confidence. Search was descriptive rather than a proprietary reverse-image database, which limits certainty.
 
 No searched image or text was incorporated into the project.
+
+## Story-local Bubble presentation — passed
+
+- Reviewed set: `Assets/Presentation/bubble/screen-variant.prefab` and its six
+  UI sprites.
+- Design field: generic clinical monitoring panels and containment-horror
+  interfaces.
+- Construction: project-owned neutral Bubble geometry was used only as an
+  edit reference so runtime anchors and nine-slice contracts remained stable;
+  the visible treatment was regenerated as charcoal smoked glass with
+  desaturated teal outlines and a limited amber status accent.
+- Exclusions: no SCP Foundation logo, wiki skin, proprietary game HUD, copied
+  typography, text, hazard insignia or named product interface appears.
+- Result: `passed`; low residual genre-similarity risk. The styling relies on
+  common clinical UI conventions while the composition and generated surface
+  treatment are original to this story.
