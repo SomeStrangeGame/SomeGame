@@ -29,13 +29,16 @@ namespace Novels.OptionSelection
             OptionListLayout layout = OptionListLayout.Default,
             System.Action<int> selectTab = null)
         {
+            var resourceName = layout == OptionListLayout.Wardrobe
+                ? "WardrobeScreen"
+                : "ChoiceScreen";
             var prefab = _screenPrefab != null
                 ? _screenPrefab
-                : Resources.Load<OptionListScreen>("OptionListScreen");
+                : Resources.Load<OptionListScreen>(resourceName);
             if (prefab == null)
             {
                 throw new System.InvalidOperationException(
-                    "OptionListScreen prefab is missing from Resources.");
+                    $"{resourceName} prefab is missing from Resources.");
             }
             _screen = Object.Instantiate(prefab);
             _screen.name = name;

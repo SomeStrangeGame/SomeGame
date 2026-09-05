@@ -35,6 +35,7 @@ namespace Novels.OptionSelection
             { "◉", "≋", "♙", "◇" };
 
         private readonly List<CardView> _cards = new();
+        [SerializeField] private OptionListLayout _layout;
         [SerializeField] private CanvasGroup _canvasGroup;
         [SerializeField] private RectTransform _content;
         [SerializeField] private RectTransform _viewport;
@@ -46,6 +47,9 @@ namespace Novels.OptionSelection
         [SerializeField] private float _snapSpeed = 12f;
         [Header("Optional default choice theme")]
         [SerializeField] private Sprite _cardSprite;
+        [SerializeField] private float _cardWidth = 640f;
+        [SerializeField] private float _cardHeight = 700f;
+        [SerializeField] private float _thumbnailScale = 1f;
         [SerializeField] private Color _cardColor =
             new(0.20f, 0.22f, 0.25f, 0.90f);
         [SerializeField] private Color _selectedCardColor =
@@ -105,7 +109,6 @@ namespace Novels.OptionSelection
         private bool _snapping;
         private int _snapSlot = -1;
         private bool _wardrobeLayout;
-        private GameObject _defaultPanel;
         private UnityEngine.Events.UnityAction[] _wardrobeTabActions;
         private Action<int> _selectWardrobeTab;
         private int _activeWardrobeTab;
@@ -113,26 +116,42 @@ namespace Novels.OptionSelection
 
         public void ConfigureLayout(OptionListLayout layout, Action<int> selectWardrobeTab = null)
         {
-            if (layout != OptionListLayout.Wardrobe || _wardrobeLayout)
-                return;
-            _wardrobeLayout = true;
+            if (layout != _layout)
+            {
+                throw new InvalidOperationException(
+                    $"{name} is authored for {_layout}, not {layout}.");
+            }
             _selectWardrobeTab = selectWardrobeTab;
-            BindWardrobeLayout();
         }
 
         private void Awake()
         {
-            _scroll.onValueChanged.AddListener(OnScrollChanged);
-            _confirm.onClick.AddListener(Confirm);
-            BindCarouselDrag();
+            _wardrobeLayout = _layout == OptionListLayout.Wardrobe;
+            if (_wardrobeLayout)
+            {
+                BindWardrobeLayout();
+            }
+            else
+            {
+                ValidateChoiceLayout();
+                _scroll.onValueChanged.AddListener(OnScrollChanged);
+                _confirm.onClick.AddListener(Confirm);
+                BindCarouselDrag();
+            }
             HideImmediate();
         }
 
         private void OnDestroy()
         {
-            _scroll.onValueChanged.RemoveListener(OnScrollChanged);
-            _confirm.onClick.RemoveListener(Confirm);
-            UnbindWardrobeLayout();
+            if (_wardrobeLayout)
+            {
+                UnbindWardrobeLayout();
+            }
+            else if (_scroll != null && _confirm != null)
+            {
+                _scroll.onValueChanged.RemoveListener(OnScrollChanged);
+                _confirm.onClick.RemoveListener(Confirm);
+            }
         }
 
         private void OnScrollChanged(Vector2 _) => SelectClosestCard();
@@ -266,10 +285,10 @@ namespace Novels.OptionSelection
             cardImage.sprite = _cardSprite;
             cardImage.type = _cardSprite == null ? Image.Type.Simple : Image.Type.Sliced;
             var rect = card.GetComponent<RectTransform>();
-            rect.sizeDelta = new Vector2(640f, 700f);
+            rect.sizeDelta = new Vector2(_cardWidth, _cardHeight);
             var layout = card.gameObject.AddComponent<LayoutElement>();
-            layout.preferredWidth = 640f;
-            layout.preferredHeight = 700f;
+            layout.preferredWidth = _cardWidth;
+            layout.preferredHeight = _cardHeight;
             label.text = item.Text;
             label.gameObject.SetActive(false);
 
@@ -278,6 +297,7 @@ namespace Novels.OptionSelection
             thumbnail.raycastTarget = false;
             SetRect(thumbnail.rectTransform, Vector2.zero, Vector2.one,
                 new Vector2(28f, 28f), new Vector2(-28f, -28f));
+            thumbnail.rectTransform.localScale = Vector3.one * _thumbnailScale;
 
             var cardSlot = _cards.Count;
             card.onClick.AddListener(() => FocusCard(cardSlot, true));
@@ -356,10 +376,13 @@ namespace Novels.OptionSelection
         {
             _selectedIndex = -1;
             _cards.Clear();
-            _scroll.velocity = Vector2.zero;
+            if (_scroll != null)
+                _scroll.velocity = Vector2.zero;
             _needsCentering = false;
             _snapping = false;
             _snapSlot = -1;
+            if (_content == null)
+                return;
             for (var index = _content.childCount - 1; index >= 0; index--)
             {
                 var child = _content.GetChild(index).gameObject;
@@ -475,8 +498,6 @@ namespace Novels.OptionSelection
         {
             ValidateWardrobeLayout();
             ApplyWardrobeTheme();
-            _defaultPanel = _title.transform.parent.gameObject;
-            _defaultPanel.SetActive(false);
             _wardrobeRoot.SetActive(true);
 
             _wardrobeConfirm.onClick.AddListener(Confirm);
@@ -528,6 +549,17 @@ namespace Novels.OptionSelection
             {
                 throw new InvalidOperationException(
                     "OptionListScreen fallback wardrobe prefab is not fully authored.");
+            }
+        }
+
+        private void ValidateChoiceLayout()
+        {
+            if (_content == null || _viewport == null || _scroll == null
+                || _title == null || _selection == null || _confirm == null
+                || _confirmLabel == null)
+            {
+                throw new InvalidOperationException(
+                    "ChoiceScreen fallback prefab is not fully authored.");
             }
         }
 
