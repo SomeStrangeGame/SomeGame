@@ -1,7 +1,8 @@
 # AI documentation index
 
 Канонический project root — Git-корень `SomeGame`; `Fork` является только
-локальным контейнером. Это единственная обязательная стартовая страница.
+локальным контейнером. Это единственная обязательная стартовая страница и карта
+канонических источников; она не заменяет и не дублирует их протоколы.
 
 ## Старт задачи
 
@@ -14,11 +15,10 @@ Tools/somegame context --task <inspect|docs|code|unity|content|art|integration> 
 
 `inspect` предназначен для узкой read-only инспекции без тематического workflow.
 Снимок показывает Git/FIFO, незавершённые риски, changed-path plan и минимальный
-список документов. Полностью прочитайте перечисленные `documents`, затем перед
-записью получите write-lock. Передавайте точные `--paths`, когда scope уже
-известен: тогда plan не расширяется чужим dirty tree. Для продолжения того же
-scope используйте `--resume`; документы с неизменившимися fingerprint повторно
-читать не требуется.
+список документов. Полностью прочитайте `documents` и применимые строки таблицы
+ниже. Точные `--paths` не дают чужому dirty tree расширить plan. Для того же
+scope используйте `--resume`; неизменившиеся документы повторно читать не нужно.
+Перед записью выберите допустимый режим по [coordination core](rules/ParallelRefactoringCoordination.md).
 
 Если runner не запускается, прочитайте [coordination core](rules/ParallelRefactoringCoordination.md),
 [Project memory](memory/Project.md), [Architecture memory](memory/Architecture.md),
@@ -37,13 +37,14 @@ scope используйте `--resume`; документы с неизмени�
 | Character/art | [CharacterLayeringRules.md](rules/CharacterLayeringRules.md), [ManualContentChecklist.md](guides/ManualContentChecklist.md) |
 | Originality review | [OriginalityReviewProtocol.md](rules/OriginalityReviewProtocol.md) |
 | Story-local Bubble UI | [StoryBubblePresentation.md](guides/StoryBubblePresentation.md) |
-| Validation/release | [ContentPipeline.md](guides/ContentPipeline.md) |
+| Content validation/release | [ContentPipeline.md](guides/ContentPipeline.md) |
+| Automation runner и validation plan | [AutomationRunners.md](guides/AutomationRunners.md) |
 | Unity MCP | [UnityMcpWorkflow.md](guides/UnityMcpWorkflow.md) |
 | Licensing | [UnityLicensingTroubleshooting.md](guides/UnityLicensingTroubleshooting.md) |
 | Размер контента | [ContentSizeOptimization.md](plans/ContentSizeOptimization.md) |
 | Известная проблема | [KnownIssues.md](memory/KnownIssues.md) |
 
-Для нескольких типов списки объединяются. При расхождении документа с кодом
+Для смешанной задачи объедините применимые строки, не расширяя scope. При расхождении документа с кодом
 зафиксируйте конфликт и проверьте текущий код, конфигурацию и evidence.
 
 ## Состояние и история
@@ -56,17 +57,10 @@ scope используйте `--resume`; документы с неизмени�
 
 ## Проверка и завершение
 
-```bash
-Tools/somegame verify --explain --base-ref origin/main
-Tools/somegame verify --agent-id <lock-owner> --base-ref origin/main
-Tools/somegame commit-plan
-Tools/somegame finish-check --agent-id <lock-owner>
-Tools/somegame git-publish --agent-id <lock-owner> [--ssh-key <path>]
-```
-
-`verify` исполняет только changed-path gates; manual/Player параметры не
-угадываются. `commit-plan` и `finish-check` read-only относительно tracked
-sources. Успех возвращается компактным JSON, полный лог читается при failure.
+Состав проверок определяет [AutomationRunners.md](guides/AutomationRunners.md),
+а handoff/commit/publish — [IntegrationProtocol.md](rules/IntegrationProtocol.md).
+Manual, Unity, Player и publish не запускаются и не считаются пройденными без
+требуемых параметров и разрешений.
 
 Новый общий документ создавайте только если существующий источник не подходит.
 Не дублируйте нормативный текст: обновите источник и ссылки.

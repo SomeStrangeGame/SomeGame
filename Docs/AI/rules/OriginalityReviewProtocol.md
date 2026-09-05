@@ -4,6 +4,19 @@
 Ink-текста, персонажей и прочего production art. Предметные skills определяют,
 что именно сравнивается; они не копируют общий цикл ниже.
 
+## Владение по стадиям
+
+| Артефакт | Владелец проверки | Предмет сравнения |
+| --- | --- | --- |
+| Narrative package | `$somegame-design-story` | premise expression, cast configuration, scene/choice/ending structure |
+| Character package | `$somegame-create-character` | facial construction, silhouette, costume, palette, accessories, pose language |
+| Non-character art | `$somegame-produce-story-art` | composition, environment, props, iconography, palette and motifs |
+| Complete source Ink | `$somegame-author-story-content` | dialogue, narration, transitions, verbal motifs and specific sequences |
+| Acceptance | `$somegame-accept-story` | presence, scope and freshness of evidence; never a new production review |
+
+Одна стадия не подменяет другую. Narrative pass не покрывает позднее написанный
+полный текст, а общий art pass не покрывает identity каждого персонажа.
+
 ## Общий цикл
 
 Проверять только полный текущий кандидат соответствующей стадии. Использовать
@@ -25,6 +38,10 @@ Ink-текста, персонажей и прочего production art. Пре�
    или назначение артефакта, вернуть решение автору или владельцу предыдущей
    стадии.
 
+Каждая итерация нумеруется и проверяет новый полный кандидат, а не только
+изменённый фрагмент. Редизайн после итерации N проверяется как N+1; скрытые
+дополнительные попытки после лимита запрещены.
+
 После пятой итерации оставшийся существенный риск даёт статус `blocked` и
 останавливает зависимые стадии. Недоступность достаточного поиска явно
 фиксируется как limitation и не превращается автоматически в `passed`.
@@ -41,3 +58,8 @@ Acceptance проверяет наличие и актуальность evidenc
 не повышает `blocked` или отсутствующий результат до `passed`. Материальное
 изменение уже проверенного артефакта возвращает его владельцу для новой
 предметной проверки.
+
+Evidence устаревает, если после результата существенно изменились проверенные
+текст, композиция, identity, структура сцен/выборов или лицензируемые источники.
+Косметическое техническое изменение без влияния на проверяемые признаки может
+сохранить результат, если это явно обосновано в handoff.

@@ -44,45 +44,14 @@ Each row maps to an actual scene and records:
 Do not infer unused combinations. A fallback may be documented, but it is not a
 substitute for a required authored appearance.
 
-## Visual-originality loop
+## Visual-originality criteria
 
-Treat the first complete identity master plus its planned appearance inventory
-as review 1. Run no more than five visual reviews total; a redesign after review
-N is evaluated by review N+1. Do not perform hidden reviews after review 5.
-
-For each review:
-
-1. Record visual fingerprints: facial design and distinctive features,
-   silhouette and proportions, hair, palette, outfit construction, accessories,
-   props, pose language, and their recognizable combination.
-2. Use available visual/reverse-image search, direct source inspection, and
-   descriptive searches against relevant published characters and artwork. Do
-   not upload the full unpublished package where a cropped or reduced search
-   reference is sufficient. Record direct links and distinguish inspected works
-   from search-result thumbnails or snippets.
-3. Compare the selection and arrangement of distinctive elements, not a single
-   generic trait. Record meaningful differences, provenance, confidence, and
-   `low`, `medium`, or `high` risk. `Medium` and `high` findings are material;
-   low-risk/common elements remain documented but do not block.
-4. If no material finding remains, mark the gate `passed`. Otherwise, when
-   fewer than five reviews have run, define a targeted identity-preserving
-   redesign and record it for the next review.
-
-An effective redesign changes the recognizable combination: silhouette,
-specific facial construction, costume structure, accessory system, palette
-relationships, or pose language. Recoloring, mirroring, cropping, light texture
-noise, and name changes do not resolve structural similarity.
-
-Licensed references, intentional adaptations, public-domain sources, and
-explicit homage require provenance and rights/attribution handling rather than
-automatic redesign. For historical or other real people, separate factual
-likeness from the protectable artistic choices of a particular depiction.
-
-After review 5, any remaining medium or high finding makes the result `blocked`.
-Return sources, implicated elements, confidence, why the risk survived, and the
-five-review change log. If meaningful visual search was unavailable or
-materially incomplete, state that limitation and do not claim absolute
-uniqueness or legal clearance.
+Apply `Docs/AI/rules/OriginalityReviewProtocol.md`. For a character, compare the
+recognizable combination of facial construction, silhouette, proportions,
+hair, palette, costume structure, accessories, props and pose language. For a
+real person, distinguish factual likeness from the artistic choices of a
+particular depiction. The shared protocol exclusively owns iteration count,
+risk levels, redesign rules, provenance and fail-closed behavior.
 
 ## Acceptance evidence
 
