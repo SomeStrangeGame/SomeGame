@@ -109,10 +109,12 @@ to an approved 1024 × 1536 RGBA file.
 
 The 2026-09-05 UI pass adds a story-local Bubble prefab for all five dialogue
 states supported by the current runtime: narrator, main character, supporting
-character, hint/disclaimer and main-character thoughts. The presentation uses
-dark clinical panels, readable pale text, restrained teal borders and amber
-status accents. Choice labels remain visible and are placed vertically by the
-runtime, preserving wrapping and touch readability on portrait screens.
+character, hint/disclaimer and main-character thoughts. Following review, its
+first rounded treatment was superseded by matte containment-record cards with
+clipped corners, integrated status rails, sage keylines and amber registration
+marks. Speech pointers are hidden, removing the comic-panel silhouette shared
+with TZM. Choice labels remain visible and are placed vertically by the runtime,
+preserving wrapping and touch readability on portrait screens.
 
 All six authored UI sprites retain alpha and their expected import dimensions:
 character panel 1400×476, narrator panel 1400×616, choice button 900×288,

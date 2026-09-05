@@ -60,12 +60,13 @@ No searched image or text was incorporated into the project.
   UI sprites.
 - Design field: generic clinical monitoring panels and containment-horror
   interfaces.
-- Construction: project-owned neutral Bubble geometry was used only as an
-  edit reference so runtime anchors and nine-slice contracts remained stable;
-  the visible treatment was regenerated as charcoal smoked glass with
-  desaturated teal outlines and a limited amber status accent.
+- Construction: the final visible sprites were generated from blank prompts,
+  without TZM art or any external UI as an image reference. Runtime dimensions
+  remain compatible, but the visible language is rebuilt around clipped
+  record cards, asymmetric side rails, flat evidence tabs, sage keylines and a
+  limited amber registration accent. Legacy speech-pointer slots are invisible.
 - Exclusions: no SCP Foundation logo, wiki skin, proprietary game HUD, copied
   typography, text, hazard insignia or named product interface appears.
-- Result: `passed`; low residual genre-similarity risk. The styling relies on
-  common clinical UI conventions while the composition and generated surface
-  treatment are original to this story.
+- Result: `passed`; low residual genre-similarity risk and low cross-story
+  confusion risk. The rejected rounded/capsule treatment is not part of the
+  final visible presentation.
