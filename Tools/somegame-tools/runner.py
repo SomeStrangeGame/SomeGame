@@ -118,6 +118,51 @@ def lock_owner(root: Path | None = None) -> str | None:
 
 ACTIVE_AGENT_ID: str | None = None
 
+RESOURCE_NAMES = ("unity", "catalog", "shared-sdk", "integration")
+STORY_ID_RE = re.compile(r"[a-z0-9][a-z0-9-]*")
+
+
+def git_common_dir(root: Path | None = None) -> Path:
+    root = ROOT if root is None else root
+    value = subprocess.run(
+        ["git", "rev-parse", "--path-format=absolute", "--git-common-dir"],
+        cwd=root, capture_output=True, text=True, check=True,
+    ).stdout.strip()
+    return Path(value).resolve()
+
+
+def shared_runtime(root: Path | None = None) -> Path:
+    root = ROOT if root is None else root
+    override = os.environ.get("SOMEGAME_SHARED_RUNTIME")
+    return Path(override).expanduser().resolve() if override else git_common_dir(root) / "somegame-runtime"
+
+
+def resource_lock_path(resource: str, root: Path | None = None) -> Path:
+    root = ROOT if root is None else root
+    return shared_runtime(root) / "resource-locks" / resource / "owner.json"
+
+
+def require_resource_lock(resource: str, agent_id: str | None, root: Path | None = None) -> None:
+    root = ROOT if root is None else root
+    path = resource_lock_path(resource, root)
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise WorkflowError("resource_lock_missing", f"Shared {resource!r} lock is required") from exc
+    if not agent_id or payload.get("agentId") != agent_id:
+        raise WorkflowError("resource_lock_not_owned", f"Shared {resource!r} lock is not owned by {agent_id!r}",
+                            details=payload)
+
+
+def require_heavy_authorization(args: argparse.Namespace, resource: str = "unity") -> None:
+    if not getattr(args, "human_approved", False):
+        raise WorkflowError("human_approval_required",
+                            "Heavy story validation requires a fresh explicit --human-approved flag")
+    note = str(getattr(args, "approval_note", "") or "").strip()
+    if not note:
+        raise WorkflowError("approval_note_required", "Record the current human approval with --approval-note")
+    require_resource_lock(resource, getattr(args, "agent_id", None))
+
 
 def refresh_lock_heartbeat(root: Path = ROOT) -> bool:
     """Refresh only the current workflow owner's lease during a long command."""
@@ -193,6 +238,7 @@ def git_output(*parts: str, timeout: float = 30) -> str:
 
 def git_publish(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    require_resource_lock("integration", args.agent_id)
     allowed = coordination_runtime_allowlist(args.agent_id)
     branch = git_output("branch", "--show-current")
     if branch != args.branch:
@@ -448,6 +494,8 @@ def tooling_tests(args: argparse.Namespace) -> dict[str, Any]:
 
 def story_check(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    if args.build:
+        require_heavy_authorization(args)
     target = args.target.strip()
     project = ROOT / "Projects" / f"novels-{target}"
     if not target or not project.is_dir() or target in {"catalog", "all"}:
@@ -520,6 +568,8 @@ def verify_workflow(args: argparse.Namespace) -> dict[str, Any]:
     if args.explain:
         return preview
     require_lock(args.agent_id)
+    if plan["content_targets"]:
+        require_heavy_authorization(args)
     static_failures = []
     if "documentation" in plan["categories"]:
         static_failures = [*scan_markdown(ROOT), *taskflow.stale_context_failures(ROOT)]
@@ -575,6 +625,9 @@ def finish_check(args: argparse.Namespace) -> dict[str, Any]:
 
 def content_gate(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    require_heavy_authorization(args)
+    if not args.target or args.target == "catalog":
+        require_resource_lock("catalog", args.agent_id)
     closed_hub = prepare_unity_lifecycle(args.close_hub)
     if args.target:
         command = [str(ROOT / "Tools/novels-tools/novels-content"), "build", args.target, args.platform]
@@ -594,6 +647,8 @@ def default_player_output(target: str, mode: str) -> Path:
 
 def player_build(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    require_heavy_authorization(args)
+    require_resource_lock("catalog", args.agent_id)
     closed_hub = prepare_unity_lifecycle(args.close_hub)
     output = Path(args.output).resolve() if args.output else default_player_output(args.target, args.mode)
     logs: list[str] = []
@@ -708,6 +763,7 @@ def editor_process_options(stop_editor: bool) -> dict[str, bool]:
 
 def editor_gate(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    require_heavy_authorization(args)
     project = (ROOT / args.project).resolve(); runtime = Path(args.runtime).resolve()
     editor: subprocess.Popen[str] | None = None; daemon: subprocess.Popen[str] | None = None
     editor_log = LOG_ROOT / f"editor-gate-{utc_stamp()}-editor.log"
@@ -810,6 +866,7 @@ def android_failure_artifacts(args: argparse.Namespace, stamp: str) -> dict[str,
 
 def android_smoke(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    require_heavy_authorization(args)
     apk = Path(args.apk).resolve()
     if not apk.is_file(): raise WorkflowError("apk_missing", f"APK does not exist: {apk}")
     stamp = utc_stamp(); required = [value for value in args.required_events.split(",") if value]
@@ -858,11 +915,13 @@ def android_smoke(args: argparse.Namespace) -> dict[str, Any]:
 
 def android_dev_cycle(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    require_heavy_authorization(args)
     build_args = argparse.Namespace(
         agent_id=args.agent_id, close_hub=args.close_hub, output=args.output,
         target="Android", mode="Embedded", remote_url="", development=False,
         test_signing=args.test_signing, skip_content_build=args.skip_content_build,
-        timeout=args.build_timeout,
+        timeout=args.build_timeout, human_approved=True, approval_note=args.approval_note,
+        catalog_variant="default",
     )
     built = player_build(build_args)
     if not built["ok"]:
@@ -871,7 +930,7 @@ def android_dev_cycle(args: argparse.Namespace) -> dict[str, Any]:
         agent_id=args.agent_id, apk=built["output"], package_id=args.package_id,
         serial=args.serial, adb=args.adb, timeout=args.smoke_timeout,
         install_timeout=args.install_timeout, poll_interval=args.poll_interval,
-        required_events=args.required_events,
+        required_events=args.required_events, human_approved=True, approval_note=args.approval_note,
     )
     smoked = android_smoke(smoke_args)
     return {"ok": smoked["ok"], "workflow": "android-dev-cycle",
@@ -927,8 +986,166 @@ def finish_task(args: argparse.Namespace) -> dict[str, Any]:
             "pending": pending, "logs": logs}
 
 
+def resource_lock_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    directory = shared_runtime() / "resource-locks" / args.resource
+    owner = directory / "owner.json"
+    if args.action == "status":
+        payload = json.loads(owner.read_text(encoding="utf-8")) if owner.is_file() else None
+        return {"ok": True, "workflow": "resource-lock", "resource": args.resource, "owner": payload}
+    if not args.agent_id:
+        raise WorkflowError("agent_required", "--agent-id is required for acquire/release")
+    if args.action == "acquire":
+        stamp = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+        try:
+            directory.mkdir(parents=True, exist_ok=False)
+        except FileExistsError:
+            if owner.is_file():
+                current = json.loads(owner.read_text(encoding="utf-8"))
+                if current.get("agentId") == args.agent_id:
+                    return {"ok": True, "workflow": "resource-lock", "resource": args.resource,
+                            "owner": current, "idempotent": True}
+            raise WorkflowError("resource_busy", f"Shared resource {args.resource!r} is already locked")
+        payload = {"agentId": args.agent_id, "resource": args.resource, "acquiredUtc": stamp,
+                   "purpose": args.purpose or ""}
+        atomic_write(owner, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+        return {"ok": True, "workflow": "resource-lock", "resource": args.resource,
+                "owner": payload, "idempotent": False}
+    require_resource_lock(args.resource, args.agent_id)
+    owner.unlink(); directory.rmdir()
+    return {"ok": True, "workflow": "resource-lock", "resource": args.resource,
+            "released": True, "agentId": args.agent_id}
+
+
+def validate_story_id(value: str) -> str:
+    if not STORY_ID_RE.fullmatch(value):
+        raise WorkflowError("invalid_story_id", "story id must use lowercase letters, digits and hyphens")
+    return value
+
+
+def primary_checkout(root: Path | None = None) -> Path:
+    root = ROOT if root is None else root
+    common = git_common_dir(root)
+    return common.parent.resolve()
+
+
+def story_registry_path(story_id: str) -> Path:
+    return shared_runtime() / "worktrees" / f"{story_id}.json"
+
+
+def story_worktree_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    story_id = validate_story_id(args.story_id)
+    registry = story_registry_path(story_id)
+    if args.action == "status":
+        payload = json.loads(registry.read_text(encoding="utf-8")) if registry.is_file() else None
+        return {"ok": True, "workflow": "story-worktree", "action": "status",
+                "storyId": story_id, "registration": payload}
+    if args.action == "create":
+        if registry.exists():
+            raise WorkflowError("worktree_registered", f"Story worktree already registered: {story_id}")
+        base = args.base
+        branch = args.branch or f"codex/story-{story_id}"
+        primary = primary_checkout()
+        target = (Path(args.path).expanduser().resolve() if args.path else
+                  primary.parent / f"{primary.name}-worktrees" / f"novels-{story_id}")
+        if target.exists():
+            raise WorkflowError("worktree_path_exists", f"Target path already exists: {target}")
+        target.parent.mkdir(parents=True, exist_ok=True)
+        result = subprocess.run(["git", "worktree", "add", "-b", branch, str(target), base],
+                                cwd=primary, capture_output=True, text=True, check=False)
+        if result.returncode:
+            raise WorkflowError("worktree_create_failed", "git worktree add failed",
+                                details=(result.stderr or result.stdout).strip()[-2000:])
+        payload = {"storyId": story_id, "branch": branch, "path": str(target), "base": base,
+                   "baseSha": git_output("rev-parse", base),
+                   "allowedPrefix": f"Projects/novels-{story_id}/",
+                   "status": "preparing",
+                   "createdUtc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+        atomic_write(registry, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+        return {"ok": True, "workflow": "story-worktree", "action": "create", **payload}
+    if not args.confirm:
+        raise WorkflowError("confirmation_required", "Removing a worktree requires --confirm")
+    if not registry.is_file():
+        raise WorkflowError("worktree_missing", f"No registered worktree for {story_id}")
+    payload = json.loads(registry.read_text(encoding="utf-8")); target = Path(payload["path"])
+    status = subprocess.run(["git", "status", "--porcelain=v1"], cwd=target,
+                            capture_output=True, text=True, check=True).stdout.strip()
+    if status:
+        raise WorkflowError("worktree_dirty", "Refusing to remove a dirty story worktree", details=status.splitlines()[:40])
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=target,
+                          capture_output=True, text=True, check=True).stdout.strip()
+    contained = subprocess.run(["git", "merge-base", "--is-ancestor", head, args.integrated_ref],
+                               cwd=target, check=False).returncode == 0
+    if not contained:
+        raise WorkflowError("story_not_integrated", f"Story HEAD is not contained in {args.integrated_ref}", details=head)
+    result = subprocess.run(["git", "worktree", "remove", str(target)], cwd=primary_checkout(),
+                            capture_output=True, text=True, check=False)
+    if result.returncode:
+        raise WorkflowError("worktree_remove_failed", "git worktree remove failed",
+                            details=(result.stderr or result.stdout).strip()[-2000:])
+    registry.unlink()
+    return {"ok": True, "workflow": "story-worktree", "action": "remove",
+            "storyId": story_id, "path": str(target), "integratedRef": args.integrated_ref}
+
+
+def story_candidate_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    story_id = validate_story_id(args.story_id); registry = story_registry_path(story_id)
+    if not registry.is_file():
+        raise WorkflowError("worktree_missing", f"No registered worktree for {story_id}")
+    registration = json.loads(registry.read_text(encoding="utf-8")); target = Path(registration["path"])
+    status = subprocess.run(["git", "status", "--porcelain=v1"], cwd=target,
+                            capture_output=True, text=True, check=True).stdout.strip()
+    if status:
+        raise WorkflowError("worktree_dirty", "Commit story-local work before candidate handoff",
+                            details=status.splitlines()[:40])
+    head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=target,
+                          capture_output=True, text=True, check=True).stdout.strip()
+    base = registration["baseSha"]
+    changed = subprocess.run(["git", "diff", "--name-only", f"{base}...{head}"], cwd=target,
+                             capture_output=True, text=True, check=True).stdout.splitlines()
+    allowed = registration["allowedPrefix"]
+    forbidden = [path for path in changed if not path.startswith(allowed)]
+    if forbidden:
+        raise WorkflowError("story_scope_violation", "Story candidate changes forbidden paths", details=forbidden[:40])
+    payload = {**registration, "headSha": head, "changedPaths": changed,
+               "status": "ready-for-final-validation", "staticEvidence": args.static_evidence,
+               "preparedUtc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+    output = shared_runtime() / "candidates" / f"{story_id}.json"
+    atomic_write(output, json.dumps(payload, ensure_ascii=False, indent=2) + "\n")
+    atomic_write(registry, json.dumps({**registration, "status": payload["status"]},
+                                     ensure_ascii=False, indent=2) + "\n")
+    return {"ok": True, "workflow": "story-candidate", "candidate": str(output), **payload}
+
+
+def story_batch_plan_workflow(args: argparse.Namespace) -> dict[str, Any]:
+    require_resource_lock("integration", args.agent_id)
+    candidates = []
+    for story_id in args.story_id:
+        story_id = validate_story_id(story_id)
+        path = shared_runtime() / "candidates" / f"{story_id}.json"
+        if not path.is_file():
+            raise WorkflowError("candidate_missing", f"Candidate is missing: {story_id}")
+        value = json.loads(path.read_text(encoding="utf-8"))
+        if value.get("status") != "ready-for-final-validation":
+            raise WorkflowError("candidate_not_ready", f"Candidate is not ready: {story_id}")
+        prefix = f"Projects/novels-{story_id}/"
+        forbidden = [item for item in value.get("changedPaths", []) if not item.startswith(prefix)]
+        if forbidden:
+            raise WorkflowError("story_scope_violation", f"Candidate scope changed: {story_id}", details=forbidden)
+        candidates.append(value)
+    return {"ok": True, "workflow": "story-batch-plan", "base": args.base,
+            "integrationBranch": args.branch, "stories": [value["storyId"] for value in candidates],
+            "commits": [value["headSha"] for value in candidates],
+            "requiresHumanApproval": True,
+            "next": "acquire integration and unity resource locks, then run explicitly approved final gates"}
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(description=__doc__); sub = p.add_subparsers(dest="workflow", required=True)
+    def heavy_approval(command: argparse.ArgumentParser) -> None:
+        command.add_argument("--human-approved", action="store_true",
+                             help="Fresh explicit human authorization for the final heavy validation slot")
+        command.add_argument("--approval-note",
+                             help="Short evidence describing the current human approval")
     docs = sub.add_parser("docs-check"); docs.add_argument("--timeout", type=float, default=120)
     context = sub.add_parser("context"); context.add_argument("--task", choices=tuple(taskflow.TASK_ROUTES), default="code")
     context.add_argument("--resume", action="store_true"); context.add_argument("--base-ref")
@@ -943,6 +1160,7 @@ def parser() -> argparse.ArgumentParser:
     verify.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
     verify.add_argument("--explain", action="store_true"); verify.add_argument("--no-cache", action="store_true")
     verify.add_argument("--release", action="store_true"); verify.add_argument("--timeout", type=float, default=3600)
+    heavy_approval(verify)
     sub.add_parser("commit-plan")
     finish = sub.add_parser("finish-check"); finish.add_argument("--agent-id", required=True)
     finish_task_parser = sub.add_parser("finish-task")
@@ -960,10 +1178,12 @@ def parser() -> argparse.ArgumentParser:
     content.add_argument("--target", help="Explicit catalog or story id; bypasses broad dirty-tree planning")
     content.add_argument("--close-hub", action="store_true")
     content.add_argument("--base-ref"); content.add_argument("--timeout", type=float, default=3600)
+    heavy_approval(content)
     story = sub.add_parser("story-check"); story.add_argument("--agent-id", required=True)
     story.add_argument("--target", required=True); story.add_argument("--build", action="store_true")
     story.add_argument("--platform", choices=("editor", "android", "ios"), default="editor")
     story.add_argument("--timeout", type=float, default=3600)
+    heavy_approval(story)
     player = sub.add_parser("player-build"); player.add_argument("--agent-id", required=True)
     player.add_argument("--target", choices=("Android", "iOS", "Windows", "macOS"), required=True)
     player.add_argument("--mode", choices=("Remote", "Embedded"), required=True)
@@ -975,6 +1195,7 @@ def parser() -> argparse.ArgumentParser:
     player.add_argument("--close-hub", action="store_true")
     player.add_argument("--catalog-variant", choices=("default", "children", "nochelessie", "scp"), default="default")
     player.add_argument("--timeout", type=float, default=7200)
+    heavy_approval(player)
     licensing = sub.add_parser("licensing-preflight"); licensing.add_argument("--agent-id")
     licensing.add_argument("--recover", action="store_true"); licensing.add_argument("--confirm-pid", type=int, action="append")
     licensing.add_argument("--timeout", type=float, default=30)
@@ -987,12 +1208,14 @@ def parser() -> argparse.ArgumentParser:
     editor.add_argument("--timeout", type=float, default=300); editor.add_argument("--startup-timeout", type=float, default=180)
     editor.add_argument("--runtime", default="/tmp/somegame-unity-mcp")
     editor.add_argument("--unity-editor", type=Path, default=UNITY_EDITOR); editor.add_argument("--mcp-cli", type=Path, default=MCP_CLI)
+    heavy_approval(editor)
     smoke = sub.add_parser("android-smoke"); smoke.add_argument("--agent-id", required=True)
     smoke.add_argument("--apk", required=True); smoke.add_argument("--package-id", required=True)
     smoke.add_argument("--serial", default="emulator-5554"); smoke.add_argument("--adb", default="adb")
     smoke.add_argument("--timeout", type=float, default=180); smoke.add_argument("--install-timeout", type=float, default=180)
     smoke.add_argument("--poll-interval", type=float, default=2)
     smoke.add_argument("--required-events", default="app.started,catalog.loading,catalog.ready,story.selected,release.activated,episode.selected,episode.ready,dialogue.ready")
+    heavy_approval(smoke)
     cycle = sub.add_parser("android-dev-cycle"); cycle.add_argument("--agent-id", required=True)
     cycle.add_argument("--package-id", required=True); cycle.add_argument("--serial", default="emulator-5554")
     cycle.add_argument("--adb", default="adb"); cycle.add_argument("--output")
@@ -1001,6 +1224,19 @@ def parser() -> argparse.ArgumentParser:
     cycle.add_argument("--smoke-timeout", type=float, default=180); cycle.add_argument("--install-timeout", type=float, default=180)
     cycle.add_argument("--poll-interval", type=float, default=2)
     cycle.add_argument("--required-events", default="app.started,catalog.loading,catalog.ready")
+    heavy_approval(cycle)
+    resource = sub.add_parser("resource-lock"); resource.add_argument("action", choices=("acquire", "status", "release"))
+    resource.add_argument("--resource", choices=RESOURCE_NAMES, required=True)
+    resource.add_argument("--agent-id"); resource.add_argument("--purpose")
+    worktree = sub.add_parser("story-worktree"); worktree.add_argument("action", choices=("create", "status", "remove"))
+    worktree.add_argument("--story-id", required=True); worktree.add_argument("--base", default="origin/main")
+    worktree.add_argument("--branch"); worktree.add_argument("--path"); worktree.add_argument("--confirm", action="store_true")
+    worktree.add_argument("--integrated-ref", default="origin/main")
+    candidate = sub.add_parser("story-candidate"); candidate.add_argument("--story-id", required=True)
+    candidate.add_argument("--static-evidence", nargs="*", default=[])
+    batch = sub.add_parser("story-batch-plan"); batch.add_argument("--agent-id", required=True)
+    batch.add_argument("--story-id", action="append", required=True)
+    batch.add_argument("--base", default="origin/main"); batch.add_argument("--branch", default="codex/story-batch")
     clean = sub.add_parser("clean-generated"); clean.add_argument("--agent-id", required=True)
     clean.add_argument("--project", required=True); clean.add_argument("--apply", action="store_true")
     return p
@@ -1019,7 +1255,10 @@ def main() -> int:
                 "content-gate": content_gate, "story-check": story_check, "player-build": player_build,
                 "licensing-preflight": licensing_preflight, "editor-gate": editor_gate,
                 "android-smoke": android_smoke, "android-dev-cycle": android_dev_cycle,
-                "clean-generated": clean_generated}
+                "clean-generated": clean_generated, "resource-lock": resource_lock_workflow,
+                "story-worktree": story_worktree_workflow,
+                "story-candidate": story_candidate_workflow,
+                "story-batch-plan": story_batch_plan_workflow}
     try:
         payload = handlers[args.workflow](args); payload["durationSeconds"] = round(time.monotonic() - started, 3)
         emit(payload); return 0 if payload.get("ok") else 1

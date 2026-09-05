@@ -3,6 +3,7 @@ import json
 import sys
 import tempfile
 import unittest
+import os
 from pathlib import Path
 
 
@@ -233,6 +234,101 @@ class RunnerTests(unittest.TestCase):
         clean = runner.parser().parse_args([
             "clean-generated", "--agent-id", "a", "--project", "Novels"])
         self.assertFalse(clean.apply)
+
+    def test_heavy_workflow_requires_human_approval_and_shared_resource_lock(self):
+        previous_root = runner.ROOT
+        previous_runtime = os.environ.get("SOMEGAME_SHARED_RUNTIME")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); runtime = root / "shared"
+            lock = root / "Docs/AI/CoordinationRuntime/active/write-lock"
+            lock.mkdir(parents=True); (lock / "owner.md").write_text("- Agent: `a`\n")
+            os.environ["SOMEGAME_SHARED_RUNTIME"] = str(runtime)
+            try:
+                runner.ROOT = root
+                args = runner.parser().parse_args(["content-gate", "--agent-id", "a"])
+                with self.assertRaises(runner.WorkflowError) as approval:
+                    runner.require_heavy_authorization(args)
+                self.assertEqual("human_approval_required", approval.exception.code)
+                runner.resource_lock_workflow(runner.parser().parse_args([
+                    "resource-lock", "acquire", "--resource", "unity", "--agent-id", "a"]));
+                args.human_approved = True; args.approval_note = "Developer said run final validation"
+                runner.require_heavy_authorization(args)
+            finally:
+                runner.ROOT = previous_root
+                if previous_runtime is None: os.environ.pop("SOMEGAME_SHARED_RUNTIME", None)
+                else: os.environ["SOMEGAME_SHARED_RUNTIME"] = previous_runtime
+
+    def test_resource_lock_is_exclusive_and_owner_releases(self):
+        previous_runtime = os.environ.get("SOMEGAME_SHARED_RUNTIME")
+        with tempfile.TemporaryDirectory() as directory:
+            os.environ["SOMEGAME_SHARED_RUNTIME"] = directory
+            try:
+                acquire = runner.parser().parse_args([
+                    "resource-lock", "acquire", "--resource", "unity", "--agent-id", "a"])
+                self.assertTrue(runner.resource_lock_workflow(acquire)["ok"])
+                with self.assertRaises(runner.WorkflowError):
+                    runner.resource_lock_workflow(runner.parser().parse_args([
+                        "resource-lock", "acquire", "--resource", "unity", "--agent-id", "b"]))
+                released = runner.resource_lock_workflow(runner.parser().parse_args([
+                    "resource-lock", "release", "--resource", "unity", "--agent-id", "a"]))
+                self.assertTrue(released["released"])
+            finally:
+                if previous_runtime is None: os.environ.pop("SOMEGAME_SHARED_RUNTIME", None)
+                else: os.environ["SOMEGAME_SHARED_RUNTIME"] = previous_runtime
+
+    def test_story_worktree_and_candidate_parsers(self):
+        worktree = runner.parser().parse_args([
+            "story-worktree", "create", "--story-id", "forest-song"])
+        self.assertEqual("codex/story-forest-song", worktree.branch or "codex/story-forest-song")
+        candidate = runner.parser().parse_args([
+            "story-candidate", "--story-id", "forest-song", "--static-evidence", "diff-check"])
+        self.assertEqual(["diff-check"], candidate.static_evidence)
+        batch = runner.parser().parse_args([
+            "story-batch-plan", "--agent-id", "integrator",
+            "--story-id", "forest-song", "--story-id", "lake-song"])
+        self.assertEqual(["forest-song", "lake-song"], batch.story_id)
+
+    def test_story_worktree_candidate_and_safe_removal_roundtrip(self):
+        previous_root = runner.ROOT
+        previous_runtime = os.environ.get("SOMEGAME_SHARED_RUNTIME")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory) / "repo"; root.mkdir()
+            for command in (["git", "init", "-b", "main"],
+                            ["git", "config", "user.email", "test@example.com"],
+                            ["git", "config", "user.name", "Test"]):
+                self.assertEqual(0, __import__("subprocess").run(command, cwd=root).returncode)
+            (root / "README.md").write_text("test\n", encoding="utf-8")
+            self.assertEqual(0, __import__("subprocess").run(["git", "add", "README.md"], cwd=root).returncode)
+            self.assertEqual(0, __import__("subprocess").run(["git", "commit", "-m", "base"], cwd=root).returncode)
+            runtime = Path(directory) / "runtime"; target = Path(directory) / "worktrees" / "story"
+            os.environ["SOMEGAME_SHARED_RUNTIME"] = str(runtime)
+            try:
+                runner.ROOT = root
+                created = runner.story_worktree_workflow(runner.parser().parse_args([
+                    "story-worktree", "create", "--story-id", "forest-song",
+                    "--base", "main", "--path", str(target)]))
+                self.assertEqual("codex/story-forest-song", created["branch"])
+                story = target / "Projects/novels-forest-song"; story.mkdir(parents=True)
+                (story / "story.txt").write_text("candidate\n", encoding="utf-8")
+                self.assertEqual(0, __import__("subprocess").run(
+                    ["git", "add", "Projects/novels-forest-song/story.txt"], cwd=target).returncode)
+                self.assertEqual(0, __import__("subprocess").run(
+                    ["git", "commit", "-m", "story"], cwd=target).returncode)
+                candidate = runner.story_candidate_workflow(runner.parser().parse_args([
+                    "story-candidate", "--story-id", "forest-song",
+                    "--static-evidence", "diff-check"]));
+                self.assertEqual("ready-for-final-validation", candidate["status"])
+                self.assertEqual(["Projects/novels-forest-song/story.txt"], candidate["changedPaths"])
+                self.assertEqual(0, __import__("subprocess").run(
+                    ["git", "merge", "--ff-only", "codex/story-forest-song"], cwd=root).returncode)
+                removed = runner.story_worktree_workflow(runner.parser().parse_args([
+                    "story-worktree", "remove", "--story-id", "forest-song",
+                    "--integrated-ref", "main", "--confirm"]));
+                self.assertTrue(removed["ok"]); self.assertFalse(target.exists())
+            finally:
+                runner.ROOT = previous_root
+                if previous_runtime is None: os.environ.pop("SOMEGAME_SHARED_RUNTIME", None)
+                else: os.environ["SOMEGAME_SHARED_RUNTIME"] = previous_runtime
 
     def test_clean_generated_is_dry_run_by_default(self):
         previous_root = runner.ROOT
