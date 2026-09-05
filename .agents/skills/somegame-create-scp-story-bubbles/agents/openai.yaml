@@ -1,0 +1,4 @@
+interface:
+  display_name: "Create SCP Story Bubbles"
+  short_description: "Create restrained containment-horror Bubble UI"
+  default_prompt: "Use $somegame-create-scp-story-bubbles to create and validate story-local dialogue and choice bubbles for this SCP story."
