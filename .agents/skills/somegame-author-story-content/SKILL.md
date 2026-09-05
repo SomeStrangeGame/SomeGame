@@ -6,8 +6,9 @@ description: Turn an approved SomeGame story package and art manifest into origi
 # Author SomeGame story content
 
 Use this skill together with `$somegame-workflow`. Start only when the narrative
-package is approved, `$somegame-create-unity-project` has produced an MCP-ready
-atomic project, `$somegame-create-character` has handed off the approved
+package is approved, `$somegame-create-unity-project` has produced a statically
+valid atomic scaffold with MCP configured for deferred final proof,
+`$somegame-create-character` has handed off the approved
 character packages, and `$somegame-produce-story-art` has handed off the
 remaining approved art manifest and available runtime addresses.
 
@@ -46,46 +47,27 @@ inside this skill without expanding the task explicitly.
 
 ## Pass the full-text originality gate
 
-After the complete source Ink draft exists and before final compilation, run up
-to five text-originality reviews. Each review extracts compact fingerprints from
-distinctive dialogue, narration, scene transitions, recurring verbal motifs,
-and unusually specific sequences introduced during full-prose authoring. Search
-available public sources and any author-supplied corpus; inspect direct sources
-rather than relying on snippets and do not upload or reproduce the full
-unpublished Ink merely to search it.
+After the complete source Ink draft exists, apply
+`Docs/AI/rules/OriginalityReviewProtocol.md`. Compare distinctive dialogue,
+narration, scene transitions, recurring verbal motifs and unusually specific
+sequences introduced during prose authoring. Preserve approved choices, state,
+factual classifications and narrative intent; return to
+`$somegame-design-story` if a safe correction would materially alter them.
 
-Record matched expression or arrangement, meaningful differences, direct
-source, provenance, confidence, and `low`, `medium`, or `high` risk. Medium and
-high findings are material. Common phrases, idioms, genre conventions,
-historical facts, necessary command syntax, and short functional UI text do not
-establish material similarity by themselves.
+## Prepare final compilation inputs
 
-Exit immediately with `passed` when no material finding remains. Otherwise,
-before review 5, revise only source `.ink` for the next review, changing the
-underlying expression or specific scene construction rather than swapping names
-or mechanically paraphrasing. Preserve approved choices, state, factual
-classifications, and narrative intent; return to `$somegame-design-story` when a
-safe revision would materially alter its approved package.
+Only after the full-text originality gate passes, complete source Ink and every
+input needed to produce compiled story JSON and source map. At this stage run
+only dependency-free/static syntax, structure, selector and reachability
+checks. Do not launch Unity, compile Ink through a Unity-backed pipeline, import,
+content build, compile C#, build Player/APK or use an emulator. Hand the complete
+candidate to final acceptance, which enters deferred gates through the
+authorization contract in `Docs/AI/rules/UnityConcurrency.md`.
 
-If material risk remains after review 5, mark content authoring and the
-downstream story workflow `blocked`. Report direct sources, implicated Ink
-locations/elements, risk/confidence, and the five-review change log. Intentional
-adaptation, licensed/public-domain material, and homage require explicit
-provenance and attribution handling. This gate is not legal clearance or proof
-of absolute uniqueness; insufficient source access must be disclosed and may
-not be silently treated as a pass.
-
-## Compile and validate
-
-Only after the full-text originality gate passes, compile through the canonical
-SomeGame content pipeline and confirm the source Ink, compiled story JSON, and
-source map all changed coherently. Run validation before build, then only the
-target-specific gates required by the current changed-path plan. Inspect
-warnings rather than treating a process exit alone as narrative correctness.
-
-Hand off exact source/compiled paths, episode and choice structure, state and
-save-compatibility decisions, selector-to-asset audit, validation/build
+Hand off exact source and planned compiled paths, episode and choice structure,
+state and save-compatibility decisions, selector-to-asset audit, static
 evidence, text-originality sources, iteration log and final gate result,
-warnings, and unresolved visual gates. Do not add the story to the catalog,
-merge, or publish unless the encompassing task explicitly includes that
-separately authorized step.
+warnings, and the deferred compile/build/visual gates. Mark the result
+`ready-for-final-validation`. This skill never registers the story in the
+catalog; `$somegame-accept-story` owns that mutation. It also does not merge or
+publish.

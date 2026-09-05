@@ -43,29 +43,12 @@ heads, bodies, hair, clothing, or facial parts.
 
 ## Pass the visual-originality gate
 
-Run the visual-originality loop in
-[character package](references/character-package.md) on the identity master and
-current planned or produced appearance package before approving bulk variants.
-Perform at most five reviews. Exit immediately when no material visual
-originality risk remains.
-
-When a material risk is found before review 5, make a targeted,
-identity-preserving redesign for the next review. Change the smallest distinctive
-combination responsible for the similarity rather than merely recoloring,
-mirroring, cropping, or adding noise. Preserve narrative identity, factual
-constraints, approved age, and representation requirements; request author
-approval if resolving the risk would materially change them.
-
-If a material risk remains after review 5, mark the character package and the
-downstream story workflow `blocked`. Report matching works and direct sources,
-implicated visual elements, risk and confidence, and the full iteration change
-log. Do not produce or import further variants to work around the block.
-
-This is an evidence-backed risk screen, not legal clearance or proof of absolute
-uniqueness. Common archetypes, ordinary anatomy, genre conventions, factual
-uniform requirements, and resemblance to a real person do not establish a
-material finding by themselves. For real people, assess the originality of the
-artistic execution rather than treating recognizable likeness as a defect.
+Apply `Docs/AI/rules/OriginalityReviewProtocol.md` and the visual criteria in
+[character package](references/character-package.md) to the identity master and
+planned appearance package before bulk variants. Compare the distinctive
+combination of silhouette, costume, facial design, palette and styling. Preserve
+narrative identity and factual constraints; for real people assess artistic
+execution rather than treating recognizable likeness as a defect.
 
 ## Produce only used appearance states
 

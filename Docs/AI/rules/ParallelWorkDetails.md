@@ -60,21 +60,36 @@ scope record, но обязан предварительно подтверди�
 подготовка story-local изменений могут идти параллельно без write-lock, пока не
 меняют checkout или runtime state.
 
-Общий checkout, текущая Git branch и index являются единым ресурсом. Поэтому
-потоки не переключают и не создают собственные ветки, не выполняют
-commit/rebase/merge и не используют отдельные worktree. Оркестратор заранее
-создаёт одну общую orchestration-ветку от актуального `main`; story-scoped
-commits формируются последовательно на integration-фазе. Каждая запись в
-checkout выполняется коротким
-атомарным FIFO-слотом под собственным request/write-lock; до release поток
-проверяет только свой scope и оставляет его в состоянии, пригодном для передачи.
+Для каждой новой истории оркестратор создаёт отдельные
+`codex/story-<storyId>` и Git worktree через `Tools/somegame story-worktree
+create`. История владеет только `Projects/novels-<storyId>/**`; story-local
+запись, статические проверки и commits не требуют repository-wide write-lock,
+поскольку branch и index изолированы. Один worktree не переиспользуется для
+другого `storyId`, а worker не переключает в нём ветку.
 
-Unity Editor, MCP write, import, генераторы, compile, tests и build остаются
-глобально последовательными. Изменения Catalog, template, shared SDK/tooling,
-общих документов и финальная Git-интеграция принадлежат отдельной
+Общий runtime хранится вне checkout в Git common dir
+`.git/somegame-runtime/` либо в явно заданном `SOMEGAME_SHARED_RUNTIME`. Там
+находятся registry worktree, candidate manifests и locks ресурсов `unity`,
+`catalog`, `shared-sdk`, `integration`. Локальная копия
+`Docs/AI/CoordinationRuntime` не используется как меж-worktree mutex.
+
+Завершённый worker обязан иметь clean worktree и передать commit SHA через
+`Tools/somegame story-candidate`; команда fail-closed проверяет, что diff от
+base затрагивает только его story prefix. `story-batch-plan` принимает только
+такие кандидаты. Catalog/shared-contract изменения выполняются отдельными
+ветками и интегрируются раньше зависимых историй.
+
+Unity Editor, MCP write, import, генераторы, compile, tests, Player и emulator
+остаются глобально последовательными под shared `unity` lock. Они запрещены до
+единого финального слота и отдельного человеческого разрешения. Изменения
+Catalog, template, shared SDK/tooling, общих документов и финальная Git-интеграция принадлежат отдельной
 последовательной integration-фазе после готовности story-local scopes. Если
 история требует нового общего контракта, её поток останавливается на handoff и
 не расширяет ownership самостоятельно.
+
+Worktree удаляется только командой `story-worktree remove --confirm`, когда он
+clean и его HEAD уже содержится в указанном integration ref. Уникальные или
+незакоммиченные изменения не удаляются автоматически.
 
 Нельзя массово переименовывать общие пути, мигрировать все проекты одним
 потоком, чистить чужие caches, выполнять общий reset/clean или коммитить весь

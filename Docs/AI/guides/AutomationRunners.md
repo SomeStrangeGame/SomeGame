@@ -32,6 +32,10 @@ pending runtime gates требуют явного `--allow-pending`.
 
 ```bash
 Tools/somegame start-task --agent-id <id> --task <summary> --scope <exact-scope>
+Tools/somegame story-worktree create --story-id <story-id>
+Tools/somegame story-candidate --story-id <story-id> --static-evidence <gate...>
+Tools/somegame story-batch-plan --story-id <story-id> [--story-id <story-id> ...]
+Tools/somegame resource-lock acquire --resource <unity|catalog|shared-sdk|integration> --agent-id <id>
 Tools/somegame tooling-tests
 Tools/somegame story-check --agent-id <lock-owner> --target <story-id> [--build]
 Tools/somegame android-dev-cycle --agent-id <lock-owner> --package-id <id>
@@ -44,6 +48,15 @@ Tools/somegame finish-task --agent-id <lock-owner> --paths <owned-path...> \
 `android-dev-cycle` последовательно выполняет существующие Player build и ADB
 smoke contracts. `clean-generated` fail-closed принимает только точный Unity
 project внутри репозитория; без `--apply` это обязательный dry-run.
+
+`story-worktree` создаёт отдельную `codex/story-<storyId>` из `origin/main` и
+регистрирует её в общем Git runtime. Удаление требует `--confirm`, clean tree и
+доказательство, что HEAD уже содержится в integration ref. `story-candidate`
+принимает только clean commit и запрещает пути вне
+`Projects/novels-<storyId>/**`; `story-batch-plan` собирает проверенные SHA для
+интегратора. `resource-lock` атомарно координирует общие ресурсы между worktree.
+По умолчанию runtime находится в `.git/somegame-runtime`; локальная переменная
+`SOMEGAME_SHARED_RUNTIME` может задать другой единый абсолютный путь.
 
 ### `context`
 
@@ -95,15 +108,18 @@ tooling, Unity/package/config и platform fingerprint в ignored
 
 - быстрый уровень является default и ограничивается scoped diff, форматами,
   shell/static/unit checks без запуска Unity;
-- стандартный запускается один раз на завершённый логический блок и добавляет
-  один compile с адресными tests;
-- релизный запускается только по прямому запросу или перед выпуском и включает
-  необходимые content/Player/device/visual gates.
+- финальный запускается один раз для полностью подготовленного кандидата
+  истории, только после отдельного явного разрешения человека, и объединяет
+  необходимые MCP/import/content/compile/test/Player/device/visual gates;
+- релизный запускается по отдельному разрешению, если финальное evidence
+  устарело или выпуск требует дополнительных gates.
 
 Наличие Unity-файла в diff не является само по себе разрешением повышать
-уровень. Связанные правки сначала пакетируются, затем получают один validation
-slot. Если пользователь исключил APK, эмулятор или иной gate, runner не должен
-запускать его косвенно через более широкий preset.
+уровень. `auto-approve`, общий end-to-end запрос и write-lock также не являются
+разрешением. Связанные правки сначала пакетируются, затем перед единым финальным
+слотом агент отдельно запрашивает актуальное человеческое разрешение. Если оно
+не получено или пользователь исключил APK, эмулятор или иной gate, runner не
+должен запускать его прямо либо косвенно через более широкий preset.
 
 ### `commit-plan` и `finish-check`
 
@@ -127,7 +143,8 @@ Tools/somegame git-publish --agent-id <lock-owner> \
   [--ssh-key <local-key-path>]
 ```
 
-По умолчанию цель — `origin/main`. Runner проверяет точного lock owner, текущую
+По умолчанию цель — `origin/main`. Runner требует общий `integration` resource
+lock, затем проверяет точного локального lock owner, текущую
 ветку и чистоту дерева; разрешены только три собственных untracked runtime-
 файла: agent, request и owner. Затем выполняются `fetch`, проверка divergence,
 обычный push без force и сравнение SHA локального `HEAD` с remote branch.
@@ -142,6 +159,10 @@ Remote-ahead история, staged runtime record, любой посторон�
 Требует `--agent-id` текущего lock owner. В очень грязном рабочем дереве
 `--target <catalog|story-id>` запускает ровно один явный atomic build вместо
 широкого changed-path plan.
+
+Catalog target и широкий changed-path content gate дополнительно требуют
+shared `catalog` lock. `player-build`, включающий Catalog, требует одновременно
+`unity` и `catalog` locks.
 
 Batch/Editor start при работающем Unity Hub fail-closed. Явный `--close-hub`
 штатно отправляет `TERM` только main Hub PID и ждёт process barrier.
@@ -207,4 +228,11 @@ recovery сравнивают `--agent-id` с
 отсутствие lock завершаются до запуска внешнего процесса.
 
 Реальный live gate выполняется только когда этого требует задача. Unit/static
-проверка runner не запускает Unity, build, ADB install или recovery.
+проверка runner не запускает Unity, build, ADB install или recovery. В workflow
+создания истории команды `content-gate`, `editor-gate`, `player-build`,
+`android-smoke`, `story-check --build`, `android-dev-cycle` и широкий `verify`,
+который планирует тяжёлый gate, разрешены только внутри финального слота после
+отдельного явного согласия человека. Команда обязана получить shared `unity`
+resource lock и передать одновременно `--human-approved` и непустой
+`--approval-note`; отсутствие любого доказательства завершает её до запуска
+Unity/build/ADB.

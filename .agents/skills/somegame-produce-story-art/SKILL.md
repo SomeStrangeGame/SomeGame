@@ -34,29 +34,12 @@ character scale and screen placement without altering the character package.
 
 ## Pass the visual-originality gate
 
-Review the current authored background, choice, and presentation-art package
-against available published visual works before final import. Use available
-visual/reverse-image search, direct source inspection, and descriptive searches.
-Assess distinctive combinations of composition, silhouettes, environment
-design, palette relationships, props, iconography, and scene-specific motifs;
-do not treat generic locations, functional UI shapes, historical facts, or
-genre conventions as material similarity by themselves.
-
-Perform at most five reviews. In each review, record inspected sources, matched
-elements, meaningful differences, provenance, confidence, and `low`, `medium`,
-or `high` risk. Medium and high findings are material. Exit immediately with
-`passed` when none remain. Otherwise, before review 5, make a targeted revision
-to the distinctive combination responsible for the risk without changing the
-approved narrative purpose or factual constraints. Recoloring, mirroring,
-cropping, or adding noise alone does not resolve structural similarity.
-
-If material risk remains after review 5, mark the art handoff and downstream
-story workflow `blocked`; report direct sources, implicated assets and elements,
-risk/confidence, and all attempted revisions. Licensed, public-domain, adapted,
-or homage material requires explicit provenance and rights/attribution handling.
-The gate is a risk screen, not legal clearance or proof of absolute uniqueness.
-If meaningful source search is unavailable, disclose the limitation rather than
-silently passing.
+Apply `Docs/AI/rules/OriginalityReviewProtocol.md` to the current background,
+choice and presentation-art package before final import. Use visual/reverse-image
+and descriptive search as available. Compare distinctive combinations of
+composition, silhouettes, environment design, palette relationships, props,
+iconography and scene-specific motifs while preserving approved narrative and
+factual constraints.
 
 ## Import and validate
 

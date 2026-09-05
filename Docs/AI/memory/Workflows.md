@@ -45,6 +45,13 @@ fingerprints позволяют не перечитывать неизменив
 evidence; `--release` и `--no-cache` обходят кэш. `commit-plan` только предлагает
 группы, а `finish-check` fail-closed проверяет handoff, lock и Editor-процессы.
 
+При создании новой истории все Unity/MCP live, import, content build, compile,
+tests, Player/APK и emulator/ADB операции откладываются до одного финального
+validation/acceptance-слота. Он начинается только после отдельного актуального
+разрешения человека; `auto-approve` и исходный запрос на создание истории его
+не заменяют. До разрешения используются только статические проверки, а готовый
+пакет передаётся как `ready-for-final-validation`.
+
 ## Выбор минимальной проверки
 
 ```bash
@@ -57,9 +64,10 @@ Tools/novels-tools/novels-content verify editor [base-ref]
 
 При явно заказанном параллельном создании нескольких новых историй допускается
 отдельный поток на каждый `storyId`. Параллельны только подготовка и
-непересекающиеся story-local scopes; checkout writes проходят отдельными
-короткими FIFO-слотами, а Unity/import/build/test, Catalog, shared contracts,
-Git branch и финальная интеграция сериализованы. Канонические границы описаны в
+непересекающиеся story-local worktree, static checks и commits. Кандидат
+передаётся clean commit SHA; Unity/import/build/test/emulator, Catalog, shared
+contracts и финальная интеграция сериализованы общими resource locks.
+Канонические границы описаны в
 [ParallelWorkDetails.md](../rules/ParallelWorkDetails.md#несколько-новых-историй-одновременно).
 
 ## Контент

@@ -30,9 +30,10 @@
 
 ## Право записи
 
-Единственное право записи — собственный `write-lock/owner.md`, где `Agent` и
-`Request` совпадают с текущей первой заявкой. Markdown-status сам по себе права
-не даёт. Нельзя менять чужие runtime-файлы, scope или незнакомый dirty tree.
+Обычное право записи — собственный `write-lock/owner.md`, где `Agent` и
+`Request` совпадают с первой заявкой. Исключение — зарегистрированный story
+worktree: в нём без repository lock меняется только его точный story prefix.
+Нельзя менять чужие runtime-файлы, scope или незнакомый dirty tree.
 
 Перед расширением scope проверить отсутствие активного владельца затрагиваемых
 файлов и обновить собственную запись до первой правки. Подробности:
@@ -72,6 +73,11 @@ Unity Editor/batch, compile, tests, import, build, генераторы и ма�
 проверяются очередь и реальные процессы ОС. Read-only probe уже открытого
 Editor допустим, если не меняет его state.
 
+Для новой истории все Unity-backed и device gates принадлежат одному финальному
+validation/acceptance-слоту. Его состав, отдельное человеческое разрешение и
+поведение без разрешения определяет только [UnityConcurrency.md](UnityConcurrency.md);
+skills не копируют и не переопределяют этот контракт.
+
 Lock не удерживается во время ожидания пользователя или внешнего ресурса.
 Heartbeat обновляется не реже пяти минут; чужой stale lock не удаляется
 автоматически. Долгие bounded-команды runner обновляют heartbeat владельца;
@@ -88,16 +94,17 @@ Heartbeat обновляется не реже пяти минут; чужой s
 - Для живого Editor использовать один persistent MCP `editor-check`, а не
   повторные status/Console/hierarchy циклы.
 - Успех передавать компактно; полные логи читать только при failure.
-- Unity не запускается для docs/tooling scope, если plan этого не требует.
+- Unity не запускается для docs/tooling scope, если plan этого не требует; при
+  создании истории он дополнительно запрещён до финального явно разрешённого
+  validation/acceptance-слота.
 - Memory bank используется по
   [MemoryBankProtocol.md](MemoryBankProtocol.md); runtime state туда не пишется.
 - Субагенты, фоновые jobs и параллельные worker-пулы по умолчанию запрещены.
   Явно заказанное одновременное создание нескольких новых историй может
-  использовать отдельный поток на каждый `storyId` по протоколу
-  [ParallelWorkDetails.md](ParallelWorkDetails.md): параллельны только
-  непересекающиеся story-local подготовка и правки, а запись под lock,
-  генераторы, Unity/import/build/test, Catalog, shared contracts, Git branch и
-  интеграция остаются последовательными.
+  использовать отдельные story worktree по
+  [ParallelWorkDetails.md](ParallelWorkDetails.md): их запись/static/commits
+  параллельны, а Unity, Catalog, shared contracts и integration сериализуются
+  общими resource locks из Git common runtime.
 
 ## Завершение
 
@@ -125,4 +132,5 @@ Heartbeat обновляется не реже пяти минут; чужой s
 | Unity, MCP write, import, test, build, ожидание FIFO | [UnityConcurrency.md](UnityConcurrency.md) |
 | Общий контракт, ready-for-integration, commit/handoff | [IntegrationProtocol.md](IntegrationProtocol.md) |
 | Обновление долговременной памяти | [MemoryBankProtocol.md](MemoryBankProtocol.md) |
+| Проверка оригинальности narrative, текста или production art | [OriginalityReviewProtocol.md](OriginalityReviewProtocol.md) |
 | Не покрытый текущими правилами случай | Дополнить подходящий действующий протокол под обычным scope/lock |

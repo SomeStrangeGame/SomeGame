@@ -11,6 +11,10 @@ Bubble runtime contract, approved art direction, audience rating and horror
 boundaries as authoritative. This skill changes presentation, not story facts,
 choice topology, attribution, or shared runtime behavior.
 
+Read `Docs/AI/guides/StoryBubblePresentation.md`; it owns the shared Bubble
+implementation boundaries, state matrix and handoff evidence. This skill adds
+only the SCP licensing and containment-horror profile below.
+
 Build an original interface for the particular story. Do not copy an SCP Wiki
 page, another SCP adaptation, or the UI of an existing game. Do not introduce
 the SCP Foundation logo, article screenshots, classification seals, or other
@@ -116,5 +120,5 @@ Report the exact story-local prefab and sprites, semantic dialogue states,
 choice behavior, motion and accessibility treatment, license/provenance notes,
 material import settings, validation commands and fresh visual evidence paths.
 Call out every state not observed in a real Player. Do not commit, publish,
-alter Ink, or register the story in the catalog unless the user separately
-requests it.
+alter Ink, or register the story in the catalog; new-story registration belongs
+to `$somegame-accept-story`.

@@ -14,6 +14,9 @@
 - Commit включает только проверенный scope и не захватывает чужой dirty tree.
 - Общая проверка выполняется после объединения зависимых изменений и только
   минимальным changed-path gate.
+- Story-worktree передаётся только clean commit SHA и machine-readable
+  candidate manifest. Интегратор проверяет story prefix до переноса commit;
+  dirty files между checkout не копируются.
 
 ## Изменение общего контракта
 
@@ -76,16 +79,23 @@ Suggested next step: <действие или none>
 ## Финальная интеграция
 
 1. Перечитать active scopes, handoff и полный Git status.
-2. Проверить зависимости и точный состав diff/commit.
-3. Выполнить minimal plan/verify, затем только оставшиеся Editor/Player/manual
-   gates.
-4. Зафиксировать evidence и реальные ограничения.
-5. Разбить проверенный diff на атомарные commits; каждый commit должен иметь
+2. Получить общий `integration` resource lock и проверить candidate manifests
+   через `Tools/somegame story-batch-plan`.
+3. Проверить зависимости и перенести только разрешённые story commit SHA в
+   отдельную batch integration branch; Catalog и shared contracts остаются
+   отдельными атомарными commits.
+4. После отдельного актуального разрешения человека получить `unity` lock и
+   выполнить один минимальный общий Unity/content/Player/emulator слот.
+5. Выполнить только оставшиеся manual gates; повтор тяжёлого слота после
+   исправлений требует нового человеческого разрешения.
+6. Зафиксировать evidence и реальные ограничения.
+7. Разбить проверенный diff на атомарные commits; каждый commit должен иметь
    одну цель и не захватывать чужой или generated scope.
-6. Пока собственные agent/request/write-lock records остаются untracked,
+8. Пока собственные agent/request/write-lock records остаются untracked,
    опубликовать commits канонической командой:
 
    ```bash
+   Tools/somegame resource-lock acquire --resource integration --agent-id <lock-owner>
    Tools/somegame git-publish --agent-id <lock-owner> \
      [--ssh-key <local-key-path>]
    ```
@@ -94,12 +104,12 @@ Suggested next step: <действие или none>
    дерево чисто кроме собственных runtime records. Она не выполняет
    pull/rebase/merge/force-push; расхождение разбирается отдельным явным scope.
    SSH-ключ остаётся локальным и никогда не добавляется в commit.
-7. Сверить возвращённые `localSha` и `remoteSha`, записать evidence в handoff,
+9. Сверить возвращённые `localSha` и `remoteSha`, записать evidence в handoff,
    завершить agent record и удалить только собственные request/write-lock.
-8. Если итоговая handoff/agent запись образует отдельный commit, получить новую
+10. Если итоговая handoff/agent запись образует отдельный commit, получить новую
    короткую FIFO-заявку и повторить ту же команду; не оставлять документированный
    результат только локально.
-9. Только после подтверждённого remote SHA считать публикацию завершённой.
+11. Только после подтверждённого remote SHA считать публикацию завершённой.
 
 Если интеграционный случай здесь не покрыт, остановить изменение контракта,
 зафиксировать риск в handoff и дополнить этот действующий протокол.

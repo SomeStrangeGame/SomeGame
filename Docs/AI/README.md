@@ -35,6 +35,8 @@ scope используйте `--resume`; документы с неизмени�
 | Архитектура/runtime | [UnityProjectContext.md](architecture/UnityProjectContext.md), [ProjectOverview.md](architecture/ProjectOverview.md) |
 | Content authoring/Ink | [ContentAuthoringGuide.md](guides/ContentAuthoringGuide.md), [InkSyntax.md](guides/InkSyntax.md) |
 | Character/art | [CharacterLayeringRules.md](rules/CharacterLayeringRules.md), [ManualContentChecklist.md](guides/ManualContentChecklist.md) |
+| Originality review | [OriginalityReviewProtocol.md](rules/OriginalityReviewProtocol.md) |
+| Story-local Bubble UI | [StoryBubblePresentation.md](guides/StoryBubblePresentation.md) |
 | Validation/release | [ContentPipeline.md](guides/ContentPipeline.md) |
 | Unity MCP | [UnityMcpWorkflow.md](guides/UnityMcpWorkflow.md) |
 | Licensing | [UnityLicensingTroubleshooting.md](guides/UnityLicensingTroubleshooting.md) |

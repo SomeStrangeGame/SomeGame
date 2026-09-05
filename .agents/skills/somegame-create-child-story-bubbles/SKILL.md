@@ -11,6 +11,10 @@ contract, approved art direction, and the child’s age as authoritative. This
 skill changes presentation, not story meaning, choice topology, or shared
 runtime behavior.
 
+Read `Docs/AI/guides/StoryBubblePresentation.md`; it owns the shared Bubble
+implementation boundaries, state matrix and handoff evidence. This skill adds
+only the pre-reading-child profile below.
+
 Assume a pre-reading child may use the story beside an adult. The adult must be
 able to read dialogue comfortably, while a child should be able to distinguish
 the available choices from their pictures alone. Do not silently remove text
@@ -116,4 +120,5 @@ Report the exact story-local prefab and sprites, intended dialogue and choice
 states, image/label fallback behavior, import settings that materially affect
 rendering, validation commands, and visual evidence paths. Call out any state
 that was not observed in a real Player. Do not commit, publish, alter Ink, or
-register the story in the catalog unless the user separately requests it.
+register the story in the catalog; new-story registration belongs to
+`$somegame-accept-story`.

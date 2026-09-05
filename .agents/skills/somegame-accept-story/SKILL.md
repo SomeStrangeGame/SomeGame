@@ -1,6 +1,6 @@
 ---
 name: somegame-accept-story
-description: Perform final acceptance of a completed SomeGame story by auditing originality evidence, narrative reachability, assets and selectors, catalog registration, content builds, mandatory Android emulator evidence, manual visual gates, and integration readiness. Use after story project, art, and playable content exist; do not use to create missing production work.
+description: Accept and register a completed SomeGame story by auditing originality evidence, narrative reachability, assets and selectors, catalog registration, content builds, mandatory Android emulator evidence, manual visual gates, and integration readiness. Use after story project, art, and playable content exist; return defects to their production owner instead of repairing them here.
 ---
 
 # Accept a SomeGame story
@@ -18,6 +18,10 @@ position, target platform, approval mode, and already completed manual gates.
 Inspect the full dirty tree and active ownership. Separate automated evidence,
 manual visual evidence, and deferred platform checks; none substitutes for
 another.
+
+Enter the final slot only through the authorization and resource-lock contract
+in `Docs/AI/rules/UnityConcurrency.md`. Without it, return
+`ready-for-final-validation`; do not duplicate or reinterpret that contract.
 
 ## Audit the complete story
 
@@ -40,28 +44,22 @@ missing required address is a failure even if the episode continues.
 
 ## Audit originality evidence
 
-Fail closed unless the handoffs contain explicit `passed` originality results
-for the narrative package, every character package, the non-character art
-package, and the complete source Ink. Each result must identify reviewed
-iterations, direct sources or declared search limitations, material findings,
-targeted revisions, final risk/confidence, and provenance for licensed,
-public-domain, adapted, or homage material.
-
-Do not repeat the same searches merely to recreate evidence and do not upgrade a
-missing, incomplete, or `blocked` gate during acceptance. A blocked production
-gate blocks the story. If a later change materially altered already reviewed
-prose or visual work, return that artifact to its owning production skill for a
-fresh originality review before acceptance continues.
+Audit the four required results under
+`Docs/AI/rules/OriginalityReviewProtocol.md`: narrative, every character,
+non-character art and complete source Ink. Acceptance validates presence,
+coverage and freshness; it never performs or repairs the production review.
 
 ## Register and validate
 
-Add the story to the catalog only when its card and minimum playable content
-exist and the encompassing request authorizes end-to-end story creation.
+Acceptance is the exclusive owner of catalog registration for a new story. Add
+it only when its card and minimum playable content exist and the encompassing
+request authorizes end-to-end story creation.
 Preserve the requested catalog position and every existing entry. Catalog-only
 mutation does not authorize publication.
 
-Use the current changed-path plan: cheapest static checks first, then story and
-catalog validation/build, the mandatory Android emulator gate below, and the
+Use the current changed-path plan: complete every cheap static audit first,
+then, only inside the authorized final slot, run story and catalog
+validation/build, the mandatory Android emulator gate below, and the
 manual visual review required by changed UI or art. Unity Editor may be used as
 a technical build/compile mechanism, but interactive Editor replay is not story
 acceptance evidence. Distinguish compilation, content build, emulator runtime,
@@ -70,7 +68,9 @@ platforms.
 
 ## Run the Android emulator acceptance gate
 
-Build a fresh Android Embedded APK from the final accepted content and catalog
+This gate is part of the same explicitly human-authorized final slot; do not
+start or reuse an emulator before that approval. Build a fresh Android Embedded
+APK from the final candidate content and catalog
 state. Record the APK path, build timestamp, cryptographic hash, package name,
 story release identity, emulator/device model, Android API level, and exact ADB
 serial. Install that APK into that emulator and launch the story through the
