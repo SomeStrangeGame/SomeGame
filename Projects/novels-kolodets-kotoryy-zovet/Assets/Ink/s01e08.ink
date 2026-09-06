@@ -1,4 +1,6 @@
 // Эпизод 8. Четыре узла
+-> KZs01e08
+
 === KZs01e08 ===
 Локация: bg04-well-yard-rain
 Музыка: ambient-water-loop

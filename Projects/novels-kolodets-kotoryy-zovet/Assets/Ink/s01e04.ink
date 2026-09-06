@@ -1,4 +1,6 @@
 // Эпизод 4. Человек с чужой фамилией
+-> KZs01e04
+
 === KZs01e04 ===
 Локация: bg15-boarding-workshop
 Музыка: ambient-dry-loop

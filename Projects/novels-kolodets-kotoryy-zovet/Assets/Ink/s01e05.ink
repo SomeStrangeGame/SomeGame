@@ -1,4 +1,6 @@
 // Эпизод 5. Сухое русло
+-> KZs01e05
+
 === KZs01e05 ===
 Локация: bg13-dry-creek-bridge
 Музыка: ambient-dry-loop

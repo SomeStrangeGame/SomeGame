@@ -1,4 +1,6 @@
 // Эпизод 7. Фраза из будущего
+-> KZs01e07
+
 === KZs01e07 ===
 Локация: bg10-pump-station
 Музыка: ambient-water-loop
