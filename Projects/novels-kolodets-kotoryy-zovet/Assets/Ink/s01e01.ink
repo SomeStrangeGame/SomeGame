@@ -12,6 +12,8 @@ VAR confession = ""
 VAR witness = ""
 VAR final_choice = ""
 
+-> KZs01e01
+
 === KZs01e01 ===
 Локация: bg01-bus-stop-day
 Музыка: ambient-dry-loop

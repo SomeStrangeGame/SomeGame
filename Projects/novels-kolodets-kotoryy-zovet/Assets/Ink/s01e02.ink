@@ -1,4 +1,6 @@
 // Эпизод 2. Плёнка без голоса
+-> KZs01e02
+
 === KZs01e02 ===
 Локация: bg03-kitchen-radio-night
 Музыка: ambient-dry-loop

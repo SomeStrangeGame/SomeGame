@@ -1,4 +1,6 @@
 // Эпизод 6. Дождь говорит
+-> KZs01e06
+
 === KZs01e06 ===
 Локация: bg12-laundry-bathhouse
 Музыка: ambient-water-loop
