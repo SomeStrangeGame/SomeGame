@@ -1,6 +1,4 @@
 // Эпизод 10. Что вернёт вода
--> KZs01e10
-
 === KZs01e10 ===
 Локация: bg04-well-yard-predawn
 Музыка: ambient-water-loop
