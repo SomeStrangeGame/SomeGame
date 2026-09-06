@@ -9,7 +9,7 @@
 - единственный `NovelContentAsset` — `Assets/kolodets-kotoryy-zovet.asset`;
 - общий Ink-вход включает десять источников `Assets/Ink/s01e01.ink` —
   `s01e10.ink`;
-- 30 фоновых состояний находятся в `Assets/Locations`;
+- 36 фоновых состояний находятся в `Assets/Locations`;
 - пять персонажей и их цельные варианты находятся в `Assets/Characters`;
 - два эмбиентных цикла и восемь событийных звуков находятся в `Assets/Audio`.
 

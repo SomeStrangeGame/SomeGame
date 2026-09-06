@@ -23,7 +23,7 @@ or legal clearance.
 ## Complete source Ink — passed
 
 - Reviewed artifacts: the final root Ink and all ten episode sources, including
-  57 visible choices, persistent state callbacks, five final branches and every
+  84 visible choices, persistent state callbacks, five final branches and every
   episode end marker.
 - Exact/title searches covered «Колодец, который зовёт», «Верни моё имя»,
   «Я Алексей. Я был Лёшей» and «История колодца закончилась не тогда, когда он
@@ -48,11 +48,13 @@ or legal clearance.
 
 ## Non-character art and audio — passed
 
-- Reviewed set: all 30 backgrounds, catalog cover, two ambience loops and eight
+- Reviewed set: all 36 backgrounds, catalog cover, two ambience loops and eight
   event sounds listed in `APPROVED_ASSETS.md`.
 - Descriptive image searches covered rain-dark village wells, abandoned clubs,
-  rural pump rooms, dry creek bridges and birch paths. These are crowded
-  environmental motifs, but no material layout or composition match was found.
+  rural pump rooms, dry creek bridges, birch paths, village cemeteries, fire
+  lookouts, small shops, water towers, old buses and low rural dams. These are
+  crowded environmental motifs, but no material layout or composition match
+  was found.
 - No reverse-image database was available, limiting confidence. No external
   visual or audio source was used. Audio is sample-free procedural synthesis.
 - Result: `passed`; low residual visual/audio similarity risk, medium confidence.
