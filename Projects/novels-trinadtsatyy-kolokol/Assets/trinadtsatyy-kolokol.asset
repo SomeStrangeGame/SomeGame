@@ -1,0 +1,75 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: trinadtsatyy-kolokol
+  m_EditorClassIdentifier:
+  _id: trinadtsatyy-kolokol
+  _mainCharacter: "Лада"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Лента номер ноль"
+    _description: "Лада слышит невозможный тринадцатый удар и получает первый адрес исчезновения."
+  - _id: s01e02
+    _title: "Кольцо последнего вагона"
+    _description: "Трамвайное кольцо связывает звон с забытой городской сетью «Глас»."
+  - _id: s01e03
+    _title: "Город в прямом эфире"
+    _description: "Ася предлагает предупредить всех, но публичность меняет ход расследования."
+  - _id: s01e04
+    _title: "Смена, которой не было"
+    _description: "Зоя открывает Дом связи и путь к тринадцатому кабелю."
+  - _id: s01e05
+    _title: "Адрес под дождём"
+    _description: "В коллекторе находится человеческий механизм исчезновений, а на крыше звучит имя Тима."
+  - _id: s01e06
+    _title: "Нулевая комната"
+    _description: "Лада проверяет последнюю версию и решает, кому должна принадлежать опасная правда."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Лада"
+    _clothes: coat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Тим"
+    _clothes: hoodie
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Роман"
+    _clothes: fieldcoat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Зоя"
+    _clothes: cardigan
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Ася"
+    _clothes: studio
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Инга"
+    _clothes: workjacket
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: a13c0df70adf4fcfa238ddd536ef2711
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []
