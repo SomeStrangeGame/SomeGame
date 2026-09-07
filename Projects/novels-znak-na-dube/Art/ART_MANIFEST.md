@@ -17,8 +17,11 @@ Each character has one identity master and only scene-used variants. Character c
 - `village-edge.png` — liminal village/forest establishing scene.
 - `oak-mark-close.png` — narrative insert of the fresh sign.
 - `headwoman-house.png` — timber council room with iron maps.
+- `charcoal-boundary.png` — abandoned charcoal boundary yard; warm roots survive beneath cold ash.
 - `bell-tower.png` — bronze bell and root-shadow geometry.
+- `drowned-shrine.png` — half-submerged path shrine with broken name tablets and a bronze bell.
 - `flooded-path.png` — black water and moving roots.
+- `root-archive.png` — subterranean archive of hanging name tablets and eight central vacancies.
 - `silent-bird-glade.png` — motionless pale birds, memory threshold.
 - `miron-memory.png` — story illustration, brother between copied footsteps.
 - `heart-oak.png` — cathedral-scale ancient oak before the choice.
@@ -34,4 +37,4 @@ Each character has one identity master and only scene-used variants. Character c
 
 ## Visual originality gate
 
-Descriptive comparisons focus on the combined empty-eye root sign, bronze acoustic motif, village iron cartography and black-water root trail. No direct artist or franchise imitation is permitted. Final generated outputs require visual inspection and reverse-image search where available; current status is `pending-production`, fail-closed until evidence is recorded in `ORIGINALITY_EVIDENCE.md`.
+Descriptive comparisons focus on the combined empty-eye root sign, bronze acoustic motif, village iron cartography, black-water root trail, drowned path-name shrine and root-borne debt archive. No direct artist or franchise imitation is permitted. Generated outputs were visually inspected; evidence and limitations are recorded in `ORIGINALITY_EVIDENCE.md`.
