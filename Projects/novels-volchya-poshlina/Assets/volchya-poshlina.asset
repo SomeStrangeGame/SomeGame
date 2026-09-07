@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   _id: volchya-poshlina
   _mainCharacter: "Ярина"
-  _contentVersion: 1
+  _contentVersion: 2
   _endMarker: "...: КОНЕЦ СЕРИИ"
   _silentAudioIds: []
   _episodes:
@@ -51,6 +51,16 @@ MonoBehaviour:
     _accessory:
   - _character: "Митя"
     _clothes: village
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Вея"
+    _clothes: winter
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Лука"
+    _clothes: bell
     _hair:
     _hairColor:
     _accessory:

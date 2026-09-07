@@ -9,13 +9,20 @@ Status: `approved-for-import` → project-bound mapping complete; runtime proof 
 | Broken bridge | `bridge` | `Assets/Locations/bridge.png` |
 | Birch boundary | `boundary` | `Assets/Locations/boundary.png` |
 | Charcoal clearing | `charcoal` | `Assets/Locations/charcoal.png` |
+| Snow chapel | `snow-chapel` | `Assets/Locations/snow-chapel.png` |
 | Frozen ravine | `ravine` | `Assets/Locations/ravine.png` |
+| Abandoned toll village | `toll-village` | `Assets/Locations/toll-village.png` |
 | Wolf ford | `ford` | `Assets/Locations/ford.png` |
+| Drowned belfry | `drowned-belfry` | `Assets/Locations/drowned-belfry.png` |
 | Watch hut | `watch-hut` | `Assets/Locations/watch-hut.png` |
+| Wolf den | `wolf-den` | `Assets/Locations/wolf-den.png` |
 | Oath oak | `oath-oak` | `Assets/Locations/oath-oak.png` |
 | Berezhki dawn | `berezhki` | `Assets/Locations/berezhki.png` |
+| Berezhki witness dawn | `berezhki` | `Assets/Locations/berezhki.png` |
 
-All eight backgrounds are required, 16:9 RGB PNG, and used by `s01e01.ink`.
+All twelve unique backgrounds are required, 16:9 RGB PNG, and used by
+`s01e01.ink`; the witness ending intentionally reuses the same settlement image
+for continuity in the fourth ending.
 
 ## Whole-character packages
 
@@ -27,11 +34,17 @@ All eight backgrounds are required, 16:9 RGB PNG, and used by `s01e01.ink`.
 | Савва / `travel` | `main`, `confession` | `story/character/characters/савва/view/whole/travel/` |
 | Седой / `natural` | `main`, `speaking` | `story/character/characters/седой/view/whole/natural/` |
 | Митя / `village` | `main` | `story/character/characters/митя/view/whole/village/` |
+| Вея / `winter` | `main`, `warning` | `story/character/characters/вея/view/whole/winter/` |
+| Лука / `bell` | `main`, `alarmed` | `story/character/characters/лука/view/whole/bell/` |
 
 All character assets are full-body RGBA PNGs. Edited variants derive from their
 corresponding whole identity master. Generated checkerboard backgrounds in edited
 drafts were rejected; accepted files use a deterministic colour-key alpha mask and
 passed dark/light compositing review. No modular body parts are used.
+For the two new characters, studio-background neutral drafts were rejected
+because alpha extraction damaged dark clothing. The accepted clean-alpha pose
+is intentionally shared by each character's two scene selectors; identity,
+anatomy and edge integrity take precedence over an unnecessary pose matrix.
 
 ## Presentation, cover and audio
 

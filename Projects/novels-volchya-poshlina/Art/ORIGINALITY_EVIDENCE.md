@@ -59,5 +59,37 @@ general Slavic-folklore motifs.
 - Final risk/confidence: low / medium.
 - Result after iteration 2: `passed`.
 
-Any material change to dialogue, scene order, character identity, visual
+## Expansion review — iteration 3
+
+- Trigger: the author requested an approximately one-hour edition with more
+  characters and backgrounds after the first acceptance attempt.
+- Revised scope: 6,651 source words, nine causal decision groups (25 authored
+  options including the investigation set), twelve unique backgrounds, eight
+  named characters and four reachable endings.
+- New narrative fingerprints: the snow chapel where collateral memories are
+  embedded in candles; silent bell-ringer Luka trapped in a repeating toll
+  village; late words beneath a drowned belfry; a wolf den where a child's
+  promise belongs to the animal rather than the road; witness-based ending.
+- Exact searches: «Люди просили лес помнить за них»; «Исполненное насильно
+  слово звучит»; «Не всякий долг принадлежит человеку»; «пошлина окончена» +
+  «остаётся обязанность».
+- Text finding: no exact match. Search results concerned general moral or
+  financial duty, religious texts, and unrelated folklore language; none
+  matched the concrete sequence, characters, promise mechanics or expression.
+- New visual fingerprints: Veya's wooden name-token button chain and candle;
+  Luka's clapperless neck bell and oversized coat; roofless ice chapel;
+  seven-house looping village; drowned belfry and root-vault wolf den.
+- Visual searches returned generic candlelit elderly women and winter folklore
+  portraits. No result matched the complete silhouettes, props, palette,
+  environment compositions or their narrative combination.
+- Provenance: built-in OpenAI image generation from project-specific prompts;
+  no third-party input images, named-artist imitation or franchise references.
+- Rejected work: three studio-background neutral character renders whose alpha
+  extraction damaged dark garments. They are not imported. Accepted variants
+  passed light/dark compositing inspection.
+- Final risk/confidence: low / medium; open search cannot cover unpublished or
+  unindexed material and no dedicated reverse-image hash index was available.
+- Result after iteration 3: `passed`.
+
+Any later material change to dialogue, scene order, character identity, visual
 composition, choice causality or endings invalidates the relevant pass.
