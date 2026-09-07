@@ -7,9 +7,9 @@ Status: `ready-for-final-validation` (not accepted, not catalog-registered).
 - Atomic scaffold copied from `Projects/novels-content-template`; Unity version and repository-relative packages preserved.
 - `card.json`, `NovelContentAsset`, six source episodes and root include authored.
 - Five characters, 20 distinct whole-image variants; all 20 PNGs report an alpha channel.
-- Twelve distinct locations, ten used choice icons, cover, story-local Bubble prefab/sprites.
+- Sixteen distinct locations, twelve used choice icons, cover, story-local Bubble prefab/sprites.
 - Two music/ambient WAV files and six SFX, synthesized without external samples.
-- Five meaningful choice groups and three statically reachable ending knots.
+- Five meaningful choice groups (12 individual decisions) and three statically reachable ending knots.
 - All referenced location, choice-icon and audio IDs resolve to exact files in a dependency-free audit.
 - Narrative, characters, non-character art and complete source Ink each have current originality evidence with the search limitation stated.
 
@@ -20,7 +20,8 @@ Status: `ready-for-final-validation` (not accepted, not catalog-registered).
 - Scoped `git diff --check` → clean.
 - Selector audit → no missing referenced location, choice or audio file.
 - Reachability audit → sequential `LZT_s01e01`…`LZT_s01e06`; endings `ending_shared`, `ending_white_map`, `ending_nameless`, each terminates at `END`.
-- Inventory: 20 character variants, 12 locations, 10 used choice icons, 8 WAV files; project size about 37 MiB before Unity import.
+- Inventory: 20 character variants, 16 locations, 12 used choice icons, 8 WAV files.
+- Length: 4,751 source word units; estimated reachable displayed route 3,750–4,150 words and 27–34 minutes at visual-novel reading pace including choices and scene transitions.
 
 ## Deferred by mandatory authorization boundary
 
@@ -28,4 +29,4 @@ No Unity Editor, Ink compilation, `.ink.json`/source-map generation, asset impor
 
 The separately authorized acceptance slot must: import the project; confirm MCP live/restart proof; compile Ink; audit every selector in generated content; register the card in the requested Catalog position; build story and Catalog; build a fresh Android Embedded APK; replay all five choice groups and all three endings through the real Catalog flow; verify save/resume and absence of fallback markers; inspect character alpha edges/scale, all backgrounds, long dialogue, maximum choice group, safe area and Bubble pressed/fallback states.
 
-Known visual risk to judge in Player: generated character sheets required deterministic dark-matte keying. Alpha exists, but subtle residual halo or loss in dark clothing edges is possible and is blocking if observed. UI crops must likewise be checked on real scene backgrounds. No publication or integration is authorized.
+Known visual risk to judge in Player: generated character sheets required deterministic dark-matte keying. Alpha exists, but subtle residual halo or loss in dark clothing edges is possible and is blocking if observed. UI crops and the four new scene crops must likewise be checked on real scene backgrounds. No publication or integration is authorized.
