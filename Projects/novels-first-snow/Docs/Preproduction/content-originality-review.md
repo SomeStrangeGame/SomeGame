@@ -1,41 +1,48 @@
-# «Первый снег» — final content originality review
+# First Snow — revised full-text originality review
 
-Date: 2026-09-07
+Date: 2026-09-07. Editorial revision 2.
+Source SHA-256: `f830ee4a271388a04e754dac1be97581358562e64da204a35b651bced1a2357b`.
 
-Scope: complete 12-scene Ink text, all reachable choices and three endings,
-character package, nine backgrounds, five inserts and cover.
+This replaces the original full-text review for the materially revised text.
+Scope: complete episode including every choice and ending, revised chronology,
+Sonya's rehearsal/payoff, returned play notebook, projector repair, consent
+before the snow photograph, next-day processing, return to the river screen,
+and four Sunday calls. No new art was produced in this revision.
 
-## Search and comparison
+## Iteration 1 for this revision
 
-The review searched distinctive Russian phrases, the exact secondary ending
-title, and combinations of school darkroom, paper stars, riverside projection,
-first snow and first love. Results included broad winter-romance visual novels
-such as *Hatsuyuki Sakura*, *Our Love at 0°C*, *Starry Sky*, *Snow Sakura* and
-*Winter Fragments*. Their discovered premises depend on transfers, mysteries,
-fantasy, dating routes, astronomy schools or childhood-friend reunions. None
-matched this story's causal chain: two long-time classmates restore an analog
-school archive, negotiate consent around imperfect photographs, fail at a
-riverside projection, then choose whether and how to begin a first relationship.
+Compared distinctive phrases and the combined sequence, not isolated school,
+winter or first-love motifs. Targeted searches used these compact fingerprints:
 
-Exact searches for «Снимай, пока не станет не страшно» and «Нерезкий, но наш»
-did not identify a matching published story or distinctive passage. «Первый
-снег» is a generic and heavily reused title; it is retained because the complete
-work, characters and scene sequence are distinct, and no subtitle, logotype or
-cover composition was copied.
+- `"Первый снег" фотограф Мия Лёша фестиваль бумажные звёзды`
+- `"Шутки про проверку не было в тексте"`
+- `"Покажу тебе, прежде чем кому-нибудь ещё" фотограф`
+- `first love visual novel paper stars photographer projector moving four Sunday calls`
 
-## Findings
+Search results did not identify matching distinctive dialogue or this causal
+sequence. Generic first-snow titles, festivals and romances appeared. The exact
+phrase searches' lack of useful hits is a limited index result, not proof that
+the phrasing has never been used elsewhere.
 
-- Plot/sequence overlap: low. Generic school romance and snow motifs only.
-- Character overlap: low after Sonya's teal-hair concept was replaced with
-  short black hair, paired copper pins and a warm amber/copper palette.
-- Phrase overlap: low; no distinctive searched line produced a matching work.
-- Visual overlap: low with medium confidence; no branded object, recognizable
-  franchise costume, copied landmark or identifiable character likeness.
-- Limitations: web and descriptive image indexes cannot establish absence from
-  private, unindexed or unpublished works.
+The developer's page for [Our Love at 0°C](https://sanmimi.itch.io/our-love-at-0c)
+was opened and read directly as a discovered winter-romance comparator. Its
+published premise concerns longtime neighbors, Christmas and a mysterious
+third figure. Shared season/romance motifs do not reproduce this candidate's
+consent conflict, practical school collaboration and negotiated long-distance
+relationship. The review does not claim access to that game's full script.
 
-Final gate: `passed`.
+The historical narrative review remains a record of the earlier design search;
+this new narrative package and complete source were assessed together for the
+revision. New dialogue was written for these characters and events, with no
+licensed passages, translated scenes or intended homage.
 
-The package is considered original enough for project import and runtime
-validation. Future substantial narrative or visual redesign requires a new
-review of the changed package.
+Result: `passed`; risk `low`; confidence `medium` for the searched public
+premises/phrases and limited for unindexed full scripts. No substantial
+distinctive match was identified, so no further rewrite iteration was needed.
+
+## Technical reference, not narrative source
+
+[ILFORD's processing guide](https://www.ilfordphoto.com/beginners-guide-processing-film/)
+was opened to verify that loading film in darkness, processing, washing and
+drying precede printmaking. The revised scene puts this work on Saturday;
+the digital branch uses a printer. No prose from the guide was copied.

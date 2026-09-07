@@ -1,0 +1,94 @@
+{
+  "sourceSha256": "f830ee4a271388a04e754dac1be97581358562e64da204a35b651bced1a2357b",
+  "checker": "inkjs 2.3.2",
+  "compileErrors": [],
+  "compileWarnings": [],
+  "runtimeProblems": [],
+  "routes": 704,
+  "endings": {
+    "ПЕРВЫЙ СНЕГ": 288,
+    "ЧЕТЫРЕ ВОСКРЕСЕНЬЯ": 320,
+    "НЕРЕЗКИЙ, НО НАШ": 96
+  },
+  "ranges": {
+    "words": [
+      6256,
+      6764
+    ],
+    "dialogueSteps": [
+      632,
+      677
+    ],
+    "decisions": [
+      9,
+      10
+    ]
+  },
+  "witnesses": {
+    "ПЕРВЫЙ СНЕГ": {
+      "variables": {
+        "attention": 2,
+        "courage": 3,
+        "admitted_closeness": true,
+        "contact_choice": "destroy",
+        "photo_choice": "take_photo",
+        "star_read": true
+      },
+      "choices": [
+        "Спросить, что написано внутри звёзд",
+        "«Недосказанное»",
+        "Признаться, почему кадр испугал",
+        "Не спрашивать при Соне",
+        "Предложить уничтожить лист",
+        "Предложить созваниваться после фестиваля",
+        "Сразу пойти за Мией",
+        "Сделать последний кадр",
+        "Спросить о будущем",
+        "Открыть звезду вместе"
+      ]
+    },
+    "ЧЕТЫРЕ ВОСКРЕСЕНЬЯ": {
+      "variables": {
+        "attention": 3,
+        "courage": 1,
+        "admitted_closeness": true,
+        "contact_choice": "keep_hands",
+        "photo_choice": "take_photo",
+        "star_read": true
+      },
+      "choices": [
+        "Спросить, что написано внутри звёзд",
+        "«Недосказанное»",
+        "Признаться, почему кадр испугал",
+        "Не спрашивать при Соне",
+        "Предложить вместе выбрать допустимое",
+        "Предложить созваниваться после фестиваля",
+        "Спросить Соню, почему она объявила",
+        "Сделать последний кадр",
+        "Открыть звезду вместе"
+      ]
+    },
+    "НЕРЕЗКИЙ, НО НАШ": {
+      "variables": {
+        "attention": 1,
+        "courage": 1,
+        "admitted_closeness": false,
+        "contact_choice": "destroy",
+        "photo_choice": "take_photo",
+        "star_read": true
+      },
+      "choices": [
+        "Спросить, что написано внутри звёзд",
+        "«Недосказанное»",
+        "Сослаться на требования конкурса",
+        "Спросить прямо",
+        "Предложить уничтожить лист",
+        "Предложить созваниваться после фестиваля",
+        "Спросить Соню, почему она объявила",
+        "Сделать последний кадр",
+        "Открыть звезду вместе"
+      ]
+    }
+  },
+  "scope": "Standalone Ink language and exhaustive traversal only; not Unity integration or measured playtime"
+}
