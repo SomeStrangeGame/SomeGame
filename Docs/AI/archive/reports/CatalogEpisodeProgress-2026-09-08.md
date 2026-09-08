@@ -68,4 +68,9 @@ interaction remain unverified; Android/iOS builds are not part of this publish.
 
 Pre-commit check: all twelve transferred files match the tested primary bytes;
 scoped whitespace check passed. Primary sources and registry are preserved.
-Remote SHA confirmation is recorded after the canonical push.
+Canonical git-publish confirmed feature commit and remote main both equal
+`dcb976a73ab946f8d413c836077cc1f8fd97a7c7` on 2026-09-08 at 15:47 UTC.
+Exactly one feature commit was ahead; push was ordinary fast-forward, no force.
+This receipt is published as a separate documentation-only commit. Primary
+HEAD/index/working files were not updated: its existing feature diff remains
+local and must not be mistaken for new unpublished work in later integration.
