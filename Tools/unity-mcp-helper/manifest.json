@@ -3,6 +3,10 @@
   "protocolVersion": "2025-06-18",
   "serverName": "unity-mcp",
   "tools": {
+    "menu": {"access": "write", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "editor_play": {"access": "write", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "editor_stop": {"access": "write", "timeoutSec": 30, "arguments": {"type": "object"}},
+    "capture_game_view": {"access": "write", "timeoutSec": 30, "arguments": {"type": "object"}},
     "editor_status": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}},
     "get_scene_hierarchy": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}},
     "console": {"access": "read", "timeoutSec": 30, "arguments": {"type": "object"}},

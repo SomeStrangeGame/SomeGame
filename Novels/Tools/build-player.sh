@@ -1,8 +1,8 @@
 #!/bin/zsh
 set -euo pipefail
 
-if (( $# < 3 || $# > 6 )); then
-  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development|--test-signing] [--catalog-variant=children|nochelessie|scp]"
+if (( $# < 3 || $# > 5 )); then
+  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development|--test-signing]"
   exit 2
 fi
 
@@ -11,7 +11,6 @@ target=$2
 output_path=${3:A}
 remote_url=${4:-}
 development_argument=${5:-}
-catalog_variant_argument=${6:-}
 script_dir=${0:A:h}
 project_root=${script_dir:h}
 somegame_root=${project_root:h}
@@ -35,10 +34,6 @@ if [[ -n ${development_argument} && ${development_argument} != --development && 
   print -u2 "Unknown option: ${development_argument}"
   exit 2
 fi
-case ${catalog_variant_argument} in
-  ""|--catalog-variant=children|--catalog-variant=nochelessie|--catalog-variant=scp) ;;
-  *) print -u2 "Unknown catalog variant: ${catalog_variant_argument}"; exit 2 ;;
-esac
 if [[ ${development_argument} == --test-signing && ${target} != Android ]]; then
   print -u2 "Test signing is supported only for Android."
   exit 2
@@ -121,7 +116,6 @@ unity_arguments=(
 [[ ${mode} == Remote ]] && unity_arguments+=(-remoteContentBaseUrl "${remote_url}")
 [[ ${development_argument} == --development ]] && unity_arguments+=(-developmentBuild)
 [[ ${development_argument} == --test-signing ]] && unity_arguments+=(-testSigning)
-[[ -n ${catalog_variant_argument} ]] && unity_arguments+=(-catalogVariant "${catalog_variant_argument#--catalog-variant=}")
 
 set +e
 "${unity_executable}" "${unity_arguments[@]}"

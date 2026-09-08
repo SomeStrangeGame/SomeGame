@@ -28,8 +28,43 @@ namespace Novels.ContentAddressing
         public static string StoryCardPath(string contentId) =>
             $"{StoryPrefix(contentId)}/card.json";
 
+        public static string StoryPreviewPath(string contentId, string platform) =>
+            $"{StoryPrefix(contentId)}/Remote/{RequireFileName(platform, nameof(platform))}/catalog-preview.json";
+
         public static string StoryCoverPath(string contentId, string fileName = "cover.webp") =>
             $"{StoryPrefix(contentId)}/{RequireFileName(fileName, nameof(fileName))}";
+
+        public static string EpisodeCoverFileName(string fileName)
+        {
+            var value = RequireFileName(fileName, nameof(fileName));
+            foreach (var character in value)
+                if (!(character is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9'
+                    or '_' or '-' or '.'))
+                    throw new ArgumentException("Episode cover must be a plain ASCII image file name.", nameof(fileName));
+            if (!value.EndsWith(".png", StringComparison.OrdinalIgnoreCase)
+                && !value.EndsWith(".jpg", StringComparison.OrdinalIgnoreCase)
+                && !value.EndsWith(".jpeg", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Episode cover must be PNG or JPEG.", nameof(fileName));
+            return value;
+        }
+
+        public static string StoryEpisodeCoverPath(string contentId, string platform, string fileName) =>
+            $"{StoryPrefix(contentId)}/Remote/{RequireFileName(platform, nameof(platform))}/episode-covers/{EpisodeCoverFileName(fileName)}";
+
+        public static string CatalogVideoFileName(string fileName)
+        {
+            var value = RequireFileName(fileName, nameof(fileName));
+            foreach (var character in value)
+                if (!(character is >= 'a' and <= 'z' or >= 'A' and <= 'Z' or >= '0' and <= '9'
+                    or '_' or '-' or '.'))
+                    throw new ArgumentException("Catalog video must be a plain ASCII MP4 file name.", nameof(fileName));
+            if (!value.EndsWith(".mp4", StringComparison.OrdinalIgnoreCase))
+                throw new ArgumentException("Catalog video must be MP4.", nameof(fileName));
+            return value;
+        }
+
+        public static string StoryCatalogVideoPath(string contentId, string platform, string fileName) =>
+            $"{StoryPrefix(contentId)}/Remote/{RequireFileName(platform, nameof(platform))}/catalog-videos/{CatalogVideoFileName(fileName)}";
 
         public static string StoryRoot(string contentId) =>
             $"{ContentRoot(contentId)}/story";

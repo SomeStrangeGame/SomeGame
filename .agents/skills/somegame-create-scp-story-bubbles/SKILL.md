@@ -10,6 +10,11 @@ or editing. Read `Docs/AI/guides/StoryBubblePresentation.md`, which exclusively
 owns shared Bubble implementation, state coverage and handoff requirements.
 This skill owns only the SCP licensing and containment-horror profile.
 
+Before a story project exists, produce only the approved presentation spec and
+raster sprites outside the repository, with logical addresses, licensing and
+import requirements. Create or change the story-local prefab only in the later
+project-bound import phase.
+
 Treat the story, license evidence, audience rating, horror boundaries and
 approved art direction as authoritative. Do not change story facts, Ink, choice
 topology, attribution, shared runtime or neutral fallback.

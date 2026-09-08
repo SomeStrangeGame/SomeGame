@@ -54,6 +54,13 @@ validation/acceptance-слота. Он начинается только пос�
 не заменяют. До разрешения используются только статические проверки, а готовый
 пакет передаётся как `ready-for-final-validation`.
 
+Канонический порядок story production: approved brief → единый
+design/originality gate → scene-derived production manifest → утверждённые
+character/art/presentation/audio deliverables вне Git → story worktree и
+статический Unity scaffold → project-bound import/mapping → Ink candidate →
+отдельно разрешённый финальный validation/acceptance slot. Unity-проект не
+создаётся до стабилизации narrative, manifest и обязательного pre-production.
+
 ## Выбор минимальной проверки
 
 ```bash

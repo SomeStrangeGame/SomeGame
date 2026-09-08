@@ -73,6 +73,20 @@ namespace Novels.ContentSdk.Editor
             var serialized = new SerializedObject(definition);
             serialized.Update();
             var episodes = serialized.FindProperty("_episodes");
+            var coversById = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var authorsById = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            var videosById = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            for (var index = 0; index < episodes.arraySize; index++)
+            {
+                var existing = episodes.GetArrayElementAtIndex(index);
+                var id = existing.FindPropertyRelative("_id").stringValue;
+                if (!string.IsNullOrWhiteSpace(id))
+                {
+                    coversById[id] = existing.FindPropertyRelative("_catalogCover").stringValue;
+                    authorsById[id] = existing.FindPropertyRelative("_author").stringValue;
+                    videosById[id] = existing.FindPropertyRelative("_catalogVideo").stringValue;
+                }
+            }
             episodes.arraySize = episodeSources.Length;
             for (var index = 0; index < episodeSources.Length; index++)
             {
@@ -80,6 +94,12 @@ namespace Novels.ContentSdk.Editor
                 var sourceLines = File.ReadLines(source).ToArray();
                 var episode = episodes.GetArrayElementAtIndex(index);
                 episode.FindPropertyRelative("_id").stringValue = id;
+                episode.FindPropertyRelative("_catalogCover").stringValue =
+                    coversById.TryGetValue(id, out var cover) ? cover : string.Empty;
+                episode.FindPropertyRelative("_author").stringValue =
+                    authorsById.TryGetValue(id, out var author) ? author : string.Empty;
+                episode.FindPropertyRelative("_catalogVideo").stringValue =
+                    videosById.TryGetValue(id, out var video) ? video : string.Empty;
                 episode.FindPropertyRelative("_title").stringValue = EpisodeTitle(
                     id,
                     sourceLines);
