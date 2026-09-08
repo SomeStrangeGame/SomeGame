@@ -64,6 +64,9 @@ class Parser:
                     if delimiter == '}':
                         break
                     assert delimiter.startswith('- ') and delimiter.endswith(':'), delimiter
+                    assert delimiter == '- else:' and len(branches) == 1, (
+                        'Inline-start Ink condition permits only one else; nest additional conditions',
+                        self.lines[self.i - 1][0], delimiter)
                     condition = delimiter[2:-1].strip()
                 nodes.append(('if', number, branches))
             elif line.startswith('* '):

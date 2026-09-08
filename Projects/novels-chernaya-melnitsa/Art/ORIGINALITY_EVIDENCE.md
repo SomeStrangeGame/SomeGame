@@ -4,6 +4,18 @@ This is an internal similarity-risk screen, not legal clearance.
 
 ## Current status — passed after the authorized additional review
 
+Technical update 2026-09-08: current source SHA-256 is
+`dddcedbb0c94cf1513a5327058ff4d881d7bfc505998733c8e2e65c721fb4253`.
+Unity's first real Ink compilation rejected the mixed conditional syntax at
+old line 229. The second condition is now nested inside `else`; no dialogue,
+choice IDs, scene order or intended branch behavior changed. All 72 routes have
+identical displayed text, choices, intermediate states and final states before
+and after (semantic snapshot SHA-256
+`08e8edd9187157cb98e766c0d5a08966ba086344f1acf6bc0deeef9453100645`).
+The earlier full-text review below remains applicable under the protocol's
+non-material technical-change rule; this is not another originality iteration.
+The old source hash below identifies the reviewed pre-syntax-fix snapshot.
+
 Current source SHA-256:
 `23c5a5fc2ce1d22b0c2d8dac06c76b26da4a75addc6f071312577293ddb7021e`.
 The user-requested causal revision adds the initial telephone intermediary and

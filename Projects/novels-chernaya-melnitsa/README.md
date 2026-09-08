@@ -5,9 +5,9 @@ Atomic Unity story project for the «Ночелесье» series.
 - Story ID: `chernaya-melnitsa`
 - Genre: фольклорный хоррор
 - Factual basis: wholly fictional
-- Status: ready for final validation; editorial/static checks and the explicitly
-  authorized additional originality review complete; Unity validation and catalog
-  registration deferred
+- Status: locally integrated and catalog-registered, but not accepted/published.
+  The first Unity build found an Ink conditional syntax error; it is corrected
+  with all 72 routes unchanged. Repeat content/APK/emulator validation is pending.
 - Template: `Projects/novels-content-template` at base `c5a431e30ff8`
 - Unity/MCP: repository-relative packages and template configuration retained;
   live proof belongs to the separately authorized final validation slot.
