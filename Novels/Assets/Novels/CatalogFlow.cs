@@ -246,7 +246,12 @@ namespace Novels
                             cover: GetEpisodeCover(catalog, entry.ContentId, preview.episodes[index].cover),
                             author: preview.episodes[index].author,
                             storyAuthor: entry.Author,
-                            videoUrl: GetCatalogVideoUrl(catalog, entry.ContentId, preview, index))));
+                            videoUrl: GetCatalogVideoUrl(catalog, entry.ContentId, preview, index),
+                            readingProgress: completedIds.Contains(episode.Id) ? 1f
+                                : !playableIds.Contains(episode.Id) ? null
+                                : EpisodeReadingProgress.Read(_progressCache,
+                                    NovelRuntime.SaveChoiceKey(entry.ContentId, episode.Id),
+                                    preview.contentVersion))));
             }).ToArray();
             using var selection = CreateSelection(catalog.Screen);
             var pendingSelection = selection.SelectAction(ApplicationTexts.CatalogTitle, items);

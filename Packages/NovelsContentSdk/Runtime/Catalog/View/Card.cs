@@ -17,6 +17,10 @@ namespace Novels.Catalog.View
         [SerializeField] private Image _cover;
         [SerializeField] private Text _author;
         [SerializeField] private RawImage _video;
+        [Header("Episode reading progress")]
+        [SerializeField] private GameObject _readingProgress;
+        [SerializeField] private Image _readingProgressFill;
+        [SerializeField] private Text _readingProgressPercent;
         [Header("Story section")]
         [SerializeField] private RectTransform _episodesContainer;
         [SerializeField] private Card _episodePrefab;
@@ -252,6 +256,17 @@ namespace Novels.Catalog.View
         {
             if (_boundEpisode?.Download != null) _boundEpisode.Download.Changed -= RefreshDownload;
             _boundEpisode = episode;
+            if (_readingProgress != null)
+                _readingProgress.SetActive(episode.IsEnabled || IsCompleted(episode));
+            var reading = IsCompleted(episode) ? 1f : episode.ReadingProgress;
+            if (_readingProgressFill != null)
+                _readingProgressFill.fillAmount = IsCompleted(episode) ? 1f
+                    : Mathf.Min(.99f, reading ?? 0f);
+            if (_readingProgressPercent != null)
+                _readingProgressPercent.text = IsCompleted(episode) ? "100%"
+                    : !reading.HasValue ? "—"
+                    : reading.Value <= 0f ? "0%"
+                    : $"≈{Mathf.Min(99, Mathf.FloorToInt(reading.Value * 100f))}%";
             SetVideoTexture(null);
             if (episode.Download != null) episode.Download.Changed += RefreshDownload;
             Bind(episode.Title, string.Empty, episode.Description, episode.Status, episode.Cover != null ? episode.Cover : cover);

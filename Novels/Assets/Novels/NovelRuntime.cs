@@ -44,6 +44,7 @@ namespace Novels
         private Location.LocationController _activeLocation;
         private Character.CharacterController _activeCharacter;
         private StoryStreamingController _streaming;
+        private string _readingStoryText;
 
         internal NovelRuntime(Dependencies ctx)
         {
@@ -147,14 +148,39 @@ namespace Novels
                 _activeCharacter.EnableFullQuality().Forget();
         }
 
-        internal UniTask FlushSaveAsync()
+        internal async UniTask FlushSaveAsync()
         {
-            return _saveSystem?.FlushAsync() ?? UniTask.CompletedTask;
+            if (_saveSystem == null) return;
+            await _saveSystem.FlushAsync();
+            SaveReadingProgress();
         }
 
         internal void FlushSaveSynchronously()
         {
             _saveSystem?.FlushSynchronously();
+            SaveReadingProgress();
+        }
+
+        private void SaveReadingProgress()
+        {
+            if (_saveSystem == null || _readingStoryText == null || _episode == null) return;
+            try
+            {
+                var cache = new Cache.Entity(_ctx.PersistentDataPath);
+                var key = SaveChoiceKey(_definition.Id, _episode.Id);
+                if (!cache.Exists(key)) return;
+                var bytes = cache.ReadBytes(key);
+                if (!_saveSystem.TryReadCompatibleDecisions(bytes, out var decisions)) return;
+                var ratio = EpisodeReadingProgress.Estimate(_readingStoryText,
+                    _progress.GetEntryState(_episode), decisions, _definition.EndMarker);
+                if (ratio.HasValue)
+                    EpisodeReadingProgress.Write(cache, key, _definition.ContentVersion, bytes, ratio.Value);
+            }
+            catch (Exception exception)
+            {
+                _ctx.OnLog?.Invoke((LogType.Warning,
+                    $"Optional episode reading progress unavailable: {exception.Message}"));
+            }
         }
 
         private void ReportError(Diagnostics.NovelError error)
