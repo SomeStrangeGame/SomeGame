@@ -15,6 +15,11 @@ Read `Docs/AI/guides/StoryBubblePresentation.md`; it owns the shared Bubble
 implementation boundaries, state matrix and handoff evidence. This skill adds
 only the pre-reading-child profile below.
 
+Before a story project exists, produce only the approved presentation spec and
+raster sprites outside the repository, with logical addresses and import
+requirements. Create or change the story-local prefab only in the later
+project-bound import phase.
+
 Assume a pre-reading child may use the story beside an adult. The adult must be
 able to read dialogue comfortably, while a child should be able to distinguish
 the available choices from their pictures alone. Do not silently remove text
