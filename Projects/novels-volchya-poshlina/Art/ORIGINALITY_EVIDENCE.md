@@ -91,5 +91,115 @@ general Slavic-folklore motifs.
   unindexed material and no dedicated reverse-image hash index was available.
 - Result after iteration 3: `passed`.
 
+## Reachability repair — iteration 4
+
+- Trigger: static acceptance found that two already-authored Anfisa choices were
+  placed after an unconditional divert and could not be selected at runtime.
+- Change: the existing `anfisa_burden` and `anfisa_continue` blocks were moved
+  beside `anfisa_return` at the wolf ford. Their IDs, wording, state changes and
+  downstream scenes were preserved; the complete candidate now has ten causal
+  decision groups and 28 authored options, including the investigation set.
+- Fresh exact searches: «Чужое имя не исправит моих рук»; «Если после этой ночи
+  слово после ещё будет что-то значить»; «Половину дороги возьму на себя» +
+  «лекарство»; «Ошибка не стала долгом» + «Бегство стало».
+- Finding: no exact match. Results shared only generic vocabulary about roads,
+  medicine, responsibility, mistakes or flight and did not match the scene,
+  dialogue sequence, promise mechanics or choice consequences.
+- Final risk/confidence: low / medium; open search cannot cover unpublished or
+  unindexed material.
+- Result after iteration 4: `passed`.
+
+## Per-character result index
+
+This index records coverage claimed by the historical grouped reviews above.
+It does not establish eight independently performed reviews or supply missing
+per-character comparison sources/contact sheets. No fresh visual review was
+performed during the narrative repair; the images themselves are unchanged.
+Acceptance must inspect the original production evidence for those requirements.
+
+| Character package | Reported coverage | Historical group result | Reported risk / confidence |
+|---|---|---|---|
+| Ярина / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
+| Макар / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
+| Анфиса / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
+| Савва / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
+| Седой / `natural` | Character and production art — iteration 1 | `passed` | low / medium |
+| Митя / `village` | Character and production art — iteration 1 | `passed` | low / medium |
+| Вея / `winter` | Expansion review — iteration 3 | `passed` | low / medium |
+| Лука / `bell` | Expansion review — iteration 3 | `passed` | low / medium |
+
+## Full candidate continuity repair — iteration 5 (2026-09-07)
+
+Scope: complete source Ink at this review, scene sequence, choice consequences and
+four endings after the author's request to find and fix inconsistencies.
+Source SHA-256:
+`0e0497fd0b2960c4a590238f7f664342275741cb999a2ae173c8552089f4c9d5`.
+
+Changes repair compile syntax, absent companions, object ownership, medicine
+loss, memory bounds and ending precedence; the existing genre, setting, cast,
+12 locations, 10 decisions and four ending concepts remain. Full details and
+the exhaustive route check are in [STORY_AUDIT.md](STORY_AUDIT.md).
+
+Fingerprints rechecked across the complete candidate: winter medicine delivery,
+broken promises tracked by wolves and frost threads, memory surrendered as
+collateral, repeating toll village and silent Luka, drowned bell tower, Savva's
+sale of the wolf den's location, three Anfisa responses, and the distinction
+between accepting responsibility, coercion and voluntary witnesses.
+
+Fresh searches included the title with Yarina; wolf + memory + promise + toll;
+and exact fragments «Отпустить нас ты смогла» + «Выпустить», «Свидетели не
+отменяли цену уже сделанного», «Доставка закончилась» + «отложенное обещание»,
+and «Названный долг идёт рядом». No exact match was observed in returned results.
+
+Directly inspected comparison sources:
+
+- [Yen Press: Spice and Wolf, Vol. 2 (manga)](https://yenpress.com/titles/9780316318273-spice-and-wolf-vol-2-manga).
+  Its publisher synopsis describes a merchant's currency scheme and rescue of
+  Holo. Travel, wolves and exchange are generic overlaps; that synopsis does
+  not describe this candidate's medicine delivery, promise-collateral rules,
+  repeating village or witness resolution.
+- [Publisher/developer description: Werewolf — Heart of the Forest](https://store.steampowered.com/app/1342620/Werewolf_The_Apocalypse__Heart_of_the_Forest/).
+  Maia's modern Białowieża family-history investigation, nature conflict and
+  Rage/Willpower/Health system differ from this candidate's delivery party,
+  promise toll, memory price and collateral ownership. Female protagonist,
+  forests, supernatural wolves and consequential choices are generic overlaps.
+
+One search result for a Russian Spice and Wolf chapter included toll/box
+vocabulary; its direct page could not be opened. It was not treated as a
+full-text comparison. Public descriptions and indexed fragments do not cover
+the full third-party works, unpublished writing or all translations.
+
+Finding: no substantial match observed in the inspected material; no redesign
+was required for originality. Result for the narrative/text candidate at the hash above:
+`passed`, risk `low`, confidence `medium`, with the search limitations above.
+This does not renew visual-originality evidence or establish legal exclusivity.
+
+### Bounded continuity corrections after iteration 5
+
+The author's first follow-up continuity checkpoint:
+`c70d58d2e60ffecc883e6818cbcbb18cd6377099e51df0409e706a32881e2681`.
+The subsequent requested consistency check produced the current source:
+`57d02cb8f410949afeb400be4dc8c201d2645c27302b06cae16a37ccfb56653b`.
+The previous hash and search record above are retained as historical evidence,
+not relabelled as a fresh search of this hash.
+
+Corrections clarify the already-established father/daughter relationship,
+the timing of Savva removing the collar, the existing fire and ribbon props,
+village arrival wording and the age of its events. They align the cut-bell
+description and the village/hamlet crate wording with actions already selected;
+the existing late-arrival damage is now reflected in state. The subsequent
+copyedit removes contradictory permission/removal wording about the existing
+ribbon and explicitly identifies whose three debts the earlier dialogue meant;
+it does not change any choice, state transition or ending. See
+[STORY_AUDIT.md](STORY_AUDIT.md) for the exact scope and regression evidence.
+
+These are bounded continuity copyedits and a state synchronization, not an
+originality-driven redesign. They introduce no new premise, identity, motif,
+scene, choice, intended consequence, ending concept, art or borrowed source.
+The iteration-5 assessment is retained under the protocol's non-material
+technical-correction exception for those unchanged fingerprints. No sixth
+originality iteration or new full-text/visual search is claimed. A material
+rewrite would require renewed stage-owner review, not this exception.
+
 Any later material change to dialogue, scene order, character identity, visual
 composition, choice causality or endings invalidates the relevant pass.
