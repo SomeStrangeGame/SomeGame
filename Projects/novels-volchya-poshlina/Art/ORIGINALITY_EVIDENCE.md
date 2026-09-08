@@ -203,3 +203,12 @@ rewrite would require renewed stage-owner review, not this exception.
 
 Any later material change to dialogue, scene order, character identity, visual
 composition, choice causality or endings invalidates the relevant pass.
+
+## Separate episode cover — 2026-09-08
+
+The new `Config/EpisodeCovers/s01e01.png` has a scoped visual-originality review,
+generation/edit provenance, inspected comparison sources, final hash and static
+mapping checks in [EPISODE_COVER.md](EPISODE_COVER.md). Its new-asset iteration 1
+result is `passed` (low risk / medium confidence with documented search limits).
+This does not revise the narrative hashes or renew the historical character and
+background evidence above. Runtime catalog composition remains unverified.

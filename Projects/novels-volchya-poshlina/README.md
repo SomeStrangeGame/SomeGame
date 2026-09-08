@@ -15,6 +15,12 @@ Bubble и звук — в `Assets/Presentation` и `Assets/Audio`.
 Результаты повторного аудита, исправления и ограничения:
 [Art/STORY_AUDIT.md](Art/STORY_AUDIT.md).
 
+Обложка единственного эпизода `s01e01` хранится отдельно в
+`Config/EpisodeCovers/s01e01.png` и назначена через `_catalogCover`.
+Общая `Config/cover.png` сохранена для карточки истории и fallback.
+[Интеграция с main](Art/INTEGRATION.md),
+[обложка: manifest, prompts и проверка](Art/EPISODE_COVER.md).
+
 AssetBundle label назначать не требуется. Проверка и сборка выполняются из
 корня общего репозитория:
 

@@ -21,6 +21,7 @@ MonoBehaviour:
   - _id: s01e01
     _title: "Долги зимней дороги"
     _description: "Ярина везёт лекарство через лес, где волки собирают пошлину за нарушенные обещания."
+    _catalogCover: s01e01.png
   _videoAliases: []
   _artAliases: []
   _characterDefaults:

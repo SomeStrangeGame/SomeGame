@@ -49,6 +49,10 @@ anatomy and edge integrity take precedence over an unnecessary pose matrix.
 ## Presentation, cover and audio
 
 - Cover: `Config/cover.png`, vertical 2:3, no embedded words.
+- Episode cover: `Config/EpisodeCovers/s01e01.png`, 1024×1536 opaque PNG,
+  bound to episode `s01e01` via `_catalogCover`. Separate approved catalog art,
+  not a copy of the story cover or an extra scene background. See
+  [EPISODE_COVER.md](EPISODE_COVER.md) for manifest, prompts and review.
 - Bubble prefab: `Assets/Presentation/bubble/screen-variant.prefab`.
 - Dialogue surface: `Assets/Presentation/bubble/sprites/dialogue-panel.png`.
 - Choice surface: `Assets/Presentation/bubble/sprites/choice-card.png`.

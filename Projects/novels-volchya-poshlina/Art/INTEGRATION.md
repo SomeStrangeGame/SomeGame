@@ -30,7 +30,9 @@ with zero compiler errors/warnings and unchanged ending counts.
 
 No Unity, content build, Player or publication was run. These checks do not
 establish runtime readiness or old-save compatibility. Episode-cover authoring
-is a separate subsequent story-local change. The historical worktree registry
+was completed as a separate subsequent story-local change; its evidence and
+remaining visual gate are in [EPISODE_COVER.md](EPISODE_COVER.md).
+The historical worktree registry
 base remains unchanged; candidate generation against that pre-main base must
 not be misreported as a valid story-only diff after the merge. For subsequent
 integration, compare this branch against the main SHA above and reconcile the
