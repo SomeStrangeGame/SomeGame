@@ -1,6 +1,6 @@
 ---
 name: somegame-create-story
-description: Orchestrate a new atomic SomeGame visual-novel story from author brief through design, project creation, art, playable content, and acceptance. Use for end-to-end creation or resuming an unfinished new story; do not use for routine edits to an existing story.
+description: Orchestrate a new atomic SomeGame visual-novel story from brief through validated pre-production, project creation, import, playable content, and acceptance. Use for end-to-end creation or resuming an unfinished new story; do not use for routine edits to an existing story.
 ---
 
 # Create a SomeGame story
@@ -19,6 +19,14 @@ Before creating content, obtain these author decisions:
   real people, documentary, or another author-defined relationship to reality;
 - audience, boundaries, approximate scope, and approval mode.
 
+Capture the author credit or pen name when supplied, including episode-specific
+credits if needed. Keep it separate from the story/episode title. Store the
+story credit as optional `author` in `Config/card.json`, and episode overrides
+as `_author` in the definition's episode entries. Never invent an author or
+insert a placeholder: unspecified credits stay empty and are not displayed.
+An episode without its own credit inherits the story credit. See the author
+contract in `Docs/AI/guides/ContentPipeline.md` for export and display rules.
+
 Genre is mandatory author input. Do not choose, normalize, or silently change
 it, including in auto-approve mode. Factual basis is a separate axis, not a
 genre. When real people, places, organizations, or events materially affect the
@@ -36,28 +44,53 @@ Approval modes:
 Neither mode authorizes the final heavy validation slot. The canonical approval
 and execution rules live only in `UnityConcurrency.md`.
 
-## Prepare repository state
-
-Create the registered story worktree through the exact lifecycle in
-`ParallelWorkDetails.md`. That protocol exclusively owns worktree scope,
-parallelism, candidate commits, resource locks and removal. A discovered shared
-dependency stops at handoff instead of silently widening story ownership.
-
 ## Produce the story
 
-1. Invoke `$somegame-design-story`; continue only with its approved narrative
-   package and passed originality result.
+1. Invoke `$somegame-design-story`. Treat narrative design and its originality
+   review as one gate; continue only with the approved package and `passed`
+   result. `OriginalityReviewProtocol.md` exclusively owns the bounded
+   full-candidate review loop and its stopping conditions.
 2. For factual stories, maintain claim evidence and clearly separate verified
    fact, inference, reconstruction, and invention.
-3. Invoke `$somegame-create-unity-project`; static scaffold readiness is the
-   required output at this stage.
-4. Invoke `$somegame-create-character` for every scene-required cast member;
-   continue only with complete, originality-passed character handoffs.
-5. Invoke `$somegame-produce-story-art` for the remaining manifest; continue
-   only with its complete, originality-passed handoff.
-6. Invoke `$somegame-author-story-content` with the approved narrative,
+3. Freeze a scene-derived production manifest before creating a Unity project.
+   Record only used characters, appearance states, backgrounds, choices,
+   presentation, audio/media, logical selectors/addresses, target formats,
+   geometry, alpha and platform constraints. The canonical template contract,
+   not a speculative project layout, defines these constraints.
+   Include catalog artwork decisions: one story cover and, only where useful
+   or requested, an optional cover for each episode. Map these to stable episode
+   IDs; omitted episode art intentionally falls back to the story cover. Do not
+   generate duplicates just to fill every episode. Read the episode-cover
+   contract in `Docs/AI/guides/ContentPipeline.md` before handing off this art.
+4. Produce and approve pre-production deliverables outside the repository:
+
+   - invoke `$somegame-create-character` for every required cast member;
+   - invoke `$somegame-produce-story-art` for remaining visual media;
+   - invoke the applicable Bubble skill for presentation design and sprites;
+   - invoke an audio skill only for manifest-required sound or music.
+
+   Each stage must pass its originality and manual review. Preserve drafts and
+   rejected variants outside Git; hand off approved masters, logical addresses,
+   provenance and import requirements. Do not claim runtime resolution yet.
+5. Only after narrative, manifest and required production deliverables are
+   stable, create the registered story worktree through `ParallelWorkDetails.md`
+   and invoke `$somegame-create-unity-project`. Static scaffold readiness is the
+   required output; Unity remains closed.
+6. Reinvoke each asset owner for project-bound import/integration. Map every
+   approved manifest row to its exact Unity file, `.meta`, import settings,
+   selector and runtime address. Build story-local Bubble prefabs at this stage.
+   Reject unmapped or unapproved files; do not regenerate accepted art merely
+   because the project was created later.
+   For catalog episode art, hand off approved PNG/JPEG files in
+   `Config/EpisodeCovers/` and the corresponding `_catalogCover` file name in
+   each definition episode; no Sprite/bundle reference is needed. Require
+   acceptance to check both an episode-specific image and the story fallback
+   when both states are present. Covers must remain available in the initial
+   lightweight catalog phase, before story payload downloads complete.
+7. Invoke `$somegame-author-story-content` with the approved narrative,
    character and remaining-art handoffs; require `ready-for-final-validation`.
-7. When all production stages are ready, follow `UnityConcurrency.md` to obtain
+8. Commit the clean story-local candidate and record it through the worktree
+   lifecycle. When all stages are ready, follow `UnityConcurrency.md` to obtain
    the separate current authorization for the final slot, then invoke
    `$somegame-accept-story`. Acceptance exclusively owns catalog registration,
    runtime/manual gates and the final readiness decision.

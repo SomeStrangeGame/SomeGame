@@ -18,7 +18,8 @@ namespace Novels.Content
             EpisodeDefinition episode,
             IEnumerable<VideoAliasDefinition> videoAliases = null,
             IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null,
-            IEnumerable<ArtAliasDefinition> artAliases = null)
+            IEnumerable<ArtAliasDefinition> artAliases = null,
+            string catalogVideo = null)
             : this(
                 id,
                 mainCharacter,
@@ -28,7 +29,8 @@ namespace Novels.Content
                 new[] { episode },
                 videoAliases,
                 characterDefaults,
-                artAliases)
+                artAliases,
+                catalogVideo)
         {
         }
 
@@ -41,12 +43,14 @@ namespace Novels.Content
             IEnumerable<EpisodeDefinition> episodes,
             IEnumerable<VideoAliasDefinition> videoAliases = null,
             IEnumerable<CharacterDefaultAppearanceDefinition> characterDefaults = null,
-            IEnumerable<ArtAliasDefinition> artAliases = null)
+            IEnumerable<ArtAliasDefinition> artAliases = null,
+            string catalogVideo = null)
         {
             Id = Require(id, nameof(id));
             MainCharacter = Require(mainCharacter, nameof(mainCharacter));
             StoryPath = Id + ".ink.json";
             ContentVersion = Require(contentVersion, nameof(contentVersion));
+            CatalogVideo = catalogVideo?.Trim() ?? string.Empty;
             EndMarker = endMarker?.Trim() ?? string.Empty;
             SilentAudioIds = Array.AsReadOnly(
                 (silentAudioIds ?? Array.Empty<string>())
@@ -103,6 +107,7 @@ namespace Novels.Content
         public string MainCharacter { get; }
         public string StoryPath { get; }
         public string ContentVersion { get; }
+        public string CatalogVideo { get; }
         public string EndMarker { get; }
         public IReadOnlyList<string> SilentAudioIds { get; }
         public string BundleName { get; }
@@ -256,18 +261,27 @@ namespace Novels.Content
             string contentId,
             string id,
             string title,
-            string description)
+            string description,
+            string catalogCover = null,
+            string author = null,
+            string catalogVideo = null)
         {
             ContentId = Require(contentId, nameof(contentId));
             Id = Require(id, nameof(id));
             Title = Require(title, nameof(title));
             Description = description?.Trim() ?? string.Empty;
+            CatalogCover = catalogCover?.Trim() ?? string.Empty;
+            Author = author?.Trim() ?? string.Empty;
+            CatalogVideo = catalogVideo?.Trim() ?? string.Empty;
         }
 
         public string ContentId { get; }
         public string Id { get; }
         public string Title { get; }
         public string Description { get; }
+        public string CatalogCover { get; }
+        public string Author { get; }
+        public string CatalogVideo { get; }
 
         private static string Require(string value, string parameterName)
         {

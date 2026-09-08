@@ -3,11 +3,11 @@
   <Project Path="Ink-Libraries.csproj" />
   <Project Path="Novels.Location.csproj" />
   <Project Path="Novels.csproj" />
+  <Project Path="Novels.Catalog.csproj" />
   <Project Path="InkEditor.csproj" />
   <Project Path="Loading.View.csproj" />
   <Project Path="Bundles.csproj" />
   <Project Path="Novels.StoryCommands.csproj" />
-  <Project Path="Novels.Catalog.csproj" />
   <Project Path="Novels.Save.csproj" />
   <Project Path="Novels.ContentSdk.Editor.csproj" />
   <Project Path="Novels.Notification.csproj" />
@@ -17,6 +17,7 @@
   <Project Path="Novels.Catalog.Contracts.csproj" />
   <Project Path="Novels.Character.csproj" />
   <Project Path="Novels.StoryContracts.csproj" />
+  <Project Path="Novels.Editor.csproj" />
   <Project Path="Bundles.Editor.csproj" />
   <Project Path="LoadingPriority.csproj" />
   <Project Path="Novels.ContentAddressing.csproj" />
@@ -24,7 +25,6 @@
   <Project Path="Novels.StoryProcessor.csproj" />
   <Project Path="Novels.Content.csproj" />
   <Project Path="Loading.csproj" />
-  <Project Path="Novels.Editor.csproj" />
   <Project Path="Novels.Audio.csproj" />
   <Project Path="Logs.csproj" />
   <Project Path="Novels.Choose.csproj" />

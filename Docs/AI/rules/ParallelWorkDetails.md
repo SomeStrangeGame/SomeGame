@@ -60,6 +60,14 @@ scope record, но обязан предварительно подтверди�
 подготовка story-local изменений могут идти параллельно без write-lock, пока не
 меняют checkout или runtime state.
 
+Narrative design, production manifests и утверждение персонажей, прочего арта,
+presentation sprites и audio могут завершаться до создания Unity-проекта.
+Pre-production drafts хранятся вне Git; handoff фиксирует approved deliverables,
+logical addresses, formats и import requirements. Story worktree создаётся,
+когда narrative, manifest и необходимые материалы стабильны и требуется
+project-bound scaffold/import. Это не отменяет отдельную runtime-проверку после
+импорта.
+
 Для каждой новой истории оркестратор создаёт отдельные
 `codex/story-<storyId>` и Git worktree через `Tools/somegame story-worktree
 create`. История владеет только `Projects/novels-<storyId>/**`; story-local

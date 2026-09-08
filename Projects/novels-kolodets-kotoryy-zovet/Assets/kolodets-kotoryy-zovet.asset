@@ -1,0 +1,82 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: kolodets-kotoryy-zovet
+  m_EditorClassIdentifier:
+  _id: kolodets-kotoryy-zovet
+  _mainCharacter: "Мира"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Обратный адрес"
+    _description: "Мира возвращается в Яровицы и впервые слышит из заколоченного колодца голос пропавшего брата."
+  - _id: s01e02
+    _title: "Плёнка без голоса"
+    _description: "Старая кассета раскрывает детскую просьбу Миры, а карта показывает, как вода слушала деревню."
+  - _id: s01e03
+    _title: "Карточка Алексея"
+    _description: "В амбулатории находится доказательство: Лёша выжил и много лет жил под другим именем."
+  - _id: s01e04
+    _title: "Человек с чужой фамилией"
+    _description: "Взрослый Алексей решает вернуться не за прошлым, а за правом самому выбрать своё имя."
+  - _id: s01e05
+    _title: "Сухое русло"
+    _description: "Дорога домой открывает цену возвращённой памяти и старую вину деревенской старосты."
+  - _id: s01e06
+    _title: "Дождь говорит"
+    _description: "Ливень разносит забытые признания по крышам и сталкивает Миру с Верой у насосной."
+  - _id: s01e07
+    _title: "Фраза из будущего"
+    _description: "Герои проверяют невозможное предсказание и обнаруживают реальные границы слуха колодца."
+  - _id: s01e08
+    _title: "Четыре узла"
+    _description: "До рассвета команда должна разомкнуть водяной контур и решить, насколько доверяет друг другу."
+  - _id: s01e09
+    _title: "Право не помнить"
+    _description: "Живые договариваются о согласии, свидетельстве и праве отказаться от возвращения прошлого."
+  - _id: s01e10
+    _title: "Что вернёт вода"
+    _description: "У колодца Мира завершает историю одним из пяти решений о правде, памяти и свободе выбора."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Мира"
+    _clothes: coat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Лёша"
+    _clothes: jacket
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Тихон"
+    _clothes: raincoat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Вера"
+    _clothes: workcoat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Соня"
+    _clothes: raincoat
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: 9a0d9cb17a2d41f89a931f2a5fb1e274
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

@@ -2,6 +2,13 @@
     "name": "Novels.Editor",
     "rootNamespace": "",
     "references": [
+        "Novels.Catalog",
+        "Bundles",
+        "UniTask",
+        "Novels.Catalog.Contracts",
+        "Novels.Content",
+        "Novels.ContentAddressing",
+        "Unity.ugui",
         "GUID:4d5cc99a41c424872a2bd557c650099c",
         "GUID:d175571fb5d647b1aa64859b26e6966b"
     ],
