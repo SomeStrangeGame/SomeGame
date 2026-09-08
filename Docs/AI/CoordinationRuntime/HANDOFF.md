@@ -108,9 +108,10 @@ Set an author only when supplied; existing stories remain unsigned. No device ve
 ## 2026-09-08T09:59Z — catalog-media-priority — ready-for-review
 Corrected precedence: episode video → loaded own episode image → story video → story image. Runtime resolver, Inspector hint and canonical guide/memory updated; fresh compile, 8-case priority matrix, covers and live catalog checks passed (agents/catalog-media-priority.md). Previous player/build evidence: [video history](../archive/reports/CoordinationHandoffHistory-2026-09-08-video.md). No production clips assigned; device/remote/offline playback unverified. Editor playing at start; helper stopped, saves unchanged; no rebuild/commit/publish.
 
-## 2026-09-08T10:12Z — publish-main-snapshot — publishing
+## 2026-09-08T10:14Z — publish-main-snapshot — published
 
 Task: Commit and publish the current primary checkout only; user explicitly excluded all worktrees.
 Changed: fallback catalog/runtime/SDK and tools, primary Volchya Poshlina source snapshot, skills and existing documentation/evidence. Generated screenshots remain local and ignored; Kolodets whitespace-only churn normalized without content changes.
 Validation: docs-check and all three tooling suites passed; zsh syntax and staged whitespace checks passed. Prior catalog Editor/build evidence above retained; no new Unity/device or story acceptance claimed.
-Pending / risks: remote publication and SHA verification next; all existing device/remote/manual gates remain deferred. No worktree branches or files integrated; catalog still contains zdm/tzm only.
+Publication: canonical git-publish confirmed local HEAD = origin/main = `bb161ec48bdc2cafbaed310b469f13db2c23d0d7`; nine previously unpushed primary commits published, including three created in this task. This receipt is committed separately.
+Pending / risks: all existing device/remote/manual gates remain deferred. No worktree branches or files integrated; catalog still contains zdm/tzm only.
