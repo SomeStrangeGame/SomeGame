@@ -129,6 +129,13 @@ non-success exit code; it is never presented as a passing quality gate.
 
 Custom arguments remain allowlisted by tool name:
 
+`menu`, `editor_play`, `editor_stop`, and `capture_game_view` are also lock-gated
+write commands for authorized visual checks. Capture overlay UI in Play Mode
+with `source: "screen"` and `save_path: "Build/Logs/catalog.png"`.
+Pipeline normalizes this path under `Assets`, returning the actual saved path;
+use that result rather than assuming a project-root output. A screenshot is visual evidence,
+not an interaction test.
+
 ```bash
 python3 Tools/unity-mcp-helper/unity_mcp_helper.py --project Novels \
   call console --arguments '{"level":"error"}'

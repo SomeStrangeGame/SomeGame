@@ -722,16 +722,11 @@ def player_build(args: argparse.Namespace) -> dict[str, Any]:
         if built["returncode"]:
             return {"ok": False, "workflow": "player-build", "stage": "content", **built}
     command = [str(ROOT / "Novels/Tools/build-player.sh"), args.mode, args.target, str(output)]
-    has_catalog_variant = args.catalog_variant != "default"
     if args.mode == "Remote": command.append(args.remote_url)
-    elif args.development or args.test_signing or has_catalog_variant:
+    elif args.development or args.test_signing:
         command.append("")
     if args.development: command.append("--development")
     if args.test_signing: command.append("--test-signing")
-    if has_catalog_variant and not (args.development or args.test_signing):
-        command.append("")
-    if has_catalog_variant:
-        command.append(f"--catalog-variant={args.catalog_variant}")
     built = run_logged(command, timeout=args.timeout, log=LOG_ROOT / f"player-{utc_stamp()}.log")
     logs.append(built["log"])
     exists = output.exists()
@@ -983,7 +978,6 @@ def android_dev_cycle(args: argparse.Namespace) -> dict[str, Any]:
         target="Android", mode="Embedded", remote_url="", development=False,
         test_signing=args.test_signing, skip_content_build=args.skip_content_build,
         timeout=args.build_timeout, human_approved=True, approval_note=args.approval_note,
-        catalog_variant="default",
     )
     built = player_build(build_args)
     if not built["ok"]:
@@ -1255,7 +1249,6 @@ def parser() -> argparse.ArgumentParser:
     signing_mode.add_argument("--test-signing", action="store_true")
     player.add_argument("--skip-content-build", action="store_true")
     player.add_argument("--close-hub", action="store_true")
-    player.add_argument("--catalog-variant", choices=("default", "children", "nochelessie", "scp"), default="default")
     player.add_argument("--timeout", type=float, default=7200)
     heavy_approval(player)
     licensing = sub.add_parser("licensing-preflight"); licensing.add_argument("--agent-id")

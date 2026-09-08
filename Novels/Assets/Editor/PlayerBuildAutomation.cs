@@ -64,9 +64,7 @@ namespace Editor
                     options = isDevelopmentBuild
                         ? BuildOptions.Development
                         : BuildOptions.None,
-                    extraScriptingDefines = GetExtraScriptingDefines(
-                        arguments,
-                        "NOVELS_EMBEDDED_CONTENT"),
+                    extraScriptingDefines = new[] {"NOVELS_EMBEDDED_CONTENT"},
                 });
             }
             finally
@@ -134,7 +132,7 @@ namespace Editor
                     options = isDevelopmentBuild
                         ? BuildOptions.Development
                         : BuildOptions.None,
-                    extraScriptingDefines = GetExtraScriptingDefines(arguments),
+                    extraScriptingDefines = Array.Empty<string>(),
                 });
             }
             finally
@@ -195,23 +193,6 @@ namespace Editor
             return index >= 0 && index + 1 < arguments.Length
                 ? arguments[index + 1]
                 : string.Empty;
-        }
-
-        private static string[] GetExtraScriptingDefines(
-            string[] arguments,
-            params string[] required)
-        {
-            var catalogVariant = GetArgument(arguments, "-catalogVariant");
-            if (string.IsNullOrWhiteSpace(catalogVariant))
-                return required;
-            if (string.Equals(catalogVariant, "children", StringComparison.OrdinalIgnoreCase))
-                return required.Concat(new[] {"NOVELS_CHILDREN_CATALOG"}).ToArray();
-            if (string.Equals(catalogVariant, "nochelessie", StringComparison.OrdinalIgnoreCase))
-                return required.Concat(new[] {"NOVELS_NOCHELESSIE_CATALOG"}).ToArray();
-            if (string.Equals(catalogVariant, "scp", StringComparison.OrdinalIgnoreCase))
-                return required.Concat(new[] {"NOVELS_SCP_CATALOG"}).ToArray();
-            throw new InvalidOperationException(
-                $"Unsupported catalog variant: {catalogVariant}.");
         }
 
         private static void ApplyTestSigning(string[] arguments, bool isDevelopmentBuild)
@@ -302,17 +283,6 @@ namespace Editor
             PlayerSettings.Android.bundleVersionCode = numericBuild;
             PlayerSettings.iOS.buildNumber = buildNumber;
             PlayerSettings.macOS.buildNumber = buildNumber;
-            var catalogVariant = GetArgument(arguments, "-catalogVariant");
-            if (string.Equals(
-                    catalogVariant,
-                    "nochelessie",
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                PlayerSettings.productName = "Ночелесье";
-                PlayerSettings.SetApplicationIdentifier(
-                    NamedBuildTarget.Android,
-                    "ru.nochelessie.novels");
-            }
             Debug.Log($"Player build identity: version={version}, build={buildNumber}.");
             return snapshot;
         }

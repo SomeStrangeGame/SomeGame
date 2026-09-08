@@ -171,6 +171,35 @@ namespace Novels.ContentSdk.Editor
             Content.NovelDefinition definition,
             ValidationReport report)
         {
+            foreach (var video in definition.Episodes.Select(episode => episode.CatalogVideo)
+                .Append(definition.CatalogVideo).Where(video => !string.IsNullOrWhiteSpace(video)))
+            {
+                try
+                {
+                    var fileName = ContentAddressing.ContentPackageConvention.CatalogVideoFileName(video);
+                    var videoPath = Absolute("Config/CatalogVideos/" + fileName);
+                    if (!File.Exists(videoPath) || new FileInfo(videoPath).Length == 0)
+                        report.Error("CATALOG_VIDEO_MISSING", $"Catalog video '{fileName}' does not exist or is empty.");
+                }
+                catch (ArgumentException exception)
+                {
+                    report.Error("CATALOG_VIDEO_INVALID", exception.Message);
+                }
+            }
+            foreach (var episode in definition.Episodes)
+            {
+                if (string.IsNullOrWhiteSpace(episode.CatalogCover)) continue;
+                try
+                {
+                    var fileName = ContentAddressing.ContentPackageConvention.EpisodeCoverFileName(episode.CatalogCover);
+                    if (!File.Exists(Absolute("Config/EpisodeCovers/" + fileName)))
+                        report.Error("EPISODE_COVER_MISSING", $"Episode '{episode.Id}' cover '{fileName}' does not exist.");
+                }
+                catch (ArgumentException exception)
+                {
+                    report.Error("EPISODE_COVER_INVALID", $"Episode '{episode.Id}': {exception.Message}");
+                }
+            }
             var path = ContentAssets.InkPath(definition.Prefix, definition.StoryPath);
             if (!File.Exists(path))
             {

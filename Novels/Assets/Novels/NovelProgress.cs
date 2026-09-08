@@ -16,26 +16,48 @@ namespace Novels
         private static readonly byte[] _magic = { 0x4E, 0x50, 0x52, 0x31 };
         private const byte _formatVersion = 1;
 
-        private readonly Content.NovelDefinition _definition;
+        private readonly string _contentId;
+        private readonly string _contentVersion;
+        private readonly IReadOnlyList<Content.EpisodeDefinition> _episodes;
+        private readonly bool _resetIncompatible;
         private readonly string _key;
         private readonly Func<string, byte[]> _read;
         private readonly Action<string, byte[]> _write;
         private readonly Action<string> _delete;
+        private readonly Func<string, bool> _exists;
         private readonly Action<(LogType type, string message)> _log;
         private readonly Dictionary<string, string> _entryStates =
+            new(StringComparer.OrdinalIgnoreCase);
+        private readonly HashSet<string> _completedEpisodes =
             new(StringComparer.OrdinalIgnoreCase);
 
         internal NovelProgress(
             Content.NovelDefinition definition,
             string persistentDataPath,
             Action<(LogType type, string message)> log)
+            : this((definition ?? throw new ArgumentNullException(nameof(definition))).Id,
+                definition.ContentVersion, definition.Episodes, persistentDataPath, log)
         {
-            _definition = definition ?? throw new ArgumentNullException(nameof(definition));
+        }
+
+        internal NovelProgress(
+            string contentId,
+            string contentVersion,
+            IReadOnlyList<Content.EpisodeDefinition> episodes,
+            string persistentDataPath,
+            Action<(LogType type, string message)> log,
+            bool resetIncompatible = true)
+        {
+            _contentId = contentId;
+            _contentVersion = contentVersion;
+            _episodes = episodes;
+            _resetIncompatible = resetIncompatible;
             var cache = new Cache.Entity(persistentDataPath);
-            _key = $"Saves/{Uri.EscapeDataString(definition.Id)}/Progress";
+            _key = $"Saves/{Uri.EscapeDataString(_contentId)}/Progress";
             _read = cache.ReadBytes;
             _write = cache.WriteBytes;
             _delete = cache.Delete;
+            _exists = cache.Exists;
             _log = log;
             Load();
         }
@@ -45,24 +67,32 @@ namespace Novels
             get
             {
                 var count = 1;
-                while (count < _definition.Episodes.Count
-                    && _entryStates.ContainsKey(_definition.Episodes[count].Id))
+                while (count < _episodes.Count
+                    && _entryStates.ContainsKey(_episodes[count].Id))
                 {
                     count++;
                 }
-                return _definition.Episodes.Take(count).ToArray();
+                return _episodes.Take(count).ToArray();
             }
         }
 
         internal string GetEntryState(Content.EpisodeDefinition episode) =>
             _entryStates.TryGetValue(episode.Id, out var state) ? state : null;
 
+        internal IReadOnlyCollection<string> CompletedEpisodeIds => _completedEpisodes;
+
         internal void Begin(Content.EpisodeDefinition episode)
         {
             var index = IndexOf(episode.Id);
             var changed = false;
-            for (var position = index + 1; position < _definition.Episodes.Count; position++)
-                changed |= _entryStates.Remove(_definition.Episodes[position].Id);
+            for (var position = index; position < _episodes.Count; position++)
+            {
+                var affected = _episodes[position].Id;
+                if (_completedEpisodes.Remove(affected))
+                    _delete(CompletionKey(affected));
+            }
+            for (var position = index + 1; position < _episodes.Count; position++)
+                changed |= _entryStates.Remove(_episodes[position].Id);
             if (changed)
                 Save();
         }
@@ -70,20 +100,24 @@ namespace Novels
         internal void Complete(Content.EpisodeDefinition episode, string continuationState)
         {
             if (string.IsNullOrWhiteSpace(continuationState))
+            {
+                MarkCompleted(episode.Id);
                 return;
+            }
+            MarkCompleted(episode.Id);
             var next = IndexOf(episode.Id) + 1;
-            if (next >= _definition.Episodes.Count)
+            if (next >= _episodes.Count)
                 return;
-            _entryStates[_definition.Episodes[next].Id] = continuationState;
+            _entryStates[_episodes[next].Id] = continuationState;
             Save();
         }
 
         private int IndexOf(string episodeId)
         {
-            for (var index = 0; index < _definition.Episodes.Count; index++)
+            for (var index = 0; index < _episodes.Count; index++)
             {
                 if (string.Equals(
-                    _definition.Episodes[index].Id,
+                    _episodes[index].Id,
                     episodeId,
                     StringComparison.OrdinalIgnoreCase))
                 {
@@ -95,6 +129,11 @@ namespace Novels
 
         private void Load()
         {
+            foreach (var episode in _episodes)
+            {
+                if (_exists(CompletionKey(episode.Id)))
+                    _completedEpisodes.Add(episode.Id);
+            }
             try
             {
                 Decode(_read(_key));
@@ -107,7 +146,7 @@ namespace Novels
                 _entryStates.Clear();
                 try
                 {
-                    _delete(_key);
+                    if (_resetIncompatible) _delete(_key);
                 }
                 catch (Exception deleteException)
                 {
@@ -115,18 +154,29 @@ namespace Novels
                 }
                 _log?.Invoke((
                     LogType.Warning,
-                    $"Novel progress is incompatible and was reset: {exception.Message}"));
+                    $"Novel progress is incompatible ({(_resetIncompatible ? "reset" : "read-only preview; preserved")}): {exception.Message}"));
             }
         }
 
         private void Save() => _write(_key, Encode());
 
-        private string ContentVersion => _definition.ContentVersion;
+        private void MarkCompleted(string episodeId)
+        {
+            if (!_completedEpisodes.Add(episodeId))
+                return;
+            _write(CompletionKey(episodeId), new byte[] { 1 });
+        }
+
+        private string CompletionKey(string episodeId) =>
+            $"Saves/{Uri.EscapeDataString(_contentId)}/"
+            + $"Completed/{Uri.EscapeDataString(episodeId)}";
+
+        private string ContentVersion => _contentVersion;
 
         private string LegacyContentVersion => string.Join(
             "|",
-            _definition.Episodes.Select(episode =>
-                $"{episode.Id}:{_definition.ContentVersion}"));
+            _episodes.Select(episode =>
+                $"{episode.Id}:{_contentVersion}"));
 
         private byte[] Encode()
         {
@@ -134,7 +184,7 @@ namespace Novels
             using var writer = new BinaryWriter(stream, Encoding.UTF8);
             writer.Write(_magic);
             writer.Write(_formatVersion);
-            writer.Write(_definition.Id);
+            writer.Write(_contentId);
             writer.Write(ContentVersion);
             writer.Write(_entryStates.Count);
             foreach (var entry in _entryStates.OrderBy(pair => pair.Key, StringComparer.Ordinal))
@@ -151,14 +201,14 @@ namespace Novels
             using var reader = new BinaryReader(stream, Encoding.UTF8);
             if (!reader.ReadBytes(_magic.Length).SequenceEqual(_magic)
                 || reader.ReadByte() != _formatVersion
-                || !string.Equals(reader.ReadString(), _definition.Id, StringComparison.Ordinal)
+                || !string.Equals(reader.ReadString(), _contentId, StringComparison.Ordinal)
                 || !MatchesContentVersion(reader.ReadString()))
             {
                 throw new InvalidDataException("Novel progress envelope is incompatible.");
             }
 
             var count = reader.ReadInt32();
-            if (count < 0 || count > _definition.Episodes.Count - 1)
+            if (count < 0 || count > _episodes.Count - 1)
                 throw new InvalidDataException("Novel progress entry count is invalid.");
             for (var index = 0; index < count; index++)
             {
