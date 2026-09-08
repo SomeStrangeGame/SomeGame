@@ -1,8 +1,34 @@
 # Acceptance preparation
 
-Status: `ready-for-final-validation` after the author-authorized additional
-originality review. Static/story-logic checks are complete; this is not an
-accepted or catalog-registered candidate. Unity still requires separate approval.
+Status: `blocked` pending revalidation after the first real Ink compile failure.
+The local integration branch now has the catalog entry; this is not accepted
+or published. The syntax fix below preserves all narrative behavior.
+
+## First final-slot attempt and syntax correction — 2026-09-08
+
+- Canonical integration branch: `codex/story-batch-chernaya-melnitsa`; story
+  commit `8e7f2b6f`, catalog entry commit `10281a7b`. Existing zdm/tzm preserved.
+- The earlier screenshot belongs to the closing Novels Editor, not this story:
+  log stack `WindowLayout.SaveWindowLayout` failed to use a missing Temp file.
+  The log records Force Quit; no tracked Novels source changed. The reason for
+  the missing temporary file is unresolved; no caches/saves were cleared.
+- A fresh batch Unity started successfully; Hub PID 79793 was closed by the
+  approved runner. First cold import created expected Unity asset metadata.
+- `content-gate-20260908T110028Z.log` failed in real Ink compilation:
+  old s01e01.ink line 229 mixed inline-start condition and another conditional
+  branch. The source now nests that branch inside `else`, with unchanged text.
+- Current source hash is
+  `dddcedbb0c94cf1513a5327058ff4d881d7bfc505998733c8e2e65c721fb4253`.
+  All 72 routes preserve identical displayed text, choices and intermediate/final
+  states. The static parser now rejects the original malformed syntax; its
+  regression fixture checks that specific rejection, not merely any exception.
+- No completed content/catalog build, compiled story/source map, APK, emulator
+  run or visual acceptance is claimed. Repeat final-slot approval is requested
+  separately under UnityConcurrency; generic auto-approval is recorded for
+  ordinary scoped decisions, not substituted for this gate.
+
+Earlier preparation records below are historical; old hashes and statements
+about an unregistered catalog or unopened Unity are superseded by this section.
 
 ## Candidate identity
 
