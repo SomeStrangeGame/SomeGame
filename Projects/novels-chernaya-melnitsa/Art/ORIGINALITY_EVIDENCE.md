@@ -2,7 +2,84 @@
 
 This is an internal similarity-risk screen, not legal clearance.
 
+## Non-character art iteration 4 — final two-illustration repair, 2026-09-08
+
+Result: `passed`, low observed similarity risk, limited confidence. Full current
+candidate reviewed: all13 scene rasters (new workshop ill01 plus corrected ill02),
+story/episode covers, complete current Bubble raster set and unchanged procedural
+audio. The unchanged images retain the direct visual inspection from iteration3
+in this same chat; the selected centered workshop was newly inspected against
+that whole package. No character/Ink/audio redesign is part of this iteration.
+
+The current [JE Marine source page](https://www.jemarine.net/outboard-services)
+was reopened; its workshop photograph was already visually inspected directly
+in the browser in iteration3. Comparison with the final centered motor preserves
+the same distinction: common functional motor/stand/tools versus branded crowded
+multi-engine shop; our own timber interior combines quiet tea, an exterior paper
+pinwheel and empty character staging. Fresh searches for boat/workshop/pinwheel/
+tea illustration and outboard/workshop painting interior returned generic marine
+service/painting material, not an established matching expressive arrangement.
+Search results are discovery only, not additional verified visual evidence.
+
+The full current package still uses its own black-flour/correspondence/wooden-mill
+and grain-knot visual vocabulary, with no new identifiable franchise iconography
+or substantial matching distinctive combination in the accessible comparisons.
+No external image was a generation input. Reverse-image and palm-source loading
+limitations from iteration3 remain; this is not exhaustive uniqueness or legal
+clearance. Stop at this passing iteration; no further originality redesign made.
+Exact final input/output and prompt: `IllustrationRepair/README.md` and PROMPTS.md.
+This gate does not validate Unity import, mobile crop/overlays or story acceptance.
+
+## Non-character art iteration 3 — 2026-09-08, partial repair candidate
+
+Result: `passed`, low observed expressive-similarity risk, limited confidence.
+This is an originality result, NOT semantic-art acceptance: ill01 remains wrong
+for its scene and blocks acceptance. Candidate: all thirteen scene rasters,
+story cover, episode cover (unchanged bg11 reuse), complete current Bubble raster
+set and unchanged procedural audio; ONLY ill02 is replaced by the selected
+upper-frame palm draft `exec-67b7a530-bd28-48ef-89ba-3f80885082dd.png`.
+All scene/cover/UI images were visually reviewed, including the two replacement
+drafts. Existing audio provenance and previous comparison limitations carry
+forward; no new sample, recording or audio composition was introduced.
+
+Fresh descriptive/image searches: boat outboard motor repair wooden workshop
+interior; hand black powder palm old book dark illustration; boat engine
+workshop interior outboard repair; black powder hand palm charcoal photograph.
+Direct sources, not search snippets:
+
+- [JE Marine workshop](https://www.jemarine.net/outboard-services): page and
+  actual workshop photograph inspected in browser. Shared outboard silhouette,
+  stand and tools are functional forms. Its crowded branded multi-engine shop,
+  yellow metal framing and concrete floor differ from the quiet wooden-room,
+  tea/window/pinwheel draft; no source image used in generation.
+- [Poppy Thomas Hill's palm/match photograph](https://www.pexels.com/photo/burn-matchstick-on-a-person-s-hand-6609331/):
+  direct author/photo description read. Palm and charcoal residue are shared
+  ordinary motifs; the new insert instead combines flour, canon coat cuff,
+  wet cloth and closed book in the mill. Full photograph failed to load in both
+  web and browser, so no pixel/composition comparison is claimed for this source.
+- [Thames Ditton Boatyard](https://thamesdittonboatyard.co.uk/): discovered as a
+  workshop comparison, but direct image retrieval failed; not counted as visual
+  evidence. Unpublished project images were not uploaded to reverse search.
+
+The full package retains generic timber mill/forest/river spaces, correspondence,
+black-flour traces, restrained indigo/rye-gold lighting and grain-knot UI, without
+new franchise motifs or an established matching distinctive combination in the
+accessible comparisons. Prior iterations 1–2 retain their source limitations.
+Search is non-exhaustive; no reverse-image service or unpublished corpus was
+available, and the palm source supports only a descriptive comparison. This
+bounded low-risk assessment is not proof of uniqueness or legal clearance.
+The pending workshop replacement was NOT imported or granted a final gate;
+its eventual final composition requires full-package iteration 4 before import.
+Exact prompts/draft failures: `IllustrationRepair/PROMPTS.md` and README.md.
+
 ## Current status — passed after the authorized additional review
+
+Character technical follow-up v6,2026-09-08: warm-fringe/ribbon cleanup only,
+without generation or new references. Core artwork is byte-identical; identity,
+pose, costume and composition preserved in all11 reviewed variants. Existing
+character originality screen remains applicable as a non-material technical
+change, not a new originality iteration. Exact current PNG hashes and bounds
+changes are recorded in `EdgeCleanup/v6/README.md` and its report.
 
 Technical update 2026-09-08: current source SHA-256 is
 `dddcedbb0c94cf1513a5327058ff4d881d7bfc505998733c8e2e65c721fb4253`.
@@ -16,7 +93,7 @@ The earlier full-text review below remains applicable under the protocol's
 non-material technical-change rule; this is not another originality iteration.
 The old source hash below identifies the reviewed pre-syntax-fix snapshot.
 
-Current source SHA-256:
+Reviewed pre-syntax-fix source SHA-256 (historical):
 `23c5a5fc2ce1d22b0c2d8dac06c76b26da4a75addc6f071312577293ddb7021e`.
 The user-requested causal revision adds the initial telephone intermediary and
 Mitya's later conscious avoidance, and separates personal release from physical
@@ -283,6 +360,19 @@ features assessed in iteration 5, so that result and its limitations are
 retained. This is a documented applicability assessment, not a sixth iteration,
 fresh web screening or broader originality claim. Any later material rewrite
 must not silently inherit this result.
+
+## Technical character-edge correction — 2026-09-08
+
+Applicability assessment, not a new screening iteration: the user authorized
+deterministic cleanup without regeneration. Eleven existing PNGs changed only
+at connected extraction-field spill/alpha edges, invisible RGB, and two remote
+mask scraps. Canvas registration and body silhouettes are preserved; faces,
+poses, costume designs, props and interior palette/artwork remain unchanged.
+Pixel invariants and before/after review are recorded in `Art/EdgeCleanup/`.
+No new expressive material, external reference or licensing input was used.
+Existing character originality evidence and its limitations therefore remain
+applicable; no new web/reverse search or broader originality claim is made.
+This cosmetic assessment does not waive the pending fresh Player alpha gate.
 
 ## Direct search sources
 

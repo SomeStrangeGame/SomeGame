@@ -1,0 +1,26 @@
+{
+  "ill01-mitya-found.png": {
+    "sha256": "850fe43591f213e410786d13db5efdae47df423474fefaec35fa60e59eb69130",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "opaque": true,
+    "meta_unchanged": true,
+    "meta_sha256": "bde7a49d51d4b8323758071a287d35108461084af2cd2bf50076cfe7c44cdf73",
+    "old_sha256": "81f4bafc15b88343d6d6e0bcae7c9cbfb74c3d4db0f36881b727b4bcb38631c1"
+  },
+  "ill02-black-flour-hand.png": {
+    "sha256": "f40d4a0caf20f2c5d4e608f5108ebf22e3f0655e688a4dd9e2c0cea32c3cf89d",
+    "size": [
+      1672,
+      941
+    ],
+    "mode": "RGB",
+    "opaque": true,
+    "meta_unchanged": true,
+    "meta_sha256": "50d7448dd4e2a1986267f3f2f63f8348dfd6392009cdf7e89ab11edbf9b02caf",
+    "old_sha256": "6838d04132ccac0862639a19b684ae8cfb25d86936c91525ffe248c2aa032836"
+  }
+}
