@@ -5,7 +5,7 @@ Atomic Unity story project for the «Кострома» series.
 - Story ID: `chernaya-melnitsa`
 - Genre: фольклорный хоррор
 - Factual basis: wholly fictional
-- Status: locally integrated and catalog-registered, but not accepted/published.
+- Status: source integrated and catalog-registered; final acceptance remains open.
   Ink plus Editor/Android content builds pass with all 72 routes unchanged.
   The latest single-story APK imported the raised/enlarged characters (+20%)
   and lower Bubble: inspected long-dialogue panels no longer cover faces.
@@ -24,7 +24,8 @@ Atomic Unity story project for the «Кострома» series.
   `Art/IllustrationRepair/README.md`. Next is a separately approved fresh
   single-story build/device gate; v6 contains neither corrected illustration.
   Concurrent catalog/runtime source changes are not validated by the v6 APK.
-  The test catalog intentionally contains only this story.
+  Local test builds intentionally use only this story; the shared source catalog
+  retains its other registered stories.
 - Template: `Projects/novels-content-template` at base `c5a431e30ff8`
 - Unity/MCP: repository-relative packages and template configuration retained;
   live proof belongs to the separately authorized final validation slot.

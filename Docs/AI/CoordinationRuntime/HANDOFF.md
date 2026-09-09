@@ -117,3 +117,13 @@ Completed TK web publication record (its single-story manifest was immediately c
 
 Completed TK channel restoration, release automation and website framing records:
 [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
+
+## Previous primary publication receipt
+
+Task: Commit and publish the current primary checkout only; user explicitly excluded all worktrees.
+Changed: fallback catalog/runtime/SDK and tools, primary Volchya Poshlina source snapshot, skills and existing documentation/evidence. Generated screenshots remain local and ignored; Kolodets whitespace-only churn normalized without content changes.
+Validation: docs-check and all three tooling suites passed; zsh syntax and staged whitespace checks passed. Prior catalog Editor/build evidence above retained; no new Unity/device or story acceptance claimed.
+Publication: canonical git-publish confirmed local HEAD = origin/main = `bb161ec48bdc2cafbaed310b469f13db2c23d0d7`; nine previously unpushed primary commits published, including three created in this task. This receipt is committed separately.
+Pending / risks: all existing device/remote/manual gates remain deferred. No worktree branches or files integrated; catalog still contains zdm/tzm only.
+
+2026-09-08 — catalog-progress-publish: feature commit dcb976a73ab946f8d413c836077cc1f8fd97a7c7 confirmed on origin/main. Approved episode reading bar, optional version/hash-bound estimate, evidence and pending gates: [publication report](../archive/reports/CatalogEpisodeProgress-2026-09-08.md). Isolated clean copy; no story commits/registry/primary checkout changes. Primary feature diff remains local despite publication; reconcile deliberately during later integration.
