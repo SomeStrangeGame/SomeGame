@@ -103,3 +103,11 @@ Completed TK channel restoration, release automation and website framing records
 [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
 
 Previous primary and catalog-progress publication receipts: [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
+
+## 2026-09-09T16:47:45Z — final-main-integration — completed
+
+Task: Integrated both Kostroma stories and release infrastructure into main; tooling, story routes, docs and remote SHA checks passed; catalog rebuild was skipped because the user's Catalog Unity Editor is open; removed the integrated Trinadtsatyy Kolokol worktree.
+Changed: Docs/AI
+Validation: finish-task passed (1 gates).
+Pending / risks: none
+Suggested next step: none
