@@ -1,6 +1,6 @@
 # Ready for final validation
 
-Status: `ready-for-final-validation` (not accepted, not catalog-registered).
+Status: source candidate for final validation (not accepted, not catalog-registered; visual format and duration remain unverified).
 
 ## Completed static scope
 
@@ -8,20 +8,31 @@ Status: `ready-for-final-validation` (not accepted, not catalog-registered).
 - `card.json`, `NovelContentAsset`, six source episodes and root include authored.
 - Five characters, 20 distinct whole-image variants; all 20 PNGs report an alpha channel.
 - Sixteen distinct locations, twelve used choice icons, cover, story-local Bubble prefab/sprites.
+- Six distinct episode catalog covers in `Config/EpisodeCovers`, assigned by `_catalogCover` for s01e01–s01e06. Full source-art review and generation evidence: `EPISODE_COVERS.md` and `EPISODE_COVER_PROMPTS.md`.
 - Two music/ambient WAV files and six SFX, synthesized without external samples.
-- Five meaningful choice groups (12 individual decisions) and three statically reachable ending knots.
+- Five meaningful choice groups (five decisions per route, twelve authored options) and three statically reachable ending knots.
 - All referenced location, choice-icon and audio IDs resolve to exact files in a dependency-free audit.
-- Narrative, characters, non-character art and complete source Ink each have current originality evidence with the search limitation stated.
+- Narrative/text review iteration 4 is recorded in `ORIGINALITY_EVIDENCE.md`; unchanged character and non-character art retain their prior limited reviews. This is not visual acceptance.
 
-## Static evidence (2026-09-06)
+## Static evidence (refreshed 2026-09-07)
 
 - `Tools/novels-tools/novels-content doctor` → configuration valid.
 - `python3 -m json.tool Config/card.json` → valid JSON.
 - Scoped `git diff --check` → clean.
 - Selector audit → no missing referenced location, choice or audio file.
-- Reachability audit → sequential `LZT_s01e01`…`LZT_s01e06`; endings `ending_shared`, `ending_white_map`, `ending_nameless`, each terminates at `END`.
+- `python3 Projects/novels-les-zabyvshiy-tropy/Art/check_source.py` → 72 source routes; sequential `LZT_s01e01`…`LZT_s01e06`; 24 shared, 9 white-map and 39 nameless endings, each reaches `END`. Checks five episode markers and one final marker per route, resource/speaker resolution, choice/global naming collisions, callback consistency and failed-bind explanation. This bounded source interpreter is not an Ink compiler.
 - Inventory: 20 character variants, 16 locations, 12 used choice icons, 8 WAV files.
-- Length: 4,751 source word units; estimated reachable displayed route 3,750–4,150 words and 27–34 minutes at visual-novel reading pace including choices and scene transitions.
+- Selector audit: explicit selectors and neutral defaults resolve to 20 produced PNGs, including protagonist runtime ID `maincharacter`. Previous name-only auditing missed this mapping and indented speakers.
+- Prior media header audit: all 51 PNG signatures valid; character PNGs RGBA; all 8 WAV files mono 16-bit PCM at 44.1 kHz. Header checks do not establish full decoding, alpha-edge quality or seamless audio loops.
+- Length: 5,271 source word units; 3,542–3,650 displayed word units per route including offered choice text. At an assumed 145–165 words/minute this is roughly 21–25 minutes of reading, plus decisions/transitions. The target 25–45 minutes needs actual timing; the prior 27–34 estimate is withdrawn.
+- Source SHA-256 (ordered root and episode names/bytes): `5705dd152565c3cb66cc498a87ee249468c6ffcd5887459ee6388bb215e6ed3a`. The audit prints a new digest when inputs change.
+- Re-review checks: melody introduced before its callback on every route; warning about Lada's possible exclusion; closed jar stored for the crossing; all five characters covered by another person's memory in the shared resolution.
+
+See `STORY_REVIEW.md` for fixes, save compatibility and residual evidence limitations.
+
+### Episode-cover update — 2026-09-08
+
+All six RGB PNGs fully decoded and passed Pillow verification at 1024×1536; source bytes preserved from generated masters. Updated dependency-free source audit checks six exact bindings, PNG headers/dimensions, distinct hashes and no duplication of the story cover. Three in-memory invalid-binding probes were rejected. Doctor and 72 routes still pass; Ink digest is unchanged. This worktree's SDK predates the cover contract: integrate current main before opening/importing this definition in Unity, then verify preview export and all six real catalog cards. PNG payload totals 18,452,350 bytes; startup delivery cost and UI crop still require final validation. The prior 51-PNG audit above is historical and excludes these six new files.
 
 ## Deferred by mandatory authorization boundary
 
@@ -29,4 +40,4 @@ No Unity Editor, Ink compilation, `.ink.json`/source-map generation, asset impor
 
 The separately authorized acceptance slot must: import the project; confirm MCP live/restart proof; compile Ink; audit every selector in generated content; register the card in the requested Catalog position; build story and Catalog; build a fresh Android Embedded APK; replay all five choice groups and all three endings through the real Catalog flow; verify save/resume and absence of fallback markers; inspect character alpha edges/scale, all backgrounds, long dialogue, maximum choice group, safe area and Bubble pressed/fallback states.
 
-Known visual risk to judge in Player: generated character sheets required deterministic dark-matte keying. Alpha exists, but subtle residual halo or loss in dark clothing edges is possible and is blocking if observed. UI crops and the four new scene crops must likewise be checked on real scene backgrounds. No publication or integration is authorized.
+Known visual risk to judge in Player: generated character sheets required deterministic dark-matte keying. Alpha exists, but subtle residual halo or loss in dark clothing edges is possible and is blocking if observed. Sixteen 627×627 backgrounds differ from the original 16:9 manifest target; `LocationLayout.SetVisualSize` fits source dimensions to the available height, not a fixed 16:9 crop. Every composition still needs review against the actual viewport, character and Bubble placement. The two tall choice illustrations also need UI crop inspection. Source-format compliance is not established by changing the manifest wording. No publication or integration is authorized.

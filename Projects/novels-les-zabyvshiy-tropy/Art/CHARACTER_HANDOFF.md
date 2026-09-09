@@ -2,6 +2,8 @@
 
 Five original whole-image packages were produced from scene-derived identity briefs. Runtime roots are `Assets/Characters/<selector>/view/whole/<outfit>/`.
 
+Technical correction (2026-09-07): Nika's selector is `maincharacter`, as required by `CharacterAssetProfile` and `CharacterSpriteResolver` for the declared protagonist. Her four unchanged PNGs were moved from `ника` to `maincharacter`; the displayed name and identity remain Ника. Other selectors are `ася`, `филя`, `лада`, `яр`. No production pixels or existing Unity GUIDs changed.
+
 | Character | Protected identity | Produced states |
 | --- | --- | --- |
 | Ника | angular kind face, dark loose bun, compact athletic silhouette, moss field coat, map satchel | main, alert, tender, determined |
