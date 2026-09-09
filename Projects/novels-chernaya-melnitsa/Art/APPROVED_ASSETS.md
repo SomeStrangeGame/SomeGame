@@ -19,8 +19,8 @@ moonlit indigo and muted rye-gold; no franchise iconography, gore or embedded te
 | bg09-village-archive-night | `Assets/Locations/bg09-village-archive-night.png` | documentary trail and trapped-village map |
 | bg10-flooded-ford-night | `Assets/Locations/bg10-flooded-ford-night.png` | Mitya's river crossing evidence |
 | bg11-mill-undercroft | `Assets/Locations/bg11-mill-undercroft.png` | hidden release letters and Saveliy's intervention |
-| ill01-mitya-found | `Assets/Locations/ill01-mitya-found.png` | earned epilogue |
-| ill02-black-flour-hand | `Assets/Locations/ill02-black-flour-hand.png` | close narrative insert |
+| ill01-mitya-found | `Assets/Locations/ill01-mitya-found.png` | corrected later boat-motor workshop, two cups/window pinwheel in central portrait region; source checked, fresh runtime overlays pending |
+| ill02-black-flour-hand | `Assets/Locations/ill02-black-flour-hand.png` | corrected upper-frame Lada palm with black flour, canon cuff, wet cloth/book; source checked, fresh runtime pending |
 | cover | `Config/cover.png` | catalog cover |
 | episode `s01e01` cover | `Config/EpisodeCovers/s01e01.png` | hidden correspondence beneath the mill; episode-specific mystery, distinct from the exterior story cover |
 

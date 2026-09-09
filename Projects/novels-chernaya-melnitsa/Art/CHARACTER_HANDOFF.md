@@ -1,6 +1,36 @@
 # Character production handoff
 
-Status: passed for static production; in-Player visual gate deferred.
+Status: user accepted residual v6 contours as non-blocking on2026-09-08.
+They are unchanged, not fixed. APK39049f824adf verified releasefb7c51d4b322.
+Large Yakov guarded sleeve ribbon is gone and Lada215 fringe reduced, but
+Yakov217 retains red/maroon trousers edge and a greenish left-sleeve contour.
+See latest `ACCEPTANCE_EVIDENCE.md`; no further fix in this validation slot.
+All11 v6 PNG/meta hashes remain verified;15tests/build/runtime loading pass,
+not full story acceptance. Remaining runtime plan: `ACCEPTANCE_PLAN.md`.
+Current source proofs: `Art/EdgeCleanup/v6/README.md`.
+
+Historical v3 source correction: all 11 runtime PNGs had edge-only colour/alpha
+cleanup; 14,046 contaminated edge pixels corrected, plus two detached extraction
+scraps removed (Saveliy229px and Yakov guarded244px). Canvas768x1280, actual body
+silhouettes, interior artwork, all meta/GUIDs, prefab composition and canonical
+ASTC8 policy remain unchanged. Source comparisons on dark/light/blue backgrounds
+and seven regression fixtures pass. Details, exact hashes and before/after proofs:
+`Art/EdgeCleanup/README.md`. Earlier identity sheets/alpha proofs below are
+historical; use EdgeCleanup evidence for current production pixels. No new
+generation or design change; originality applicability is documented separately.
+
+## Historical Player failure (before source correction)
+
+2026-09-08 composition APK: raised characters at1.2 scale and lower Bubble
+preserve readable faces in inspected Lada/Nastasiya scenes. Lada at Ink172/204
+shows jagged brown/magenta edges around hair/clothing on dark backgrounds.
+Evidence: `Novels/Build/Logs/automation/chernaya-composition-20260908/`
+`replay-155242.png`, `replay-155348.png`. Residual coloured pixels are also
+visible in source `maincharacter/view/whole/coat/wary.png` and the earlier dark
+alpha proof. ASTC contribution has not been isolated. Source PNGs and canonical
+import policy remained unchanged during that slot. The source correction above
+now requires a fresh actual Player gate. The earlier “clean at review scale”
+statement is not a current bundled-texture pass.
 
 All characters use coherent whole-image variants on a common `768x1280`
 transparent canvas. Variants were produced as identity-consistent sheets, then

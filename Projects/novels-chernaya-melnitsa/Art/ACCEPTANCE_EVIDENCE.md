@@ -1,8 +1,424 @@
-# Acceptance preparation
+# Acceptance evidence
 
-Status: `blocked` pending revalidation after the first real Ink compile failure.
-The local integration branch now has the catalog entry; this is not accepted
-or published. The syntax fix below preserves all narrative behavior.
+Status: source art `ready-for-final-validation`; runtime acceptance incomplete.
+Source repair 2026-09-08: both semantic mismatches corrected. ill01 is a centered
+boat-motor workshop with two cups/window pinwheel; ill02 is Lada's upper-frame
+palm with black flour, canon cuff, damp cloth/book. PNG/meta/source-selector
+checks and full non-character originality iteration4 passed with limitations.
+No fresh Unity import/Player visual pass. See `IllustrationRepair/README.md` and
+source-check.json for exact hashes, composition boundaries and historical failures.
+The old v6 APK/candidate pins and runtime findings below are historical; do not
+mistake their unchanged artifact hashes for current source-art freshness.
+The user accepted only the earlier residual character contours as non-blocking;
+they were NOT fixed. Illustration fixes are source changes, not a waiver.
+The full visual matrix and remaining semantic route/ending gates remain open.
+
+## Runtime route check — 2026-09-08, 14:10–14:46 UTC
+
+User «Давай проверим теперь» authorized the prepared immutable-v6 replay.
+No new build/install: APK39049f824adf/releasefb7c51d4b322 and one-story catalog
+verified before and after. Full candidate identity is in the v6 section below.
+Actual test package/Activity, API34/ARM64 Pixel7/1080x2400, AVD
+Novels_CHM_20260908/emulator-5554 are unchanged.
+
+**Historical v6 blockers, distinct from the accepted character contours:**
+
+- `Assets/Locations/ill01-mitya-found.png` contains the mill-side river crossing,
+  repeating the composition of bg08 (not byte-identical), rather than the later
+  Mitya/workshop settlement of narrative scene12/Ink459–473. Confirmed in the
+  actual ending and source PNG. `R01-road.png`/`failure-final.png` are settled
+  Ink473 evidence; `R01-road-line-466.png` is a partially faded dialogue frame,
+  not a clean-opacity visual pass. Source SHA256
+  `81f4bafc15b88343d6d6e0bcae7c9cbfb74c3d4db0f36881b727b4bcb38631c1`.
+- `Assets/Locations/ill02-black-flour-hand.png` is a wide sack-room interior,
+  with no hand or close flour insert required by APPROVED_ASSETS/Ink282–284.
+  Confirmed by direct source-image review; no separate settled device capture
+  of this short insert was preserved, so this is explicitly source evidence.
+  SHA256 `6838d04132ccac0862639a19b684ae8cfb25d86936c91525ffe248c2aa032836`.
+
+Return both assets to the production-art workflow for scene-matched correction,
+applicable originality/provenance review, then a separately authorized fresh
+single-story build/device gate. No images/Ink/runtime source were repaired here.
+
+Actual R01 choices: find_mitya → go_alone → open_lada_sack → take_promises →
+ending_road, numeric IDs `[1,1,0,1,0]`, confirmed by telemetry and real save.
+Reached the road ending title at Ink473; stopped on art mismatch BEFORE tapping
+the final title. No episode.completed, catalog-completion or post-ending restart
+pass. R02–R05 were not run. The static72-route/365-line plan is not device coverage.
+
+Cold Continue after C2/C3/C4 passed at Ink137/293/333: identical before/after OCR
+text, new process each time, real decision history retained (94/208/220 saved
+decisions). Read-only inspection follows SaveDataCodec v3; no save injection.
+The observed text preserves release from Mitya's promise, foreign re-exposure
+and delayed recovery at Ink437; runtime variables were not inspected directly.
+Four app runIds/PIDs: b27f085e12c74c5f9952ee5eb036512d/5293,
+a48758aa21874e95b9f81a7a4d010717/12579,
+2edcf8d6a7134d819fa95f52a8e64342/19123,
+701a74c4f730493887709385ffc9bb18/20785.
+325 unique events,288 dialogue.ready,5choice.selected; no error/fallback.used,
+FATAL/ANR/Unity error-level markers in saved PID logs. All four story activations
+match the same release. Sampled long Bubble and C1/C2/C4/C5 text fit without face
+overlap/clipping; full13scene/11character/8audio and platform matrices stay open.
+
+Evidence: `Novels/Build/Logs/automation/chernaya-routes-20260908/REPORT.md`,
+`runtime-report.json`, `runtime-journal.json`, observed JSONL, screenshots/PID logs,
+full failure logcat and activity BEFORE stop. Early helper taps could precede
+Bubble readiness: fixed only in the ignored helper. Transitional screenshots
+and the initial still-open restart modal (`R01-C1`) are not Player failures or
+visual passes. In-game restart used the real catalog hold2s confirmation.
+
+Original checkpoint201bytes, final345bytes and three intermediate save copies
+remain separate; actual final save contains284decisions/all5choices, no completion
+marker. Original progress was not restored silently. App20785 force-stopped/PID
+absent; AVD left device, shared unity released. Known ASTC software-emulator
+limitations and the prior explicit contour exception remain unchanged.
+
+User in «Проекты» explicitly allowed concurrent source-only catalog work.
+Checkout lock was safely transferred under the new narrow ParallelWorkDetails
+exception, retaining only immutable APK/device/ignored evidence ownership;
+tracked final docs were deferred until a second normal checkout slot. New
+catalog/runtime/Ink-engine source changes belong to that task and were NOT
+validated by this APK. No commits, merge, publication or broad catalog build.
+
+## Historical user decision and integration preparation — 2026-09-08
+
+User: «Это не страшно, продолжаем интеграцию» after the v6 residual-contour report.
+This is an explicit exception for the reported visual edges, not a retroactive
+clean-alpha pass or waiver of content/runtime correctness. Subsequent answer
+«Пока только подготовка без эмулятора» excludes Unity/ADB and new builds.
+Existing v6 candidate unchanged. `ACCEPTANCE_PLAN.md`/`ACCEPTANCE_ROUTES.json`
+define5 planned replays covering12choices/35condition outcomes/3endings and all
+365text/resource lines. None executed in this preparation. Candidate JSON pins
+source/compiled/map/APK hashes;3bundle/10payload ZIP hashes,11PNG/meta and
+one-story catalog verified. Two plan tests,layout audit,doctor pass. No art/Ink/
+catalog/SDK edit,save mutation,commit/publication. Next: explicit permission for
+remaining actual route/endings/save-resume/visual acceptance.
+
+## Fresh v6 APK validation — 2026-09-08, 13:48–13:58 UTC
+
+- Fresh user «Да» authorized exact-story final slot. Process preflight found no
+  Editor/Hub, existing LicensingClient91796 unchanged. Unity6000.3.11f1.
+- Story Editor gate134915Z22.210s; story Android135005Z9.202s; one-entry catalog
+  Android135118Z5.293s; Embedded ARM64 development Player135155Z37.940s: PASS.
+  No build all. Actual ZIP contains only chernaya-melnitsa/Android and one-entry
+  catalog. Previous composed cache recoverably preserved at
+  `Novels/Build/LocalContent-before-chernaya-v6-only-20260908T1350`.
+- APK `Novels/Build/Players/chernaya-melnitsa-v6-20260908/Novels.apk`,
+  81,160,454bytes, SHA256
+  `39049f824adf96c9f0b65a3b17671520f9853bb3fddaba52f83858dd5e456f01`,
+  version2026.09.08/code3517311,min25/target36,package
+  `com.UnityTechnologies.com.unity.template.urpblank`, UnityPlayerGameActivity.
+- Exact new story release
+  `fb7c51d4b322ccbee639cb642f7fa3c1cbb7019affe495ce2e355e38d2c3e267`
+  matches APK and release.activated in real run
+  `a10a52237baf4a66a29a36abaa1755ee`,PID4939.11events/3dialogue.ready;
+  catalog download→story→episode→resume215→advance217 pass, no fallback/error
+  events, Unity error-level/FATAL/ANR/content-root markers in saved PID log.
+- Dedicated Novels_CHM_20260908,API34 ARM64 software GPU,emulator-5554. ADB
+  transient offline after daemon restart resolved by bounded wait-for-device;
+  install-r Success, cold Activity launch and foreground confirmed. Current
+  inventory contains only5554; no foreign process/device changed.
+- Visual evidence `Novels/Build/Logs/automation/chernaya-v6-check-20260908/`:
+  `01-catalog.png` correct one-story cover/card; `02-resume.png` captured before
+  first settled dialogue and is not a pass. `03-lada-settled.png` is exact
+  Ink215 comparison with v3: pink fringe reduced, fine contour remains.
+  `04-yakov-guarded.png` at Ink217 uses the same guarded variant as old206:
+  large detached sleeve ribbon removed, but red/maroon strip remains along
+  right trousers and greenish edge is visible at left sleeve. Visual FAIL.
+  Do not equate improved source metric with complete edge acceptance. Green
+  edge origin is unresolved; do not label it a proven compression regression.
+- Each screenshot has PID-filtered log; `failure-full-logcat.log` preserves
+  wider diagnostics, `post-stop-activity.txt` is explicitly AFTER cleanup.
+  ASTC unsupported/decompress warnings persist: no physical ASTC quality,
+  memory, performance or compatibility pass. No whole route/endings claims.
+- Production11 PNG hashes and all11 metadata/GUIDs match v6 report. Unity-only
+  trailing spaces normalized in11character metas,13location metas and one
+  PlayerSettings file after byte/semantic comparison; no settings change.
+  15regression tests,configuration doctor and scoped diff checks PASS.
+- App force-stopped, PID absent; AVD remains device. Actual save copied before
+  install(2files199bytes) and after(2files201bytes); never restored/reset/erased.
+  Own locks released. No production fix, second build, commit or publication.
+  Next: separate bounded correction of residual pants/sleeve edge, then fresh
+  approval for another exact-story final slot. Preserve current failures.
+
+## Source matte follow-up — 2026-09-08, 13:29–13:45 UTC
+
+User approved deterministic repair without regeneration, not another heavy slot.
+Actual APK ASTC textures compared offline: broad sleeve ribbon already exists
+in source; compression adds staircase artefacts. Warm spill escaped v3 threshold.
+All11 PNGs now use edge-matte-v6:17,300 chroma pixels,941 ribbon pixels and162
+reviewed Yakov sleeve pixels corrected/removed. Six-pixel interior RGBA, canvas,
+registration, all metadata/GUIDs, Ink, prefab and SDK policy preserved. Mitya's
+right alpha bound contracts one pixel529→528, with no canvas movement.
+All11 full-body dark/light proofs and two controlled offline ASTC comparisons
+reviewed;15tests/72staticroutes/layout338dialogues/doctor pass. Exact hashes,
+methods, proofs and backup locations: `EdgeCleanup/v6/README.md`.
+No Unity/APK/ADB in this pass. Offline ASTC is not fresh Unity/device evidence;
+fine compression edges and full matrix still require separately approved
+one-story final slot. Catalog/build must contain only chernaya-melnitsa.
+
+## Historical v3 APK validation — 2026-09-08, 13:15–13:26 UTC
+
+- Fresh user «да» authorized this slot after the deterministic cleanup. Initial
+  process probe: no Editor/Hub; existing LicensingClient91796 unchanged. Exact
+  story Editor gate131522Z28.5s and Android131607Z10.652s passed; required
+  one-entry catalog Android131640Z5.946s passed. No other story built.
+- Player131734Z38.517s passed. APK
+  `Novels/Build/Players/chernaya-melnitsa-alpha-20260908/Novels.apk`,
+  81,157,466bytes, SHA256
+  `a712f2ffeabc0f9c56da451b8dea3c5629eef8121ab4e5245790a5b7dc70ab6a`,
+  package `com.UnityTechnologies.com.unity.template.urpblank`,
+  version2026.09.08/code3517277,minAPI25/target36. Actual ZIP has only this story,
+  Android, and one-entry catalog. No broad build all; Player skip-content-build
+  used after exact hash-verified isolated staging. Previous composed cache
+  preserved at `Novels/Build/LocalContent-before-chernaya-alpha-only-20260908T1317`.
+- New release `6fe829364b698b2ec2b393b2caf0dc3f6beb39f9cb523056a9939e1781e04f21`
+  appears in both APK and real release.activated event; old-cache identity is
+  excluded. Changed bundles chunk0/chunk2, unchanged chunk1. All11 production
+  PNG hashes and normalized meta hashes still match EdgeCleanup/report.json.
+- Preserved Novels_CHM_20260908 API34 ARM64 Pixel7 1080x2400, software GPU,
+  emulator-5554. Install-r Success and exact Activity COLD launch succeeded.
+  Separate emulator-5580 was visible in inventory but is not task-owned and was
+  never touched. Run `b0e18d85ddf24500962fb4e6a54992e5`, PID4151:18 events,
+  10 dialogue.ready, no choice/endings or fallback.used/error events. Real
+  catalog/download/release/episode chain passed; resumed at204, advanced to215.
+- Evidence: `Novels/Build/Logs/automation/chernaya-alpha-check-20260908/`.
+  `01-catalog.png` shows correct one-story card/cover and download22%; completion
+  later confirmed by catalog.download_ready. `02-resume.png` is a transitional
+  Ink169 background during restoration, NOT a visual pass. Filename labels in
+  the next two files were assigned before the actual speaker was known:
+  `03-yakov.png` actually shows Saveliy205; `04-lada.png` actually shows Yakov206.
+  Yakov206 has visible coloured strips around right sleeve/trousers; FAIL.
+  `05-lada-undercroft.png` and `06-final-failure.png` show Lada215 with residual
+  coloured/jagged hair/coat contour; FAIL. Text/faces remain separated in these
+  sampled scenes, but the whole layout/character matrix is not passed.
+- Full PID logs accompany every screenshot. AVD reports ASTC8X8 unsupported,
+  decompressing texture; this software-emulator run is not proof of physical
+  ASTC-capable device behaviour, GPU memory or performance. Neither the exact
+  compression contribution nor all remaining source-edge colours were isolated.
+  The earlier min(R,B)-G metric/static proof is insufficient for visual acceptance.
+- Seven regression fixtures and 338dialogue/12label/360choice-context layout
+  checks pass. Unity-generated whitespace-only metadata/settings rewrites were
+  normalized; no semantic importer, compression, prefab, Ink or art fix was made
+  during validation. Original input/output hashes remain applicable.
+- App force-stopped, PID absent; dedicated emulator remains device per standard
+  smoke cleanup. Test save copied after stop to `checkpoint-chernaya-melnitsa/`,
+  not altered/restored/deleted. No commit/publication. Locks released.
+- Next: return to technical edge/mask correction, inspect remaining warm/red
+  fringe and distinguish source from compressed output. Do not claim that the
+  first cleanup fixed the Player defect. Any subsequent material art fix needs
+  a separately approved fresh one-story final slot; full routes/endings and
+  remaining state/safe-area visual matrix were not continued past this failure.
+
+## Deterministic source-edge cleanup — 2026-09-08
+
+- User explicitly approved technical mask/edge-colour correction without
+  regeneration. Eleven runtime character PNGs corrected; no Ink, prefab,
+  metadata, shared compression, catalog or device/save changes in this task.
+- 14,046 edge pixels cleaned; isolated scraps removed from Saveliy229px and
+  Yakov guarded244px. Full canvas/body registration and interior art preserved.
+  Input/output/meta SHA256 manifest and source proof comparisons are in
+  `Art/EdgeCleanup/`. Originals retained in ignored
+  `Novels/Build/Logs/automation/chernaya-alpha-20260908/v3/before/`.
+- Seven edge/mask regression tests, 11-file pixel/hash invariants, 72 narrative
+  routes, 338 dialogue/12 label/360 choice-context layout checks and content
+  doctor pass. Source proofs inspected on dark/light/blue backgrounds. This is
+  source evidence, NOT ASTC simulation, Unity import or actual Player acceptance.
+- APK098ff515a0e1 below now predates current production PNGs. No Unity, content
+  build, APK or ADB run was started for this correction. Under
+  UnityConcurrency, separately authorize the fresh single-story final slot;
+  rebuild only chernaya-melnitsa and necessary one-entry catalog/Player. Never
+  build all. Preserve existing saves/checkpoints and restage isolated payload.
+- First recheck Lada172/204 and Yakov edges, both sides and light/dark scenes,
+  then broad Saveliy/Mitya, choice/safe-area/state matrix and the five planned
+  semantic paths/all endings/save-resume. Originality applicability retained
+  as a technical cosmetic correction, not a new design or screening iteration.
+
+## Composition APK validation — 2026-09-08, 12:41–12:56 UTC
+
+- Explicit user «Да», then «Закрыто» authorized the current final slot.
+  Initial process probe confirmed no Editor/Hub. Story Editor gate124135Z,
+  story Android124209Z and catalog Android124217Z all passed; Player log
+  `Novels/Build/Logs/automation/player-20260908T124243Z.log`, duration36.262s.
+  Catalog Editor was unchanged and not rebuilt during this slot.
+- Fresh APK: `Novels/Build/Players/chernaya-melnitsa-composition-20260908/Novels.apk`,
+  81,158,886 bytes, SHA256
+  `098ff515a0e17ac90f07fad6efb8ede99ed3369eee7d11918a0a12d10d49a504`.
+  Runner initially resolved relative output under root `Build/Players`; the
+  artifact was moved intact to the final path above. Package
+  `com.UnityTechnologies.com.unity.template.urpblank`, version2026.09.08 /
+  versionCode3517242, minAPI25, target36. Android story release
+  `c4c8379cce3657d310c85294d57c7e1cc593b6f53af63ad48ba5af6d044e3669`.
+  Actual ZIP confirms only chernaya-melnitsa and Android payloads; one-entry
+  registry. No other stories built and no `build all`. Player used
+  `--skip-content-build` after isolated staging; composed cache preserved at
+  `Novels/Build/LocalContent-before-chernaya-composition-only-20260908T1243`.
+- New character prefab imported with GUID `c33639195f26345c2a2f184e22156798`;
+  its exact runtime address appears in the Android release. All original PNG
+  bytes/Ink remain unchanged; generated texture metadata whitespace normalized.
+- Dedicated preserved AVD Novels_CHM_20260908, Pixel7 1080x2400, API34 ARM64,
+  emulator37.1.11, exact serial emulator-5554, software GPU. No resolution
+  override. APK installed with `-r`, launched through verified Activity and real
+  catalog. Run `956e46934594430ea381016efe8ee2cb`, PID3574, contains131 events:
+  ordered app/catalog/download/story/release/episode markers,122 dialogue.ready,
+  one choice.selected(1 = go_alone). No error/fallback.used markers occurred.
+- Catalog cover/one-card/Continue passed. Previous test save resumed at Ink49,
+  preserving prior sell_house selection. Continued through Ink204 with the
+  go_alone branch. This is NOT a full current-APK route or all-branch save/resume
+  proof. Real untouched save copies are under the evidence directory's
+  `checkpoints/route15-c2/` and `checkpoints/paused-alpha-review/`; none restored
+  or synthesized. Before C2 the SaveChoice envelope contains90 decisions and
+  choices[0]. Final saved progress is retained on the stopped dedicated AVD.
+- Evidence folder: `Novels/Build/Logs/automation/chernaya-composition-20260908/`.
+  `01-start.png`: correct real catalog. `02-nastasiya-long.png` (Ink50) and
+  `03-nastasiya-max.png` (Ink77): full named text fits and face stays above panel.
+  `replay-155117.png` (Ink124): both C2 choices fit and are readable.
+  `replay-155242.png` (Ink172) and `replay-155348.png` (Ink204): Lada's raised,
+  enlarged portrait and text are separated, but visible jagged brown/magenta
+  fringe around hair/clothing FAILS the alpha-edge visual gate. Original
+  `wary.png` and prior Lada dark alpha proof also show residual coloured edges;
+  Android compression may amplify them, but its contribution was not isolated.
+  The canonical ASTC8/alphaIsTransparency settings were not changed.
+- `runtime-final.log` preserves full PID logcat. `04-paused.png` is the final
+  stopped frame. Some earlier replay screenshots captured transitions because
+  dialogue.ready precedes presentation; the helper now waits3s before capture.
+  Blank transitional screenshots are not missing-asset findings or visual passes.
+- Returned to character/art production for edge cleanup; no PNG or shared
+  pipeline fix performed during acceptance. UI geometry passes only the named
+  cases above. First three-choice group, C5 variants, broad Saveliy, Mitya,
+  pressed/fallback/safe-area matrix, full semantic routes and all3 endings remain.
+  Static audit/doctor/diff checks pass, but do not waive these missing gates.
+- Revised minimal replay plan indices15,32,67,30,33 of audit_story routes covers
+  every source line/choice option and3 endings. Paths30/33 can use a real C4
+  checkpoint from path32; no such checkpoint exists yet. Runtime evidence is
+  incomplete, not a five-route pass. Test app and own AVD stopped, saves retained;
+  locks released. No commit/publication. Any material art fix needs fresh build
+  evidence and separate final-slot authorization under UnityConcurrency.
+
+## UI rerun and portrait occlusion correction — 2026-09-08
+
+- User's new explicit «Да» authorized this rerun after the first layout fix.
+  Built only chernaya-melnitsa (Editor + Android), required Android catalog,
+  and an Embedded development Player with `--skip-content-build`. Logs under
+  `Novels/Build/Logs/automation/`: story `content-gate-20260908T120313Z.log`,
+  story Android `120335Z`, catalog Android `120343Z`, Player `player-20260908T120417Z.log`.
+  These passed; catalog Editor was not rebuilt during this rerun.
+- APK: `Novels/Build/Players/chernaya-melnitsa-ui-20260908/Novels.apk`,
+  81,157,530 bytes, versionCode 3517204, SHA256
+  `f5cc9f0cc78383b2b48188bb59ba2976cab7ca79dec34581bdf61f6b27fb6a7c`.
+  Android story release `74bc984e720eded0396a667390bf96dd9778d75f75fc9fb5513f84d591610d54`.
+  Catalog release remains `cd07557fbab3fc3f79aef6dd3c138c4ed968180cb3ab8c2ef211043842bf37c4`.
+  Actual APK ZIP/registry inspection confirmed only this story and Android payloads.
+  Pre-isolation composed output retained recoverably at
+  `Novels/Build/LocalContent-before-chernaya-ui-only-20260908T1204`.
+- Same dedicated API34 Pixel7 AVD, 1080x2400, `-gpu software`. Installed with
+  `install -r`, preserving the previous test save. Real catalog showed one card
+  with its assigned episode cover and Continue, then resumed at the first choice.
+  `runId=e35a1e5cd5444f62bdcc23640f4a994b`: 24 events through Ink line49,
+  including catalog.ready(storyCount1), matching release.activated, episode.ready,
+  15 dialogue.ready events and choice.selected(0 = sell_house). No fallback.used
+  or error markers occurred. Endings were not reached; resume proof is limited
+  to preservation across APK replacement, not full branch-state save/resume.
+- Screenshots and full PID logcat in
+  `Novels/Build/Logs/automation/chernaya-ui-recheck-20260908/`:
+  `01-catalog.png`, `02-first-choice.png` (all three labels/targets inside screen),
+  `03-choice-result.png` (Lada); `replay-151807.png` proves the new failure at
+  `s01e01.ink:48`: the four-line named panel completely hides Nastasiya's face.
+  `portrait-overlap-logcat.txt` records the complete run; the final screenshot
+  `portrait-overlap-final.png` is the next narrator line49, not the failure frame.
+- Returned to `somegame-produce-story-art`. Initial unbuilt idea of raising
+  named panels to y=170 was discarded when the user requested raising characters,
+  lowering Bubble, and increasing character scale. Current story-local character
+  variant inherits the shared character screen, changing only viewport y=-220
+  to150 and uniform XY scale1 to1.2 (plus root display name). PNGs, per-sprite
+  registration, horizontal position logic and all runtime bindings are unchanged.
+  New prefab/folder metadata is deliberately left to the next Unity import.
+- Current Bubble named/thought roots: y=-115 to-180 (65 units lower); narrator
+  y=35 to-55 (90 units lower). Previous body22/label20/button96/slicing fixes stay.
+  All200 named lines fit the conservative lower panel budget (maxheight240,
+  panelbottom794 at logicalheight1024). All360 actual pre-choice contexts across
+  72 routes are measured, including C5 after Lada/Nastasiya: worstbottom958,
+  bottomclearance66. Eleven source alpha bounds at three portrait heights pass
+  a rough140-unit head reserve above named headers. This is not face detection
+  or proof of horizontal cropping/visual quality. Pixel art/Ink/shared runtime
+  remain unchanged; no raster generation or new originality iteration.
+- Static layout/72-route audits and content doctor pass. New character address
+  follows `story/presentation/character/screen-variant.prefab` convention;
+  packaging/import and all new geometry still need real Unity validation.
+  The APK above predates these corrections and is stale for final acceptance.
+- Our test app and dedicated emulator stopped; data retained. A read-only process
+  check at12:24:52Z found a separate user Editor for `/Users/iantonishin/Kids/skazbuka`
+  and its Hub/import workers. They were not touched; check real processes before
+  any future heavy slot and never auto-close this unrelated project.
+- Next: separate repeat-slot approval under UnityConcurrency; rebuild/replay only
+  this story and required catalog/Player. First verify long named lines77/465,
+  enlarged portraits (especially broad Saveliy and both sides), first three-choice
+  group and C5 named/narrator variants, then the remaining matrix and replay paths,
+  all three endings and save/resume. No new commit, publication or other-story build.
+
+## Authorized single-story rerun — 2026-09-08
+
+- Baseline: `codex/story-batch-chernaya-melnitsa` at `f1721a63e046`.
+  The user explicitly approved the repeated final slot, then required building
+  only the tested story and keeping only it in the catalog. Current catalog
+  is `["chernaya-melnitsa"]`; zdm/tzm source projects were not changed or built.
+- Four content gates passed: story Editor `content-gate-20260908T112739Z.log`,
+  catalog Editor `112818Z`, story Android `112825Z`, catalog Android `112900Z`.
+  Logs are under `Novels/Build/Logs/automation/`. Real Ink compilation produced
+  JSON and a source map with 1209 entries. All three Android chunk audits passed.
+- Android story release: `cc9c49f2418449034e0a6529206230b5017c736ac5aa217d1eafe8560e11b9c9`.
+  Catalog release: `cd07557fbab3fc3f79aef6dd3c138c4ed968180cb3ab8c2ef211043842bf37c4`.
+  Episode preview exports `s01e01.png`, and the emulator shows the assigned
+  undercroft image, episode title and description in the single-story catalog.
+- Fresh Embedded development APK: `Novels/Build/Players/chernaya-melnitsa-20260908/Novels.apk`,
+  built 2026-09-08 around 11:31 UTC; 81,157,658 bytes, SHA256
+  `b4d4fd9ad9f8a784f8b6c573fc11deb840a9484b11ae442cbe21cba52744a536`.
+  Package `com.UnityTechnologies.com.unity.template.urpblank`, version
+  `2026.09.08` / `3517169`, ARM64, minimum API25, target API36.
+  ZIP inspection confirms ONLY chernaya-melnitsa and Android payloads, with the
+  one-entry catalog. Player build used `--skip-content-build` after the exact
+  content gates; it did not call the broad `build all` path.
+- Existing composed output was moved, not deleted, to
+  `Novels/Build/LocalContent-before-chernaya-only-20260908T1130`.
+  A later content-gate's compose can reintroduce other cached stories: before
+  the next APK, preserve that output separately and restage only this story
+  plus the catalog. Inspect the actual APK ZIP again.
+- Existing Pixel AVD refused installation due to a signing-certificate conflict.
+  No uninstall/save reset occurred. Dedicated AVD `Novels_CHM_20260908` uses
+  Pixel 7 geometry 1080x2400, API34 / `sdk_gphone64_arm64`, serial `emulator-5554`,
+  emulator 37.1.11. Its data is under `/private/tmp/somegame-chernaya-emulator.EJ3awb/avd`.
+  `monkey` refused its physical-key configuration; verified launch Activity
+  `com.unity3d.player.UnityPlayerGameActivity` was started with `am start -W`.
+  This entered the real catalog, not a direct episode/scene.
+- Host GPU hung in `vkCreateDescriptorPool`; original log retained. Restarting
+  the same dedicated AVD with `-gpu software` loaded the unchanged APK correctly.
+  First-run missing-cache warnings caused normal extraction from APK; they are
+  not missing authored assets. Bundle `deliveryMode: Remote` is the release
+  descriptor's mode, not proof that the Embedded APK accessed a remote server.
+- Software-rendered run `20eb3df3e48b421a8f2599bf695f118a` recorded ordered
+  app.started → catalog.loading → catalog.ready (storyCount 1) → download_ready
+  → story.selected → release.activated (matching Android release) → episode.ready
+  → dialogue.ready. No episode.selected event was emitted on the direct card
+  flow; the runner's default event list was not passed and is not claimed green.
+- Failure: source `s01e01.ink:22`, first three-option choice, third label crosses
+  the lower edge; narrator text overlaps the stretched decorative frame.
+  Evidence: `Novels/Build/Logs/automation/chernaya-emulator-20260908/`
+  `replay-144241.png`, `first-choice-failure-logcat.txt`, `first-choice-activity.txt`.
+  `07-ready.png` verifies catalog artwork. No `fallback.used` occurred before
+  the visual failure. Later scenes, characters, five planned replay routes,
+  three endings and save/resume were NOT validated.
+- Returned to `somegame-produce-story-art`: story-local prefab now uses body22,
+  label20, 96-unit buttons and raised viewport; panel nine-slicing preserves
+  decoration instead of scaling it through the text. PNG bytes/GUIDs, Ink,
+  runtime binding identities and shared UI code remain unchanged.
+  `Art/audit_bubble_layout.py` checks 338 dialogue strings and all 12 labels
+  with the actual font, conservative leading and worst-case geometry. It passes,
+  as do the unchanged 72-route audit and scoped diff check. These are STATIC
+  estimates, not visual acceptance; all old APK evidence is stale for this UI fix.
+- Test app and our emulator were stopped. No publication or other-story builds.
+  Next: separately authorize a repeat final slot under UnityConcurrency, rebuild
+  only this story and the required one-entry catalog/APK, then repeat the visual
+  matrix and five-route coverage. Do not reuse this failed APK as final evidence.
 
 ## First final-slot attempt and syntax correction — 2026-09-08
 
@@ -176,7 +592,11 @@ The author subsequently authorized one additional full-current-candidate
 review; narrative iteration 5 and complete-Ink iteration 6 passed with the
 limitations in `ORIGINALITY_EVIDENCE.md`. The source hash below is unchanged.
 
-## Reproducible current static checks
+## Historical pre-Unity static checks
+
+The hash and pending-build statements below describe the earlier snapshot.
+Use current records at the top and `ACCEPTANCE_CANDIDATE.json`, not this section,
+for new work; do not rebuild based on the historical list.
 
 Reviewed Ink SHA-256:
 `23c5a5fc2ce1d22b0c2d8dac06c76b26da4a75addc6f071312577293ddb7021e`.
@@ -257,7 +677,9 @@ review of the material rewrite.
 Unity imports, real Ink compilation/source map, content validation/build and
 Player/manual evidence remain deferred to the authorized final slot below.
 
-## Deferred final slot (mandatory)
+## Historical pre-Unity final-slot plan
+
+Superseded by completed build records above and current `ACCEPTANCE_PLAN.md`.
 
 The originality hold is resolved for the unchanged candidate hash above.
 Obtain new explicit human authorization under `UnityConcurrency.md` and shared

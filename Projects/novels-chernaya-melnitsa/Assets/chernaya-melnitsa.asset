@@ -17,6 +17,7 @@ MonoBehaviour:
   _contentVersion: 1
   _endMarker: "...: КОНЕЦ ИСТОРИИ"
   _silentAudioIds: []
+  _catalogVideo: chernaya-melnitsa-loop.mp4
   _episodes:
   - _id: s01e01
     _title: "Кому дано слово"
