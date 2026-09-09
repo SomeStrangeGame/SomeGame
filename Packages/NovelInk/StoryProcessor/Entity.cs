@@ -12,6 +12,7 @@ namespace Novels.StoryProcessor
             public string StoryText;
             public string InitialState;
             public string SourceMapText;
+            public float ReadTimeLimitMilliseconds;
         }
 
         private readonly Ctx _ctx;
@@ -65,7 +66,7 @@ namespace Novels.StoryProcessor
         {
             var hasContent = _story.canContinue;
             var source = hasContent
-                ? _story.Continue().Trim()
+                ? Continue().Trim()
                 : string.Empty;
             var choices = GetChoices();
             var sourceLocation = GetSourceLocation();
@@ -89,6 +90,15 @@ namespace Novels.StoryProcessor
                 source,
                 choices,
                 sourceLocation);
+        }
+
+        private string Continue()
+        {
+            if (_ctx.ReadTimeLimitMilliseconds <= 0f) return _story.Continue();
+            _story.ContinueAsync(_ctx.ReadTimeLimitMilliseconds);
+            if (!_story.asyncContinueComplete)
+                throw new TimeoutException("Speculative Ink read exceeded its time budget.");
+            return _story.currentText;
         }
 
         private StorySourceLocation GetSourceLocation()

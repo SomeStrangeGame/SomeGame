@@ -119,6 +119,21 @@ namespace Novels.Save
         public StoryContracts.StoryDecision[] GetInitialDecisionsSnapshot() =>
             (StoryContracts.StoryDecision[])_initialDecisions.Clone();
 
+        // Read-only projection for optional catalog metadata; never repairs/deletes saves.
+        public bool TryReadCompatibleDecisions(byte[] bytes,
+            out StoryContracts.StoryDecision[] decisions)
+        {
+            decisions = null;
+            try
+            {
+                var decoded = SaveDataCodec.Decode(bytes);
+                if (!MatchesCurrentContent(decoded)) return false;
+                decisions = decoded.Decisions;
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
+
         public void DiscardIncompatibleReplay(string reason)
         {
             Clear();

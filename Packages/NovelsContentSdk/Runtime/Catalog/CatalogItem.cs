@@ -41,7 +41,8 @@ namespace Novels.Catalog
             UnityEngine.Sprite cover = null,
             string author = null,
             string storyAuthor = null,
-            string videoUrl = null)
+            string videoUrl = null,
+            float? readingProgress = null)
         {
             Id = string.IsNullOrWhiteSpace(id)
                 ? throw new ArgumentException("Episode id must not be empty.", nameof(id))
@@ -59,6 +60,9 @@ namespace Novels.Catalog
             Cover = cover;
             Author = (string.IsNullOrWhiteSpace(author) ? storyAuthor : author)?.Trim() ?? string.Empty;
             VideoUrl = videoUrl?.Trim() ?? string.Empty;
+            ReadingProgress = readingProgress.HasValue && !float.IsNaN(readingProgress.Value)
+                && !float.IsInfinity(readingProgress.Value)
+                ? UnityEngine.Mathf.Clamp01(readingProgress.Value) : null;
         }
 
         public string Id { get; }
@@ -73,6 +77,7 @@ namespace Novels.Catalog
         public UnityEngine.Sprite Cover { get; }
         public string Author { get; }
         public string VideoUrl { get; }
+        public float? ReadingProgress { get; }
     }
 
     public sealed class CatalogItem
