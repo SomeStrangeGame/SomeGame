@@ -1,0 +1,4 @@
+interface:
+  display_name: "Manage SomeGame Website"
+  short_description: "Build and safely publish the static story site"
+  default_prompt: "Use $somegame-manage-website to update, validate, and safely publish the SomeGame static website."

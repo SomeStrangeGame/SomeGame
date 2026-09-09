@@ -1,6 +1,6 @@
 ---
 name: somegame-create-story
-description: Orchestrate a new atomic SomeGame visual-novel story from brief through validated pre-production, project creation, import, playable content, and acceptance. Use for end-to-end creation or resuming an unfinished new story; do not use for routine edits to an existing story.
+description: Orchestrate a new atomic SomeGame visual-novel story from brief through validated pre-production, project creation, playable content, web preview, acceptance, and release handoff. Use for end-to-end creation or resuming an unfinished new story; do not use for routine edits to an existing story.
 ---
 
 # Create a SomeGame story
@@ -89,11 +89,22 @@ and execution rules live only in `UnityConcurrency.md`.
    lightweight catalog phase, before story payload downloads complete.
 7. Invoke `$somegame-author-story-content` with the approved narrative,
    character and remaining-art handoffs; require `ready-for-final-validation`.
-8. Commit the clean story-local candidate and record it through the worktree
+8. Create the story-owned website reading preview described in
+   [web preview and publication](references/web-preview-publication.md). Every
+   new story carries `Config/Preview/preview.json` and only the character images
+   it actually uses. The excerpt must come from canonical Ink and must be ready
+   before release handoff; generated runtime `catalog-preview.json` is a
+   different artifact and does not satisfy this requirement.
+9. Commit the clean story-local candidate and record it through the worktree
    lifecycle. When all stages are ready, follow `UnityConcurrency.md` to obtain
    the separate current authorization for the final slot, then invoke
    `$somegame-accept-story`. Acceptance exclusively owns catalog registration,
    runtime/manual gates and the final readiness decision.
+10. If the request includes deployment, proceed only after acceptance and
+    integration through the release handoff in
+    [web preview and publication](references/web-preview-publication.md), then
+    invoke `$somegame-release-app`. Story creation does not itself grant server,
+    APK, source-publication or production-channel authority.
 
 Do not generate speculative assets merely to fill a fixed matrix. Create only
 backgrounds, outfits, expressions, poses, media, and branches that the current
@@ -105,6 +116,13 @@ Before acceptance, report `ready-for-final-validation`, never accepted or
 runtime-validated. Candidate commit, integration and worktree removal follow
 `ParallelWorkDetails.md` and `IntegrationProtocol.md`; this skill does not own
 those mechanics.
+
+The handoff must say whether the story-owned website preview is complete and
+whether deployment was requested. A missing preview blocks release readiness,
+but does not imply that acceptance or publication happened. When deployment is
+requested, identify the intended app profile, channel and exact ordered story
+set; leave build, remote mutation and public verification to
+`$somegame-release-app`.
 
 Report the branch, project and catalog paths, authored assets, factual or
 creative assumptions, validation evidence, manual visual checks, unresolved

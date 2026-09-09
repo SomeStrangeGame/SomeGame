@@ -702,17 +702,48 @@ def content_gate(args: argparse.Namespace) -> dict[str, Any]:
             "target": args.target or "changed-path-plan", "closedHubPids": closed_hub, **result}
 
 
-def default_player_output(target: str, mode: str) -> Path:
+def default_player_output(app: str, target: str, mode: str) -> Path:
     suffix = {"Android": "Novels.apk", "iOS": "Novels", "Windows": "Novels.exe", "macOS": "Novels.app"}[target]
-    return ROOT / "Novels/Build/Players/automation" / target / mode / suffix
+    return ROOT / "Novels/Build/Players/automation" / app / target / mode / suffix
+
+
+def application_profile_paths(app: str) -> tuple[Path, Path]:
+    if not re.fullmatch(r"[a-z0-9][a-z0-9-]*", app):
+        raise WorkflowError("invalid_app_id", "--app must use lowercase letters, digits, and hyphens")
+    profile_root = ROOT / "Projects/apps" / app
+    profile = profile_root / "Config/player.json"
+    icon = profile_root / "Assets/icon.png"
+    if not profile.is_file() or not icon.is_file():
+        raise WorkflowError(
+            "application_profile_missing",
+            f"Application profile '{app}' must contain Config/player.json and Assets/icon.png")
+    try:
+        value = json.loads(profile.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise WorkflowError("application_profile_invalid", f"Invalid application profile: {exc}") from exc
+    required = (
+        value.get("schemaVersion") == 1,
+        value.get("id") == app,
+        isinstance(value.get("productName"), str) and bool(value["productName"].strip()),
+        value.get("icon") == "../Assets/icon.png",
+        all(isinstance(value.get(key), str) and bool(value[key].strip()) for key in (
+            "androidApplicationId", "iosApplicationId", "standaloneApplicationId")),
+    )
+    if not all(required):
+        raise WorkflowError(
+            "application_profile_invalid",
+            f"Application profile '{app}' has an invalid schema or missing identity fields")
+    return profile, icon
 
 
 def player_build(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
+    application_profile_paths(args.app)
     require_heavy_authorization(args)
     require_resource_lock("catalog", args.agent_id)
     closed_hub = prepare_unity_lifecycle(args.close_hub)
-    output = Path(args.output).resolve() if args.output else default_player_output(args.target, args.mode)
+    output = Path(args.output).resolve() if args.output else default_player_output(
+        args.app, args.target, args.mode)
     logs: list[str] = []
     platform = {"Android": "android", "iOS": "ios", "Windows": "windows", "macOS": "editor"}[args.target]
     if not args.skip_content_build:
@@ -727,11 +758,14 @@ def player_build(args: argparse.Namespace) -> dict[str, Any]:
         command.append("")
     if args.development: command.append("--development")
     if args.test_signing: command.append("--test-signing")
-    built = run_logged(command, timeout=args.timeout, log=LOG_ROOT / f"player-{utc_stamp()}.log")
+    player_env = os.environ.copy()
+    player_env["NOVELS_APP_ID"] = args.app
+    built = run_logged(command, timeout=args.timeout, log=LOG_ROOT / f"player-{utc_stamp()}.log",
+                       env=player_env)
     logs.append(built["log"])
     exists = output.exists()
     return {"ok": built["returncode"] == 0 and exists, "workflow": "player-build",
-            "target": args.target, "mode": args.mode, "output": str(output),
+            "target": args.target, "mode": args.mode, "app": args.app, "output": str(output),
             "closedHubPids": closed_hub,
             "artifactExists": exists, "artifactBytes": output.stat().st_size if output.is_file() else None,
             "logs": logs, "tail": built["tail"]}
@@ -974,7 +1008,7 @@ def android_dev_cycle(args: argparse.Namespace) -> dict[str, Any]:
     require_lock(args.agent_id)
     require_heavy_authorization(args)
     build_args = argparse.Namespace(
-        agent_id=args.agent_id, close_hub=args.close_hub, output=args.output,
+        agent_id=args.agent_id, app=args.app, close_hub=args.close_hub, output=args.output,
         target="Android", mode="Embedded", remote_url="", development=False,
         test_signing=args.test_signing, skip_content_build=args.skip_content_build,
         timeout=args.build_timeout, human_approved=True, approval_note=args.approval_note,
@@ -1241,6 +1275,7 @@ def parser() -> argparse.ArgumentParser:
     story.add_argument("--timeout", type=float, default=3600)
     heavy_approval(story)
     player = sub.add_parser("player-build"); player.add_argument("--agent-id", required=True)
+    player.add_argument("--app", required=True)
     player.add_argument("--target", choices=("Android", "iOS", "Windows", "macOS"), required=True)
     player.add_argument("--mode", choices=("Remote", "Embedded"), required=True)
     player.add_argument("--output"); player.add_argument("--remote-url", default="https://pureshechka.com/dev")
@@ -1272,6 +1307,7 @@ def parser() -> argparse.ArgumentParser:
     smoke.add_argument("--required-events", default="app.started,catalog.loading,catalog.ready,story.selected,release.activated,episode.selected,episode.ready,dialogue.ready")
     heavy_approval(smoke)
     cycle = sub.add_parser("android-dev-cycle"); cycle.add_argument("--agent-id", required=True)
+    cycle.add_argument("--app", required=True)
     cycle.add_argument("--package-id", required=True); cycle.add_argument("--serial", default="emulator-5554")
     cycle.add_argument("--adb", default="adb"); cycle.add_argument("--output")
     cycle.add_argument("--test-signing", action="store_true"); cycle.add_argument("--skip-content-build", action="store_true")

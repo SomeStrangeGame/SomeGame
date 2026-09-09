@@ -17,6 +17,7 @@ usage() {
   print '  novels-content validate <catalog|story-id|all>'
   print '  novels-content build <catalog|story-id|all> <editor|windows|android|ios>'
   print '  novels-content trim-sprites <story-id|all> <report|apply> [padding]'
+  print '  novels-content stage-channel <dev|prod> (--base-manifest <path>|--replace) <story-id=version> [...]'
   print '  novels-content publish <destination-directory>'
 }
 
@@ -240,6 +241,86 @@ publish() {
   print "Published: $destination"
 }
 
+stage_channel() {
+  local channel=${1:-}
+  shift || true
+  [[ "$channel" == dev || "$channel" == prod ]] || {
+    print -u2 "Channel must be dev or prod."
+    return 2
+  }
+  local mode=${1:-}
+  local base_manifest=''
+  case "$mode" in
+    --base-manifest)
+      (( $# >= 3 )) || { print -u2 "--base-manifest requires a path and story selectors."; return 2; }
+      base_manifest=$2
+      shift 2
+      [[ -f "$base_manifest" ]] || { print -u2 "Base manifest is missing: $base_manifest"; return 2; }
+      ;;
+    --replace)
+      shift
+      ;;
+    *)
+      print -u2 "Choose --base-manifest <path> for a safe incremental update or --replace for an intentional exact set."
+      return 2
+      ;;
+  esac
+  (( $# > 0 )) || { print -u2 "At least one story-id=version is required."; return 2; }
+
+  local destination=${NOVELS_CHANNEL_OUTPUT:-"$GAME_PROJECT/Build/ChannelContent"}
+  local entry id version source target staging
+  local -A selected
+  for entry in "$@"; do
+    id=${entry%%=*}
+    version=${entry#*=}
+    [[ "$entry" == *=* && "$id" =~ '^[a-z0-9_-]+$' && "$version" =~ '^[a-z0-9._-]+$' ]] || {
+      print -u2 "Invalid story version selector: $entry"
+      return 2
+    }
+    [[ -z ${selected[$id]:-} ]] || { print -u2 "Duplicate story: $id"; return 2; }
+    selected[$id]=$version
+    source="$GAME_PROJECT/Build/LocalContent/stories/$id"
+    target="$destination/stories/$id/$version"
+    [[ -d "$source" && -f "$source/card.json" ]] || {
+      print -u2 "Built story is incomplete: $source"
+      return 3
+    }
+    if [[ -e "$target" ]]; then
+      [[ -d "$target" ]] || { print -u2 "Story version path is not a directory: $target"; return 3; }
+      local differences=$(rsync -acn --delete "$source/" "$target/")
+      [[ -z "$differences" ]] || {
+        print -u2 "Immutable story version differs from the current build: $target"
+        return 3
+      }
+    fi
+  done
+  mkdir -p "$destination"
+  local manifest_staging="$destination/.$channel.json.$$"
+  local manifest_arguments=(--output "$manifest_staging")
+  if [[ "$mode" == --base-manifest ]]; then
+    manifest_arguments+=(--base-manifest "$base_manifest")
+  else
+    manifest_arguments+=(--replace)
+  fi
+  local summary=$(python3 "$TOOL_DIR/channel_manifest.py" $manifest_arguments "$@")
+  for entry in "$@"; do
+    id=${entry%%=*}
+    version=${entry#*=}
+    source="$GAME_PROJECT/Build/LocalContent/stories/$id"
+    target="$destination/stories/$id/$version"
+    if [[ ! -d "$target" ]]; then
+      staging="$destination/.staging-$id-$version-$$"
+      mkdir -p "$staging"
+      rsync -a "$source/" "$staging/"
+      mkdir -p "${target:h}"
+      mv "$staging" "$target"
+    fi
+  done
+  mv "$manifest_staging" "$destination/$channel.json"
+  print "Staged channel: $destination/$channel.json"
+  print -r -- "$summary"
+}
+
 case ${1:-} in
   doctor) doctor ;;
   plan) verification_plan "${2:-}" ;;
@@ -247,6 +328,7 @@ case ${1:-} in
   validate) validate "${2:-}" ;;
   build) build "${2:-}" "${3:-}" ;;
   trim-sprites) trim_sprites "${2:-}" "${3:-report}" "${4:-4}" ;;
+  stage-channel) shift; stage_channel "$@" ;;
   publish) publish "${2:-}" ;;
   *) usage; exit 2 ;;
 esac

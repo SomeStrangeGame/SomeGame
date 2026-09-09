@@ -101,7 +101,31 @@ Tools/novels-tools/novels-content build all ios
 `build all ios` формируют единое серверное дерево. Content-addressed `Files`
 дополняются; конкретный release использует только перечисленные в нём payloads.
 
-Опубликовать уже собранное дерево:
+Подготовить локальный immutable-снимок удалённого канала без публикации:
+
+```bash
+Tools/novels-tools/novels-content stage-channel dev \
+  --base-manifest /tmp/current-app-dev.json somestory=1.0
+Tools/novels-tools/novels-content stage-channel prod \
+  --replace somestory=1.0
+```
+
+`--base-manifest` — безопасный режим обновления существующего канала: он
+сохраняет порядок и прежние записи, меняет версию существующей истории на месте
+и добавляет новую в конец. `--replace` создаёт точный набор и применяется только
+для нового канала либо при явно разрешённом удалении/переупорядочивании. Вызов
+без одного из этих режимов завершается ошибкой.
+
+Команда копирует уже собранные story outputs в
+`Novels/Build/ChannelContent/stories/<storyId>/<version>` и создаёт компактный
+`dev.json` или `prod.json`, затем печатает JSON-сводку merge. Манифест содержит
+`schema: 1` и упорядоченный объект
+`stories`, где ключ — canonical story ID, значение — immutable version segment.
+Версионный каталог нельзя перезаписывать. Публикация channel-tree намеренно не
+выполняется этой командой.
+
+Legacy-команда публикации полного `LocalContent` остаётся доступна для старого
+единого layout:
 
 ```bash
 Tools/novels-tools/novels-content publish /absolute/server/root
@@ -371,8 +395,49 @@ LocalContent/
 ```
 
 Editor читает это дерево через `FileSystemContentSource`, Remote Android/iOS —
-через `HttpContentSource`, Android Embedded внутри APK — через
-`StreamingAssetsContentSource`. Каталог и истории публикуются независимо.
+channel manifest `<remote-root>/<dev|prod>.json` и версионные story roots через
+`HttpContentSource`, Android Embedded внутри APK — через
+`StreamingAssetsContentSource`. Remote Player включает текущий catalog UI bundle
+в `StreamingAssets/NovelCatalog`; отдельная серверная папка `catalog` ему не
+нужна. Список Remote-историй берётся из channel manifest, а не ограничивается
+embedded registry. Канал выбирается при сборке через `NOVELS_CONTENT_CHANNEL`
+(по умолчанию `dev`). Истории и карточки их эпизодов остаются удалёнными и
+версионируются вместе. Поэтому совместимая новая история выпускается добавлением
+immutable story tree и заменой manifest без пересборки APK; APK нужен при
+изменении runtime/catalog UI/profile/channel или несовместимости client/schema.
+
+```text
+ChannelContent/
+  dev.json
+  prod.json
+  stories/<storyId>/<version>/
+    card.json
+    cover.<extension>
+    Files/<sha256>.bin
+    Remote/<platform>/release.json
+    Remote/<platform>/catalog-preview.json
+    Remote/<platform>/episode-covers/<filename>.png
+    Remote/<platform>/<bundle>/<bundleVersion>
+```
+
+## Профили Player-приложений
+
+Каждая самостоятельная поставка Player выбирает обязательный профиль через
+`Tools/somegame player-build --app <app-id>`. Профиль находится в
+`Projects/apps/<app-id>/Config/player.json`, а исходная квадратная PNG-иконка —
+в `Projects/apps/<app-id>/Assets/icon.png`. Во временный staging-проект
+копируется только выбранный профиль; `PlayerBuildAutomation` применяет его
+`productName`, platform application ID и иконку перед сборкой и восстанавливает
+исходные `PlayerSettings` после неё.
+
+Неизвестный app ID, отсутствующий профиль, иконка или application ID целевой
+платформы останавливают сборку. Пример:
+
+```bash
+Tools/somegame player-build --agent-id <agent> --app kostroma \
+  --mode Embedded --target Android --human-approved \
+  --approval-note "Explicit final Player build approval"
+```
 
 `catalog-preview.json` (schema 1) автоматически экспортируется сборкой истории
 из `NovelContentAsset`: storyId, contentVersion, releaseId, упорядоченные id/title/
