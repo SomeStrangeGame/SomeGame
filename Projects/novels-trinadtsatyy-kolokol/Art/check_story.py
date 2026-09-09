@@ -18,6 +18,13 @@ INK = ROOT / "Assets/Ink"
 STORY = "trinadtsatyy-kolokol"
 
 
+def unity_quoted_name(value):
+    """Decode the double-quoted name subset emitted by this Unity definition."""
+    decoded = ast.literal_eval('"' + value + '"')
+    assert isinstance(decoded, str), "Expected a quoted character name"
+    return decoded
+
+
 def expression(source, state):
     tree = ast.parse(source.replace("&&", " and ").replace("||", " or ").strip(), mode="eval")
 
@@ -130,8 +137,9 @@ def main():
 
     definition = (ROOT / f"Assets/{STORY}.asset").read_text()
     assert re.findall(r"  - _id: (s\d+e\d+)", definition) == [f"s01e{i:02}" for i in range(1, 7)]
-    main_character = re.search(r'_mainCharacter: "([^"]+)"', definition)[1]
-    defaults = dict(re.findall(r'_character: "([^"]+)"\s+_clothes: (\S+)', definition))
+    main_character = unity_quoted_name(re.search(r'_mainCharacter: "([^"]+)"', definition)[1])
+    defaults = {unity_quoted_name(name): outfit for name, outfit in
+                re.findall(r'_character: "([^"]+)"\s+_clothes: (\S+)', definition)}
     paths = {name: ROOT / "Assets/Characters" / ("maincharacter" if name == main_character else name.lower()) / "view/whole" / outfit for name, outfit in defaults.items()}
     for path in paths.values():
         assert (path / "main.png").is_file(), f"Missing neutral runtime address: {path}/main.png"
@@ -245,6 +253,10 @@ def self_test():
     from contextlib import redirect_stdout
     from io import StringIO
     from unittest.mock import patch
+
+    assert unity_quoted_name("Тим") == unity_quoted_name(r"\u0422\u0438\u043C") == "Тим"
+    assert unity_quoted_name("Лада") == unity_quoted_name(r"\u041B\u0430\u0434\u0430") == "Лада"
+    print("Unity quoted-name Unicode regression: passed")
 
     guard = "* (publish_archive) { evidence >= 8 }"
     cases = [

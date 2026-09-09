@@ -1,5 +1,21 @@
 # Character production handoff
 
+**Current correction2026-09-09:** Android V2 disproved Lada quality/clean-alpha
+claims below: four620×620 source variants, plus opaque pale strip in main/focused.
+Those historical claims are not current acceptance evidence. Repair drafts are
+in `Art/lada-repair-v1/README.md`. User-authorized deterministic matte cleanup
+produced a reviewed neutral RGBA1254×1254 master (five tests pass); master and
+planned-appearance originality review passed with bounded medium confidence.
+Built-in imagegen later recovered; at11:19UTC all three emotions were completed
+and the full four-image package reviewed. Only Lada's four runtime PNGs replaced
+in the retained clone; all metas/import settings preserved byte-for-byte.
+Source geometry/alpha5tests, matte5tests,46scene references and exact copy audit
+PASS. Face/full-body/light/dark proofs and fresh complete-package originality
+iteration2 (low risk/medium confidence) are in that repair README.
+Status: ready-for-final-validation. Other character packages unchanged. No new
+Unity/Android pass: existing APK still contains old sprites. Historical details
+below are not promoted to current acceptance evidence.
+
 All characters are fictional. Visual style: painterly neo-noir, cool key and copper rim, realistic anatomy, whole-image runtime representation.
 
 | Selector | Protected identity | Master | Authored variants | Runtime fallback |
