@@ -1,0 +1,4 @@
+interface:
+  display_name: "SomeGame Story Card Video"
+  short_description: "Animate story cards with scene-matched sound"
+  default_prompt: "Use $somegame-create-card-video to turn this story card into a polished five-second audiovisual loop."

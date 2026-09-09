@@ -1,0 +1,307 @@
+{
+  "algorithm": "edge-matte-v6",
+  "edgeSeedPixels": 6,
+  "maxConnectedEdgeBandPixels": 6,
+  "hiddenBleedPixels": 8,
+  "files": [
+    {
+      "edgeChromaPixels": 1207,
+      "ribbonPixelsRemoved": 44,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 3320,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        247,
+        413,
+        520,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        247,
+        413,
+        520,
+        1260
+      ],
+      "path": "maincharacter/view/whole/coat/guilt.png",
+      "beforeSha256": "8988d88bd6730558458e0d185abae6f7d71395654bfe481e7006099698d31c26",
+      "afterSha256": "19ebf5fba6332ee0e7b76355e0965eb67301c8eb57bdcd73cba56e9c5c03610c",
+      "metaSha256": "c8beb063c98183483b13d9c4297da7a5660be28dc068a9f36f212745d8636d8d"
+    },
+    {
+      "edgeChromaPixels": 1034,
+      "ribbonPixelsRemoved": 41,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 3327,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        238,
+        411,
+        529,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        238,
+        411,
+        529,
+        1260
+      ],
+      "path": "maincharacter/view/whole/coat/main.png",
+      "beforeSha256": "d0ce532482337df379c2fa4fc5bf5312a6e3a2d92dab67d593af4e016d78f934",
+      "afterSha256": "510d2743010b2e117926240b1f21fac7a1c4b44c0792c7b65b0aa8be3fef2989",
+      "metaSha256": "546128fe6be9816ce8827cde2087b46f1265c3365fa2dd78b65b026974ef1c64"
+    },
+    {
+      "edgeChromaPixels": 1282,
+      "ribbonPixelsRemoved": 19,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 3534,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        240,
+        405,
+        528,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        240,
+        405,
+        528,
+        1260
+      ],
+      "path": "maincharacter/view/whole/coat/resolve.png",
+      "beforeSha256": "0f1acb9dc4386ece50aca3342908895fe8e58fc0442c5ddb3300019fecd20df9",
+      "afterSha256": "e5692c0c4aabe937caf68e01958eb05f9bb91113ec210e6cf5fb4e25d822c92c",
+      "metaSha256": "4583e75b4dc4a28c0e0a9e1cd9e3b02033fc26cfa4f942648f2c589e87bc2579"
+    },
+    {
+      "edgeChromaPixels": 1319,
+      "ribbonPixelsRemoved": 39,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 3495,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        240,
+        404,
+        528,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        240,
+        404,
+        528,
+        1260
+      ],
+      "path": "maincharacter/view/whole/coat/wary.png",
+      "beforeSha256": "91f063b8ffb7e47ca415c59996c40f5e0c477c540d91949bd672dbac211d7bbc",
+      "afterSha256": "ee6d2dcd211c7610f981731d74af4a8e4d09a581129024ac45466e2ba16c37ab",
+      "metaSha256": "29999b6684de5db7d7d59f4c3f1425e1aedd0e7b65e6c9ccb38083a4c386f0c6"
+    },
+    {
+      "edgeChromaPixels": 1396,
+      "ribbonPixelsRemoved": 56,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 3695,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        238,
+        312,
+        529,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        238,
+        312,
+        528,
+        1260
+      ],
+      "path": "митя/view/whole/jacket/main.png",
+      "beforeSha256": "d9a7cd668a12a34eeb08cf5fbf4103e8fddd6a3b400add1017022d8f1b2596ee",
+      "afterSha256": "2540e3d7c98a7f5cad25e6f217f051d8a3b2e1eb043a93893321658ac08b1ced",
+      "metaSha256": "c07a166005175bb2985d33f315197d0d2d28a05a90a78b3af514fda51e92a334"
+    },
+    {
+      "edgeChromaPixels": 786,
+      "ribbonPixelsRemoved": 8,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 3233,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        222,
+        338,
+        546,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        222,
+        338,
+        546,
+        1260
+      ],
+      "path": "настасья/view/whole/wool/main.png",
+      "beforeSha256": "adf410f8edf4dc54dd7b0116cbbadd7d46599a0f135eee0279c5086220d532cf",
+      "afterSha256": "b08970e1e2ee7a82c001468e17808ac402e701467efeb672ac7c9753bca1c21e",
+      "metaSha256": "4c14489451a0dde37f5ff4172dd55c526fedff3417916d178e020062165dad36"
+    },
+    {
+      "edgeChromaPixels": 1016,
+      "ribbonPixelsRemoved": 30,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 3579,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        210,
+        301,
+        613,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        210,
+        301,
+        613,
+        1260
+      ],
+      "path": "савелий/view/whole/raincoat/main.png",
+      "beforeSha256": "f02fa8f1e3db0489240eb403b4736497b96281fa96f285b29af4e1cf2a4cf7c3",
+      "afterSha256": "6672a49005868de2632240441951a85a0e7e121b61facc5113f033e00c6f5410",
+      "metaSha256": "e335afd765033faf203e7aa11a49e43124254d472b61224677c6b1c160bd380b"
+    },
+    {
+      "edgeChromaPixels": 2414,
+      "ribbonPixelsRemoved": 198,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 4346,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        207,
+        377,
+        560,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        207,
+        377,
+        560,
+        1260
+      ],
+      "path": "яков/view/whole/work/alarm.png",
+      "beforeSha256": "b73f342cd9536f67f8fef6e081acc9b10496fca3f6c0fac27816f0f6a6763191",
+      "afterSha256": "d25aecb8488bf6d5c825140bc4f390aa0c7f27eabbda3ac9e3480a60b06e131f",
+      "metaSha256": "c1db04aebccab6d6134c9a1dc039cab494d0adf9f2b092d143a577dcb116fa58"
+    },
+    {
+      "edgeChromaPixels": 2148,
+      "ribbonPixelsRemoved": 350,
+      "reviewedSleevePixelsRemoved": 162,
+      "boundaryAlphaPixels": 3758,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        208,
+        374,
+        482,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        208,
+        374,
+        482,
+        1260
+      ],
+      "path": "яков/view/whole/work/guarded.png",
+      "beforeSha256": "def68a162802b1200f9c766ace2633db0afde83cdd3beb7a7b17da32b7ca326c",
+      "afterSha256": "7cd175eeb108381086a59a43f7d2206e0b170e7c58f710dc6e1982c5da0e05e6",
+      "metaSha256": "b42a39bece7eae9fa889a57c360877a706ccd9a411364ad0cbb9da30666df4b9"
+    },
+    {
+      "edgeChromaPixels": 2368,
+      "ribbonPixelsRemoved": 64,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 4140,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        215,
+        374,
+        552,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        215,
+        374,
+        552,
+        1260
+      ],
+      "path": "яков/view/whole/work/honest.png",
+      "beforeSha256": "c792075a4a901335a0e1ae78f8760edaf47312e8a50ff876d1843b19ff74948d",
+      "afterSha256": "6e9bbdb5df01e13111fefada3f9f0b15716f8fc8558a6029cd2d605d5d557201",
+      "metaSha256": "07fbaeb61299da6eedab0a5e840dc78f1ac93ec6d70682830769652cd82bf839"
+    },
+    {
+      "edgeChromaPixels": 2330,
+      "ribbonPixelsRemoved": 92,
+      "reviewedSleevePixelsRemoved": 0,
+      "boundaryAlphaPixels": 4304,
+      "interiorUnchanged": true,
+      "dimensions": [
+        768,
+        1280
+      ],
+      "alphaBoundsBefore": [
+        237,
+        374,
+        530,
+        1260
+      ],
+      "alphaBoundsAfter": [
+        237,
+        374,
+        530,
+        1260
+      ],
+      "path": "яков/view/whole/work/main.png",
+      "beforeSha256": "86992db87a7e2e64f47039ab039f30d1b4a696a5e1aaf7a73722cd84fd739953",
+      "afterSha256": "5664608a178e73d1a938b63285189f15bd9cb361473f19dab3454a7a9fd5c47d",
+      "metaSha256": "5e515ded50db2c329a90f84aa2e9f2d117113c72d895d641724dad57bc522f5c"
+    }
+  ],
+  "foregroundCoreInset": 6,
+  "boundaryBlurSigma": 0.45
+}

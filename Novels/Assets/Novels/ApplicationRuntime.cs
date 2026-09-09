@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -17,11 +18,15 @@ namespace Novels
             internal Action<Diagnostics.NovelError> OnError;
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
             internal Bundles.IContentSource ContentSource;
+            internal Bundles.IContentSource CatalogContentSource;
+            internal IReadOnlyList<string> StoryIds;
+            internal Func<string, Bundles.IContentSource> CreateStoryContentSource;
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
         private readonly ApplicationEnvironment _environment;
         private readonly Bundles.IContentSource _contentSource;
+        private readonly Func<string, Bundles.IContentSource> _createStoryContentSource;
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Action<Diagnostics.NovelError> _onError;
         private readonly Diagnostics.SmokeTelemetry _smokeTelemetry;
@@ -29,46 +34,67 @@ namespace Novels
         private readonly Bundles.Entity _catalogBundles;
         private readonly DisposableSlot<NovelRuntime> _activeNovel;
         private readonly CatalogFlow _catalogFlow;
+        private readonly ApplicationAudioSettings _audioSettings;
 
         internal ApplicationRuntime(Dependencies ctx)
         {
             _environment = ctx.Environment
                 ?? throw new ArgumentNullException(nameof(ctx.Environment));
-            _contentSource = ctx.ContentSource
-                ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
+            _contentSource = ctx.ContentSource;
+            _createStoryContentSource = ctx.CreateStoryContentSource;
+            var catalogContentSource = ctx.CatalogContentSource;
+            if (catalogContentSource == null)
+            {
+                if (_contentSource == null)
+                    throw new ArgumentNullException(nameof(ctx.ContentSource));
+                catalogContentSource = new Bundles.PrefixedContentSource(
+                    _contentSource,
+                    ContentAddressing.ContentPackageConvention.CatalogUiPrefix);
+            }
             _onLog = ctx.OnLog;
             _onError = ctx.OnError;
             _smokeTelemetry = ctx.SmokeTelemetry;
             _onStorySourceChanged = ctx.OnStorySourceChanged;
+            _audioSettings = new ApplicationAudioSettings().AddTo(this);
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _catalogBundles = CreateBundles(
-                new Bundles.PrefixedContentSource(
-                    _contentSource,
-                    ContentAddressing.ContentPackageConvention.CatalogUiPrefix),
+                catalogContentSource,
                 "catalog").AddTo(this);
             _catalogFlow = new CatalogFlow(new CatalogFlow.Dependencies
             {
                 Bundles = _catalogBundles,
                 RootContentSource = _contentSource,
+                StoryIds = ctx.StoryIds,
+                CreateStoryContentSource = ctx.CreateStoryContentSource,
                 PriorityLoader = new PriorityLoader(_defaultThreadPriority),
                 PersistentDataPath = _environment.PersistentDataPath,
                 ClientVersion = _environment.ClientVersion,
+                ContentPlatform = string.IsNullOrWhiteSpace(_environment.ContentPlatform)
+                    ? Bundles.ContentPlatform.GetCurrent() : _environment.ContentPlatform,
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _onLog,
                 SmokeTelemetry = _smokeTelemetry,
+                CreateStoryBundles = CreateStoryBundles,
+                Settings = _audioSettings,
             });
             _activeNovel = new DisposableSlot<NovelRuntime>().AddTo(this);
         }
 
         internal async UniTask Run()
         {
+            _audioSettings.Apply();
             using var bootstrap = new Bootstrap.BootstrapController(_environment.CancellationToken);
             using var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
             bootstrap.Hide();
             while (!_environment.CancellationToken.IsCancellationRequested)
             {
                 var launch = await _catalogFlow.SelectContent(catalog);
-                if (!await RunStory(launch.Content, launch.StartNew, bootstrap))
+                if (!await RunStory(
+                        launch.Content,
+                        launch.EpisodeId,
+                        launch.RestartEpisode,
+                        bootstrap,
+                        catalog.Downloads.GetReadyBundles(launch.Content.ContentId)))
                     return;
                 _smokeTelemetry?.Emit(
                     "catalog.returned",
@@ -79,15 +105,13 @@ namespace Novels
 
         private async UniTask<bool> RunStory(
             Catalog.NovelCatalogEntry content,
-            bool startNew,
-            Bootstrap.BootstrapController bootstrap)
+            string episodeId,
+            bool restartEpisode,
+            Bootstrap.BootstrapController bootstrap,
+            Bundles.Entity storyBundles)
         {
-            using var storyBundles = CreateBundles(
-                new Bundles.PrefixedContentSource(
-                    _contentSource,
-                    ContentAddressing.ContentPackageConvention.StoryPrefix(
-                        content.ContentId)),
-                $"story-{content.ContentId}");
+            // Borrow the verified/pinned release prepared by the catalog queue.
+            // Loading a fresh release here could launch a different, not-yet-downloaded version.
             var contentDeliveryFlow = new ContentDeliveryFlow(
                 storyBundles,
                 _environment.CancellationToken);
@@ -100,7 +124,8 @@ namespace Novels
                 AudioMixer = _environment.AudioMixer,
                 FallbackAssets = _environment.FallbackAssets,
                 RuntimeTuning = _environment.RuntimeTuning,
-                StartNew = startNew,
+                SelectedEpisodeId = episodeId,
+                RestartSelectedEpisode = restartEpisode,
                 PrepareNovelContent = contentId =>
                     contentDeliveryFlow.PrepareStoryInitial(bootstrap, contentId),
                 HidePreparationScreen = bootstrap.Hide,
@@ -117,10 +142,6 @@ namespace Novels
                 EpisodeRunResult result;
                 try
                 {
-                    await storyBundles.LoadReleaseAsync(
-                        _environment.ClientVersion,
-                        ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion,
-                        ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion);
                     storyReleaseLoaded = true;
                     storyBundles.ActivateRelease();
                     _smokeTelemetry?.Emit(
@@ -170,12 +191,14 @@ namespace Novels
 
         internal void FlushSaveSynchronously()
         {
+            _audioSettings.Save();
             _activeNovel.Value?.FlushSaveSynchronously();
         }
 
         private Bundles.Entity CreateBundles(
             Bundles.IContentSource source,
-            string cacheNamespace)
+            string cacheNamespace,
+            CancellationToken? cancellationToken = null)
         {
             return new Bundles.Entity(new Bundles.Entity.Ctx
             {
@@ -184,9 +207,17 @@ namespace Novels
                 CacheNamespace = cacheNamespace,
                 Platform = _environment.ContentPlatform,
                 DeliveryOptions = _environment.RuntimeTuning.ContentDelivery,
-                CancellationToken = _environment.CancellationToken,
+                CancellationToken = cancellationToken ?? _environment.CancellationToken,
                 OnLog = _onLog,
             });
         }
+
+        private Bundles.Entity CreateStoryBundles(string contentId, CancellationToken cancellationToken) =>
+            CreateBundles(
+                _createStoryContentSource?.Invoke(contentId)
+                    ?? new Bundles.PrefixedContentSource(
+                        _contentSource,
+                        ContentAddressing.ContentPackageConvention.StoryPrefix(contentId)),
+                $"story-{contentId}", cancellationToken);
     }
 }

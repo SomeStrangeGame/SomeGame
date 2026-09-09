@@ -105,42 +105,47 @@ class RunnerTests(unittest.TestCase):
             self.assertEqual("agent-a", runner.lock_owner(root))
 
     def test_default_player_output_has_target_suffix(self):
-        self.assertEqual("Novels.apk", runner.default_player_output("Android", "Embedded").name)
+        output = runner.default_player_output("kostroma", "Android", "Embedded")
+        self.assertEqual("Novels.apk", output.name)
+        self.assertIn("kostroma", output.parts)
+
+    def test_application_profile_rejects_invalid_id(self):
+        with self.assertRaises(runner.WorkflowError) as invalid:
+            runner.application_profile_paths("../wrong")
+        self.assertEqual("invalid_app_id", invalid.exception.code)
+
+    def test_application_profile_rejects_missing_profile(self):
+        previous_root = runner.ROOT
+        with tempfile.TemporaryDirectory() as directory:
+            runner.ROOT = Path(directory)
+            try:
+                with self.assertRaises(runner.WorkflowError) as missing:
+                    runner.application_profile_paths("missing")
+                self.assertEqual("application_profile_missing", missing.exception.code)
+            finally:
+                runner.ROOT = previous_root
 
     def test_player_parser_accepts_test_signing(self):
         args = runner.parser().parse_args([
-            "player-build", "--agent-id", "a", "--target", "Android",
+            "player-build", "--agent-id", "a", "--app", "kostroma", "--target", "Android",
             "--mode", "Embedded", "--test-signing",
         ])
         self.assertTrue(args.test_signing)
         self.assertFalse(args.development)
 
-    def test_player_parser_accepts_children_catalog_variant(self):
-        args = runner.parser().parse_args([
-            "player-build", "--agent-id", "a", "--target", "Android",
-            "--mode", "Embedded", "--catalog-variant", "children",
-        ])
-        self.assertEqual("children", args.catalog_variant)
-
-    def test_player_parser_accepts_scp_catalog_variant(self):
-        args = runner.parser().parse_args([
-            "player-build", "--agent-id", "a", "--target", "Android",
-            "--mode", "Embedded", "--catalog-variant", "scp",
-        ])
-        self.assertEqual("scp", args.catalog_variant)
-
-    def test_player_parser_accepts_nochelessie_catalog_variant(self):
-        args = runner.parser().parse_args([
-            "player-build", "--agent-id", "a", "--target", "Android",
-            "--mode", "Embedded", "--catalog-variant", "nochelessie",
-        ])
-        self.assertEqual("nochelessie", args.catalog_variant)
-
     def test_player_parser_rejects_development_with_test_signing(self):
         with self.assertRaises(SystemExit):
             runner.parser().parse_args([
                 "player-build", "--agent-id", "a", "--target", "Android",
-                "--mode", "Embedded", "--development", "--test-signing",
+                "--mode", "Embedded", "--app", "kostroma",
+                "--development", "--test-signing",
+            ])
+
+    def test_player_parser_requires_application_profile(self):
+        with self.assertRaises(SystemExit):
+            runner.parser().parse_args([
+                "player-build", "--agent-id", "a", "--target", "Android",
+                "--mode", "Embedded",
             ])
 
     def test_content_gate_parser_accepts_explicit_target(self):
@@ -278,7 +283,9 @@ class RunnerTests(unittest.TestCase):
             "story-check", "--agent-id", "a", "--target", "tzm", "--build", "--platform", "android"])
         self.assertTrue(story.build)
         cycle = runner.parser().parse_args([
-            "android-dev-cycle", "--agent-id", "a", "--package-id", "com.example.game"])
+            "android-dev-cycle", "--agent-id", "a", "--app", "kostroma",
+            "--package-id", "com.example.game"])
+        self.assertEqual("kostroma", cycle.app)
         self.assertEqual("emulator-5554", cycle.serial)
         clean = runner.parser().parse_args([
             "clean-generated", "--agent-id", "a", "--project", "Novels"])

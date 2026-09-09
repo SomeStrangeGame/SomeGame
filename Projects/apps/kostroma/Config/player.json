@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "id": "kostroma",
+  "productName": "Кострома",
+  "androidApplicationId": "ru.kostroma.novels",
+  "iosApplicationId": "ru.kostroma.novels",
+  "standaloneApplicationId": "ru.kostroma.novels",
+  "icon": "../Assets/icon.png"
+}

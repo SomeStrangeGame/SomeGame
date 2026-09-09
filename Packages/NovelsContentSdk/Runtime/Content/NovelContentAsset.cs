@@ -13,6 +13,12 @@ namespace Novels.Content
             [SerializeField] private string _id;
             [SerializeField] private string _title;
             [SerializeField] private string _description;
+            [SerializeField, Tooltip("Optional image file in Config/EpisodeCovers. Empty uses the story cover.")]
+            private string _catalogCover;
+            [SerializeField, Tooltip("Optional episode author or pen name. Empty uses the story author.")]
+            private string _author;
+            [SerializeField, Tooltip("Optional MP4 in Config/CatalogVideos. Empty uses own episode cover, then story video, then story cover.")]
+            private string _catalogVideo;
 
             internal readonly EpisodeDefinition ToDefinition(string contentId)
             {
@@ -20,7 +26,10 @@ namespace Novels.Content
                     contentId,
                     _id,
                     _title,
-                    _description);
+                    _description,
+                    _catalogCover,
+                    _author,
+                    _catalogVideo);
             }
         }
 
@@ -66,6 +75,8 @@ namespace Novels.Content
         [SerializeField] private string _id;
         [SerializeField] private string _mainCharacter;
         [SerializeField] private string _contentVersion = "1";
+        [SerializeField, Tooltip("Optional story card MP4 in Config/CatalogVideos.")]
+        private string _catalogVideo;
         [SerializeField] private string _endMarker;
         [SerializeField] private string[] _silentAudioIds;
         [SerializeField] private EpisodeEntry[] _episodes;
@@ -92,7 +103,8 @@ namespace Novels.Content
                 (_characterDefaults ?? Array.Empty<CharacterDefaultEntry>())
                     .Select(value => value.ToDefinition()),
                 (_artAliases ?? Array.Empty<ArtAliasEntry>())
-                    .Select(alias => alias.ToDefinition()));
+                    .Select(alias => alias.ToDefinition()),
+                _catalogVideo);
         }
     }
 }

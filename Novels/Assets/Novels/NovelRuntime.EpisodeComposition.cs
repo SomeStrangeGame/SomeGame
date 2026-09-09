@@ -13,6 +13,7 @@ namespace Novels
             var storyData = await _priorityLoader.Run(() => state.EpisodePreloading
                 .AttachExternalCancellation(cancellationToken));
             var storyText = storyData.StoryText;
+            _readingStoryText = storyText;
             var initialState = _progress.GetEntryState(_episode);
             ReplayValidator.ValidateOrDiscard(
                 state.SaveSystem,
@@ -70,7 +71,7 @@ namespace Novels
             }).AddTo(state.EpisodeScope);
             state.EpisodeRuntime.Configure(
                 novelProcess.Run,
-                state.SaveSystem.FlushAsync);
+                FlushSaveAsync);
             return await state.EpisodeRuntime.Run();
         }
 

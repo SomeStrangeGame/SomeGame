@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: a13c0df70adf4fcfa238ddd536ef2711
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData:
+  assetBundleName:
+  assetBundleVariant:
+  script: {fileID: 11500000, guid: 3d3f15187e96401f9d8f2573a2b8ef11, type: 3}
+  compileAutomatically: 1
+  masterInkAsset: {fileID: 0}
+  includePaths: []
