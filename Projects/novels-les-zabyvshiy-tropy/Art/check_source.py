@@ -132,6 +132,43 @@ def audit():
             'Expected six distinct episode covers')
     require(hashlib.sha256((ROOT / 'Config' / card['cover']).read_bytes()).hexdigest()
             not in episode_covers.values(), 'Episode cover duplicates story cover')
+    preview_path = ROOT / 'Config/Preview/preview.json'
+    preview = json.loads(preview_path.read_text())
+    require(preview['schemaVersion'] == 1, 'Preview schema mismatch')
+    require(preview['storyId'] == card['storyId'], 'Preview story ID mismatch')
+    require(preview['episodeId'] == 's01e01', 'Preview episode ID mismatch')
+    require(preview['source'] == 'Assets/Ink/s01e01.ink', 'Preview source mismatch')
+    preview_characters = preview['characters']
+    markers = [block['character'] for block in preview['blocks'] if block['type'] == 'character']
+    require(set(markers) == set(preview_characters), 'Preview character-marker coverage mismatch')
+    preview_files = []
+    for character_id, character in preview_characters.items():
+        relative = character['image']
+        require(re.fullmatch(r'characters/[A-Za-z0-9_.-]+\.png', relative),
+                f'Preview unsafe character path: {relative}')
+        path = preview_path.parent / relative
+        require(path.is_file(), f'Preview missing character image: {relative}')
+        preview_files.append(path.relative_to(preview_path.parent).as_posix())
+    actual_preview_files = sorted(
+        path.relative_to(preview_path.parent).as_posix()
+        for path in (preview_path.parent / 'characters').iterdir() if path.is_file())
+    require(sorted(preview_files) == actual_preview_files, 'Preview contains unreferenced character files')
+    opening = (INK / 's01e01.ink').read_text()
+    cursor = 0
+    for block in preview['blocks']:
+        require(block['type'] in {'character', 'narration', 'dialogue', 'separator'},
+                f"Preview unsupported block type: {block['type']}")
+        if block['type'] not in {'narration', 'dialogue'}:
+            continue
+        text = block['text']
+        position = opening.find(text, cursor)
+        require(position >= 0, f'Preview text is absent/out of order: {text[:48]}')
+        if block['type'] == 'dialogue':
+            line_start = opening.rfind('\n', 0, position) + 1
+            prefix = opening[line_start:position]
+            require(prefix.startswith(block['speaker']) and prefix.rstrip().endswith(':'),
+                    f"Preview speaker mismatch: {block['speaker']}")
+        cursor = position + len(text)
     initial, raw, current = {}, {'entry': []}, 'entry'
     locations, audio, icons, character_files, labels = set(), set(), set(), set(), set()
     source_hash = hashlib.sha256()
@@ -268,6 +305,7 @@ def audit():
     require(len(routes) == 72, 'Expected all 3×2×2×2×3 choice combinations')
     return {'source_sha256': source_hash.hexdigest(), 'routes': len(routes), 'endings': dict(endings),
             'episode_cover_sha256': episode_covers,
+            'website_preview': {'blocks': len(preview['blocks']), 'characters': len(preview_characters)},
             'decisions_per_route': 5, 'options_total': len(labels), 'locations': len(locations),
             'choice_icons': len(icons), 'audio_ids': len(audio), 'character_files_resolved': len(character_files),
             'source_word_units': sum(len((INK / p).read_text().split()) for p in includes),
