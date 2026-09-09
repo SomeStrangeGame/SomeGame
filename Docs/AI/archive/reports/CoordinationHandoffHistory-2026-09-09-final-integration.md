@@ -9,6 +9,25 @@ Changed: coordination agent/handoff and prior TK integration history.
 Validation: finish-task passed (1 gate).
 Pending / risks: none.
 
+## Earlier web-preview and publication records
+
+- `chernaya-melnitsa-web-preview`: added the canonical-Ink web preview; JSON,
+  source and diff checks passed; Unity content build was deferred.
+- `story-web-publication-skill`: required website reading previews for new
+  stories and documented the safe Remote publication handoff; project docs and
+  scoped diff checks passed.
+- TK preview-layout and web-publication records were completed; the temporary
+  single-story manifest was immediately corrected by `tk-catalog-restore`.
+
+## Previous primary publication receipts
+
+- Primary publication confirmed `origin/main` at
+  `bb161ec48bdc2cafbaed310b469f13db2c23d0d7`, with worktrees explicitly
+  excluded and existing device/manual gates deferred.
+- `catalog-progress-publish` confirmed feature commit
+  `dcb976a73ab946f8d413c836077cc1f8fd97a7c7` on `origin/main`; its detailed
+  evidence remains in `CatalogEpisodeProgress-2026-09-08.md`.
+
 ## 2026-09-09T16:10:04Z — website-character-framing-v4 — completed
 
 Task: Fixed top-safe framing for differently proportioned preview character

@@ -97,33 +97,9 @@ Completed branding/release entries: [preserved history](../archive/reports/Coord
 ## 2026-09-09 — tk-route-final — blocked: all4routes/6episodes/13options/3endings and854ordered markers PASS on unchanged V3APK fd689229; no runtime/save/fallback/crash/ANR failures. New substantial persistent Tim rendering defect in R2 city epilogue (broad white body/hair pattern and halo); minor-edge waiver not silently extended; no repair/rebuild. Audio listening remains unverified. Evidence/next author decision: agents/tk-route-final.md and retained clone Art/ANDROID_ACCEPTANCE_V3.md; screenshot Build/AndroidAcceptanceV3/r2-ending-tim-settled.png. Own emulator stopped with saves retained; releasing own resources/request after review, automationPAUSED. No foreign process/source touched; old APK does not validate Kostroma. Historical TK/branding/release and completed Kostroma site/dev/video records: [history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md).
 Completed release skill, shared-root/app-manifest and publisher/site/carousel records: [integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md), [release skills](../archive/reports/CoordinationHandoffHistory-2026-09-09-release-skills.md), [publisher history](../archive/reports/CoordinationHandoffHistory-2026-09-09-publisher-site.md).
 
-## 2026-09-09T14:09:00Z — chernaya-melnitsa-web-preview — ready-for-integration
-
-Added `Projects/novels-chernaya-melnitsa/Config/preview.json`: 393 canonical Ink words, 27 linear web-readable blocks, estimated four minutes. JSON/source/diff checks passed; no runtime/card/site/publish change. Unity content build intentionally deferred because `tk-route-final` retained shared Unity/device ownership during the approved source-only overlap.
-
-Completed Kostroma preview-character publication: [history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md).
-
-## 2026-09-09T15:27:00Z — story-web-publication-skill — ready-for-integration
-
-Task: Require every new story to ship a canonical-Ink website reading preview and provide a safe Remote publication handoff.
-Changed: `.agents/skills/somegame-create-story/SKILL.md`, `references/web-preview-publication.md`.
-Validation: project `docs-check` skill/frontmatter/link/tooling checks PASS after handoff rotation; scoped diff check PASS. Standalone system quick validator could not start because its Python environment lacks PyYAML; project validator covers the changed skill contract.
-Pending / risks: none for the skill update; actual story deployment remains a separate authorized release operation.
-Suggested next step: create `trinadtsatyy-kolokol` Preview, integrate its catalog entry, then release through `somegame-release-app`.
-
-Completed story-web skill and preview-layout-v2 records: [integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md).
-
-Completed TK web publication record (its single-story manifest was immediately corrected by `tk-catalog-restore`): [integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md).
+Completed Chyornaya Melnitsa web-preview, story-web publication skill, preview-layout and corrected TK web-publication records: [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
 
 Completed TK channel restoration, release automation and website framing records:
 [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
 
-## Previous primary publication receipt
-
-Task: Commit and publish the current primary checkout only; user explicitly excluded all worktrees.
-Changed: fallback catalog/runtime/SDK and tools, primary Volchya Poshlina source snapshot, skills and existing documentation/evidence. Generated screenshots remain local and ignored; Kolodets whitespace-only churn normalized without content changes.
-Validation: docs-check and all three tooling suites passed; zsh syntax and staged whitespace checks passed. Prior catalog Editor/build evidence above retained; no new Unity/device or story acceptance claimed.
-Publication: canonical git-publish confirmed local HEAD = origin/main = `bb161ec48bdc2cafbaed310b469f13db2c23d0d7`; nine previously unpushed primary commits published, including three created in this task. This receipt is committed separately.
-Pending / risks: all existing device/remote/manual gates remain deferred. No worktree branches or files integrated; catalog still contains zdm/tzm only.
-
-2026-09-08 — catalog-progress-publish: feature commit dcb976a73ab946f8d413c836077cc1f8fd97a7c7 confirmed on origin/main. Approved episode reading bar, optional version/hash-bound estimate, evidence and pending gates: [publication report](../archive/reports/CatalogEpisodeProgress-2026-09-08.md). Isolated clean copy; no story commits/registry/primary checkout changes. Primary feature diff remains local despite publication; reconcile deliberately during later integration.
+Previous primary and catalog-progress publication receipts: [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
