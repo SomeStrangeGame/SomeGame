@@ -1,6 +1,17 @@
 # Acceptance evidence
 
-Status: **blocked** — runtime launch succeeds, but the character-alpha visual gate fails.
+Status: **revalidation pending** — the source character-alpha blocker is repaired; a fresh Unity/Android visual gate is required before acceptance.
+
+## Character alpha repair — 2026-09-10
+
+- Replaced destructive sparse alpha with 20 reviewed, pose-specific foreground masks; no generated replacement RGB was used.
+- Verified all 20 production PNGs retain decoded RGB pixels exactly against the pre-repair Git revision.
+- Preserved every `512×768` canvas, selector/outfit/state path and Unity `.meta` GUID.
+- Reviewed the five neutral identities on both dark and light backgrounds in `AlphaRepair/dark-light-proof.png`.
+- Reviewed every expression/pose on alternating dark and light backgrounds in `AlphaRepair/all-variants-proof.png`; the intentional translucent `яр/fading` treatment remains contained inside a coherent silhouette.
+- Reproduction data and per-file hashes are recorded in `AlphaRepair/repair-report.json`; the deterministic alpha-only applicator is `AlphaRepair/apply_character_masks.py`.
+- Fresh Android content-gate passed after the repair (`content-gate-20260910T085729Z.log`).
+- Fresh Embedded Player validation is still pending: the first build attempt reached signing and failed because release passwords were unavailable; the authorized test-signing retry was stopped at the user's request after Unity Licensing failed again. The older APK and its screenshots are not claimed as evidence for the repaired package.
 
 ## Android gate — 2026-09-10
 
@@ -15,13 +26,13 @@ Status: **blocked** — runtime launch succeeds, but the character-alpha visual 
 
 The first runtime frame exposed dark-brown text on a dark-blue story-local Bubble. Six dialogue text states were changed to a light cold tone. A later long line exposed `32px` overflow; all dialogue text states were restored to the established `22px` size while the distinct choice-button size remained unchanged. The final `dialogue-readable.png` proves the long sampled line is readable and contained.
 
-## Blocking finding
+## Superseded blocking finding
 
 At least Asya's runtime whole-character sprite has destructive internal transparency: face, hands and scattered highlights remain while most dark clothing/body pixels disappear and the location shows through. The source inventory confirms this is not a Unity selector fallback: the intended selector resolves, but the imported PNG alpha is sparse (`main.png`: 380,187 fully transparent pixels of 393,216; mean alpha approximately 6.8/255). The same source-generation pattern is present across the 20 character PNGs, with mean alpha approximately 4.0–118.4/255, so the package must be treated as affected until every used variant passes light/dark alpha proofs.
 
 Expected: one coherent, opaque whole-character silhouette with transparency only outside the character. Actual: large holes inside the body and clothing. Evidence: `Acceptance/20260910-android/character-alpha-failure.png` and the production PNGs under `Assets/Characters/`.
 
-The built-in background-extraction edit was attempted for the neutral Asya master but returned HTTP 429 before producing an artifact. No unsafe opaque rectangle, unrelated fallback, or identity-changing replacement was substituted. Per `CharacterLayeringRules.md` and the acceptance skill this blocks acceptance and further route/endings claims.
+This source finding is repaired by the pose-specific alpha package above. No unsafe opaque rectangle, unrelated fallback, or identity-changing replacement was substituted. Runtime evidence below remains historical and must not be reused as proof of the repaired sprites.
 
 ## Preserved evidence
 
@@ -32,4 +43,4 @@ The built-in background-extraction edit was attempted for the neutral Asya maste
 - Story Android log: `Novels/Build/Logs/automation/content-gate-20260910T075524Z.log`
 - Player log: `Novels/Build/Logs/automation/player-20260910T075548Z.log`
 
-Next required owner: `$somegame-create-character` together with `$imagegen`. Repair the neutral identity/outfit masters and every used variant as true transparent cutouts while preserving selector paths and `.meta` GUIDs; generate full-body/face contact sheets plus light/dark alpha proofs. After that material art change, repeat a freshly authorized exact-story Unity/Android gate and the planned episode/choice/ending matrix. The story must not be marked accepted before those checks pass.
+Next required step after Unity Licensing is healthy: build a fresh test-signed Embedded Player, capture a repaired character in Player, and then execute the planned episode/choice/ending matrix. The story must not be marked accepted before those checks pass.
