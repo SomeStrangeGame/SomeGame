@@ -1,17 +1,10 @@
 # Current cross-chat handoff
 
-Previous snapshot preserved in
-[`CoordinationHandoffHistory-2026-09-05-pre-publish.md`](../archive/reports/CoordinationHandoffHistory-2026-09-05-pre-publish.md).
+Previous snapshot preserved in [`CoordinationHandoffHistory-2026-09-05-pre-publish.md`](../archive/reports/CoordinationHandoffHistory-2026-09-05-pre-publish.md).
 
 ## Ready for integration or validation
-
-- `catalog-resume-reset`: fixed saved-episode primary action and labelled restart;
-  catalog build, fresh compile and live zdm/tzm checks passed (one Continue action).
-
-- `fallback-art-integration`: applied the prepared fallback artwork and icons;
-  final catalog Editor build, Novels compile and live portrait interaction/visual
-  checks passed for zdm/tzm. Original approved mockup file was not available for
-  pixel-diff comparison; Android/tablet verification was not run.
+- `catalog-resume-reset`: fixed saved-episode primary action and labelled restart; catalog build, fresh compile and live zdm/tzm checks passed (one Continue action).
+- `fallback-art-integration`: applied the prepared fallback artwork and icons; final catalog Editor build, Novels compile and live portrait interaction/visual checks passed for zdm/tzm. Original approved mockup file was not available for pixel-diff comparison; Android/tablet verification was not run.
 
 - `scp1198-bubbles-layout-v4`: current story-local Bubble sprites, prefab and evidence are ready for publication with further visual fitting intentionally deferred.
 - `option-screen-prefab-split`: Choice and Wardrobe now use independent authored fallback prefabs; scoped checks, TZM content build and fresh Novels compile passed. Manual portrait smoke remains.
@@ -19,6 +12,7 @@ Previous snapshot preserved in
 - `scp-genre-catalog`: reusable genre-catalog skill and authored SCP catalog variant passed catalog and tooling gates. Fresh Player visual acceptance remains pending.
 - `parallel-story-orchestration`: parallel story-local preparation with serialized checkout/Unity/integration was documented and validated.
 - `fast-validation-protocol`: fast, standard and release validation levels plus batched validation slots were documented and validated.
+- `fallback-completion-check`: fallback completed episodes no longer show the redundant central checkmark; locked-state glyph remains. Scoped prefab/reference and diff checks passed; fresh Unity visual gate remains pending.
 
 ## Blocked or deferred gates
 
@@ -57,47 +51,21 @@ Pending / risks: design and approve fallback before introducing the four new
 product variants; Unity validation belongs to that later design task.
 Suggested next step: define fallback hierarchy, states and override points.
 
-Completed/superseded fallback entries preserved in
-[`CoordinationHandoffHistory-2026-09-07-fallback-integration.md`](../archive/reports/CoordinationHandoffHistory-2026-09-07-fallback-integration.md).
+Completed/superseded fallback entries preserved in [`CoordinationHandoffHistory-2026-09-07-fallback-integration.md`](../archive/reports/CoordinationHandoffHistory-2026-09-07-fallback-integration.md).
 
-Earlier fallback and completed skill details preserved in
-[`catalog snap history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-snap.md).
+Earlier fallback and completed skill details preserved in [`catalog snap history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-snap.md).
 
-Resume/reset and locked-card text evidence preserved in
-[`2026-09-08 catalog controls history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-controls.md).
+Resume/reset and locked-card text evidence preserved in [`2026-09-08 catalog controls history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-controls.md).
 
-Settings implementation and trim details preserved in
-[`background delivery history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-background-delivery.md).
+Settings implementation and trim details preserved in [`background delivery history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-background-delivery.md).
 Privacy/terms/support URLs remain empty pending real application links; UI and volume checks passed.
 
 Scroll-snap details preserved in [publication history](../archive/reports/CoordinationHandoffHistory-2026-09-08-publication.md); APK/tablet validation remains pending.
 
-## 2026-09-08T08:09:00Z — catalog-background-download — ready-for-review
+Background-delivery implementation evidence preserved in [episode progress history](../archive/reports/CoordinationHandoffHistory-2026-09-08-episode-progress.md).
+Pending: story-level download gating remains conservative; remote/mobile timing unverified.
 
-Task: Metadata-first catalog with ordered background delivery and per-card progress/retry.
-Changed: CatalogFlow/CatalogDownloads/ApplicationRuntime/NovelProgress/ContentDeliveryFlow;
-SDK catalog model/controller/card, preview contract/convention/exporter; existing live validation,
-Editor references, Catalog README, ContentPipeline guide and Architecture memory.
-Build exports platform catalog-preview.json from the unique authored definition (both layouts),
-pinned to releaseId; new client requires rebuilt story content. Card.json remains schema 2.
-Queue uses verified delivery groups, continues across reading, retains leases/releases and
-blocks open/reset until ready. Preview reads never delete incompatible progress.
-Validation: zdm content-gate 075209 and tzm 075730 passed; editor-gate 075901 and final compile
-completed without compiler errors. Download fixture passed serial order, failure/retry,
-partial lockout, mismatch, cancellation and actual card controls in isolated temporary cache.
-Live zdm/tzm, settings and snapping passed. Snap probe needed continuous Editor frames and
-post-LateUpdate observation; earlier failed probes remain in log, corrected checks passed.
-Local startup evidence: app.started 08:00:00.628, catalog.ready 08:00:02.304, zdm ready 07.372,
-tzm ready 13.471. Preview sizes 2661/1731 bytes (11/7 episodes), excluding covers.
-Pending: no per-episode dependency manifest: all shared story groups conservatively gate every
-episode together. Remote/mobile timing and Android/iOS Player not tested; rebuild target outputs.
-Runtime: Editor playing at catalog start; inspected ready-card Game View in
-Novels/Assets/Build/Logs/catalog-background-final-20260908.png (TZM ready state).
-No user cache/save reset, scene save, commit or publish. Isolated fixture cache removed.
-Final cleanup compile and delivery suite passed again; validation restores temporary background-frame mode.
-
-Catalog header/story spacing evidence is preserved in
-[`spacing history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-spacing.md).
+Catalog header/story spacing evidence is preserved in [`spacing history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-spacing.md).
 
 Episode-cover evidence: [history](../archive/reports/CoordinationHandoffHistory-2026-09-08-episode-covers.md).
 Pending: no new episode art assigned (11/7 use story covers); no Android/iOS Player or remote timing gate.
@@ -108,10 +76,38 @@ Set an author only when supplied; existing stories remain unsigned. No device ve
 ## 2026-09-08T09:59Z — catalog-media-priority — ready-for-review
 Corrected precedence: episode video → loaded own episode image → story video → story image. Runtime resolver, Inspector hint and canonical guide/memory updated; fresh compile, 8-case priority matrix, covers and live catalog checks passed (agents/catalog-media-priority.md). Previous player/build evidence: [video history](../archive/reports/CoordinationHandoffHistory-2026-09-08-video.md). No production clips assigned; device/remote/offline playback unverified. Editor playing at start; helper stopped, saves unchanged; no rebuild/commit/publish.
 
-## 2026-09-08T10:14Z — publish-main-snapshot — published
+Publication receipt preserved in [candidate handoff history](../archive/reports/CoordinationHandoffHistory-2026-09-08-chernaya-candidate.md).
 
-Task: Commit and publish the current primary checkout only; user explicitly excluded all worktrees.
-Changed: fallback catalog/runtime/SDK and tools, primary Volchya Poshlina source snapshot, skills and existing documentation/evidence. Generated screenshots remain local and ignored; Kolodets whitespace-only churn normalized without content changes.
-Validation: docs-check and all three tooling suites passed; zsh syntax and staged whitespace checks passed. Prior catalog Editor/build evidence above retained; no new Unity/device or story acceptance claimed.
-Publication: canonical git-publish confirmed local HEAD = origin/main = `bb161ec48bdc2cafbaed310b469f13db2c23d0d7`; nine previously unpushed primary commits published, including three created in this task. This receipt is committed separately.
-Pending / risks: all existing device/remote/manual gates remain deferred. No worktree branches or files integrated; catalog still contains zdm/tzm only.
+2026-09-08 — nevesta-episode-cover: isolated registered story worktree now has s01e01 PNG + source binding; new-cover originality and static PNG/binding/6-test/38-route checks passed (agents/nevesta-episode-cover.md). Pending: scope-safe SDK refresh, audio/alpha evidence, authorized Unity/catalog/Player validation; no main integration, build or publication.
+
+## 2026-09-09 — chernaya-melnitsa-publish — source-published, manual acceptance pending
+
+Canonical push verified source a48a2bda, then receipt 3f6d110e600f7ebf48b79f26425b8d74f79ec32b on origin/main. User-authorized isolated clone preserved primary branch/index/product files and foreign edits. Old clean worktree removed; story branch/8e7f2b6f retained. Static 72 routes/3 endings, 17 tests, geometry/hash/JSON/diff PASS; no Unity/build/ADB. Fresh illustrations and remaining completion/routes/visual gates await user manual build/test; source publication is not acceptance. Remote receipt: Docs/AI/archive/reports/ChyornayaMelnitsaPublication-2026-09-09.md. Local details: agents/chernaya-melnitsa-publish.md; historical art/runtime evidence: [story validation history](../archive/reports/CoordinationHandoffHistory-2026-09-08-chernaya-source.md). Heartbeat paused; own locks/requests released.
+
+## 2026-09-08T14:49Z — catalog-episode-reading-progress — ready-for-final-validation
+
+Task: Approved authored per-episode reading bar and percentage above primary button. Changed: Card/model/fallback prefab, CatalogFlow, save projection and NovelRuntime flush; optional version/hash sidecar; opt-in bounded speculative Ink reads; Catalog README and Architecture routing.
+Validation: isolated Roslyn compilation of four current assemblies PASS; 28 managed probes PASS (linear/branch/boundary/entry-state/loop limit, v2/v3, sidecar mismatch/corruption/reset); prefab IDs/local references/bindings/fill/layout and scoped diff PASS. Evidence commands and limits: [report](../archive/reports/CoordinationHandoffHistory-2026-09-08-episode-progress.md). Follow-up: catalog-progress-live-check below covers catalog build, fresh compile and visible unread bar. Approximate forecast follows first available future choices; legacy saves without estimate show — until next reading exit. Saved-progress/branch/reset runtime and Player checks remain pending; old APK unchanged.
+
+## 2026-09-08T15:40Z — catalog-progress-live-check — ready-for-review
+
+User requested launch. Catalog-only Mac build and fresh Novels compile PASS, catalog.ready/download_ready confirmed; portrait capture shows Прочитано/0%/bar above primary button. Unity6000.3.11f1 Novels PID98697 left OPEN in Play Mode for manual review; clean baseline scene Assets/Novels/Novels.unity. Helper stopped, heartbeat paused, own locks released. Existing chernaya-melnitsa Mac story bundle deliberately not rebuilt (latest illustration not included); registry and saves unchanged. First Play ended without runtime error, followed by capture-tool error; second launch/capture succeeded, final aggregate cancelled during helper cleanup. Exact logs, run/release IDs and limitations: agents/catalog-progress-live-check.md. No APK, full story acceptance or saved-progress interaction pass claimed. Do not close user Editor without approval.
+
+Completed branding/release entries: [preserved history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md). Branding compile/test limitations remain recorded there.
+## 2026-09-09 — tk-route-final — blocked: all4routes/6episodes/13options/3endings and854ordered markers PASS on unchanged V3APK fd689229; no runtime/save/fallback/crash/ANR failures. New substantial persistent Tim rendering defect in R2 city epilogue (broad white body/hair pattern and halo); minor-edge waiver not silently extended; no repair/rebuild. Audio listening remains unverified. Evidence/next author decision: agents/tk-route-final.md and retained clone Art/ANDROID_ACCEPTANCE_V3.md; screenshot Build/AndroidAcceptanceV3/r2-ending-tim-settled.png. Own emulator stopped with saves retained; releasing own resources/request after review, automationPAUSED. No foreign process/source touched; old APK does not validate Kostroma. Historical TK/branding/release and completed Kostroma site/dev/video records: [history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md).
+Completed release skill, shared-root/app-manifest and publisher/site/carousel records: [integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md), [release skills](../archive/reports/CoordinationHandoffHistory-2026-09-09-release-skills.md), [publisher history](../archive/reports/CoordinationHandoffHistory-2026-09-09-publisher-site.md).
+
+Completed Chyornaya Melnitsa web-preview, story-web publication skill, preview-layout and corrected TK web-publication records: [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
+
+Completed TK channel restoration, release automation and website framing records:
+[final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
+
+Previous primary and catalog-progress publication receipts: [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
+
+## 2026-09-09T16:47:45Z — final-main-integration — completed
+
+Task: Integrated both Kostroma stories and release infrastructure into main; tooling, story routes, docs and remote SHA checks passed; catalog rebuild was skipped because the user's Catalog Unity Editor is open; removed the integrated Trinadtsatyy Kolokol worktree.
+Changed: Docs/AI
+Validation: finish-task passed (1 gates).
+Pending / risks: none
+Suggested next step: none

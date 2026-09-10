@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: chernaya-melnitsa
+  m_EditorClassIdentifier:
+  _id: chernaya-melnitsa
+  _mainCharacter: "Лада"
+  _contentVersion: 3
+  _endMarker: "...: КОНЕЦ ИСТОРИИ"
+  _silentAudioIds: []
+  _catalogVideo: chernaya-melnitsa-loop.mp4
+  _episodes:
+  - _id: s01e01
+    _title: "Дом, который ждал"
+    _description: "Лада возвращается в Черноталие, где старый дом хранит следы чёрной муки и ответа, которого она так и не получила."
+    _catalogCover: s01e01.png
+  - _id: s01e02
+    _title: "За рекой"
+    _description: "Поиски Мити ведут через затопленный брод к мельнице и к первому выбору: кому можно доверить старую вину."
+    _catalogCover: s01e02.png
+  - _id: s01e03
+    _title: "Слова под камнями"
+    _description: "Внутри мельницы Лада узнаёт, как нарушенные обещания превращаются в чёрную муку и почему письма не дошли до адресатов."
+    _catalogCover: s01e03.png
+  - _id: s01e04
+    _title: "Право уйти"
+    _description: "До рассвета героям предстоит остановить жернова и решить, кто вправе распоряжаться чужим словом и чужой свободой."
+    _catalogCover: s01e04.png
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Лада"
+    _clothes: coat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Яков"
+    _clothes: work
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Настасья"
+    _clothes: wool
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Савелий"
+    _clothes: raincoat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Митя"
+    _clothes: jacket
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: 4f46de5375484b74960c748c20dc5f37
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

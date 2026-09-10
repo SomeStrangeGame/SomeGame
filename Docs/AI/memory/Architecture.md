@@ -41,6 +41,9 @@ EntryPoint
 - Попап настроек — authored-часть Catalog prefab с нейтральным fallback-стилем.
   Game владеет общей громкостью/сохранением и передаёт `ICatalogSettings`;
   Catalog владеет только UI и конфигурируемыми ссылками. См. Catalog README.
+- Полоса эпизода — необязательная оценка одного пути по сохранённым решениям,
+  не основание для unlock/completion. Version/hash-bound sidecar не меняет saves.
+  Расчёт, неизвестные значения и сброс: [Catalog README](../../../Projects/novels-catalog/README.md#прогресс-чтения-эпизода).
 
 ## Контент
 

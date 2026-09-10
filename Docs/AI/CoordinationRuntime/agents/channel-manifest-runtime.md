@@ -1,0 +1,13 @@
+# Agent: `channel-manifest-runtime`
+
+- Status: completed
+- Task: Implement local dev/prod channel manifests with fallback catalog and versioned story roots; no server publication
+- Scope: Packages/NovelsContentSdk/Runtime/CatalogContracts; Packages/NovelsContentSdk/Runtime/ContentAddressing; Novels/Assets/Novels/ContentRuntimeConfiguration.cs; Novels/Assets/Novels/EntryPoint.cs; Novels/Assets/Novels/ApplicationRuntime.cs; Novels/Assets/Novels/CatalogFlow.cs; Novels/Assets/Editor; Tools/novels-tools; Docs/AI/guides/ContentPipeline.md; Projects/novels-catalog/README.md
+- Base commit: `f1721a63e0462958912795316e63a184e21dd74e`.
+- Requested UTC: `2026-09-08T15:52:36Z`.
+- Current blocker: another task owns the checkout lock and is waiting for explicit permission to close the open Unity Editor. The queued request was removed while awaiting that permission; no product files or server state were changed.
+- Resumed UTC: `2026-09-08T15:56:06Z`; user approved closing the Editor, the previous owner closed it cleanly and released its locks, and this task acquired request `20260908T155606Z-channel-manifest-runtime`.
+- Scope extension before edit: `Novels/Assets/Novels/ChannelManifest.cs`, its meta, `Novels/Assets/Novels/Novels.asmdef`, and `Novels/Tools/build-player.sh` are required for manifest parsing, runtime assembly wiring, and embedding the fallback catalog in Remote Players.
+- Result: Remote Player now selects ordered immutable story versions through `<root>/<dev|prod>.json`, reads story cards and all episode previews from each selected version, and embeds the existing catalog bundle in `StreamingAssets/NovelCatalog`. `stage-channel` creates or safely reuses local immutable version trees; no server publication was performed.
+- Validation: channel parser compiled and passed valid/unsafe-path smoke; `stage-channel` produced matching dev/prod snapshots with reusable story versions; zsh syntax, scoped diff-check and `Docs/AI` checks passed. Generated solution build could not run without a Unity-generated `Temp/obj` restore. Pending one explicitly authorized final Unity slot: catalog editor build, Player runtime compile and `ChannelManifestValidation.Run`; no Player build is required by the changed-path plan.
+- Final validation UTC: `2026-09-08T16:40Z`; catalog Editor build passed, fallback batch launched Unity 6000.3.11f1, compiled Novels without C# errors, executed `Editor.ChannelManifestValidation.Run`, logged `Channel manifest contract validation passed`, and exited successfully. Persistent helper startup timed out before this successful fallback. No Player build, server write or publication.

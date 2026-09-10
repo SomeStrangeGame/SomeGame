@@ -1,0 +1,84 @@
+{
+  "storyId": "les-zabyvshiy-tropy",
+  "manifestVersion": 2,
+  "recordedAtUtc": "2026-09-10T11:26:24Z",
+  "predecessor": "2026-09-10_manifest_v001.json",
+  "archiveAdoptedAtUtc": "2026-09-10T10:03:00Z",
+  "knownGaps": [
+    "Creative drafts, prompts, candidate variants, author feedback, approvals, and generation metadata predating archive adoption were not retained and have not been recreated or backdated."
+  ],
+  "artifacts": [
+    {
+      "artifactId": "android-choice-repair-v002",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "reviews/2026-09-10_android-choice-repair_v002.md",
+      "format": "text/markdown",
+      "sha256": "5745c9b117ad598e46ac5752b10e27b24481d04af9987aa0cc324bc6ee6f1f6d",
+      "snapshotTimeUtc": "2026-09-10T11:26:24Z",
+      "sourceDateUtc": "2026-09-10T11:26:24Z",
+      "originalName": "Android illustrated-choice repair and resume review",
+      "originalLocation": "Android emulator-5554",
+      "sourceReference": "runIds e58999045d79491d939906204a960943 and 92480ae3640f467f8653f2b270d0067c",
+      "creatorRole": "acceptance agent",
+      "toolMetadata": "Unity 6000.3.11f1; ADB 37.0.1; Android API 34",
+      "requestArtifactIds": [],
+      "inputArtifactIds": ["android-choice-acceptance-v001"],
+      "parentRevision": "2026-09-10_manifest_v001.json",
+      "decisionReference": "choice blocker repaired; overall acceptance in progress",
+      "status": "selected",
+      "reason": "Current repair and save/resume result",
+      "approvedBy": null,
+      "approvedAtUtc": null,
+      "productionMapping": "Art/ACCEPTANCE_EVIDENCE.md",
+      "storage": "git workspace",
+      "availability": "available",
+      "redactions": [],
+      "gaps": ["Full route and ending matrix remains pending."]
+    },
+    {
+      "artifactId": "android-choice-visible-frame-v002",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "../Art/Acceptance/20260910-choice-fix/choice-icons-visible.png",
+      "format": "image/png",
+      "sha256": "2af69518d49bda866fd199a202ff40d0d2d32373c61bfaaa4175c36938f54baf",
+      "sourceReference": "runId e58999045d79491d939906204a960943 seq 46",
+      "status": "selected",
+      "availability": "available"
+    },
+    {
+      "artifactId": "android-save-resume-catalog-v002",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "../Art/Acceptance/20260910-choice-fix/save-resume-catalog.png",
+      "format": "image/png",
+      "sha256": "5b3c71ade970b0c98a98351a6024e46aa1ba7abe90d19f350e523c0587ef323f",
+      "sourceReference": "runId 92480ae3640f467f8653f2b270d0067c catalog continue state",
+      "status": "selected",
+      "availability": "available"
+    },
+    {
+      "artifactId": "android-save-resume-restored-v002",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "../Art/Acceptance/20260910-choice-fix/save-resume-restored.png",
+      "format": "image/png",
+      "sha256": "64ffce8d77cbf87c6d5ed5cb69618ca7b7fc5aa718b56a37956df0681965363e",
+      "sourceReference": "runId 92480ae3640f467f8653f2b270d0067c restored post-choice line",
+      "status": "selected",
+      "availability": "available"
+    },
+    {
+      "artifactId": "android-choice-runtime-log-v002",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "../Art/Acceptance/20260910-choice-fix/runtime-logcat.txt",
+      "format": "text/plain",
+      "sha256": "3454ccfb83f7bee295c59726b5c20afbe6384fc6773df49949d19df1a836ce8f",
+      "sourceReference": "runs e58999045d79491d939906204a960943 and 92480ae3640f467f8653f2b270d0067c",
+      "status": "selected",
+      "availability": "available"
+    }
+  ]
+}

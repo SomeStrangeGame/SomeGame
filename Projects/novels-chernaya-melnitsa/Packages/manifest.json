@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "com.cysharp.unitask": "https://github.com/Cysharp/UniTask.git?path=src/UniTask/Assets/Plugins/UniTask#73a63b7f672b88f7e9992f6917eb458a8cbb6fa9",
+    "com.inkle.ink-unity-integration": "file:../../../Packages/InkUnityIntegration",
+    "com.unity.2d.sprite": "1.0.0",
+    "com.unity.ugui": "2.0.0",
+    "com.unity.modules.assetbundle": "1.0.0",
+    "com.unity.modules.audio": "1.0.0",
+    "com.unity.modules.jsonserialize": "1.0.0",
+    "com.unity.modules.unitywebrequest": "1.0.0",
+    "com.unity.modules.unitywebrequestaudio": "1.0.0",
+    "com.unity.modules.video": "1.0.0",
+    "somegame.bundles": "file:../../../Packages/Bundles",
+    "somegame.cache": "file:../../../Packages/Cache",
+    "somegame.disposable": "file:../../../Packages/Disposable",
+    "somegame.loading": "file:../../../Packages/Loading",
+    "somegame.loading-priority": "file:../../../Packages/LoadingPriority",
+    "somegame.novel-ink": "file:../../../Packages/NovelInk",
+    "somegame.novels-content-sdk": "file:../../../Packages/NovelsContentSdk",
+    "somegame.setting": "file:../../../Packages/Setting",
+    "somegame.ui-transitions": "file:../../../Packages/UITransitions",
+    "com.unity.pipeline": "0.5.0-exp.1"
+  }
+}

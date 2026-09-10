@@ -59,23 +59,72 @@ namespace Novels
                         logs.Log("[Novels]", data);
                 };
                 _smokeTelemetry = new Diagnostics.SmokeTelemetry(onLog);
-                _runtime = new ApplicationRuntime(new ApplicationRuntime.Dependencies
+                StartRuntime(environment, onLog, runtimeTuning.ContentDelivery).Forget();
+            }
+            catch (Exception exception)
+            {
+                ReportError(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.InitializationFailed,
+                    Diagnostics.NovelErrorSeverity.Fatal,
+                    "Novel initialization failed.",
+                    exception: exception));
+                DisposeSession();
+            }
+        }
+
+        private async UniTaskVoid StartRuntime(
+            ApplicationEnvironment environment,
+            Action<(LogType type, string message)> onLog,
+            Bundles.ContentDeliveryOptions options)
+        {
+            try
+            {
+                var dependencies = new ApplicationRuntime.Dependencies
                 {
                     Environment = environment,
-                    ContentSource = CreateContentSource(
-                        _sessionCancellation.Token,
-                        runtimeTuning.ContentDelivery),
                     OnLog = onLog,
                     OnError = ReportError,
                     SmokeTelemetry = _smokeTelemetry,
                     OnStorySourceChanged = _storySourceOverlay.Show,
-                });
+                };
+#if UNITY_EDITOR || NOVELS_EMBEDDED_CONTENT
+                dependencies.ContentSource = CreateContentSource(
+                    environment.CancellationToken, options);
+#else
+                var configuration = ContentRuntimeConfiguration.Load();
+                var remoteSource = new Bundles.HttpContentSource(
+                    configuration.RemoteContentBaseUrl,
+                    environment.CancellationToken,
+                    options.RemoteRequestPolicy);
+                var manifestJson = await remoteSource.DownloadText(
+                    ChannelManifest.FileName(configuration.ContentChannel),
+                    environment.CancellationToken);
+                var manifest = ChannelManifest.Deserialize(manifestJson);
+                var catalogRoot = Path.Combine(
+                    Application.streamingAssetsPath,
+                    "NovelCatalog");
+                dependencies.CatalogContentSource = new Bundles.StreamingAssetsContentSource(
+                    catalogRoot,
+                    environment.CancellationToken,
+                    options.LocalRequestPolicy);
+                dependencies.StoryIds = manifest.StoryIds;
+                dependencies.CreateStoryContentSource = storyId =>
+                    new Bundles.PrefixedContentSource(
+                        remoteSource,
+                        manifest.StoryRoot(storyId));
+#endif
+                environment.CancellationToken.ThrowIfCancellationRequested();
+                _runtime = new ApplicationRuntime(dependencies);
                 _smokeTelemetry.Emit(
                     "app.started",
                     ("appVersion", Application.version),
                     ("platform", Application.platform.ToString()),
                     ("contentPlatform", environment.ContentPlatform));
-                Run(_runtime, _sessionCancellation.Token).Forget();
+                Run(_runtime, environment.CancellationToken).Forget();
+            }
+            catch (OperationCanceledException)
+                when (environment.CancellationToken.IsCancellationRequested)
+            {
             }
             catch (Exception exception)
             {
