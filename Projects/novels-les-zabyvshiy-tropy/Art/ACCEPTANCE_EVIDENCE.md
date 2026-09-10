@@ -1,6 +1,16 @@
 # Acceptance evidence
 
-Status: **revalidation pending** — the source character-alpha blocker is repaired; a fresh Unity/Android visual gate is required before acceptance.
+Status: **character gate passed; full route acceptance pending** — the source and Android runtime character-alpha blocker is repaired. The episode/choice/ending matrix is still required before acceptance.
+
+## Character Android recheck — 2026-09-10
+
+- Recovered Unity Licensing by stopping the stale mutex-owning Licensing Client and starting a clean batchmode session.
+- Fresh test-signed Embedded build passed: `Novels/Build/Players/automation/kostroma/Android/Embedded/Novels.apk`, 2,464,944,117 bytes, SHA-256 `3cf56aefc377f9f6e5078dcd26ba080993d64f396d12765af78a1a6315ab8d05`.
+- Installed and tested the actual APK package `ru.kostroma.novels`, version `2026.09.10` (`3519910`), on `emulator-5554`, Android API 34, 1080×2400; `lastUpdateTime=2026-09-10 12:13:33`.
+- Clean run `8ec8172644774311a15e38326a0a81d7` reached `catalog.ready` with three stories, selected `les-zabyvshiy-tropy`, activated release `3b3d4bdf9bb374ef2fc96a27231cdfd98a02b0764b884633530c688ef30f01fd`, reached `episode.ready(s01e01)` and repeated `dialogue.ready`.
+- `nika-alert.png` shows a coherent full Nika pose. `asya-stern.png` rechecks the exact character/state family that exposed the original failure and shows continuous clothing, body and legs without location bleed-through.
+- The saved clean-run log contains no `fallback.used`, `FATAL EXCEPTION`, fatal smoke error, or application ANR marker.
+- Evidence: `Acceptance/20260910-alpha-recheck/nika-alert.png`, `Acceptance/20260910-alpha-recheck/asya-stern.png`, and `Acceptance/20260910-alpha-recheck/runtime-logcat.txt`.
 
 ## Character alpha repair — 2026-09-10
 
@@ -11,7 +21,7 @@ Status: **revalidation pending** — the source character-alpha blocker is repai
 - Reviewed every expression/pose on alternating dark and light backgrounds in `AlphaRepair/all-variants-proof.png`; the intentional translucent `яр/fading` treatment remains contained inside a coherent silhouette.
 - Reproduction data and per-file hashes are recorded in `AlphaRepair/repair-report.json`; the deterministic alpha-only applicator is `AlphaRepair/apply_character_masks.py`.
 - Fresh Android content-gate passed after the repair (`content-gate-20260910T085729Z.log`).
-- Fresh Embedded Player validation is still pending: the first build attempt reached signing and failed because release passwords were unavailable; the authorized test-signing retry was stopped at the user's request after Unity Licensing failed again. The older APK and its screenshots are not claimed as evidence for the repaired package.
+- The earlier failed signing/licensing attempts are superseded by the successful test-signed build and clean runtime evidence above.
 
 ## Android gate — 2026-09-10
 
@@ -43,4 +53,4 @@ This source finding is repaired by the pose-specific alpha package above. No uns
 - Story Android log: `Novels/Build/Logs/automation/content-gate-20260910T075524Z.log`
 - Player log: `Novels/Build/Logs/automation/player-20260910T075548Z.log`
 
-Next required step after Unity Licensing is healthy: build a fresh test-signed Embedded Player, capture a repaired character in Player, and then execute the planned episode/choice/ending matrix. The story must not be marked accepted before those checks pass.
+Next required step: execute the planned episode/choice/ending matrix. The story must not be marked accepted before those checks pass.
