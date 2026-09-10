@@ -12,7 +12,9 @@ Previous snapshot preserved in [`CoordinationHandoffHistory-2026-09-05-pre-publi
 - `scp-genre-catalog`: reusable genre-catalog skill and authored SCP catalog variant passed catalog and tooling gates. Fresh Player visual acceptance remains pending.
 - `parallel-story-orchestration`: parallel story-local preparation with serialized checkout/Unity/integration was documented and validated.
 - `fast-validation-protocol`: fast, standard and release validation levels plus batched validation slots were documented and validated.
-- `fallback-completion-check`: fallback completed episodes no longer show the redundant central checkmark; locked-state glyph remains. Scoped prefab/reference and diff checks passed; fresh Unity visual gate remains pending.
+- `fallback-locked-copy`: fallback completed episodes remain iconless; locked episodes now show `Прочитайте предыдущий эпизод` on the disabled action instead of a lock glyph. Scoped prefab/reference and diff checks passed; catalog build was blocked by the open Catalog Editor, so compile and fresh visual gate remain pending.
+- `catalog-publish-locked-copy`: Android Catalog gate and Kostroma Remote test-signed APK build passed; exact user-confirmed atomic publication completed. Public APK is `https://pureshechka.com/DevBuilds/Kostroma-dev.apk`, SHA-256 `ec706395ec775dff5b059a85bd2d77e9198cd8ec0dcaf02087e9abe45294f8a2`, 30,750,116 bytes, HTTP 200. Previous APK backup SHA `ad8a2cb2...` retained; `kostroma-dev.json` and story trees unchanged.
+- `chernaya-melnitsa-dev-publish-v2`: current main rebuilt and atomically published as immutable v2; public Kostroma dev map is `chernaya-melnitsa=2`, `trinadtsatyy-kolokol=1`, manifest SHA `96cc54d5...`, all 19 tree hashes and required HTTP endpoints pass; APK reused. Physical-phone catalog-video check was explicitly accepted as a dev-release limitation.
 
 ## Blocked or deferred gates
 
@@ -25,89 +27,87 @@ Previous snapshot preserved in [`CoordinationHandoffHistory-2026-09-05-pre-publi
 - `android-memory-full-smoke`: paused because the APK content was stale and must be rebuilt before resumption.
 - The WebGL prototype remains only on `prototype/webgl-local-platform`; compilation and browser smoke were not run.
 
-## 2026-09-07T11:03:00Z — nochelessie-catalog-drafts — ready-for-final-validation
+Older catalog, publication and validation details were rotated without loss to
+[`2026-09-10 pre-all-main history`](../archive/reports/CoordinationHandoffHistory-2026-09-10-pre-all-main.md).
+Open risks retained there include Nochelessie/fallback Player validation,
+saved-progress device checks, the TK Tim rendering defect, and the Nevesta and
+Nightwood route/visual gates.
 
-Task: Finished a Nochelessie catalog candidate informed by «Колодец, который
-зовёт» and «Волчья пошлина»: original background, direct fallback variant
-override, provenance evidence and updated MVP status.
-Changed: Projects/novels-catalog/Assets/RemoteAssets/catalog/nochelessie,
-Projects/novels-catalog/README.md, Docs/AI/plans/SlavicMysticismMvp.md
-Validation: scoped diff, GUID, prefab-inheritance, image-format and config checks
-passed. Catalog build stopped because the catalog project is open in Unity.
-Pending / risks: final catalog build and fresh Player visual acceptance require
-an explicit heavy-slot approval; no APK was launched.
-Suggested next step: close the catalog Editor, then run the single approved
-final validation slot.
+## 2026-09-10T10:03:00Z — les-zabyvshiy-tropy-route-matrix — blocked
 
-## 2026-09-07T15:16:20Z — catalog-custom-reset — ready-with-limitations
+Task: Began the mandatory Android episode/choice/ending matrix on the immutable fresh candidate APK through the real catalog flow.
+Changed: acceptance blocker screenshot/log, `Art/ACCEPTANCE_EVIDENCE.md`, and dated archive adoption review/manifest under `Projects/novels-les-zabyvshiy-tropy/`.
+Validation: exact APK reinstall passed; clean run `7652336f15334178a56e6700e5e8026a` reached `s01e01` sequence 46 with `choiceCount=3`; source audit, manifest JSON parse and scoped diff check passed.
+Pending / risks: all three choice cards have no readable labels after settling. Route selection, all 12 alternatives, three endings and save/resume remain invalid/pending. Earlier creative-process archive history is unavailable and explicitly recorded as a gap.
+Suggested next step: the production owner confirmed all 12 choice PNGs were imported as Texture rather than Sprite and corrected their importer metadata plus static regression coverage. After the pending foreign catalog publication clears its dirty scope, run Unity import/content build, build a fresh Embedded APK, and restart the complete three-route matrix.
 
-Task: Removed all custom Catalog prefab variants and their selection/build
-wiring so fallback is again the only active catalog contract.
-Changed: catalog variant assets, CatalogAddresses, Player build automation and
-script, runner/parser tests, Catalog README and Nochelessie MVP status.
-Validation: scoped diff check, shell syntax and 37 runner tests passed. Catalog
-content build stopped because Projects/novels-catalog is open in Unity.
-Pending / risks: design and approve fallback before introducing the four new
-product variants; Unity validation belongs to that later design task.
-Suggested next step: define fallback hierarchy, states and override points.
+## 2026-09-10T09:43:34Z — story-archive-guidance — completed
 
-Completed/superseded fallback entries preserved in [`CoordinationHandoffHistory-2026-09-07-fallback-integration.md`](../archive/reports/CoordinationHandoffHistory-2026-09-07-fallback-integration.md).
+Task: Added per-story archive contract with dated immutable document versions, actual drafts/rejections/feedback/provenance, SHA-256 manifests, honest history gaps, staging transfer and storage/privacy limits; linked create/design/Ink/acceptance skills. Reviewed drafts match, metadata/links/docs-check passed. Previous scenario guidance preserved; completed handoff entries rotated verbatim with remaining route risk retained. No historical archive migration, Unity, commit or publication.
+Changed: .agents/skills/somegame-create-story/SKILL.md, .agents/skills/somegame-create-story/references/story-archive.md, .agents/skills/somegame-design-story/SKILL.md, .agents/skills/somegame-author-story-content/SKILL.md, .agents/skills/somegame-accept-story/SKILL.md, Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-10-story-archive.md
+Validation: finish-task passed (1 gates).
+Pending / risks: none
+Suggested next step: none
 
-Earlier fallback and completed skill details preserved in [`catalog snap history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-snap.md).
+## 2026-09-10T14:09:00Z — chernaya-melnitsa-four-episodes — ready-for-final-validation
 
-Resume/reset and locked-card text evidence preserved in [`2026-09-08 catalog controls history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-controls.md).
+Task: Converted the approved latest four-episode literary revision into a local
+playable Ink candidate and updated the story package to content version 2.
+Changed: story Ink root and s01e01–s01e04, definition/card, episode covers,
+approved-art/provenance/originality notes, and dated immutable archive.
+Validation: literary traversal passed 72 routes, five decisions and three endings;
+six archive hashes, four episode files, 12 choice alternatives, card JSON,
+residual-Markdown scan and scoped diff check passed.
+Pending / risks: no real Ink compilation or Unity/content build has run for this
+revision. New `.meta` files and runtime presentation evidence require a fresh
+explicitly authorized final validation slot.
+Suggested next step: after human approval, enqueue a new exact-scope request and
+run `story-check`/content validation for `chernaya-melnitsa` before committing.
 
-Settings implementation and trim details preserved in [`background delivery history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-background-delivery.md).
-Privacy/terms/support URLs remain empty pending real application links; UI and volume checks passed.
+## 2026-09-10T11:58:33Z — remove-tzm-launch-branding — completed
 
-Scroll-snap details preserved in [publication history](../archive/reports/CoordinationHandoffHistory-2026-09-08-publication.md); APK/tablet validation remains pending.
+Task: Removed the TZM artwork from the Android splash and default application icon, and deleted the obsolete shared Icon asset; branded player builds retain their own profile icon.
+Changed: Novels/ProjectSettings/ProjectSettings.asset, Novels/Assets/Settings/Build Profiles/Android.asset, Novels/Assets/Icon.png, Novels/Assets/Icon.png.meta
+Validation: finish-task passed (1 gates).
+Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>, player-build --target <platform> --mode <Remote|Embedded>
+Suggested next step: none
 
-Background-delivery implementation evidence preserved in [episode progress history](../archive/reports/CoordinationHandoffHistory-2026-09-08-episode-progress.md).
-Pending: story-level download gating remains conservative; remote/mobile timing unverified.
+## 2026-09-10T13:14:20Z — les-zabyvshiy-tropy-choice-build-retry — ready-for-final-validation
 
-Catalog header/story spacing evidence is preserved in [`spacing history`](../archive/reports/CoordinationHandoffHistory-2026-09-08-catalog-spacing.md).
+Task: Replaced the author-rejected image-only choice cards with adult text-first controls patterned after Black Mill.
+Changed: story Bubble prefab, source audit, acceptance status, and append-only review/manifest v004.
+Validation: 72-route bounded audit, layout regression assertions, manifest JSON parse and exact changed-file diff checks pass.
+Pending / risks: no Unity/runtime proof exists for this source revision; all earlier choice screenshots and APK `36536684…` are superseded for layout acceptance.
+Suggested next step: obtain fresh explicit final-slot authorization, acquire FIFO/shared Unity resources, rebuild, and verify labeled buttons plus thumbnails in portrait Android runtime.
 
-Episode-cover evidence: [history](../archive/reports/CoordinationHandoffHistory-2026-09-08-episode-covers.md).
-Pending: no new episode art assigned (11/7 use story covers); no Android/iOS Player or remote timing gate.
+## 2026-09-10T15:24:00Z — chernaya-melnitsa-v3-server-main — completed
 
-Author support evidence: [history](../archive/reports/CoordinationHandoffHistory-2026-09-08-authors.md).
-Set an author only when supplied; existing stories remain unsigned. No device verification.
+Task: Expanded Chyornaya Melnitsa to four episodes, built Android content without
+emulator, published immutable v3 to Kostroma dev, and integrated scoped source.
+Changed: `Projects/novels-chernaya-melnitsa` story source/archive; remote immutable
+`stories/chernaya-melnitsa/3`; mutable `kostroma-dev.json`; Git main commit
+`b6896bb7b188dc2f6350077ef18b70c80fbcd165`.
+Validation: 72 literary routes/5 decisions/3 endings; Unity/Ink Android content
+gate; 31-file local/remote checksum equality; exact public manifest/card/cover/
+release/preview/episode-cover/bundle checks. No Player, APK build, ADB or emulator.
+Publication: ordered map is `chernaya-melnitsa=3`, `trinadtsatyy-kolokol=1`,
+`les-zabyvshiy-tropy=1`; manifest SHA `663b4c96c3e06eb0ca87895d6e2a2c6aa9447d5a9ff744821d0cdc6f06dde632`;
+APK unchanged. Remote backup path is recorded in the agent handoff.
+Late instruction: the user asked not to push after the push had already completed;
+no destructive rollback or additional remote Git operation was performed.
 
-## 2026-09-08T09:59Z — catalog-media-priority — ready-for-review
-Corrected precedence: episode video → loaded own episode image → story video → story image. Runtime resolver, Inspector hint and canonical guide/memory updated; fresh compile, 8-case priority matrix, covers and live catalog checks passed (agents/catalog-media-priority.md). Previous player/build evidence: [video history](../archive/reports/CoordinationHandoffHistory-2026-09-08-video.md). No production clips assigned; device/remote/offline playback unverified. Editor playing at start; helper stopped, saves unchanged; no rebuild/commit/publish.
+## 2026-09-10T15:40:23Z — kolokol-worktree-cleanup — paused
 
-Publication receipt preserved in [candidate handoff history](../archive/reports/CoordinationHandoffHistory-2026-09-08-chernaya-candidate.md).
+Task: Remove whitespace-only Trinadtsatyy Kolokol noise and safely retire the integrated story-batch worktree and branch.
+Changed: Restored exactly 37 whitespace-only files under `Projects/novels-trinadtsatyy-kolokol` to `HEAD`; no story content or committed history changed.
+Validation: scoped status is clean; `git diff --ignore-all-space` had proven the removed diff semantic-free; commit `56129279` remains an ancestor of `main`; `codex/story-batch` HEAD `c5a431e3` is also an ancestor of `main`.
+Pending / risks: story-batch removal is blocked by three untracked coordination records owned by `codex-kolodets-integration`; protocol forbids deleting another owner's records.
+Suggested next step: owner retires those stale records, then remove the clean worktree through `Tools/somegame story-worktree remove --confirm --integrated-ref main` and delete the merged branch if still present.
 
-2026-09-08 — nevesta-episode-cover: isolated registered story worktree now has s01e01 PNG + source binding; new-cover originality and static PNG/binding/6-test/38-route checks passed (agents/nevesta-episode-cover.md). Pending: scope-safe SDK refresh, audio/alpha evidence, authorized Unity/catalog/Player validation; no main integration, build or publication.
+## 2026-09-10T15:43:24Z — story-batch-retirement — completed
 
-## 2026-09-09 — chernaya-melnitsa-publish — source-published, manual acceptance pending
-
-Canonical push verified source a48a2bda, then receipt 3f6d110e600f7ebf48b79f26425b8d74f79ec32b on origin/main. User-authorized isolated clone preserved primary branch/index/product files and foreign edits. Old clean worktree removed; story branch/8e7f2b6f retained. Static 72 routes/3 endings, 17 tests, geometry/hash/JSON/diff PASS; no Unity/build/ADB. Fresh illustrations and remaining completion/routes/visual gates await user manual build/test; source publication is not acceptance. Remote receipt: Docs/AI/archive/reports/ChyornayaMelnitsaPublication-2026-09-09.md. Local details: agents/chernaya-melnitsa-publish.md; historical art/runtime evidence: [story validation history](../archive/reports/CoordinationHandoffHistory-2026-09-08-chernaya-source.md). Heartbeat paused; own locks/requests released.
-
-## 2026-09-08T14:49Z — catalog-episode-reading-progress — ready-for-final-validation
-
-Task: Approved authored per-episode reading bar and percentage above primary button. Changed: Card/model/fallback prefab, CatalogFlow, save projection and NovelRuntime flush; optional version/hash sidecar; opt-in bounded speculative Ink reads; Catalog README and Architecture routing.
-Validation: isolated Roslyn compilation of four current assemblies PASS; 28 managed probes PASS (linear/branch/boundary/entry-state/loop limit, v2/v3, sidecar mismatch/corruption/reset); prefab IDs/local references/bindings/fill/layout and scoped diff PASS. Evidence commands and limits: [report](../archive/reports/CoordinationHandoffHistory-2026-09-08-episode-progress.md). Follow-up: catalog-progress-live-check below covers catalog build, fresh compile and visible unread bar. Approximate forecast follows first available future choices; legacy saves without estimate show — until next reading exit. Saved-progress/branch/reset runtime and Player checks remain pending; old APK unchanged.
-
-## 2026-09-08T15:40Z — catalog-progress-live-check — ready-for-review
-
-User requested launch. Catalog-only Mac build and fresh Novels compile PASS, catalog.ready/download_ready confirmed; portrait capture shows Прочитано/0%/bar above primary button. Unity6000.3.11f1 Novels PID98697 left OPEN in Play Mode for manual review; clean baseline scene Assets/Novels/Novels.unity. Helper stopped, heartbeat paused, own locks released. Existing chernaya-melnitsa Mac story bundle deliberately not rebuilt (latest illustration not included); registry and saves unchanged. First Play ended without runtime error, followed by capture-tool error; second launch/capture succeeded, final aggregate cancelled during helper cleanup. Exact logs, run/release IDs and limitations: agents/catalog-progress-live-check.md. No APK, full story acceptance or saved-progress interaction pass claimed. Do not close user Editor without approval.
-
-Completed branding/release entries: [preserved history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md). Branding compile/test limitations remain recorded there.
-## 2026-09-09 — tk-route-final — blocked: all4routes/6episodes/13options/3endings and854ordered markers PASS on unchanged V3APK fd689229; no runtime/save/fallback/crash/ANR failures. New substantial persistent Tim rendering defect in R2 city epilogue (broad white body/hair pattern and halo); minor-edge waiver not silently extended; no repair/rebuild. Audio listening remains unverified. Evidence/next author decision: agents/tk-route-final.md and retained clone Art/ANDROID_ACCEPTANCE_V3.md; screenshot Build/AndroidAcceptanceV3/r2-ending-tim-settled.png. Own emulator stopped with saves retained; releasing own resources/request after review, automationPAUSED. No foreign process/source touched; old APK does not validate Kostroma. Historical TK/branding/release and completed Kostroma site/dev/video records: [history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md).
-Completed release skill, shared-root/app-manifest and publisher/site/carousel records: [integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-tk-integration.md), [release skills](../archive/reports/CoordinationHandoffHistory-2026-09-09-release-skills.md), [publisher history](../archive/reports/CoordinationHandoffHistory-2026-09-09-publisher-site.md).
-
-Completed Chyornaya Melnitsa web-preview, story-web publication skill, preview-layout and corrected TK web-publication records: [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
-
-Completed TK channel restoration, release automation and website framing records:
-[final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
-
-Previous primary and catalog-progress publication receipts: [final integration history](../archive/reports/CoordinationHandoffHistory-2026-09-09-final-integration.md).
-
-## 2026-09-09T16:47:45Z — final-main-integration — completed
-
-Task: Integrated both Kostroma stories and release infrastructure into main; tooling, story routes, docs and remote SHA checks passed; catalog rebuild was skipped because the user's Catalog Unity Editor is open; removed the integrated Trinadtsatyy Kolokol worktree.
-Changed: Docs/AI
+Task: Removed explicitly transferred stale Kolodets coordination records, then deleted the clean fully integrated story-batch worktree and branch without force.
+Changed: Docs/AI/CoordinationRuntime/agents/story-batch-retirement.md
 Validation: finish-task passed (1 gates).
 Pending / risks: none
 Suggested next step: none

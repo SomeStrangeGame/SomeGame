@@ -85,6 +85,7 @@ namespace Novels
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
             internal Func<string, CancellationToken, Bundles.Entity> CreateStoryBundles;
             internal Catalog.ICatalogSettings Settings;
+            internal Catalog.CatalogUpdatePrompt UpdatePrompt;
         }
 
         private readonly Dependencies _ctx;
@@ -169,7 +170,9 @@ namespace Novels
         }
 
         internal async UniTask<StoryLaunchSelection> SelectContent(
-            LoadedCatalog catalog)
+            LoadedCatalog catalog,
+            string focusedStoryId = null,
+            string focusedEpisodeId = null)
         {
             var entries = catalog.Entries
                 .Where(entry => entry.IsEnabled)
@@ -231,7 +234,7 @@ namespace Novels
                                 playableIds,
                                 completedIds),
                             actionLabel: !playableIds.Contains(episode.Id)
-                                ? "ЗАКРЫТО"
+                                ? "Прочитайте предыдущий эпизод"
                                 : completedIds.Contains(episode.Id)
                                     ? string.Empty
                                     : HasEpisodeSave(entry.ContentId, episode.Id)
@@ -256,7 +259,11 @@ namespace Novels
                                     preview.contentVersion))));
             }).ToArray();
             using var selection = CreateSelection(catalog.Screen);
-            var pendingSelection = selection.SelectAction(ApplicationTexts.CatalogTitle, items);
+            var pendingSelection = selection.SelectAction(
+                ApplicationTexts.CatalogTitle,
+                items,
+                focusedStoryId,
+                focusedEpisodeId);
             catalog.Downloads.Start();
             var selected = await pendingSelection;
             if (!catalog.Downloads.GetState(selected.Item.Id).IsReady)
@@ -559,7 +566,7 @@ namespace Novels
         }
 
         private Catalog.CatalogController CreateSelection(GameObject screen) =>
-            new(screen, _ctx.CancellationToken, _ctx.Settings);
+            new(screen, _ctx.CancellationToken, _ctx.Settings, _ctx.UpdatePrompt);
 
         private static void ShowProgress(
             Bootstrap.BootstrapController bootstrap,

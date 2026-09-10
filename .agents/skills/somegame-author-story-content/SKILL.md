@@ -41,11 +41,23 @@ credit, and if neither exists the catalog byline stays hidden.
 
 ## Author playable Ink
 
+Read the [story archive contract](../somegame-create-story/references/story-archive.md).
+Preserve dated scenario/Ink snapshots and the feedback behind each revision,
+map selected versions to canonical source paths, and update the dated manifest
+at handoff. Keep archival copies outside runtime assets and build inputs.
+
 Translate the approved scene package into reachable knots, stitches, choices,
 consequences, endings, and persistent state. Choices must preserve the intended
 agency and reconvergence plan; do not add cosmetic branches merely to inflate
 choice count. Use canonical Ink command syntax and edit source `.ink`, never
 compiled JSON directly.
+
+Preserve the approved scenario's orientation, descriptive passages, motives,
+explanations and episode transitions using the quality criteria in
+[story design](../somegame-design-story/references/story-design.md).
+Split prose into readable presentation units rather than deleting context to
+fit a bubble. Carry notification timing, branch-specific knowledge and recaps
+into Ink using the current syntax and save contracts, not literal draft markers.
 
 After metadata, enter the first real scene directly. Do not add a one-option
 `Начать`, `Начать историю`, or `Играть` choice: opening the story already starts

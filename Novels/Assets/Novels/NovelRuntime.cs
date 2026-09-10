@@ -123,7 +123,7 @@ namespace Novels
                 result = await RunEpisode(prepared);
             }
             catch (OperationCanceledException)
-                when (_ctx.CancellationToken.IsCancellationRequested)
+                when (episodeRuntime.CancellationToken.IsCancellationRequested)
             {
                 result = EpisodeRunResult.Cancelled();
             }

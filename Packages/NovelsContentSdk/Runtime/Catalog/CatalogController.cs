@@ -30,16 +30,19 @@ namespace Novels.Catalog
         private readonly CancellationToken _cancellationToken;
         private View.CatalogScreen _screen;
         private readonly ICatalogSettings _settings;
+        private readonly CatalogUpdatePrompt _updatePrompt;
 
         public CatalogController(
             GameObject bundledPrefab,
             CancellationToken cancellationToken,
-            ICatalogSettings settings = null)
+            ICatalogSettings settings = null,
+            CatalogUpdatePrompt updatePrompt = default)
         {
             _bundledPrefab = bundledPrefab
                 ?? throw new ArgumentNullException(nameof(bundledPrefab));
             _cancellationToken = cancellationToken;
             _settings = settings;
+            _updatePrompt = updatePrompt;
         }
 
         public async UniTask<CatalogItem> Select(
@@ -52,7 +55,9 @@ namespace Novels.Catalog
 
         public async UniTask<CatalogSelection> SelectAction(
             string title,
-            IReadOnlyList<CatalogItem> items)
+            IReadOnlyList<CatalogItem> items,
+            string focusedStoryId = null,
+            string focusedEpisodeId = null)
         {
             if (items == null || items.Count == 0)
                 throw new InvalidOperationException("Catalog is empty.");
@@ -92,6 +97,7 @@ namespace Novels.Catalog
             try
             {
                 _screen.gameObject.SetActive(true);
+                _screen.Focus(focusedStoryId, focusedEpisodeId);
                 return await selection.Task.AttachExternalCancellation(
                     _cancellationToken);
             }
@@ -117,6 +123,7 @@ namespace Novels.Catalog
             var instance = UnityEngine.Object.Instantiate(_bundledPrefab);
             _screen = instance.GetComponent<View.CatalogScreen>();
             instance.GetComponent<View.CatalogSettingsPopup>()?.Configure(_settings);
+            instance.GetComponent<View.CatalogUpdatePopup>()?.Configure(_updatePrompt);
             if (_screen == null)
             {
                 UnityEngine.Object.Destroy(instance);

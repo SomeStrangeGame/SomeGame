@@ -43,6 +43,19 @@ namespace Novels.Catalog.View
             _items.AddRange(items);
         }
 
+        public void Focus(RectTransform item)
+        {
+            if (item == null || _scroll == null || _scroll.viewport == null)
+                return;
+            Cancel();
+            LayoutRebuilder.ForceRebuildLayoutImmediate(_scroll.content);
+            var target = TargetPosition(item);
+            var position = _scroll.content.anchoredPosition;
+            if (_vertical) position.y = target;
+            else position.x = -target;
+            _scroll.content.anchoredPosition = position;
+        }
+
         public void Cancel()
         {
             _settling = false;
@@ -97,13 +110,7 @@ namespace Novels.Catalog.View
             foreach (var item in _items)
             {
                 if (item == null || !item.gameObject.activeInHierarchy) continue;
-                // Only the card rect: descendant episode content can be much wider.
-                var edge = viewport.InverseTransformPoint(item.TransformPoint(
-                    new Vector3(item.rect.xMin, item.rect.yMax, 0f)));
-                var target = Position + (_vertical
-                    ? viewport.rect.yMax - StoryInset - edge.y
-                    : edge.x - viewport.rect.xMin);
-                target = Mathf.Clamp(target, 0f, maximum);
+                var target = TargetPosition(item);
                 var candidateDistance = Mathf.Abs(target - predicted);
                 if (candidateDistance >= distance) continue;
                 best = target;
@@ -114,6 +121,20 @@ namespace Novels.Catalog.View
             _started = Time.unscaledTime;
             _settling = true;
             _scroll.StopMovement();
+        }
+
+        private float TargetPosition(RectTransform item)
+        {
+            var viewport = _scroll.viewport;
+            var maximum = Mathf.Max(0f, _vertical
+                ? _scroll.content.rect.height - viewport.rect.height
+                : _scroll.content.rect.width - viewport.rect.width);
+            // Only the card rect: descendant episode content can be much wider.
+            var edge = viewport.InverseTransformPoint(item.TransformPoint(
+                new Vector3(item.rect.xMin, item.rect.yMax, 0f)));
+            return Mathf.Clamp(Position + (_vertical
+                ? viewport.rect.yMax - StoryInset - edge.y
+                : edge.x - viewport.rect.xMin), 0f, maximum);
         }
 
         private void LateUpdate()
