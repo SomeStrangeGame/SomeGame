@@ -26,8 +26,8 @@ Status: source candidate for final validation (not accepted, not catalog-registe
 - Inventory: 20 character variants, 16 locations, 12 used choice icons, 8 WAV files.
 - Selector audit: explicit selectors and neutral defaults resolve to 20 produced PNGs, including protagonist runtime ID `maincharacter`. Previous name-only auditing missed this mapping and indented speakers.
 - Prior media header audit: all 51 PNG signatures valid; character PNGs RGBA; all 8 WAV files mono 16-bit PCM at 44.1 kHz. Header checks do not establish full decoding, alpha-edge quality or seamless audio loops.
-- Length: 5,271 source word units; 3,542–3,650 displayed word units per route including offered choice text. At an assumed 145–165 words/minute this is roughly 21–25 minutes of reading, plus decisions/transitions. The target 25–45 minutes needs actual timing; the prior 27–34 estimate is withdrawn.
-- Source SHA-256 (ordered root and episode names/bytes): `5705dd152565c3cb66cc498a87ee249468c6ffcd5887459ee6388bb215e6ed3a`. The audit prints a new digest when inputs change.
+- Length: 5,294 source word units; 3,542–3,650 displayed word units per route including offered choice text. At an assumed 145–165 words/minute this is roughly 21–25 minutes of reading, plus decisions/transitions. The target 25–45 minutes needs actual timing; the prior 27–34 estimate is withdrawn.
+- Source SHA-256 (ordered root and episode names/bytes): `a648e1111e9f113deeb889dd5698e7d1f7840e767efae19f7fcbb813ad76c7a5`. The audit prints a new digest when inputs change.
 - Re-review checks: melody introduced before its callback on every route; warning about Lada's possible exclusion; closed jar stored for the crossing; all five characters covered by another person's memory in the shared resolution.
 
 See `STORY_REVIEW.md` for fixes, save compatibility and residual evidence limitations.
@@ -37,6 +37,10 @@ See `STORY_REVIEW.md` for fixes, save compatibility and residual evidence limita
 All six RGB PNGs fully decoded and passed Pillow verification at 1024×1536; source bytes preserved from generated masters. Updated dependency-free source audit checks six exact bindings, PNG headers/dimensions, distinct hashes and no duplication of the story cover. Three in-memory invalid-binding probes were rejected. Doctor and 72 routes still pass; Ink digest is unchanged. The branch now contains the current cover-aware SDK; preview export and all six real catalog cards still require the final Unity-backed validation. PNG payload totals 18,452,350 bytes; startup delivery cost and UI crop still require final validation. The prior 51-PNG audit above is historical and excludes these six new files.
 
 The branch now includes the current SDK and the newly required story-owned reading preview. Its excerpt is copied verbatim from the first episode and stops before the first unresolved choice; no bridging prose was invented. Portrait and landscape website layout/interaction remain deferred because this request does not include site deployment and no browser-generated runtime preview exists before acceptance outputs.
+
+### Final Ink compiler correction — 2026-09-10
+
+The official compiler rejected the earlier non-canonical `|condition:` branch spelling that the dependency-free audit had accepted. Every binary conditional now uses canonical `- else:` syntax; three-way cases are represented as nested binary conditions without changing prose, state assignments, branch predicates or outcomes. The static parser was tightened to the same boundary syntax. Its complete 72-route result is unchanged, and the subsequent Unity-backed Ink compilation and editor story build passed.
 
 ## Deferred by mandatory authorization boundary
 

@@ -2,10 +2,12 @@
 === LZT_s01e06 ===
 {final_choice == "share":
     -> ending_shared
-|final_choice == "bind" && map_debt >= 2 && keep_map:
-    -> ending_white_map
-|else:
-    -> ending_nameless
+- else:
+    {final_choice == "bind" && map_debt >= 2 && keep_map:
+        -> ending_white_map
+    - else:
+        -> ending_nameless
+    }
 }
 
 === ending_shared ===

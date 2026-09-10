@@ -61,14 +61,14 @@ def parse(lines):
                 branches = []
                 condition = line[1:-1]
                 while True:
-                    branches.append((condition, block(('|', '}'))))
+                    branches.append((condition, block(('- ', '}'))))
                     require(pos < len(lines), f'{source}: unclosed conditional')
                     _, boundary = lines[pos]
                     pos += 1
                     if boundary == '}':
                         break
-                    require(boundary.startswith('|') and boundary.endswith(':'), source)
-                    condition = boundary[1:-1]
+                    require(boundary.startswith('- ') and boundary.endswith(':'), source)
+                    condition = boundary[2:-1]
                 nodes.append(('if', branches))
             elif line.startswith('*'):
                 options = []
@@ -200,7 +200,7 @@ def audit():
                 icon = re.search(r'choice_icon:([\w-]+)', line).group(1)
                 require((ROOT / 'Assets/Choices' / (icon + '.png')).is_file(), f'Missing {icon}')
                 icons.add(icon)
-            if ':' not in line or line[0] in '{|*':
+            if ':' not in line or line[0] in '{|-*':
                 continue
             prefix, payload = line.split(':', 1)
             payload = payload.strip()
