@@ -9,6 +9,11 @@ Use this skill together with `$somegame-workflow`. This skill owns stage order,
 inputs, outputs and stopping conditions. Each invoked production skill owns its
 domain; do not reproduce or override its procedure here.
 
+Read [story creation archive](references/story-archive.md) before the first
+creative stage. Maintain dated, non-overwriting evidence of the work throughout
+the workflow, not just a final report. Pass the archive location and contract
+to every invoked stage and collect its actual candidates, feedback and handoff.
+
 ## Establish the brief
 
 Before creating content, obtain these author decisions:
@@ -18,6 +23,11 @@ Before creating content, obtain these author decisions:
 - factual basis: fictional, inspired by reality, based on real events, about
   real people, documentary, or another author-defined relationship to reality;
 - audience, boundaries, approximate scope, and approval mode.
+
+For episodic stories, distinguish total play time from the target per episode.
+Use the episode-planning guidance in
+[story design](../somegame-design-story/references/story-design.md); do not
+infer a fixed episode count or enlarge an approved scope to fill a template.
 
 Capture the author credit or pen name when supplied, including episode-specific
 credits if needed. Keep it separate from the story/episode title. Store the
@@ -50,6 +60,9 @@ and execution rules live only in `UnityConcurrency.md`.
    review as one gate; continue only with the approved package and `passed`
    result. `OriginalityReviewProtocol.md` exclusively owns the bounded
    full-candidate review loop and its stopping conditions.
+   Require the scenario checkpoint to satisfy that reference's reader-clarity,
+   character-motivation, world-explanation, notification and episode-continuity
+   criteria. A synopsis alone does not satisfy a request for a complete script.
 2. For factual stories, maintain claim evidence and clearly separate verified
    fact, inference, reconstruction, and invention.
 3. Freeze a scene-derived production manifest before creating a Unity project.
@@ -70,12 +83,16 @@ and execution rules live only in `UnityConcurrency.md`.
    - invoke an audio skill only for manifest-required sound or music.
 
    Each stage must pass its originality and manual review. Preserve drafts and
-   rejected variants outside Git; hand off approved masters, logical addresses,
-   provenance and import requirements. Do not claim runtime resolution yet.
+   rejected variants in the non-Git staging archive before project creation;
+   hand off approved masters, logical addresses, provenance and import
+   requirements together with dated archive records. Follow the archive's
+   storage policy for large candidates. Do not claim runtime resolution yet.
 5. Only after narrative, manifest and required production deliverables are
    stable, create the registered story worktree through `ParallelWorkDetails.md`
    and invoke `$somegame-create-unity-project`. Static scaffold readiness is the
    required output; Unity remains closed.
+   Transfer and verify the accumulated staging archive into the created
+   story project's `archive/` before discarding any staging material.
 6. Reinvoke each asset owner for project-bound import/integration. Map every
    approved manifest row to its exact Unity file, `.meta`, import settings,
    selector and runtime address. Build story-local Bubble prefabs at this stage.
@@ -111,6 +128,11 @@ backgrounds, outfits, expressions, poses, media, and branches that the current
 story uses or that the author explicitly requested.
 
 ## Validate and hand off
+
+Include the exact latest dated archive manifest and its completeness check.
+An unrecorded intermediate stage or irrecoverable history gap must be named,
+not silently reconstructed. Archive evidence does not replace originality
+or runtime validation, and its collection does not authorize publication.
 
 Before acceptance, report `ready-for-final-validation`, never accepted or
 runtime-validated. Candidate commit, integration and worktree removal follow

@@ -162,6 +162,24 @@ namespace Novels.Catalog.View
                 () => onClick?.Invoke(item.Episodes.FirstOrDefault()));
         }
 
+        public void Focus(string storyId, string episodeId = null)
+        {
+            if (string.IsNullOrWhiteSpace(storyId)
+                || !_cards.TryGetValue(storyId, out var card))
+            {
+                return;
+            }
+            Canvas.ForceUpdateCanvases();
+            if (_verticalRoot != null && _verticalRoot.activeSelf && _verticalScroll != null)
+            {
+                RefreshStorySnapping(_verticalScroll);
+                CatalogScrollSnap.Ensure(_verticalScroll).Focus(card.RectTransform);
+                card.FocusEpisode(episodeId);
+                return;
+            }
+            _carousel?.Focus(card);
+        }
+
         private void RefreshStorySnapping(ScrollRect scroll)
         {
             if (scroll == null || scroll.viewport == null || _cards.Count == 0) return;

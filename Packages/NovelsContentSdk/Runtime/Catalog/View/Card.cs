@@ -45,6 +45,7 @@ namespace Novels.Catalog.View
         internal string VideoUrl => _boundEpisode?.VideoUrl;
         internal bool RestartIsOpen => _restartConfirmation != null && _restartConfirmation.activeSelf;
         internal bool HasVideoSurface => _video != null;
+        internal string EpisodeId => _boundEpisode?.Id;
 
         internal void SetVideoTexture(Texture texture)
         {
@@ -223,6 +224,19 @@ namespace Novels.Catalog.View
             LayoutRebuilder.ForceRebuildLayoutImmediate(_episodesContainer);
             scroll.horizontalNormalizedPosition = Mathf.Clamp01(normalized);
             CatalogScrollSnap.Ensure(scroll).SetItems(_episodeCards.Select(card => card.RectTransform));
+        }
+
+        internal void FocusEpisode(string episodeId)
+        {
+            if (string.IsNullOrWhiteSpace(episodeId) || _episodeScroll == null)
+                return;
+            RefreshEpisodeLayout();
+            var episode = _episodeCards.FirstOrDefault(card => string.Equals(
+                card.EpisodeId,
+                episodeId,
+                StringComparison.OrdinalIgnoreCase));
+            if (episode != null)
+                CatalogScrollSnap.Ensure(_episodeScroll).Focus(episode.RectTransform);
         }
 
         private void ConfigureNestedScrolling(

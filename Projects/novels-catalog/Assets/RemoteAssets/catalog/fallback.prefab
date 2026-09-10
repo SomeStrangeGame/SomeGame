@@ -3269,7 +3269,7 @@ MonoBehaviour:
   _restartConfirmButton: {fileID: 9012018184520920999}
   _episodeLabel: {fileID: 8088408113757548159}
   _stateIcon: {fileID: 95002403}
-  _lockedIcon: {fileID: 21300000, guid: 8d71b5e00d3544749c63d3e1b4e25101, type: 3}
+  _lockedIcon: {fileID: 0}
   _completedIcon: {fileID: 0}
 --- !u!1 &2678385591707107077
 GameObject:
@@ -5353,6 +5353,7 @@ GameObject:
   - component: {fileID: 7792442949654031430}
   - component: {fileID: 4193034219087203250}
   - component: {fileID: 96000901}
+  - component: {fileID: 97000901}
   m_Layer: 0
   m_Name: fallback
   m_TagString: Untagged
@@ -6430,6 +6431,19 @@ MonoBehaviour:
   _privacyUrl:
   _termsUrl:
   _supportUrl:
+--- !u!114 &97000901
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8297047868520763657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58fd049a175841578278fa120f16cf54, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Novels.Catalog::Novels.Catalog.View.CatalogUpdatePopup
+  _catalogContent: {fileID: 96000900}
 --- !u!1 &96000000
 GameObject:
   m_ObjectHideFlags: 0
