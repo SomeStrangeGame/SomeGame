@@ -22,6 +22,9 @@ namespace Novels
             internal IReadOnlyList<string> StoryIds;
             internal Func<string, Bundles.IContentSource> CreateStoryContentSource;
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
+            internal Notifications.LocalNotificationCoordinator Notifications;
+            internal Notifications.NotificationRoute InitialNotificationRoute;
+            internal Catalog.CatalogUpdatePrompt UpdatePrompt;
         }
 
         private readonly ApplicationEnvironment _environment;
@@ -35,6 +38,9 @@ namespace Novels
         private readonly DisposableSlot<NovelRuntime> _activeNovel;
         private readonly CatalogFlow _catalogFlow;
         private readonly ApplicationAudioSettings _audioSettings;
+        private readonly Notifications.LocalNotificationCoordinator _notifications;
+        private Notifications.NotificationRoute _pendingNotificationRoute;
+        private CatalogFlow.LoadedCatalog _activeCatalog;
 
         internal ApplicationRuntime(Dependencies ctx)
         {
@@ -55,6 +61,8 @@ namespace Novels
             _onError = ctx.OnError;
             _smokeTelemetry = ctx.SmokeTelemetry;
             _onStorySourceChanged = ctx.OnStorySourceChanged;
+            _notifications = ctx.Notifications;
+            _pendingNotificationRoute = ctx.InitialNotificationRoute;
             _audioSettings = new ApplicationAudioSettings().AddTo(this);
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _catalogBundles = CreateBundles(
@@ -76,6 +84,7 @@ namespace Novels
                 SmokeTelemetry = _smokeTelemetry,
                 CreateStoryBundles = CreateStoryBundles,
                 Settings = _audioSettings,
+                UpdatePrompt = ctx.UpdatePrompt,
             });
             _activeNovel = new DisposableSlot<NovelRuntime>().AddTo(this);
         }
@@ -85,22 +94,55 @@ namespace Novels
             _audioSettings.Apply();
             using var bootstrap = new Bootstrap.BootstrapController(_environment.CancellationToken);
             using var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
+            _activeCatalog = catalog;
+            _notifications?.SetCatalog(catalog.Entries);
             bootstrap.Hide();
-            while (!_environment.CancellationToken.IsCancellationRequested)
+            try
             {
-                var launch = await _catalogFlow.SelectContent(catalog);
-                if (!await RunStory(
-                        launch.Content,
+                while (!_environment.CancellationToken.IsCancellationRequested)
+                {
+                    var route = _pendingNotificationRoute;
+                    _pendingNotificationRoute = null;
+                    var launch = await _catalogFlow.SelectContent(
+                        catalog,
+                        route?.storyId,
+                        route?.episodeId);
+                    _notifications?.SetReadingTarget(
+                        launch.Content.ContentId,
                         launch.EpisodeId,
-                        launch.RestartEpisode,
-                        bootstrap,
-                        catalog.Downloads.GetReadyBundles(launch.Content.ContentId)))
-                    return;
-                _smokeTelemetry?.Emit(
-                    "catalog.returned",
-                    ("contentId", launch.Content.ContentId));
-                bootstrap.Hide();
+                        launch.Content.Text.Title);
+                    if (!await RunStory(
+                            launch.Content,
+                            launch.EpisodeId,
+                            launch.RestartEpisode,
+                            bootstrap,
+                            catalog.Downloads.GetReadyBundles(launch.Content.ContentId)))
+                        return;
+                    _smokeTelemetry?.Emit(
+                        "catalog.returned",
+                        ("contentId", launch.Content.ContentId));
+                    bootstrap.Hide();
+                }
             }
+            finally
+            {
+                _activeCatalog = null;
+            }
+        }
+
+        internal void NavigateToCatalog(Notifications.NotificationRoute route)
+        {
+            if (route?.IsValid != true)
+                return;
+            _pendingNotificationRoute = route;
+            if (_activeNovel.Value != null)
+            {
+                _activeNovel.Clear();
+                return;
+            }
+            _activeCatalog?.Screen
+                ?.GetComponent<Catalog.View.CatalogScreen>()
+                ?.Focus(route.storyId, route.episodeId);
         }
 
         private async UniTask<bool> RunStory(
@@ -172,9 +214,15 @@ namespace Novels
                     return true;
                 }
                 if (result.Status == EpisodeRunStatus.Cancelled)
-                    return false;
+                    return _pendingNotificationRoute != null;
                 if (result.Status == EpisodeRunStatus.Failed)
                     _onError?.Invoke(result.Error.Value);
+                if (result.Status == EpisodeRunStatus.Completed)
+                {
+                    _notifications?.ClearReadingTarget(
+                        content.ContentId,
+                        episodeId);
+                }
                 return true;
             }
             finally

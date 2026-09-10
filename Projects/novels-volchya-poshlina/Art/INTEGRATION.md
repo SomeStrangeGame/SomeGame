@@ -90,3 +90,26 @@ and scenario guidance; the existing worktree-registration baseline issue; and
 separately authorized runtime/acceptance gates. No Unity, website deployment,
 source publication or acceptance is claimed. Suggested next step: agree which
 local skill revision to adopt, then prepare the story-owned reading preview.
+
+## Follow-up main refresh — 2026-09-10
+
+The author requested another main refresh and enabled auto-approve. Fetched
+`origin/main` is `3e449934bf86ab84ed08853d34845b30f7eacf25`; preceding story
+HEAD is `85a5e2cabfc7ba35de57e1a3877dfb702ffd3501`. The previously local-only
+archive and scenario skill rules are now published and arrive unchanged from
+main. The unpublished-rule distinction in the earlier checkpoint is historical.
+
+Waited for the shared integration resource, acquired it as
+`volchya-main-refresh-auto`, then prepared the merge without conflicts. Existing
+Ink, definition and episode-cover bytes exactly match the preceding story HEAD;
+only upstream `Assets/Presentation/bubble.meta` is added to the story project.
+Its GUID has one declaration in this story. The cover audit and scoped
+story/skill whitespace checks pass; the difference against fetched main remains
+story-local. No fresh route traversal is claimed: the exact Ink bytes retain
+the prior successful 26,244-route evidence and source hash recorded above.
+
+Auto-approve is recorded for reversible decisions within the authorized task;
+this refresh does not implement the proposed literary expansion or select a new
+episode count. Story rewriting, archive population and preview authoring remain
+future work. The earlier registration-baseline issue also remains unresolved.
+No Unity, acceptance or publication was requested or run in this update.
