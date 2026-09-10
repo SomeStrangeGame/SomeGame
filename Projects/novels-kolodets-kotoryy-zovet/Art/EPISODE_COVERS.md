@@ -36,10 +36,11 @@ remaining images. Full prompts, output provenance and review results follow.
 
 The current main contract (`ContentPipeline.md`, episode-cover section) uses
 ordinary PNG/JPEG files, not Unity sprites or bundle dependencies. `_catalogCover`
-must be assigned by stable episode ID. The story worktree still predates this
-SDK contract. No Unity session is authorized; definition assignment, preview
-export and catalog UI acceptance remain pending until safe main integration
-and the separately authorized final validation slot. Do not hand-edit generated
+must be assigned by stable episode ID. The story worktree now includes this
+SDK contract after the 2026-09-10 merge of origin/main at `3e449934`.
+No Unity session is authorized; definition assignment, preview export and
+catalog UI acceptance remain pending for the separately authorized final
+validation slot. Do not hand-edit generated
 preview data or fabricate Unity validation. A file in this directory alone is
 not proof of runtime assignment.
 
@@ -105,8 +106,8 @@ iterations, not unresolved originality findings.
 
 ## Handoff
 
-Use the ten filename mappings above after the worktree is safely brought onto
-the SDK contract from main. Assign through the supported authoring workflow,
+Use the ten filename mappings above; the SDK contract from main is now present.
+Assign through the supported authoring workflow,
 then export preview and verify every episode card plus missing-image fallback
 in the authorized Unity/catalog slot. This step has NOT been performed.
 The gallery is a static asset review, not runtime evidence.
