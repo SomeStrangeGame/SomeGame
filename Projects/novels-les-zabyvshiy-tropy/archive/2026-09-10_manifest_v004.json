@@ -1,0 +1,53 @@
+{
+  "storyId": "les-zabyvshiy-tropy",
+  "manifestVersion": 4,
+  "recordedAtUtc": "2026-09-10T13:14:20Z",
+  "predecessor": "2026-09-10_manifest_v003.json",
+  "knownGaps": [
+    "Fresh Unity import, APK rebuild and portrait runtime visual evidence are pending for the text-first choice revision."
+  ],
+  "artifacts": [
+    {
+      "artifactId": "text-first-choice-redesign-review-v004",
+      "category": "reviews",
+      "stage": "author-correction",
+      "path": "reviews/2026-09-10_text-first-choice-redesign_v004.md",
+      "format": "text/markdown",
+      "status": "selected",
+      "decisionReference": "Author rejected image-only choice cards and required labeled buttons patterned after Black Mill",
+      "productionMapping": "Assets/Presentation/bubble/screen-variant.prefab",
+      "availability": "available"
+    },
+    {
+      "artifactId": "image-only-choice-runtime-v003",
+      "category": "acceptance-evidence",
+      "path": "../Art/Acceptance/20260910-adult-bubble/choice-stable-v3.png",
+      "sha256": "106997c065334c330f7245c59f3fd2d973af743fd96b35a4de0736921dc50675",
+      "status": "rejected",
+      "reason": "Choice text was hidden and large images acted as the controls."
+    },
+    {
+      "artifactId": "choice-card-production-v003",
+      "category": "production-assets",
+      "path": "../Assets/Presentation/bubble/sprites/choice-card.png",
+      "sha256": "150b4328dda669ea067458c16ea4c4267a2938347ad0396646992af98eaf8b27",
+      "status": "superseded",
+      "reason": "No longer referenced as the choice-button surface after the text-first redesign."
+    },
+    {
+      "artifactId": "dialogue-panel-production-v004",
+      "category": "production-assets",
+      "path": "../Assets/Presentation/bubble/sprites/dialogue-panel.png",
+      "sha256": "318954b959f6efa0cf4816018ba02c771fb9195a395e74c7a11d399b32c28c52",
+      "status": "selected",
+      "productionMapping": "Sliced story-local dialogue and choice-button surface"
+    },
+    {
+      "artifactId": "bubble-prefab-v004",
+      "category": "production-assets",
+      "path": "../Assets/Presentation/bubble/screen-variant.prefab",
+      "sha256": "fa4ad409f03fbf1ec7ae637c03213fc5247b34b547a4f15920ab7ab83866f4fe",
+      "status": "selected"
+    }
+  ]
+}

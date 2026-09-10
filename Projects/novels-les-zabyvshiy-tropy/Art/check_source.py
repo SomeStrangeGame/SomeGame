@@ -21,6 +21,14 @@ def require(ok, message):
         raise ValueError(message)
 
 
+def png_header(path):
+    data = path.read_bytes()
+    require(data[:8] == b'\x89PNG\r\n\x1a\n' and data[12:16] == b'IHDR',
+            f'{path}: invalid PNG header')
+    width, height = struct.unpack('>II', data[16:24])
+    return width, height, data[25]
+
+
 def value(source, state):
     node = ast.parse(source.replace('&&', ' and ').replace('||', ' or '), mode='eval').body
 
@@ -104,6 +112,33 @@ def audit():
     card = json.loads((ROOT / 'Config/card.json').read_text())
     require(card['storyId'] == 'les-zabyvshiy-tropy', 'Story ID mismatch')
     require((ROOT / 'Config' / card['cover']).is_file(), 'Missing cover')
+    bubble_root = ROOT / 'Assets/Presentation/bubble'
+    bubble_prefab = (bubble_root / 'screen-variant.prefab').read_text()
+    dialogue_panel = bubble_root / 'sprites/dialogue-panel.png'
+    choice_card = bubble_root / 'sprites/choice-card.png'
+    require(png_header(dialogue_panel) == (1200, 800, 6),
+            'Dialogue panel must be a 1200x800 RGBA PNG')
+    require(png_header(choice_card) == (512, 768, 6),
+            'Choice card must be a 512x768 RGBA PNG')
+    require(bubble_prefab.count('m_Name: Descritpion') == 5,
+            'Unexpected dialogue variant count')
+    require(bubble_prefab.count('m_SizeDelta: {x: 344, y:') == 5,
+            'Every dialogue variant needs the narrow text-safe width')
+    require(bubble_prefab.count('m_SizeDelta: {x: 96, y: 120}') == 4 and
+            bubble_prefab.count('m_SizeDelta: {x: 64, y: 104}') == 1,
+            'Every dialogue background needs the long-text containment inset')
+    require('_placeChoicesHorizontally: 0' in bubble_prefab and
+            '_hideChoiceText: 0' in bubble_prefab,
+            'Choices must be vertical text-first buttons')
+    require('m_SizeDelta: {x: 380, y: 96}' in bubble_prefab,
+            'Choice button must use the adult wide-button geometry')
+    require('m_AnchorMin: {x: 0, y: 0.5}\n  m_AnchorMax: {x: 0, y: 0.5}\n'
+            '  m_AnchoredPosition: {x: 48, y: 0}\n  m_SizeDelta: {x: 64, y: 64}'
+            in bubble_prefab,
+            'Choice image must remain a compact supporting thumbnail')
+    require('m_AnchoredPosition: {x: 48, y: 0}\n  m_SizeDelta: {x: -132, y: -22}'
+            in bubble_prefab and 'm_FontSize: 20' in bubble_prefab,
+            'Choice label must retain primary readable space')
     definition = (ROOT / 'Assets/les-zabyvshiy-tropy.asset').read_text()
     main = re.search(r'_mainCharacter: "(.+)"', definition).group(1)
     defaults = dict(re.findall(r'_character: "(.+)"\n\s+_clothes: (\S+)', definition))
@@ -198,7 +233,17 @@ def audit():
                 require(label not in labels, f'Duplicate choice label {label}')
                 labels.add(label)
                 icon = re.search(r'choice_icon:([\w-]+)', line).group(1)
-                require((ROOT / 'Assets/Choices' / (icon + '.png')).is_file(), f'Missing {icon}')
+                icon_path = ROOT / 'Assets/Choices' / (icon + '.png')
+                require(icon_path.is_file(), f'Missing {icon}')
+                importer = Path(str(icon_path) + '.meta').read_text()
+                require(re.search(r'^\s+enableMipMap: 0$', importer, re.M),
+                        f'{icon}: choice sprite must disable mipmaps')
+                require(re.search(r'^\s+spriteMode: 1$', importer, re.M),
+                        f'{icon}: choice image is not imported as a single Sprite')
+                require(re.search(r'^\s+alphaIsTransparency: 1$', importer, re.M),
+                        f'{icon}: choice sprite transparency is disabled')
+                require(re.search(r'^\s+textureType: 8$', importer, re.M),
+                        f'{icon}: choice image is not imported as Sprite (2D and UI)')
                 icons.add(icon)
             if ':' not in line or line[0] in '{|-*':
                 continue
