@@ -95,3 +95,12 @@ This source finding is repaired by the pose-specific alpha package above. No uns
 - Player log: `Novels/Build/Logs/automation/player-20260910T075548Z.log`
 
 Next required step: execute the planned episode/choice/ending matrix. The story must not be marked accepted before those checks pass.
+
+## Main and web publication — 2026-09-10
+
+- Integrated the accepted story source and catalog registration into `origin/main` at `8771daf9`.
+- Published immutable story version `les-zabyvshiy-tropy/1` with 37 checksum-verified files: Android and Mac releases, payloads, six episode covers, card, cover, and the story-owned reading preview with three character images.
+- Atomically updated `https://pureshechka.com/content/kostroma-dev.json` last. The ordered channel retains `chernaya-melnitsa=2` and `trinadtsatyy-kolokol=1`, then adds `les-zabyvshiy-tropy=1`; manifest SHA-256 is `054d294db272b17626ab564e6347db39db156beaada7efae460d96b54b94de35`.
+- Public HTTPS checks returned `200` for the manifest, card, cover, reading preview, representative character, Android release and episode-six cover. Android `release.json` SHA-256 is `dae5e10d5283052c268e637fb2f69fe1a8a874d8d1579c20d2b188fa567d00de`.
+- The previous channel manifest is retained at `/home/p/pureshecom/rebrand-backups/20260910-nightwood/kostroma-dev.json.before`; the published checksum inventory is stored beside it.
+- Per the user's explicit instruction, no emulator replay and no APK publication were performed in this publication pass. The earlier route-matrix acceptance limitation remains documented rather than being overstated.
