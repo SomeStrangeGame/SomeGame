@@ -1,0 +1,25 @@
+{
+  "size": [
+    1254,
+    1254
+  ],
+  "mode": "RGBA",
+  "keyMedian": [
+    4.0,
+    248.0,
+    8.0
+  ],
+  "backgroundPixels": 1263495,
+  "mixedEdgePixels": 6341,
+  "residualGreenPixels": 698,
+  "corePixels": 292935,
+  "coreRgbUnchanged": true,
+  "alphaBounds": [
+    430,
+    13,
+    868,
+    1213
+  ],
+  "inputPixelSha256": "489e8e6cf9cb6559db975cdf649b6be1c069aa687bd15f8158a40e08849cc313",
+  "outputPixelSha256": "f32090faf31c1f0611c12515b62feafc3dfdcfa637d84d65d727088bda0d9588"
+}

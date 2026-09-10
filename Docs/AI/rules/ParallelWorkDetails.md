@@ -44,6 +44,31 @@ scope record, но обязан предварительно подтверди�
 
 ## Постоянные границы
 
+### Явно разрешённая параллельная правка при проверке неизменного APK
+
+Если пользователь явно отменил ожидание source-only задачи на время уже
+запущенной проверки готового APK, владелец может передать checkout write-lock
+первой следующей заявке, не прерывая этот device-прогон, только если:
+
+- APK, release, package и ADB serial зафиксированы; новый APK не собирается,
+  не устанавливается и не подменяется, исходники для работы Player не читаются;
+- прежний владелец сохраняет shared `unity` resource и точный scope только
+  своего устройства/сохранений и ignored каталога evidence/helpers;
+- до передачи он фиксирует разрешение, границы и статус в своей agent-записи
+  и handoff, затем удаляет только свой checkout request/write-lock;
+- новый checkout-владелец не запускает Unity, build, Unity-backed tests, ADB,
+  эмулятор, Git/branch/index mutations и не меняет story/art/APK/cache/evidence
+  проверяемого кандидата; допустимы его source-only правки и дешёвые static checks;
+- прежний владелец откладывает любые tracked/coordination правки до нового
+  обычного checkout-lock. Его shared `unity` lock остаётся process barrier;
+- device evidence относится исключительно к записанному APK, а не к новым
+  исходникам. После изменения runtime/catalog code новый checkout не получает
+  автоматический acceptance pass; его финальная проверка требует нового APK
+  и отдельного разрешённого слота.
+
+Это адресное исключение не разрешает параллельные тяжёлые процессы или
+произвольные source-only изменения без человеческого разрешения.
+
 - Shared pipeline: `Packages/NovelsContentSdk/**`, `Tools/novels-tools/**` и
   связанные общие контракты.
 - Catalog: `Projects/novels-catalog/**`.

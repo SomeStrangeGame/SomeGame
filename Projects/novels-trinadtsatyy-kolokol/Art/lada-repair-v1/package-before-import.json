@@ -1,0 +1,477 @@
+{
+  "status": "source-static-pass-not-runtime-acceptance",
+  "records": {
+    "main": {
+      "file": "main-clean-v2.png",
+      "sha256": "13717205cf1579674ad47c5c116001919dfc971c0c60f4ba134882d2db7fb8ff",
+      "bounds": [
+        430,
+        13,
+        868,
+        1213
+      ],
+      "silhouetteIoU": 1.0,
+      "metaSha256": "15f2cb9e434612bb05b9595e4c4aac185af4272b421d60334693f3a1c99e2961",
+      "guid": "b180622655b654e7eb27b3506e8534cd",
+      "target": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    "focused": {
+      "file": "focused-clean.png",
+      "sha256": "962da0c2f828123ea881ce32e295fa6a43169ebbaaf112a1bc5d3d7b598e86d1",
+      "bounds": [
+        430,
+        13,
+        868,
+        1212
+      ],
+      "silhouetteIoU": 0.9924103747437897,
+      "metaSha256": "e5a75f54b49fa9401510c8e72107ef8005a96138d44f50d1bfbb031062b31a76",
+      "guid": "670b6fb3917e54a31b10b7afea5942c6",
+      "target": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    "alarmed": {
+      "file": "alarmed-clean.png",
+      "sha256": "c864a0c4d493320a6366c324d52dfd1074276f732b046e9a4dfa7ed3f01181ec",
+      "bounds": [
+        431,
+        13,
+        868,
+        1212
+      ],
+      "silhouetteIoU": 0.9912034232538957,
+      "metaSha256": "dbd0cafc568a702732e92c679a12c4af3c9cfcb841218eeab560f99b166127da",
+      "guid": "1c850b331914246a4922ab3e79c1105c",
+      "target": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    "resolve": {
+      "file": "resolve-clean.png",
+      "sha256": "4cf0f8234e709245f34d19649b9ab2670130946a106e4c1bfff220d093ee85b3",
+      "bounds": [
+        431,
+        13,
+        868,
+        1212
+      ],
+      "silhouetteIoU": 0.9926057236219684,
+      "metaSha256": "f865f74aa58214d7fdaff8079996e59cb1302d93f89f53edd12c9f55792e7ac6",
+      "guid": "0d504b7750d944369b8d136521223850",
+      "target": "Assets/Characters/maincharacter/view/whole/coat/resolve.png"
+    }
+  },
+  "sceneReferences": [
+    {
+      "scene": "s01e01.ink",
+      "line": 16,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 23,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 26,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 31,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 36,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 38,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 40,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 44,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 46,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e01.ink",
+      "line": 51,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e02.ink",
+      "line": 7,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e02.ink",
+      "line": 13,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e02.ink",
+      "line": 23,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e02.ink",
+      "line": 29,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e02.ink",
+      "line": 35,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e03.ink",
+      "line": 7,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e03.ink",
+      "line": 17,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e03.ink",
+      "line": 32,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e03.ink",
+      "line": 39,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e03.ink",
+      "line": 48,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e03.ink",
+      "line": 54,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e03.ink",
+      "line": 58,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e04.ink",
+      "line": 26,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e04.ink",
+      "line": 30,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e04.ink",
+      "line": 42,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e05.ink",
+      "line": 10,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e05.ink",
+      "line": 14,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e05.ink",
+      "line": 30,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e05.ink",
+      "line": 67,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 11,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 20,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 28,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 57,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "resolve",
+      "address": "maincharacter/view/whole/coat/resolve",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/resolve.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 64,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 74,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 84,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 88,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 92,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 95,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "alarmed",
+      "address": "maincharacter/view/whole/coat/alarmed",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/alarmed.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 98,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 106,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "resolve",
+      "address": "maincharacter/view/whole/coat/resolve",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/resolve.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 125,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 127,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "focused",
+      "address": "maincharacter/view/whole/coat/focused",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/focused.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 156,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 170,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "main",
+      "address": "maincharacter/view/whole/coat/main",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/main.png"
+    },
+    {
+      "scene": "s01e06.ink",
+      "line": 190,
+      "selector": "Лада",
+      "outfit": "coat",
+      "emotion": "resolve",
+      "address": "maincharacter/view/whole/coat/resolve",
+      "file": "Assets/Characters/maincharacter/view/whole/coat/resolve.png"
+    }
+  ]
+}

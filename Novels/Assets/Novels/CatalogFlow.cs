@@ -74,6 +74,8 @@ namespace Novels
         {
             internal Bundles.Entity Bundles;
             internal Bundles.IContentSource RootContentSource;
+            internal IReadOnlyList<string> StoryIds;
+            internal Func<string, Bundles.IContentSource> CreateStoryContentSource;
             internal PriorityLoader PriorityLoader;
             internal string PersistentDataPath;
             internal string ClientVersion;
@@ -93,7 +95,7 @@ namespace Novels
             _ctx = ctx;
             if (ctx.Bundles == null)
                 throw new ArgumentNullException(nameof(ctx.Bundles));
-            if (ctx.RootContentSource == null)
+            if (ctx.RootContentSource == null && ctx.StoryIds == null)
                 throw new ArgumentNullException(nameof(ctx.RootContentSource));
             if (ctx.PriorityLoader == null)
                 throw new ArgumentNullException(nameof(ctx.PriorityLoader));
@@ -246,7 +248,12 @@ namespace Novels
                             cover: GetEpisodeCover(catalog, entry.ContentId, preview.episodes[index].cover),
                             author: preview.episodes[index].author,
                             storyAuthor: entry.Author,
-                            videoUrl: GetCatalogVideoUrl(catalog, entry.ContentId, preview, index))));
+                            videoUrl: GetCatalogVideoUrl(catalog, entry.ContentId, preview, index),
+                            readingProgress: completedIds.Contains(episode.Id) ? 1f
+                                : !playableIds.Contains(episode.Id) ? null
+                                : EpisodeReadingProgress.Read(_progressCache,
+                                    NovelRuntime.SaveChoiceKey(entry.ContentId, episode.Id),
+                                    preview.contentVersion))));
             }).ToArray();
             using var selection = CreateSelection(catalog.Screen);
             var pendingSelection = selection.SelectAction(ApplicationTexts.CatalogTitle, items);
@@ -402,42 +409,46 @@ namespace Novels
             IReadOnlyDictionary<string, Catalog.Contracts.StoryCatalogPreview> previews)> LoadEntries(
                 Bootstrap.BootstrapController bootstrap)
         {
-            var registryJson = await _ctx.RootContentSource.DownloadText(
-                ContentAddressing.ContentPackageConvention.CatalogRegistryPath,
-                _ctx.CancellationToken);
-            var registry = Catalog.Contracts.CatalogContractCodec
-                .DeserializeRegistry(registryJson);
+            IReadOnlyList<string> storyIds = _ctx.StoryIds;
+            if (storyIds == null)
+            {
+                var registryJson = await _ctx.RootContentSource.DownloadText(
+                    ContentAddressing.ContentPackageConvention.CatalogRegistryPath,
+                    _ctx.CancellationToken);
+                storyIds = Catalog.Contracts.CatalogContractCodec
+                    .DeserializeRegistry(registryJson).stories;
+            }
             var entries = new List<Catalog.NovelCatalogEntry>();
             var covers = new Dictionary<string, Sprite>(StringComparer.Ordinal);
             var previews = new Dictionary<string, Catalog.Contracts.StoryCatalogPreview>(
                 StringComparer.OrdinalIgnoreCase);
             try
             {
-                foreach (var storyId in registry.stories)
+                foreach (var storyId in storyIds)
                 {
-                    var cardJson = await _ctx.RootContentSource.DownloadText(
-                        ContentAddressing.ContentPackageConvention.StoryCardPath(
-                            storyId),
-                        _ctx.CancellationToken);
+                    var storySource = CreateStoryContentSource(storyId);
+                    var cardJson = await storySource.DownloadText(
+                        "card.json", _ctx.CancellationToken);
                     var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
                         cardJson,
                         storyId);
-                    var previewJson = await _ctx.RootContentSource.DownloadText(
-                        ContentAddressing.ContentPackageConvention.StoryPreviewPath(storyId, _ctx.ContentPlatform),
+                    var previewJson = await storySource.DownloadText(
+                        $"Remote/{_ctx.ContentPlatform}/catalog-preview.json",
                         _ctx.CancellationToken);
                     var preview = Catalog.Contracts.CatalogContractCodec.DeserializePreview(previewJson, storyId);
                     previews.Add(storyId, preview);
                     covers.Add(card.storyId, await LoadCover(
-                        ContentAddressing.ContentPackageConvention.StoryCoverPath(card.storyId, card.cover),
-                        _ctx.RootContentSource, _ctx.CancellationToken));
+                        card.cover,
+                        storySource, _ctx.CancellationToken));
                     foreach (var episode in preview.episodes)
                     {
                         if (string.IsNullOrWhiteSpace(episode.cover)) continue;
-                        var path = ContentAddressing.ContentPackageConvention.StoryEpisodeCoverPath(
+                        var key = ContentAddressing.ContentPackageConvention.StoryEpisodeCoverPath(
                             storyId, _ctx.ContentPlatform, episode.cover);
-                        if (!covers.ContainsKey(path))
-                            covers.Add(path, await LoadOptionalEpisodeCover(path,
-                                _ctx.RootContentSource, _ctx.CancellationToken, _ctx.OnLog));
+                        var path = $"Remote/{_ctx.ContentPlatform}/episode-covers/{episode.cover}";
+                        if (!covers.ContainsKey(key))
+                            covers.Add(key, await LoadOptionalEpisodeCover(path,
+                                storySource, _ctx.CancellationToken, _ctx.OnLog));
                     }
                     entries.Add(new Catalog.NovelCatalogEntry(
                         card.storyId,
@@ -466,9 +477,16 @@ namespace Novels
             var video = SelectCatalogVideo(preview, index,
                 GetEpisodeCover(catalog, storyId, preview.episodes[index].cover) != null);
             // Resolve only: the visible card prepares the optional stream, never blocks catalog startup.
-            return string.IsNullOrWhiteSpace(video) ? null : _ctx.RootContentSource.GetUrl(
-                ContentAddressing.ContentPackageConvention.StoryCatalogVideoPath(storyId, _ctx.ContentPlatform, video));
+            return string.IsNullOrWhiteSpace(video) ? null : CreateStoryContentSource(storyId).GetUrl(
+                $"Remote/{_ctx.ContentPlatform}/catalog-videos/"
+                + ContentAddressing.ContentPackageConvention.CatalogVideoFileName(video));
         }
+
+        private Bundles.IContentSource CreateStoryContentSource(string storyId) =>
+            _ctx.CreateStoryContentSource?.Invoke(storyId)
+                ?? new Bundles.PrefixedContentSource(
+                    _ctx.RootContentSource,
+                    ContentAddressing.ContentPackageConvention.StoryPrefix(storyId));
 
         internal static string SelectCatalogVideo(Catalog.Contracts.StoryCatalogPreview preview,
             int index, bool hasEpisodeCover)

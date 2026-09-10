@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -17,11 +18,15 @@ namespace Novels
             internal Action<Diagnostics.NovelError> OnError;
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
             internal Bundles.IContentSource ContentSource;
+            internal Bundles.IContentSource CatalogContentSource;
+            internal IReadOnlyList<string> StoryIds;
+            internal Func<string, Bundles.IContentSource> CreateStoryContentSource;
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
         }
 
         private readonly ApplicationEnvironment _environment;
         private readonly Bundles.IContentSource _contentSource;
+        private readonly Func<string, Bundles.IContentSource> _createStoryContentSource;
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Action<Diagnostics.NovelError> _onError;
         private readonly Diagnostics.SmokeTelemetry _smokeTelemetry;
@@ -35,8 +40,17 @@ namespace Novels
         {
             _environment = ctx.Environment
                 ?? throw new ArgumentNullException(nameof(ctx.Environment));
-            _contentSource = ctx.ContentSource
-                ?? throw new ArgumentNullException(nameof(ctx.ContentSource));
+            _contentSource = ctx.ContentSource;
+            _createStoryContentSource = ctx.CreateStoryContentSource;
+            var catalogContentSource = ctx.CatalogContentSource;
+            if (catalogContentSource == null)
+            {
+                if (_contentSource == null)
+                    throw new ArgumentNullException(nameof(ctx.ContentSource));
+                catalogContentSource = new Bundles.PrefixedContentSource(
+                    _contentSource,
+                    ContentAddressing.ContentPackageConvention.CatalogUiPrefix);
+            }
             _onLog = ctx.OnLog;
             _onError = ctx.OnError;
             _smokeTelemetry = ctx.SmokeTelemetry;
@@ -44,14 +58,14 @@ namespace Novels
             _audioSettings = new ApplicationAudioSettings().AddTo(this);
             Application.backgroundLoadingPriority = _defaultThreadPriority;
             _catalogBundles = CreateBundles(
-                new Bundles.PrefixedContentSource(
-                    _contentSource,
-                    ContentAddressing.ContentPackageConvention.CatalogUiPrefix),
+                catalogContentSource,
                 "catalog").AddTo(this);
             _catalogFlow = new CatalogFlow(new CatalogFlow.Dependencies
             {
                 Bundles = _catalogBundles,
                 RootContentSource = _contentSource,
+                StoryIds = ctx.StoryIds,
+                CreateStoryContentSource = ctx.CreateStoryContentSource,
                 PriorityLoader = new PriorityLoader(_defaultThreadPriority),
                 PersistentDataPath = _environment.PersistentDataPath,
                 ClientVersion = _environment.ClientVersion,
@@ -200,9 +214,10 @@ namespace Novels
 
         private Bundles.Entity CreateStoryBundles(string contentId, CancellationToken cancellationToken) =>
             CreateBundles(
-                new Bundles.PrefixedContentSource(
-                    _contentSource,
-                    ContentAddressing.ContentPackageConvention.StoryPrefix(contentId)),
+                _createStoryContentSource?.Invoke(contentId)
+                    ?? new Bundles.PrefixedContentSource(
+                        _contentSource,
+                        ContentAddressing.ContentPackageConvention.StoryPrefix(contentId)),
                 $"story-{contentId}", cancellationToken);
     }
 }

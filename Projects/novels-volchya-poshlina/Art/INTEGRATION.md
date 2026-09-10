@@ -37,3 +37,56 @@ base remains unchanged; candidate generation against that pre-main base must
 not be misreported as a valid story-only diff after the merge. For subsequent
 integration, compare this branch against the main SHA above and reconcile the
 candidate lifecycle in the integration owner phase.
+
+## Remote refresh and skill review — 2026-09-10
+
+Scope: update this isolated story branch from fetched `origin/main` and inspect
+the creation workflow, not rewrite the story, publish other tasks' changes or
+run Unity. Incoming main: `b6896bb7b188dc2f6350077ef18b70c80fbcd165`;
+previous story HEAD: `678034ec013ba6d018dc678c7026287e884642fd`.
+
+The merge has no conflicts. Its only changes to pre-existing story files are
+the upstream series/catalog label `Ночелесье` → `Кострома` in Ink and README.
+The expanded cast, twelve locations, four endings and distinct episode cover
+remain intact. Shared files match the fetched main; the candidate difference
+from it remains wholly under this story prefix.
+
+Fresh standalone audit: 26,244 routes, zero compiler errors/warnings, unchanged
+ending counts and 2,846–3,693 displayed words per route. New source SHA-256:
+`4d783fef34f38a53729865f100b9a1b14741b5c4a036d7c5905c58b7783dd488`.
+Earlier source hashes in the historical evidence describe their own checkpoints;
+this update changes only the series label, not story prose or transitions.
+Episode-cover audit passes with the same approved image hash. The changed
+story/skill paths pass whitespace checks relative to the preceding story HEAD.
+The wider diff against main includes existing whitespace in old Unity `.meta`
+files; no repository-wide whitespace-cleanliness claim is made.
+
+Reviewed the full published creation skill and its website-preview reference.
+Its new pre-release requirement is `Config/Preview/preview.json`, a faithful
+linear excerpt from canonical Ink plus only referenced character images.
+This story does not yet have that preview. It is distinct from the episode
+cover and generated runtime `catalog-preview.json`.
+
+Also inspected, but did not copy or commit, the canonical checkout's unpublished
+creation/design skill edits and `references/story-archive.md`. Those add dated,
+non-overwriting creation archives with verified provenance and explicit gaps;
+reader orientation, motives and supernatural-rule explanations; branch-earned
+notifications; and a default proposal of 15–20 minutes per episode, subordinate
+to the author's agreed scope. They do not mandate a fixed episode count.
+Skill-contract checks and local links in the creation skill/references and
+story-design reference pass for both inspected versions. This is not a fresh
+literary review of every story scene. Historical archive migration, new prose,
+notifications and preview authoring are not performed by this inspection.
+
+Coordination incident: another task acquired the integration resource between
+the initial free-status check and acquisition. The merge preparation mistakenly
+ran after the acquisition refusal. It affected only this isolated worktree;
+no commit followed until the resource became free and was acquired by
+`volchya-skill-refresh`. The shared checkout and other owner's files were not
+modified. Subsequent write operations use the acquired resource.
+
+Pending: preview authoring; separate review/adoption of the unpublished archive
+and scenario guidance; the existing worktree-registration baseline issue; and
+separately authorized runtime/acceptance gates. No Unity, website deployment,
+source publication or acceptance is claimed. Suggested next step: agree which
+local skill revision to adopt, then prepare the story-owned reading preview.

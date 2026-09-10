@@ -1,0 +1,11 @@
+# Agent: `chernaya-melnitsa-alpha-cleanup`
+
+- Status: ready-for-final-validation
+- Task: User-approved deterministic mask/edge colour cleanup, no regeneration.
+- Scope: Projects/novels-chernaya-melnitsa/Assets/Characters/**/*.png; story Art cleanup script/proofs and CHARACTER_HANDOFF, GENERATION_PROVENANCE, ORIGINALITY_EVIDENCE, ACCEPTANCE_EVIDENCE; story README; own coordination and chernaya HANDOFF entry; ignored Novels/Build/Logs/automation/chernaya-alpha-20260908 backups/candidates.
+- Base: codex/story-batch-chernaya-melnitsa at f1721a63e0462958912795316e63a184e21dd74e.
+- Requested UTC: 2026-09-08T13:04:43Z.
+- Approval: Ага to technical mask/edge colour cleanup without regenerating drawings. No new Unity/APK/ADB approval.
+- Plan: source backups, bounded edge-only correction, before/after visual proofs, pixel invariants, narrative/layout/doctor static checks. Preserve canvas, interior artwork, metas/GUIDs, prefab layout, shared compression, Ink and one-story catalog. Release locks ready-for-final-validation; fresh APK needs separate approval.
+- Result: 11 production PNGs updated by cleanup_character_edges.py v3;14046 connected edge pixels corrected, remote scraps Saveliy229px/Yakov guarded244px removed. Actual body silhouettes/interior RGBA/canvas registration/meta hashes preserved. Magenta heuristic14067→17 (remaining isolated interior/rounding matches deliberately not globally recoloured). No regeneration. Source proofs reviewed dark/light/blue; Art/EdgeCleanup contains report plus four key comparisons. Full11 proofs and byte-exact HEAD-matching originals in ignored Novels/Build/Logs/automation/chernaya-alpha-20260908/v3.
+- Validation: seven regression fixtures; all11 production/candidate/original/meta SHA256 checks; dimensions/alpha/no-growth/interior invariants;72routes,338dialogue/12labels/360choice-context audit and doctor pass. Ink hash remains dddcedbb0c94cf1513a5327058ff4d881d7bfc505998733c8e2e65c721fb4253. Source/static only; no Unity/import/APK/ADB or save changes. Existing catalog remains exactly chernaya-melnitsa. Current APK098ff515a0e1 stale for these PNGs; remaining Player alpha/layout/semantic/endings matrix described in ACCEPTANCE_EVIDENCE.md. No commit/publication; release own locks before requesting fresh single-story final-slot approval.

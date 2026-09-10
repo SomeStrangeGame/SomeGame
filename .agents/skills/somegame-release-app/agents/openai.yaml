@@ -1,0 +1,4 @@
+interface:
+  display_name: "Release SomeGame App"
+  short_description: "Publish a Remote app with shared versioned content"
+  default_prompt: "Build and publish a selected-story Remote app release using one shared story store and an app-specific dev or prod manifest."

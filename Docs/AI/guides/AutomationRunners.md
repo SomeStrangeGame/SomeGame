@@ -38,7 +38,7 @@ Tools/somegame story-batch-plan --story-id <story-id> [--story-id <story-id> ...
 Tools/somegame resource-lock acquire --resource <unity|catalog|shared-sdk|integration> --agent-id <id>
 Tools/somegame tooling-tests
 Tools/somegame story-check --agent-id <lock-owner> --target <story-id> [--build]
-Tools/somegame android-dev-cycle --agent-id <lock-owner> --package-id <id>
+Tools/somegame android-dev-cycle --agent-id <lock-owner> --app kostroma --package-id <id>
 Tools/somegame clean-generated --agent-id <lock-owner> --project <project> [--apply]
 Tools/somegame finish-task --agent-id <lock-owner> --paths <owned-path...> \
   --summary <result> [--allow-pending]
@@ -57,6 +57,13 @@ project внутри репозитория; без `--apply` это обяза�
 интегратора. `resource-lock` атомарно координирует общие ресурсы между worktree.
 По умолчанию runtime находится в `.git/somegame-runtime`; локальная переменная
 `SOMEGAME_SHARED_RUNTIME` может задать другой единый абсолютный путь.
+
+`Tools/novels-tools/novels-content stage-channel` требует явного режима:
+`--base-manifest <current.json>` безопасно дополняет существующий ordered
+manifest без удаления историй, а `--replace` намеренно создаёт точный набор.
+Обычное добавление Remote-истории использует первый режим и не запускает Player
+build, если текущий APK доказанно поддерживает release schema/minimum client и
+история не требует нового runtime или catalog UI.
 
 ### `context`
 
@@ -185,6 +192,10 @@ runner’ом helper и Editor завершаются в cleanup; `--no-stop-edi
 process session от lifecycle самой команды.
 
 ### `player-build`
+
+Требует `--app <app-id>`. Профиль из `Projects/apps/<app-id>` задаёт название,
+application ID и иконку Player; default output включает app ID и поэтому не
+перезаписывает сборку другого приложения.
 
 Последовательно собирает content для одной платформы и ровно один Player
 `Remote|Embedded`, используя `Novels/Tools/build-player.sh`. Полная matrix не
