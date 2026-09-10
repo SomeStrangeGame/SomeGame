@@ -1,0 +1,14 @@
+{
+  "schemaVersion": 1,
+  "storyId": "chernaya-melnitsa",
+  "createdDate": "2026-09-10",
+  "purpose": "Archive the previous one-episode Ink revision and the approved literary sources used for the four-episode conversion.",
+  "entries": [
+    {"path": "scenarios/2026-09-10_pre-four-episode-root-ink_v001.ink", "sha256": "18b1956facabbe0b817b7c39f73be5311678b58e16ce60d76056afd6be33b44b"},
+    {"path": "scenarios/2026-09-10_pre-four-episode-s01e01_v001.ink", "sha256": "dddcedbb0c94cf1513a5327058ff4d881d7bfc505998733c8e2e65c721fb4253"},
+    {"path": "scenarios/2026-09-10_extended-scenario_v001.md", "sha256": "b0a5577bf1e1f35d709de87e020a2cf1ced070c9620d59a44a55bedcce6bfe39"},
+    {"path": "scenarios/2026-09-10_four-episode-scenario_v002.md", "sha256": "fca2247c10f0c3bd15b05c6bbbfa8a7c0aab06051ef26a4a923bfa9dacf23a6d"},
+    {"path": "reviews/2026-09-10_four-episode-route-check_v001.rb", "sha256": "b3e957494eebc3698a552a8507f49a715136bb2ec3d7249089ef6d1e8e56b771"},
+    {"path": "decisions/2026-09-10_four-episode-ink-conversion_v001.rb", "sha256": "db3b1e7ab10fa2eafcb5af638b81ae35c617daca2fe9b8f93303cdd3bcca0ae0"}
+  ]
+}

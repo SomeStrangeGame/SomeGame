@@ -73,3 +73,12 @@ Extension source outputs in the Codex generation store:
 editing, external reference or composition change was introduced. The extension
 non-character art iteration 2 evidence remains applicable to the unchanged
 pixels; this is reuse, not a new originality review or runtime acceptance.
+
+## Four-episode cover assignment — 2026-09-10
+
+The new `s01e02.png`, `s01e03.png`, and `s01e04.png` files are byte-identical
+copies of already approved location art `bg10`, `bg05`, and `bg07`. Their SHA-256
+values are respectively `8a0693167c66a7504931fc5ee173d2c1cb6b64218de10c4eef5b8cab3dfc7c58`,
+`2a1d8264c0be00018bedfb2447c71ada332475157589dc7df775b40770a618f5`, and
+`26bf8bdfcf0035fc7acd392f6ba0877f98093b412cec389a07df8e1cf09c7cd3`.
+No new generated or externally sourced image entered the package.

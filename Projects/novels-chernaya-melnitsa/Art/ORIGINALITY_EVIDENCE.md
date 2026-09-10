@@ -2,6 +2,24 @@
 
 This is an internal similarity-risk screen, not legal clearance.
 
+## Four-episode literary revision — 2026-09-10
+
+Result: `passed`, low observed expressive-similarity risk, limited confidence.
+The complete four-episode literary source (SHA-256
+`fca2247c10f0c3bd15b05c6bbbfa8a7c0aab06051ef26a4a923bfa9dacf23a6d`)
+was reviewed together with all 72 reachable routes, five choices, and three
+endings. Fresh searches combined the mill, broken promises, black flour,
+withheld letters, and voluntary release. Accessible comparisons included the
+magic mill in *Krabat*, letter-and-vow fiction, and generic mill folklore; none
+established the distinctive combination of coercive promise residue, concealed
+replies from addressees, and release through each addressee's independent answer.
+This is an inference from indexed public material, not an exhaustive corpus or
+legal clearance. The title and haunted-mill premise remain generic overlap.
+
+The Ink conversion preserves the approved prose and branch state without adding
+external text. New episode covers only duplicate previously approved project
+art, so the earlier visual originality evidence remains applicable.
+
 ## Non-character art iteration 4 — final two-illustration repair, 2026-09-08
 
 Result: `passed`, low observed similarity risk, limited confidence. Full current

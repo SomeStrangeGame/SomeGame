@@ -14,15 +14,27 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   _id: chernaya-melnitsa
   _mainCharacter: "Лада"
-  _contentVersion: 1
+  _contentVersion: 3
   _endMarker: "...: КОНЕЦ ИСТОРИИ"
   _silentAudioIds: []
   _catalogVideo: chernaya-melnitsa-loop.mp4
   _episodes:
   - _id: s01e01
-    _title: "Кому дано слово"
-    _description: "До рассвета Лада должна раскрыть книгу Чёрной мельницы и решить, можно ли освободить людей от слов, сказанных другой версии себя."
+    _title: "Дом, который ждал"
+    _description: "Лада возвращается в Черноталие, где старый дом хранит следы чёрной муки и ответа, которого она так и не получила."
     _catalogCover: s01e01.png
+  - _id: s01e02
+    _title: "За рекой"
+    _description: "Поиски Мити ведут через затопленный брод к мельнице и к первому выбору: кому можно доверить старую вину."
+    _catalogCover: s01e02.png
+  - _id: s01e03
+    _title: "Слова под камнями"
+    _description: "Внутри мельницы Лада узнаёт, как нарушенные обещания превращаются в чёрную муку и почему письма не дошли до адресатов."
+    _catalogCover: s01e03.png
+  - _id: s01e04
+    _title: "Право уйти"
+    _description: "До рассвета героям предстоит остановить жернова и решить, кто вправе распоряжаться чужим словом и чужой свободой."
+    _catalogCover: s01e04.png
   _videoAliases: []
   _artAliases: []
   _characterDefaults:

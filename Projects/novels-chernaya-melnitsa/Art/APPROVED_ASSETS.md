@@ -23,6 +23,9 @@ moonlit indigo and muted rye-gold; no franchise iconography, gore or embedded te
 | ill02-black-flour-hand | `Assets/Locations/ill02-black-flour-hand.png` | corrected upper-frame Lada palm with black flour, canon cuff, wet cloth/book; source checked, fresh runtime pending |
 | cover | `Config/cover.png` | catalog cover |
 | episode `s01e01` cover | `Config/EpisodeCovers/s01e01.png` | hidden correspondence beneath the mill; episode-specific mystery, distinct from the exterior story cover |
+| episode `s01e02` cover | `Config/EpisodeCovers/s01e02.png` | flooded ford and river crossing |
+| episode `s01e03` cover | `Config/EpisodeCovers/s01e03.png` | grinding room and promise mechanism |
+| episode `s01e04` cover | `Config/EpisodeCovers/s01e04.png` | wind gallery and final physical shutdown |
 
 ## Episode catalog artwork — 2026-09-08
 
@@ -34,6 +37,15 @@ The existing auto-approval mode covers this reversible assignment. Source-image
 review confirmed the indigo/rye-gold palette, legible chest/letters and absence
 of people or embedded text. The catalog crop/readability check remains deferred.
 The `_catalogCover` value is a plain file name, not a Sprite/bundle address.
+
+## Four-episode catalog artwork — 2026-09-10
+
+The expanded definition contains four episodes. Episodes 2–4 reuse approved,
+unchanged scene pixels: `bg10-flooded-ford-night.png`,
+`bg05-grinding-room.png`, and `bg07-wind-gallery.png`. The assignments match
+the principal location of each episode and avoid ending spoilers. No generation,
+painting, crop, rescale, or external reference was introduced. Unity import and
+catalog crop/readability remain part of the final authorized validation slot.
 
 ## Characters
 

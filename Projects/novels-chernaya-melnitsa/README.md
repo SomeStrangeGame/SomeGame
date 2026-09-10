@@ -33,6 +33,15 @@ Atomic Unity story project for the «Кострома» series.
 Creative and technical evidence lives in `Art/`. Source Ink lives in
 `Assets/Ink/`; runtime art uses story-local selectors only.
 
+## Four-episode release v3 — 2026-09-10
+
+The story now contains four episodes: `Дом, который ждал`, `За рекой`,
+`Слова под камнями`, and `Право уйти`. The approved literary source covers
+72 reachable routes, five decisions, and three endings. Android Unity/Ink
+content build passed; immutable release v3 was published to the Kostroma dev
+channel without rebuilding the Player or running an emulator. The previous
+one-episode Ink revision and conversion evidence are preserved under `archive/`.
+
 The story branch was fast-forwarded to `origin/main` at `f234c9a758a6` on
 2026-09-08; the original template provenance above is retained. Episode
 `s01e01` has its own catalog cover in `Config/EpisodeCovers/s01e01.png`, assigned
