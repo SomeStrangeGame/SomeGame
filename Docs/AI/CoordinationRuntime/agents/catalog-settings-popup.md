@@ -1,0 +1,10 @@
+# Agent: `catalog-settings-popup`
+
+- Status: ready-for-review
+- Task: Neutral settings popup authored inside fallback catalog; fixed gear, persistent global volume, configurable footer links
+- Scope: Novels/Assets/Novels/ApplicationRuntime.cs;Novels/Assets/Novels/ApplicationAudioSettings.cs;Novels/Assets/Novels/ApplicationAudioSettings.cs.meta;Novels/Assets/Novels/CatalogFlow.cs;Packages/NovelsContentSdk/Runtime/Catalog/CatalogController.cs;Packages/NovelsContentSdk/Runtime/Catalog/ICatalogSettings.cs;Packages/NovelsContentSdk/Runtime/Catalog/ICatalogSettings.cs.meta;Packages/NovelsContentSdk/Runtime/Catalog/View/CatalogSettingsPopup.cs;Packages/NovelsContentSdk/Runtime/Catalog/View/CatalogSettingsPopup.cs.meta;Projects/novels-catalog/Assets/RemoteAssets/catalog/fallback.prefab;Projects/novels-catalog/Assets/RemoteAssets/catalog/fallback-art/icons/navigation/settings.svg;Projects/novels-catalog/Assets/RemoteAssets/catalog/fallback-art/icons/navigation/settings.svg.meta;Projects/novels-catalog/Assets/RemoteAssets/catalog/fallback-art/icons/navigation/settings.png;Projects/novels-catalog/Assets/RemoteAssets/catalog/fallback-art/icons/navigation/settings.png.meta;Novels/Assets/Editor/CatalogVisualValidation.cs;Projects/novels-catalog/README.md;Docs/AI/memory/Architecture.md; own coordination and handoff/archive rotation
+- Base commit: `c5a431e30ff857a00e70fd50ed14ae0d559995ad`
+- Requested UTC: `2026-09-08T06:45:16Z`
+- Contract: Game owns sound preference; optional ICatalogSettings injected through CatalogController. Popup layout/links owned by prefab, no genre art or runtime UI generation. Existing callers remain compatible.
+- Validation: catalog Editor build, Novels compile, live popup/modal/scroll/volume checks; restore original preference after tests; never touch story saves. Real footer URLs pending user.
+- Result: final build/compile and live pointer/mute/save/reopen/modal checks passed; final Game View inspected. Neutral popup embedded in fallback. HTTPS footer URLs remain empty/disabled pending user; no genre styling, story-save changes or publish.

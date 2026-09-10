@@ -19,11 +19,11 @@ Tools/somegame licensing-preflight --recover --agent-id <lock-owner> --confirm-p
 Tools/somegame content-gate --agent-id <lock-owner> --platform editor
 Tools/somegame content-gate --agent-id <lock-owner> --target catalog --platform editor --close-hub
 Tools/somegame editor-gate --agent-id <lock-owner> --project Novels --compile
-Tools/somegame player-build --agent-id <lock-owner> --target Android --mode Embedded --development
-Tools/somegame player-build --agent-id <lock-owner> --target Android --mode Embedded --test-signing
+Tools/somegame player-build --agent-id <lock-owner> --app kostroma --target Android --mode Embedded --development
+Tools/somegame player-build --agent-id <lock-owner> --app kostroma --target Android --mode Embedded --test-signing
 Tools/somegame android-smoke --agent-id <lock-owner> --apk <path> \
   --package-id <id-from-current-apk-or-player-settings>
-Tools/somegame android-dev-cycle --agent-id <lock-owner> --package-id <id>
+Tools/somegame android-dev-cycle --agent-id <lock-owner> --app kostroma --package-id <id>
 Tools/somegame clean-generated --agent-id <lock-owner> --project <exact-project> [--apply]
 Tools/somegame finish-task --agent-id <lock-owner> --paths <owned-path...> \
   --summary <result> [--allow-pending]
@@ -77,7 +77,9 @@ process barrier; helper-процессы отдельно не сигналят�
 failure. Для ручного сценария список ожидаемых событий меняется через
 `--required-events`.
 
-`player-build --test-signing` собирает обычный Android Player без
+`player-build` требует явный `--app`: профиль задаёт название, application ID и
+иконку, а стандартный output разделяется по app ID. `player-build --test-signing`
+собирает обычный Android Player без
 `BuildOptions.Development`, но использует отдельный локальный ключ из
 `Novels/LocalSigning`. При первом запуске ключ и credentials создаются
 автоматически и игнорируются Git; production keystore и его настройки не

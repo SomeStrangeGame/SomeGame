@@ -1,0 +1,102 @@
+{
+  "storyId": "les-zabyvshiy-tropy",
+  "manifestVersion": 1,
+  "recordedAtUtc": "2026-09-10T10:03:00Z",
+  "predecessor": null,
+  "archiveAdoptedAtUtc": "2026-09-10T10:03:00Z",
+  "knownGaps": [
+    "Creative drafts, prompts, candidate variants, author feedback, approvals, and generation metadata predating archive adoption were not retained and have not been recreated or backdated."
+  ],
+  "artifacts": [
+    {
+      "artifactId": "android-choice-acceptance-v001",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "reviews/2026-09-10_android-choice-acceptance_v001.md",
+      "format": "text/markdown",
+      "sha256": "e6604217c1df7ff72dcc31575d0b70e106215fd1071f1fa3dd4aebd6aefb0616",
+      "snapshotTimeUtc": "2026-09-10T10:03:00Z",
+      "sourceDateUtc": "2026-09-10T10:03:00Z",
+      "originalName": "runtime acceptance observation",
+      "originalLocation": "Android emulator-5554",
+      "sourceReference": "runId 7652336f15334178a56e6700e5e8026a",
+      "creatorRole": "acceptance agent",
+      "toolMetadata": "ADB 37.0.1; Android API 34",
+      "requestArtifactIds": [],
+      "inputArtifactIds": [
+        "candidate-apk-3cf56aef"
+      ],
+      "parentRevision": null,
+      "decisionReference": "blocked: invisible choice labels",
+      "status": "selected",
+      "reason": "Current acceptance result and production handoff",
+      "approvedBy": null,
+      "approvedAtUtc": null,
+      "productionMapping": "Art/ACCEPTANCE_EVIDENCE.md",
+      "storage": "git workspace",
+      "availability": "available",
+      "redactions": [],
+      "gaps": []
+    },
+    {
+      "artifactId": "android-choice-missing-labels-frame-v001",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "../Art/Acceptance/20260910-route-matrix/route-a/choice-labels-missing.png",
+      "format": "image/png",
+      "sha256": "f6cdb388a6d3a78f621505ff6ef3d47d5fc77c8d43523a54ad494a4fc3e9c88c",
+      "snapshotTimeUtc": "2026-09-10T10:03:00Z",
+      "sourceDateUtc": "2026-09-10T10:02:00Z",
+      "originalName": "choice-labels-missing.png",
+      "originalLocation": "emulator-5554 screenshot",
+      "sourceReference": "runId 7652336f15334178a56e6700e5e8026a seq 46",
+      "creatorRole": "acceptance agent",
+      "toolMetadata": "adb exec-out screencap",
+      "requestArtifactIds": [],
+      "inputArtifactIds": [
+        "candidate-apk-3cf56aef"
+      ],
+      "parentRevision": null,
+      "decisionReference": "android-choice-acceptance-v001",
+      "status": "selected",
+      "reason": "Stable visual proof of blocking defect",
+      "approvedBy": null,
+      "approvedAtUtc": null,
+      "productionMapping": null,
+      "storage": "git workspace",
+      "availability": "available",
+      "redactions": [],
+      "gaps": []
+    },
+    {
+      "artifactId": "android-choice-runtime-log-v001",
+      "category": "reviews",
+      "stage": "acceptance",
+      "path": "../Art/Acceptance/20260910-route-matrix/route-a/runtime-logcat.txt",
+      "format": "text/plain",
+      "sha256": "5f40626a0e2aa31d9c61e3644ad1823122f8b2bf5d6726fe125d1d2c14bd7d94",
+      "snapshotTimeUtc": "2026-09-10T10:03:00Z",
+      "sourceDateUtc": "2026-09-10T10:03:00Z",
+      "originalName": "runtime-logcat.txt",
+      "originalLocation": "emulator-5554 logcat",
+      "sourceReference": "runId 7652336f15334178a56e6700e5e8026a",
+      "creatorRole": "acceptance agent",
+      "toolMetadata": "adb logcat -d -v threadtime",
+      "requestArtifactIds": [],
+      "inputArtifactIds": [
+        "candidate-apk-3cf56aef"
+      ],
+      "parentRevision": null,
+      "decisionReference": "android-choice-acceptance-v001",
+      "status": "selected",
+      "reason": "Runtime markers for the blocked choice screen",
+      "approvedBy": null,
+      "approvedAtUtc": null,
+      "productionMapping": null,
+      "storage": "git workspace",
+      "availability": "available",
+      "redactions": [],
+      "gaps": []
+    }
+  ]
+}

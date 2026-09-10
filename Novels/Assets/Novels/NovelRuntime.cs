@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Threading;
 using Cysharp.Threading.Tasks;
 using Disposable;
@@ -26,7 +27,8 @@ namespace Novels
             internal AudioMixer AudioMixer;
             internal FallbackAssets FallbackAssets;
             internal NovelRuntimeTuning RuntimeTuning;
-            internal bool StartNew;
+            internal string SelectedEpisodeId;
+            internal bool RestartSelectedEpisode;
             internal Func<string, UniTask<Bundles.ContentDeliveryLease>>
                 PrepareNovelContent;
             internal Action HidePreparationScreen;
@@ -42,6 +44,7 @@ namespace Novels
         private Location.LocationController _activeLocation;
         private Character.CharacterController _activeCharacter;
         private StoryStreamingController _streaming;
+        private string _readingStoryText;
 
         internal NovelRuntime(Dependencies ctx)
         {
@@ -97,15 +100,15 @@ namespace Novels
                 _definition,
                 _ctx.PersistentDataPath,
                 _ctx.OnLog);
-            var playableDefinition = new Content.NovelDefinition(
-                _definition.Id,
-                _definition.MainCharacter,
-                _definition.ContentVersion,
-                _definition.EndMarker,
-                _definition.SilentAudioIds,
-                _progress.PlayableEpisodes);
-            _episode = playableDefinition.Episodes[
-                _ctx.StartNew ? 0 : playableDefinition.Episodes.Count - 1];
+            var playableEpisodes = _progress.PlayableEpisodes;
+            _episode = string.IsNullOrWhiteSpace(_ctx.SelectedEpisodeId)
+                ? playableEpisodes[playableEpisodes.Count - 1]
+                : playableEpisodes.FirstOrDefault(episode => string.Equals(
+                    episode.Id,
+                    _ctx.SelectedEpisodeId,
+                    StringComparison.OrdinalIgnoreCase))
+                    ?? throw new InvalidOperationException(
+                        $"Episode '{_ctx.SelectedEpisodeId}' is not unlocked.");
             _progress.Begin(_episode);
             var episodeRuntime = new EpisodeRuntime(_ctx.CancellationToken).AddTo(this);
 
@@ -114,13 +117,13 @@ namespace Novels
             {
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
                 var prepared = await PrepareEpisode(storyAssets, episodeRuntime);
-                if (_ctx.StartNew)
+                if (_ctx.RestartSelectedEpisode)
                     prepared.SaveSystem.Clear();
                 _ctx.CancellationToken.ThrowIfCancellationRequested();
                 result = await RunEpisode(prepared);
             }
             catch (OperationCanceledException)
-                when (_ctx.CancellationToken.IsCancellationRequested)
+                when (episodeRuntime.CancellationToken.IsCancellationRequested)
             {
                 result = EpisodeRunResult.Cancelled();
             }
@@ -145,14 +148,39 @@ namespace Novels
                 _activeCharacter.EnableFullQuality().Forget();
         }
 
-        internal UniTask FlushSaveAsync()
+        internal async UniTask FlushSaveAsync()
         {
-            return _saveSystem?.FlushAsync() ?? UniTask.CompletedTask;
+            if (_saveSystem == null) return;
+            await _saveSystem.FlushAsync();
+            SaveReadingProgress();
         }
 
         internal void FlushSaveSynchronously()
         {
             _saveSystem?.FlushSynchronously();
+            SaveReadingProgress();
+        }
+
+        private void SaveReadingProgress()
+        {
+            if (_saveSystem == null || _readingStoryText == null || _episode == null) return;
+            try
+            {
+                var cache = new Cache.Entity(_ctx.PersistentDataPath);
+                var key = SaveChoiceKey(_definition.Id, _episode.Id);
+                if (!cache.Exists(key)) return;
+                var bytes = cache.ReadBytes(key);
+                if (!_saveSystem.TryReadCompatibleDecisions(bytes, out var decisions)) return;
+                var ratio = EpisodeReadingProgress.Estimate(_readingStoryText,
+                    _progress.GetEntryState(_episode), decisions, _definition.EndMarker);
+                if (ratio.HasValue)
+                    EpisodeReadingProgress.Write(cache, key, _definition.ContentVersion, bytes, ratio.Value);
+            }
+            catch (Exception exception)
+            {
+                _ctx.OnLog?.Invoke((LogType.Warning,
+                    $"Optional episode reading progress unavailable: {exception.Message}"));
+            }
         }
 
         private void ReportError(Diagnostics.NovelError error)

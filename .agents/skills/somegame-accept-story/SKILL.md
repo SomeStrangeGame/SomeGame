@@ -25,6 +25,13 @@ in `Docs/AI/rules/UnityConcurrency.md`. Without it, return
 
 ## Audit the complete story
 
+Read the [story archive contract](../somegame-create-story/references/story-archive.md).
+Audit the dated archive and current manifest for retained intermediate work,
+input/output lineage, actual approvals, hashes, accessible storage and declared
+gaps. Return missing evidence to its producer; never manufacture the history.
+Record acceptance results and refresh the dated manifest after the authorized
+checks, without treating an archive as proof of originality or a runtime pass.
+
 Confirm that the approved scenes, meaningful choices, consequences, state
 transitions, reconvergence, and endings are reachable and coherent. For factual
 stories, verify that the supplied evidence classifications and material

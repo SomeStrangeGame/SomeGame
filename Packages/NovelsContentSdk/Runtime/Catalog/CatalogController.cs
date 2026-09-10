@@ -9,13 +9,18 @@ namespace Novels.Catalog
 {
     public readonly struct CatalogSelection
     {
-        internal CatalogSelection(CatalogItem item, bool isSecondaryAction)
+        internal CatalogSelection(
+            CatalogItem item,
+            CatalogEpisodeItem episode,
+            bool isSecondaryAction)
         {
             Item = item;
+            Episode = episode;
             IsSecondaryAction = isSecondaryAction;
         }
 
         public CatalogItem Item { get; }
+        public CatalogEpisodeItem Episode { get; }
         public bool IsSecondaryAction { get; }
     }
 
@@ -24,14 +29,20 @@ namespace Novels.Catalog
         private readonly GameObject _bundledPrefab;
         private readonly CancellationToken _cancellationToken;
         private View.CatalogScreen _screen;
+        private readonly ICatalogSettings _settings;
+        private readonly CatalogUpdatePrompt _updatePrompt;
 
         public CatalogController(
             GameObject bundledPrefab,
-            CancellationToken cancellationToken)
+            CancellationToken cancellationToken,
+            ICatalogSettings settings = null,
+            CatalogUpdatePrompt updatePrompt = default)
         {
             _bundledPrefab = bundledPrefab
                 ?? throw new ArgumentNullException(nameof(bundledPrefab));
             _cancellationToken = cancellationToken;
+            _settings = settings;
+            _updatePrompt = updatePrompt;
         }
 
         public async UniTask<CatalogItem> Select(
@@ -44,7 +55,9 @@ namespace Novels.Catalog
 
         public async UniTask<CatalogSelection> SelectAction(
             string title,
-            IReadOnlyList<CatalogItem> items)
+            IReadOnlyList<CatalogItem> items,
+            string focusedStoryId = null,
+            string focusedEpisodeId = null)
         {
             if (items == null || items.Count == 0)
                 throw new InvalidOperationException("Catalog is empty.");
@@ -67,13 +80,24 @@ namespace Novels.Catalog
                     item.SecondaryActionLabel,
                     item.IsEnabled,
                     item.Cover,
-                    () => selection.TrySetResult(new CatalogSelection(item, false)),
-                    () => selection.TrySetResult(new CatalogSelection(item, true)));
+                    item.Episodes,
+                    episode =>
+                    {
+                        if (episode.IsEnabled && (episode.Download == null || episode.Download.IsReady))
+                            selection.TrySetResult(new CatalogSelection(item, episode, false));
+                    },
+                    episode =>
+                    {
+                        if (!string.IsNullOrWhiteSpace(episode.RestartLabel)
+                            && (episode.Download == null || episode.Download.IsReady))
+                            selection.TrySetResult(new CatalogSelection(item, episode, true));
+                    });
             }
 
             try
             {
                 _screen.gameObject.SetActive(true);
+                _screen.Focus(focusedStoryId, focusedEpisodeId);
                 return await selection.Task.AttachExternalCancellation(
                     _cancellationToken);
             }
@@ -98,6 +122,8 @@ namespace Novels.Catalog
                 return;
             var instance = UnityEngine.Object.Instantiate(_bundledPrefab);
             _screen = instance.GetComponent<View.CatalogScreen>();
+            instance.GetComponent<View.CatalogSettingsPopup>()?.Configure(_settings);
+            instance.GetComponent<View.CatalogUpdatePopup>()?.Configure(_updatePrompt);
             if (_screen == null)
             {
                 UnityEngine.Object.Destroy(instance);

@@ -10,8 +10,10 @@ namespace Novels
         private const string _resourcePath = "Novels/ContentRuntimeConfiguration";
 
         [SerializeField] private string _remoteContentBaseUrl;
+        [SerializeField] private string _contentChannel = "dev";
 
         public string RemoteContentBaseUrl => _remoteContentBaseUrl;
+        public string ContentChannel => _contentChannel;
 
         internal static ContentRuntimeConfiguration Load()
         {

@@ -1,0 +1,76 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: les-zabyvshiy-tropy
+  m_EditorClassIdentifier:
+  _id: les-zabyvshiy-tropy
+  _mainCharacter: "Ника"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _catalogCover: s01e01.png
+    _title: "Нулевая просека"
+    _description: "Ника входит в Ночелесье и выбирает память, которая станет якорем пути."
+  - _id: s01e02
+    _catalogCover: s01e02.png
+    _title: "Мост, которого не было"
+    _description: "Группа решает, довериться ли невозможному проводнику или приборам."
+  - _id: s01e03
+    _catalogCover: s01e03.png
+    _title: "Дом без двери"
+    _description: "Карты Яра раскрывают ошибку, заставившую лес стирать дороги."
+  - _id: s01e04
+    _catalogCover: s01e04.png
+    _title: "Круг голосов"
+    _description: "Лес предлагает каждому удобное воспоминание без будущего."
+  - _id: s01e05
+    _catalogCover: s01e05.png
+    _title: "Поляна несказанных имён"
+    _description: "Ника находит Яра и выбирает судьбу закреплённого маршрута."
+  - _id: s01e06
+    _catalogCover: s01e06.png
+    _title: "Первый след"
+    _description: "Рассвет приводит героев к одной из трёх достижимых развязок."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Ника"
+    _clothes: fieldcoat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Ася"
+    _clothes: forester
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Филя"
+    _clothes: windbreaker
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Лада"
+    _clothes: ringcoat
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Яр"
+    _clothes: trailjacket
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: a41d7f916e7a4ccab8a1d8c3f90b2e11
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

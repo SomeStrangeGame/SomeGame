@@ -25,6 +25,9 @@ namespace Novels
         private Diagnostics.SmokeTelemetry _smokeTelemetry;
         private CancellationTokenSource _sessionCancellation;
         private StorySourceOverlay _storySourceOverlay;
+        private Notifications.LocalNotificationCoordinator _notifications;
+        private Func<CancellationToken, UniTask<string>> _downloadNotificationSchedule;
+        private Notifications.NotificationRoute _pendingDeepLink;
 
         private void OnEnable()
         {
@@ -59,23 +62,89 @@ namespace Novels
                         logs.Log("[Novels]", data);
                 };
                 _smokeTelemetry = new Diagnostics.SmokeTelemetry(onLog);
-                _runtime = new ApplicationRuntime(new ApplicationRuntime.Dependencies
+                _notifications = new Notifications.LocalNotificationCoordinator(onLog);
+                _notifications.Initialize();
+                Application.deepLinkActivated += OnDeepLinkActivated;
+                _pendingDeepLink = Notifications.NotificationRoute.Deserialize(
+                    Application.absoluteURL);
+                StartRuntime(environment, onLog, runtimeTuning.ContentDelivery).Forget();
+            }
+            catch (Exception exception)
+            {
+                ReportError(new Diagnostics.NovelError(
+                    Diagnostics.NovelErrorCodes.InitializationFailed,
+                    Diagnostics.NovelErrorSeverity.Fatal,
+                    "Novel initialization failed.",
+                    exception: exception));
+                DisposeSession();
+            }
+        }
+
+        private async UniTaskVoid StartRuntime(
+            ApplicationEnvironment environment,
+            Action<(LogType type, string message)> onLog,
+            Bundles.ContentDeliveryOptions options)
+        {
+            try
+            {
+                var dependencies = new ApplicationRuntime.Dependencies
                 {
                     Environment = environment,
-                    ContentSource = CreateContentSource(
-                        _sessionCancellation.Token,
-                        runtimeTuning.ContentDelivery),
                     OnLog = onLog,
                     OnError = ReportError,
                     SmokeTelemetry = _smokeTelemetry,
                     OnStorySourceChanged = _storySourceOverlay.Show,
-                });
+                    Notifications = _notifications,
+                    InitialNotificationRoute = _pendingDeepLink ?? _notifications.OnForeground(),
+                };
+#if UNITY_EDITOR || NOVELS_EMBEDDED_CONTENT
+                dependencies.ContentSource = CreateContentSource(
+                    environment.CancellationToken, options);
+#else
+                var configuration = ContentRuntimeConfiguration.Load();
+                var remoteSource = new Bundles.HttpContentSource(
+                    configuration.RemoteContentBaseUrl,
+                    environment.CancellationToken,
+                    options.RemoteRequestPolicy);
+                var manifestJson = await remoteSource.DownloadText(
+                    ChannelManifest.FileName(configuration.ContentChannel),
+                    environment.CancellationToken);
+                var manifest = ChannelManifest.Deserialize(manifestJson);
+                dependencies.UpdatePrompt = await ApplicationUpdatePolicy.Download(
+                    remoteSource,
+                    configuration.ContentChannel,
+                    Application.version,
+                    environment.CancellationToken,
+                    onLog);
+                _downloadNotificationSchedule = token => remoteSource.DownloadText(
+                    Notifications.NotificationSchedule.FileName(configuration.ContentChannel),
+                    token);
+                await RefreshNotificationSchedule(environment.CancellationToken);
+                var catalogRoot = Path.Combine(
+                    Application.streamingAssetsPath,
+                    "NovelCatalog");
+                dependencies.CatalogContentSource = new Bundles.StreamingAssetsContentSource(
+                    catalogRoot,
+                    environment.CancellationToken,
+                    options.LocalRequestPolicy);
+                dependencies.StoryIds = manifest.StoryIds;
+                dependencies.CreateStoryContentSource = storyId =>
+                    new Bundles.PrefixedContentSource(
+                        remoteSource,
+                        manifest.StoryRoot(storyId));
+#endif
+                environment.CancellationToken.ThrowIfCancellationRequested();
+                _runtime = new ApplicationRuntime(dependencies);
                 _smokeTelemetry.Emit(
                     "app.started",
                     ("appVersion", Application.version),
                     ("platform", Application.platform.ToString()),
                     ("contentPlatform", environment.ContentPlatform));
-                Run(_runtime, _sessionCancellation.Token).Forget();
+                Run(_runtime, environment.CancellationToken).Forget();
+            }
+            catch (OperationCanceledException)
+                when (environment.CancellationToken.IsCancellationRequested)
+            {
             }
             catch (Exception exception)
             {
@@ -170,6 +239,10 @@ namespace Novels
                 _sessionCancellation?.Dispose();
                 _sessionCancellation = null;
                 _runtime = null;
+                _downloadNotificationSchedule = null;
+                _notifications = null;
+                _pendingDeepLink = null;
+                Application.deepLinkActivated -= OnDeepLinkActivated;
                 _smokeTelemetry = null;
                 _storySourceOverlay?.Show(default);
             }
@@ -177,14 +250,54 @@ namespace Novels
 
         private void OnApplicationPause(bool pauseStatus)
         {
-            if (pauseStatus && _runtime != null)
-                FlushSaveSynchronously(_runtime, "pausing");
+            if (pauseStatus)
+            {
+                if (_runtime != null)
+                    FlushSaveSynchronously(_runtime, "pausing");
+                _notifications?.OnBackground();
+                return;
+            }
+            var route = _notifications?.OnForeground();
+            if (route != null)
+                _runtime?.NavigateToCatalog(route);
+            RefreshNotificationSchedule(_sessionCancellation?.Token ?? default).Forget();
         }
 
         private void OnApplicationQuit()
         {
             if (_runtime != null)
                 FlushSaveSynchronously(_runtime, "quitting");
+            _notifications?.OnBackground();
+        }
+
+        private void OnDeepLinkActivated(string url)
+        {
+            var route = Notifications.NotificationRoute.Deserialize(url);
+            if (route == null)
+                return;
+            _pendingDeepLink = route;
+            _runtime?.NavigateToCatalog(route);
+        }
+
+        private async UniTask RefreshNotificationSchedule(
+            CancellationToken cancellationToken)
+        {
+            if (_downloadNotificationSchedule == null || cancellationToken.IsCancellationRequested)
+                return;
+            try
+            {
+                var json = await _downloadNotificationSchedule(cancellationToken);
+                _notifications?.ApplyServerSchedule(json);
+            }
+            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
+            {
+            }
+            catch (Exception exception)
+            {
+                using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
+                    logs.Log("[Novels]", (LogType.Warning,
+                        $"Notification schedule unavailable: {exception.Message}"));
+            }
         }
 
         private void FlushSaveSynchronously(

@@ -22,10 +22,38 @@ namespace Novels.Catalog.Contracts
         public string genre;
         public string description;
         public string cover = "cover.webp";
+        public string author;
     }
 
     public static class CatalogContractCodec
     {
+        public static StoryCatalogPreview DeserializePreview(string json, string storyId)
+        {
+            var value = Deserialize<StoryCatalogPreview>(json, "story catalog preview");
+            RequireSchema(value.schemaVersion, 1, "story catalog preview");
+            if (value.storyId != RequireCanonicalStoryId(storyId)
+                || string.IsNullOrWhiteSpace(value.releaseId)
+                || string.IsNullOrWhiteSpace(value.contentVersion)
+                || value.episodes == null || value.episodes.Length == 0)
+                throw new InvalidOperationException($"Story '{storyId}' preview is incomplete.");
+            var ids = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            value.video = NormalizeVideo(value.video);
+            foreach (var episode in value.episodes)
+            {
+                if (episode == null || string.IsNullOrWhiteSpace(episode.id)
+                    || string.IsNullOrWhiteSpace(episode.title) || !ids.Add(episode.id))
+                    throw new InvalidOperationException($"Story '{storyId}' preview has invalid episodes.");
+                episode.cover = string.IsNullOrWhiteSpace(episode.cover) ? null
+                    : global::Novels.ContentAddressing.ContentPackageConvention.EpisodeCoverFileName(episode.cover);
+                episode.author = episode.author?.Trim();
+                episode.video = NormalizeVideo(episode.video);
+            }
+            return value;
+        }
+
+        private static string NormalizeVideo(string video) => string.IsNullOrWhiteSpace(video) ? null
+            : global::Novels.ContentAddressing.ContentPackageConvention.CatalogVideoFileName(video);
+
         public static CatalogRegistry DeserializeRegistry(string json)
         {
             var value = Deserialize<CatalogRegistry>(json, "catalog registry");
@@ -61,6 +89,7 @@ namespace Novels.Catalog.Contracts
             if (string.IsNullOrWhiteSpace(value.genre))
                 throw new InvalidOperationException($"Story '{expected}' has no genre.");
             value.genre = value.genre.Trim();
+            value.author = value.author?.Trim();
             if (string.IsNullOrWhiteSpace(value.cover))
                 throw new InvalidOperationException($"Story '{expected}' has no cover path.");
             value.cover = value.cover.Trim();
@@ -119,5 +148,28 @@ namespace Novels.Catalog.Contracts
                     + $"Expected {expectedVersion}.");
             }
         }
+    }
+
+    // Generated from the authored definition, not a second authoring source.
+    [Serializable]
+    public sealed class StoryCatalogPreview
+    {
+        public int schemaVersion = 1;
+        public string storyId;
+        public string releaseId;
+        public string contentVersion;
+        public string video;
+        public StoryCatalogEpisodePreview[] episodes;
+    }
+
+    [Serializable]
+    public sealed class StoryCatalogEpisodePreview
+    {
+        public string id;
+        public string title;
+        public string description;
+        public string cover;
+        public string author;
+        public string video;
     }
 }

@@ -26,7 +26,9 @@
         "GUID:3b89f9e6e94d45f2a6cd7001c9720201",
         "GUID:7bac3d2e9f405182b3c4d5e6f708192a",
         "GUID:2757e8d94af102b36e7f8091a2b3c4d5",
-        "GUID:64ebfae35cb14b57ba4770741d9b1aa3"
+        "GUID:64ebfae35cb14b57ba4770741d9b1aa3",
+        "Unity.Notifications.Android",
+        "Unity.Notifications.iOS"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

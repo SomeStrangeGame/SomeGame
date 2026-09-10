@@ -1,0 +1,75 @@
+{
+  "storyId": "les-zabyvshiy-tropy",
+  "manifestVersion": 3,
+  "recordedAtUtc": "2026-09-10T11:57:22Z",
+  "predecessor": "2026-09-10_manifest_v002.json",
+  "knownGaps": [
+    "Fresh Unity import, APK rebuild and portrait runtime visual evidence are pending for this Bubble revision."
+  ],
+  "artifacts": [
+    {
+      "artifactId": "adult-bubble-redesign-review-v003",
+      "category": "reviews",
+      "stage": "author-correction",
+      "path": "reviews/2026-09-10_adult-bubble-redesign_v003.md",
+      "format": "text/markdown",
+      "status": "selected",
+      "decisionReference": "Author rejected childlike Bubble and reported text outside its backing",
+      "productionMapping": "Assets/Presentation/bubble/",
+      "availability": "available"
+    },
+    {
+      "artifactId": "dialogue-panel-rejected-v001",
+      "category": "assets",
+      "path": "assets/2026-09-10_dialogue-panel-childlike-rejected_v001.png",
+      "sha256": "7d5a54472c3d613a6793ffac9eee7bcecde62081d609fe136a3bcbb12fb02649",
+      "status": "rejected",
+      "reason": "Childlike ornament is incompatible with the adult mystical story."
+    },
+    {
+      "artifactId": "choice-card-rejected-v001",
+      "category": "assets",
+      "path": "assets/2026-09-10_choice-card-childlike-rejected_v001.png",
+      "sha256": "6f67eb35ce93a6c80a6831c8deca0464a8e5160422908abeabe8cea725d4a924",
+      "status": "rejected",
+      "reason": "Mushrooms, tracks and antlers read as children's fairytale UI."
+    },
+    {
+      "artifactId": "dialogue-panel-raw-v002",
+      "category": "assets",
+      "path": "assets/2026-09-10_dialogue-panel-raw-candidate_v002.png",
+      "sha256": "ad12427010acaaf34df9f0eec0809f0f4f64587474ebb835a0fc00926b7fbe5c",
+      "status": "processed",
+      "reason": "Generator candidate retained for provenance; checker background was not production-safe."
+    },
+    {
+      "artifactId": "choice-card-raw-v002",
+      "category": "assets",
+      "path": "assets/2026-09-10_choice-card-raw-candidate_v002.png",
+      "sha256": "2d4af403b39fe251f2a01268c59bdea649aafb0c954f7d9a3528447179e853bb",
+      "status": "processed",
+      "reason": "Generator candidate retained for provenance; checker background was not production-safe."
+    },
+    {
+      "artifactId": "dialogue-panel-production-v003",
+      "category": "production-assets",
+      "path": "../Assets/Presentation/bubble/sprites/dialogue-panel.png",
+      "sha256": "318954b959f6efa0cf4816018ba02c771fb9195a395e74c7a11d399b32c28c52",
+      "status": "selected"
+    },
+    {
+      "artifactId": "choice-card-production-v003",
+      "category": "production-assets",
+      "path": "../Assets/Presentation/bubble/sprites/choice-card.png",
+      "sha256": "150b4328dda669ea067458c16ea4c4267a2938347ad0396646992af98eaf8b27",
+      "status": "selected"
+    },
+    {
+      "artifactId": "bubble-prefab-v003",
+      "category": "production-assets",
+      "path": "../Assets/Presentation/bubble/screen-variant.prefab",
+      "sha256": "fa372c0120b152b7854f83d969791d538719a191e29d6993da3d6f1832fbffcb",
+      "status": "selected"
+    }
+  ]
+}

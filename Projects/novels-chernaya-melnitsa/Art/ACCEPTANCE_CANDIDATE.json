@@ -1,0 +1,18 @@
+{
+  "status": "static-identity-pass-runtime-still-pending",
+  "sourceSha256": "dddcedbb0c94cf1513a5327058ff4d881d7bfc505998733c8e2e65c721fb4253",
+  "compiledSha256": "1af4a54db12d40591cda02fb29820e25b98adca019d9f98c60168c90390424f8",
+  "sourceMapSha256": "b4531fb55a23280cbeb1016114cd84e2c40fb341ea33dc50f90655b007e89c7b",
+  "sourceMapEntries": 1209,
+  "verifiedCharacterPngsAndMetas": 11,
+  "apk": "Novels/Build/Players/chernaya-melnitsa-v6-20260908/Novels.apk",
+  "apkSha256": "39049f824adf96c9f0b65a3b17671520f9853bb3fddaba52f83858dd5e456f01",
+  "releaseId": "fb7c51d4b322ccbee639cb642f7fa3c1cbb7019affe495ce2e355e38d2c3e267",
+  "verifiedBundles": 3,
+  "verifiedPayloadFiles": 10,
+  "catalogStories": [
+    "chernaya-melnitsa"
+  ],
+  "runtimeExecuted": false,
+  "originalityEvidence": "Existing four scoped passes retained; no new review"
+}

@@ -64,9 +64,7 @@ namespace Editor
                     options = isDevelopmentBuild
                         ? BuildOptions.Development
                         : BuildOptions.None,
-                    extraScriptingDefines = GetExtraScriptingDefines(
-                        arguments,
-                        "NOVELS_EMBEDDED_CONTENT"),
+                    extraScriptingDefines = new[] {"NOVELS_EMBEDDED_CONTENT"},
                 });
             }
             finally
@@ -89,6 +87,7 @@ namespace Editor
         {
             var arguments = Environment.GetCommandLineArgs();
             var remoteUrl = GetArgument(arguments, "-remoteContentBaseUrl");
+            var contentChannel = GetArgument(arguments, "-contentChannel");
             var output = GetArgument(arguments, "-playerOutput");
             var isDevelopmentBuild = arguments.Contains("-developmentBuild");
             if (!Uri.TryCreate(remoteUrl, UriKind.Absolute, out var uri)
@@ -100,13 +99,21 @@ namespace Editor
             }
             if (string.IsNullOrWhiteSpace(output))
                 throw new InvalidOperationException("-playerOutput is required.");
+            if (string.IsNullOrWhiteSpace(contentChannel)
+                || contentChannel.Any(character =>
+                    !(character is >= 'a' and <= 'z'
+                        or >= '0' and <= '9' or '_' or '-')))
+            {
+                throw new InvalidOperationException(
+                    "-contentChannel must be a lowercase path segment.");
+            }
 
             AssertRemoteContentExcluded();
             AssertReleasePlayerSettings(isDevelopmentBuild);
             EditorSceneManager.OpenScene(
                 "Assets/Novels/Novels.unity",
                 OpenSceneMode.Single);
-            CreateRuntimeConfiguration(uri.AbsoluteUri.TrimEnd('/'));
+            CreateRuntimeConfiguration(uri.AbsoluteUri.TrimEnd('/'), contentChannel);
 
             var scenes = EditorBuildSettings.scenes
                 .Where(value => value.enabled)
@@ -134,7 +141,7 @@ namespace Editor
                     options = isDevelopmentBuild
                         ? BuildOptions.Development
                         : BuildOptions.None,
-                    extraScriptingDefines = GetExtraScriptingDefines(arguments),
+                    extraScriptingDefines = Array.Empty<string>(),
                 });
             }
             finally
@@ -155,7 +162,7 @@ namespace Editor
                 + $"({report.summary.totalSize / (1024f * 1024f):F1} MiB)");
         }
 
-        private static void CreateRuntimeConfiguration(string remoteUrl)
+        private static void CreateRuntimeConfiguration(string remoteUrl, string contentChannel)
         {
             if (AssetDatabase.LoadMainAssetAtPath(
                     Novels.ContentRuntimeConfiguration.AssetPath) != null)
@@ -169,6 +176,7 @@ namespace Editor
                 Novels.ContentRuntimeConfiguration>();
             var serialized = new SerializedObject(configuration);
             serialized.FindProperty("_remoteContentBaseUrl").stringValue = remoteUrl;
+            serialized.FindProperty("_contentChannel").stringValue = contentChannel;
             serialized.ApplyModifiedPropertiesWithoutUndo();
             AssetDatabase.CreateAsset(
                 configuration,
@@ -195,23 +203,6 @@ namespace Editor
             return index >= 0 && index + 1 < arguments.Length
                 ? arguments[index + 1]
                 : string.Empty;
-        }
-
-        private static string[] GetExtraScriptingDefines(
-            string[] arguments,
-            params string[] required)
-        {
-            var catalogVariant = GetArgument(arguments, "-catalogVariant");
-            if (string.IsNullOrWhiteSpace(catalogVariant))
-                return required;
-            if (string.Equals(catalogVariant, "children", StringComparison.OrdinalIgnoreCase))
-                return required.Concat(new[] {"NOVELS_CHILDREN_CATALOG"}).ToArray();
-            if (string.Equals(catalogVariant, "nochelessie", StringComparison.OrdinalIgnoreCase))
-                return required.Concat(new[] {"NOVELS_NOCHELESSIE_CATALOG"}).ToArray();
-            if (string.Equals(catalogVariant, "scp", StringComparison.OrdinalIgnoreCase))
-                return required.Concat(new[] {"NOVELS_SCP_CATALOG"}).ToArray();
-            throw new InvalidOperationException(
-                $"Unsupported catalog variant: {catalogVariant}.");
         }
 
         private static void ApplyTestSigning(string[] arguments, bool isDevelopmentBuild)
@@ -281,13 +272,18 @@ namespace Editor
 
         private static BuildIdentitySnapshot ApplyBuildIdentity(string[] arguments)
         {
+            var namedBuildTarget = NamedBuildTarget.FromBuildTargetGroup(
+                BuildPipeline.GetBuildTargetGroup(EditorUserBuildSettings.activeBuildTarget));
             var snapshot = new BuildIdentitySnapshot(
                 PlayerSettings.productName,
-                PlayerSettings.GetApplicationIdentifier(NamedBuildTarget.Android),
+                namedBuildTarget,
+                PlayerSettings.GetApplicationIdentifier(namedBuildTarget),
+                PlayerSettings.GetIcons(namedBuildTarget, IconKind.Application),
                 PlayerSettings.bundleVersion,
                 PlayerSettings.Android.bundleVersionCode,
                 PlayerSettings.iOS.buildNumber,
                 PlayerSettings.macOS.buildNumber);
+            var profile = LoadApplicationProfile(arguments);
             var version = GetArgument(arguments, "-playerVersion");
             var buildNumber = GetArgument(arguments, "-playerBuildNumber");
             if (string.IsNullOrWhiteSpace(version)
@@ -298,29 +294,117 @@ namespace Editor
                     "-playerVersion and a positive -playerBuildNumber are required.");
             }
 
+            var applicationIdentifier = profile.ApplicationIdentifier(
+                EditorUserBuildSettings.activeBuildTarget);
+            if (string.IsNullOrWhiteSpace(applicationIdentifier))
+            {
+                throw new InvalidOperationException(
+                    $"Application profile '{profile.id}' has no identifier for "
+                    + $"{EditorUserBuildSettings.activeBuildTarget}.");
+            }
+            var icon = AssetDatabase.LoadAssetAtPath<Texture2D>(profile.IconAssetPath);
+            if (icon == null)
+            {
+                throw new InvalidOperationException(
+                    $"Application icon is missing or not importable: {profile.IconAssetPath}");
+            }
+            var iconSizes = PlayerSettings.GetIconSizes(namedBuildTarget, IconKind.Application);
+            var icons = Enumerable.Repeat(icon, Math.Max(1, iconSizes.Length)).ToArray();
+
+            PlayerSettings.productName = profile.productName;
+            PlayerSettings.SetApplicationIdentifier(namedBuildTarget, applicationIdentifier);
+            PlayerSettings.SetIcons(namedBuildTarget, icons, IconKind.Application);
             PlayerSettings.bundleVersion = version;
             PlayerSettings.Android.bundleVersionCode = numericBuild;
             PlayerSettings.iOS.buildNumber = buildNumber;
             PlayerSettings.macOS.buildNumber = buildNumber;
-            var catalogVariant = GetArgument(arguments, "-catalogVariant");
-            if (string.Equals(
-                    catalogVariant,
-                    "nochelessie",
-                    StringComparison.OrdinalIgnoreCase))
-            {
-                PlayerSettings.productName = "Ночелесье";
-                PlayerSettings.SetApplicationIdentifier(
-                    NamedBuildTarget.Android,
-                    "ru.nochelessie.novels");
-            }
-            Debug.Log($"Player build identity: version={version}, build={buildNumber}.");
+            Debug.Log(
+                $"Player build identity: app={profile.id}, product={profile.productName}, "
+                + $"identifier={applicationIdentifier}, version={version}, build={buildNumber}.");
             return snapshot;
+        }
+
+        private static ApplicationProfile LoadApplicationProfile(string[] arguments)
+        {
+            var profileAssetPath = GetArgument(arguments, "-playerProfile").Replace('\\', '/');
+            var profileSegments = profileAssetPath.Split('/');
+            if (string.IsNullOrWhiteSpace(profileAssetPath)
+                || profileSegments.Length != 5
+                || profileSegments[0] != "Assets"
+                || profileSegments[1] != "BuildProfiles"
+                || profileSegments[3] != "Config"
+                || profileSegments[4] != "player.json")
+            {
+                throw new InvalidOperationException(
+                    "-playerProfile must reference Assets/<profile>/Config/player.json.");
+            }
+            var projectRoot = Directory.GetParent(Application.dataPath)?.FullName
+                ?? throw new InvalidOperationException("Unity project root is unavailable.");
+            var profilePath = Path.GetFullPath(Path.Combine(projectRoot, profileAssetPath));
+            var assetsRoot = Path.GetFullPath(Application.dataPath) + Path.DirectorySeparatorChar;
+            if (!profilePath.StartsWith(assetsRoot, StringComparison.Ordinal)
+                || !File.Exists(profilePath))
+            {
+                throw new InvalidOperationException(
+                    $"Application profile is missing or outside Assets: {profileAssetPath}");
+            }
+            var profile = JsonUtility.FromJson<ApplicationProfile>(File.ReadAllText(profilePath));
+            if (profile == null || profile.schemaVersion != 1
+                || string.IsNullOrWhiteSpace(profile.id)
+                || profile.id != profileSegments[2]
+                || profile.id.Any(character =>
+                    !(character is >= 'a' and <= 'z' or >= '0' and <= '9' or '-'))
+                || string.IsNullOrWhiteSpace(profile.productName)
+                || string.IsNullOrWhiteSpace(profile.icon))
+            {
+                throw new InvalidOperationException(
+                    $"Application profile is invalid: {profileAssetPath}");
+            }
+            var profileDirectory = Path.GetDirectoryName(profileAssetPath)?.Replace('\\', '/');
+            var iconAssetPath = Path.GetFullPath(Path.Combine(
+                    projectRoot,
+                    profileDirectory ?? string.Empty,
+                    profile.icon))
+                .Replace('\\', '/');
+            var normalizedProjectRoot = projectRoot.Replace('\\', '/').TrimEnd('/') + "/";
+            if (!iconAssetPath.StartsWith(normalizedProjectRoot + "Assets/", StringComparison.Ordinal))
+            {
+                throw new InvalidOperationException(
+                    $"Application profile icon escapes Assets: {profile.icon}");
+            }
+            profile.IconAssetPath = iconAssetPath.Substring(normalizedProjectRoot.Length);
+            AssetDatabase.ImportAsset(profile.IconAssetPath, ImportAssetOptions.ForceSynchronousImport);
+            return profile;
+        }
+
+        [Serializable]
+        private sealed class ApplicationProfile
+        {
+            public int schemaVersion;
+            public string id;
+            public string productName;
+            public string androidApplicationId;
+            public string iosApplicationId;
+            public string standaloneApplicationId;
+            public string icon;
+
+            [NonSerialized] public string IconAssetPath;
+
+            internal string ApplicationIdentifier(BuildTarget target) => target switch
+            {
+                BuildTarget.Android => androidApplicationId,
+                BuildTarget.iOS => iosApplicationId,
+                BuildTarget.StandaloneWindows64 or BuildTarget.StandaloneOSX => standaloneApplicationId,
+                _ => string.Empty,
+            };
         }
 
         private readonly struct BuildIdentitySnapshot
         {
             private readonly string _productName;
-            private readonly string _androidApplicationIdentifier;
+            private readonly NamedBuildTarget _namedBuildTarget;
+            private readonly string _applicationIdentifier;
+            private readonly Texture2D[] _icons;
             private readonly string _version;
             private readonly int _androidBuild;
             private readonly string _iosBuild;
@@ -328,14 +412,18 @@ namespace Editor
 
             internal BuildIdentitySnapshot(
                 string productName,
-                string androidApplicationIdentifier,
+                NamedBuildTarget namedBuildTarget,
+                string applicationIdentifier,
+                Texture2D[] icons,
                 string version,
                 int androidBuild,
                 string iosBuild,
                 string macBuild)
             {
                 _productName = productName;
-                _androidApplicationIdentifier = androidApplicationIdentifier;
+                _namedBuildTarget = namedBuildTarget;
+                _applicationIdentifier = applicationIdentifier;
+                _icons = icons;
                 _version = version;
                 _androidBuild = androidBuild;
                 _iosBuild = iosBuild;
@@ -346,8 +434,9 @@ namespace Editor
             {
                 PlayerSettings.productName = _productName;
                 PlayerSettings.SetApplicationIdentifier(
-                    NamedBuildTarget.Android,
-                    _androidApplicationIdentifier);
+                    _namedBuildTarget,
+                    _applicationIdentifier);
+                PlayerSettings.SetIcons(_namedBuildTarget, _icons, IconKind.Application);
                 PlayerSettings.bundleVersion = _version;
                 PlayerSettings.Android.bundleVersionCode = _androidBuild;
                 PlayerSettings.iOS.buildNumber = _iosBuild;

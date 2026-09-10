@@ -101,7 +101,31 @@ Tools/novels-tools/novels-content build all ios
 `build all ios` формируют единое серверное дерево. Content-addressed `Files`
 дополняются; конкретный release использует только перечисленные в нём payloads.
 
-Опубликовать уже собранное дерево:
+Подготовить локальный immutable-снимок удалённого канала без публикации:
+
+```bash
+Tools/novels-tools/novels-content stage-channel dev \
+  --base-manifest /tmp/current-app-dev.json somestory=1.0
+Tools/novels-tools/novels-content stage-channel prod \
+  --replace somestory=1.0
+```
+
+`--base-manifest` — безопасный режим обновления существующего канала: он
+сохраняет порядок и прежние записи, меняет версию существующей истории на месте
+и добавляет новую в конец. `--replace` создаёт точный набор и применяется только
+для нового канала либо при явно разрешённом удалении/переупорядочивании. Вызов
+без одного из этих режимов завершается ошибкой.
+
+Команда копирует уже собранные story outputs в
+`Novels/Build/ChannelContent/stories/<storyId>/<version>` и создаёт компактный
+`dev.json` или `prod.json`, затем печатает JSON-сводку merge. Манифест содержит
+`schema: 1` и упорядоченный объект
+`stories`, где ключ — canonical story ID, значение — immutable version segment.
+Версионный каталог нельзя перезаписывать. Публикация channel-tree намеренно не
+выполняется этой командой.
+
+Legacy-команда публикации полного `LocalContent` остаётся доступна для старого
+единого layout:
 
 ```bash
 Tools/novels-tools/novels-content publish /absolute/server/root
@@ -365,9 +389,131 @@ LocalContent/
     cover.<extension>
     Files/<sha256>.bin
     Remote/<platform>/release.json
+    Remote/<platform>/catalog-preview.json
+    Remote/<platform>/episode-covers/<filename>.png
     Remote/<platform>/<bundle>/<version>
 ```
 
 Editor читает это дерево через `FileSystemContentSource`, Remote Android/iOS —
-через `HttpContentSource`, Android Embedded внутри APK — через
-`StreamingAssetsContentSource`. Каталог и истории публикуются независимо.
+channel manifest `<remote-root>/<dev|prod>.json` и версионные story roots через
+`HttpContentSource`, Android Embedded внутри APK — через
+`StreamingAssetsContentSource`. Remote Player включает текущий catalog UI bundle
+в `StreamingAssets/NovelCatalog`; отдельная серверная папка `catalog` ему не
+нужна. Список Remote-историй берётся из channel manifest, а не ограничивается
+embedded registry. Канал выбирается при сборке через `NOVELS_CONTENT_CHANNEL`
+(по умолчанию `dev`). Истории и карточки их эпизодов остаются удалёнными и
+версионируются вместе. Поэтому совместимая новая история выпускается добавлением
+immutable story tree и заменой manifest без пересборки APK; APK нужен при
+изменении runtime/catalog UI/profile/channel или несовместимости client/schema.
+
+```text
+ChannelContent/
+  dev.json
+  prod.json
+  stories/<storyId>/<version>/
+    card.json
+    cover.<extension>
+    Files/<sha256>.bin
+    Remote/<platform>/release.json
+    Remote/<platform>/catalog-preview.json
+    Remote/<platform>/episode-covers/<filename>.png
+    Remote/<platform>/<bundle>/<bundleVersion>
+```
+
+## Профили Player-приложений
+
+Каждая самостоятельная поставка Player выбирает обязательный профиль через
+`Tools/somegame player-build --app <app-id>`. Профиль находится в
+`Projects/apps/<app-id>/Config/player.json`, а исходная квадратная PNG-иконка —
+в `Projects/apps/<app-id>/Assets/icon.png`. Во временный staging-проект
+копируется только выбранный профиль; `PlayerBuildAutomation` применяет его
+`productName`, platform application ID и иконку перед сборкой и восстанавливает
+исходные `PlayerSettings` после неё.
+
+Неизвестный app ID, отсутствующий профиль, иконка или application ID целевой
+платформы останавливают сборку. Пример:
+
+```bash
+Tools/somegame player-build --agent-id <agent> --app kostroma \
+  --mode Embedded --target Android --human-approved \
+  --approval-note "Explicit final Player build approval"
+```
+
+`catalog-preview.json` (schema 1) автоматически экспортируется сборкой истории
+из `NovelContentAsset`: storyId, contentVersion, releaseId, упорядоченные id/title/
+description эпизодов. Это производная для быстрого каталога, не новый источник
+авторских данных; вручную её не редактируют. `card.json` остаётся schema 2.
+Preview и соответствующий platform release публикуются вместе. Старые клиенты
+игнорируют sidecar; новому клиенту нужны пересобранные story outputs. Отсутствие
+preview не должно незаметно возвращать полную загрузку всех историй на старте.
+Перед разблокировкой карточки очередь сверяет releaseId и проверяет все payloads
+обычным delivery/integrity/cache маршрутом. Из каталога в чтение передаётся тот же
+release, чтобы не переключиться на новую, ещё не скачанную версию.
+
+### Обложки эпизодов каталога
+
+В `NovelContentAsset._episodes` у каждого эпизода есть необязательное строковое
+поле `_catalogCover`. Например, `_catalogCover: s01e02.jpg` указывает на
+`Config/EpisodeCovers/s01e02.jpg` того же атомарного проекта. Это обычный PNG/JPEG,
+не Unity Sprite и не зависимость story bundle. Имя файла — ASCII-буквы, цифры,
+`_`, `-`, `.`; пути, URL и `..` запрещены. Пустое поле использует общую обложку
+истории. Обновление эпизодов из Ink сохраняет назначение по ID, а не позиции.
+
+Сборка проверяет существование назначенных файлов, добавляет необязательное
+`cover` в запись эпизода в preview schema 1 и копирует только используемые
+картинки в `Remote/<platform>/episode-covers/`. Compose/publish переносят их вместе
+с platform preview; отдельная ручная копия не нужна. Схемы card/registry остаются
+2, старые previews без `cover` и старые определения остаются совместимыми.
+
+Каталог загружает эти картинки вместе с описаниями до показа карточек, без
+загрузки story bundle. Одинаковый файл внутри истории запрашивается один раз.
+Карточка выбирает обложку эпизода, а при пустом поле или недоступной/повреждённой
+картинке — обложку истории; ошибка необязательной картинки даёт предупреждение,
+не блокирует каталог. Отмена загрузки не превращается в fallback. Новые картинки
+не назначаются существующим историям автоматически: нужны утверждённые арты.
+
+### Авторские подписи
+
+Необязательное `author` в `Config/card.json` задаёт автора/псевдоним истории.
+Необязательное `_author` у эпизода в `NovelContentAsset._episodes` переопределяет
+его для этого эпизода и экспортируется как `episodes[].author` в preview.
+Пустой автор эпизода наследует автора истории; если оба пустые/отсутствуют,
+подпись скрыта без заглушки. Старые card schema 2 и preview schema 1 совместимы.
+Обновление списка из Ink сохраняет авторов по ID эпизода.
+
+Подпись — отдельный неинтерактивный plain-text элемент в правом верхнем углу
+эпизодной карточки fallback-префаба, под кнопкой сброса чтения; название не меняется.
+Неизвестный автор не выдумывается и не заменяется заглушкой.
+
+### Видео на карточках каталога
+
+Необязательное `_catalogVideo` в корне `NovelContentAsset` задаёт ролик истории,
+такое же поле у `_episodes[]` — ролик конкретного эпизода. Значение — имя MP4
+из `Config/CatalogVideos/` (ASCII-буквы, цифры, `_`, `-`, `.`, без путей/URL/`..`).
+Приоритет подложки: видео эпизода → собственная картинка эпизода → видео истории
+→ картинка истории. Собственная успешно загруженная картинка блокирует наследование
+видео истории, если видео эпизода не задано. При отсутствии/ошибке своей картинки
+разрешён переход к медиа истории. У карточки самой истории: своё видео → своя картинка.
+Ink refresh сохраняет назначение эпизода по ID. Нельзя подменять
+этим полем сюжетные video aliases. Рекомендуемый совместимый формат — короткий
+зацикленный H.264/yuv420p MP4 с одной AAC-дорожкой и faststart; телефонная
+проверка конкретного файла обязательна перед публикацией.
+
+Build проверяет наличие непустых файлов, экспортирует `video` / `episodes[].video`
+в preview schema 1 и копирует уникальные назначенные файлы в
+`Remote/<platform>/catalog-videos/`. Compose переносит их с platform output.
+Новые поля optional, старые определения и preview совместимы. Runtime получает
+URL через IContentSource и готовит только текущий ролик, без загрузки всех видео
+на старте и без участия в блокировке запуска эпизода. HTTP-доставка использует
+поток VideoPlayer; offline-кэш роликов пока не гарантируется.
+
+В fallback prefab есть отдельный authored RawImage под градиентом и текстом;
+в каталоге один VideoPlayer и один 2D AudioSource. Основная карточка определяется
+по максимальной видимой площади в пересечении вертикального и горизонтального
+viewport (не менее половины карточки); соседний «выступ» видео не запускает.
+При смене карточки старое видео сразу останавливается. До первого готового кадра,
+при пустом поле, ошибке или 15-секундном timeout видна обложка, без чёрной заглушки.
+Звук нарастает от нуля за 1,2 секунды и подчиняется общей громкости AudioListener.
+Настройки, inline reset, потеря фокуса, сворачивание и скрытие каталога отключают
+воспроизведение. Возврат начинает ролик заново с fade-in. Проверка в Editor:
+`Novels/Validation/Check Catalog Video` с временным H.264/AAC test-pattern fixture.
