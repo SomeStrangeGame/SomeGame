@@ -6,8 +6,8 @@ description: Plan, create, originality-screen, import, and visually validate non
 # Produce SomeGame story art
 
 Use this skill together with `$somegame-workflow`. The approved narrative
-package, character handoff from `$somegame-create-character`, exact story-project
-path, current repository art rules, and author decisions are inputs; do not
+package, character handoff from `$somegame-create-character`, intended story ID,
+current repository art rules, and author decisions are inputs; do not
 revise the story to justify speculative assets or recreate character assets.
 Use `$imagegen` whenever AI raster generation or editing is required.
 
@@ -43,6 +43,10 @@ factual constraints.
 
 ## Import and validate
 
+This is a second, project-bound phase. Before the project exists, keep drafts
+outside Git and hand off only approved deliverables, logical addresses,
+provenance, formats and import requirements with status `approved-for-import`.
+
 Place only approved deliverables in the exact story project. Preserve Unity
 `.meta` identity when replacing an asset; let the current Unity import pipeline
 create new metadata and apply its canonical texture settings. Do not establish
@@ -56,6 +60,7 @@ review.
 Hand off the approved non-character manifest, exact files and runtime addresses,
 generation/edit provenance, rejected/draft work, visual evidence,
 visual-originality sources, iteration log and final gate result,
-import/validation results, and unresolved manual gates. Missing required art or
+import/validation results, and unresolved manual gates. After project mapping,
+the handoff may advance to `ready-for-final-validation`. Missing required art or
 a blocked originality gate blocks downstream content completion; neither may be
 hidden with an unrelated fallback.

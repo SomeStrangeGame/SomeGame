@@ -7,9 +7,9 @@ description: Design, originality-screen, produce, import, and visually validate 
 
 Use this skill together with `$somegame-workflow`. Use `$imagegen` whenever AI
 raster generation or editing is required. Treat the approved narrative package,
-the exact story project, author decisions, current character-layering rules, and
-manual-content checklist as authoritative. This skill realizes character
-requirements; it does not rewrite the story to justify a preferred design.
+author decisions, current character-layering rules and manual-content checklist
+as authoritative. An exact story project is required only for import/runtime
+integration, not for pre-production. This skill does not rewrite the story.
 
 Read [character package](references/character-package.md) before defining or
 producing a character.
@@ -18,7 +18,7 @@ producing a character.
 
 Start from the character's actual narrative function, scenes, relationships,
 emotional arc, appearance states, and factual constraints. Confirm the stable
-character name/selector, story project, art style, approval mode, and whether
+character name/selector, intended story ID, art style, approval mode, and whether
 the runtime representation is whole-image or genuinely requires independent
 layers. Ask only for an unresolved decision that would materially change
 identity, sensitivity, historical integrity, or production scope.
@@ -65,6 +65,10 @@ canvas. Never independently generate interchangeable body parts.
 
 ## Import and prove runtime resolution
 
+This is a second, project-bound phase. Before the project exists, hand off
+approved masters and variants outside the repository with intended logical
+addresses and import requirements; do not claim imported or runtime-validated.
+
 Place only approved production files in the exact story project. Preserve
 existing Unity `.meta` identity on replacement and use the current import
 pipeline for new assets. Do not create per-file compression policy or manual
@@ -89,7 +93,9 @@ Return the approved character brief, protected identity traits, identity master,
 scene-derived appearance inventory, exact files and selectors, master-to-variant
 provenance, runtime-resolution audit, contact sheets, alpha proofs, import and
 validation evidence, visual-originality iteration log and final gate result,
-rejected or draft work, and unresolved manual gates.
+rejected or draft work, and unresolved manual gates. A pre-production-only
+handoff is `approved-for-import`; after project mapping and static resolution it
+may become `ready-for-final-validation`.
 
 Missing required variants or identity drift block the character package. Do not
 hide them with unrelated fallbacks, modify narrative requirements, author Ink,

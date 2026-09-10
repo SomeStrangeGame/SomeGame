@@ -97,6 +97,8 @@ namespace Novels.Catalog.View
                 SelectOrOpen(_focusedCard);
         }
 
+        public void Focus(Card card) => Focus(card, true);
+
         private void Focus(Card card, bool immediately)
         {
             if (card == null)

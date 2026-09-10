@@ -1,8 +1,8 @@
 #!/bin/zsh
 set -euo pipefail
 
-if (( $# < 3 || $# > 6 )); then
-  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development|--test-signing] [--catalog-variant=children|nochelessie|scp]"
+if (( $# < 3 || $# > 5 )); then
+  print -u2 "Usage: $0 <Remote|Embedded> <Android|iOS|Windows|macOS> <output-path> [remote-url] [--development|--test-signing]"
   exit 2
 fi
 
@@ -11,7 +11,6 @@ target=$2
 output_path=${3:A}
 remote_url=${4:-}
 development_argument=${5:-}
-catalog_variant_argument=${6:-}
 script_dir=${0:A:h}
 project_root=${script_dir:h}
 somegame_root=${project_root:h}
@@ -19,6 +18,8 @@ content_root=${project_root}/Build/LocalContent
 unity_executable=${UNITY_EXECUTABLE:-/Applications/Unity/Hub/Editor/6000.3.11f1/Unity.app/Contents/MacOS/Unity}
 version=${NOVELS_PLAYER_VERSION:-$(date -u +%Y.%m.%d)}
 build_number=${NOVELS_PLAYER_BUILD_NUMBER:-$(( ($(date -u +%s) - 1577836800) / 60 ))}
+content_channel=${NOVELS_CONTENT_CHANNEL:-dev}
+app_id=${NOVELS_APP_ID:-}
 
 case ${target} in
   Android) unity_target=Android ; content_platform=android ;;
@@ -35,10 +36,6 @@ if [[ -n ${development_argument} && ${development_argument} != --development && 
   print -u2 "Unknown option: ${development_argument}"
   exit 2
 fi
-case ${catalog_variant_argument} in
-  ""|--catalog-variant=children|--catalog-variant=nochelessie|--catalog-variant=scp) ;;
-  *) print -u2 "Unknown catalog variant: ${catalog_variant_argument}"; exit 2 ;;
-esac
 if [[ ${development_argument} == --test-signing && ${target} != Android ]]; then
   print -u2 "Test signing is supported only for Android."
   exit 2
@@ -46,6 +43,21 @@ fi
 if [[ ${mode} == Remote && ${remote_url} != http://* && ${remote_url} != https://* ]]; then
   print -u2 "Remote mode requires an absolute HTTP(S) URL."
   exit 2
+fi
+if [[ ! ${content_channel} =~ '^[a-z0-9_-]+$' ]]; then
+  print -u2 "NOVELS_CONTENT_CHANNEL must be a lowercase path segment."
+  exit 2
+fi
+if [[ ! ${app_id} =~ '^[a-z0-9-]+$' ]]; then
+  print -u2 "NOVELS_APP_ID is required and must use lowercase letters, digits, and hyphens."
+  exit 2
+fi
+app_profile_root=${somegame_root}/Projects/apps/${app_id}
+app_profile=${app_profile_root}/Config/player.json
+app_icon=${app_profile_root}/Assets/icon.png
+if [[ ! -f ${app_profile} || ! -f ${app_icon} ]]; then
+  print -u2 "Application profile '${app_id}' is incomplete: ${app_profile_root}"
+  exit 3
 fi
 
 stage_root=${project_root}/Library/PlayerBuild/${mode}/${target}
@@ -61,12 +73,19 @@ if [[ ${mode} == Embedded && ! -f ${content_root}/catalog/registry/catalog.json 
   print -u2 "Embedded content is missing. Run: Tools/novels-tools/novels-content build all ${content_platform}"
   exit 3
 fi
+if [[ ${mode} == Remote && ! -f ${content_root}/catalog/ui/Remote/${content_platform}/release.json ]]; then
+  print -u2 "Fallback catalog is missing. Run: Tools/novels-tools/novels-content build catalog ${content_platform}"
+  exit 3
+fi
 
 mkdir -p "${stage_root}/SomeGame/Packages" "${stage_project}" "${log_path:h}" "${output_path:h}"
 rsync -a --delete "${somegame_root}/Packages/" "${stage_root}/SomeGame/Packages/"
 rsync -a --delete \
   --exclude Library --exclude Temp --exclude Logs --exclude Build --exclude LocalSigning --exclude .utmp \
   "${project_root}/" "${stage_project}/"
+stage_profile=${stage_project}/Assets/BuildProfiles/${app_id}
+mkdir -p "${stage_profile}"
+rsync -a --delete "${app_profile_root}/" "${stage_profile}/"
 
 if [[ ${development_argument} == --test-signing ]]; then
   signing_root=${project_root}/LocalSigning
@@ -105,6 +124,9 @@ if [[ ${mode} == Embedded ]]; then
   rsync -a --delete "${content_root}/" "${stage_content}/"
   execute_method=Editor.PlayerBuildAutomation.BuildEmbeddedPlayerBatch
 else
+  stage_catalog=${stage_project}/Assets/StreamingAssets/NovelCatalog
+  mkdir -p "${stage_catalog}"
+  rsync -a --delete "${content_root}/catalog/ui/" "${stage_catalog}/"
   execute_method=Editor.PlayerBuildAutomation.BuildRemotePlayerBatch
 fi
 
@@ -114,14 +136,14 @@ unity_arguments=(
   -buildTarget "${unity_target}"
   -executeMethod "${execute_method}"
   -playerOutput "${output_path}"
+  -playerProfile "Assets/BuildProfiles/${app_id}/Config/player.json"
   -playerVersion "${version}"
   -playerBuildNumber "${build_number}"
   -logFile "${log_path}"
 )
-[[ ${mode} == Remote ]] && unity_arguments+=(-remoteContentBaseUrl "${remote_url}")
+[[ ${mode} == Remote ]] && unity_arguments+=(-remoteContentBaseUrl "${remote_url}" -contentChannel "${content_channel}")
 [[ ${development_argument} == --development ]] && unity_arguments+=(-developmentBuild)
 [[ ${development_argument} == --test-signing ]] && unity_arguments+=(-testSigning)
-[[ -n ${catalog_variant_argument} ]] && unity_arguments+=(-catalogVariant "${catalog_variant_argument#--catalog-variant=}")
 
 set +e
 "${unity_executable}" "${unity_arguments[@]}"
@@ -135,4 +157,5 @@ fi
 
 print "${mode} ${target} Player completed: ${output_path}"
 print "Version: ${version} (${build_number})"
+print "Application profile: ${app_id}"
 print "Build log: ${log_path}"

@@ -1,0 +1,185 @@
+{
+  "method": "reviewed per-character alpha mask; original RGB preserved byte-for-byte after decode",
+  "characters": {
+    "maincharacter": {
+      "neutral_mask": "Art/AlphaRepair/masks/maincharacter__main.png",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_mean": 84.88129170735677,
+      "variants": [
+        {
+          "file": "alert.png",
+          "mask": "Art/AlphaRepair/masks/maincharacter__alert.png",
+          "before_sha256": "ec85a04a45e269416e540aa3d9fb2afe3c1389e9bbe050ae433ad4edd7d88db2",
+          "after_sha256": "5ef349604c73963e320834f08633d9cd09a11b021e25cb782149f9b145123f33",
+          "rgb_preserved": true
+        },
+        {
+          "file": "determined.png",
+          "mask": "Art/AlphaRepair/masks/maincharacter__determined.png",
+          "before_sha256": "bf225f93c93e6fe0122fe3baa2782179ec048506092ad4f816d9a84385a15594",
+          "after_sha256": "75d4f684636f00e3b8930644c79042d72835062866b2a7776f1166614983d071",
+          "rgb_preserved": true
+        },
+        {
+          "file": "main.png",
+          "mask": "Art/AlphaRepair/masks/maincharacter__main.png",
+          "before_sha256": "d502f73554c9cd863f467c2b2da2e3f2513627fcebf4a9d6d29f3ede80714f4a",
+          "after_sha256": "d502f73554c9cd863f467c2b2da2e3f2513627fcebf4a9d6d29f3ede80714f4a",
+          "rgb_preserved": true
+        },
+        {
+          "file": "tender.png",
+          "mask": "Art/AlphaRepair/masks/maincharacter__tender.png",
+          "before_sha256": "cf80bfca454c6dd287dd1b2029afe86efa2d44a50fe31254957f30e44da17006",
+          "after_sha256": "e3ae2a24eb8f95fe123688eb524f4a6decdc51d8c6caac1f7ddcdb3eb2d07169",
+          "rgb_preserved": true
+        }
+      ]
+    },
+    "asya": {
+      "neutral_mask": "Art/AlphaRepair/masks/asya__main.png",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_mean": 74.08096822102864,
+      "variants": [
+        {
+          "file": "guilty.png",
+          "mask": "Art/AlphaRepair/masks/asya__guilty.png",
+          "before_sha256": "539d650555cba98bb59de3b2c4dc524983aefa72a1ae9b59530692f41daaf5ff",
+          "after_sha256": "c5091573942344fbb1aaa8b269f298844adf61adc9a1aa2e0b118460ff5cdf49",
+          "rgb_preserved": true
+        },
+        {
+          "file": "main.png",
+          "mask": "Art/AlphaRepair/masks/asya__main.png",
+          "before_sha256": "38f73d65133806ec920a16b7b032b4b95081748d9a647557fc67bd68d3cbe6e4",
+          "after_sha256": "38f73d65133806ec920a16b7b032b4b95081748d9a647557fc67bd68d3cbe6e4",
+          "rgb_preserved": true
+        },
+        {
+          "file": "relieved.png",
+          "mask": "Art/AlphaRepair/masks/asya__relieved.png",
+          "before_sha256": "00462aef681665913c78fbf407fcfd6871eb7e2d027dcaab815c9d5d1685aad5",
+          "after_sha256": "00a38a808898d659bc634ebde489eabda1568db99d8f99905ce302aa9e673754",
+          "rgb_preserved": true
+        },
+        {
+          "file": "stern.png",
+          "mask": "Art/AlphaRepair/masks/asya__stern.png",
+          "before_sha256": "6d28c569b0f2bae3ad8356fa9649fc728f0b48a14b5aa3db3f47995cfac16d8e",
+          "after_sha256": "1731681e3ed5ec8c46084d994397e527767133eb269838caaa93ff050272539b",
+          "rgb_preserved": true
+        }
+      ]
+    },
+    "lada": {
+      "neutral_mask": "Art/AlphaRepair/masks/lada__main.png",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_mean": 75.02890268961589,
+      "variants": [
+        {
+          "file": "curious.png",
+          "mask": "Art/AlphaRepair/masks/lada__curious.png",
+          "before_sha256": "f5193bb0ecb1a445159162373da43b87e40ed83ae07c7a9b76a7d495d1c2f03a",
+          "after_sha256": "17703c735e391cdc77b461bac9ddbfbe48b3a76096d57c50e3a83b516ed299e3",
+          "rgb_preserved": true
+        },
+        {
+          "file": "luminous.png",
+          "mask": "Art/AlphaRepair/masks/lada__luminous.png",
+          "before_sha256": "43c6c00298c5b77d2ee8d6c0ec4a56b7b2e37dbd07bd1a2f1ee99848e7e1b2b0",
+          "after_sha256": "2170879bc658c1fc6a7dbe62587294d029a050632efa33fbb5aa39439ee7bc97",
+          "rgb_preserved": true
+        },
+        {
+          "file": "main.png",
+          "mask": "Art/AlphaRepair/masks/lada__main.png",
+          "before_sha256": "8dadbe81caff1354a614712345c8bf31905508c1eee5fca396a84d5bc1907e04",
+          "after_sha256": "8dadbe81caff1354a614712345c8bf31905508c1eee5fca396a84d5bc1907e04",
+          "rgb_preserved": true
+        },
+        {
+          "file": "sad.png",
+          "mask": "Art/AlphaRepair/masks/lada__sad.png",
+          "before_sha256": "0f6c714c704ae8abb587aced594d6c45957017f9c614e56473c7e21ef00943a7",
+          "after_sha256": "84ccf846e2fba227297ec1a7ec5d111ab59c5e2499021ec7f117a22f2ccd5539",
+          "rgb_preserved": true
+        }
+      ]
+    },
+    "filya": {
+      "neutral_mask": "Art/AlphaRepair/masks/filya__main.png",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_mean": 71.91241455078125,
+      "variants": [
+        {
+          "file": "afraid.png",
+          "mask": "Art/AlphaRepair/masks/filya__afraid.png",
+          "before_sha256": "6084f10382ae71a194f2f6fc90396cb8b77b390f389693fa4e75998e1eee439d",
+          "after_sha256": "f8b75bc5ffb6fbec2638dffb98540d96e47b765907ec269e0e3882bfd24c56d6",
+          "rgb_preserved": true
+        },
+        {
+          "file": "focused.png",
+          "mask": "Art/AlphaRepair/masks/filya__focused.png",
+          "before_sha256": "d88dd7be0a6cb05ec9a0ec46e4c606635e6555657dcf8568f87ec1b9bfa73626",
+          "after_sha256": "031223e28c6b161f2739a2b1738bc461df04840d23bc77416c94ecc361bf63ad",
+          "rgb_preserved": true
+        },
+        {
+          "file": "grinning.png",
+          "mask": "Art/AlphaRepair/masks/filya__grinning.png",
+          "before_sha256": "95304111cabf25eb4fe7c5180050fd83d6cc0402e9b81c66b408ac9453e476af",
+          "after_sha256": "5ee74ec6c4efdd163c124de528005a5d72d578ae4742a25cff383163dc62dbee",
+          "rgb_preserved": true
+        },
+        {
+          "file": "main.png",
+          "mask": "Art/AlphaRepair/masks/filya__main.png",
+          "before_sha256": "c932051515487dc0e53d111b8874f25af505ac0fe60ba35a534076719501681b",
+          "after_sha256": "c932051515487dc0e53d111b8874f25af505ac0fe60ba35a534076719501681b",
+          "rgb_preserved": true
+        }
+      ]
+    },
+    "yar": {
+      "neutral_mask": "Art/AlphaRepair/masks/yar__main.png",
+      "alpha_min": 0,
+      "alpha_max": 255,
+      "alpha_mean": 79.7670669555664,
+      "variants": [
+        {
+          "file": "exhausted.png",
+          "mask": "Art/AlphaRepair/masks/yar__exhausted.png",
+          "before_sha256": "09794d03d13f43cdd34ee938e8d1977c3f24ff3600a07158be37c7d25529dd14",
+          "after_sha256": "48e23db90a9a4130720ea08d2b22f7a57dbea6c4ed7bec0f18569e446bfc1a92",
+          "rgb_preserved": true
+        },
+        {
+          "file": "fading.png",
+          "mask": "Art/AlphaRepair/masks/yar__fading.png",
+          "before_sha256": "8e36a27fe41556c32d66ab213626463a2f130d5a0746c9481328325260116d71",
+          "after_sha256": "780d365198e4b8f85b277ca70b6c181289aca80ce86d393088a32151dac95935",
+          "rgb_preserved": true
+        },
+        {
+          "file": "hopeful.png",
+          "mask": "Art/AlphaRepair/masks/yar__hopeful.png",
+          "before_sha256": "0f7c9bef198f32a99a302651c0b380c022071ecf0a5d32402b0ffa351f99012d",
+          "after_sha256": "e7aa7ef78600e5fef116795fcacc22ae47ac2ab7f04bcf8e4d2715ec59730fde",
+          "rgb_preserved": true
+        },
+        {
+          "file": "main.png",
+          "mask": "Art/AlphaRepair/masks/yar__main.png",
+          "before_sha256": "7db94cd5295a4c2a4b0869b7c1cc13ab5c9a7dbe6d5ba8567db74955827f8a99",
+          "after_sha256": "7db94cd5295a4c2a4b0869b7c1cc13ab5c9a7dbe6d5ba8567db74955827f8a99",
+          "rgb_preserved": true
+        }
+      ]
+    }
+  }
+}

@@ -16,11 +16,15 @@ namespace Novels
             internal LoadedCatalog(
                 IReadOnlyList<Catalog.NovelCatalogEntry> entries,
                 IReadOnlyDictionary<string, Sprite> covers,
+                IReadOnlyDictionary<string, Catalog.Contracts.StoryCatalogPreview> previews,
+                CatalogDownloads downloads,
                 GameObject screen,
                 Bundles.ContentDeliveryLease deliveryLease)
             {
                 Entries = entries ?? throw new ArgumentNullException(nameof(entries));
                 Covers = covers ?? throw new ArgumentNullException(nameof(covers));
+                Previews = previews ?? throw new ArgumentNullException(nameof(previews));
+                Downloads = downloads ?? throw new ArgumentNullException(nameof(downloads));
                 Screen = screen;
                 _deliveryLease = deliveryLease;
             }
@@ -29,11 +33,14 @@ namespace Novels
 
             internal IReadOnlyList<Catalog.NovelCatalogEntry> Entries { get; }
             internal IReadOnlyDictionary<string, Sprite> Covers { get; }
+            internal IReadOnlyDictionary<string, Catalog.Contracts.StoryCatalogPreview> Previews { get; }
+            internal CatalogDownloads Downloads { get; }
             internal GameObject Screen { get; }
 
             public void Dispose()
             {
                 _deliveryLease?.Dispose();
+                Downloads.Dispose();
                 foreach (var cover in Covers.Values)
                 {
                     if (cover == null)
@@ -50,26 +57,35 @@ namespace Novels
         {
             internal StoryLaunchSelection(
                 Catalog.NovelCatalogEntry content,
-                bool startNew)
+                string episodeId,
+                bool restartEpisode)
             {
                 Content = content;
-                StartNew = startNew;
+                EpisodeId = episodeId;
+                RestartEpisode = restartEpisode;
             }
 
             internal Catalog.NovelCatalogEntry Content { get; }
-            internal bool StartNew { get; }
+            internal string EpisodeId { get; }
+            internal bool RestartEpisode { get; }
         }
 
         internal struct Dependencies
         {
             internal Bundles.Entity Bundles;
             internal Bundles.IContentSource RootContentSource;
+            internal IReadOnlyList<string> StoryIds;
+            internal Func<string, Bundles.IContentSource> CreateStoryContentSource;
             internal PriorityLoader PriorityLoader;
             internal string PersistentDataPath;
             internal string ClientVersion;
+            internal string ContentPlatform;
             internal CancellationToken CancellationToken;
             internal Action<(LogType type, string message)> OnLog;
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
+            internal Func<string, CancellationToken, Bundles.Entity> CreateStoryBundles;
+            internal Catalog.ICatalogSettings Settings;
+            internal Catalog.CatalogUpdatePrompt UpdatePrompt;
         }
 
         private readonly Dependencies _ctx;
@@ -80,7 +96,7 @@ namespace Novels
             _ctx = ctx;
             if (ctx.Bundles == null)
                 throw new ArgumentNullException(nameof(ctx.Bundles));
-            if (ctx.RootContentSource == null)
+            if (ctx.RootContentSource == null && ctx.StoryIds == null)
                 throw new ArgumentNullException(nameof(ctx.RootContentSource));
             if (ctx.PriorityLoader == null)
                 throw new ArgumentNullException(nameof(ctx.PriorityLoader));
@@ -94,6 +110,8 @@ namespace Novels
                     "Client version must not be empty.",
                     nameof(ctx.ClientVersion));
             }
+            if (ctx.CreateStoryBundles == null)
+                throw new ArgumentNullException(nameof(ctx.CreateStoryBundles));
             _progressCache = new Cache.Entity(ctx.PersistentDataPath);
         }
 
@@ -115,7 +133,7 @@ namespace Novels
                         ContentAddressing.ContentCompatibility.MinimumSupportedSchemaVersion,
                         ContentAddressing.ContentCompatibility.MaximumSupportedSchemaVersion);
                     deliveryLease = await PrepareApplicationContent(bootstrap, loading);
-                    var resources = await Load(deliveryLease);
+                    var resources = await Load(deliveryLease, bootstrap);
                     _ctx.Bundles.ActivateRelease();
                     _ctx.SmokeTelemetry?.Emit(
                         "catalog.ready",
@@ -127,6 +145,7 @@ namespace Novels
                 catch (OperationCanceledException)
                     when (_ctx.CancellationToken.IsCancellationRequested)
                 {
+                    deliveryLease?.Dispose();
                     throw;
                 }
                 catch (Exception exception) when (
@@ -151,7 +170,9 @@ namespace Novels
         }
 
         internal async UniTask<StoryLaunchSelection> SelectContent(
-            LoadedCatalog catalog)
+            LoadedCatalog catalog,
+            string focusedStoryId = null,
+            string focusedEpisodeId = null)
         {
             var entries = catalog.Entries
                 .Where(entry => entry.IsEnabled)
@@ -162,6 +183,26 @@ namespace Novels
             {
                 var text = entry.Text;
                 var started = HasStarted(entry.ContentId);
+                var preview = catalog.Previews[entry.ContentId];
+                var progress = new NovelProgress(
+                    entry.ContentId,
+                    preview.contentVersion,
+                    preview.episodes.Select(episode => new Content.EpisodeDefinition(
+                        entry.ContentId, episode.id, episode.title, episode.description)).ToArray(),
+                    _ctx.PersistentDataPath,
+                    _ctx.OnLog,
+                    resetIncompatible: false);
+                var playableIds = new HashSet<string>(
+                    progress.PlayableEpisodes.Select(episode => episode.Id),
+                    StringComparer.OrdinalIgnoreCase);
+                var completedIds = new HashSet<string>(
+                    progress.CompletedEpisodeIds,
+                    StringComparer.OrdinalIgnoreCase);
+                for (var index = 0; index + 1 < entry.Episodes.Count; index++)
+                {
+                    if (playableIds.Contains(entry.Episodes[index + 1].Id))
+                        completedIds.Add(entry.Episodes[index].Id);
+                }
                 return new Catalog.CatalogItem(
                     entry.ContentId,
                     text.Title,
@@ -178,15 +219,60 @@ namespace Novels
                         : null,
                     cover: catalog.Covers.TryGetValue(entry.ContentId, out var cover)
                         ? cover
-                        : null);
+                        : null,
+                    episodes: entry.Episodes.Select((episode, index) =>
+                        new Catalog.CatalogEpisodeItem(
+                            episode.Id,
+                            episode.Title,
+                            playableIds.Contains(episode.Id)
+                                ? episode.Description
+                                : "Чтобы открыть этот эпизод, дочитайте предыдущие эпизоды.",
+                            status: BuildEpisodeStatus(
+                                entry,
+                                episode,
+                                index,
+                                playableIds,
+                                completedIds),
+                            actionLabel: !playableIds.Contains(episode.Id)
+                                ? "Прочитайте предыдущий эпизод"
+                                : completedIds.Contains(episode.Id)
+                                    ? string.Empty
+                                    : HasEpisodeSave(entry.ContentId, episode.Id)
+                                        ? ApplicationTexts.ContinueContent
+                                        : ApplicationTexts.OpenContent,
+                            restartLabel: completedIds.Contains(episode.Id)
+                                || HasEpisodeSave(entry.ContentId, episode.Id)
+                                ? ApplicationTexts.StartAgain
+                                : null,
+                            restartWarning: BuildRestartWarning(entry, index),
+                            isEnabled: playableIds.Contains(episode.Id)
+                                && !completedIds.Contains(episode.Id),
+                            download: catalog.Downloads.GetState(entry.ContentId),
+                            cover: GetEpisodeCover(catalog, entry.ContentId, preview.episodes[index].cover),
+                            author: preview.episodes[index].author,
+                            storyAuthor: entry.Author,
+                            videoUrl: GetCatalogVideoUrl(catalog, entry.ContentId, preview, index),
+                            readingProgress: completedIds.Contains(episode.Id) ? 1f
+                                : !playableIds.Contains(episode.Id) ? null
+                                : EpisodeReadingProgress.Read(_progressCache,
+                                    NovelRuntime.SaveChoiceKey(entry.ContentId, episode.Id),
+                                    preview.contentVersion))));
             }).ToArray();
             using var selection = CreateSelection(catalog.Screen);
-            var selected = await selection.SelectAction(
+            var pendingSelection = selection.SelectAction(
                 ApplicationTexts.CatalogTitle,
-                items);
-            var startNew = selected.IsSecondaryAction;
-            if (startNew)
-                ResetStoryProgress(selected.Item.Id);
+                items,
+                focusedStoryId,
+                focusedEpisodeId);
+            catalog.Downloads.Start();
+            var selected = await pendingSelection;
+            if (!catalog.Downloads.GetState(selected.Item.Id).IsReady)
+                throw new InvalidOperationException("Cannot launch an episode before its content is ready.");
+            var restartEpisode = selected.IsSecondaryAction;
+            if (selected.Episode == null)
+                throw new InvalidOperationException("Catalog selection has no episode.");
+            if (restartEpisode)
+                ResetEpisodeSaves(selected.Item.Id, selected.Episode.Id, entries);
             MarkStarted(selected.Item.Id);
             var content = entries.First(entry => string.Equals(
                 entry.ContentId,
@@ -195,7 +281,64 @@ namespace Novels
             _ctx.SmokeTelemetry?.Emit(
                 "story.selected",
                 ("contentId", content.ContentId));
-            return new StoryLaunchSelection(content, startNew);
+            return new StoryLaunchSelection(
+                content,
+                selected.Episode.Id,
+                restartEpisode);
+        }
+
+        private static string BuildEpisodeStatus(
+            Catalog.NovelCatalogEntry entry,
+            Catalog.NovelCatalogEpisodeEntry episode,
+            int index,
+            ISet<string> playableIds,
+            ISet<string> completedIds)
+        {
+            if (!playableIds.Contains(episode.Id))
+                return "Недоступно";
+            if (completedIds.Contains(episode.Id))
+                return "Завершено";
+            return "Доступно";
+        }
+
+        private static string BuildRestartWarning(
+            Catalog.NovelCatalogEntry entry,
+            int index)
+        {
+            var affected = entry.Episodes.Count - index;
+            return affected > 1
+                ? $"Прогресс этого и {affected - 1} следующих эпизодов будет сброшен."
+                : "Прогресс этого эпизода будет сброшен.";
+        }
+
+        private bool HasEpisodeSave(string contentId, string episodeId) =>
+            _progressCache.Exists(NovelRuntime.SaveChoiceKey(contentId, episodeId));
+
+        private void ResetEpisodeSaves(
+            string contentId,
+            string episodeId,
+            IReadOnlyList<Catalog.NovelCatalogEntry> entries)
+        {
+            var entry = entries.First(value => string.Equals(
+                value.ContentId,
+                contentId,
+                StringComparison.OrdinalIgnoreCase));
+            var start = entry.Episodes
+                .Select((episode, index) => (episode, index))
+                .First(value => string.Equals(
+                    value.episode.Id,
+                    episodeId,
+                    StringComparison.OrdinalIgnoreCase))
+                .index;
+            for (var index = start; index < entry.Episodes.Count; index++)
+            {
+                var directory = _progressCache.GetLocalPath(
+                    $"Saves/{Uri.EscapeDataString(contentId)}/"
+                    + Uri.EscapeDataString(entry.Episodes[index].Id),
+                    false);
+                if (Directory.Exists(directory))
+                    Directory.Delete(directory, true);
+            }
         }
 
         private void ResetStoryProgress(string contentId)
@@ -240,7 +383,8 @@ namespace Novels
         }
 
         private async UniTask<LoadedCatalog> Load(
-            Bundles.ContentDeliveryLease deliveryLease)
+            Bundles.ContentDeliveryLease deliveryLease,
+            Bootstrap.BootstrapController bootstrap)
         {
             await _ctx.PriorityLoader.Run(() => _ctx.Bundles
                 .GetAssetBundle(Catalog.CatalogAddresses.BundleName)
@@ -256,38 +400,74 @@ namespace Novels
                     $"Catalog assets could not be loaded from "
                     + $"AssetBundle '{Catalog.CatalogAddresses.BundleName}'.");
             }
-            var loaded = await LoadEntries();
-            return new LoadedCatalog(loaded.entries, loaded.covers, screen, deliveryLease);
+            var loaded = await LoadEntries(bootstrap);
+            return new LoadedCatalog(
+                loaded.entries,
+                loaded.covers,
+                loaded.previews,
+                new CatalogDownloads(_ctx, loaded.entries, loaded.previews),
+                screen,
+                deliveryLease);
         }
 
         private async UniTask<(
             IReadOnlyList<Catalog.NovelCatalogEntry> entries,
-            IReadOnlyDictionary<string, Sprite> covers)> LoadEntries()
+            IReadOnlyDictionary<string, Sprite> covers,
+            IReadOnlyDictionary<string, Catalog.Contracts.StoryCatalogPreview> previews)> LoadEntries(
+                Bootstrap.BootstrapController bootstrap)
         {
-            var registryJson = await _ctx.RootContentSource.DownloadText(
-                ContentAddressing.ContentPackageConvention.CatalogRegistryPath,
-                _ctx.CancellationToken);
-            var registry = Catalog.Contracts.CatalogContractCodec
-                .DeserializeRegistry(registryJson);
+            IReadOnlyList<string> storyIds = _ctx.StoryIds;
+            if (storyIds == null)
+            {
+                var registryJson = await _ctx.RootContentSource.DownloadText(
+                    ContentAddressing.ContentPackageConvention.CatalogRegistryPath,
+                    _ctx.CancellationToken);
+                storyIds = Catalog.Contracts.CatalogContractCodec
+                    .DeserializeRegistry(registryJson).stories;
+            }
             var entries = new List<Catalog.NovelCatalogEntry>();
-            var covers = new Dictionary<string, Sprite>(StringComparer.OrdinalIgnoreCase);
+            var covers = new Dictionary<string, Sprite>(StringComparer.Ordinal);
+            var previews = new Dictionary<string, Catalog.Contracts.StoryCatalogPreview>(
+                StringComparer.OrdinalIgnoreCase);
             try
             {
-                foreach (var storyId in registry.stories)
+                foreach (var storyId in storyIds)
                 {
-                    var cardJson = await _ctx.RootContentSource.DownloadText(
-                        ContentAddressing.ContentPackageConvention.StoryCardPath(
-                            storyId),
-                        _ctx.CancellationToken);
+                    var storySource = CreateStoryContentSource(storyId);
+                    var cardJson = await storySource.DownloadText(
+                        "card.json", _ctx.CancellationToken);
                     var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
                         cardJson,
                         storyId);
-                    covers.Add(card.storyId, await LoadCover(card));
+                    var previewJson = await storySource.DownloadText(
+                        $"Remote/{_ctx.ContentPlatform}/catalog-preview.json",
+                        _ctx.CancellationToken);
+                    var preview = Catalog.Contracts.CatalogContractCodec.DeserializePreview(previewJson, storyId);
+                    previews.Add(storyId, preview);
+                    covers.Add(card.storyId, await LoadCover(
+                        card.cover,
+                        storySource, _ctx.CancellationToken));
+                    foreach (var episode in preview.episodes)
+                    {
+                        if (string.IsNullOrWhiteSpace(episode.cover)) continue;
+                        var key = ContentAddressing.ContentPackageConvention.StoryEpisodeCoverPath(
+                            storyId, _ctx.ContentPlatform, episode.cover);
+                        var path = $"Remote/{_ctx.ContentPlatform}/episode-covers/{episode.cover}";
+                        if (!covers.ContainsKey(key))
+                            covers.Add(key, await LoadOptionalEpisodeCover(path,
+                                storySource, _ctx.CancellationToken, _ctx.OnLog));
+                    }
                     entries.Add(new Catalog.NovelCatalogEntry(
                         card.storyId,
                         card.title,
                         card.genre,
-                        card.description));
+                        card.description,
+                        preview.episodes.Select(episode =>
+                            new Catalog.NovelCatalogEpisodeEntry(
+                                episode.id,
+                                episode.title,
+                                episode.description)),
+                        author: card.author));
                 }
             }
             catch
@@ -295,7 +475,35 @@ namespace Novels
                 DestroyCovers(covers.Values);
                 throw;
             }
-            return (entries, covers);
+            return (entries, covers, previews);
+        }
+
+        private string GetCatalogVideoUrl(LoadedCatalog catalog, string storyId,
+            Catalog.Contracts.StoryCatalogPreview preview, int index)
+        {
+            var video = SelectCatalogVideo(preview, index,
+                GetEpisodeCover(catalog, storyId, preview.episodes[index].cover) != null);
+            // Resolve only: the visible card prepares the optional stream, never blocks catalog startup.
+            return string.IsNullOrWhiteSpace(video) ? null : CreateStoryContentSource(storyId).GetUrl(
+                $"Remote/{_ctx.ContentPlatform}/catalog-videos/"
+                + ContentAddressing.ContentPackageConvention.CatalogVideoFileName(video));
+        }
+
+        private Bundles.IContentSource CreateStoryContentSource(string storyId) =>
+            _ctx.CreateStoryContentSource?.Invoke(storyId)
+                ?? new Bundles.PrefixedContentSource(
+                    _ctx.RootContentSource,
+                    ContentAddressing.ContentPackageConvention.StoryPrefix(storyId));
+
+        internal static string SelectCatalogVideo(Catalog.Contracts.StoryCatalogPreview preview,
+            int index, bool hasEpisodeCover)
+        {
+            var ownVideo = preview.episodes[index].video;
+            if (!string.IsNullOrWhiteSpace(ownVideo)) return ownVideo;
+            // Episode art wins over inherited story media. Failed/missing own art
+            // has already resolved to null during loading and permits story fallback.
+            if (hasEpisodeCover) return null;
+            return string.IsNullOrWhiteSpace(preview.video) ? null : preview.video;
         }
 
         private static void DestroyCovers(IEnumerable<Sprite> covers)
@@ -311,16 +519,38 @@ namespace Novels
             }
         }
 
-        private async UniTask<Sprite> LoadCover(Catalog.Contracts.StoryCard card)
+        private Sprite GetEpisodeCover(LoadedCatalog catalog, string storyId, string fileName)
         {
-            var path = ContentAddressing.ContentPackageConvention.StoryCoverPath(
-                card.storyId,
-                card.cover);
+            if (string.IsNullOrWhiteSpace(fileName)) return null;
+            var path = ContentAddressing.ContentPackageConvention.StoryEpisodeCoverPath(
+                storyId, _ctx.ContentPlatform, fileName);
+            return catalog.Covers.TryGetValue(path, out var cover) ? cover : null;
+        }
+
+        internal static async UniTask<Sprite> LoadOptionalEpisodeCover(string path,
+            Bundles.IContentSource source, CancellationToken token, Action<(LogType type, string message)> onLog)
+        {
+            try { return await LoadCover(path, source, token, timeout: 15); }
+            catch (OperationCanceledException) { throw; }
+            catch (Exception exception)
+            {
+                token.ThrowIfCancellationRequested();
+                onLog?.Invoke((LogType.Warning,
+                    $"Episode cover '{path}' unavailable; using story cover. {exception.Message}"));
+                return null;
+            }
+        }
+
+        private static async UniTask<Sprite> LoadCover(string path, Bundles.IContentSource source,
+            CancellationToken token, int timeout = 0)
+        {
+            token.ThrowIfCancellationRequested();
             using var request = UnityWebRequestTexture.GetTexture(
-                _ctx.RootContentSource.GetUrl(path),
+                source.GetUrl(path),
                 true);
+            request.timeout = timeout;
             await request.SendWebRequest().ToUniTask(
-                cancellationToken: _ctx.CancellationToken);
+                cancellationToken: token);
             if (request.result != UnityWebRequest.Result.Success)
             {
                 throw new Bundles.ContentSourceException(
@@ -336,7 +566,7 @@ namespace Novels
         }
 
         private Catalog.CatalogController CreateSelection(GameObject screen) =>
-            new(screen, _ctx.CancellationToken);
+            new(screen, _ctx.CancellationToken, _ctx.Settings, _ctx.UpdatePrompt);
 
         private static void ShowProgress(
             Bootstrap.BootstrapController bootstrap,

@@ -1,0 +1,60 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: volchya-poshlina
+  m_EditorClassIdentifier:
+  _id: volchya-poshlina
+  _mainCharacter: "Ярина"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Долги зимней дороги"
+    _description: "Ярина везёт лекарство через лес, где волки собирают пошлину за нарушенные обещания."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Ярина"
+    _clothes: travel
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Макар"
+    _clothes: travel
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Анфиса"
+    _clothes: travel
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Савва"
+    _clothes: travel
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Седой"
+    _clothes: natural
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Митя"
+    _clothes: village
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: aac8315947154a518641987ec73dbc80
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

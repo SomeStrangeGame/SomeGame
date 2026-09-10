@@ -179,6 +179,7 @@ namespace Novels.ContentSdk.Editor
                 releasePath,
                 ContentReleaseCodec.Serialize(release),
                 new UTF8Encoding(false));
+            WriteCatalogPreview(plan, release, Path.GetDirectoryName(releasePath));
         }
 
         private static void BuildStreamingTargetRelease(
@@ -257,6 +258,62 @@ namespace Novels.ContentSdk.Editor
                 releasePath,
                 ContentReleaseCodec.Serialize(release),
                 new UTF8Encoding(false));
+            WriteCatalogPreview(plan, release, Path.GetDirectoryName(releasePath));
+        }
+
+        private static void WriteCatalogPreview(ContentBuildPlan plan, ContentReleaseDto release, string directory)
+        {
+            if (plan.Kind != ContentProjectKind.Story) return;
+            // DefinitionAsset is a published bundle address, not necessarily its
+            // authoring path (short-layout stories keep the definition at Assets/).
+            var definitionPath = AssetDatabase.GUIDToAssetPath(
+                AssetDatabase.FindAssets("t:NovelContentAsset").Single());
+            var asset = AssetDatabase.LoadAssetAtPath<Content.NovelContentAsset>(
+                definitionPath);
+            var definition = asset != null ? asset.ToDefinition()
+                : throw new InvalidOperationException("Cannot export catalog preview without story definition.");
+            WriteStoryCatalogPreview(definition, release, directory,
+                Path.Combine(Application.dataPath, "../Config/EpisodeCovers"));
+        }
+
+        private static void WriteStoryCatalogPreview(Content.NovelDefinition definition,
+            ContentReleaseDto release, string directory, string coversDirectory)
+        {
+            var preview = new Catalog.Contracts.StoryCatalogPreview
+            {
+                storyId = definition.Id,
+                releaseId = release.releaseId,
+                contentVersion = definition.ContentVersion,
+                video = string.IsNullOrWhiteSpace(definition.CatalogVideo) ? null : definition.CatalogVideo,
+                episodes = definition.Episodes.Select(episode => new Catalog.Contracts.StoryCatalogEpisodePreview
+                {
+                    id = episode.Id, title = episode.Title, description = episode.Description,
+                    cover = string.IsNullOrWhiteSpace(episode.CatalogCover) ? null : episode.CatalogCover,
+                    author = episode.Author,
+                    video = string.IsNullOrWhiteSpace(episode.CatalogVideo) ? null : episode.CatalogVideo,
+                }).ToArray(),
+            };
+            var json = JsonUtility.ToJson(preview, true);
+            Catalog.Contracts.CatalogContractCodec.DeserializePreview(json, definition.Id);
+            foreach (var cover in preview.episodes.Select(episode => episode.cover)
+                .Where(cover => !string.IsNullOrWhiteSpace(cover)).Distinct(StringComparer.Ordinal))
+            {
+                var fileName = ContentAddressing.ContentPackageConvention.EpisodeCoverFileName(cover);
+                var target = Path.Combine(directory, "episode-covers");
+                Directory.CreateDirectory(target);
+                var source = Path.Combine(coversDirectory, fileName);
+                File.Copy(source, Path.Combine(target, fileName), true);
+            }
+            foreach (var video in preview.episodes.Select(episode => episode.video).Append(preview.video)
+                .Where(video => !string.IsNullOrWhiteSpace(video)).Distinct(StringComparer.Ordinal))
+            {
+                var fileName = ContentAddressing.ContentPackageConvention.CatalogVideoFileName(video);
+                var target = Path.Combine(directory, "catalog-videos");
+                Directory.CreateDirectory(target);
+                File.Copy(Path.Combine(coversDirectory, "../CatalogVideos", fileName),
+                    Path.Combine(target, fileName), true);
+            }
+            File.WriteAllText(Path.Combine(directory, "catalog-preview.json"), json, new UTF8Encoding(false));
         }
 
         private static BundleReleaseEntry CopyBuiltBundle(

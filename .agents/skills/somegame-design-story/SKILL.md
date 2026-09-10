@@ -39,6 +39,12 @@ consequence. Do not add cosmetic branches to inflate choice count. Make every
 ending and state transition reachable and explain which state must survive
 reconvergence or episode boundaries.
 
+Apply the prose, world-explanation and episodic-design criteria in
+[story design](references/story-design.md) to the scenario, not only its
+outline. When a full script is requested, deliver readable scenes and actual
+branch text with notifications and conditional recaps, rather than a list of
+planned additions. Keep reading-time estimates separate from measured play time.
+
 When the orchestrator supplies factual constraints or an evidence ledger,
 preserve their classifications and uncertainty. Do not perform a separate
 historical-research workflow or turn reconstruction into documented fact.
@@ -53,6 +59,11 @@ boundaries and player promise; a material change to them returns to the author.
 A `blocked` result stops all downstream production.
 
 ## Hand off
+
+Follow the [story archive contract](../somegame-create-story/references/story-archive.md)
+from the initial brief: checkpoint actual drafts, alternatives, user feedback
+and decisions as dated versions. Return the current archive manifest, staged
+location if the project does not yet exist, and any known history gaps.
 
 Return the approved brief, narrative package, scene matrix, choice/state graph,
 ending conditions, continuity constraints, factual/reconstruction boundaries,
