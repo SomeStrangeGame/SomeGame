@@ -1,6 +1,6 @@
 # Ready for final validation
 
-Status: source candidate for final validation (not accepted, not catalog-registered; visual format and duration remain unverified).
+Status: **blocked in final validation**. The story is catalog-registered and launches on Android, but destructive internal transparency in the runtime character sprites fails the visual gate. See `ACCEPTANCE_EVIDENCE.md`.
 
 ## Completed static scope
 
@@ -26,8 +26,8 @@ Status: source candidate for final validation (not accepted, not catalog-registe
 - Inventory: 20 character variants, 16 locations, 12 used choice icons, 8 WAV files.
 - Selector audit: explicit selectors and neutral defaults resolve to 20 produced PNGs, including protagonist runtime ID `maincharacter`. Previous name-only auditing missed this mapping and indented speakers.
 - Prior media header audit: all 51 PNG signatures valid; character PNGs RGBA; all 8 WAV files mono 16-bit PCM at 44.1 kHz. Header checks do not establish full decoding, alpha-edge quality or seamless audio loops.
-- Length: 5,294 source word units; 3,542–3,650 displayed word units per route including offered choice text. At an assumed 145–165 words/minute this is roughly 21–25 minutes of reading, plus decisions/transitions. The target 25–45 minutes needs actual timing; the prior 27–34 estimate is withdrawn.
-- Source SHA-256 (ordered root and episode names/bytes): `a648e1111e9f113deeb889dd5698e7d1f7840e767efae19f7fcbb813ad76c7a5`. The audit prints a new digest when inputs change.
+- Length: 5,296 source word units; 3,542–3,650 displayed word units per route including offered choice text. At an assumed 145–165 words/minute this is roughly 21–25 minutes of reading, plus decisions/transitions. The target 25–45 minutes needs actual timing; the prior 27–34 estimate is withdrawn.
+- Source SHA-256 (ordered root and episode names/bytes): `77b56d1ba41d6a4c9bfda5ebb53584064bb7c6ac1cc3eba479553a73d9c53f75`. The audit prints a new digest when inputs change.
 - Re-review checks: melody introduced before its callback on every route; warning about Lada's possible exclusion; closed jar stored for the crossing; all five characters covered by another person's memory in the shared resolution.
 
 See `STORY_REVIEW.md` for fixes, save compatibility and residual evidence limitations.
