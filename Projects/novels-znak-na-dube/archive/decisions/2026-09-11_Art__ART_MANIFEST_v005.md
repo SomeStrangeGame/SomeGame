@@ -48,14 +48,3 @@ Descriptive comparisons focus on the combined empty-eye root sign, bronze acoust
 ## Website excerpt derivatives — 2026-09-10
 
 `Config/Preview/characters/yar.png` is an unchanged copy of `Assets/Characters/maincharacter/view/whole/travel/alarmed.png`; `lada.png` copies `Assets/Characters/лада/view/whole/forager/urgent.png`. These are the two states shown by the canonical opening. Byte identity, exact JSON references and absence of unreferenced preview images are checked by `Art/check_story.py`. No new visual candidate or image manipulation; actual website layout remains untested.
-
-## Desktop production-sheet review — 2026-09-11
-
-Directly inspected the story cover, episode cover, all three location sheets,
-the character sheets, the six-icon choice sheet and Bubble kit. The assets keep
-one charcoal/bronze/cold-moonlight language and their scene identities remain
-distinguishable. No visible title text, logo or watermark was found; the
-episode bell reads independently from the oak-led story cover, and the choice
-images remain distinguishable without relying on labels. This inspection does
-not establish catalog crop, runtime alpha, import settings, safe-area or Player
-contrast; those remain deferred.
