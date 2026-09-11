@@ -1,6 +1,12 @@
 # First Snow — editorial handoff
 
-Status: `unity-validated-with-device-waiver`.
+Status: `ready-with-limitations`.
+
+Integrated acceptance evidence is recorded in
+`../Evidence/acceptance-validation.md`. The story is registered in the local
+Catalog and story/Catalog builds plus a fresh Novels Editor compile pass. The
+remaining limitations are the explicitly waived emulator/ADB gate and manual
+visual acceptance through the real Player flow.
 
 ## Unity validation — 2026-09-11
 
@@ -19,7 +25,7 @@ no authored runtime display commands/prefabs, so they must not be claimed as
 visible.
 
 Current archive manifest:
-`archive/2026-09-11_manifest_v002.json`. Date naming, predecessor, referenced
+`archive/2026-09-11_manifest_v003.json`. Date naming, predecessor, referenced
 files and SHA-256 values pass the static completeness check; known pre-adoption
 history gaps remain explicit.
 

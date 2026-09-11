@@ -113,6 +113,6 @@ storytelling and portrayal still need an in-game visual review. Use a fresh
 playthrough: this unreleased candidate introduces state variables and does not
 claim migration of old in-progress test saves.
 
-Current archive handoff is `archive/2026-09-11_manifest_v002.json`; its
+Current archive handoff is `archive/2026-09-11_manifest_v003.json`; its
 predecessor and all retained artifact hashes are checked by
 `Docs/Evidence/verify-pre-unity.cjs`.
