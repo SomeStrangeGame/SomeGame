@@ -113,3 +113,31 @@ this refresh does not implement the proposed literary expansion or select a new
 episode count. Story rewriting, archive population and preview authoring remain
 future work. The earlier registration-baseline issue also remains unresolved.
 No Unity, acceptance or publication was requested or run in this update.
+
+## Story-skill adoption — 2026-09-11
+
+The story now follows the published creation/archive/preview contract through
+the last pre-Unity stage. The canonical Ink clarifies the opening orientation,
+party relationships, bounded road mechanics, witness limitations, Luka's
+chronology and the silver/fire rule; earned notifications follow supporting
+events. Existing knots, named choices, state, scene order, asset inventory and
+four ending conditions are unchanged.
+
+Current source SHA-256:
+`466be5b94d53fa71ba41135797bb22def55955ac2ee931b8c690cae36ade398b`.
+The standalone compiler and exhaustive traversal pass all 26,244 routes with
+zero errors/warnings, 10 decisions, 28 options and four reachable endings.
+Displayed text is 3,079–3,926 words per route.
+
+The dated archive starts at
+`archive/2026-09-11_manifest_v001.json`, includes exact pre/post-revision Ink
+snapshots, and records unavailable earlier process history as gaps. The
+story-owned `Config/Preview/preview.json` contains 16 source-ordered verbatim
+opening blocks and only the three referenced 512x768 portraits. Static preview,
+archive hash, project documentation and configuration checks pass.
+
+`novels-content plan HEAD` classifies the change as the single atomic content
+target and requires a content build; that is the Unity boundary and was not
+crossed. Compiled Ink/source map, Unity import, validate/build, manual visual
+smoke, acceptance and publication remain pending explicit authorization.
+Current status: `ready-for-final-validation`.

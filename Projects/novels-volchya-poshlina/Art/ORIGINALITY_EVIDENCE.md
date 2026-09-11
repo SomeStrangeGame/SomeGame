@@ -204,6 +204,44 @@ rewrite would require renewed stage-owner review, not this exception.
 Any later material change to dialogue, scene order, character identity, visual
 composition, choice causality or endings invalidates the relevant pass.
 
+## Post-adoption complete-source review — revision cycle 2, iteration 1 (2026-09-11)
+
+Trigger: the new story skill required a material clarification of reader
+orientation and world mechanics. This is an explicitly new review cycle for the
+post-adoption revision, not a hidden sixth attempt in the historical cycle that
+closed at iteration 5. The full reviewed source SHA-256 is
+`466be5b94d53fa71ba41135797bb22def55955ac2ee931b8c690cae36ade398b`.
+
+Scope: the complete current `Assets/Ink/s01e01.ink`, including all dialogue,
+narration, transitions, 10 decision groups, 28 options, recurring promise/thread/
+tally imagery and four endings. The revision adds the delivery party's relation
+to Berezhki and Mitya, the road's bounded area and historical account, the
+distinction between naming, voluntary fulfilment, transfer and coercion, Luka's
+chronology, the silver/fire rule, and earned notifications. It does not change
+the scene order, choice topology, characters, assets or ending conditions.
+
+Exact searches included «память без свидетеля превращается в приговор», «Без
+метки зверя книга не принимает огня», «След можно назвать, исполнить или
+передать» and «Исполненное насильно слово звучит». No exact match was observed;
+returned pages shared only ordinary vocabulary about words, tracks, memory,
+fire or obligation and did not reproduce the scene or phrase combinations.
+
+Direct comparison sources inspected for the nearest broad combinations:
+
+- [Penguin Random House: *Noah Barleywater Runs Away* teacher guide](https://images.penguinrandomhouse.com/teachers_guides/9780385752466.pdf): a child takes an untrodden forest path and hears stories involving regrets and broken promises. It has no medicine delivery, promise-ledger mechanics, wolf witnesses, repeating toll village or four-way responsibility resolution.
+- [Penguin Random House: *The Beholden*](https://www.penguinrandomhouse.com/books/735597/the-beholden-by-cassandra-rose-clarke/): sisters repay a supernatural favour during a journey through a changing wilderness. Its divine bargain and quest configuration do not match this candidate's broken human promises, bounded road, memory transfer, silver book or witness ending.
+- [Steam: *Werewolf — The Apocalypse: Heart of the Forest*](https://store.steampowered.com/app/1342620/Werewolf_The_Apocalypse__Heart_of_the_Forest/): a modern family-history and nature-conflict investigation with werewolf systems, distinct from a winter medicine convoy and the road's promise accounting.
+- [Steam: *Rain and the Wolf*](https://store.steampowered.com/app/3016500/Rain_and_the_Wolf/): a Little Red Riding Hood-inspired romance with a werewolf and seven endings; the forest/wolf/branching format is generic and the premise, cast, mechanics and prose sequences differ.
+
+Finding: no substantial match was observed in the inspected indexed material.
+The distinctive combination remains the medicine deadline, a human-made bounded
+promise road, memory as an invalid transferable payment, Luka's voluntarily
+repurposed bell and the witness/pathless resolutions. Result: `passed`; risk
+`low`, confidence `medium`. Open search cannot cover unpublished or unindexed
+works, all translations or complete third-party texts; this is a risk assessment,
+not a legal conclusion. Visual assets were not materially changed, so this pass
+does not claim a new visual-originality review.
+
 ## Separate episode cover — 2026-09-08
 
 The new `Config/EpisodeCovers/s01e01.png` has a scoped visual-originality review,
