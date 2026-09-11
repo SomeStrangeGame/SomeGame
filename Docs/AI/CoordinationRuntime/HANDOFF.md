@@ -83,8 +83,16 @@ Completed commit-all-main receipt is preserved in the same [history](../archive/
 Task: Merged origin/main 3e449934 into first-snow as a309df99 without conflicts; all 73 story hashes and dirty status preserved; standalone Ink 704 routes and episode-cover checks passed. Registered base refreshed; old candidate marked needs-candidate-refresh. Story revision and Unity acceptance remain separate; no push.
 Changed: Docs/AI/CoordinationRuntime/agents/first-snow-sync-main.md, Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-10-first-snow-sync.md
 Validation: finish-task passed (1 gates).
-Pending / risks: none
-Suggested next step: none
+Pending / risks: emulator/ADB was explicitly waived for this chat; manual visual acceptance through the real Catalog-to-story Player flow remains.
+Suggested next step: perform the manual Player visual gate if full visual acceptance is later required.
+
+## 2026-09-11T12:20:40Z — codex-first-snow-handoff — completed
+
+Task: Persist the completed First Snow integration handoff.
+Changed: coordination handoff and agent records only.
+Validation: scoped coordination diff reviewed; product commits and acceptance evidence already complete.
+Pending / risks: same explicit device waiver and manual Player visual limitation recorded above.
+Suggested next step: none unless full manual visual acceptance is requested.
 
 ## 2026-09-11T10:45:34Z — product-analytics-client — ready-with-limitations
 
@@ -115,3 +123,11 @@ Changed: fresh compiled Ink, catalog registration, acceptance evidence and coord
 Validation: Android story/catalog builds and final APK catalog-to-story smoke passed through first choice.
 Pending / risks: third option clips below the 1080x2400 portrait safe area; remaining route/endings/save-resume matrix stopped; no server write occurred.
 Suggested next step: repair the story-local Bubble/choice layout, rebuild, and rerun full Android acceptance before staging or upload.
+
+## 2026-09-11T12:19:35Z — codex-first-snow-integration — completed
+
+Task: Integrated First Snow, registered it in Catalog, passed story/catalog builds and Novels compile; emulator/ADB waived and manual Player visual remains
+Changed: Projects/novels-first-snow, Projects/novels-catalog/Config/catalog.json
+Validation: finish-task passed (3 gates).
+Pending / risks: none
+Suggested next step: none
