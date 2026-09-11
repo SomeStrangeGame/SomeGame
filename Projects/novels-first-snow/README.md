@@ -14,14 +14,16 @@
 - Фактическая основа: полностью вымышленная.
 - Границы: без эротики и трагической смерти.
 
-Проект создан из `Projects/novels-content-template`. Unity/MCP live proof,
-import, content build и runtime acceptance отложены до отдельно разрешённого
-финального validation-слота.
+Проект создан из `Projects/novels-content-template`. Разрешённый финальный
+Unity-слот выполнен 2026-09-11: импорт, каноническая Ink-компиляция с source map,
+atomic editor content build и bundle audit прошли. Подробное evidence находится
+в [Unity validation](Docs/Evidence/unity-validation.md).
 
-Pre-Unity candidate status: `ready-for-final-validation`. Standalone Ink
-compilation, exhaustive route traversal and runtime-address/default-outfit
-audit pass; canonical compilation and visual/runtime proof remain
-deferred to that slot.
+Standalone Ink compilation, exhaustive route traversal,
+runtime-address/default-outfit audit и атомарная Unity-сборка проходят.
+Эмулятор и ADB явно исключены пользователем для этого чата и не считаются
+device evidence. Catalog/Player-интеграция, Play Mode и ручная визуальная
+приёмка остаются отдельными следующими воротами.
 
 Story-owned веб-превью находится в `Config/Preview/preview.json`: это точный
 линейный фрагмент канонического начала с двумя утверждёнными персонажами.

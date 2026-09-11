@@ -1,6 +1,22 @@
 # First Snow — editorial handoff
 
-Status: `ready-for-final-validation`.
+Status: `unity-validated-with-device-waiver`.
+
+## Unity validation — 2026-09-11
+
+The separately authorized final Unity slot passed for the atomic story project:
+Unity `6000.3.11f1` imported the assets, generated the canonical Ink JSON and
+source map, audited three content chunks and produced the editor release. The
+post-build atomic validation also passed. Exact artifact sizes, release id,
+diagnostics and remaining gates are recorded in
+`../Evidence/unity-validation.md`.
+
+The user explicitly waived emulator and ADB checks for this chat. This removes
+those gates from the requested run but does not turn them into passed device
+evidence. Catalog registration, Player/Play Mode and manual visual acceptance
+were not performed. The five presentation inserts were bundled but still have
+no authored runtime display commands/prefabs, so they must not be claimed as
+visible.
 
 Current archive manifest:
 `archive/2026-09-11_manifest_v002.json`. Date naming, predecessor, referenced
