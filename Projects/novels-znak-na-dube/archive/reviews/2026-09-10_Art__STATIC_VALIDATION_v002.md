@@ -1,25 +1,5 @@
 # Static validation handoff
 
-## Current revision — 2026-09-10
-
-Current source SHA-256: `d33f3b7eded22668ece53a564e854425544ca6638d81f486b4734f170a60ab0f`.
-`check_story.py` passes all 372 routes, 192 pre-final combinations, 18 options,
-13 knots, three distinct final-state contracts and seven authored notifications.
-There are no unreachable executable lines. All 14 locations, 5 audio files,
-6 choice icons, character selectors, episode cover and authored GUIDs resolve.
-The 17-block/two-character website preview exactly matches canonical opening
-prose, order and speakers; PNGs equal approved source states byte-for-byte.
-The readable complete scenario includes every prose alternative in source order.
-Seven regression tests pass (baseline plus six in-memory negative controls).
-
-Displayed word count: 4,800–4,939 including selected labels and notifications.
-Estimated duration: 34.3–44.9 minutes at 110–140 effective words/minute; unmeasured.
-Added final-state variables require fresh saves. Full revision, both originality
-gates and archive limitations: [REVISION_HANDOFF.md](REVISION_HANDOFF.md).
-Status remains **ready-for-final-validation**, not compiled or runtime-accepted.
-
-## Historical baseline and earlier checks (not current source metrics)
-
 Status: **ready-for-final-validation** (not accepted, not runtime-validated).
 
 Prepared on 2026-09-06; refreshed on 2026-09-07 after the continuity/runtime-address audit, without launching Unity, content build, Player, ADB or emulator:

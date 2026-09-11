@@ -21,6 +21,7 @@ MonoBehaviour:
   - _id: s01e01
     _title: "Знак на дубе"
     _description: "Метка связывает Яра с пробуждающимся лесом и голосом пропавшего брата."
+    _catalogCover: s01e01.png
   _videoAliases: []
   _artAliases: []
   _characterDefaults:

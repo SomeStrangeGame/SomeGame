@@ -44,7 +44,3 @@ Each character has one identity master and only scene-used variants. Character c
 ## Visual originality gate
 
 Descriptive comparisons focus on the combined empty-eye root sign, bronze acoustic motif, village iron cartography, black-water root trail, drowned path-name shrine and root-borne debt archive. No direct artist or franchise imitation is permitted. Generated outputs were visually inspected; evidence and limitations are recorded in `ORIGINALITY_EVIDENCE.md`.
-
-## Website excerpt derivatives — 2026-09-10
-
-`Config/Preview/characters/yar.png` is an unchanged copy of `Assets/Characters/maincharacter/view/whole/travel/alarmed.png`; `lada.png` copies `Assets/Characters/лада/view/whole/forager/urgent.png`. These are the two states shown by the canonical opening. Byte identity, exact JSON references and absence of unreferenced preview images are checked by `Art/check_story.py`. No new visual candidate or image manipulation; actual website layout remains untested.

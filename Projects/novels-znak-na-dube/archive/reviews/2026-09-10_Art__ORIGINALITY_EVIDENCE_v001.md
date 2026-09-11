@@ -61,9 +61,3 @@ Generated sheets, including all three 2026-09-07 extension crops, were visually 
 The separately requested 2026-09-08 `s01e01` catalog cover has its own complete-image review, generation/edit prompts, source paths, checksum and limitations in [EPISODE_COVER_HANDOFF.md](EPISODE_COVER_HANDOFF.md). This supplemental visual review does not change the narrative/text iteration count or recertify unchanged assets.
 
 Raster source sheets were produced with the built-in OpenAI image generation tool on 2026-09-06 from prompts recorded in `GENERATION_PROVENANCE.md`, then deterministically cropped into runtime files with macOS `sips`. No external artwork was copied. Audio is deterministic original synthesis from `Art/render_audio.py`; the only non-original binary is Liberation Sans, copied from the repository’s existing presentation dependency with its existing license/provenance.
-
-## Iteration 5 — narrative and full-text revision, 2026-09-10
-
-Current complete source: `d33f3b7eded22668ece53a564e854425544ca6638d81f486b4734f170a60ab0f`. This supersedes iteration 4 and its editorial freshness note for narrative/text only. The narrative gate was recorded before canonical integration; complete source prose was reviewed separately after byte-identical integration. Both gates: **passed**, risk **low**, confidence **medium**, within the bounded inspected sources. The five-iteration counter was not reset.
-
-Exact queries, directly inspected sources, shared motifs, differences, provenance and limitations are recorded in [REVISION_HANDOFF.md](REVISION_HANDOFF.md). No exhaustive full-book/translation comparison or legal clearance is claimed. Art remains covered only by its own unchanged-art and episode-cover evidence.
