@@ -14,13 +14,14 @@ MonoBehaviour:
   m_EditorClassIdentifier:
   _id: volchya-poshlina
   _mainCharacter: "Ярина"
-  _contentVersion: 1
+  _contentVersion: 2
   _endMarker: "...: КОНЕЦ СЕРИИ"
   _silentAudioIds: []
   _episodes:
   - _id: s01e01
     _title: "Долги зимней дороги"
     _description: "Ярина везёт лекарство через лес, где волки собирают пошлину за нарушенные обещания."
+    _catalogCover: s01e01.png
   _videoAliases: []
   _artAliases: []
   _characterDefaults:
@@ -51,6 +52,16 @@ MonoBehaviour:
     _accessory:
   - _character: "Митя"
     _clothes: village
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Вея"
+    _clothes: winter
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Лука"
+    _clothes: bell
     _hair:
     _hairColor:
     _accessory:

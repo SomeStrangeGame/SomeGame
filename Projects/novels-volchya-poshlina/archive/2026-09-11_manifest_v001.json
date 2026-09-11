@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "storyId": "volchya-poshlina",
+  "manifestVersion": 1,
+  "recordedAtUtc": "2026-09-11T07:35:53Z",
+  "status": "ready-for-final-validation",
+  "previousManifest": null,
+  "artifacts": [
+    {
+      "id": "brief-adoption-v001",
+      "path": "archive/brief/2026-09-11_adoption-brief_v001.md",
+      "sha256": "d05b3d2912de211ef7c12095238e38328c1b89d8185474a2c0768805a6f55c27",
+      "snapshotAtUtc": "2026-09-11T07:31:03Z",
+      "originalDate": "unknown",
+      "source": "facts recoverable from the current project and user instructions at archive adoption",
+      "toolMetadata": null,
+      "status": "selected",
+      "mapsTo": "Art/NARRATIVE_PACKAGE.md"
+    },
+    {
+      "id": "skill-adoption-decision-v001",
+      "path": "archive/decisions/2026-09-11_skill-adoption_v001.md",
+      "sha256": "38810388c7bb0912dce6ea6281ba0b07323bf094cf274e1b0edde7e1a8e3f0fb",
+      "snapshotAtUtc": "2026-09-11T07:31:03Z",
+      "originalDate": "2026-09-11",
+      "source": "user request and current SomeGame skill contracts",
+      "toolMetadata": null,
+      "status": "selected",
+      "mapsTo": "current pre-Unity scope"
+    },
+    {
+      "id": "ink-pre-skill-revision-v001",
+      "path": "archive/scenarios/2026-09-11_s01e01-pre-skill-revision_v001.ink",
+      "sha256": "4d783fef34f38a53729865f100b9a1b14741b5c4a036d7c5905c58b7783dd488",
+      "snapshotAtUtc": "2026-09-11T07:31:03Z",
+      "originalDate": "unknown",
+      "source": "exact bytes of Assets/Ink/s01e01.ink at Git HEAD 143f70a929f702eece5b686f963ce87a8b998239 before this revision",
+      "toolMetadata": null,
+      "status": "superseded",
+      "mapsTo": "Assets/Ink/s01e01.ink"
+    },
+    {
+      "id": "ink-skill-revision-v002",
+      "path": "archive/scenarios/2026-09-11_s01e01-skill-revision_v002.ink",
+      "sha256": "466be5b94d53fa71ba41135797bb22def55955ac2ee931b8c690cae36ade398b",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-11",
+      "source": "current canonical complete source Ink",
+      "toolMetadata": "inkjs 2.3.2 standalone compile and exhaustive route audit",
+      "status": "selected",
+      "mapsTo": "Assets/Ink/s01e01.ink"
+    },
+    {
+      "id": "narrative-package-current",
+      "path": "Art/NARRATIVE_PACKAGE.md",
+      "sha256": "e85f6a4be6fbb58d62b47966c005ab174f5a625529a4ff6bfa3ae19280f1a484",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-11",
+      "source": "current story and adopted brief",
+      "toolMetadata": null,
+      "status": "selected",
+      "mapsTo": "Assets/Ink/s01e01.ink and Art/APPROVED_ASSETS.md"
+    },
+    {
+      "id": "originality-evidence-current",
+      "path": "Art/ORIGINALITY_EVIDENCE.md",
+      "sha256": "335f53c8d2c6f5eba5daaf636b5e372e56a6df551f9f91fad756752d4b714b3c",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "mixed; historical dates retained in source",
+      "source": "historical evidence plus 2026-09-11 post-adoption full-candidate review",
+      "toolMetadata": "open web search and direct public comparison pages",
+      "status": "selected",
+      "mapsTo": "Assets/Ink/s01e01.ink"
+    },
+    {
+      "id": "story-audit-current",
+      "path": "Art/STORY_AUDIT.md",
+      "sha256": "37e6ba5d6d7851e5f4fac015504170dc6b3aefe9f226f30fe56327f8e178bab8",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "mixed; historical dates retained in source",
+      "source": "story-local static audit",
+      "toolMetadata": "inkjs 2.3.2 and Node.js story/preview audit scripts",
+      "status": "selected",
+      "mapsTo": "Assets/Ink/s01e01.ink and Config/Preview/preview.json"
+    },
+    {
+      "id": "pre-unity-review-v001",
+      "path": "archive/reviews/2026-09-11_pre-unity-review_v001.md",
+      "sha256": "23b5922af2a6e9c001bed8ecaaa22c50fcac210bacfc45528beb02927231f1fe",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-11",
+      "source": "results of the current static story and preview checks",
+      "toolMetadata": "inkjs 2.3.2 and Node.js",
+      "status": "selected",
+      "mapsTo": "current ready-for-final-validation handoff"
+    },
+    {
+      "id": "approved-assets-current",
+      "path": "Art/APPROVED_ASSETS.md",
+      "sha256": "66455a47b650230109ada497748157a2ac33c99db362d432ae8b1b4beab228d3",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "unknown",
+      "source": "pre-existing scene-derived production inventory",
+      "toolMetadata": null,
+      "status": "selected",
+      "mapsTo": "existing Assets/Locations, Assets/Characters and Assets/Audio"
+    },
+    {
+      "id": "episode-cover-s01e01",
+      "path": "Config/EpisodeCovers/s01e01.png",
+      "sha256": "f52697591caa1bd05ab2445c8cce31bd3347c8ceb336d672a6489dd05120782f",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-08",
+      "source": "approved story-owned generated episode cover",
+      "toolMetadata": "provenance and review recorded in Art/EPISODE_COVER.md",
+      "status": "selected",
+      "mapsTo": "Assets/volchya-poshlina.asset episode VPs01e01 catalog cover"
+    },
+    {
+      "id": "website-preview-current",
+      "path": "Config/Preview/preview.json",
+      "sha256": "09623d9492105f8c074d75db0cc065f07d0c3e1da55ebbce00b65d06c98f4d28",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-11",
+      "source": "verbatim opening excerpt from Assets/Ink/s01e01.ink",
+      "toolMetadata": "Art/Checks/preview-audit.cjs",
+      "status": "selected",
+      "mapsTo": "Config/Preview/characters/yarina.png, makar.png, anfisa.png"
+    },
+    {
+      "id": "website-preview-yarina",
+      "path": "Config/Preview/characters/yarina.png",
+      "sha256": "80fca58c477be68ecd6c48db4f167a865453d6bf28e555f2c5f168d9a6ed2ff8",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-11",
+      "source": "identity-preserving resize of Assets/Characters/ярина/view/whole/travel/main.png",
+      "toolMetadata": "macOS sips, 512x768 PNG",
+      "status": "selected",
+      "mapsTo": "Config/Preview/preview.json character yarina"
+    },
+    {
+      "id": "website-preview-makar",
+      "path": "Config/Preview/characters/makar.png",
+      "sha256": "d6dd5e60fc714a4027778afda579a9f67d26dc3338584741cb610ed83c1fa65d",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-11",
+      "source": "identity-preserving resize of Assets/Characters/макар/view/whole/travel/main.png",
+      "toolMetadata": "macOS sips, 512x768 PNG",
+      "status": "selected",
+      "mapsTo": "Config/Preview/preview.json character makar"
+    },
+    {
+      "id": "website-preview-anfisa",
+      "path": "Config/Preview/characters/anfisa.png",
+      "sha256": "7b777391977435108db710c6fcda05aeb294e75ce5e2ce3150d58b08a53bd4c2",
+      "snapshotAtUtc": "2026-09-11T07:35:53Z",
+      "originalDate": "2026-09-11",
+      "source": "identity-preserving resize of Assets/Characters/анфиса/view/whole/travel/main.png",
+      "toolMetadata": "macOS sips, 512x768 PNG",
+      "status": "selected",
+      "mapsTo": "Config/Preview/preview.json character anfisa"
+    }
+  ],
+  "externalLinks": [
+    "https://images.penguinrandomhouse.com/teachers_guides/9780385752466.pdf",
+    "https://www.penguinrandomhouse.com/books/735597/the-beholden-by-cassandra-rose-clarke/",
+    "https://store.steampowered.com/app/1342620/Werewolf_The_Apocalypse__Heart_of_the_Forest/",
+    "https://store.steampowered.com/app/3016500/Rain_and_the_Wolf/"
+  ],
+  "gaps": [
+    "The original author brief, author identity/credit, prompts, approvals and their dates before 2026-09-11 are unavailable and were not reconstructed.",
+    "Rejected narrative drafts and pre-adoption intermediate Ink versions are unavailable beyond Git history and were not relabelled as archive artifacts.",
+    "Original image-generation prompts and rejected visual candidates are not present in this project archive; existing Art documents record only the provenance that was actually retained.",
+    "Unity-backed compile, source map, import, content validation/build, Player/device and manual visual evidence are deferred pending explicit authorization.",
+    "Website and Remote publication were not requested and were not performed."
+  ]
+}
