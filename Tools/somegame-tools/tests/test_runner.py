@@ -337,8 +337,11 @@ class RunnerTests(unittest.TestCase):
             "story-worktree", "create", "--story-id", "forest-song"])
         self.assertEqual("codex/story-forest-song", worktree.branch or "codex/story-forest-song")
         candidate = runner.parser().parse_args([
-            "story-candidate", "--story-id", "forest-song", "--static-evidence", "diff-check"])
+            "story-candidate", "--story-id", "forest-song", "--refresh-base", "--base", "main",
+            "--static-evidence", "diff-check"])
         self.assertEqual(["diff-check"], candidate.static_evidence)
+        self.assertTrue(candidate.refresh_base)
+        self.assertEqual("main", candidate.base)
         batch = runner.parser().parse_args([
             "story-batch-plan", "--agent-id", "integrator",
             "--story-id", "forest-song", "--story-id", "lake-song"])
@@ -364,6 +367,11 @@ class RunnerTests(unittest.TestCase):
                     "story-worktree", "create", "--story-id", "forest-song",
                     "--base", "main", "--path", str(target)]))
                 self.assertEqual("codex/story-forest-song", created["branch"])
+                (root / "README.md").write_text("shared update\n", encoding="utf-8")
+                self.assertEqual(0, __import__("subprocess").run(
+                    ["git", "commit", "-am", "shared"], cwd=root).returncode)
+                self.assertEqual(0, __import__("subprocess").run(
+                    ["git", "merge", "--ff-only", "main"], cwd=target).returncode)
                 story = target / "Projects/novels-forest-song"; story.mkdir(parents=True)
                 (story / "story.txt").write_text("candidate\n", encoding="utf-8")
                 self.assertEqual(0, __import__("subprocess").run(
@@ -371,10 +379,24 @@ class RunnerTests(unittest.TestCase):
                 self.assertEqual(0, __import__("subprocess").run(
                     ["git", "commit", "-m", "story"], cwd=target).returncode)
                 candidate = runner.story_candidate_workflow(runner.parser().parse_args([
-                    "story-candidate", "--story-id", "forest-song",
+                    "story-candidate", "--story-id", "forest-song", "--refresh-base", "--base", "main",
                     "--static-evidence", "diff-check"]));
                 self.assertEqual("ready-for-final-validation", candidate["status"])
                 self.assertEqual(["Projects/novels-forest-song/story.txt"], candidate["changedPaths"])
+                runner.resource_lock_workflow(runner.parser().parse_args([
+                    "resource-lock", "acquire", "--resource", "integration", "--agent-id", "integrator"]))
+                batch_args = runner.parser().parse_args([
+                    "story-batch-plan", "--agent-id", "integrator", "--story-id", "forest-song"])
+                self.assertEqual([candidate["headSha"]], runner.story_batch_plan_workflow(batch_args)["commits"])
+                (story / "story.txt").write_text("new candidate\n", encoding="utf-8")
+                self.assertEqual(0, __import__("subprocess").run(
+                    ["git", "commit", "-am", "new story"], cwd=target).returncode)
+                with self.assertRaises(runner.WorkflowError) as stale:
+                    runner.story_batch_plan_workflow(batch_args)
+                self.assertEqual("candidate_stale", stale.exception.code)
+                candidate = runner.story_candidate_workflow(runner.parser().parse_args([
+                    "story-candidate", "--story-id", "forest-song",
+                    "--static-evidence", "diff-check"]));
                 self.assertEqual(0, __import__("subprocess").run(
                     ["git", "merge", "--ff-only", "codex/story-forest-song"], cwd=root).returncode)
                 removed = runner.story_worktree_workflow(runner.parser().parse_args([

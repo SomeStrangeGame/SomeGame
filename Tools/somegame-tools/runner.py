@@ -1190,6 +1190,26 @@ def story_candidate_workflow(args: argparse.Namespace) -> dict[str, Any]:
     head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=target,
                           capture_output=True, text=True, check=True).stdout.strip()
     base = registration["baseSha"]
+    if args.refresh_base:
+        if not args.base:
+            raise WorkflowError("candidate_base_required", "--refresh-base requires an explicit --base ref")
+        refreshed_base = subprocess.run(["git", "rev-parse", args.base], cwd=target,
+                                        capture_output=True, text=True, check=True).stdout.strip()
+        old_is_ancestor = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", base, refreshed_base], cwd=target,
+            check=False).returncode == 0
+        base_is_ancestor = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", refreshed_base, head], cwd=target,
+            check=False).returncode == 0
+        if not old_is_ancestor or not base_is_ancestor:
+            raise WorkflowError("candidate_base_not_ancestor",
+                                "Refreshed base must descend from the registered base and be an ancestor of HEAD",
+                                details={"registeredBaseSha": base, "requestedBaseSha": refreshed_base,
+                                         "headSha": head})
+        registration = {**registration, "base": args.base, "baseSha": refreshed_base,
+                        "previousBaseSha": base,
+                        "refreshedUtc": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")}
+        base = refreshed_base
     changed = subprocess.run(["git", "diff", "--name-only", f"{base}...{head}"], cwd=target,
                              capture_output=True, text=True, check=True).stdout.splitlines()
     allowed = registration["allowedPrefix"]
@@ -1218,6 +1238,28 @@ def story_batch_plan_workflow(args: argparse.Namespace) -> dict[str, Any]:
         if value.get("status") != "ready-for-final-validation":
             raise WorkflowError("candidate_not_ready", f"Candidate is not ready: {story_id}")
         prefix = f"Projects/novels-{story_id}/"
+        registry_path = story_registry_path(story_id)
+        if not registry_path.is_file():
+            raise WorkflowError("worktree_missing", f"No registered worktree for {story_id}")
+        registration = json.loads(registry_path.read_text(encoding="utf-8"))
+        target = Path(registration["path"])
+        current_head = subprocess.run(["git", "rev-parse", "HEAD"], cwd=target,
+                                      capture_output=True, text=True, check=True).stdout.strip()
+        if value.get("headSha") != current_head:
+            raise WorkflowError("candidate_stale", f"Candidate HEAD is stale: {story_id}",
+                                details={"candidateHeadSha": value.get("headSha"),
+                                         "currentHeadSha": current_head})
+        if value.get("baseSha") != registration.get("baseSha"):
+            raise WorkflowError("candidate_base_stale", f"Candidate base is stale: {story_id}",
+                                details={"candidateBaseSha": value.get("baseSha"),
+                                         "registeredBaseSha": registration.get("baseSha")})
+        actual_changed = subprocess.run(
+            ["git", "diff", "--name-only", f'{value["baseSha"]}...{current_head}'], cwd=target,
+            capture_output=True, text=True, check=True).stdout.splitlines()
+        if value.get("changedPaths") != actual_changed:
+            raise WorkflowError("candidate_scope_stale", f"Candidate path manifest is stale: {story_id}",
+                                details={"candidatePaths": value.get("changedPaths", []),
+                                         "actualPaths": actual_changed})
         forbidden = [item for item in value.get("changedPaths", []) if not item.startswith(prefix)]
         if forbidden:
             raise WorkflowError("story_scope_violation", f"Candidate scope changed: {story_id}", details=forbidden)
@@ -1324,6 +1366,9 @@ def parser() -> argparse.ArgumentParser:
     worktree.add_argument("--branch"); worktree.add_argument("--path"); worktree.add_argument("--confirm", action="store_true")
     worktree.add_argument("--integrated-ref", default="origin/main")
     candidate = sub.add_parser("story-candidate"); candidate.add_argument("--story-id", required=True)
+    candidate.add_argument("--refresh-base", action="store_true",
+                           help="Explicitly advance a stale registered base before replacing the candidate")
+    candidate.add_argument("--base", help="Verified descendant base ref used with --refresh-base")
     candidate.add_argument("--static-evidence", nargs="*", default=[])
     batch = sub.add_parser("story-batch-plan"); batch.add_argument("--agent-id", required=True)
     batch.add_argument("--story-id", action="append", required=True)

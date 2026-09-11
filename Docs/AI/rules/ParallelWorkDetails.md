@@ -112,6 +112,18 @@ base затрагивает только его story prefix. `story-batch-plan`
 такие кандидаты. Catalog/shared-contract изменения выполняются отдельными
 ветками и интегрируются раньше зависимых историй.
 
+Если зарегистрированная story-ветка уже получила общий main merge, а registry
+сохранил более старый `baseSha`, кандидат обновляется только явной командой
+`story-candidate --refresh-base --base <verified-ref>`. Новый base обязан быть
+потомком прежнего base и предком текущего clean HEAD; diff от него по-прежнему
+обязан целиком лежать в story prefix. Команда сохраняет `previousBaseSha` и
+время обновления. Без явного флага baseline не меняется.
+
+`story-batch-plan` перед интеграцией повторно сверяет candidate `headSha` с
+фактическим HEAD зарегистрированного worktree, candidate `baseSha` с registry и
+точный `changedPaths` с новым Git diff. Старый manifest не принимается только
+потому, что его статус когда-то был `ready-for-final-validation`.
+
 Unity Editor, MCP write, import, генераторы, compile, tests, Player и emulator
 остаются глобально последовательными под shared `unity` lock. Они запрещены до
 единого финального слота и отдельного человеческого разрешения. Изменения

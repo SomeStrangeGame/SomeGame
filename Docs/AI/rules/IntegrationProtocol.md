@@ -17,6 +17,9 @@
 - Story-worktree передаётся только clean commit SHA и machine-readable
   candidate manifest. Интегратор проверяет story prefix до переноса commit;
   dirty files между checkout не копируются.
+- Перед plan/переносом machine-readable manifest повторно сверяется с текущими
+  registry, worktree HEAD и Git diff. Расхождение означает stale candidate и
+  требует нового `story-candidate`, а не интеграции сохранённого старого SHA.
 
 ## Изменение общего контракта
 
