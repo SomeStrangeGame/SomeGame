@@ -108,10 +108,10 @@ Validation: finish-task passed (6 gates).
 Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>
 Suggested next step: none
 
-## 2026-09-11T10:56:31Z — product-analytics-errors — completed
+## 2026-09-11T12:06:21Z — codex-kolodets-publish — blocked
 
-Task: Added automatic rate-limited and deduplicated capture of Unity errors, assertions, and exceptions into anonymous product analytics
-Changed: Novels/Assets/Novels/Analytics/ProductAnalytics.cs, Novels/Assets/Novels/EntryPoint.cs
-Validation: finish-task passed (1 gates).
-Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>
-Suggested next step: none
+Task: Complete Kolodets Android acceptance and Kostroma dev publication.
+Changed: fresh compiled Ink, catalog registration, acceptance evidence and coordination receipt.
+Validation: Android story/catalog builds and final APK catalog-to-story smoke passed through first choice.
+Pending / risks: third option clips below the 1080x2400 portrait safe area; remaining route/endings/save-resume matrix stopped; no server write occurred.
+Suggested next step: repair the story-local Bubble/choice layout, rebuild, and rerun full Android acceptance before staging or upload.
