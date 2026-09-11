@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9ef49ee7dc364b55bd46cdf47f47db65, type: 3}
+  m_Name: after-the-last-light
+  m_EditorClassIdentifier:
+  _id: after-the-last-light
+  _mainCharacter: "Мира"
+  _contentVersion: 1
+  _endMarker: "...: КОНЕЦ СЕРИИ"
+  _silentAudioIds: []
+  _episodes:
+  - _id: s01e01
+    _title: "Четыре минуты темноты"
+    _description: "Мира и Рен спасают совместную инсталляцию после грозы и решают, останется ли их взаимное притяжение только красивым эффектом."
+  _videoAliases: []
+  _artAliases: []
+  _characterDefaults:
+  - _character: "Мира"
+    _clothes: festival
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Рен"
+    _clothes: festival
+    _hair:
+    _hairColor:
+    _accessory:
+  _authoringRootInkGuid: 20b580b2ded34c88a581ba1a113d0130
+  _authoringChunkSizeMiB: 16
+  _authoringChunks: []
+  _authoringUnusedAssetGuids: []

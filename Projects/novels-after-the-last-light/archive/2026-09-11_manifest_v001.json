@@ -1,0 +1,26 @@
+{
+  "storyId": "after-the-last-light",
+  "recordedAtUtc": "2026-09-11T15:27:04Z",
+  "status": "published-with-limitations",
+  "channel": "kostroma-dev",
+  "version": "1",
+  "storyFileCount": 15,
+  "channelManifestSha256": "38e6c4744f5b005e620f60ad50e63d234a813b1174280a89d03571ec9a38ff98",
+  "publicApkSha256": "368d1efaf4f0579afcd832f6ea41906cefc698d435dc97f60aa551f37929251f",
+  "apkAction": "retained unchanged",
+  "passed": [
+    "editor story content build",
+    "fresh Ink compilation and source map",
+    "Android story content build",
+    "Android catalog content gate",
+    "full immutable-tree checksum comparison",
+    "representative public HTTPS checks"
+  ],
+  "waivedOrMissing": [
+    "emulator and ADB testing explicitly waived",
+    "exact-project MCP restart proof",
+    "real Player route and save traversal",
+    "Bubble visual state matrix",
+    "catalog-to-story runtime smoke"
+  ]
+}
