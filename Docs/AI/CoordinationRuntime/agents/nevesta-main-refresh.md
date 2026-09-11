@@ -1,0 +1,12 @@
+# Agent: `nevesta-main-refresh`
+
+- Status: completed
+- Task: Refresh registered Nevesta worktree to verified origin/main without changing story bytes
+- Scope: Registered novels-nevesta-izo-lda branch fast-forward and its exact shared registry/base receipt; Docs/AI/rules/ParallelWorkDetails.md, Docs/AI/memory/Workflows.md, Docs/AI/README.md for bounded refresh protocol; own coordination/handoff. Preserve main checkout and all story files; no Unity, story commit or publication.
+- Base commit: `3e449934bf86ab84ed08853d34845b30f7eacf25`.
+- Requested UTC: `2026-09-10T16:59:41Z`.
+- Result: `codex/story-nevesta-izo-lda` fast-forwarded from `d31d993572d30a1c38cbf1a8e1dde94eb10f1f5f` to fetched origin/main `3e449934bf86ab84ed08853d34845b30f7eacf25`. Exact shared registry base updated with previousBaseSha and refreshedUtc `2026-09-10T17:07:38Z`; path/branch/prefix/status preparing preserved. No candidate manifest existed or was created.
+- Preservation: all 114 files in Projects/novels-nevesta-izo-lda matched their pre-update SHA-256 values immediately after merge and again after tests. Sorted path/hash inventory JSON SHA-256: `9e8598fd5fdd8fe67476e0e7dfa5e8b1d4d272d435d4273797dc586c096fbea8`. No staged/tracked diff before or after; 12 ignored files outside story did not collide with incoming paths. Story files remain untracked as before; no stash, reset, clean, story commit or publication.
+- Verification: HEAD/origin/main ahead-behind `0 0`; registered base matches HEAD and base...HEAD has no shared/story commit diff. Current create-story skill and archive reference byte-match main; SDK contains `_catalogCover`; all six existing story tests passed. Source Ink SHA `3d09da4a55b225a5d1d640f89e8230f3ba0494782d66dd9157bce0354715dddb` and episode cover SHA `591958954c28fdfcebb3bb3271fc27e2eb0502ac8af431ba45bae05af0a9540c` unchanged.
+- Supporting local documentation: added bounded preparing-worktree refresh protocol, index route and workflow-memory pointer. docs-check and scoped diff check passed. These edits and this receipt are not committed/published; other tasks' main changes preserved.
+- Pending: literary/archive/preview/audio/alpha preparation and separately authorized final validation remain. The 2026-09-08 story handoff's old SDK/base prerequisite is superseded by this technical refresh receipt only; no media approval, Unity import, compilation, Player or acceptance is claimed. No Unity process was launched or touched.
