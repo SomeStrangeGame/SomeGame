@@ -187,6 +187,14 @@ compose() {
     local covers=("$project"/Config/cover.*(N))
     [[ ${#covers} -eq 1 ]] || { print -u2 "Story '$id' must contain one cover."; return 1; }
     cp "$covers[1]" "$destination/stories/$id/${covers[1]:t}"
+    local preview="$project/Config/Preview"
+    if [[ -d "$preview" ]]; then
+      [[ -f "$preview/preview.json" ]] || {
+        print -u2 "Story '$id' preview directory has no preview.json."
+        return 1
+      }
+      copy_tree "$preview" "$destination/stories/$id/preview"
+    fi
   done
   cp "$(project_path catalog)/Config/catalog.json" "$destination/catalog/registry/catalog.json"
   print "Composed: $destination"

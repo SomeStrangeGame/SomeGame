@@ -54,3 +54,19 @@ version `first-snow/1`. The existing public APK was retained unchanged.
   The access gate prevented an unauthenticated click-through visual review.
 - Server access reused the dedicated `~/.ssh/sweb_novels` identity. No key
   contents were read or recorded.
+
+## Publication correction — version 2
+
+The initial public version did not expose the intended beta stage or the
+story-owned website preview. Root causes were a missing `releaseStage` field in
+the First Snow card and the compose command not copying `Config/Preview` into
+the releasable story tree.
+
+Published immutable `first-snow/2` on 2026-09-11. The corrected card contains
+`releaseStage: beta`; `preview/preview.json` and its two character images are
+present. The seven-entry `kostroma-dev` manifest now selects version `2` and has
+SHA-256 `25657e8bae53cdd605371e27b85a679a44d1d2df0b1439285c0b6a8d5d481625`.
+The staged and server trees matched under checksum comparison. Public HTTP
+checks returned `200` for all three preview files. Live browser inspection
+confirmed the `БЕТА` badge, the `Читать начало` button, and an opened preview
+ending with `Продолжение — в приложении`.
