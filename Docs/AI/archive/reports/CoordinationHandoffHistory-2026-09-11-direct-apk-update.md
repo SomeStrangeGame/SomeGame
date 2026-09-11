@@ -67,3 +67,11 @@ Changed: Novels/Build/ChannelContent/stories/znak-na-dube/2, Novels/Build/Channe
 Validation: finish-task passed (1 gates).
 Pending / risks: none
 Suggested next step: none
+
+## 2026-09-11T10:56:31Z — product-analytics-errors — completed
+
+Task: Added automatic rate-limited and deduplicated capture of Unity errors, assertions, and exceptions into anonymous product analytics
+Changed: Novels/Assets/Novels/Analytics/ProductAnalytics.cs, Novels/Assets/Novels/EntryPoint.cs
+Validation: finish-task passed (1 gates).
+Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>
+Suggested next step: none
