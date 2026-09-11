@@ -18,6 +18,11 @@ Previous snapshot preserved in [`CoordinationHandoffHistory-2026-09-05-pre-publi
 
 ## Blocked or deferred gates
 
+- `volchya-poshlina-final`: story/catalog editor and Android content builds
+  passed. At the user's direction the emulator gate was skipped and immutable
+  `volchya-poshlina=1` was published content-only to Kostroma dev; all 26 files,
+  public manifest and key release metadata passed server SHA-256 and public HTTP
+  checks. Formal runtime acceptance remains pending the user's device check.
 - `catalog-playmode-review`: paused until manual visual review is explicitly resumed.
 - `gpl-catalog-registration`, `gpl-lea-layered-rework`, `gpl-mark-integration`, `gpl-vera-integration`: content/build checks passed; bounded in-game visual gates remain.
 - `tzm-wardrobe-runtime`: implementation and content checks passed; portrait visual review remains.
@@ -115,6 +120,14 @@ Suggested next step: none
 ## 2026-09-10T16:56:00Z — commit-all-main — completed
 Task: Committed and published all current repository changes to origin/main at 2a6af3beda33bcfb48d6dfd441959ac122fd5e7f; static diff check passed; aggregate content validation was blocked by the open Catalog Editor; fresh Kostroma Android dev build and catalog startup evidence already passed.
 Changed: .agents, Docs/AI, Novels, Packages, Projects
+Validation: finish-task passed (1 gates).
+Pending / risks: none
+Suggested next step: none
+
+## 2026-09-11T10:22:42Z — volchya-poshlina-dev-publish — completed
+
+Task: Published immutable volchya-poshlina v1 content-only to Kostroma dev; server hashes and all 26 public HTTP endpoints pass; emulator intentionally skipped and device acceptance remains manual.
+Changed: Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/CoordinationRuntime/agents/volchya-poshlina-dev-publish.md
 Validation: finish-task passed (1 gates).
 Pending / risks: none
 Suggested next step: none
