@@ -1,8 +1,16 @@
 # Originality evidence
 
-Status applies to the final complete Ink, approved character package,
-non-character art and audio. This is an internal risk screen, not legal advice
-or legal clearance.
+Historical evidence from 2026-09-06. The complete-source result below does NOT
+cover the continuity revision of 2026-09-07. The ten source episodes changed
+materially (conditions, memory cost, consequences and epilogues); a fresh full
+text review is required before compilation/acceptance. No new search or
+originality pass is claimed by the continuity audit.
+
+The narrative result covers the earlier design package, whose differences from
+the implemented story are documented in [CONTINUITY_REVIEW.md](CONTINUITY_REVIEW.md).
+Character pixels, background pixels, cover and audio were not changed by the
+continuity revision; their historical coverage is preserved, not revalidated.
+This is an internal risk screen, not legal advice or legal clearance.
 
 ## Narrative design — passed
 
@@ -20,7 +28,7 @@ or legal clearance.
 - Result: `passed`; low residual risk from common well, echo, village-secret
   and lost-memory tropes; medium confidence within indexed public-search limits.
 
-## Complete source Ink — passed
+## Complete source Ink — historical passed; current revision pending
 
 - Reviewed artifacts: the final root Ink and all ten episode sources, including
   84 visible choices, persistent state callbacks, five final branches and every
