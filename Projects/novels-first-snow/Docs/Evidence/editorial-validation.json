@@ -1,0 +1,155 @@
+{
+  "sourceSha256": "c7006807538f19f0f9b3b218914a5ce3276997918dc685d8c8165f1cd8739d72",
+  "checker": "inkjs 2.3.2",
+  "compileErrors": [],
+  "compileWarnings": [],
+  "runtimeProblems": [],
+  "routes": 704,
+  "endings": {
+    "ПЕРВЫЙ СНЕГ": 288,
+    "ЧЕТЫРЕ ВОСКРЕСЕНЬЯ": 320,
+    "НЕРЕЗКИЙ, НО НАШ": 96
+  },
+  "ranges": {
+    "words": [
+      6654,
+      7197
+    ],
+    "dialogueSteps": [
+      643,
+      690
+    ],
+    "decisions": [
+      9,
+      10
+    ]
+  },
+  "witnesses": {
+    "ПЕРВЫЙ СНЕГ": {
+      "variables": {
+        "attention": 2,
+        "courage": 3,
+        "admitted_closeness": true,
+        "contact_choice": "destroy",
+        "photo_choice": "take_photo",
+        "star_read": true,
+        "star_opened": true
+      },
+      "choices": [
+        "Спросить, что написано внутри звёзд",
+        "«Недосказанное»",
+        "Признаться, почему кадр испугал",
+        "Не спрашивать при Соне",
+        "Предложить уничтожить лист",
+        "Предложить созваниваться после фестиваля",
+        "Сразу пойти за Мией",
+        "Сделать последний кадр",
+        "Спросить о будущем",
+        "Открыть звезду вместе"
+      ]
+    },
+    "ЧЕТЫРЕ ВОСКРЕСЕНЬЯ": {
+      "variables": {
+        "attention": 3,
+        "courage": 1,
+        "admitted_closeness": true,
+        "contact_choice": "keep_hands",
+        "photo_choice": "take_photo",
+        "star_read": true,
+        "star_opened": true
+      },
+      "choices": [
+        "Спросить, что написано внутри звёзд",
+        "«Недосказанное»",
+        "Признаться, почему кадр испугал",
+        "Не спрашивать при Соне",
+        "Предложить вместе выбрать допустимое",
+        "Предложить созваниваться после фестиваля",
+        "Спросить Соню, почему она объявила",
+        "Сделать последний кадр",
+        "Открыть звезду вместе"
+      ]
+    },
+    "НЕРЕЗКИЙ, НО НАШ": {
+      "variables": {
+        "attention": 1,
+        "courage": 1,
+        "admitted_closeness": false,
+        "contact_choice": "destroy",
+        "photo_choice": "take_photo",
+        "star_read": true,
+        "star_opened": true
+      },
+      "choices": [
+        "Спросить, что написано внутри звёзд",
+        "«Недосказанное»",
+        "Сослаться на требования конкурса",
+        "Спросить прямо",
+        "Предложить уничтожить лист",
+        "Предложить созваниваться после фестиваля",
+        "Спросить Соню, почему она объявила",
+        "Сделать последний кадр",
+        "Открыть звезду вместе"
+      ]
+    }
+  },
+  "assetAudit": {
+    "locations": [
+      "Assets/Locations/assembly-hall-prep.png",
+      "Assets/Locations/bus-stop-rain.png",
+      "Assets/Locations/bus-stop-snow-night.png",
+      "Assets/Locations/bus-stop-winter-morning.png",
+      "Assets/Locations/darkroom.png",
+      "Assets/Locations/radio-booth.png",
+      "Assets/Locations/river-screen.png",
+      "Assets/Locations/school-courtyard-snow.png",
+      "Assets/Locations/school-rooftop.png"
+    ],
+    "characterVariants": [
+      "Assets/Characters/лёша/view/whole/festival/main.png",
+      "Assets/Characters/лёша/view/whole/school/main.png",
+      "Assets/Characters/лёша/view/whole/winter/main.png",
+      "Assets/Characters/мия/view/whole/festival/main.png",
+      "Assets/Characters/мия/view/whole/school/main.png",
+      "Assets/Characters/мия/view/whole/winter/main.png",
+      "Assets/Characters/соня/view/whole/festival/main.png",
+      "Assets/Characters/соня/view/whole/school/main.png"
+    ],
+    "runtimeMappings": [
+      {
+        "address": "story/character/characters/maincharacter/view/whole/festival/main.png",
+        "file": "Assets/Characters/лёша/view/whole/festival/main.png"
+      },
+      {
+        "address": "story/character/characters/maincharacter/view/whole/school/main.png",
+        "file": "Assets/Characters/лёша/view/whole/school/main.png"
+      },
+      {
+        "address": "story/character/characters/maincharacter/view/whole/winter/main.png",
+        "file": "Assets/Characters/лёша/view/whole/winter/main.png"
+      },
+      {
+        "address": "story/character/characters/мия/view/whole/festival/main.png",
+        "file": "Assets/Characters/мия/view/whole/festival/main.png"
+      },
+      {
+        "address": "story/character/characters/мия/view/whole/school/main.png",
+        "file": "Assets/Characters/мия/view/whole/school/main.png"
+      },
+      {
+        "address": "story/character/characters/мия/view/whole/winter/main.png",
+        "file": "Assets/Characters/мия/view/whole/winter/main.png"
+      },
+      {
+        "address": "story/character/characters/соня/view/whole/festival/main.png",
+        "file": "Assets/Characters/соня/view/whole/festival/main.png"
+      },
+      {
+        "address": "story/character/characters/соня/view/whole/school/main.png",
+        "file": "Assets/Characters/соня/view/whole/school/main.png"
+      }
+    ],
+    "missing": []
+  },
+  "scope": "Standalone Ink compilation, exhaustive traversal, initial clothes, protagonist aliases and inherited selector audit against current source contracts; not Unity execution or measured playtime"
+}
