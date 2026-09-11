@@ -1,5 +1,16 @@
 # Non-character art handoff — `first-snow`
 
+Episode-cover addition: the author approved the s01e01 portrait in this chat.
+`Config/EpisodeCovers/s01e01.png` and its definition binding are prepared for the
+current main episode-cover contract, now present in the story branch. See
+`episode-cover-handoff.md` for exact provenance, SHA-256 and originality
+findings. Export, crop and catalog display remain deferred to Unity acceptance.
+The pre-existing source-art approvals below are unchanged.
+
+The website preview reuses byte-identical approved school masters for Лёша and
+Соня under `Config/Preview/characters/`; these are delivery copies, not new art
+or new originality candidates.
+
 Status: `approved-for-import`; nine backgrounds, five inserts and cover are
 approved. V1 intentionally uses the shared Bubble/choice fallback and requires
 no story-local audio.

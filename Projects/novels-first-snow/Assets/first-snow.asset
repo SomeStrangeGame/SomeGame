@@ -20,10 +20,32 @@ MonoBehaviour:
   _episodes:
   - _id: s01e01
     _title: "Первый снег"
-    _description: "Один последний кадр, одна неделя до отъезда и первая любовь, которой придётся выдержать честный разговор."
+    _description: "Один последний кадр, пять дней до отъезда и первая любовь, которой придётся выдержать честный разговор."
+    _catalogCover: s01e01.png
   _videoAliases: []
-  _artAliases: []
-  _characterDefaults: []
+  _artAliases:
+  - _alias: "story/character/characters/maincharacter/view/whole/school/main.png"
+    _target: "story/character/characters/лёша/view/whole/school/main.png"
+  - _alias: "story/character/characters/maincharacter/view/whole/festival/main.png"
+    _target: "story/character/characters/лёша/view/whole/festival/main.png"
+  - _alias: "story/character/characters/maincharacter/view/whole/winter/main.png"
+    _target: "story/character/characters/лёша/view/whole/winter/main.png"
+  _characterDefaults:
+  - _character: "Лёша"
+    _clothes: school
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Мия"
+    _clothes: school
+    _hair:
+    _hairColor:
+    _accessory:
+  - _character: "Соня"
+    _clothes: school
+    _hair:
+    _hairColor:
+    _accessory:
   _authoringRootInkGuid: 6c973b3ca11b4b7fa8035581ed7990aa
   _authoringChunkSizeMiB: 16
   _authoringChunks: []

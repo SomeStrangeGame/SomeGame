@@ -1,5 +1,5 @@
 {
-  "sourceSha256": "c7006807538f19f0f9b3b218914a5ce3276997918dc685d8c8165f1cd8739d72",
+  "sourceSha256": "1ea409eda208d387a830ab03d7a428acea3273995e99d1ea73f7689177a7d9cc",
   "checker": "inkjs 2.3.2",
   "compileErrors": [],
   "compileWarnings": [],
@@ -12,12 +12,12 @@
   },
   "ranges": {
     "words": [
-      6654,
-      7197
+      6537,
+      7087
     ],
     "dialogueSteps": [
-      643,
-      690
+      639,
+      686
     ],
     "decisions": [
       9,
@@ -32,8 +32,7 @@
         "admitted_closeness": true,
         "contact_choice": "destroy",
         "photo_choice": "take_photo",
-        "star_read": true,
-        "star_opened": true
+        "star_read": true
       },
       "choices": [
         "Спросить, что написано внутри звёзд",
@@ -55,8 +54,7 @@
         "admitted_closeness": true,
         "contact_choice": "keep_hands",
         "photo_choice": "take_photo",
-        "star_read": true,
-        "star_opened": true
+        "star_read": true
       },
       "choices": [
         "Спросить, что написано внутри звёзд",
@@ -77,8 +75,7 @@
         "admitted_closeness": false,
         "contact_choice": "destroy",
         "photo_choice": "take_photo",
-        "star_read": true,
-        "star_opened": true
+        "star_read": true
       },
       "choices": [
         "Спросить, что написано внутри звёзд",

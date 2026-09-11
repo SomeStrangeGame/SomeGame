@@ -1,43 +1,5 @@
 # First Snow — revised full-text originality review
 
-Date: 2026-09-11. Current editorial revision 5.
-Source SHA-256: `c7006807538f19f0f9b3b218914a5ce3276997918dc685d8c8165f1cd8739d72`.
-
-## Revision 5 — iteration 1
-
-The complete current candidate was reread after the opening-orientation,
-portrait-aftermath, notification, state and ending revisions. Targeted public
-searches used the title/cast/photographer/paper-star combination, the exact
-line `Пусть меня запомнят не только уходящей`, and the English combination of
-a photographer, paper stars, moving away and four Sunday calls. No indexed
-result reproduced the exact phrase or the candidate's concrete sequence.
-
-Direct comparators inspected:
-
-- [Our Love at 0°C](https://sanmimi.itch.io/our-love-at-0c): winter romance
-  about long-time neighbours approaching Christmas and meeting a mysterious
-  third figure. Its published premise remains distinct from the school
-  festival, consent dispute, departure and negotiated four-call structure.
-- [Not Even Looking](https://not-even-looking.com/): an adult 18+ multi-route
-  dating story about a university film-photography student and four women who
-  seek professional boudoir photographs under false pretences. Photography and
-  multiple endings are generic overlap; audience, cast configuration, conflict,
-  scene chain and expression are materially different.
-- [Paper Stars forum announcement](https://lemmasoft.renai.us/forums/viewtopic.php?p=515009):
-  its indexed description associates folded paper stars with wishes. That motif
-  is broad and does not reproduce this story's photographer, consent conflict,
-  move, projector, state graph or ending consequences. Direct page retrieval
-  failed, so only the indexed description is claimed.
-
-The new wording about staying in a conversation, calendar meetings and an
-awkward spring plan was written for this revision; no comparator wording was
-copied or translated. Result: `passed`; risk `low`; confidence `medium` for
-indexed public descriptions and exact-phrase search, limited for unavailable or
-unindexed full scripts. No second rewrite iteration was required. This is a
-risk assessment, not proof of absolute uniqueness.
-
-## Retained revision 4 review
-
 Date: 2026-09-07. Current editorial revision 4.
 Source SHA-256: `1ea409eda208d387a830ab03d7a428acea3273995e99d1ea73f7689177a7d9cc`.
 

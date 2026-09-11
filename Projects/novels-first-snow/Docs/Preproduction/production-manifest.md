@@ -1,6 +1,6 @@
 # «Первый снег» — frozen production manifest
 
-Status: `editorial-revision-v2`; approved source art retained, scene usage updated.
+Status: `editorial-revision-v5`; approved source art retained, runtime addressing corrected.
 
 ## Characters
 
@@ -18,6 +18,14 @@ Status: `editorial-revision-v2`; approved source art retained, scene usage updat
 Whole-image representation is intentional. Dialogue and staging carry fine
 emotion changes; the runtime must not synthesize an unused Cartesian emotion
 matrix. Each authored outfit has a neutral `main` fallback.
+
+All three speakers now have `school` initial clothes in the definition, required
+by the current whole-variant loader before it processes explicit selectors.
+Because Лёша is the declared protagonist, his requested runtime addresses use
+`story/character/characters/maincharacter/view/whole/<outfit>/main.png`.
+Three definition aliases map them to the corresponding physical Лёша PNGs in
+the table. Miya and Sonya use their own names. The checker exercises defaults,
+aliases and inherited outfits on all 704 routes; Unity import is deferred.
 
 ## Backgrounds
 
@@ -48,6 +56,20 @@ three stop images share geometry by edit provenance.
 | all | shared Bubble fallback | standard readable presentation for 12+ story | approved for v1 |
 | choices | shared choice fallback | standard readable presentation for 12+ story | approved for v1 |
 | catalog | `Config/cover.png` | first snow, paper stars, two figures implied without copying sprites | approved |
+| episode s01e01 catalog | `Config/EpisodeCovers/s01e01.png` | scene 9: paper star under the walkway, first snow and warm school windows; no branch outcome | author-approved; source binding prepared for current main SDK |
+
+Episode cover: PNG 1024×1536, opaque portrait 2:3, no typography. Definition
+`s01e01._catalogCover` points to `s01e01.png`; the original story cover is retained.
+See `episode-cover-handoff.md` for provenance, originality review and checks.
+The story branch now contains the current main episode-cover contract. The
+source binding and PNG pass static checks; catalog export, crop and display stay
+deferred to the separately authorized Unity acceptance slot.
+
+The five files under `Presentation/inserts` are retained source artwork. The
+current Ink/prefab set does not display them; their table scene numbers express
+intended use, not an implemented runtime feature. In particular, the final-print
+image has not passed fit review for the revised photograph. Shared Bubble and
+choice fallbacks remain the implemented v1 presentation.
 
 ## Audio
 
@@ -57,6 +79,15 @@ provided by the shared application. An original three-note motif and dedicated
 environment loops are explicitly optional post-v1 enhancements; their absence
 must not cause missing-asset errors or block the story.
 
+## Story-owned website preview
+
+`Config/Preview/preview.json` uses schema 1 and a faithful linear excerpt from
+the canonical opening before its first meaningful choice. It references only
+`characters/lesha.png` and `characters/sonya.png`, copied byte-for-byte from
+their approved school masters. Static source-order, speaker, path, PNG and
+unreferenced-file checks are required. Browser layout and deployment are not in
+scope before Unity acceptance and a separate release request.
+
 ## Geometry and import
 
 - Characters: 1024×1536 PNG with true alpha; whole-image runtime variants.
@@ -65,6 +96,6 @@ must not cause missing-asset errors or block the story.
 - UI sprites: true transparent exterior, hidden RGB matte matching the edge,
   no painted checkerboard; nine-slice only after actual-size proof.
 - No manual AssetBundle labels. All existing project addresses are retained.
-- V2 changes text and scene usage only; no PNGs, prefabs or import settings were
+- V3 changes text, definition defaults/aliases and checks; no PNGs, prefabs or import settings were
   edited. Existing stills do not prove every narrated prop action or outfit
   transition. Those remain part of the final visual review.
