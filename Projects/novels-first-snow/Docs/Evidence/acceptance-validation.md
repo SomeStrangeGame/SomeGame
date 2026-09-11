@@ -35,3 +35,22 @@ Non-blocking fresh-log diagnostics were limited to the known initial licensing
 access-token message, certificate/Xcode discovery diagnostics and shared Ink
 integration obsolete-API warnings. They did not prevent successful builds or
 compilation.
+
+## Publication
+
+Published to the `kostroma-dev` content channel on 2026-09-11 as immutable
+version `first-snow/1`. The existing public APK was retained unchanged.
+
+- Final Android content build and validation: passed.
+- The channel manifest retained the six existing entries at their then-current
+  versions and appended `first-snow: 1`, for seven stories total.
+- The staged and server story trees matched under an `rsync --checksum`
+  comparison; all 16 files were present.
+- The local and public channel-manifest SHA-256 is
+  `52e0581c193d8b5439c0144c1ff6ffc8f73674a76c72048453d5da501bff17c0`.
+- Public HTTP checks returned `200` for the card, cover, Android and Mac release
+  manifests, episode cover, and a representative Android bundle.
+- The live website exposed `Первый снег` in navigation and reported `1 / 7`.
+  The access gate prevented an unauthenticated click-through visual review.
+- Server access reused the dedicated `~/.ssh/sweb_novels` identity. No key
+  contents were read or recorded.
