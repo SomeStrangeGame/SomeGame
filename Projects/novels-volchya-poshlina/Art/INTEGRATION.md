@@ -141,3 +141,14 @@ target and requires a content build; that is the Unity boundary and was not
 crossed. Compiled Ink/source map, Unity import, validate/build, manual visual
 smoke, acceptance and publication remain pending explicit authorization.
 Current status: `ready-for-final-validation`.
+
+The clean pre-Unity candidate is committed as
+`9aeef63dd0f854a2e3aa105bf5f6ddecd510d8d4`. A canonical
+`story-candidate` registration attempt failed closed with
+`story_scope_violation`: the worktree registry still compares this branch to
+its creation base `d31d993572d30a1c38cbf1a8e1dde94eb10f1f5f`, so already merged shared
+skill and coordination changes appear as forbidden paths. The current merge
+base with `origin/main` is `3e449934bf86ab84ed08853d34845b30f7eacf25` and the worktree is clean.
+No registry file was edited manually and no history was rewritten; repairing
+the stale registration baseline belongs to the integration owner before the
+final Unity slot.
