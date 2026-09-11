@@ -29,6 +29,7 @@ scope используйте `--resume`; неизменившиеся докум
 | Задача | Канонический источник |
 | --- | --- |
 | Изменение файлов/scope | [ParallelWorkDetails.md](rules/ParallelWorkDetails.md) |
+| Обновление базы registered story worktree | [ParallelWorkDetails.md](rules/ParallelWorkDetails.md#обновление-базы-preparing-worktree-без-собственных-коммитов) |
 | Unity, tests, build, FIFO | [UnityConcurrency.md](rules/UnityConcurrency.md), [AutomationRunners.md](guides/AutomationRunners.md) |
 | Commit, handoff, restart | [IntegrationProtocol.md](rules/IntegrationProtocol.md) |
 | Memory bank | [MemoryBankProtocol.md](rules/MemoryBankProtocol.md) |

@@ -17,6 +17,10 @@
 - Story-worktree передаётся только clean commit SHA и machine-readable
   candidate manifest. Интегратор проверяет story prefix до переноса commit;
   dirty files между checkout не копируются.
+- Unity/import/build/emulator evidence независимых story candidates создаётся
+  параллельно под их `story`, `unity-project`, `emulator` и `build-output`
+  locks. Получение `integration` не инвалидирует это evidence, пока candidate
+  SHA и его release/APK hashes не изменились.
 
 ## Изменение общего контракта
 
@@ -84,8 +88,12 @@ Suggested next step: <действие или none>
 3. Проверить зависимости и перенести только разрешённые story commit SHA в
    отдельную batch integration branch; Catalog и shared contracts остаются
    отдельными атомарными commits.
-4. После отдельного актуального разрешения человека получить `unity` lock и
-   выполнить один минимальный общий Unity/content/Player/emulator слот.
+4. Не повторять уже успешные story-local Unity/content/Player/emulator gates
+   для неизменившихся candidate SHA. После отдельного актуального разрешения
+   человека получить только locks фактически общих ресурсов и выполнить один
+   минимальный общий Catalog/compose/Player слот, если changed-path plan его
+   требует. Общий `unity` lock нужен лишь для общей Unity-инфраструктуры или
+   recovery, а не как глобальный mutex разных atomic projects.
 5. Выполнить только оставшиеся manual gates; повтор тяжёлого слота после
    исправлений требует нового человеческого разрешения.
 6. Зафиксировать evidence и реальные ограничения.

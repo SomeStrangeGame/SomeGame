@@ -68,10 +68,14 @@ scope/FIFO/write-lock/handoff. Наличие чужого непересека�
 
 ## FIFO и тяжёлые процессы
 
-Unity Editor/batch, compile, tests, import, build, генераторы и массовая
-обработка выполняются по одному на весь репозиторий и только под lock. До старта
-проверяются очередь и реальные процессы ОС. Read-only probe уже открытого
-Editor допустим, если не меняет его state.
+Задача может использовать собственные Editor и emulator параллельно с другими.
+До старта фиксируются project/worktree path, PID, AVD/serial и output paths;
+совпадающий mutable resource не используется одновременно. Story-local работа
+требует locks только своих ресурсов и не входит в repository FIFO без изменения
+main, Catalog, shared SDK/tooling или общего output. Read-only probe допустим.
+
+Независимые истории используют отдельные `story`, `unity-project`, `emulator`
+и `build-output` locks; `catalog`, `shared-sdk`, `integration` сериализуются.
 
 Для новой истории все Unity-backed и device gates принадлежат одному финальному
 validation/acceptance-слоту. Его состав, отдельное человеческое разрешение и
