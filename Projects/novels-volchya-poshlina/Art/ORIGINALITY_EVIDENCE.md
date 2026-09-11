@@ -111,22 +111,23 @@ general Slavic-folklore motifs.
 
 ## Per-character result index
 
-This index records coverage claimed by the historical grouped reviews above.
-It does not establish eight independently performed reviews or supply missing
-per-character comparison sources/contact sheets. No fresh visual review was
-performed during the narrative repair; the images themselves are unchanged.
-Acceptance must inspect the original production evidence for those requirements.
+The historical grouped reviews above remain provenance. Eight fresh, separate
+package reviews were completed on 2026-09-11 and are recorded with per-package
+scope, hashes, sources, findings and results in
+[CHARACTER_ORIGINALITY_REVIEWS.md](CHARACTER_ORIGINALITY_REVIEWS.md). The Veya
+`warning` and Luka `alarmed` variants were repaired before their final package
+results because the previous files duplicated their neutral masters.
 
-| Character package | Reported coverage | Historical group result | Reported risk / confidence |
+| Character package | Current separate result | Final risk / confidence |
 |---|---|---|---|
-| Ярина / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
-| Макар / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
-| Анфиса / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
-| Савва / `travel` | Character and production art — iteration 1 | `passed` | low / medium |
-| Седой / `natural` | Character and production art — iteration 1 | `passed` | low / medium |
-| Митя / `village` | Character and production art — iteration 1 | `passed` | low / medium |
-| Вея / `winter` | Expansion review — iteration 3 | `passed` | low / medium |
-| Лука / `bell` | Expansion review — iteration 3 | `passed` | low / medium |
+| Ярина / `travel` | `passed` | low / medium |
+| Макар / `travel` | `passed` | low / medium |
+| Анфиса / `travel` | `passed` | low / medium |
+| Савва / `travel` | `passed` | low / medium |
+| Седой / `natural` | `passed` | low / medium |
+| Митя / `village` | `passed` | low / medium |
+| Вея / `winter` | `passed` | low / medium |
+| Лука / `bell` | `passed` | low / medium |
 
 ## Full candidate continuity repair — iteration 5 (2026-09-07)
 
