@@ -19,6 +19,7 @@ namespace Novels
             public Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
+            internal Analytics.ProductAnalytics ProductAnalytics;
             internal Action<StoryProcessor.StorySourceLocation> OnStorySourceChanged;
             internal Bundles.Entity Bundles;
             internal Catalog.NovelCatalogEntry Content;
@@ -130,6 +131,14 @@ namespace Novels
             if (result.Status == EpisodeRunStatus.Completed)
             {
                 _progress.Complete(_episode, result.ContinuationState);
+                var storyCompleted = string.Equals(
+                    _definition.Episodes[_definition.Episodes.Count - 1].Id,
+                    _episode.Id,
+                    StringComparison.OrdinalIgnoreCase);
+                _ctx.ProductAnalytics?.EpisodeCompleted(
+                    _definition.Id,
+                    _episode.Id,
+                    storyCompleted);
                 _ctx.SmokeTelemetry?.Emit(
                     "episode.completed",
                     ("contentId", _definition.Id),
@@ -174,7 +183,13 @@ namespace Novels
                 var ratio = EpisodeReadingProgress.Estimate(_readingStoryText,
                     _progress.GetEntryState(_episode), decisions, _definition.EndMarker);
                 if (ratio.HasValue)
+                {
                     EpisodeReadingProgress.Write(cache, key, _definition.ContentVersion, bytes, ratio.Value);
+                    _ctx.ProductAnalytics?.StoryProgress(
+                        _definition.Id,
+                        _episode.Id,
+                        ratio.Value);
+                }
             }
             catch (Exception exception)
             {

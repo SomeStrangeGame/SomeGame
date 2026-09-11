@@ -82,4 +82,14 @@ namespace Novels.StoryCommands
 
         public int Duration { get; }
     }
+
+    public sealed class AnalyticsEndingCommandData
+    {
+        internal AnalyticsEndingCommandData(string endingId)
+        {
+            EndingId = endingId ?? string.Empty;
+        }
+
+        public string EndingId { get; }
+    }
 }

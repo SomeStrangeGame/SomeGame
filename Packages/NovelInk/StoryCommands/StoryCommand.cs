@@ -16,6 +16,7 @@ namespace Novels.StoryCommands
         Camera,
         Wait,
         Dialogue,
+        AnalyticsEnding,
     }
 
     public abstract class StoryCommand
@@ -129,6 +130,13 @@ namespace Novels.StoryCommands
         {
             return new WaitStoryCommand(source, new WaitCommandData(duration));
         }
+
+        internal static StoryCommand CreateAnalyticsEnding(string source, string endingId)
+        {
+            return new AnalyticsEndingStoryCommand(
+                source,
+                new AnalyticsEndingCommandData(endingId));
+        }
     }
 
     public sealed class EmptyStoryCommand : StoryCommand
@@ -225,6 +233,17 @@ namespace Novels.StoryCommands
         }
 
         public WaitCommandData Data { get; }
+    }
+
+    public sealed class AnalyticsEndingStoryCommand : StoryCommand
+    {
+        internal AnalyticsEndingStoryCommand(string source, AnalyticsEndingCommandData data)
+            : base(StoryCommandType.AnalyticsEnding, source)
+        {
+            Data = data ?? throw new ArgumentNullException(nameof(data));
+        }
+
+        public AnalyticsEndingCommandData Data { get; }
     }
 
     public readonly struct StoryParseError

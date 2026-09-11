@@ -32,23 +32,72 @@ owner/request/FIFO, реальные Unity/Hub/Licensing процессы и п�
 Это read-only диагностика; наличие `lockStale=true` само по себе не выполняет
 takeover.
 
-## Эксклюзивный ресурс
+## Task-owned Unity и emulator
 
-Одновременно допускается один тяжёлый процесс на весь SomeGame. Перед запуском
-проверяются реальные Unity/build процессы. Official Unity MCP и fallback helper
-используют ту же очередь; они не создают отдельное право записи.
+Каждая задача вправе запустить и использовать один собственный Unity Editor и
+один собственный Android emulator, даже если Editor или emulator другой задачи
+уже работает. Наличие чужого процесса само по себе не блокирует запуск.
 
-При нескольких worktree дополнительно требуется общий resource lock `unity` в
-Git common dir. Он получается через `Tools/somegame resource-lock acquire
---resource unity --agent-id <agent>` и освобождается тем же владельцем. Для
-Catalog, общего SDK и интеграции используются соответственно `catalog`,
-`shared-sdk` и `integration`. Локальный lock конкретного checkout не заменяет
-общий resource lock.
+До запуска задача фиксирует точные project/worktree path и Editor PID, а для
+эмулятора — уникальные AVD name и ADB serial. Два Editor не открывают один и тот
+же project path; две задачи не используют один emulator serial, package/cache
+scope или build output. Общие Catalog, SDK, integration и совпадающие output
+resources остаются последовательными под соответствующими locks. Подтверждённый
+licensing IPC conflict также останавливает новый запуск до recovery.
+
+Official Unity MCP и fallback helper принадлежат тому же task-owned Editor и не
+создают отдельное право записи. Чужие Editor/emulator/helper процессы нельзя
+останавливать или переиспользовать как свои.
+
+При нескольких worktree независимые истории не используют один глобальный
+`unity` lock. Каждая получает `story:<storyId>` и точные collision locks:
+`unity-project:<canonical-project-id>`, `emulator:<serial>` и
+`build-output:<canonical-output-id>`. Значения выводятся из разрешённых точных
+path/serial, фиксируются в agent record; совпавший resource обслуживается своей
+FIFO-очередью.
+
+Общий `unity` lock применяется только к доказанно общей Unity-инфраструктуре,
+например destructive licensing recovery. Для Catalog, общего SDK и записи в
+main используются `catalog`, `shared-sdk` и `integration`. Их нельзя заменять
+story lock. Финальная интеграция кандидатов последовательна, но их
+Editor/build/emulator gates могут идти одновременно.
 
 Для live Editor предпочтителен один persistent helper и один `editor-check`.
 Запуск/остановка Editor, Play Mode, compile, tests и write-tools требуют lock и
 точного `--agent-id`. Atomic project использует общий
 `--coordination-root .` из корня репозитория.
+
+Одновременно одна задача держит соединение максимум с одним Unity MCP target.
+Persistent helper живёт только внутри одного bounded Unity-шага и закрывается
+сразу после последнего требуемого вызова. Перед сменой target и перед release
+lock владелец обязан остановить все созданные им helper/client/relay/server
+процессы и проверить отсутствие собственных остатков. Пользовательский Editor
+можно оставить открытым, но созданное задачей MCP connection к нему закрывается.
+Чужой или неопределённый PID не завершается без точной идентификации и явного
+разрешения человека. Пока остаточные MCP процессы мешают клиенту, новые
+connections не создаются.
+
+## Классы Unity/MCP-операций
+
+Требования определяются фактическим side effect операции, а не названием tool
+или тем, что вызов выглядит как чтение. Если provider не гарантирует отсутствие
+refresh, import, compile, domain reload, Play Mode, save или изменения
+serialized/Editor state, операция относится к следующему, более строгому
+классу.
+
+| Класс | Примеры | Checkout/FIFO lock | Shared `unity` lock | Отдельное актуальное разрешение человека |
+| --- | --- | --- | --- | --- |
+| Репозиторное чтение | `git status`, чтение `Assets`/`Packages`/`ProjectSettings`, MCP config и сохранённых логов | нет | нет | нет |
+| Live read-only probe уже открытого Editor | гарантированно read-only `editor_status`, active scene/dirty flag, hierarchy, Console delta; проверка transport без запуска Editor | нет | нет | нет |
+| Editor state/heavy operation | запуск/остановка Editor или helper с write-capable manifest, refresh/import, recompile/domain reload, Play Mode, tests, save, изменение scene/prefab/settings/assets, content/Player build | story/resource FIFO для atomic story либо checkout FIFO для общего scope | точные `unity-project`/`build-output`; общий `unity` только для общей инфраструктуры | не дополнительно, если это прямо входит в обычную текущую задачу; для новой истории — только внутри отдельно разрешённого финального слота |
+| Защищённая операция | финальный/релизный слот истории, destructive recovery, завершение чужого процесса, действие с неясной license-tier зависимостью | применимая story/resource FIFO; checkout FIFO только для общего scope | точные collision locks; общий `unity` для recovery | да; неизвестная license-tier зависимость не разрешается согласием и требует Personal-совместимого маршрута или подтверждения совместимости |
+
+Read-only probe теряет исключение сразу после обнаружения необходимости
+изменить state: агент не продолжает тем же MCP-сеансом, а входит в FIFO и
+получает требуемые locks. Серия отдельных status/Console/hierarchy вызовов не
+используется как polling; для связанной проверки применяется один bounded
+`editor-check`. Само наличие lock не является разрешением на финальный,
+релизный, destructive или license-sensitive шаг.
 
 ## Уровни проверки
 

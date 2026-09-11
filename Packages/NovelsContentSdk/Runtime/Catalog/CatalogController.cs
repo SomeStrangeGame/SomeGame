@@ -31,18 +31,24 @@ namespace Novels.Catalog
         private View.CatalogScreen _screen;
         private readonly ICatalogSettings _settings;
         private readonly CatalogUpdatePrompt _updatePrompt;
+        private readonly Action<string, string> _onStoryOpened;
+        private readonly Action _onFeedbackOpened;
 
         public CatalogController(
             GameObject bundledPrefab,
             CancellationToken cancellationToken,
             ICatalogSettings settings = null,
-            CatalogUpdatePrompt updatePrompt = default)
+            CatalogUpdatePrompt updatePrompt = default,
+            Action<string, string> onStoryOpened = null,
+            Action onFeedbackOpened = null)
         {
             _bundledPrefab = bundledPrefab
                 ?? throw new ArgumentNullException(nameof(bundledPrefab));
             _cancellationToken = cancellationToken;
             _settings = settings;
             _updatePrompt = updatePrompt;
+            _onStoryOpened = onStoryOpened;
+            _onFeedbackOpened = onFeedbackOpened;
         }
 
         public async UniTask<CatalogItem> Select(
@@ -84,13 +90,19 @@ namespace Novels.Catalog
                     episode =>
                     {
                         if (episode.IsEnabled && (episode.Download == null || episode.Download.IsReady))
+                        {
+                            _onStoryOpened?.Invoke(item.Id, episode.Id);
                             selection.TrySetResult(new CatalogSelection(item, episode, false));
+                        }
                     },
                     episode =>
                     {
                         if (!string.IsNullOrWhiteSpace(episode.RestartLabel)
                             && (episode.Download == null || episode.Download.IsReady))
+                        {
+                            _onStoryOpened?.Invoke(item.Id, episode.Id);
                             selection.TrySetResult(new CatalogSelection(item, episode, true));
+                        }
                     });
             }
 
@@ -122,7 +134,9 @@ namespace Novels.Catalog
                 return;
             var instance = UnityEngine.Object.Instantiate(_bundledPrefab);
             _screen = instance.GetComponent<View.CatalogScreen>();
-            instance.GetComponent<View.CatalogSettingsPopup>()?.Configure(_settings);
+            instance.GetComponent<View.CatalogSettingsPopup>()?.Configure(
+                _settings,
+                _onFeedbackOpened);
             instance.GetComponent<View.CatalogUpdatePopup>()?.Configure(_updatePrompt);
             if (_screen == null)
             {

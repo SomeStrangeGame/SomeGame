@@ -11,6 +11,10 @@ namespace Novels.Catalog.View
         private static bool _softShown;
         private GameObject _popup;
         private Button _laterButton;
+        private Button _updateButton;
+        private Text _message;
+        private Text _updateLabel;
+        private ICatalogUpdateAction _action;
         private string _storeUrl;
         private bool _hard;
         private bool _contentInteractable;
@@ -24,10 +28,12 @@ namespace Novels.Catalog.View
                 return;
             EnsureView();
             _storeUrl = prompt.StoreUrl;
+            _action = prompt.Action;
             _hard = prompt.Mode == CatalogUpdateMode.Hard;
             var texts = _popup.GetComponentsInChildren<Text>(true);
             texts[0].text = _hard ? "Нужно обновить приложение" : "Доступно обновление";
-            texts[1].text = _hard
+            _message = texts[1];
+            _message.text = _hard
                 ? "Эта версия больше не поддерживается. Обновите приложение, чтобы продолжить."
                 : "Рекомендуем обновить приложение, чтобы получить улучшения и новые истории.";
             _laterButton.gameObject.SetActive(!_hard);
@@ -58,8 +64,9 @@ namespace Novels.Catalog.View
                 28, FontStyle.Bold, TextAnchor.MiddleCenter);
             CreateText(panel.transform, "Message", new Vector2(28f, -108f), new Vector2(-28f, 116f),
                 18, FontStyle.Normal, TextAnchor.UpperCenter);
-            CreateButton(panel.transform, "Обновить", new Vector2(24f, 22f), new Vector2(-24f, 64f),
-                OpenStore, new Color(.82f, .62f, .18f, 1f));
+            _updateButton = CreateButton(panel.transform, "Обновить", new Vector2(24f, 22f),
+                new Vector2(-24f, 64f), StartUpdate, new Color(.82f, .62f, .18f, 1f));
+            _updateLabel = _updateButton.GetComponentInChildren<Text>();
             _laterButton = CreateButton(panel.transform, "Позже", new Vector2(24f, 94f),
                 new Vector2(-24f, 48f), Close, new Color(.18f, .22f, .27f, 1f));
             _popup.SetActive(false);
@@ -90,14 +97,35 @@ namespace Novels.Catalog.View
             }
         }
 
-        private void OpenStore()
+        private void StartUpdate()
         {
+            if (_action != null)
+            {
+                if (_action.CanStart)
+                    _action.Start();
+                return;
+            }
             if (!string.IsNullOrWhiteSpace(_storeUrl))
                 Application.OpenURL(_storeUrl);
         }
 
         public void OnCancel(BaseEventData eventData) => Close();
-        private void Update() { if (IsOpen && Input.GetKeyDown(KeyCode.Escape)) Close(); }
+        private void Update()
+        {
+            if (IsOpen && Input.GetKeyDown(KeyCode.Escape)) Close();
+            if (!IsOpen || _action == null) return;
+            _message.text = _action.StatusMessage;
+            _updateButton.interactable = _action.CanStart;
+            _updateLabel.text = _action.State switch
+            {
+                CatalogUpdateState.Downloading => $"Загрузка {Mathf.RoundToInt(_action.Progress * 100f)}%",
+                CatalogUpdateState.Verifying => "Проверяем…",
+                CatalogUpdateState.Installing => "Открываем установку…",
+                CatalogUpdateState.PermissionRequired => "Открыть настройки",
+                CatalogUpdateState.Failed => "Повторить",
+                _ => "Обновить",
+            };
+        }
 
         private static GameObject CreateObject(string name, Transform parent, params System.Type[] components)
         {

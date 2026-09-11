@@ -112,13 +112,61 @@ base затрагивает только его story prefix. `story-batch-plan`
 такие кандидаты. Catalog/shared-contract изменения выполняются отдельными
 ветками и интегрируются раньше зависимых историй.
 
-Unity Editor, MCP write, import, генераторы, compile, tests, Player и emulator
-остаются глобально последовательными под shared `unity` lock. Они запрещены до
-единого финального слота и отдельного человеческого разрешения. Изменения
+Каждая история может использовать один task-owned Editor своего точного
+story-worktree и один task-owned emulator с уникальным AVD/serial. Процессы
+разных историй могут сосуществовать; совпадающий project path, serial, outputs,
+Catalog, shared SDK и integration остаются последовательными под применимыми
+resource locks. Тяжёлые gates запрещены до единого финального слота истории и
+отдельного человеческого разрешения. Изменения
 Catalog, template, shared SDK/tooling, общих документов и финальная Git-интеграция принадлежат отдельной
 последовательной integration-фазе после готовности story-local scopes. Если
 история требует нового общего контракта, её поток останавливается на handoff и
 не расширяет ownership самостоятельно.
+
+Story-local финальная проверка не ждёт глобальный repository FIFO. До первого
+тяжёлого шага задача получает `story:<storyId>`, затем locks точных mutable
+ресурсов `unity-project:<canonical-project-id>`, `emulator:<serial>` и
+`build-output:<canonical-output-id>`. Другая история с непересекающимися
+идентификаторами выполняется параллельно. Общий `unity` lock для разных atomic
+project paths не используется; он остаётся только для licensing recovery или
+другой доказанно общей Unity-инфраструктуры.
+
+Результат каждой проверки — immutable candidate SHA и связанный с ним evidence:
+source/release/APK SHA, Unity version, project path, AVD/serial, точные маршруты
+и runtime markers. Изменение кандидата инвалидирует evidence только этой
+истории. После готовности нескольких кандидатов один интегратор получает
+`integration` и при необходимости `catalog`, проверяет SHA/scope через
+`story-batch-plan`, переносит commits в `main`, разрешает только общие
+catalog-конфликты и выполняет один общий compose gate.
+
+### Обновление базы preparing-worktree без собственных коммитов
+
+По явному запросу обновить ветку разрешён ограниченный ручной fast-forward,
+пока runner не предоставляет отдельную команду refresh. Операция требует
+обычного checkout write-lock и shared `integration` lock. Перед ней:
+
+1. Проверить точные registry/path/branch, статус `preparing`, отсутствие
+   candidate manifest и активных владельцев/Unity-процессов целевого worktree.
+2. Получить origin/main и зафиксировать полный SHA. Требовать, чтобы HEAD
+   совпадал с прежним registry `baseSha` и был предком целевого SHA; staged и
+   tracked diff должны быть пусты. Другие случаи требуют отдельного плана.
+3. Проверить весь untracked scope: только зарегистрированный story prefix,
+   которого нет в целевом Git tree. Проверить также коллизии с ignored files
+   вне prefix. Сохранить перечень и SHA-256 всех файлов истории до операции.
+4. Выполнить `git merge --ff-only <verified-sha>` в точном worktree. Не применять
+   reset/clean, автоматический stash, переключение ветки или копирование dirty
+   файлов в другой checkout. Основной checkout не обновляется этой командой.
+5. Проверить HEAD, неизменность файлов истории и отсутствие нового tracked
+   diff. Только после успеха изменить `baseSha` в точной shared registry на
+   проверенный SHA, сохранив branch/path/allowedPrefix и статус `preparing`.
+   В записи сохранить прежний baseSha и фактическое UTC-время обновления.
+6. Повторно проверить registry, ancestry и diff от новой базы; входящие общие
+   изменения не должны считаться вкладом истории. Записать evidence в handoff.
+
+При ошибке до fast-forward registry не менять. При ошибке после него сохранить
+обе версии SHA в handoff и остановить candidate handoff до согласования registry;
+не выполнять обратный reset. Это техническое обновление не утверждает контент,
+не создаёт готовый candidate и не разрешает Unity, commit или publication.
 
 Worktree удаляется только командой `story-worktree remove --confirm`, когда он
 clean и его HEAD уже содержится в указанном integration ref. Уникальные или

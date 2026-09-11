@@ -135,10 +135,11 @@ Tools/novels-tools/novels-content publish /absolute/server/root
 
 Android Player с вшитым контентом после успешной сборки не считается
 проверенным, пока тот же APK не установлен и не запущен в Android-эмуляторе.
-Операция подчиняется общей FIFO/write-lock очереди и эксклюзивному Unity-
-ресурсу: Editor, Hub, content build и Player build выполняются строго
-последовательно. Открытый Editor можно закрывать только после явного
-разрешения пользователя и проверки несохранённого состояния.
+Операция подчиняется FIFO/write-lock и применимым resource locks. Editor или
+emulator другой задачи допустимы, если project/worktree path, AVD/serial,
+package/cache scope и build outputs не пересекаются. Внутри одной задачи её
+content build, Player build и smoke выполняются в установленном порядке.
+Чужой Editor или emulator нельзя закрывать либо переиспользовать.
 
 ### 1. Подготовить фактический release-set
 
@@ -170,6 +171,38 @@ WIP в handoff и последовательно собирают только �
 keystore. Release build не должен автоматически понижаться до debug signing:
 ему нужны штатные пароли production keystore.
 
+### Прямое обновление standalone APK
+
+Remote Android Player, распространяемый напрямую, читает
+`updates/<channel>.json`. Android-секция прямого обновления имеет контракт:
+
+```json
+{
+  "android": {
+    "versionCode": 3,
+    "minimumSupportedVersionCode": 2,
+    "apkUrl": "https://example.test/app-3.apk",
+    "apkSize": 12345678,
+    "apkSha256": "64 lowercase hexadecimal characters"
+  }
+}
+```
+
+`versionCode` должен строго возрастать. Значение ниже
+`minimumSupportedVersionCode` включает обязательный update, остальные старые
+версии получают отложенный update. Клиент принимает только HTTPS, проверяет
+точный размер, SHA-256, package name, более высокий versionCode и совпадение
+сертификата APK с установленным приложением. APK публикуется под immutable
+именем; update JSON переключается атомарно только после публичной проверки
+файла. Откат выполняется новой сборкой с ещё большим versionCode, а не
+downgrade APK.
+
+Все последовательные standalone-релизы одного application ID подписываются
+одним постоянным ключом. Test-signing годится только для upgrade-smoke между
+тестовыми APK с тем же локальным ключом. Прямой updater не включается в будущую
+store-сборку: RuStore/Google Play подключаются отдельным provider поверх общего
+update UI.
+
 Для локальной проверки release-конфигурации без production credentials
 используется явный `Tools/somegame player-build ... --test-signing`. Он не
 добавляет `BuildOptions.Development`, создаёт отдельный ключ только в ignored
@@ -199,8 +232,9 @@ Android Embedded читает `Application.streamingAssetsPath` внутри APK
 
 ### 3. Установить и сразу запустить тот же APK
 
-Используется ARM64 AVD `Novels_Pixel_7_API_34` либо явно согласованный
-эквивалент. Перед установкой подтверждают состояние `device`, а package ID
+Используется task-owned ARM64 AVD с уникальными name и serial; исторический
+`Novels_Pixel_7_API_34` допустим только если не принадлежит другой активной
+задаче. Перед установкой подтверждают состояние `device`, а package ID
 берут из текущих Player Settings/manifest APK, не угадывают по названию игры.
 
 ```bash

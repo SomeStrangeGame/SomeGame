@@ -61,10 +61,16 @@ namespace Novels
                 ExecuteQueue = queueExecutor.Run,
                 GetNextSavedDecision = state.SaveSystem.GetNextSavedDecision,
                 HideLoading = presentation.Loading.Hide,
-                OnReady = () => _ctx.SmokeTelemetry?.Emit(
-                    "episode.ready",
-                    ("contentId", _definition.Id),
-                    ("episodeId", _episode.Id)),
+                OnReady = () =>
+                {
+                    _ctx.ProductAnalytics?.StoryStarted(
+                        _definition.Id,
+                        _episode.Id);
+                    _ctx.SmokeTelemetry?.Emit(
+                        "episode.ready",
+                        ("contentId", _definition.Id),
+                        ("episodeId", _episode.Id));
+                },
                 CancellationToken = cancellationToken,
                 OnError = ReportError,
                 OnStorySourceChanged = _ctx.OnStorySourceChanged,

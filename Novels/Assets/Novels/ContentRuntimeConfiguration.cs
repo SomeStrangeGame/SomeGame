@@ -11,9 +11,17 @@ namespace Novels
 
         [SerializeField] private string _remoteContentBaseUrl;
         [SerializeField] private string _contentChannel = "dev";
+        [SerializeField] private bool _analyticsEnabled;
+        [SerializeField] private string _analyticsEndpointUrl =
+            "https://pureshechka.com/api/v1/events";
 
         public string RemoteContentBaseUrl => _remoteContentBaseUrl;
         public string ContentChannel => _contentChannel;
+        public bool AnalyticsEnabled => _analyticsEnabled;
+        public string AnalyticsEndpointUrl => _analyticsEndpointUrl;
+
+        internal static ContentRuntimeConfiguration TryLoad() =>
+            Resources.Load<ContentRuntimeConfiguration>(_resourcePath);
 
         internal static ContentRuntimeConfiguration Load()
         {

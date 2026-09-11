@@ -261,6 +261,30 @@ class RunnerTests(unittest.TestCase):
             {"start_new_session": False},
             runner.editor_process_options(args.stop_editor))
 
+    def test_editor_project_path_supports_quoted_paths(self):
+        command = '/Applications/Unity -projectPath "/tmp/story one" -logFile /tmp/editor.log'
+        self.assertEqual(Path("/tmp/story one").resolve(), runner.editor_project_path(command))
+
+    def test_unrelated_editor_does_not_block_target_project(self):
+        previous = runner.unity_processes
+        runner.unity_processes = lambda: runner.UnityProcesses(
+            [{"pid": 10, "command": "/Applications/Unity -projectPath /tmp/story-a"}], [], [])
+        try:
+            self.assertEqual([], runner.prepare_unity_lifecycle(False, Path("/tmp/story-b")))
+        finally:
+            runner.unity_processes = previous
+
+    def test_same_project_editor_remains_a_collision(self):
+        previous = runner.unity_processes
+        runner.unity_processes = lambda: runner.UnityProcesses(
+            [{"pid": 10, "command": "/Applications/Unity -projectPath /tmp/story-a"}], [], [])
+        try:
+            with self.assertRaises(runner.WorkflowError) as collision:
+                runner.prepare_unity_lifecycle(False, Path("/tmp/story-a"))
+            self.assertEqual("editor_running", collision.exception.code)
+        finally:
+            runner.unity_processes = previous
+
     def test_compiler_error_scan_detects_csharp_errors(self):
         with tempfile.TemporaryDirectory() as directory:
             log = Path(directory) / "Editor.log"
@@ -329,6 +353,57 @@ class RunnerTests(unittest.TestCase):
                     "resource-lock", "release", "--resource", "unity", "--agent-id", "a"]))
                 self.assertTrue(released["released"])
             finally:
+                if previous_runtime is None: os.environ.pop("SOMEGAME_SHARED_RUNTIME", None)
+                else: os.environ["SOMEGAME_SHARED_RUNTIME"] = previous_runtime
+
+    def test_scoped_resource_locks_allow_independent_story_owners(self):
+        previous_runtime = os.environ.get("SOMEGAME_SHARED_RUNTIME")
+        with tempfile.TemporaryDirectory() as directory:
+            os.environ["SOMEGAME_SHARED_RUNTIME"] = directory
+            try:
+                for key, owner in (("story:ice-bride", "a"),
+                                   ("story:oak-sign", "b"),
+                                   ("unity-project:ice-bride", "a"),
+                                   ("unity-project:oak-sign", "b"),
+                                   ("emulator:emulator-5560", "a"),
+                                   ("emulator:emulator-5562", "b")):
+                    args = runner.parser().parse_args([
+                        "resource-lock", "acquire", "--resource", key, "--agent-id", owner])
+                    self.assertTrue(runner.resource_lock_workflow(args)["ok"])
+                with self.assertRaises(runner.WorkflowError):
+                    runner.resource_lock_workflow(runner.parser().parse_args([
+                        "resource-lock", "acquire", "--resource", "story:ice-bride",
+                        "--agent-id", "b"]))
+            finally:
+                if previous_runtime is None: os.environ.pop("SOMEGAME_SHARED_RUNTIME", None)
+                else: os.environ["SOMEGAME_SHARED_RUNTIME"] = previous_runtime
+
+    def test_resource_key_rejects_paths_and_unknown_kinds(self):
+        for value in ("unity-project:/tmp/story", "emulator:../5554", "unknown:value"):
+            with self.assertRaises(SystemExit):
+                runner.parser().parse_args([
+                    "resource-lock", "status", "--resource", value])
+
+    def test_heavy_authorization_accepts_owned_scoped_resource_set_without_checkout_lock(self):
+        previous_root = runner.ROOT
+        previous_runtime = os.environ.get("SOMEGAME_SHARED_RUNTIME")
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory); runtime = root / "shared"
+            os.environ["SOMEGAME_SHARED_RUNTIME"] = str(runtime)
+            try:
+                runner.ROOT = root
+                keys = ["story:ice-bride", "unity-project:ice-bride"]
+                for key in keys:
+                    runner.resource_lock_workflow(runner.parser().parse_args([
+                        "resource-lock", "acquire", "--resource", key, "--agent-id", "a"]))
+                args = runner.parser().parse_args([
+                    "story-check", "--agent-id", "a", "--target", "ice-bride", "--build",
+                    "--human-approved", "--approval-note", "approved",
+                    "--resource-key", keys[0], "--resource-key", keys[1]])
+                runner.require_execution_lock(args)
+                runner.require_heavy_authorization(args)
+            finally:
+                runner.ROOT = previous_root
                 if previous_runtime is None: os.environ.pop("SOMEGAME_SHARED_RUNTIME", None)
                 else: os.environ["SOMEGAME_SHARED_RUNTIME"] = previous_runtime
 

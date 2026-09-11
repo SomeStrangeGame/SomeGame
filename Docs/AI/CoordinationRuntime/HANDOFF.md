@@ -1,11 +1,13 @@
 # Current cross-chat handoff
 
+Nevesta main refresh completed: branch and registry base now equal fetched origin/main `3e449934`; all 114 story files unchanged, 6 tests passed, updated skills present. Local refresh protocol/routing/memory docs validated, uncommitted; no Unity or publication. Old SDK blocker superseded; literary/archive/preview/audio/alpha and final validation remain. Receipt: agents/nevesta-main-refresh.md.
+
 Previous snapshot preserved in [`CoordinationHandoffHistory-2026-09-05-pre-publish.md`](../archive/reports/CoordinationHandoffHistory-2026-09-05-pre-publish.md).
 
 ## Ready for integration or validation
 - `catalog-resume-reset`: fixed saved-episode primary action and labelled restart; catalog build, fresh compile and live zdm/tzm checks passed (one Continue action).
 - `fallback-art-integration`: applied the prepared fallback artwork and icons; final catalog Editor build, Novels compile and live portrait interaction/visual checks passed for zdm/tzm. Original approved mockup file was not available for pixel-diff comparison; Android/tablet verification was not run.
-
+- `kolodets-main-refresh` (2026-09-10T17:22:44Z, completed): checkpoint `85b70624`, merge `811bab3d` from origin/main `3e449934`, final HEAD `721ed7f8`; story/art preserved, duplicate merge divert corrected, 13 continuity tests plus cover-file test and scoped checks pass. Registry base refreshed; old candidate stale. Pending: new-skill revision and separate Unity acceptance; no push. Details: [agent receipt](agents/kolodets-main-refresh.md).
 - `scp1198-bubbles-layout-v4`: current story-local Bubble sprites, prefab and evidence are ready for publication with further visual fitting intentionally deferred.
 - `option-screen-prefab-split`: Choice and Wardrobe now use independent authored fallback prefabs; scoped checks, TZM content build and fresh Novels compile passed. Manual portrait smoke remains.
 - `tzm-choice-reference-parity`: story-local white/cyan presentation and neighboring-card affordance are implemented; scoped checks, content builds and fresh compiles passed. Final aesthetic approval remains.
@@ -41,13 +43,7 @@ Validation: exact APK reinstall passed; clean run `7652336f15334178a56e6700e5e80
 Pending / risks: all three choice cards have no readable labels after settling. Route selection, all 12 alternatives, three endings and save/resume remain invalid/pending. Earlier creative-process archive history is unavailable and explicitly recorded as a gap.
 Suggested next step: the production owner confirmed all 12 choice PNGs were imported as Texture rather than Sprite and corrected their importer metadata plus static regression coverage. After the pending foreign catalog publication clears its dirty scope, run Unity import/content build, build a fresh Embedded APK, and restart the complete three-route matrix.
 
-## 2026-09-10T09:43:34Z — story-archive-guidance — completed
-
-Task: Added per-story archive contract with dated immutable document versions, actual drafts/rejections/feedback/provenance, SHA-256 manifests, honest history gaps, staging transfer and storage/privacy limits; linked create/design/Ink/acceptance skills. Reviewed drafts match, metadata/links/docs-check passed. Previous scenario guidance preserved; completed handoff entries rotated verbatim with remaining route risk retained. No historical archive migration, Unity, commit or publication.
-Changed: .agents/skills/somegame-create-story/SKILL.md, .agents/skills/somegame-create-story/references/story-archive.md, .agents/skills/somegame-design-story/SKILL.md, .agents/skills/somegame-author-story-content/SKILL.md, .agents/skills/somegame-accept-story/SKILL.md, Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-10-story-archive.md
-Validation: finish-task passed (1 gates).
-Pending / risks: none
-Suggested next step: none
+Completed story-archive guidance receipt: [preserved history](../archive/reports/CoordinationHandoffHistory-2026-09-10-first-snow-sync.md).
 
 ## 2026-09-10T14:09:00Z — chernaya-melnitsa-four-episodes — ready-for-final-validation
 
@@ -64,14 +60,6 @@ explicitly authorized final validation slot.
 Suggested next step: after human approval, enqueue a new exact-scope request and
 run `story-check`/content validation for `chernaya-melnitsa` before committing.
 
-## 2026-09-10T11:58:33Z — remove-tzm-launch-branding — completed
-
-Task: Removed the TZM artwork from the Android splash and default application icon, and deleted the obsolete shared Icon asset; branded player builds retain their own profile icon.
-Changed: Novels/ProjectSettings/ProjectSettings.asset, Novels/Assets/Settings/Build Profiles/Android.asset, Novels/Assets/Icon.png, Novels/Assets/Icon.png.meta
-Validation: finish-task passed (1 gates).
-Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>, player-build --target <platform> --mode <Remote|Embedded>
-Suggested next step: none
-
 ## 2026-09-10T13:14:20Z — les-zabyvshiy-tropy-choice-build-retry — ready-for-final-validation
 
 Task: Replaced the author-rejected image-only choice cards with adult text-first controls patterned after Black Mill.
@@ -79,22 +67,6 @@ Changed: story Bubble prefab, source audit, acceptance status, and append-only r
 Validation: 72-route bounded audit, layout regression assertions, manifest JSON parse and exact changed-file diff checks pass.
 Pending / risks: no Unity/runtime proof exists for this source revision; all earlier choice screenshots and APK `36536684…` are superseded for layout acceptance.
 Suggested next step: obtain fresh explicit final-slot authorization, acquire FIFO/shared Unity resources, rebuild, and verify labeled buttons plus thumbnails in portrait Android runtime.
-
-## 2026-09-10T15:24:00Z — chernaya-melnitsa-v3-server-main — completed
-
-Task: Expanded Chyornaya Melnitsa to four episodes, built Android content without
-emulator, published immutable v3 to Kostroma dev, and integrated scoped source.
-Changed: `Projects/novels-chernaya-melnitsa` story source/archive; remote immutable
-`stories/chernaya-melnitsa/3`; mutable `kostroma-dev.json`; Git main commit
-`b6896bb7b188dc2f6350077ef18b70c80fbcd165`.
-Validation: 72 literary routes/5 decisions/3 endings; Unity/Ink Android content
-gate; 31-file local/remote checksum equality; exact public manifest/card/cover/
-release/preview/episode-cover/bundle checks. No Player, APK build, ADB or emulator.
-Publication: ordered map is `chernaya-melnitsa=3`, `trinadtsatyy-kolokol=1`,
-`les-zabyvshiy-tropy=1`; manifest SHA `663b4c96c3e06eb0ca87895d6e2a2c6aa9447d5a9ff744821d0cdc6f06dde632`;
-APK unchanged. Remote backup path is recorded in the agent handoff.
-Late instruction: the user asked not to push after the push had already completed;
-no destructive rollback or additional remote Git operation was performed.
 
 ## 2026-09-10T15:40:23Z — kolokol-worktree-cleanup — paused
 
@@ -104,17 +76,42 @@ Validation: scoped status is clean; `git diff --ignore-all-space` had proven the
 Pending / risks: story-batch removal is blocked by three untracked coordination records owned by `codex-kolodets-integration`; protocol forbids deleting another owner's records.
 Suggested next step: owner retires those stale records, then remove the clean worktree through `Tools/somegame story-worktree remove --confirm --integrated-ref main` and delete the merged branch if still present.
 
-## 2026-09-10T15:43:24Z — story-batch-retirement — completed
+Completed commit-all-main receipt is preserved in the same [history](../archive/reports/CoordinationHandoffHistory-2026-09-10-first-snow-sync.md).
 
-Task: Removed explicitly transferred stale Kolodets coordination records, then deleted the clean fully integrated story-batch worktree and branch without force.
-Changed: Docs/AI/CoordinationRuntime/agents/story-batch-retirement.md
+## 2026-09-10T17:03:09Z — first-snow-sync-main — completed
+
+Task: Merged origin/main 3e449934 into first-snow as a309df99 without conflicts; all 73 story hashes and dirty status preserved; standalone Ink 704 routes and episode-cover checks passed. Registered base refreshed; old candidate marked needs-candidate-refresh. Story revision and Unity acceptance remain separate; no push.
+Changed: Docs/AI/CoordinationRuntime/agents/first-snow-sync-main.md, Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-10-first-snow-sync.md
 Validation: finish-task passed (1 gates).
 Pending / risks: none
 Suggested next step: none
 
-## 2026-09-10T16:56:00Z — commit-all-main — completed
-Task: Committed and published all current repository changes to origin/main at 2a6af3beda33bcfb48d6dfd441959ac122fd5e7f; static diff check passed; aggregate content validation was blocked by the open Catalog Editor; fresh Kostroma Android dev build and catalog startup evidence already passed.
-Changed: .agents, Docs/AI, Novels, Packages, Projects
+## 2026-09-11T10:45:34Z — product-analytics-client — ready-with-limitations
+
+Task: Prepared anonymous product analytics event capture, durable local queue,
+HTTPS batch delivery, application/story lifecycle hooks, and authored ending IDs.
+Changed: Novels analytics runtime and integration points; NovelInk ending command
+and tests; catalog feedback/open hooks; analytics configuration; Ink syntax guide.
+Validation: Novels Unity compile passed with no compiler errors; 5/5
+`Novels.StoryCommands.Tests` passed; scoped `git diff --check` passed.
+Pending / risks: catalog content build was blocked by another open Unity Catalog
+Editor. Network delivery stays disabled until the PHP endpoint is deployed and
+analytics is enabled in runtime configuration.
+Suggested next step: after the Catalog Editor is free, rerun the changed-path
+content gate; then implement and deploy the PHP/MySQL receiver.
+
+## 2026-09-11T10:33:45Z — direct-apk-updater — completed
+
+Task: Implemented secure direct APK self-update from the own HTTPS server with version, size, SHA-256, package and signing-certificate verification, unknown-source permission flow, installer handoff, progress/retry UI, validation tooling and a future update-provider seam.
+Changed: Novels/Assets/Novels/ApplicationUpdatePolicy.cs, Novels/Assets/Novels/DirectApkUpdater.cs, Novels/Assets/Novels/DirectApkUpdater.cs.meta, Novels/Assets/Plugins/Android/AndroidManifest.xml, Novels/Assets/Plugins/Android/DirectApkUpdater.androidlib, Novels/Assets/Plugins/Android/DirectApkUpdater.androidlib.meta, Packages/NovelsContentSdk/Runtime/Catalog/CatalogUpdatePrompt.cs, Packages/NovelsContentSdk/Runtime/Catalog/View/CatalogUpdatePopup.cs, Novels/Assets/Editor/ApplicationUpdateValidation.cs, Novels/Assets/Editor/ApplicationUpdateValidation.cs.meta, Docs/AI/guides/ContentPipeline.md, Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-11-direct-apk-update.md
+Validation: finish-task passed (6 gates).
+Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>
+Suggested next step: none
+
+## 2026-09-11T10:56:31Z — product-analytics-errors — completed
+
+Task: Added automatic rate-limited and deduplicated capture of Unity errors, assertions, and exceptions into anonymous product analytics
+Changed: Novels/Assets/Novels/Analytics/ProductAnalytics.cs, Novels/Assets/Novels/EntryPoint.cs
 Validation: finish-task passed (1 gates).
-Pending / risks: none
+Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>
 Suggested next step: none

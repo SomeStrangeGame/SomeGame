@@ -81,6 +81,12 @@ contracts и финальная интеграция сериализованы 
 
 ## Контент
 
+Обновление базы registered preparing-worktree без собственных коммитов
+допускает только проверенный fast-forward с сохранением файлов и согласованием
+registry; ограничения и восстановление — в
+[ParallelWorkDetails.md](../rules/ParallelWorkDetails.md#обновление-базы-preparing-worktree-без-собственных-коммитов).
+Это не acceptance и не разрешение на Unity или публикацию.
+
 ```bash
 Tools/novels-tools/novels-content doctor
 Tools/novels-tools/novels-content validate <catalog|story-id|all>

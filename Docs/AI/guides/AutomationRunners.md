@@ -35,7 +35,7 @@ Tools/somegame start-task --agent-id <id> --task <summary> --scope <exact-scope>
 Tools/somegame story-worktree create --story-id <story-id>
 Tools/somegame story-candidate --story-id <story-id> --static-evidence <gate...>
 Tools/somegame story-batch-plan --story-id <story-id> [--story-id <story-id> ...]
-Tools/somegame resource-lock acquire --resource <unity|catalog|shared-sdk|integration> --agent-id <id>
+Tools/somegame resource-lock acquire --resource <resource-key> --agent-id <id>
 Tools/somegame tooling-tests
 Tools/somegame story-check --agent-id <lock-owner> --target <story-id> [--build]
 Tools/somegame android-dev-cycle --agent-id <lock-owner> --app kostroma --package-id <id>
@@ -48,6 +48,14 @@ Tools/somegame finish-task --agent-id <lock-owner> --paths <owned-path...> \
 `android-dev-cycle` последовательно выполняет существующие Player build и ADB
 smoke contracts. `clean-generated` fail-closed принимает только точный Unity
 project внутри репозитория; без `--apply` это обязательный dry-run.
+
+Для параллельной story-валидации resource key имеет один из видов
+`story:<storyId>`, `unity-project:<canonical-project-id>`,
+`emulator:<serial>` или `build-output:<canonical-output-id>`. Общие ключи
+`unity`, `catalog`, `shared-sdk`, `integration` сохраняются; `unity` используется
+только для общей Unity-инфраструктуры и recovery, а не для разных atomic
+projects. Runner обязан вывести collision keys из явных target/path/serial и
+fail-closed отклонить несовпадение с locks владельца.
 
 `story-worktree` создаёт отдельную `codex/story-<storyId>` из `origin/main` и
 регистрирует её в общем Git runtime. Удаление требует `--confirm`, clean tree и
@@ -173,8 +181,9 @@ Catalog target и широкий changed-path content gate дополнител�
 shared `catalog` lock. `player-build`, включающий Catalog, требует одновременно
 `unity` и `catalog` locks.
 
-Batch/Editor start при работающем Unity Hub fail-closed. Явный `--close-hub`
-штатно отправляет `TERM` только main Hub PID и ждёт process barrier.
+Batch/Editor start допускается при Editor другой задачи, если его project path
+не совпадает с target. Явный `--close-hub` штатно отправляет `TERM` только main
+Hub PID, но не закрывает Hub при живом Editor другой задачи.
 
 ### `editor-gate`
 
@@ -209,6 +218,9 @@ Runner ждёт упорядоченные `[NOVELS_SMOKE]` events одного 
 activity и отсутствие blocking markers. Package ID не угадывается. Screenshot,
 полный logcat и activity dump сохраняются только при failure; приложение всегда
 останавливается через `am force-stop`, AVD остаётся запущенным. Повторные
+Serial/AVD должен принадлежать текущей задаче; другой emulator с иным serial не
+блокирует gate и не может переиспользоваться или останавливаться этой задачей.
+Повторные
 соединения самого `qemu-system-aarch64` с `127.0.0.1:1970` классифицируются в
 JSON как `android-emulator-sdk-controller-1970` с `affectsGate=false`: это
 внешняя диагностика необязательного SDK Controller, а не ошибка приложения.

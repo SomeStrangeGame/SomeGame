@@ -119,6 +119,8 @@ def lock_owner(root: Path | None = None) -> str | None:
 ACTIVE_AGENT_ID: str | None = None
 
 RESOURCE_NAMES = ("unity", "catalog", "shared-sdk", "integration")
+SCOPED_RESOURCE_KINDS = ("story", "unity-project", "emulator", "build-output")
+RESOURCE_VALUE_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*")
 STORY_ID_RE = re.compile(r"[a-z0-9][a-z0-9-]*")
 
 
@@ -137,8 +139,20 @@ def shared_runtime(root: Path | None = None) -> Path:
     return Path(override).expanduser().resolve() if override else git_common_dir(root) / "somegame-runtime"
 
 
+def validate_resource_key(resource: str) -> str:
+    if resource in RESOURCE_NAMES:
+        return resource
+    kind, separator, value = resource.partition(":")
+    if separator and kind in SCOPED_RESOURCE_KINDS and RESOURCE_VALUE_RE.fullmatch(value):
+        return resource
+    raise argparse.ArgumentTypeError(
+        "resource must be a shared key or story:<id>, unity-project:<id>, "
+        "emulator:<serial>, build-output:<id>")
+
+
 def resource_lock_path(resource: str, root: Path | None = None) -> Path:
     root = ROOT if root is None else root
+    resource = validate_resource_key(resource)
     return shared_runtime(root) / "resource-locks" / resource / "owner.json"
 
 
@@ -161,7 +175,19 @@ def require_heavy_authorization(args: argparse.Namespace, resource: str = "unity
     note = str(getattr(args, "approval_note", "") or "").strip()
     if not note:
         raise WorkflowError("approval_note_required", "Record the current human approval with --approval-note")
-    require_resource_lock(resource, getattr(args, "agent_id", None))
+    resources = list(getattr(args, "resource_key", None) or [resource])
+    for key in resources:
+        require_resource_lock(key, getattr(args, "agent_id", None))
+
+
+def require_execution_lock(args: argparse.Namespace) -> None:
+    """Allow legacy checkout ownership or an explicit collision-scoped lock set."""
+    resources = list(getattr(args, "resource_key", None) or [])
+    if resources:
+        for key in resources:
+            require_resource_lock(key, getattr(args, "agent_id", None))
+        return
+    require_lock(getattr(args, "agent_id", None))
 
 
 def refresh_lock_heartbeat(root: Path = ROOT) -> bool:
@@ -294,11 +320,28 @@ def git_publish(args: argparse.Namespace) -> dict[str, Any]:
             "aheadBefore": ahead, "pushed": pushed, "logs": logs}
 
 
-def prepare_unity_lifecycle(close_hub: bool, timeout: float = 30) -> list[int]:
+def editor_project_path(command: str) -> Path | None:
+    match = re.search(r"(?:^|\s)-projectPath\s+(?:\"([^\"]+)\"|'([^']+)'|(\S+))", command)
+    value = next((part for part in match.groups() if part), None) if match else None
+    return Path(value).expanduser().resolve() if value else None
+
+
+def editors_for_project(editors: Iterable[dict[str, Any]], project: Path) -> list[dict[str, Any]]:
+    expected = project.resolve()
+    return [item for item in editors if editor_project_path(str(item.get("command", ""))) == expected]
+
+
+def prepare_unity_lifecycle(close_hub: bool, project: Path | None = None,
+                            timeout: float = 30) -> list[int]:
     processes = unity_processes()
+    conflicting = processes.editors if project is None else editors_for_project(processes.editors, project)
+    if conflicting:
+        raise WorkflowError("editor_running", "Target Unity project is already open in another Editor",
+                            details=conflicting)
+    # Hub belongs to the user-wide Unity installation. Do not terminate it while
+    # unrelated task-owned Editors are live; their presence is not a target collision.
     if processes.editors:
-        raise WorkflowError("editor_running", "Batch workflow refuses to start while a Unity Editor is running",
-                            details=processes.editors)
+        return []
     if not processes.hubs:
         return []
     if not close_hub:
@@ -555,7 +598,7 @@ def tooling_tests(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def story_check(args: argparse.Namespace) -> dict[str, Any]:
-    require_lock(args.agent_id)
+    require_execution_lock(args)
     if args.build:
         require_heavy_authorization(args)
     target = args.target.strip()
@@ -672,7 +715,6 @@ def finish_check(args: argparse.Namespace) -> dict[str, Any]:
         process_probe_error = str(exc)
     blockers: list[str] = []
     if args.agent_id not in handoff: blockers.append("handoff_missing_agent")
-    if processes.editors: blockers.append("unity_editor_running")
     if process_probe_error: blockers.append("process_probe_unavailable")
     agent = ROOT / f"Docs/AI/CoordinationRuntime/agents/{args.agent_id}.md"
     if not agent.is_file(): blockers.append("agent_record_missing")
@@ -686,11 +728,14 @@ def finish_check(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def content_gate(args: argparse.Namespace) -> dict[str, Any]:
-    require_lock(args.agent_id)
+    require_execution_lock(args)
     require_heavy_authorization(args)
     if not args.target or args.target == "catalog":
         require_resource_lock("catalog", args.agent_id)
-    closed_hub = prepare_unity_lifecycle(args.close_hub)
+    target_project = None
+    if args.target == "catalog": target_project = ROOT / "Projects/novels-catalog"
+    elif args.target: target_project = ROOT / f"Projects/novels-{args.target}"
+    closed_hub = prepare_unity_lifecycle(args.close_hub, target_project)
     if args.target:
         command = [str(ROOT / "Tools/novels-tools/novels-content"), "build", args.target, args.platform]
     else:
@@ -737,11 +782,11 @@ def application_profile_paths(app: str) -> tuple[Path, Path]:
 
 
 def player_build(args: argparse.Namespace) -> dict[str, Any]:
-    require_lock(args.agent_id)
+    require_execution_lock(args)
     application_profile_paths(args.app)
     require_heavy_authorization(args)
     require_resource_lock("catalog", args.agent_id)
-    closed_hub = prepare_unity_lifecycle(args.close_hub)
+    closed_hub = prepare_unity_lifecycle(args.close_hub, ROOT / "Novels")
     output = Path(args.output).resolve() if args.output else default_player_output(
         args.app, args.target, args.mode)
     logs: list[str] = []
@@ -834,7 +879,7 @@ def licensing_preflight(args: argparse.Namespace) -> dict[str, Any]:
             if recovered: raise WorkflowError("recovery_timeout", "Processes did not exit after TERM", details=recovered)
         processes = unity_processes()
     conflict = bool(markers and (len(processes.licensing) > 1 or processes.hubs))
-    return {"ok": not conflict and len(processes.editors) <= 1, "workflow": "licensing-preflight",
+    return {"ok": not conflict, "workflow": "licensing-preflight",
             "editors": processes.editors, "hubs": processes.hubs, "licensing": processes.licensing,
             "conflictMarkers": markers, "sockets": sockets, "terminatedPids": recovered,
             "note": "Sockets are reported but never deleted automatically."}
@@ -853,7 +898,7 @@ def editor_process_options(stop_editor: bool) -> dict[str, bool]:
 
 
 def editor_gate(args: argparse.Namespace) -> dict[str, Any]:
-    require_lock(args.agent_id)
+    require_execution_lock(args)
     require_heavy_authorization(args)
     project = (ROOT / args.project).resolve(); runtime = Path(args.runtime).resolve()
     editor: subprocess.Popen[str] | None = None; daemon: subprocess.Popen[str] | None = None
@@ -862,9 +907,8 @@ def editor_gate(args: argparse.Namespace) -> dict[str, Any]:
     helper = ROOT / "Tools/unity-mcp-helper/unity_mcp_helper.py"
     try:
         if args.start_editor:
-            closed_hub = prepare_unity_lifecycle(args.close_hub)
+            closed_hub = prepare_unity_lifecycle(args.close_hub, project)
             preflight = licensing_preflight(argparse.Namespace(recover=False, agent_id=args.agent_id, timeout=10))
-            if preflight["editors"]: raise WorkflowError("editor_already_running", "--start-editor requires no live Editor")
             editor_log.parent.mkdir(parents=True, exist_ok=True)
             with editor_log.open("w", encoding="utf-8") as stream:
                 editor = subprocess.Popen(
@@ -956,7 +1000,7 @@ def android_failure_artifacts(args: argparse.Namespace, stamp: str) -> dict[str,
 
 
 def android_smoke(args: argparse.Namespace) -> dict[str, Any]:
-    require_lock(args.agent_id)
+    require_execution_lock(args)
     require_heavy_authorization(args)
     apk = Path(args.apk).resolve()
     if not apk.is_file(): raise WorkflowError("apk_missing", f"APK does not exist: {apk}")
@@ -1005,13 +1049,14 @@ def android_smoke(args: argparse.Namespace) -> dict[str, Any]:
 
 
 def android_dev_cycle(args: argparse.Namespace) -> dict[str, Any]:
-    require_lock(args.agent_id)
+    require_execution_lock(args)
     require_heavy_authorization(args)
     build_args = argparse.Namespace(
         agent_id=args.agent_id, app=args.app, close_hub=args.close_hub, output=args.output,
         target="Android", mode="Embedded", remote_url="", development=False,
         test_signing=args.test_signing, skip_content_build=args.skip_content_build,
         timeout=args.build_timeout, human_approved=True, approval_note=args.approval_note,
+        resource_key=args.resource_key,
     )
     built = player_build(build_args)
     if not built["ok"]:
@@ -1021,6 +1066,7 @@ def android_dev_cycle(args: argparse.Namespace) -> dict[str, Any]:
         serial=args.serial, adb=args.adb, timeout=args.smoke_timeout,
         install_timeout=args.install_timeout, poll_interval=args.poll_interval,
         required_events=args.required_events, human_approved=True, approval_note=args.approval_note,
+        resource_key=args.resource_key,
     )
     smoked = android_smoke(smoke_args)
     return {"ok": smoked["ok"], "workflow": "android-dev-cycle",
@@ -1236,6 +1282,8 @@ def parser() -> argparse.ArgumentParser:
                              help="Fresh explicit human authorization for the final heavy validation slot")
         command.add_argument("--approval-note",
                              help="Short evidence describing the current human approval")
+        command.add_argument("--resource-key", action="append", type=validate_resource_key,
+                             help="Owned collision-scoped resource key; repeat for every mutable resource")
     docs = sub.add_parser("docs-check"); docs.add_argument("--timeout", type=float, default=120)
     context = sub.add_parser("context"); context.add_argument("--task", choices=tuple(taskflow.TASK_ROUTES), default="code")
     context.add_argument("--resume", action="store_true"); context.add_argument("--base-ref")
@@ -1317,7 +1365,7 @@ def parser() -> argparse.ArgumentParser:
     cycle.add_argument("--required-events", default="app.started,catalog.loading,catalog.ready")
     heavy_approval(cycle)
     resource = sub.add_parser("resource-lock"); resource.add_argument("action", choices=("acquire", "status", "release"))
-    resource.add_argument("--resource", choices=RESOURCE_NAMES, required=True)
+    resource.add_argument("--resource", type=validate_resource_key, required=True)
     resource.add_argument("--agent-id"); resource.add_argument("--purpose")
     worktree = sub.add_parser("story-worktree"); worktree.add_argument("action", choices=("create", "status", "remove"))
     worktree.add_argument("--story-id", required=True); worktree.add_argument("--base", default="origin/main")

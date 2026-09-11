@@ -20,6 +20,11 @@ namespace Novels
             public string softVersion;
             public string hardVersion;
             public string storeUrl;
+            public int versionCode;
+            public int minimumSupportedVersionCode;
+            public string apkUrl;
+            public long apkSize;
+            public string apkSha256;
         }
 
         internal static string FileName(string channel) =>
@@ -57,6 +62,23 @@ namespace Novels
             PlatformConfiguration configuration,
             string currentVersion)
         {
+            var currentVersionCode = DirectApkUpdater.CurrentVersionCode;
+            if (Application.platform == RuntimePlatform.Android
+                && currentVersionCode > 0
+                && configuration?.versionCode > currentVersionCode)
+            {
+                var directMode = currentVersionCode < configuration.minimumSupportedVersionCode
+                    ? Catalog.CatalogUpdateMode.Hard
+                    : Catalog.CatalogUpdateMode.Soft;
+                var action = DirectApkUpdater.TryCreate(
+                    configuration.apkUrl,
+                    configuration.apkSize,
+                    configuration.apkSha256,
+                    configuration.versionCode);
+                return action == null
+                    ? Catalog.CatalogUpdatePrompt.None
+                    : new Catalog.CatalogUpdatePrompt(directMode, configuration.storeUrl, action);
+            }
             if (configuration == null
                 || !TryParse(currentVersion, out var current)
                 || !TryParse(configuration.hardVersion, out var hard)

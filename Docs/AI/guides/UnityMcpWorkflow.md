@@ -36,6 +36,11 @@ target Editor. После изменения `~/.codex/config.toml` Codex Deskto
 потребовать полный restart, прежде чем новые native namespaces появятся в
 следующих задачах.
 
+`required=false` не является lifecycle-гарантией: клиент всё равно может
+поднять несколько relay/server процессов и перегрузить либо подвесить чат.
+Одна задача выбирает ровно один target project и не активирует, не probe-ит и
+не удерживает соединения с MCP servers остальных проектов.
+
 Общий fallback helper находится в `Tools/unity-mcp-helper`. Для атомарного
 проекта write-capable daemon обязательно запускается с target `--project`,
 общим `--coordination-root .` из корня `SomeGame` и `--agent-id` владельца lock. Без явного
@@ -60,6 +65,54 @@ project. В обоих режимах отсутствие точного owner 
 проверяются обычными репозиторными инструментами. Успешный MCP probe не
 доказывает успешную content/player build или визуальную корректность.
 
+## Как определить требования операции
+
+Перед MCP-вызовом классифицировать его по таблице в
+[UnityConcurrency.md](../rules/UnityConcurrency.md#классы-unitymcp-операций).
+Решает фактический side effect, а не имя команды:
+
+- чтение файлов проекта, Git, MCP config и уже сохранённых логов не является
+  Unity-операцией и не требует lock;
+- гарантированно read-only status/scene metadata/hierarchy/Console delta уже
+  открытого Editor допускаются как один короткий probe без lock;
+- вызов, способный запустить refresh/import/compile/domain reload, Play Mode,
+  test, save или изменить selection, scene, prefab, asset, setting либо другой
+  Editor state, требует FIFO/write-lock до первого вызова;
+- helper с write-capable manifest запускается только под lock, даже если
+  планируется сначала вызвать в нём read-tool; для probe без lock используется
+  native read-only surface либо явно read-only manifest;
+- отдельное актуальное разрешение человека требуется не для каждого MCP write,
+  а для защищённых случаев из concurrency-контракта: финального/релизного слота
+  истории, destructive recovery, завершения чужого процесса и иных явно
+  оговорённых действий. Lock сам по себе это разрешение не заменяет.
+
+Если read-only probe выявил необходимость исправления, recompile или иной
+mutation, остановиться на evidence, затем отдельно войти в FIFO и получить
+locks. Нельзя расширять probe до write-сеанса молча.
+
+## Lifecycle и обязательный cleanup
+
+Persistent означает только один bounded Unity-шаг, а не весь чат. После
+последнего требуемого MCP-вызова поток немедленно:
+
+1. Закрывает созданные им helper, client session и relay/server process точного
+   target, не откладывая cleanup до конца длинного текстового этапа.
+2. Если Editor был запущен runner'ом, закрывает и его, кроме явного
+   `--no-stop-editor`; пользовательский уже открытый Editor без явной просьбы
+   не закрывает, но своё MCP-соединение с ним завершает.
+3. Проверяет отсутствие собственных оставшихся helper/relay/server процессов и
+   только затем освобождает lock. В итоговом evidence указывает результат
+   cleanup.
+4. Перед переключением на другой Unity project сначала полностью завершает
+   MCP lifecycle предыдущего target; два активных target MCP в одном чате
+   запрещены.
+
+Обнаруженный процесс без доказанного ownership не завершается вслепую. Сначала
+фиксируются command line, PID, target project и владелец; завершение чужого или
+неопределённого процесса требует явного разрешения человека. Если такие
+остаточные процессы уже мешают чату, новые Unity MCP connections не создаются
+до cleanup или решения пользователя.
+
 ## Обязательный порядок
 
 1. Прочитать `AGENTS.md`, индекс `Docs/AI/README.md`, этот документ, текущий
@@ -67,15 +120,19 @@ project. В обоих режимах отсутствие точного owner 
 2. Убедиться, что target project точный и содержит `Assets`,
    `Packages/manifest.json`, `ProjectSettings/ProjectVersion.txt` и ровно один
    выбранный MCP provider; выбранная MCP-операция доступна на Unity Personal.
-3. Для уже открытого Editor разрешён лёгкий read-only probe без захвата lock,
-   если он не меняет Unity state и не запускает новый тяжёлый процесс.
+3. Классифицировать операцию по нормативной матрице. Для уже открытого Editor
+   разрешён один лёгкий read-only probe без захвата lock только когда provider
+   гарантирует отсутствие side effects и не запускается write-capable helper.
 4. Перед запуском/остановкой Editor, Play Mode, compile, tests или любой
    write-командой войти в общую FIFO, получить `write-lock` и проверить реальные
-   Unity-процессы. Один Editor/build остаётся эксклюзивным ресурсом репозитория.
+    Unity-процессы. Чужой Editor другого project/worktree path не блокирует
+    задачу; совпадающий target path или общий mutable output блокирует.
 5. Проверить transport командой `unity pipeline list`; target path должен
    совпасть буквально, Pipeline server должен быть reachable.
-6. Сначала выполнить малый read-only probe: `editor_status`, затем при
-   необходимости hierarchy и Console.
+6. Сначала выполнить малый read-only probe: `editor_status`, затем только
+   необходимые hierarchy и Console delta. Если эти чтения составляют одну
+   проверку, выполнить их одним bounded `editor-check`, а не отдельными
+   модельными polling-циклами.
 7. Предпочитать native namespace из таблицы текущего охвата, когда Codex Desktop
    его экспортирует. Пока namespace отсутствует, использовать checked-in
    persistent fallback из `Tools/unity-mcp-helper`.
@@ -85,9 +142,12 @@ project. В обоих режимах отсутствие точного owner 
    работы.
 9. После операции дождаться `compiling=false`, `domainReloadInProgress=false`,
    повторно прочитать сцену/Console и проверить Git delta.
-10. Остановить helper, освободить собственные request/lock и записать точное
-    evidence в `HANDOFF.md`. Editor оставлять открытым только по явной задаче
-    пользователя, без удержания write-lock.
+10. Выполнить lifecycle cleanup: остановить все созданные текущим потоком
+    helper/client/relay/server процессы target, проверить отсутствие своих
+    остатков, затем освободить собственные request/lock и записать точное
+    evidence в `HANDOFF.md`. Запущенный runner'ом Editor оставлять открытым
+    только по явной задаче пользователя, без удержания write-lock;
+    пользовательский Editor можно оставить, но MCP connection к нему закрыть.
 
 Для обычной проверки нельзя вызывать status/Console/hierarchy отдельными
 модельными циклами. Используется один `editor-check`; его внутренний polling не
@@ -149,9 +209,10 @@ Player — целевая platform build/device проверка.
 7. Только после этого allowlist-ить необходимые write-tools отдельным scope с
    bounded polling и post-check.
 
-Даже при установленном package нельзя открывать несколько Editor одновременно:
-все live проверки, content builds и write-команды остаются общим эксклюзивным
-Unity-ресурсом и выполняются через FIFO/write-lock.
+Параллельные задачи могут открыть по одному Editor для разных точных
+project/worktree paths. Один path нельзя открывать дважды; shared outputs,
+Catalog/SDK/integration resources и подтверждённый licensing conflict требуют
+применимой сериализации.
 
 ## Проверенная матрица
 

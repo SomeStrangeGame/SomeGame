@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "storyId": "nevesta-izo-lda",
+  "createdAt": "2026-09-11",
+  "previousManifest": null,
+  "artifacts": [
+    {"path": "scenarios/2026-09-11_s01e01-ink-before-skill-adoption_v001.ink", "sha256": "3d09da4a55b225a5d1d640f89e8230f3ba0494782d66dd9157bce0354715dddb"},
+    {"path": "scenarios/2026-09-11_s01e01-ink-after-skill-adoption_v002.ink", "sha256": "4ec6345555b01988af7f716567693648443457d1ef13171d883757bfb3a75861"},
+    {"path": "scenarios/2026-09-11_narrative-package-before-skill-adoption_v001.md", "sha256": "3081d755abb01f1caf4c25aee9a51ab44bbb92de0e960d6230184c42f82685fc"},
+    {"path": "scenarios/2026-09-11_narrative-package-after-skill-adoption_v002.md", "sha256": "ed677f1fe66980155cd0b9ab7765075ce58a8e113097d6ad07c0bd3caea74684"},
+    {"path": "assets/2026-09-11_generation-prompts-adopted_v001.md", "sha256": "557b99daaa04da4204685b67a8f56eb874521bc051aff0b55129f60f59b5cf0f"},
+    {"path": "reviews/2026-09-11_narrative-originality-adopted_v001.md", "sha256": "b929dd1cc7488dc65dde842a112736f1cbb0ce2a7ac570f2572a50c45de703b6"},
+    {"path": "reviews/2026-09-11_art-originality-adopted_v001.md", "sha256": "e7fe72e5988f0e655691f8e0b17ef20d7192463069057157a777fc50b1d1d107"}
+  ],
+  "knownGaps": [
+    "Earlier iterative drafts and rejected candidates predate adoption and were not available; they were not reconstructed.",
+    "Production binary assets remain at their canonical project paths; original WAV drafts are preserved under archive/assets/audio-drafts-2026-09-11/."
+  ]
+}
