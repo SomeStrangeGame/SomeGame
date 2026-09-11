@@ -28,6 +28,14 @@ namespace Novels.StoryQueue
                         return Cysharp.Threading.Tasks.UniTask.CompletedTask;
                     });
 
+                case StoryCommands.AnalyticsEndingStoryCommand ending:
+                    return new StoryExecution.DelegateStoryOperation(context =>
+                    {
+                        if (context.Mode == StoryExecution.QueueExecutionMode.Live)
+                            _dependencies.OnEndingReached?.Invoke(ending.Data.EndingId);
+                        return Cysharp.Threading.Tasks.UniTask.CompletedTask;
+                    });
+
                 case StoryCommands.BackgroundStoryCommand background:
                     return new StoryExecution.DelegateStoryOperation(context =>
                         _dependencies.Location.SetImage(

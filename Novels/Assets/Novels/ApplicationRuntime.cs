@@ -17,6 +17,7 @@ namespace Novels
             internal Action<(LogType type, string message)> OnLog;
             internal Action<Diagnostics.NovelError> OnError;
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
+            internal Analytics.ProductAnalytics ProductAnalytics;
             internal Bundles.IContentSource ContentSource;
             internal Bundles.IContentSource CatalogContentSource;
             internal IReadOnlyList<string> StoryIds;
@@ -33,6 +34,7 @@ namespace Novels
         private readonly Action<(LogType type, string message)> _onLog;
         private readonly Action<Diagnostics.NovelError> _onError;
         private readonly Diagnostics.SmokeTelemetry _smokeTelemetry;
+        private readonly Analytics.ProductAnalytics _productAnalytics;
         private readonly Action<StoryProcessor.StorySourceLocation> _onStorySourceChanged;
         private readonly Bundles.Entity _catalogBundles;
         private readonly DisposableSlot<NovelRuntime> _activeNovel;
@@ -60,6 +62,7 @@ namespace Novels
             _onLog = ctx.OnLog;
             _onError = ctx.OnError;
             _smokeTelemetry = ctx.SmokeTelemetry;
+            _productAnalytics = ctx.ProductAnalytics;
             _onStorySourceChanged = ctx.OnStorySourceChanged;
             _notifications = ctx.Notifications;
             _pendingNotificationRoute = ctx.InitialNotificationRoute;
@@ -82,6 +85,7 @@ namespace Novels
                 CancellationToken = _environment.CancellationToken,
                 OnLog = _onLog,
                 SmokeTelemetry = _smokeTelemetry,
+                ProductAnalytics = _productAnalytics,
                 CreateStoryBundles = CreateStoryBundles,
                 Settings = _audioSettings,
                 UpdatePrompt = ctx.UpdatePrompt,
@@ -89,14 +93,16 @@ namespace Novels
             _activeNovel = new DisposableSlot<NovelRuntime>().AddTo(this);
         }
 
-        internal async UniTask Run()
+        internal async UniTask Run(Bootstrap.BootstrapController bootstrap)
         {
+            if (bootstrap == null)
+                throw new ArgumentNullException(nameof(bootstrap));
             _audioSettings.Apply();
-            using var bootstrap = new Bootstrap.BootstrapController(_environment.CancellationToken);
             using var catalog = await _catalogFlow.LoadWithRetry(bootstrap);
             _activeCatalog = catalog;
             _notifications?.SetCatalog(catalog.Entries);
             bootstrap.Hide();
+            _productAnalytics?.CatalogOpened();
             try
             {
                 while (!_environment.CancellationToken.IsCancellationRequested)
@@ -121,6 +127,7 @@ namespace Novels
                     _smokeTelemetry?.Emit(
                         "catalog.returned",
                         ("contentId", launch.Content.ContentId));
+                    _productAnalytics?.CatalogOpened();
                     bootstrap.Hide();
                 }
             }
@@ -175,6 +182,7 @@ namespace Novels
                 OnLog = _onLog,
                 OnError = _onError,
                 SmokeTelemetry = _smokeTelemetry,
+                ProductAnalytics = _productAnalytics,
                 OnStorySourceChanged = _onStorySourceChanged,
             });
             _activeNovel.Replace(novel);
@@ -227,6 +235,7 @@ namespace Novels
             }
             finally
             {
+                _productAnalytics?.StopReading();
                 _onStorySourceChanged?.Invoke(default);
                 _activeNovel.Clear(novel);
             }

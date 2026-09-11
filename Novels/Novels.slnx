@@ -17,6 +17,7 @@
   <Project Path="Novels.Catalog.Contracts.csproj" />
   <Project Path="Novels.Character.csproj" />
   <Project Path="Novels.StoryContracts.csproj" />
+  <Project Path="Novels.StoryCommands.Tests.csproj" />
   <Project Path="Novels.Editor.csproj" />
   <Project Path="Bundles.Editor.csproj" />
   <Project Path="LoadingPriority.csproj" />

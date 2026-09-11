@@ -23,11 +23,13 @@ namespace Novels
 
         private ApplicationRuntime _runtime;
         private Diagnostics.SmokeTelemetry _smokeTelemetry;
+        private Analytics.ProductAnalytics _productAnalytics;
         private CancellationTokenSource _sessionCancellation;
         private StorySourceOverlay _storySourceOverlay;
         private Notifications.LocalNotificationCoordinator _notifications;
         private Func<CancellationToken, UniTask<string>> _downloadNotificationSchedule;
         private Notifications.NotificationRoute _pendingDeepLink;
+        private bool _suppressAutomaticErrorCapture;
 
         private void OnEnable()
         {
@@ -62,6 +64,17 @@ namespace Novels
                         logs.Log("[Novels]", data);
                 };
                 _smokeTelemetry = new Diagnostics.SmokeTelemetry(onLog);
+                var analyticsConfiguration = ContentRuntimeConfiguration.TryLoad();
+                _productAnalytics = new Analytics.ProductAnalytics(
+                    Application.persistentDataPath,
+                    analyticsConfiguration?.AnalyticsEndpointUrl,
+                    Application.version,
+                    Application.platform.ToString(),
+                    analyticsConfiguration?.AnalyticsEnabled == true && !Application.isEditor,
+                    _sessionCancellation.Token,
+                    onLog);
+                Application.logMessageReceived += OnUnityLogMessage;
+                _productAnalytics.StartSession();
                 _notifications = new Notifications.LocalNotificationCoordinator(onLog);
                 _notifications.Initialize();
                 Application.deepLinkActivated += OnDeepLinkActivated;
@@ -85,14 +98,18 @@ namespace Novels
             Action<(LogType type, string message)> onLog,
             Bundles.ContentDeliveryOptions options)
         {
+            using var bootstrap = new Bootstrap.BootstrapController(
+                environment.CancellationToken);
             try
             {
+                bootstrap.ShowLoading(ApplicationTexts.CatalogLoading);
                 var dependencies = new ApplicationRuntime.Dependencies
                 {
                     Environment = environment,
                     OnLog = onLog,
                     OnError = ReportError,
                     SmokeTelemetry = _smokeTelemetry,
+                    ProductAnalytics = _productAnalytics,
                     OnStorySourceChanged = _storySourceOverlay.Show,
                     Notifications = _notifications,
                     InitialNotificationRoute = _pendingDeepLink ?? _notifications.OnForeground(),
@@ -106,20 +123,24 @@ namespace Novels
                     configuration.RemoteContentBaseUrl,
                     environment.CancellationToken,
                     options.RemoteRequestPolicy);
-                var manifestJson = await remoteSource.DownloadText(
+                var manifestRequest = remoteSource.DownloadText(
                     ChannelManifest.FileName(configuration.ContentChannel),
                     environment.CancellationToken);
-                var manifest = ChannelManifest.Deserialize(manifestJson);
-                dependencies.UpdatePrompt = await ApplicationUpdatePolicy.Download(
+                var updateRequest = ApplicationUpdatePolicy.Download(
                     remoteSource,
                     configuration.ContentChannel,
                     Application.version,
                     environment.CancellationToken,
                     onLog);
+                var (manifestJson, updatePrompt) = await UniTask.WhenAll(
+                    manifestRequest,
+                    updateRequest);
+                var manifest = ChannelManifest.Deserialize(manifestJson);
+                dependencies.UpdatePrompt = updatePrompt;
                 _downloadNotificationSchedule = token => remoteSource.DownloadText(
                     Notifications.NotificationSchedule.FileName(configuration.ContentChannel),
                     token);
-                await RefreshNotificationSchedule(environment.CancellationToken);
+                RefreshNotificationSchedule(environment.CancellationToken).Forget();
                 var catalogRoot = Path.Combine(
                     Application.streamingAssetsPath,
                     "NovelCatalog");
@@ -140,7 +161,7 @@ namespace Novels
                     ("appVersion", Application.version),
                     ("platform", Application.platform.ToString()),
                     ("contentPlatform", environment.ContentPlatform));
-                Run(_runtime, environment.CancellationToken).Forget();
+                await _runtime.Run(bootstrap);
             }
             catch (OperationCanceledException)
                 when (environment.CancellationToken.IsCancellationRequested)
@@ -195,27 +216,6 @@ namespace Novels
 #endif
         }
 
-        private async UniTaskVoid Run(
-            ApplicationRuntime runtime,
-            CancellationToken cancellationToken)
-        {
-            try
-            {
-                await runtime.Run();
-            }
-            catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
-            {
-            }
-            catch (Exception exception)
-            {
-                ReportError(new Diagnostics.NovelError(
-                    Diagnostics.NovelErrorCodes.InitializationFailed,
-                    Diagnostics.NovelErrorSeverity.Fatal,
-                    "Novel initialization failed.",
-                    exception: exception));
-            }
-        }
-
         private void OnDisable()
         {
             DisposeSession();
@@ -224,6 +224,7 @@ namespace Novels
         private void DisposeSession()
         {
             _smokeTelemetry?.Emit("app.stopped");
+            _productAnalytics?.FlushSynchronously();
             _sessionCancellation?.Cancel();
             try
             {
@@ -243,7 +244,9 @@ namespace Novels
                 _notifications = null;
                 _pendingDeepLink = null;
                 Application.deepLinkActivated -= OnDeepLinkActivated;
+                Application.logMessageReceived -= OnUnityLogMessage;
                 _smokeTelemetry = null;
+                _productAnalytics = null;
                 _storySourceOverlay?.Show(default);
             }
         }
@@ -255,12 +258,14 @@ namespace Novels
                 if (_runtime != null)
                     FlushSaveSynchronously(_runtime, "pausing");
                 _notifications?.OnBackground();
+                _productAnalytics?.ApplicationPaused();
                 return;
             }
             var route = _notifications?.OnForeground();
             if (route != null)
                 _runtime?.NavigateToCatalog(route);
             RefreshNotificationSchedule(_sessionCancellation?.Token ?? default).Forget();
+            _productAnalytics?.ApplicationResumed();
         }
 
         private void OnApplicationQuit()
@@ -268,6 +273,7 @@ namespace Novels
             if (_runtime != null)
                 FlushSaveSynchronously(_runtime, "quitting");
             _notifications?.OnBackground();
+            _productAnalytics?.FlushSynchronously();
         }
 
         private void OnDeepLinkActivated(string url)
@@ -320,6 +326,11 @@ namespace Novels
 
         private void ReportError(Diagnostics.NovelError error)
         {
+            _productAnalytics?.RuntimeError(
+                error.Code,
+                error.Context.ContentId,
+                error.Context.EpisodeId,
+                $"{error.Severity}:{error.Context.ReleaseId}:{error.Context.DeliveryMode}");
             _smokeTelemetry?.Emit(
                 "error",
                 ("code", error.Code),
@@ -331,8 +342,23 @@ namespace Novels
             var logType = error.Severity == Diagnostics.NovelErrorSeverity.Warning
                 ? LogType.Warning
                 : LogType.Error;
-            using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
-                logs.Log("[Novels]", (logType, error.ToString()));
+            _suppressAutomaticErrorCapture = true;
+            try
+            {
+                using (var logs = new Logs.Entity(new Logs.Entity.Ctx {Logs = _logs}))
+                    logs.Log("[Novels]", (logType, error.ToString()));
+            }
+            finally
+            {
+                _suppressAutomaticErrorCapture = false;
+            }
+        }
+
+        private void OnUnityLogMessage(string condition, string stackTrace, LogType type)
+        {
+            if (_suppressAutomaticErrorCapture)
+                return;
+            _productAnalytics?.CaptureUnityError(condition, stackTrace, type);
         }
     }
 }

@@ -11,6 +11,27 @@ namespace Novels
 {
     internal sealed class CatalogFlow
     {
+        private const int _maximumParallelPreviewRequests = 3;
+        private const int _requiredCoverTimeoutSeconds = 30;
+        private const int _optionalCoverTimeoutSeconds = 15;
+
+        private readonly struct LoadedEntry
+        {
+            internal LoadedEntry(
+                Catalog.NovelCatalogEntry entry,
+                Catalog.Contracts.StoryCatalogPreview preview,
+                IReadOnlyDictionary<string, Sprite> covers)
+            {
+                Entry = entry;
+                Preview = preview;
+                Covers = covers;
+            }
+
+            internal Catalog.NovelCatalogEntry Entry { get; }
+            internal Catalog.Contracts.StoryCatalogPreview Preview { get; }
+            internal IReadOnlyDictionary<string, Sprite> Covers { get; }
+        }
+
         internal sealed class LoadedCatalog : IDisposable
         {
             internal LoadedCatalog(
@@ -83,6 +104,7 @@ namespace Novels
             internal CancellationToken CancellationToken;
             internal Action<(LogType type, string message)> OnLog;
             internal Diagnostics.SmokeTelemetry SmokeTelemetry;
+            internal Analytics.ProductAnalytics ProductAnalytics;
             internal Func<string, CancellationToken, Bundles.Entity> CreateStoryBundles;
             internal Catalog.ICatalogSettings Settings;
             internal Catalog.CatalogUpdatePrompt UpdatePrompt;
@@ -429,35 +451,96 @@ namespace Novels
             var covers = new Dictionary<string, Sprite>(StringComparer.Ordinal);
             var previews = new Dictionary<string, Catalog.Contracts.StoryCatalogPreview>(
                 StringComparer.OrdinalIgnoreCase);
+            var completed = new List<LoadedEntry>();
+            using var requests = new SemaphoreSlim(
+                _maximumParallelPreviewRequests,
+                _maximumParallelPreviewRequests);
             try
             {
-                foreach (var storyId in storyIds)
+                var loadedEntries = await UniTask.WhenAll(storyIds.Select(storyId =>
+                    LoadEntry(storyId, requests, completed)));
+                foreach (var loaded in loadedEntries)
                 {
-                    var storySource = CreateStoryContentSource(storyId);
-                    var cardJson = await storySource.DownloadText(
-                        "card.json", _ctx.CancellationToken);
-                    var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
-                        cardJson,
-                        storyId);
-                    var previewJson = await storySource.DownloadText(
-                        $"Remote/{_ctx.ContentPlatform}/catalog-preview.json",
-                        _ctx.CancellationToken);
-                    var preview = Catalog.Contracts.CatalogContractCodec.DeserializePreview(previewJson, storyId);
-                    previews.Add(storyId, preview);
-                    covers.Add(card.storyId, await LoadCover(
+                    entries.Add(loaded.Entry);
+                    previews.Add(loaded.Entry.ContentId, loaded.Preview);
+                    foreach (var cover in loaded.Covers)
+                        covers.Add(cover.Key, cover.Value);
+                }
+            }
+            catch
+            {
+                DestroyCovers(completed.SelectMany(value => value.Covers.Values));
+                throw;
+            }
+            return (entries, covers, previews);
+        }
+
+        private async UniTask<LoadedEntry> LoadEntry(
+            string storyId,
+            SemaphoreSlim requests,
+            ICollection<LoadedEntry> completed)
+        {
+            var storySource = CreateStoryContentSource(storyId);
+            var loadedCovers = new Dictionary<string, Sprite>(StringComparer.Ordinal);
+            try
+            {
+                var (cardJson, previewJson) = await UniTask.WhenAll(
+                    RunPreviewRequest(
+                        requests,
+                        () => storySource.DownloadText("card.json", _ctx.CancellationToken)),
+                    RunPreviewRequest(
+                        requests,
+                        () => storySource.DownloadText(
+                            $"Remote/{_ctx.ContentPlatform}/catalog-preview.json",
+                            _ctx.CancellationToken)));
+                var card = Catalog.Contracts.CatalogContractCodec.DeserializeCard(
+                    cardJson,
+                    storyId);
+                var preview = Catalog.Contracts.CatalogContractCodec.DeserializePreview(
+                    previewJson,
+                    storyId);
+                var coverRequests = new List<UniTask<(string key, Sprite sprite)>>
+                {
+                    LoadRequiredCover(
+                        requests,
+                        storyId,
+                        preview.releaseId,
+                        card.storyId,
                         card.cover,
-                        storySource, _ctx.CancellationToken));
-                    foreach (var episode in preview.episodes)
-                    {
-                        if (string.IsNullOrWhiteSpace(episode.cover)) continue;
-                        var key = ContentAddressing.ContentPackageConvention.StoryEpisodeCoverPath(
-                            storyId, _ctx.ContentPlatform, episode.cover);
-                        var path = $"Remote/{_ctx.ContentPlatform}/episode-covers/{episode.cover}";
-                        if (!covers.ContainsKey(key))
-                            covers.Add(key, await LoadOptionalEpisodeCover(path,
-                                storySource, _ctx.CancellationToken, _ctx.OnLog));
-                    }
-                    entries.Add(new Catalog.NovelCatalogEntry(
+                        storySource),
+                };
+                var coverKeys = new HashSet<string>(StringComparer.Ordinal)
+                {
+                    card.storyId,
+                };
+                foreach (var episode in preview.episodes)
+                {
+                    if (string.IsNullOrWhiteSpace(episode.cover))
+                        continue;
+                    var key = ContentAddressing.ContentPackageConvention.StoryEpisodeCoverPath(
+                        storyId,
+                        _ctx.ContentPlatform,
+                        episode.cover);
+                    if (!coverKeys.Add(key))
+                        continue;
+                    coverRequests.Add(LoadOptionalCover(
+                        requests,
+                        storyId,
+                        preview.releaseId,
+                        key,
+                        $"Remote/{_ctx.ContentPlatform}/episode-covers/{episode.cover}",
+                        episode.cover,
+                        storySource));
+                }
+                foreach (var cover in await UniTask.WhenAll(coverRequests))
+                {
+                    if (cover.sprite != null && !loadedCovers.ContainsKey(cover.key))
+                        loadedCovers.Add(cover.key, cover.sprite);
+                    else if (cover.sprite != null)
+                        DestroyCovers(new[] { cover.sprite });
+                }
+                var loaded = new LoadedEntry(
+                    new Catalog.NovelCatalogEntry(
                         card.storyId,
                         card.title,
                         card.genre,
@@ -467,16 +550,73 @@ namespace Novels
                                 episode.id,
                                 episode.title,
                                 episode.description)),
-                        author: card.author));
-                }
+                        author: card.author),
+                    preview,
+                    loadedCovers);
+                lock (completed)
+                    completed.Add(loaded);
+                return loaded;
             }
             catch
             {
-                DestroyCovers(covers.Values);
+                DestroyCovers(loadedCovers.Values);
                 throw;
             }
-            return (entries, covers, previews);
         }
+
+        private async UniTask<(string key, Sprite sprite)> LoadRequiredCover(
+            SemaphoreSlim requests,
+            string storyId,
+            string releaseId,
+            string key,
+            string path,
+            Bundles.IContentSource source) =>
+            (key, await RunPreviewRequest(
+                requests,
+                () => LoadCover(
+                    path,
+                    source,
+                    _ctx.CancellationToken,
+                    _progressCache,
+                    CoverCacheKey(storyId, releaseId, path),
+                    _requiredCoverTimeoutSeconds)));
+
+        private async UniTask<(string key, Sprite sprite)> LoadOptionalCover(
+            SemaphoreSlim requests,
+            string storyId,
+            string releaseId,
+            string key,
+            string path,
+            string fileName,
+            Bundles.IContentSource source) =>
+            (key, await RunPreviewRequest(
+                requests,
+                () => LoadOptionalEpisodeCoverCached(
+                    path,
+                    source,
+                    _ctx.CancellationToken,
+                    _ctx.OnLog,
+                    _progressCache,
+                    CoverCacheKey(storyId, releaseId, fileName))));
+
+        private async UniTask<T> RunPreviewRequest<T>(
+            SemaphoreSlim requests,
+            Func<UniTask<T>> request)
+        {
+            await requests.WaitAsync(_ctx.CancellationToken);
+            try
+            {
+                return await request();
+            }
+            finally
+            {
+                requests.Release();
+            }
+        }
+
+        private static string CoverCacheKey(string storyId, string releaseId, string fileName) =>
+            $"CatalogPreviews/{Uri.EscapeDataString(storyId)}/"
+            + $"{Uri.EscapeDataString(releaseId)}/{Uri.EscapeDataString(fileName)}";
 
         private string GetCatalogVideoUrl(LoadedCatalog catalog, string storyId,
             Catalog.Contracts.StoryCatalogPreview preview, int index)
@@ -528,9 +668,28 @@ namespace Novels
         }
 
         internal static async UniTask<Sprite> LoadOptionalEpisodeCover(string path,
-            Bundles.IContentSource source, CancellationToken token, Action<(LogType type, string message)> onLog)
+            Bundles.IContentSource source, CancellationToken token,
+            Action<(LogType type, string message)> onLog) =>
+            await LoadOptionalEpisodeCoverCached(path, source, token, onLog, null, null);
+
+        private static async UniTask<Sprite> LoadOptionalEpisodeCoverCached(
+            string path,
+            Bundles.IContentSource source,
+            CancellationToken token,
+            Action<(LogType type, string message)> onLog,
+            Cache.Entity cache,
+            string cacheKey)
         {
-            try { return await LoadCover(path, source, token, timeout: 15); }
+            try
+            {
+                return await LoadCover(
+                    path,
+                    source,
+                    token,
+                    cache,
+                    cacheKey,
+                    _optionalCoverTimeoutSeconds);
+            }
             catch (OperationCanceledException) { throw; }
             catch (Exception exception)
             {
@@ -541,14 +700,70 @@ namespace Novels
             }
         }
 
-        private static async UniTask<Sprite> LoadCover(string path, Bundles.IContentSource source,
-            CancellationToken token, int timeout = 0)
+        private static async UniTask<Sprite> LoadCover(
+            string path,
+            Bundles.IContentSource source,
+            CancellationToken token,
+            Cache.Entity cache = null,
+            string cacheKey = null,
+            int timeoutSeconds = 0)
         {
             token.ThrowIfCancellationRequested();
+            if (cache != null && !string.IsNullOrWhiteSpace(cacheKey)
+                && cache.Exists(cacheKey))
+            {
+                try
+                {
+                    var cached = CreateCover(cache.ReadBytes(cacheKey), path);
+                    cache.Touch(cacheKey);
+                    return cached;
+                }
+                catch
+                {
+                    cache.Delete(cacheKey);
+                }
+            }
+            if (cache != null && !string.IsNullOrWhiteSpace(cacheKey))
+            {
+                var temporaryPath = cache.CreateTemporaryPath(cacheKey);
+                try
+                {
+                    using var timeout = CancellationTokenSource.CreateLinkedTokenSource(token);
+                    if (timeoutSeconds > 0)
+                        timeout.CancelAfter(TimeSpan.FromSeconds(timeoutSeconds));
+                    try
+                    {
+                        await source.DownloadFile(path, temporaryPath, null, timeout.Token);
+                    }
+                    catch (OperationCanceledException exception)
+                        when (!token.IsCancellationRequested)
+                    {
+                        throw new Bundles.ContentSourceException(
+                            $"Story cover '{path}' timed out.",
+                            exception);
+                    }
+                    var sprite = CreateCover(File.ReadAllBytes(temporaryPath), path);
+                    try
+                    {
+                        cache.CommitTemporaryFile(temporaryPath, cacheKey);
+                        return sprite;
+                    }
+                    catch
+                    {
+                        DestroyCovers(new[] { sprite });
+                        throw;
+                    }
+                }
+                finally
+                {
+                    if (File.Exists(temporaryPath))
+                        File.Delete(temporaryPath);
+                }
+            }
             using var request = UnityWebRequestTexture.GetTexture(
                 source.GetUrl(path),
                 true);
-            request.timeout = timeout;
+            request.timeout = timeoutSeconds;
             await request.SendWebRequest().ToUniTask(
                 cancellationToken: token);
             if (request.result != UnityWebRequest.Result.Success)
@@ -565,8 +780,36 @@ namespace Novels
                 new Vector2(0.5f, 0.5f));
         }
 
+        private static Sprite CreateCover(byte[] bytes, string path)
+        {
+            var texture = new Texture2D(2, 2, TextureFormat.RGBA32, false);
+            try
+            {
+                if (!ImageConversion.LoadImage(texture, bytes, true))
+                    throw new Bundles.ContentSourceException(
+                        $"Story cover '{path}' could not be decoded.");
+                return Sprite.Create(
+                    texture,
+                    new Rect(0, 0, texture.width, texture.height),
+                    new Vector2(0.5f, 0.5f));
+            }
+            catch
+            {
+                UnityEngine.Object.Destroy(texture);
+                throw;
+            }
+        }
+
         private Catalog.CatalogController CreateSelection(GameObject screen) =>
-            new(screen, _ctx.CancellationToken, _ctx.Settings, _ctx.UpdatePrompt);
+            new(
+                screen,
+                _ctx.CancellationToken,
+                _ctx.Settings,
+                _ctx.UpdatePrompt,
+                (storyId, episodeId) => _ctx.ProductAnalytics?.StoryOpened(
+                    storyId,
+                    episodeId),
+                () => _ctx.ProductAnalytics?.FeedbackOpened());
 
         private static void ShowProgress(
             Bootstrap.BootstrapController bootstrap,

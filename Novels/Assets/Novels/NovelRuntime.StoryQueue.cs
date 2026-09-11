@@ -82,6 +82,10 @@ namespace Novels
                         ("contentId", _definition.Id),
                         ("episodeId", _episode.Id),
                         ("choiceId", choiceId.ToString())),
+                    OnEndingReached = endingId => _ctx.ProductAnalytics?.EndingReached(
+                        _definition.Id,
+                        _episode.Id,
+                        endingId),
                 });
         }
 

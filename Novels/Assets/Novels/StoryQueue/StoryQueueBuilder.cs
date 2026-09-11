@@ -25,6 +25,7 @@ namespace Novels.StoryQueue
             internal StoryExecution.WardrobeSequenceState WardrobeSequence;
             internal Action<string, int> OnDialogueReady;
             internal Action<int> OnChoiceSelected;
+            internal Action<string> OnEndingReached;
         }
 
         private readonly StoryCommandQueueBuilder _storyCommandQueueBuilder;
