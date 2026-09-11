@@ -1,0 +1,3 @@
+# Creative archive snapshots are byte-preserving evidence; do not normalize or
+# reject retained source whitespace during Git checks.
+archive/** -text -whitespace

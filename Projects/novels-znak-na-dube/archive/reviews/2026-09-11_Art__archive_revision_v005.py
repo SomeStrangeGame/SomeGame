@@ -38,16 +38,11 @@ def category_for(src):
 
 def archive_candidate(src, day, suffix, artifact_id, status, production_mapping, stamp):
     data = src.read_bytes()
-    retained = [path for path in sorted((ARCHIVE / 'assets').glob(f'*_{artifact_id}_v*{src.suffix}'))
-                if digest(path.read_bytes()) == digest(data)] if (ARCHIVE / 'assets').exists() else []
-    if retained:
-        dst = retained[-1]
-    else:
-        dst = ARCHIVE / 'assets' / f'{day}_{artifact_id}_{suffix}{src.suffix}'
-        dst.parent.mkdir(parents=True, exist_ok=True)
-        with dst.open('xb') as output:
-            output.write(data)
-        assert dst.read_bytes() == data
+    dst = ARCHIVE / 'assets' / f'{day}_{artifact_id}_{suffix}{src.suffix}'
+    dst.parent.mkdir(parents=True, exist_ok=True)
+    with dst.open('xb') as output:
+        output.write(data)
+    assert dst.read_bytes() == data
     return {
         'artifactId': f'candidate:{artifact_id}', 'stage': 'ready-for-final-validation',
         'category': 'assets', 'path': dst.relative_to(ARCHIVE).as_posix(),
@@ -57,7 +52,7 @@ def archive_candidate(src, day, suffix, artifact_id, status, production_mapping,
         'creatorRole': 'AI-generated candidate', 'toolModel': 'built-in image generation; exact model unavailable',
         'status': status, 'approval': 'Selected/rejected as recorded in Art/EPISODE_COVER_HANDOFF.md',
         'productionMapping': production_mapping, 'decision': 'See Art/EPISODE_COVER_HANDOFF.md',
-        'availability': 'retained bytes in story archive; reused by hash in later manifests', 'redactions': [],
+        'availability': 'retained bytes in story archive', 'redactions': [],
         'gaps': ['Exact model/version metadata unavailable']
     }
 
