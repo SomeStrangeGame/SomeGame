@@ -1,0 +1,1482 @@
+--------- beginning of main
+09-11 15:01:26.621  5366  5366 I kostroma.novels: Using CollectorTypeCC GC.
+09-11 15:01:26.624  5366  5366 E kostroma.novels: Not starting debugger since process cannot load the jdwp agent.
+09-11 15:01:26.639  5366  5366 D CompatibilityChangeReporter: Compat change id reported: 171979766; UID 10199; state: ENABLED
+09-11 15:01:26.639  5366  5366 D CompatibilityChangeReporter: Compat change id reported: 242716250; UID 10199; state: ENABLED
+09-11 15:01:26.649  5366  5366 D nativeloader: Configuring clns-6 for other apk /data/app/~~pNt6UzelV4bgbNxYjRPrBw==/ru.kostroma.novels-aI1zFDM_OEIrAD9ne_Wp0g==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~pNt6UzelV4bgbNxYjRPrBw==/ru.kostroma.novels-aI1zFDM_OEIrAD9ne_Wp0g==/lib/arm64:/data/app/~~pNt6UzelV4bgbNxYjRPrBw==/ru.kostroma.novels-aI1zFDM_OEIrAD9ne_Wp0g==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/ru.kostroma.novels
+09-11 15:01:26.679  5366  5366 V GraphicsEnvironment: Currently set values for:
+09-11 15:01:26.679  5366  5366 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[]
+09-11 15:01:26.679  5366  5366 V GraphicsEnvironment:   angle_gl_driver_selection_values=[]
+09-11 15:01:26.679  5366  5366 V GraphicsEnvironment: ANGLE GameManagerService for ru.kostroma.novels: false
+09-11 15:01:26.679  5366  5366 V GraphicsEnvironment: ru.kostroma.novels is not listed in per-application setting
+09-11 15:01:26.679  5366  5366 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+09-11 15:01:26.697  5366  5366 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+09-11 15:01:26.713  5366  5366 D gti.InputConnection: InputConnection created
+09-11 15:01:26.740  5366  5366 I IL2CPP  : JNI_OnLoad
+09-11 15:01:26.740  5366  5366 V Unity   : Context Type: GameActivity
+09-11 15:01:26.742  5366  5366 I GameActivity: Looking for library libgame.so
+09-11 15:01:26.742  5366  5366 I GameActivity: Found library libgame.so. Loading...
+09-11 15:01:26.747  5366  5366 D GameActivity: GameActivity_register
+09-11 15:01:26.747  5366  5366 D GameActivity: SDK version: 34
+09-11 15:01:26.747  5366  5385 I Unity   : UnityApplication::CreateInstance
+09-11 15:01:26.747  5366  5385 I Unity   : GameActivity Package Version '3.0.5'
+09-11 15:01:26.747  5366  5385 I Unity   : Starting Game Loop
+09-11 15:01:26.749  5366  5385 I Unity   : Handle cmd APP_CMD_START(11)
+09-11 15:01:26.751  5366  5385 I Unity   : Handle cmd APP_CMD_RESUME(12)
+09-11 15:01:26.753  5366  5366 D CompatibilityChangeReporter: Compat change id reported: 237531167; UID 10199; state: DISABLED
+09-11 15:01:26.770  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.770  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.771  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:26.792  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.792  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.793  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.793  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.793  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.793  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.793  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:26.793  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:26.793  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:26.793  5366  5385 I Unity   : Handle cmd APP_CMD_CONTENT_RECT_CHANGED(5)
+09-11 15:01:26.796  5366  5385 I Unity   : Handle cmd APP_CMD_INIT_WINDOW(1)
+09-11 15:01:26.799  5366  5366 I Gralloc4: mapper 4.x is not supported
+09-11 15:01:26.802  5366  5385 I Unity   : MemoryManager: Using 'Dynamic Heap' Allocator.
+09-11 15:01:26.834  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.834  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.834  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.834  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.863  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.863  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.863  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.863  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.988  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.988  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:26.988  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:26.988  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.034  5366  5385 I Unity   : SystemInfo CPU = ARM64 FP ASIMD AES, Cores = 4, Memory = 3922mb
+09-11 15:01:27.034  5366  5385 I Unity   : SystemInfo ARM big.LITTLE configuration: 4 big (mask: 0xf), 0 little (mask: 0x0)
+09-11 15:01:27.034  5366  5385 I Unity   : ApplicationInfo 'ru.kostroma.novels', Version '2026.09.11', Min API Level '25', Target API Level '36'
+09-11 15:01:27.034  5366  5385 I Unity   : Built from '6000.3/staging' branch, Version '6000.3.11f1 (3000ef702840)', Build type 'Release', Scripting Backend 'il2cpp', CPU 'arm64-v8a', Stripping 'Enabled'
+09-11 15:01:27.034  5366  5385 I Unity   : Device Model 'Google sdk_gphone64_arm64', OS 'Android OS 14 (API 34)'
+09-11 15:01:27.036  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.036  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.069  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.069  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.071  5366  5385 I Unity   : Company Name: Pureshechka
+09-11 15:01:27.071  5366  5385 I Unity   : Product Name: Кострома
+09-11 15:01:27.077  5366  5385 E platform: Failed to open rendernode: No such file or directory
+09-11 15:01:27.077  5366  5385 I androidemu: HealthMonitor enabled. Returning monitor.
+09-11 15:01:27.080  5366  5385 D vulkan  : searching for layers in '/data/app/~~pNt6UzelV4bgbNxYjRPrBw==/ru.kostroma.novels-aI1zFDM_OEIrAD9ne_Wp0g==/lib/arm64'
+09-11 15:01:27.080  5366  5385 D vulkan  : searching for layers in '/data/app/~~pNt6UzelV4bgbNxYjRPrBw==/ru.kostroma.novels-aI1zFDM_OEIrAD9ne_Wp0g==/base.apk!/lib/arm64-v8a'
+09-11 15:01:27.083  5366  5385 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+09-11 15:01:27.084  5366  5385 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+09-11 15:01:27.084  5366  5385 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+09-11 15:01:27.086  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.086  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.097  5366  5385 E EGL_emulation: eglCreateContext: EGL_BAD_CONFIG: no ES 3.2 support
+09-11 15:01:27.097  5366  5385 E EGL_emulation: tid 5385: eglCreateContext(1834): error 0x3005 (EGL_BAD_CONFIG)
+09-11 15:01:27.100  5366  5385 E EGL_emulation: [getAttribValue] Bad attribute idx
+09-11 15:01:27.100  5366  5385 E EGL_emulation: tid 5385: eglGetConfigAttrib(1277): error 0x3004 (EGL_BAD_ATTRIBUTE)
+09-11 15:01:27.136  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.136  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.260  5366  5385 I AAudio  : AAudioStreamBuilder_openStream() called ----------------------------------------
+09-11 15:01:27.260  5366  5385 I AudioStreamBuilder: rate   =  24000, channels  = 2, channelMask = 0x80000003, format   = 5, sharing = SH, dir = OUTPUT
+09-11 15:01:27.260  5366  5385 I AudioStreamBuilder: device =      0, sessionId = 0, perfMode = 12, callback: ON with frames = 512
+09-11 15:01:27.260  5366  5385 I AudioStreamBuilder: usage  =      0, contentType = 0, inputPreset = 0, allowedCapturePolicy = 0
+09-11 15:01:27.260  5366  5385 I AudioStreamBuilder: privacy sensitive = false, opPackageName = (null), attributionTag = (null)
+09-11 15:01:27.260  5366  5385 D AudioStreamBuilder: build() MMAP not used because sessionId specified.
+09-11 15:01:27.260  5366  5385 D kostroma.novels: PlayerBase::PlayerBase()
+09-11 15:01:27.260  5366  5385 D AudioStreamTrack: open(), request notificationFrames = 0, frameCount = 8192
+09-11 15:01:27.303  5366  5385 D AudioStreamTrack: open() flags changed from 0x00000004 to 0x00000000
+09-11 15:01:27.303  5366  5385 D AudioStreamTrack: open() perfMode changed from 12 to 10
+09-11 15:01:27.303  5366  5385 D AAudioStream: setState(s#1) from 0 to 2
+09-11 15:01:27.304  5366  5385 I AAudio  : AAudioStreamBuilder_openStream() returns 0 = AAUDIO_OK for s#1 ----------------
+09-11 15:01:27.304  5366  5385 D AAudio  : AAudioStream_requestStart(s#1) called --------------
+09-11 15:01:27.304  5366  5385 D AAudioStream: setState(s#1) from 2 to 3
+09-11 15:01:27.305  5366  5380 D AudioStreamLegacy: onAudioDeviceUpdate(deviceId = 2)
+09-11 15:01:27.305  5366  5385 D AAudio  : AAudioStream_requestStart(s#1) returned 0 ---------
+09-11 15:01:27.306  5366  5427 D AAudioStream: setState(s#1) from 3 to 4
+09-11 15:01:27.333  5366  5385 I Unity   :     HasWindow = 1, HasFocus = 0
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_RESIZED(3)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_REDRAW_NEEDED(4)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_GAINED_FOCUS(7)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.333  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.351  5366  5385 V MediaRouter: Selecting route: RouteInfo{ name=Phone, description=null, status=null, category=RouteCategory{ name=System types=ROUTE_TYPE_LIVE_AUDIO ROUTE_TYPE_LIVE_VIDEO  groupable=false }, supportedTypes=ROUTE_TYPE_LIVE_AUDIO ROUTE_TYPE_LIVE_VIDEO , presentationDisplay=null }
+09-11 15:01:27.351  5366  5385 I MediaRouter: Skip setBluetoothA2dpOn(): types=8388615, isPlaybackActive()=true, BT route=null
+09-11 15:01:27.393  5366  5366 D GameActivity: ************** mainWorkCallback *********
+09-11 15:01:27.395  5366  5366 I ImeTracker: ru.kostroma.novels:d1ca3cd2: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+09-11 15:01:27.405  5366  5385 W UnityNotifications: No custom_notification_android_activity found, attempting to find app activity class
+09-11 15:01:27.430  5366  5433 D CompatibilityChangeReporter: Compat change id reported: 160794467; UID 10199; state: ENABLED
+09-11 15:01:27.433  5366  5385 I IL2CPP  : Locale en-US
+09-11 15:01:27.436  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":1,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"app.started","appVersion":"2026.09.11","platform":"Android","contentPlatform":"Android"}</color>
+09-11 15:01:27.436  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:27.436  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:27.436  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:27.436  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:27.436  5366  5385 I Unity   : Novels.<StartRuntime>d__20:MoveNext()
+09-11 15:01:27.436  5366  5385 I Unity   : Novels.EntryPoint:StartRuntime(ApplicationEnvironment, Action`1, ContentDeliveryOptions)
+09-11 15:01:27.436  5366  5385 I Unity   : Novels.EntryPoint:OnEnable()
+09-11 15:01:27.436  5366  5385 I Unity   :
+09-11 15:01:27.437  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":2,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.loading"}</color>
+09-11 15:01:27.437  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:27.437  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.<LoadWithRetry>d__10:MoveNext()
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.CatalogFlow:LoadWithRetry(BootstrapController)
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.<Run>d__18:MoveNext()
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.ApplicationRuntime:Run(BootstrapController)
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.<StartRuntime>d__20:MoveNext()
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.EntryPoint:StartRuntime(ApplicationEnvironment, Action`1, ContentDeliveryOptions)
+09-11 15:01:27.437  5366  5385 I Unity   : Novels.EntryPoint:OnEnable()
+09-11 15:01:27.437  5366  5385 I Unity   :
+09-11 15:01:27.470  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.470  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.470  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.470  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.480  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.480  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.621  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.621  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.621  5366  5366 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 15:01:27.621  5366  5366 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 15:01:27.635  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:27.635  5366  5385 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 15:01:28.582  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release 'b532649eed82dd06ec853d7fdfb60432808b6a933e3de145587c1006e8fb25ef'.</color>
+09-11 15:01:28.582  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:28.582  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:28.582  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.<LoadWithRetry>d__10:MoveNext()
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.<Load>d__21:MoveNext()
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask`2:SetResult(T)
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.<LoadEntries>d__22:MoveNext()
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.WhenAllPromise`1:TryInvokeContinuation(WhenAllPromise`1, Awaiter&, Int32)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask`2:S
+09-11 15:01:28.582  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":3,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.ready","storyCount":"7","releaseId":"b532649eed82dd06ec853d7fdfb60432808b6a933e3de145587c1006e8fb25ef","deliveryMode":"Remote"}</color>
+09-11 15:01:28.582  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:28.582  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.<LoadWithRetry>d__10:MoveNext()
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.<Load>d__21:MoveNext()
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask`2:SetResult(T)
+09-11 15:01:28.582  5366  5385 I Unity   : Novels.<LoadEntries>d__22:MoveNext()
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.WhenAllPromise`1:TryInvokeContinuation(WhenAllPromise`1, Awaiter&, Int32)
+09-11 15:01:28.582  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Ob
+09-11 15:01:28.637  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":4,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_started","contentId":"chernaya-melnitsa"}</color>
+09-11 15:01:28.637  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:28.637  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:28.637  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:28.637  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:28.637  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:28.637  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:28.637  5366  5385 I Unity   : Cysharp.Threading.Tasks.YieldPromise:MoveNext()
+09-11 15:01:28.637  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.PlayerLoopRunner:RunCore()
+09-11 15:01:28.637  5366  5385 I Unity   :
+09-11 15:01:28.638  5366  5423 D EGL_emulation: app_time_stats: avg=56.06ms min=6.52ms max=119.33ms count=18
+09-11 15:01:29.665  5366  5423 D EGL_emulation: app_time_stats: avg=11.71ms min=2.71ms max=46.61ms count=21
+09-11 15:01:30.214  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release '450921d078c69d4bf36d42e1fab1eb46c3c681bc359b5cf65f2bda04eed56e82'.</color>
+09-11 15:01:30.214  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:30.214  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:30.214  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:30.214  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:30.214  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:Try
+09-11 15:01:30.214  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":5,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_ready","contentId":"chernaya-melnitsa"}</color>
+09-11 15:01:30.214  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:30.214  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:30.214  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:30.214  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:30.214  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.214  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Objec
+09-11 15:01:30.216  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":6,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_started","contentId":"trinadtsatyy-kolokol"}</color>
+09-11 15:01:30.216  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:30.216  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:30.216  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:30.216  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:30.216  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:30.216  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.216  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:30.216  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.216  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:30.216  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.216  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:30.216  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.216  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:30.216  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:30.216  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(
+09-11 15:01:30.714  5366  5423 D EGL_emulation: app_time_stats: avg=5.78ms min=4.96ms max=7.23ms count=21
+09-11 15:01:31.753  5366  5423 D EGL_emulation: app_time_stats: avg=7.58ms min=2.82ms max=45.77ms count=21
+09-11 15:01:32.145  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release '834935a0ec81038b97267abf6f4c3563381021c828d26c46e14ce8622a74ee37'.</color>
+09-11 15:01:32.145  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:32.145  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:32.145  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:32.145  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:32.145  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:Try
+09-11 15:01:32.145  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":7,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_ready","contentId":"trinadtsatyy-kolokol"}</color>
+09-11 15:01:32.145  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:32.145  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:32.145  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:32.145  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:32.145  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.145  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Ob
+09-11 15:01:32.147  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":8,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_started","contentId":"les-zabyvshiy-tropy"}</color>
+09-11 15:01:32.147  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:32.147  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:32.147  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:32.147  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:32.147  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:32.147  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.147  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:32.147  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.147  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:32.147  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.147  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:32.147  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.147  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:32.147  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:32.147  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(O
+09-11 15:01:32.780  5366  5423 D EGL_emulation: app_time_stats: avg=7.73ms min=5.04ms max=46.97ms count=21
+09-11 15:01:33.223  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release 'c296794b0b9db4b6c3470a190c9c81f70744497b1be0e89c5b16518bd78b0ef9'.</color>
+09-11 15:01:33.223  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.223  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.223  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.223  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:33.223  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:Try
+09-11 15:01:33.223  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":9,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_ready","contentId":"les-zabyvshiy-tropy"}</color>
+09-11 15:01:33.223  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.223  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.223  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.223  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:33.223  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.223  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Obj
+09-11 15:01:33.224  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":10,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_started","contentId":"nevesta-izo-lda"}</color>
+09-11 15:01:33.224  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.224  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.224  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.224  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:33.224  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:33.224  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.224  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:33.224  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.224  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:33.224  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.224  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:33.224  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.224  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:33.224  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:33.224  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Obje
+09-11 15:01:33.326  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_nevesta_izo_lda_chunk_0' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:33.326  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.326  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.326  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.326  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:33.326  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:33.326  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:33.326  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:33.326  5366  5385 I Unity   :
+09-11 15:01:33.328  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/nevesta-izo-lda/nevesta-izo-lda.ink.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:33.328  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.328  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.328  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.328  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:33.328  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:33.328  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:33.328  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:33.328  5366  5385 I Unity   :
+09-11 15:01:33.329  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/nevesta-izo-lda/nevesta-izo-lda.ink.json.source-map.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:33.329  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.329  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.329  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.329  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:33.329  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:33.329  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:33.329  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:33.329  5366  5385 I Unity   :
+09-11 15:01:33.561  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_nevesta_izo_lda_chunk_1' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:33.561  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.561  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.561  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.561  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:33.561  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:33.561  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:33.561  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:33.561  5366  5385 I Unity   :
+09-11 15:01:33.759  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_nevesta_izo_lda_chunk_2' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:33.759  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.759  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.759  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.759  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:33.759  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:33.759  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:33.759  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:33.759  5366  5385 I Unity   :
+09-11 15:01:33.809  5366  5423 D EGL_emulation: app_time_stats: avg=11.62ms min=3.50ms max=49.73ms count=21
+09-11 15:01:33.950  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_nevesta_izo_lda_chunk_3' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:33.950  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:33.950  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:33.950  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:33.950  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:33.950  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:33.950  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:33.950  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:33.950  5366  5385 I Unity   :
+09-11 15:01:34.122  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_nevesta_izo_lda_chunk_4' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:34.122  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:34.122  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:34.122  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:34.122  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:34.122  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:34.122  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:34.122  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:34.122  5366  5385 I Unity   :
+09-11 15:01:34.400  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_nevesta_izo_lda_chunk_5' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:34.400  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:34.400  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:34.400  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:34.400  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:34.400  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:34.400  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:34.400  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:34.400  5366  5385 I Unity   :
+09-11 15:01:34.598  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/winter-breath.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:34.598  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:34.598  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:34.598  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:34.598  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:34.598  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:34.598  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:34.598  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:34.598  5366  5385 I Unity   :
+09-11 15:01:34.802  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/distant-bell.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:34.802  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:34.802  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:34.802  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:34.802  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:34.802  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:34.802  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:34.802  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:34.802  5366  5385 I Unity   :
+09-11 15:01:34.856  5366  5423 D EGL_emulation: app_time_stats: avg=11.15ms min=3.11ms max=64.38ms count=20
+09-11 15:01:34.954  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/ice-whisper.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:34.954  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:34.954  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:34.954  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:34.954  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:34.954  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:34.954  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:34.954  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:34.954  5366  5385 I Unity   :
+09-11 15:01:35.146  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/hearth-under-ice.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:35.146  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:35.146  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:35.146  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:35.146  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:35.146  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:35.146  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:35.146  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:35.146  5366  5385 I Unity   :
+09-11 15:01:35.393  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/ribbon-snap.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:35.393  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:35.393  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:35.393  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:35.393  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:35.393  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:35.393  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:35.393  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:35.393  5366  5385 I Unity   :
+09-11 15:01:35.545  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/ice-crack.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:35.545  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:35.545  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:35.545  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:35.545  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:35.545  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:35.545  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:35.545  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:35.545  5366  5385 I Unity   :
+09-11 15:01:35.739  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/covenant-bed.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:35.739  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:35.739  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:35.739  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:35.739  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:35.739  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:35.739  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:35.739  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:35.739  5366  5385 I Unity   :
+09-11 15:01:35.892  5366  5423 D EGL_emulation: app_time_stats: avg=5.68ms min=3.91ms max=7.03ms count=21
+09-11 15:01:35.937  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/thaw-theme.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:35.937  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:35.937  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:35.937  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:35.937  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:35.937  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:35.937  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:35.937  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:35.937  5366  5385 I Unity   :
+09-11 15:01:36.178  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/covenant-bell.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:36.178  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.178  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.178  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.178  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:36.178  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:36.178  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:36.178  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:36.178  5366  5385 I Unity   :
+09-11 15:01:36.324  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/nevesta-izo-lda/empty-bell.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:36.324  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.324  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.324  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.324  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:36.324  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:36.324  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:36.324  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:36.324  5366  5385 I Unity   :
+09-11 15:01:36.379  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release '5480acbc83384a2b245ec2b4222e1378b2f9de945bf7f82d91a8bffe86a8a504'.</color>
+09-11 15:01:36.379  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.379  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.379  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:Try
+09-11 15:01:36.379  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":11,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_ready","contentId":"nevesta-izo-lda"}</color>
+09-11 15:01:36.379  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.379  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object
+09-11 15:01:36.379  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":12,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_started","contentId":"znak-na-dube"}</color>
+09-11 15:01:36.379  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.379  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:36.379  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:36.475  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_znak_na_dube_chunk_0' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:36.475  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.475  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.475  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.475  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:36.475  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:36.475  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:36.475  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:36.475  5366  5385 I Unity   :
+09-11 15:01:36.479  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/znak-na-dube/znak-na-dube.ink.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:36.479  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.479  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.479  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.479  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:36.479  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:36.479  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:36.479  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:36.479  5366  5385 I Unity   :
+09-11 15:01:36.480  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/znak-na-dube/znak-na-dube.ink.json.source-map.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:36.480  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.480  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.480  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.480  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:36.480  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:36.480  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:36.480  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:36.480  5366  5385 I Unity   :
+09-11 15:01:36.670  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_znak_na_dube_chunk_1' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:36.670  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.670  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.670  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.670  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:36.670  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:36.670  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:36.670  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:36.670  5366  5385 I Unity   :
+09-11 15:01:36.812  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/znak-na-dube/nochelestye-bed.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:36.812  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:36.812  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:36.812  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:36.812  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:36.812  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:36.812  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:36.812  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:36.812  5366  5385 I Unity   :
+09-11 15:01:36.917  5366  5423 D EGL_emulation: app_time_stats: avg=9.47ms min=2.79ms max=46.90ms count=21
+09-11 15:01:37.062  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/znak-na-dube/mark-pulse.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.062  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.062  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.062  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.062  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.062  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.062  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.062  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.062  5366  5385 I Unity   :
+09-11 15:01:37.257  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/znak-na-dube/bronze-answer.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.257  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.257  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.257  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.257  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.257  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.257  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.257  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.257  5366  5385 I Unity   :
+09-11 15:01:37.399  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/znak-na-dube/root-creak.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.399  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.399  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.399  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.399  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.399  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.399  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.399  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.399  5366  5385 I Unity   :
+09-11 15:01:37.596  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/znak-na-dube/cliffhanger-sting.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.596  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.596  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.596  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.596  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.596  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.596  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.596  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.596  5366  5385 I Unity   :
+09-11 15:01:37.675  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release 'db6d0ba698f7c36b417d1c0de8c10b7df8508e8bd690ea0f7fd5c25afb84451f'.</color>
+09-11 15:01:37.675  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.675  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.675  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.675  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:37.675  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.675  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.675  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.675  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:37.675  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:Try
+09-11 15:01:37.677  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":13,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_ready","contentId":"znak-na-dube"}</color>
+09-11 15:01:37.677  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.677  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.677  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.677  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:37.677  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:37.677  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.677  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:37.677  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.677  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:37.677  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.677  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:37.677  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.677  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:37.677  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.677  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:37.677  5366  5385 I Unity   : C
+09-11 15:01:37.678  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":14,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_started","contentId":"volchya-poshlina"}</color>
+09-11 15:01:37.678  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.678  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.678  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.678  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:37.678  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:37.678  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.678  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:37.678  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.678  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:37.678  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.678  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:37.678  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.678  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:37.678  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:37.678  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Obj
+09-11 15:01:37.792  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_volchya_poshlina_chunk_0' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.792  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.792  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.792  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.792  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.792  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.792  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.792  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.792  5366  5385 I Unity   :
+09-11 15:01:37.793  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/volchya-poshlina/volchya-poshlina.ink.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.793  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.793  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.793  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.793  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.793  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.793  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.793  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.793  5366  5385 I Unity   :
+09-11 15:01:37.793  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/volchya-poshlina/volchya-poshlina.ink.json.source-map.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.793  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.793  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.793  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.793  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.793  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.793  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.793  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.793  5366  5385 I Unity   :
+09-11 15:01:37.944  5366  5423 D EGL_emulation: app_time_stats: avg=11.88ms min=4.65ms max=46.72ms count=21
+09-11 15:01:37.989  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_volchya_poshlina_chunk_1' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:37.989  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:37.989  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:37.989  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:37.989  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:37.989  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:37.989  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:37.989  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:37.989  5366  5385 I Unity   :
+09-11 15:01:38.144  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_volchya_poshlina_chunk_2' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:38.144  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:38.144  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:38.144  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:38.144  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:38.144  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:38.144  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:38.144  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:38.144  5366  5385 I Unity   :
+09-11 15:01:38.344  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_volchya_poshlina_chunk_3' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:38.344  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:38.344  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:38.344  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:38.344  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:38.344  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:38.344  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:38.344  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:38.344  5366  5385 I Unity   :
+09-11 15:01:38.541  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_volchya_poshlina_chunk_4' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:38.541  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:38.541  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:38.541  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:38.541  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:38.541  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:38.541  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:38.541  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:38.541  5366  5385 I Unity   :
+09-11 15:01:38.741  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/volchya-poshlina/winter_forest_loop.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:38.741  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:38.741  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:38.741  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:38.741  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:38.741  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:38.741  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:38.741  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:38.741  5366  5385 I Unity   :
+09-11 15:01:38.945  5366  5423 D EGL_emulation: app_time_stats: avg=5.72ms min=5.09ms max=6.78ms count=20
+09-11 15:01:38.992  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/volchya-poshlina/ice_crack.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:38.992  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:38.992  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:38.992  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:38.992  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:38.992  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:38.992  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:38.992  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:38.992  5366  5385 I Unity   :
+09-11 15:01:39.183  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/volchya-poshlina/distant_howl.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:39.183  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.183  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.183  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.183  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:39.183  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:39.183  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:39.183  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:39.183  5366  5385 I Unity   :
+09-11 15:01:39.384  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/volchya-poshlina/rope_strain.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:39.384  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.384  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.384  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.384  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:39.384  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:39.384  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:39.384  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:39.384  5366  5385 I Unity   :
+09-11 15:01:39.571  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/volchya-poshlina/wooden_notch.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:39.571  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.571  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.571  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.571  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:39.571  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:39.571  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:39.571  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:39.571  5366  5385 I Unity   :
+09-11 15:01:39.713  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/volchya-poshlina/wolf_motif.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:39.713  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.713  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.713  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.713  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:39.713  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:39.713  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:39.713  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:39.713  5366  5385 I Unity   :
+09-11 15:01:39.810  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release '5ecd6689900d96d67044d36671e71cf9355c002f8476c0a1f240014934365d2a'.</color>
+09-11 15:01:39.810  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.810  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.810  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:Try
+09-11 15:01:39.810  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":15,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_ready","contentId":"volchya-poshlina"}</color>
+09-11 15:01:39.810  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.810  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Objec
+09-11 15:01:39.810  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":16,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_started","contentId":"kolodets-kotoryy-zovet"}</color>
+09-11 15:01:39.810  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.810  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:39.810  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3
+09-11 15:01:39.956  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/kolodets-kotoryy-zovet/kolodets-kotoryy-zovet.ink.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:39.956  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.956  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.956  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.956  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:39.956  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:39.956  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:39.956  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:39.956  5366  5385 I Unity   :
+09-11 15:01:39.956  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'noveltexts/kolodets-kotoryy-zovet/kolodets-kotoryy-zovet.ink.json.source-map.json' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:39.956  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.956  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.956  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.956  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:39.956  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:39.956  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:39.956  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:39.956  5366  5385 I Unity   :
+09-11 15:01:39.957  5366  5423 D EGL_emulation: app_time_stats: avg=13.81ms min=4.77ms max=49.47ms count=21
+09-11 15:01:39.958  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_0' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:39.958  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:39.958  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:39.958  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:39.958  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:39.958  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:39.958  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:39.958  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:39.958  5366  5385 I Unity   :
+09-11 15:01:40.149  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_1' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:40.149  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:40.149  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:40.149  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:40.149  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:40.149  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:40.149  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:40.149  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:40.149  5366  5385 I Unity   :
+09-11 15:01:40.341  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_2' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:40.341  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:40.341  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:40.341  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:40.341  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:40.341  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:40.341  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:40.341  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:40.341  5366  5385 I Unity   :
+09-11 15:01:40.540  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_3' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:40.540  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:40.540  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:40.540  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:40.540  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:40.540  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:40.540  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:40.540  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:40.540  5366  5385 I Unity   :
+09-11 15:01:40.732  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_4' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:40.732  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:40.732  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:40.732  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:40.732  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:40.732  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:40.732  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:40.732  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:40.732  5366  5385 I Unity   :
+09-11 15:01:40.931  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_5' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:40.931  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:40.931  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:40.931  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:40.931  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:40.931  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:40.931  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:40.931  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:40.931  5366  5385 I Unity   :
+09-11 15:01:40.990  5366  5423 D EGL_emulation: app_time_stats: avg=9.65ms min=5.10ms max=46.66ms count=21
+09-11 15:01:41.180  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_6' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:41.180  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:41.180  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:41.180  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:41.180  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:41.180  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:41.180  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:41.180  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:41.180  5366  5385 I Unity   :
+09-11 15:01:41.381  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_7' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:41.381  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:41.381  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:41.381  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:41.381  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:41.381  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:41.381  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:41.381  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:41.381  5366  5385 I Unity   :
+09-11 15:01:41.576  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novels_content_kolodets_kotoryy_zovet_chunk_8' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:41.576  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:41.576  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:41.576  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:41.576  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:41.576  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:41.576  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:41.576  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:41.576  5366  5385 I Unity   :
+09-11 15:01:41.774  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/ambient-dry-loop.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:41.774  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:41.774  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:41.774  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:41.774  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:41.774  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:41.774  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:41.774  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:41.774  5366  5385 I Unity   :
+09-11 15:01:41.993  5366  5423 D EGL_emulation: app_time_stats: avg=12.27ms min=4.13ms max=50.95ms count=20
+09-11 15:01:42.039  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/distant-bus.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:42.039  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:42.039  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:42.039  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:42.039  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:42.039  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:42.039  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:42.039  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:42.039  5366  5385 I Unity   :
+09-11 15:01:42.239  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/dry-faucet.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:42.239  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:42.239  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:42.239  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:42.239  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:42.239  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:42.239  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:42.239  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:42.239  5366  5385 I Unity   :
+09-11 15:01:42.432  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/cassette-click.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:42.432  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:42.432  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:42.432  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:42.432  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:42.432  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:42.432  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:42.432  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:42.432  5366  5385 I Unity   :
+09-11 15:01:42.629  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/radio-static.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:42.629  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:42.629  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:42.629  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:42.629  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:42.629  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:42.629  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:42.629  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:42.629  5366  5385 I Unity   :
+09-11 15:01:42.823  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/pipe-resonance.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:42.823  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:42.823  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:42.823  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:42.823  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:42.823  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:42.823  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:42.823  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:42.823  5366  5385 I Unity   :
+09-11 15:01:43.018  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/ambient-water-loop.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:43.018  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:43.018  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:43.018  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:43.018  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:43.018  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:43.018  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:43.018  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:43.018  5366  5385 I Unity   :
+09-11 15:01:43.028  5366  5366 D CompatibilityChangeReporter: Compat change id reported: 150939131; UID 10199; state: ENABLED
+09-11 15:01:43.080  5366  5423 D EGL_emulation: app_time_stats: avg=9.89ms min=1.78ms max=63.22ms count=21
+09-11 15:01:43.376  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/rain-on-metal.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:43.376  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:43.376  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:43.376  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:43.376  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:43.376  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:43.376  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:43.376  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:43.376  5366  5385 I Unity   :
+09-11 15:01:43.575  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/boards-release.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:43.575  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:43.575  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:43.575  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:43.575  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:43.575  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:43.575  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:43.575  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:43.575  5366  5385 I Unity   :
+09-11 15:01:43.768  5366  5385 I Unity   : [Novels] <color=#FFEB04>Download content 'novelsaudio/kolodets-kotoryy-zovet/gate-creak.wav' because its cache is invalid: Cached content file is missing.</color>
+09-11 15:01:43.768  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:43.768  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:43.768  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:43.768  5366  5385 I Unity   : Bundles.<MaterializeCore>d__15:MoveNext()
+09-11 15:01:43.768  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 15:01:43.768  5366  5385 I Unity   : Bundles.<VerifyAsync>d__4:MoveNext()
+09-11 15:01:43.768  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.ContinuationQueue:RunCore()
+09-11 15:01:43.768  5366  5385 I Unity   :
+09-11 15:01:43.864  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Activate content release 'a64bd55e15e034a468aaa4541fa639a2d8a63e7a8f909a53fbce2b9da7e0c1d4'.</color>
+09-11 15:01:43.864  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:43.864  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:43.864  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:43.864  5366  5385 I Unity   : Bundles.ContentReleaseProvider:ActivateCurrent()
+09-11 15:01:43.864  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:Try
+09-11 15:01:43.864  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":17,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"catalog.download_ready","contentId":"kolodets-kotoryy-zovet"}</color>
+09-11 15:01:43.864  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:01:43.864  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:01:43.864  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:01:43.864  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:01:43.864  5366  5385 I Unity   : Novels.<Run>d__13:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Novels.<PrepareStoryComplete>d__6:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Bundles.<Prepare>d__12:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Bundles.<DownloadGroup>d__13:MoveNext()
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:01:43.864  5366  5385 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0
+09-11 15:01:44.115  5366  5423 D EGL_emulation: app_time_stats: avg=6.40ms min=5.19ms max=14.45ms count=20
+09-11 15:01:45.134  5366  5423 D EGL_emulation: app_time_stats: avg=7.36ms min=5.02ms max=42.90ms count=21
+09-11 15:01:46.144  5366  5423 D EGL_emulation: app_time_stats: avg=7.57ms min=4.70ms max=42.49ms count=21
+09-11 15:01:47.173  5366  5423 D EGL_emulation: app_time_stats: avg=5.45ms min=3.24ms max=6.52ms count=21
+09-11 15:01:48.206  5366  5423 D EGL_emulation: app_time_stats: avg=7.63ms min=2.96ms max=45.33ms count=21
+09-11 15:01:49.249  5366  5423 D EGL_emulation: app_time_stats: avg=14.11ms min=3.90ms max=52.55ms count=21
+09-11 15:01:50.275  5366  5423 D EGL_emulation: app_time_stats: avg=9.74ms min=4.66ms max=48.65ms count=21
+09-11 15:01:51.296  5366  5423 D EGL_emulation: app_time_stats: avg=9.35ms min=3.21ms max=46.05ms count=21
+09-11 15:01:52.328  5366  5423 D EGL_emulation: app_time_stats: avg=5.57ms min=4.88ms max=7.33ms count=21
+09-11 15:01:53.360  5366  5423 D EGL_emulation: app_time_stats: avg=13.75ms min=4.83ms max=50.00ms count=21
+09-11 15:01:54.403  5366  5423 D EGL_emulation: app_time_stats: avg=9.51ms min=4.45ms max=45.83ms count=21
+09-11 15:01:55.424  5366  5423 D EGL_emulation: app_time_stats: avg=10.29ms min=2.82ms max=51.42ms count=20
+09-11 15:01:56.437  5366  5423 D EGL_emulation: app_time_stats: avg=7.96ms min=2.63ms max=49.93ms count=20
+09-11 15:01:57.477  5366  5423 D EGL_emulation: app_time_stats: avg=7.58ms min=4.91ms max=46.28ms count=21
+09-11 15:01:58.512  5366  5423 D EGL_emulation: app_time_stats: avg=9.65ms min=3.88ms max=90.60ms count=21
+09-11 15:01:59.518  5366  5423 D EGL_emulation: app_time_stats: avg=12.22ms min=5.12ms max=49.37ms count=20
+09-11 15:02:00.522  5366  5423 D EGL_emulation: app_time_stats: avg=10.28ms min=4.96ms max=52.49ms count=20
+09-11 15:02:01.552  5366  5423 D EGL_emulation: app_time_stats: avg=11.60ms min=4.92ms max=50.96ms count=21
+09-11 15:02:02.580  5366  5423 D EGL_emulation: app_time_stats: avg=11.39ms min=2.69ms max=48.81ms count=21
+09-11 15:02:03.614  5366  5423 D EGL_emulation: app_time_stats: avg=7.35ms min=4.36ms max=49.21ms count=21
+09-11 15:02:04.633  5366  5423 D EGL_emulation: app_time_stats: avg=10.47ms min=3.35ms max=44.58ms count=19
+09-11 15:02:05.670  5366  5423 D EGL_emulation: app_time_stats: avg=7.59ms min=2.92ms max=50.01ms count=21
+09-11 15:02:06.705  5366  5423 D EGL_emulation: app_time_stats: avg=7.51ms min=4.72ms max=47.96ms count=21
+09-11 15:02:07.733  5366  5423 D EGL_emulation: app_time_stats: avg=11.28ms min=3.89ms max=47.57ms count=21
+09-11 15:02:08.768  5366  5423 D EGL_emulation: app_time_stats: avg=9.53ms min=4.86ms max=46.26ms count=21
+09-11 15:02:09.801  5366  5423 D EGL_emulation: app_time_stats: avg=7.44ms min=4.75ms max=42.93ms count=21
+09-11 15:02:10.821  5366  5423 D EGL_emulation: app_time_stats: avg=9.41ms min=3.37ms max=46.84ms count=21
+09-11 15:02:11.848  5366  5423 D EGL_emulation: app_time_stats: avg=5.38ms min=4.75ms max=6.09ms count=21
+09-11 15:02:12.879  5366  5423 D EGL_emulation: app_time_stats: avg=7.57ms min=3.21ms max=44.38ms count=21
+09-11 15:02:13.920  5366  5423 D EGL_emulation: app_time_stats: avg=7.55ms min=3.04ms max=47.76ms count=21
+09-11 15:02:14.964  5366  5423 D EGL_emulation: app_time_stats: avg=9.93ms min=4.89ms max=46.46ms count=21
+09-11 15:02:16.002  5366  5423 D EGL_emulation: app_time_stats: avg=7.45ms min=3.96ms max=49.32ms count=21
+09-11 15:02:17.049  5366  5423 D EGL_emulation: app_time_stats: avg=11.93ms min=3.73ms max=52.96ms count=21
+09-11 15:02:18.054  5366  5423 D EGL_emulation: app_time_stats: avg=7.96ms min=5.15ms max=45.83ms count=20
+09-11 15:02:19.078  5366  5423 D EGL_emulation: app_time_stats: avg=11.90ms min=2.23ms max=48.32ms count=21
+09-11 15:02:20.095  5366  5423 D EGL_emulation: app_time_stats: avg=7.68ms min=4.89ms max=44.96ms count=21
+09-11 15:02:21.123  5366  5423 D EGL_emulation: app_time_stats: avg=5.58ms min=3.03ms max=7.00ms count=21
+09-11 15:02:22.150  5366  5423 D EGL_emulation: app_time_stats: avg=11.16ms min=4.94ms max=43.04ms count=22
+09-11 15:02:23.154  5366  5423 D EGL_emulation: app_time_stats: avg=7.42ms min=3.34ms max=42.92ms count=21
+09-11 15:02:24.172  5366  5423 D EGL_emulation: app_time_stats: avg=5.71ms min=4.92ms max=7.01ms count=21
+09-11 15:02:25.196  5366  5423 D EGL_emulation: app_time_stats: avg=5.45ms min=4.33ms max=6.86ms count=22
+09-11 15:02:26.204  5366  5423 D EGL_emulation: app_time_stats: avg=7.40ms min=3.78ms max=41.42ms count=21
+09-11 15:02:27.247  5366  5423 D EGL_emulation: app_time_stats: avg=12.50ms min=4.36ms max=66.06ms count=21
+09-11 15:02:28.255  5366  5423 D EGL_emulation: app_time_stats: avg=7.16ms min=3.62ms max=41.98ms count=21
+09-11 15:02:29.287  5366  5423 D EGL_emulation: app_time_stats: avg=9.28ms min=3.24ms max=48.89ms count=21
+09-11 15:02:30.337  5366  5423 D EGL_emulation: app_time_stats: avg=7.87ms min=4.85ms max=15.71ms count=17
+09-11 15:02:31.379  5366  5423 D EGL_emulation: app_time_stats: avg=5.55ms min=2.95ms max=6.85ms count=19
+09-11 15:02:32.403  5366  5423 D EGL_emulation: app_time_stats: avg=13.04ms min=3.70ms max=57.85ms count=19
+09-11 15:02:33.460  5366  5423 D EGL_emulation: app_time_stats: avg=11.33ms min=2.97ms max=50.40ms count=18
+09-11 15:02:34.479  5366  5423 D EGL_emulation: app_time_stats: avg=7.59ms min=2.49ms max=49.26ms count=20
+09-11 15:02:35.486  5366  5423 D EGL_emulation: app_time_stats: avg=7.22ms min=3.23ms max=41.37ms count=21
+09-11 15:02:36.519  5366  5423 D EGL_emulation: app_time_stats: avg=5.21ms min=2.48ms max=7.29ms count=22
+09-11 15:02:37.559  5366  5423 D EGL_emulation: app_time_stats: avg=7.14ms min=2.28ms max=44.40ms count=22
+09-11 15:02:38.600  5366  5423 D EGL_emulation: app_time_stats: avg=9.14ms min=3.58ms max=48.53ms count=22
+09-11 15:02:39.636  5366  5423 D EGL_emulation: app_time_stats: avg=11.40ms min=4.61ms max=53.26ms count=21
+09-11 15:02:40.668  5366  5423 D EGL_emulation: app_time_stats: avg=11.57ms min=4.63ms max=91.35ms count=21
+09-11 15:02:41.669  5366  5423 D EGL_emulation: app_time_stats: avg=9.24ms min=2.84ms max=44.16ms count=21
+09-11 15:02:42.744  5366  5423 D EGL_emulation: app_time_stats: avg=9.00ms min=3.25ms max=48.04ms count=22
+09-11 15:02:43.758  5366  5423 D EGL_emulation: app_time_stats: avg=7.46ms min=4.60ms max=44.57ms count=22
+09-11 15:02:44.787  5366  5423 D EGL_emulation: app_time_stats: avg=5.50ms min=4.79ms max=6.50ms count=22
+09-11 15:02:45.820  5366  5423 D EGL_emulation: app_time_stats: avg=10.70ms min=3.92ms max=45.48ms count=22
+09-11 15:02:46.418  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":18,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"story.selected","contentId":"kolodets-kotoryy-zovet"}</color>
+09-11 15:02:46.418  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:02:46.418  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:02:46.418  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:02:46.418  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:02:46.418  5366  5385 I Unity   : Novels.<SelectContent>d__11:MoveNext()
+09-11 15:02:46.418  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.418  5366  5385 I Unity   : Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask`2:SetResult(T)
+09-11 15:02:46.418  5366  5385 I Unity   : Novels.Catalog.<SelectAction>d__9:MoveNext()
+09-11 15:02:46.418  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.418  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:02:46.418  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSource`1:TrySignalCompletion(UniTaskStatus)
+09-11 15:02:46.418  5366  5385 I Unity   : Novels.Catalog.<>c__DisplayClass9_1:<SelectAction>b__0(CatalogEpisodeItem)
+09-11 15:02:46.418  5366  5385 I Unity   : UnityEngine.Events.UnityEvent:Invoke()
+09-11 15:02:46.418  5366  5385 I Unity   : UnityEngine.EventSystems.ExecuteEvents:Execute(GameObject, BaseEventData,
+09-11 15:02:46.419  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":19,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"release.activated","scope":"story","contentId":"kolodets-kotoryy-zovet","releaseId":"a64bd55e15e034a468aaa4541fa639a2d8a63e7a8f909a53fbce2b9da7e0c1d4","deliveryMode":"Remote"}</color>
+09-11 15:02:46.419  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:02:46.419  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:02:46.419  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:02:46.419  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:02:46.419  5366  5385 I Unity   : Novels.<RunStory>d__20:MoveNext()
+09-11 15:02:46.419  5366  5385 I Unity   : Novels.ApplicationRuntime:RunStory(NovelCatalogEntry, String, Boolean, BootstrapController, Entity)
+09-11 15:02:46.419  5366  5385 I Unity   : Novels.<Run>d__18:MoveNext()
+09-11 15:02:46.419  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.419  5366  5385 I Unity   : Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask`2:SetResult(T)
+09-11 15:02:46.419  5366  5385 I Unity   : Novels.<SelectContent>d__11:MoveNext()
+09-11 15:02:46.419  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.419  5366  5385 I Unity   : Cysharp.Threading.Tasks.CompilerServices.AsyncUniTask`2:SetResult(T)
+09-11 15:02:46.419  5366  5385 I Unity   : Novels.Catal
+09-11 15:02:46.592  5366  5385 I Unity   : [Novels] <color=#FFFFFF>No save file</color>
+09-11 15:02:46.592  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:02:46.592  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.Save.SaveSystem:Init()
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.NovelRuntime:CreateSaveSystem()
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.<PrepareEpisode>d__14:MoveNext()
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.NovelRuntime:PrepareEpisode(Scope, EpisodeRuntime)
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.<Init>d__50:MoveNext()
+09-11 15:02:46.592  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.<LoadContent>d__2:MoveNext()
+09-11 15:02:46.592  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.592  5366  5385 I Unity   : Novels.<Run>d__3`1:MoveNext()
+09-11 15:02:46.592  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.592  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:02:46.592  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.592  5366  5385 I Unity   : Bundles.<GetScriptableObject>d__11`1:MoveNext()
+09-11 15:02:46.592  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:46.592  5366  5385 I Unity   : UnityEngine.AsyncOperation:InvokeCompletionEvent()
+09-11 15:02:46.592  5366  5385 I Unity   :
+09-11 15:02:46.825  5366  5423 D EGL_emulation: app_time_stats: avg=10.36ms min=4.11ms max=49.71ms count=25
+09-11 15:02:47.503  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":20,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"episode.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01"}</color>
+09-11 15:02:47.503  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:02:47.503  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:02:47.503  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:02:47.503  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:02:47.503  5366  5385 I Unity   : Novels.<>c__DisplayClass4_0:<RunEpisode>b__4()
+09-11 15:02:47.503  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:02:47.503  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:47.503  5366  5385 I Unity   : Cysharp.Threading.Tasks.<RunTask>d__5:MoveNext()
+09-11 15:02:47.503  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:47.503  5366  5385 I Unity   : Loading.<Hide>d__6:MoveNext()
+09-11 15:02:47.503  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:47.503  5366  5385 I Unity   : Loading.View.<Hide>d__6:MoveNext()
+09-11 15:02:47.503  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:47.503  5366  5385 I Unity   : Cysharp.Threading.Tasks.YieldPromise:MoveNext()
+09-11 15:02:47.503  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.PlayerLoopRunner:RunCore()
+09-11 15:02:47.503  5366  5385 I Unity   :
+09-11 15:02:47.603  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":21,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"dialogue.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01","presentation":"Dialogue","choiceCount":"0"}</color>
+09-11 15:02:47.603  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:02:47.603  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.<>c__DisplayClass28_0:<CreateStoryQueue>b__5(String, Int32)
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.StoryExecution.<Present>d__3:MoveNext()
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.StoryExecution.BubblePresentationRouter:Present()
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__4:MoveNext()
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.StoryExecution.SetBubbleQueue:Run(StoryExecutionContext)
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:02:47.603  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:02:47.603  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompl
+09-11 15:02:47.841  5366  5423 D EGL_emulation: app_time_stats: avg=18.63ms min=3.36ms max=39.03ms count=28
+09-11 15:02:48.305  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Play audio ambient-dry-loop</color>
+09-11 15:02:48.305  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:02:48.305  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:02:48.305  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:02:48.305  5366  5385 I Unity   : Novels.Audio.<PlayAudio>d__9:MoveNext()
+09-11 15:02:48.305  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:48.305  5366  5385 I Unity   : Novels.Audio.<Load>d__2:MoveNext()
+09-11 15:02:48.305  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:02:48.305  5366  5385 I Unity   : UnityEngine.AsyncOperation:InvokeCompletionEvent()
+09-11 15:02:48.305  5366  5385 I Unity   :
+09-11 15:02:48.875  5366  5423 D EGL_emulation: app_time_stats: avg=31.83ms min=10.32ms max=38.56ms count=31
+09-11 15:02:49.876  5366  5423 D EGL_emulation: app_time_stats: avg=33.34ms min=32.15ms max=34.56ms count=30
+09-11 15:02:50.908  5366  5423 D EGL_emulation: app_time_stats: avg=33.30ms min=29.55ms max=37.30ms count=31
+09-11 15:02:51.942  5366  5423 D EGL_emulation: app_time_stats: avg=33.34ms min=31.06ms max=35.45ms count=31
+09-11 15:02:52.974  5366  5423 D EGL_emulation: app_time_stats: avg=33.31ms min=31.70ms max=34.78ms count=31
+09-11 15:02:53.975  5366  5423 D EGL_emulation: app_time_stats: avg=33.34ms min=31.53ms max=35.53ms count=30
+09-11 15:02:55.008  5366  5423 D EGL_emulation: app_time_stats: avg=33.32ms min=32.22ms max=34.71ms count=31
+09-11 15:02:56.042  5366  5423 D EGL_emulation: app_time_stats: avg=33.34ms min=30.01ms max=36.21ms count=31
+09-11 15:02:57.075  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=30.90ms max=34.91ms count=31
+09-11 15:02:58.076  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=31.75ms max=35.38ms count=30
+09-11 15:02:59.108  5366  5423 D EGL_emulation: app_time_stats: avg=33.29ms min=30.78ms max=35.46ms count=31
+09-11 15:03:00.108  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=30.79ms max=35.11ms count=30
+09-11 15:03:01.142  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=30.07ms max=36.11ms count=31
+09-11 15:03:02.174  5366  5423 D EGL_emulation: app_time_stats: avg=33.29ms min=30.53ms max=35.34ms count=31
+09-11 15:03:03.175  5366  5423 D EGL_emulation: app_time_stats: avg=33.34ms min=31.39ms max=35.53ms count=30
+09-11 15:03:04.180  5366  5423 D EGL_emulation: app_time_stats: avg=33.51ms min=31.61ms max=36.31ms count=30
+09-11 15:03:05.207  5366  5423 D EGL_emulation: app_time_stats: avg=26.28ms min=4.94ms max=35.37ms count=31
+09-11 15:03:06.208  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=31.94ms max=35.84ms count=30
+09-11 15:03:07.208  5366  5423 D EGL_emulation: app_time_stats: avg=33.35ms min=31.11ms max=35.90ms count=30
+09-11 15:03:08.241  5366  5423 D EGL_emulation: app_time_stats: avg=33.32ms min=30.95ms max=36.20ms count=31
+09-11 15:03:09.242  5366  5423 D EGL_emulation: app_time_stats: avg=33.36ms min=31.47ms max=35.50ms count=30
+09-11 15:03:10.275  5366  5423 D EGL_emulation: app_time_stats: avg=33.30ms min=31.11ms max=36.70ms count=31
+09-11 15:03:11.308  5366  5423 D EGL_emulation: app_time_stats: avg=33.31ms min=30.54ms max=35.64ms count=31
+09-11 15:03:12.308  5366  5423 D EGL_emulation: app_time_stats: avg=31.10ms min=2.61ms max=40.14ms count=30
+09-11 15:03:13.308  5366  5423 D EGL_emulation: app_time_stats: avg=33.34ms min=30.58ms max=35.84ms count=30
+09-11 15:03:14.309  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=32.10ms max=34.19ms count=30
+09-11 15:03:15.341  5366  5423 D EGL_emulation: app_time_stats: avg=33.29ms min=32.17ms max=34.57ms count=31
+09-11 15:03:16.341  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=31.09ms max=35.12ms count=30
+09-11 15:03:17.341  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=31.67ms max=34.84ms count=30
+09-11 15:03:18.374  5366  5423 D EGL_emulation: app_time_stats: avg=33.30ms min=32.29ms max=34.72ms count=31
+09-11 15:03:19.374  5366  5423 D EGL_emulation: app_time_stats: avg=24.88ms min=4.81ms max=40.47ms count=30
+09-11 15:03:20.374  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=31.97ms max=35.33ms count=30
+09-11 15:03:21.376  5366  5423 D EGL_emulation: app_time_stats: avg=33.37ms min=30.38ms max=36.67ms count=30
+09-11 15:03:22.409  5366  5423 D EGL_emulation: app_time_stats: avg=33.32ms min=30.77ms max=35.49ms count=31
+09-11 15:03:23.441  5366  5423 D EGL_emulation: app_time_stats: avg=33.31ms min=31.66ms max=35.07ms count=31
+09-11 15:03:24.442  5366  5423 D EGL_emulation: app_time_stats: avg=33.34ms min=31.08ms max=35.34ms count=30
+09-11 15:03:25.475  5366  5423 D EGL_emulation: app_time_stats: avg=33.31ms min=31.93ms max=34.75ms count=31
+09-11 15:03:26.508  5366  5423 D EGL_emulation: app_time_stats: avg=31.01ms min=5.19ms max=34.88ms count=31
+09-11 15:03:27.541  5366  5423 D EGL_emulation: app_time_stats: avg=33.32ms min=32.45ms max=34.04ms count=31
+09-11 15:03:28.574  5366  5423 D EGL_emulation: app_time_stats: avg=33.32ms min=31.61ms max=34.81ms count=31
+09-11 15:03:29.608  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=31.54ms max=36.03ms count=31
+09-11 15:03:30.642  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=32.04ms max=34.66ms count=31
+09-11 15:03:31.674  5366  5423 D EGL_emulation: app_time_stats: avg=33.30ms min=31.35ms max=34.89ms count=31
+09-11 15:03:32.717  5366  5423 D EGL_emulation: app_time_stats: avg=33.05ms min=6.94ms max=44.88ms count=30
+09-11 15:03:33.724  5366  5423 D EGL_emulation: app_time_stats: avg=27.32ms min=5.06ms max=36.51ms count=31
+09-11 15:03:34.726  5366  5423 D EGL_emulation: app_time_stats: avg=25.41ms min=4.76ms max=38.92ms count=30
+09-11 15:03:35.759  5366  5423 D EGL_emulation: app_time_stats: avg=32.64ms min=16.72ms max=35.06ms count=31
+09-11 15:03:36.793  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=32.11ms max=34.97ms count=31
+09-11 15:03:37.825  5366  5423 D EGL_emulation: app_time_stats: avg=33.29ms min=31.62ms max=35.42ms count=31
+09-11 15:03:38.825  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=31.34ms max=35.89ms count=30
+09-11 15:03:39.858  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=30.79ms max=36.39ms count=31
+09-11 15:03:40.892  5366  5423 D EGL_emulation: app_time_stats: avg=33.32ms min=31.47ms max=35.75ms count=31
+09-11 15:03:41.925  5366  5423 D EGL_emulation: app_time_stats: avg=33.30ms min=29.69ms max=36.78ms count=31
+09-11 15:03:42.925  5366  5423 D EGL_emulation: app_time_stats: avg=33.35ms min=31.36ms max=35.81ms count=30
+09-11 15:03:43.926  5366  5423 D EGL_emulation: app_time_stats: avg=33.37ms min=30.94ms max=35.20ms count=30
+09-11 15:03:44.960  5366  5423 D EGL_emulation: app_time_stats: avg=33.32ms min=30.87ms max=35.28ms count=31
+09-11 15:03:45.992  5366  5423 D EGL_emulation: app_time_stats: avg=33.31ms min=30.41ms max=36.71ms count=31
+09-11 15:03:47.024  5366  5423 D EGL_emulation: app_time_stats: avg=32.53ms min=16.89ms max=35.56ms count=31
+09-11 15:03:47.152  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":22,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"dialogue.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01","presentation":"Dialogue","choiceCount":"0"}</color>
+09-11 15:03:47.152  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:03:47.152  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.<>c__DisplayClass28_0:<CreateStoryQueue>b__5(String, Int32)
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.StoryExecution.<Present>d__3:MoveNext()
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.StoryExecution.BubblePresentationRouter:Present()
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__4:MoveNext()
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.StoryExecution.SetBubbleQueue:Run(StoryExecutionContext)
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:03:47.152  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:03:47.152  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompl
+09-11 15:03:47.587  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":23,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"dialogue.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01","presentation":"Dialogue","choiceCount":"0"}</color>
+09-11 15:03:47.587  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:03:47.587  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.<>c__DisplayClass28_0:<CreateStoryQueue>b__5(String, Int32)
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.StoryExecution.<Present>d__3:MoveNext()
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.StoryExecution.BubblePresentationRouter:Present()
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__4:MoveNext()
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.StoryExecution.SetBubbleQueue:Run(StoryExecutionContext)
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:03:47.587  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:03:47.587  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompl
+09-11 15:03:48.025  5366  5423 D EGL_emulation: app_time_stats: avg=33.35ms min=31.45ms max=34.88ms count=30
+09-11 15:03:49.026  5366  5423 D EGL_emulation: app_time_stats: avg=31.59ms min=5.76ms max=38.06ms count=30
+09-11 15:03:49.319  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":24,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"dialogue.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01","presentation":"Dialogue","choiceCount":"0"}</color>
+09-11 15:03:49.319  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:03:49.319  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.<>c__DisplayClass28_0:<CreateStoryQueue>b__5(String, Int32)
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.StoryExecution.<Present>d__3:MoveNext()
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.StoryExecution.BubblePresentationRouter:Present()
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__4:MoveNext()
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.StoryExecution.SetBubbleQueue:Run(StoryExecutionContext)
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:03:49.319  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:03:49.319  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompl
+09-11 15:03:50.058  5366  5423 D EGL_emulation: app_time_stats: avg=32.44ms min=11.68ms max=35.60ms count=31
+09-11 15:03:50.819  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":25,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"dialogue.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01","presentation":"Dialogue","choiceCount":"0"}</color>
+09-11 15:03:50.819  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:03:50.819  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.<>c__DisplayClass28_0:<CreateStoryQueue>b__5(String, Int32)
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.StoryExecution.<Present>d__3:MoveNext()
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.StoryExecution.BubblePresentationRouter:Present()
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__4:MoveNext()
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.StoryExecution.SetBubbleQueue:Run(StoryExecutionContext)
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:03:50.819  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:03:50.819  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompl
+09-11 15:03:50.821  5366  5385 I Unity   : [Novels] <color=#FFFFFF>Play audio distant-bus</color>
+09-11 15:03:50.821  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:03:50.821  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.Audio.<PlayAudio>d__9:MoveNext()
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.Audio.AudioController:PlayAudio(String, Audio)
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.StoryExecution.DelegateStoryOperation:Run(StoryExecutionContext)
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:03:50.821  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:03:50.821  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetResult(TResult)
+09-11 15:03:50.821  5366  5385 I Unity   : Cysharp.Threading.Tasks.YieldPromise:MoveNext()
+09-11 15:03:50.821  5366  5385 I Unity   : Cysharp.Threading.Tasks.Internal.PlayerLoopRunner:RunCore()
+09-11 15:03:50.821  5366  5385 I Unity   :
+09-11 15:03:51.062  5366  5423 D EGL_emulation: app_time_stats: avg=33.44ms min=30.56ms max=36.98ms count=30
+09-11 15:03:52.091  5366  5423 D EGL_emulation: app_time_stats: avg=32.39ms min=11.65ms max=37.05ms count=31
+09-11 15:03:52.886  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":26,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"dialogue.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01","presentation":"Dialogue","choiceCount":"0"}</color>
+09-11 15:03:52.886  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:03:52.886  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.<>c__DisplayClass28_0:<CreateStoryQueue>b__5(String, Int32)
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.StoryExecution.<Present>d__3:MoveNext()
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.StoryExecution.BubblePresentationRouter:Present()
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__4:MoveNext()
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.StoryExecution.SetBubbleQueue:Run(StoryExecutionContext)
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:03:52.886  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:03:52.886  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompl
+09-11 15:03:53.126  5366  5423 D EGL_emulation: app_time_stats: avg=33.36ms min=30.20ms max=36.45ms count=31
+09-11 15:03:53.387  5366  5385 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":27,"runId":"d641efa4108b470899bc0b4d1dc0b225","event":"dialogue.ready","contentId":"kolodets-kotoryy-zovet","episodeId":"s01e01","presentation":"Dialogue","choiceCount":"3"}</color>
+09-11 15:03:53.387  5366  5385 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 15:03:53.387  5366  5385 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.<>c__DisplayClass28_0:<CreateStoryQueue>b__5(String, Int32)
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.StoryExecution.<Present>d__3:MoveNext()
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.StoryExecution.BubblePresentationRouter:Present()
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__4:MoveNext()
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.StoryExecution.SetBubbleQueue:Run(StoryExecutionContext)
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.StoryExecution.<Run>d__0:MoveNext()
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.StoryExecution.StoryOperationExecutor:Run(Queue`1, Nullable`1, CancellationToken)
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.<TryExecute>d__7:MoveNext()
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.NovelProcess:TryExecute(Queue`1, Nullable`1)
+09-11 15:03:53.387  5366  5385 I Unity   : Novels.<Run>d__6:MoveNext()
+09-11 15:03:53.387  5366  5385 I Unity   : Cysharp.Threading.Tasks.UniTaskCompl
+09-11 15:03:54.126  5366  5423 D EGL_emulation: app_time_stats: avg=33.33ms min=30.98ms max=36.29ms count=30
+09-11 15:03:55.156  5366  5423 D EGL_emulation: app_time_stats: avg=20.67ms min=4.35ms max=34.45ms count=31
+09-11 15:03:56.158  5366  5423 D EGL_emulation: app_time_stats: avg=15.56ms min=3.26ms max=35.56ms count=30
+09-11 15:03:57.172  5366  5423 D EGL_emulation: app_time_stats: avg=12.26ms min=4.36ms max=35.16ms count=30
+09-11 15:03:58.204  5366  5423 D EGL_emulation: app_time_stats: avg=6.49ms min=4.40ms max=29.97ms count=31
+09-11 15:03:59.204  5366  5423 D EGL_emulation: app_time_stats: avg=20.81ms min=5.10ms max=34.91ms count=30
+09-11 15:04:00.211  5366  5423 D EGL_emulation: app_time_stats: avg=15.06ms min=4.85ms max=34.21ms count=30
+09-11 15:04:01.220  5366  5423 D EGL_emulation: app_time_stats: avg=6.61ms min=3.77ms max=31.89ms count=30
+09-11 15:04:02.221  5366  5423 D EGL_emulation: app_time_stats: avg=22.45ms min=4.99ms max=34.91ms count=30
+09-11 15:04:03.226  5366  5423 D EGL_emulation: app_time_stats: avg=18.85ms min=4.16ms max=34.18ms count=30
+09-11 15:04:04.230  5366  5423 D EGL_emulation: app_time_stats: avg=8.27ms min=2.76ms max=32.69ms count=29
+09-11 15:04:05.249  5366  5423 D EGL_emulation: app_time_stats: avg=13.77ms min=4.42ms max=56.59ms count=30
+09-11 15:04:06.257  5366  5423 D EGL_emulation: app_time_stats: avg=7.41ms min=4.63ms max=29.94ms count=30
+09-11 15:04:07.259  5366  5423 D EGL_emulation: app_time_stats: avg=10.23ms min=4.75ms max=32.50ms count=30
+09-11 15:04:08.289  5366  5423 D EGL_emulation: app_time_stats: avg=9.12ms min=2.10ms max=34.26ms count=31
+09-11 15:04:09.314  5366  5423 D EGL_emulation: app_time_stats: avg=8.52ms min=3.55ms max=32.66ms count=31
+09-11 15:04:10.346  5366  5423 D EGL_emulation: app_time_stats: avg=11.42ms min=4.81ms max=34.71ms count=31
+09-11 15:04:11.351  5366  5423 D EGL_emulation: app_time_stats: avg=7.16ms min=4.69ms max=31.86ms count=30
+09-11 15:04:12.354  5366  5423 D EGL_emulation: app_time_stats: avg=9.08ms min=4.38ms max=33.63ms count=30
+09-11 15:04:13.360  5366  5423 D EGL_emulation: app_time_stats: avg=8.20ms min=4.31ms max=33.79ms count=30
+09-11 15:04:14.387  5366  5423 D EGL_emulation: app_time_stats: avg=5.40ms min=3.75ms max=6.42ms count=31
+09-11 15:04:15.388  5366  5423 D EGL_emulation: app_time_stats: avg=11.74ms min=2.62ms max=35.55ms count=30
+09-11 15:04:16.420  5366  5423 D EGL_emulation: app_time_stats: avg=10.74ms min=4.94ms max=34.86ms count=31
+09-11 15:04:17.448  5366  5423 D EGL_emulation: app_time_stats: avg=11.60ms min=3.54ms max=34.72ms count=31
+09-11 15:04:18.467  5366  5423 D EGL_emulation: app_time_stats: avg=7.47ms min=3.63ms max=33.34ms count=29
+09-11 15:04:19.480  5366  5423 D EGL_emulation: app_time_stats: avg=5.26ms min=2.63ms max=7.82ms count=30
+09-11 15:04:20.511  5366  5423 D EGL_emulation: app_time_stats: avg=5.45ms min=4.57ms max=6.05ms count=31
+09-11 15:04:21.529  5366  5423 D EGL_emulation: app_time_stats: avg=6.49ms min=4.11ms max=29.58ms count=30
+09-11 15:04:22.563  5366  5423 D EGL_emulation: app_time_stats: avg=8.12ms min=4.31ms max=58.50ms count=30
+09-11 15:04:23.571  5366  5423 D EGL_emulation: app_time_stats: avg=14.70ms min=3.40ms max=58.95ms count=31
+09-11 15:04:24.593  5366  5423 D EGL_emulation: app_time_stats: avg=7.36ms min=4.65ms max=35.54ms count=31
+09-11 15:04:25.618  5366  5423 D EGL_emulation: app_time_stats: avg=7.13ms min=4.06ms max=30.76ms count=31
+09-11 15:04:26.622  5366  5423 D EGL_emulation: app_time_stats: avg=13.74ms min=5.00ms max=34.25ms count=30
+09-11 15:04:27.626  5366  5423 D EGL_emulation: app_time_stats: avg=18.77ms min=2.35ms max=38.28ms count=30
+09-11 15:04:28.660  5366  5423 D EGL_emulation: app_time_stats: avg=21.96ms min=5.06ms max=35.01ms count=31
+09-11 15:04:29.692  5366  5423 D EGL_emulation: app_time_stats: avg=25.57ms min=5.59ms max=36.15ms count=31
+09-11 15:04:30.722  5366  5423 D EGL_emulation: app_time_stats: avg=20.91ms min=4.74ms max=35.46ms count=31
+09-11 15:04:31.759  5366  5423 D EGL_emulation: app_time_stats: avg=15.78ms min=4.39ms max=36.29ms count=31
+09-11 15:04:32.799  5366  5423 D EGL_emulation: app_time_stats: avg=23.82ms min=5.11ms max=39.17ms count=31
+09-11 15:04:33.820  5366  5423 D EGL_emulation: app_time_stats: avg=7.28ms min=4.22ms max=32.44ms count=29
+09-11 15:04:34.832  5366  5423 D EGL_emulation: app_time_stats: avg=6.65ms min=4.23ms max=28.81ms count=28
+09-11 15:04:35.861  5366  5423 D EGL_emulation: app_time_stats: avg=5.38ms min=4.37ms max=6.99ms count=31
+09-11 15:04:36.883  5366  5423 D EGL_emulation: app_time_stats: avg=7.84ms min=4.85ms max=30.86ms count=31
+09-11 15:04:37.907  5366  5423 D EGL_emulation: app_time_stats: avg=5.54ms min=4.67ms max=6.65ms count=31
+09-11 15:04:38.926  5366  5423 D EGL_emulation: app_time_stats: avg=7.56ms min=4.16ms max=31.63ms count=30
+09-11 15:04:39.955  5366  5423 D EGL_emulation: app_time_stats: avg=7.24ms min=2.85ms max=33.85ms count=30
+09-11 15:04:40.965  5366  5423 D EGL_emulation: app_time_stats: avg=5.10ms min=2.75ms max=6.63ms count=29
+09-11 15:04:41.994  5366  5423 D EGL_emulation: app_time_stats: avg=7.38ms min=3.80ms max=37.82ms count=30
+09-11 15:04:43.000  5366  5423 D EGL_emulation: app_time_stats: avg=6.62ms min=4.79ms max=35.71ms count=29
+09-11 15:04:44.014  5366  5423 D EGL_emulation: app_time_stats: avg=6.29ms min=3.13ms max=28.71ms count=30
+09-11 15:04:45.036  5366  5423 D EGL_emulation: app_time_stats: avg=7.45ms min=4.18ms max=33.91ms count=30
+09-11 15:04:46.044  5366  5423 D EGL_emulation: app_time_stats: avg=8.92ms min=4.53ms max=35.94ms count=29
+09-11 15:04:47.060  5366  5423 D EGL_emulation: app_time_stats: avg=6.73ms min=2.81ms max=29.51ms count=28
+09-11 15:04:48.093  5366  5423 D EGL_emulation: app_time_stats: avg=6.54ms min=3.97ms max=28.88ms count=30
+09-11 15:04:49.100  5366  5423 D EGL_emulation: app_time_stats: avg=7.53ms min=5.06ms max=32.33ms count=29
+09-11 15:04:50.104  5366  5423 D EGL_emulation: app_time_stats: avg=8.39ms min=2.88ms max=33.66ms count=29
+09-11 15:04:51.133  5366  5423 D EGL_emulation: app_time_stats: avg=7.50ms min=3.39ms max=34.96ms count=30
+09-11 15:04:52.164  5366  5423 D EGL_emulation: app_time_stats: avg=7.17ms min=2.14ms max=34.79ms count=30
+09-11 15:04:53.190  5366  5423 D EGL_emulation: app_time_stats: avg=10.26ms min=4.22ms max=34.29ms count=30
+09-11 15:04:54.191  5366  5423 D EGL_emulation: app_time_stats: avg=7.59ms min=3.76ms max=34.08ms count=29
+09-11 15:04:55.213  5366  5423 D EGL_emulation: app_time_stats: avg=5.53ms min=4.18ms max=7.34ms count=30
+09-11 15:04:56.223  5366  5423 D EGL_emulation: app_time_stats: avg=9.58ms min=3.81ms max=35.64ms count=29
+09-11 15:04:57.232  5366  5423 D EGL_emulation: app_time_stats: avg=7.29ms min=3.77ms max=36.03ms count=29
+09-11 15:04:58.264  5366  5423 D EGL_emulation: app_time_stats: avg=9.30ms min=4.82ms max=34.06ms count=30
+09-11 15:04:59.299  5366  5423 D EGL_emulation: app_time_stats: avg=6.68ms min=4.46ms max=32.46ms count=30
+09-11 15:05:00.318  5366  5423 D EGL_emulation: app_time_stats: avg=10.06ms min=5.05ms max=34.68ms count=29

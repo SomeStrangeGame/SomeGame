@@ -1,0 +1,441 @@
+--------- beginning of main
+09-11 14:58:00.881  1293  1303 W .gms.persistent: Cleared Reference was only reachable from finalizer (only reported once)
+09-11 14:58:00.883   918   956 W System  : A resource failed to call AbstractCursor.close.
+09-11 14:58:00.883   918   956 W System  : A resource failed to call AbstractCursor.close.
+09-11 14:58:00.902  1293  1303 I .gms.persistent: Background concurrent copying GC freed 184280(8238KB) AllocSpace objects, 17(664KB) LOS objects, 49% free, 13MB/27MB, paused 19us,5us total 140.864ms
+--------- beginning of system
+09-11 14:58:00.972   540   566 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-11 14:58:00.972   540   566 W WindowMagnificationMgr: requestConnection duplicated request: connect=false, mConnectionState=DISCONNECTED
+09-11 14:58:01.111  4893  4893 D AndroidRuntime: >>>>>> START com.android.internal.os.RuntimeInit uid 2000 <<<<<<
+09-11 14:58:01.114  4893  4893 I AndroidRuntime: Using default boot image
+09-11 14:58:01.114  4893  4893 I AndroidRuntime: Leaving lock profiling enabled
+09-11 14:58:01.116  4893  4893 I app_process: Core platform API reporting enabled, enforcing=false
+09-11 14:58:01.116  4893  4893 I app_process: Using CollectorTypeCC GC.
+09-11 14:58:01.119  1487  1487 I AiAiEcho: AppFetcherImpl onPackageChanged ru.kostroma.novels.
+09-11 14:58:01.121  1487  4812 I AiAiEcho: AppIndexer Package:[ru.kostroma.novels] UserProfile:[0] Enabled:[true].
+09-11 14:58:01.121  1487  4812 I AiAiEcho: AppFetcherImplV2 updateApps package:[ru.kostroma.novels], userId:[0], reason:[package is updated.].
+09-11 14:58:01.152  4893  4893 D nativeloader: InitDefaultPublicLibraries for_preload=1: libandroid.so:libaaudio.so:libamidi.so:libbinder_ndk.so:libc.so:libcamera2ndk.so:libdl.so:libEGL.so:libGLESv1_CM.so:libGLESv2.so:libGLESv3.so:libicu.so:libicui18n.so:libicuuc.so:libjnigraphics.so:liblog.so:libmediandk.so:libm.so:libnativehelper.so:libnativewindow.so:libOpenMAXAL.so:libOpenSLES.so:libRS.so:libstdc++.so:libsync.so:libvulkan.so:libwebviewchromium_plat_support.so:libz.so
+09-11 14:58:01.172  4893  4893 D app_process: Time zone APEX ICU file found: /apex/com.android.tzdata/etc/icu/icu_tzdata.dat
+09-11 14:58:01.172  4893  4893 D app_process: I18n APEX ICU file found: /apex/com.android.i18n/etc/icu/icudt72l.dat
+09-11 14:58:01.204  4893  4893 W main    : type=1400 audit(0.0:54): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=77 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-11 14:58:01.210  4893  4893 W libc    : Access denied finding property "ro.product.name_for_attestation"
+09-11 14:58:01.204  4893  4893 W main    : type=1400 audit(0.0:55): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=77 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-11 14:58:01.204  4893  4893 W main    : type=1400 audit(0.0:56): avc:  denied  { read } for  name="u:object_r:build_attestation_prop:s0" dev="tmpfs" ino=77 scontext=u:r:shell:s0 tcontext=u:object_r:build_attestation_prop:s0 tclass=file permissive=0
+09-11 14:58:01.210  4893  4893 W libc    : Access denied finding property "ro.product.brand_for_attestation"
+09-11 14:58:01.210  4893  4893 W libc    : Access denied finding property "ro.product.model_for_attestation"
+09-11 14:58:01.212  4893  4893 D AndroidRuntime: Calling main entry com.android.commands.monkey.Monkey
+09-11 14:58:01.213  4893  4893 W Monkey  : args: [-p, ru.kostroma.novels, -c, android.intent.category.LAUNCHER, 1]
+09-11 14:58:01.213  4893  4893 W Monkey  :  arg: "-p"
+09-11 14:58:01.213  4893  4893 W Monkey  :  arg: "ru.kostroma.novels"
+09-11 14:58:01.213  4893  4893 W Monkey  :  arg: "-c"
+09-11 14:58:01.213  4893  4893 W Monkey  :  arg: "android.intent.category.LAUNCHER"
+09-11 14:58:01.213  4893  4893 W Monkey  :  arg: "1"
+09-11 14:58:01.213  4893  4893 W Monkey  : data="ru.kostroma.novels"
+09-11 14:58:01.213  4893  4893 W Monkey  : data="android.intent.category.LAUNCHER"
+09-11 14:58:01.229   540   597 W ActivityManager: registerReceiverWithFeature: no app for null
+09-11 14:58:01.230  4893  4893 W System  : No Compatibility callbacks set! Querying change 263076149
+09-11 14:58:01.230  4893  4893 W System  : No Compatibility callbacks set! Querying change 263076149
+09-11 14:58:01.230  4893  4893 W System  : No Compatibility callbacks set! Querying change 263076149
+09-11 14:58:01.233   540   597 W ActivityTaskManager: callingPackage for (uid=2000, pid=4893) has no WPC
+09-11 14:58:01.234   540   597 D CompatibilityChangeReporter: Compat change id reported: 244637991; UID 2000; state: ENABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 265464455; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 265452344; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 266124927; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 265451093; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 265456536; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 255940284; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 236283604; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 263959004; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 264304459; UID 10199; state: DISABLED
+09-11 14:58:01.235   540   597 D CompatibilityChangeReporter: Compat change id reported: 264301586; UID 10199; state: DISABLED
+09-11 14:58:01.236   540   597 D CompatibilityChangeReporter: Compat change id reported: 254631730; UID 10199; state: DISABLED
+09-11 14:58:01.236   540   597 D CompatibilityChangeReporter: Compat change id reported: 273509367; UID 10199; state: DISABLED
+09-11 14:58:01.236   540   597 D CompatibilityChangeReporter: Compat change id reported: 263259275; UID 10199; state: DISABLED
+09-11 14:58:01.236   540   597 D CompatibilityChangeReporter: Compat change id reported: 174042980; UID 10199; state: DISABLED
+09-11 14:58:01.236   540   597 D CompatibilityChangeReporter: Compat change id reported: 174042936; UID 10199; state: DISABLED
+09-11 14:58:01.236   540   597 D CompatibilityChangeReporter: Compat change id reported: 181136395; UID 10199; state: DISABLED
+09-11 14:58:01.238   540   597 D CompatibilityChangeReporter: Compat change id reported: 194480991; UID 10199; state: ENABLED
+09-11 14:58:01.242   540   597 D CompatibilityChangeReporter: Compat change id reported: 197654537; UID 10199; state: ENABLED
+09-11 14:58:01.244   540   597 D CompatibilityChangeReporter: Compat change id reported: 184838306; UID 10199; state: DISABLED
+09-11 14:58:01.244   540   597 D CompatibilityChangeReporter: Compat change id reported: 185004937; UID 10199; state: DISABLED
+09-11 14:58:01.246   540   597 D CompatibilityChangeReporter: Compat change id reported: 205907456; UID 10199; state: ENABLED
+09-11 14:58:01.248   754   847 V WindowManagerShell: Transition requested: android.os.BinderProxy@3797bb9 TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=208 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity } baseActivity=ComponentInfo{ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity} topActivity=ComponentInfo{ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity} origActivity=null realActivity=ComponentInfo{ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity} numActivities=1 lastActiveTime=282780 supportsMultiWindow=true resizeMode=2 isResizeable=true minWidth=400 minHeight=300 defaultMinSize=220 token=WCT{android.window.IWindowContainerToken$Stub$Proxy@8823bfe} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 136 - 0, 0) topActivityInfo=ActivityInfo{22f1f5f com.unity3d.player.UnityPlayerGameActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
+09-11 14:58:01.250   540   597 D CompatibilityChangeReporter: Compat change id reported: 194833441; UID 10199; state: ENABLED
+09-11 14:58:01.250   540   597 I ActivityTaskManager: START u0 {act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity} with LAUNCH_SINGLE_TASK from uid 2000 (BAL_ALLOW_PERMISSION) result code=0
+09-11 14:58:01.251   540   560 D CompatibilityChangeReporter: Compat change id reported: 135634846; UID 10199; state: DISABLED
+09-11 14:58:01.251   540   560 D CompatibilityChangeReporter: Compat change id reported: 177438394; UID 10199; state: DISABLED
+09-11 14:58:01.251   540   560 D CompatibilityChangeReporter: Compat change id reported: 135772972; UID 10199; state: DISABLED
+09-11 14:58:01.251   540   560 D CompatibilityChangeReporter: Compat change id reported: 135754954; UID 10199; state: ENABLED
+09-11 14:58:01.251   540   568 D CompatibilityChangeReporter: Compat change id reported: 143937733; UID 10199; state: ENABLED
+09-11 14:58:01.252  4893  4893 I Monkey  : Events injected: 1
+09-11 14:58:01.260   354   354 I Zygote  : Entering forkRepeatedly native zygote loop
+09-11 14:58:01.265   354   354 D Zygote  : Forked child process 4910
+09-11 14:58:01.265   540   568 I ActivityManager: Start proc 4910:ru.kostroma.novels/u0a199 for next-top-activity {ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity}
+09-11 14:58:01.275  4893  4893 I Monkey  : ## Network stats: elapsed time=40ms (0ms mobile, 0ms wifi, 40ms not connected)
+09-11 14:58:01.276   540   612 D CompatibilityChangeReporter: Compat change id reported: 265195908; UID 10199; state: ENABLED
+09-11 14:58:01.279  4893  4893 I app_process: System.exit called, status: 0
+09-11 14:58:01.279  4893  4893 I AndroidRuntime: VM exiting with result code 0.
+09-11 14:58:01.285   391   391 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-11 14:58:01.300  1536  1536 I GsaVoiceInteractionSrv: (REDACTED) O received %s
+09-11 14:58:01.301  1483  1483 W MediaProvider: WorkProfileOwnerApps cache is empty
+09-11 14:58:01.313   754   867 D SplashScreenView: Build android.window.SplashScreenView{a0accf7 V.E...... ......ID 0,0-0,0}
+09-11 14:58:01.313   754   867 D SplashScreenView: Icon: view: android.widget.ImageView{f16b764 V.ED..... ......I. 0,0-0,0 #10204f0 android:id/splashscreen_icon_view} drawable: com.android.wm.shell.startingsurface.SplashscreenIconDrawableFactory$ImmobileIconDrawable@3e4bdcd size: 504
+09-11 14:58:01.313   754   867 D SplashScreenView: Branding: view: android.view.View{3c77682 G.ED..... ......I. 0,0-0,0 #10204ef android:id/splashscreen_branding_view} drawable: null size w: 0 h: 0
+09-11 14:58:01.326  4910  4910 I kostroma.novels: Using CollectorTypeCC GC.
+09-11 14:58:01.331  4910  4910 E kostroma.novels: Not starting debugger since process cannot load the jdwp agent.
+09-11 14:58:01.332   754   885 E OpenGLRenderer: Unable to match the desired swap behavior.
+09-11 14:58:01.334   540  2091 D ActivityManager: sync unfroze 1423 com.google.android.apps.wellbeing for 7
+09-11 14:58:01.361   754   847 V WindowManagerShell: onTransitionReady android.os.BinderProxy@3797bb9: {id=6 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@7d36160} m=OPEN f=NONE leash=Surface(name=Task=208)/@0xd7e151d sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@cebe619} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xa8c0392 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-11 14:58:01.361   754   847 V WindowManagerShell: Playing animation for (#6)android.os.BinderProxy@3797bb9@0
+09-11 14:58:01.361   754   847 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultMixedHandler@cac140e
+09-11 14:58:01.361   754   847 V WindowManagerShell:  try handler com.android.wm.shell.keyguard.KeyguardTransitionHandler@434fe2f
+09-11 14:58:01.361   754   847 V WindowManagerShell:  try handler com.android.wm.shell.activityembedding.ActivityEmbeddingController@75cbc3c
+09-11 14:58:01.361   754   847 V WindowManagerShell:  try handler com.android.wm.shell.recents.RecentsTransitionHandler@63e9dc5
+09-11 14:58:01.361   754   847 V ShellRecents: RecentsTransitionHandler.startAnimation: no controller found
+09-11 14:58:01.361   754   847 V WindowManagerShell:  try handler com.android.wm.shell.pip.PipTransition@819631a
+09-11 14:58:01.361   754   847 V WindowManagerShell:  try handler com.android.wm.shell.splitscreen.StageCoordinator@f1d4e4b
+09-11 14:58:01.362   754   847 V WindowManagerShell:  try handler com.android.wm.shell.transition.RemoteTransitionHandler@6576028
+09-11 14:58:01.362   754   847 V WindowManagerShell: Transition doesn't have explicit remote, search filters for match for {id=6 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@7d36160} m=OPEN f=NONE leash=Surface(name=Task=208)/@0xd7e151d sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@cebe619} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xa8c0392 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-11 14:58:01.362   754   754 D ControlsListingControllerImpl: ServiceConfig reloaded, count: 0
+09-11 14:58:01.362   540   557 V WindowManager: Sent Transition #6 createdAt=09-11 14:58:01.240 via request=TransitionRequestInfo { type = OPEN, triggerTask = TaskInfo{userId=0 taskId=208 displayId=0 isRunning=true baseIntent=Intent { act=android.intent.action.MAIN cat=[android.intent.category.LAUNCHER] flg=0x10200000 cmp=ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity } baseActivity=ComponentInfo{ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity} topActivity=ComponentInfo{ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity} origActivity=null realActivity=ComponentInfo{ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity} numActivities=1 lastActiveTime=282780 supportsMultiWindow=true resizeMode=2 isResizeable=true minWidth=400 minHeight=300 defaultMinSize=220 token=WCT{RemoteToken{f022932 Task{9e4336c #208 type=standard A=10199:ru.kostroma.novels}}} topActivityType=1 pictureInPictureParams=null shouldDockBigOverlays=false launchIntoPipHostTaskId=-1 lastParentTaskIdBeforePip=-1 displayCutoutSafeInsets=Rect(0, 136 - 0, 0) topActivityInfo=ActivityInfo{b24f683 com.unity3d.player.UnityPlayerGameActivity} launchCookies=[] positionInParent=Point(0, 0) parentTaskId=-1 isFocused=false isVisible=false isVisibleRequested=false isSleeping=false topActivityInSizeCompat=false topActivityEligibleForLetterboxEducation= false topActivityLetterboxed= false isFromDoubleTap= false topActivityLetterboxVerticalPosition= -1 topActivityLetterboxHorizontalPosition= -1 topActivityLetterboxWidth=-1 topActivityLetterboxHeight=-1 locusId=null displayAreaFeatureId=1 cameraCompatControlState=hidden}, remoteTransition = null, displayChange = null }
+09-11 14:58:01.362   754   847 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x0 checks=[{atype=dream independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=ANY topActivity=null},{atype=home independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@e2c6de, appThread = android.app.IApplicationThread$Stub$Proxy@6da80bf, debugName = LauncherToDream }}
+09-11 14:58:01.363   754   847 V WindowManagerShell:  Checking filter Pair{{types=[] flags=0x0] notFlags=0x100 checks=[{atype=home independent=true modes=[OPEN,TO_FRONT] flags=NONE mustBeTask=false order=TOP topActivity=ComponentInfo{com.google.android.apps.nexuslauncher/com.google.android.apps.nexuslauncher.NexusLauncherActivity}},{atype=standard independent=true modes=[CLOSE,TO_BACK] flags=NONE mustBeTask=false order=ANY topActivity=null}]} RemoteTransition { remoteTransition = android.window.IRemoteTransition$Stub$Proxy@fd338c, appThread = android.app.IApplicationThread$Stub$Proxy@bcbcad5, debugName = QuickstepLaunchHome }}
+09-11 14:58:01.363   754   847 V WindowManagerShell:  Delegate animation for #6 to null
+09-11 14:58:01.363   754   847 V WindowManagerShell:  try handler com.android.wm.shell.transition.DefaultTransitionHandler@9705141
+09-11 14:58:01.363   754   847 V WindowManagerShell: start default transition animation, info = {id=6 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{android.window.IWindowContainerToken$Stub$Proxy@7d36160} m=OPEN f=NONE leash=Surface(name=Task=208)/@0xd7e151d sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{android.window.IWindowContainerToken$Stub$Proxy@cebe619} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0xa8c0392 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-11 14:58:01.363   754   754 D ControlsListingControllerImpl: ServiceConfig reloaded, count: 0
+09-11 14:58:01.363   540   557 V WindowManager:     startWCT=WindowContainerTransaction { changes = {} hops = [] errorCallbackToken=null taskFragmentOrganizer=null }
+09-11 14:58:01.363   540   557 V WindowManager:     info={id=6 t=OPEN f=0x0 trk=0 r=[0@Point(0, 0)] c=[{WCT{RemoteToken{f022932 Task{9e4336c #208 type=standard A=10199:ru.kostroma.novels}}} m=OPEN f=NONE leash=Surface(name=Task=208)/@0x189e94 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0},{WCT{RemoteToken{e2b1000 Task{3029416 #1 type=home}}} m=TO_BACK f=SHOW_WALLPAPER leash=Surface(name=Task=1)/@0x6016269 sb=Rect(0, 0 - 1080, 2400) eb=Rect(0, 0 - 1080, 2400) d=0}]}
+09-11 14:58:01.364   754   754 D ControlsListingControllerImpl: ServiceConfig reloaded, count: 0
+09-11 14:58:01.365   754   847 V WindowManagerShell: loadAnimation: anim=android.view.animation.AnimationSet@5497e69 animAttr=0x13 type=OPEN isEntrance=false
+09-11 14:58:01.366  4910  4910 D CompatibilityChangeReporter: Compat change id reported: 171979766; UID 10199; state: ENABLED
+09-11 14:58:01.366  4910  4910 D CompatibilityChangeReporter: Compat change id reported: 242716250; UID 10199; state: ENABLED
+09-11 14:58:01.366  1164  1575 D EGL_emulation: app_time_stats: avg=22249.96ms min=2.31ms max=266119.31ms count=12
+09-11 14:58:01.367  1536  1536 I GsaVoiceInteractionSrv: (REDACTED) O received %s
+09-11 14:58:01.367  1293  4917 I Fitness : FitCleanupIntentOperation received Intent android.intent.action.PACKAGE_REMOVED [CONTEXT service_id=17 ]
+09-11 14:58:01.368   540   558 V GameManagerService: Game power mode ON (process state was changed to foreground)
+09-11 14:58:01.373  1293  4914 I ProximityAuth: [RecentAppsMediator] Package added: (user=UserHandle{0}) ru.kostroma.novels
+09-11 14:58:01.375  1536  1536 I GsaVoiceInteractionSrv: (REDACTED) O received %s
+09-11 14:58:01.376   383   383 I android.hardware.power-service.example: Power isModeSupported: 15
+09-11 14:58:01.381   540   910 D CompatibilityChangeReporter: Compat change id reported: 170503758; UID 10199; state: ENABLED
+09-11 14:58:01.389   754   847 V WindowManagerShell: loadAnimation: anim=android.view.animation.AnimationSet@6423936 animAttr=0x12 type=OPEN isEntrance=true
+09-11 14:58:01.389  1580  4918 I Auth    : [SupervisedAccountIntentOperation] onHandleIntent(): android.intent.action.PACKAGE_ADDED
+09-11 14:58:01.390  1536  2222 W A       : Failed to notify listeners
+09-11 14:58:01.390  1536  2222 W A       : java.util.concurrent.CancellationException
+09-11 14:58:01.390  1536  2222 W A       : 	at java.util.concurrent.FutureTask.report(FutureTask.java:121)
+09-11 14:58:01.390  1536  2222 W A       : 	at java.util.concurrent.FutureTask.get(FutureTask.java:191)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.bv.get(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.ee.a(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.cj.r(PG:2)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.cc.run(PG:4)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.bg.execute(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.bj.c(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.bj.b(PG:3)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.cy.done(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at java.util.concurrent.FutureTask.finishCompletion(FutureTask.java:381)
+09-11 14:58:01.390  1536  2222 W A       : 	at java.util.concurrent.FutureTask.cancel(FutureTask.java:179)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.bv.cancel(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.android.libraries.search.assistant.fulfillment.server.l.o.run(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.apps.tiktok.tracing.er.run(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:487)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.eb.a(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.cw.run(PG:4)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.common.w.a.ec.run(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.android.libraries.i.z.run(PG:1)
+09-11 14:58:01.390  1536  2222 W A       : 	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1145)
+09-11 14:58:01.390  1536  2222 W A       : 	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:644)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.android.libraries.i.h.run(PG:2)
+09-11 14:58:01.390  1536  2222 W A       : 	at java.lang.Thread.run(Thread.java:1012)
+09-11 14:58:01.390  1536  2222 W A       : 	at com.google.android.libraries.i.ai.run(PG:5)
+09-11 14:58:01.393  1536  2195 I AssistantForeground: (REDACTED) Get launcher package: %s
+09-11 14:58:01.395   754   847 V WindowManagerShell:  animated by com.android.wm.shell.transition.DefaultTransitionHandler@9705141
+09-11 14:58:01.399   754   847 W Looper  : Slow dispatch took 38ms wmshell.main h=android.os.Handler c=com.android.wm.shell.transition.Transitions$TransitionPlayerImpl$$ExternalSyntheticLambda0@b9c09a4 m=0
+09-11 14:58:01.401  1580  1580 D BoundBrokerSvc: onBind: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
+09-11 14:58:01.401  1580  1580 D BoundBrokerSvc: Loading bound service for intent: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
+09-11 14:58:01.401  4910  4910 I kostroma.novels: Failed to add image file: Failed to find OatDexFile for DexFile /data/app/~~iM55jfckBDxYounf_7t9QQ==/ru.kostroma.novels-CtsuVHBwCohEv_L68qydBQ==/base.apk (canonical path /data/app/~~iM55jfckBDxYounf_7t9QQ==/ru.kostroma.novels-CtsuVHBwCohEv_L68qydBQ==/base.apk) in OatFile /data/app/~~g7r1OhqvqPfp78ft5jgqwQ==/ru.kostroma.novels-Q41C0DWRRCRerCcqUDVeew==/oat/arm64/base.odex
+09-11 14:58:01.402  4910  4910 D nativeloader: Configuring clns-6 for other apk /data/app/~~g7r1OhqvqPfp78ft5jgqwQ==/ru.kostroma.novels-Q41C0DWRRCRerCcqUDVeew==/base.apk. target_sdk_version=36, uses_libraries=, library_path=/data/app/~~g7r1OhqvqPfp78ft5jgqwQ==/ru.kostroma.novels-Q41C0DWRRCRerCcqUDVeew==/lib/arm64:/data/app/~~g7r1OhqvqPfp78ft5jgqwQ==/ru.kostroma.novels-Q41C0DWRRCRerCcqUDVeew==/base.apk!/lib/arm64-v8a, permitted_path=/data:/mnt/expand:/data/user/0/ru.kostroma.novels
+09-11 14:58:01.417  1580  1580 D BoundBrokerSvc: onUnbind: Intent { act=com.google.android.gms.common.BIND_SHARED_PREFS pkg=com.google.android.gms }
+09-11 14:58:01.423   540  2782 D CompatibilityChangeReporter: Compat change id reported: 161252188; UID 10199; state: DISABLED
+09-11 14:58:01.434  1423  1436 I .apps.wellbeing: Background concurrent copying GC freed 7392(531KB) AllocSpace objects, 0(0B) LOS objects, 49% free, 3744KB/7489KB, paused 705us,29us total 100.392ms
+--------- beginning of kernel
+09-11 14:58:01.447   153   153 I logd    : logdr: UID=2000 GID=2000 PID=4979 n tail=0 logMask=99 pid=4910 start=0ns deadline=0ns
+09-11 14:58:01.456  1293  1340 W ChimeraUtils: Module com.google.android.gms.nearby_en missing resource null(0)
+09-11 14:58:01.458  1293  1340 W ChimeraUtils: Module com.google.android.gms.nearby_en missing resource null(0)
+09-11 14:58:01.459  4910  4910 V GraphicsEnvironment: Currently set values for:
+09-11 14:58:01.460  4910  4910 V GraphicsEnvironment:   angle_gl_driver_selection_pkgs=[]
+09-11 14:58:01.460  4910  4910 V GraphicsEnvironment:   angle_gl_driver_selection_values=[]
+09-11 14:58:01.460  4910  4910 V GraphicsEnvironment: ANGLE GameManagerService for ru.kostroma.novels: false
+09-11 14:58:01.460  4910  4910 V GraphicsEnvironment: ru.kostroma.novels is not listed in per-application setting
+09-11 14:58:01.460  4910  4910 V GraphicsEnvironment: Neither updatable production driver nor prerelease driver is supported.
+09-11 14:58:01.463   540  2091 I ActivityManager: Flag disabled. Ignoring finishAttachApplication from uid: 10199. pid: 4910
+09-11 14:58:01.472  4910  4910 D AppCompatDelegate: Checking for metadata for AppLocalesMetadataHolderService : Service not found
+09-11 14:58:01.492  4910  4910 D gti.InputConnection: InputConnection created
+09-11 14:58:01.514  1580  4954 W SQLiteLog: (28) double-quoted string literal: "ru.kostroma.novels"
+09-11 14:58:01.519  1570  2498 W SearchServiceCore: Abort, client detached.
+09-11 14:58:01.519  1570  2498 W SearchServiceCore: Abort, client detached.
+09-11 14:58:01.532  1570  2498 W SearchServiceCore: Abort, client detached.
+09-11 14:58:01.543  4910  4910 I IL2CPP  : JNI_OnLoad
+09-11 14:58:01.543  4910  4910 V Unity   : Context Type: GameActivity
+09-11 14:58:01.546  4910  4910 I GameActivity: Looking for library libgame.so
+09-11 14:58:01.546  4910  4910 I GameActivity: Found library libgame.so. Loading...
+09-11 14:58:01.551  1580  2685 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=AppsCorpus serviceId=36
+09-11 14:58:01.566   540   559 I DropBoxManagerService: add tag=system_server_strictmode isTagEnabled=true flags=0x2
+09-11 14:58:01.568  4910  4910 D GameActivity: GameActivity_register
+09-11 14:58:01.570  4910  4910 D GameActivity: SDK version: 34
+09-11 14:58:01.572  4910  4985 I Unity   : UnityApplication::CreateInstance
+09-11 14:58:01.572  4910  4985 I Unity   : GameActivity Package Version '3.0.5'
+09-11 14:58:01.572  4910  4985 I Unity   : Starting Game Loop
+09-11 14:58:01.580  4910  4985 I Unity   : Handle cmd APP_CMD_START(11)
+09-11 14:58:01.582  4910  4985 I Unity   : Handle cmd APP_CMD_RESUME(12)
+09-11 14:58:01.584  4910  4910 D CompatibilityChangeReporter: Compat change id reported: 237531167; UID 10199; state: DISABLED
+09-11 14:58:01.585   540  2091 W WindowManager: Failed looking up window session=Session{a3fe6a3 4910:u0a10199} callers=com.android.server.wm.WindowManagerService.windowForClientLocked:6034 com.android.server.wm.Session.updateRequestedVisibleTypes:690 android.view.IWindowSession$Stub.onTransact:1034
+09-11 14:58:01.590   540  2375 D CoreBackPreview: Window{9e049ff u0 ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity}: Setting back callback OnBackInvokedCallbackInfo{mCallback=android.window.IOnBackInvokedCallback$Stub$Proxy@a72bd2a, mPriority=1, mIsAnimationCallback=false}
+09-11 14:58:01.590  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.590  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.591  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:01.597  1580  4816 I Icing   : Usage reports ok 1, Failed Usage reports 0, indexed 0, rejected 0
+09-11 14:58:01.599   391   479 W ServiceManagerCppClient: Permission failure: android.permission.ROTATE_SURFACE_FLINGER from uid=10199 pid=4910
+09-11 14:58:01.599   391   479 D PermissionCache: checking android.permission.ROTATE_SURFACE_FLINGER for uid=10199 => denied (265 us)
+09-11 14:58:01.599   391   630 W ServiceManagerCppClient: Permission failure: android.permission.ROTATE_SURFACE_FLINGER from uid=10199 pid=0
+09-11 14:58:01.599   391   630 D PermissionCache: checking android.permission.ROTATE_SURFACE_FLINGER for uid=10199 => denied (348 us)
+09-11 14:58:01.599   391   630 W ServiceManagerCppClient: Permission failure: android.permission.INTERNAL_SYSTEM_WINDOW from uid=10199 pid=0
+09-11 14:58:01.599   391   630 D PermissionCache: checking android.permission.INTERNAL_SYSTEM_WINDOW for uid=10199 => denied (158 us)
+09-11 14:58:01.599   391   479 W ServiceManagerCppClient: Permission failure: android.permission.INTERNAL_SYSTEM_WINDOW from uid=10199 pid=4910
+09-11 14:58:01.599   391   479 D PermissionCache: checking android.permission.INTERNAL_SYSTEM_WINDOW for uid=10199 => denied (201 us)
+09-11 14:58:01.599   391   630 W ServiceManagerCppClient: Permission failure: android.permission.ACCESS_SURFACE_FLINGER from uid=10199 pid=0
+09-11 14:58:01.599   391   630 D PermissionCache: checking android.permission.ACCESS_SURFACE_FLINGER for uid=10199 => denied (126 us)
+09-11 14:58:01.600   391   479 W ServiceManagerCppClient: Permission failure: android.permission.ACCESS_SURFACE_FLINGER from uid=10199 pid=4910
+09-11 14:58:01.600   391   479 D PermissionCache: checking android.permission.ACCESS_SURFACE_FLINGER for uid=10199 => denied (730 us)
+09-11 14:58:01.600  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.600  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.600  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:01.600  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.600  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.600  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.600  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.600  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:01.600  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:01.600  4910  4985 I Unity   : Handle cmd APP_CMD_CONTENT_RECT_CHANGED(5)
+09-11 14:58:01.602  1536  2121 W native  : W0000 00:00:1789127881.600125    2121 input-utils.cc:142] Failed to get value for update inducing feature |longitude| due to INVALID_ARGUMENT: No feature generators for feature "longitude"
+09-11 14:58:01.602  1536  2121 W native  : === Source Location Trace: ===
+09-11 14:58:01.602  1536  2121 W native  : ./speech/service/context/features/feature-dictionary-provider.h:99
+09-11 14:58:01.602  1536  2121 W native  :  Subgraphs depending on this feature will not have a new revision.
+09-11 14:58:01.602  1536  2121 W native  : W0000 00:00:1789127881.602240    2121 input-utils.cc:142] Failed to get value for update inducing feature |latitude| due to INVALID_ARGUMENT: No feature generators for feature "latitude"
+09-11 14:58:01.602  1536  2121 W native  : === Source Location Trace: ===
+09-11 14:58:01.602  1536  2121 W native  : ./speech/service/context/features/feature-dictionary-provider.h:99
+09-11 14:58:01.602  1536  2121 W native  :  Subgraphs depending on this feature will not have a new revision.
+09-11 14:58:01.613  1536  2121 W native  : W0000 00:00:1789127881.613222    2121 input-utils.cc:142] Failed to get value for update inducing feature |longitude| due to INVALID_ARGUMENT: No feature generators for feature "longitude"
+09-11 14:58:01.613  1536  2121 W native  : === Source Location Trace: ===
+09-11 14:58:01.613  1536  2121 W native  : ./speech/service/context/features/feature-dictionary-provider.h:99
+09-11 14:58:01.613  1536  2121 W native  :  Subgraphs depending on this feature will not have a new revision.
+09-11 14:58:01.613  1536  2121 W native  : W0000 00:00:1789127881.613250    2121 input-utils.cc:142] Failed to get value for update inducing feature |latitude| due to INVALID_ARGUMENT: No feature generators for feature "latitude"
+09-11 14:58:01.613  1536  2121 W native  : === Source Location Trace: ===
+09-11 14:58:01.613  1536  2121 W native  : ./speech/service/context/features/feature-dictionary-provider.h:99
+09-11 14:58:01.613  1536  2121 W native  :  Subgraphs depending on this feature will not have a new revision.
+09-11 14:58:01.615  1580  2687 I Icing   : IndexChimeraService.getServiceInterface callingPackage=com.google.android.gms componentName=null serviceId=30
+09-11 14:58:01.616  4910  4985 I Unity   : Handle cmd APP_CMD_INIT_WINDOW(1)
+09-11 14:58:01.620   391  1018 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-11 14:58:01.622   160   160 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-11 14:58:01.625  4910  4985 I Unity   : MemoryManager: Using 'Dynamic Heap' Allocator.
+09-11 14:58:01.630   161   161 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-11 14:58:01.630  4910  4910 I Gralloc4: mapper 4.x is not supported
+09-11 14:58:01.631  1580  4816 I Icing   : Usage reports ok 0, Failed Usage reports 0, indexed 0, rejected 0
+09-11 14:58:01.649  1580  4816 I Icing   : Indexing com.google.android.gms-apps from com.google.android.gms
+09-11 14:58:01.654  1580  4816 I Icing   : Indexing done com.google.android.gms-apps
+09-11 14:58:01.683  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.683  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.683  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.683  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.683   540   597 W ServiceManagerCppClient: Permission failure: android.permission.ROTATE_SURFACE_FLINGER from uid=10199 pid=0
+09-11 14:58:01.683   540   597 D PermissionCache: checking android.permission.ROTATE_SURFACE_FLINGER for uid=10199 => denied (42 us)
+09-11 14:58:01.683   540   597 W ServiceManagerCppClient: Permission failure: android.permission.INTERNAL_SYSTEM_WINDOW from uid=10199 pid=0
+09-11 14:58:01.683   540   597 D PermissionCache: checking android.permission.INTERNAL_SYSTEM_WINDOW for uid=10199 => denied (6 us)
+09-11 14:58:01.683   540   597 W ServiceManagerCppClient: Permission failure: android.permission.ACCESS_SURFACE_FLINGER from uid=10199 pid=0
+09-11 14:58:01.683   540   597 D PermissionCache: checking android.permission.ACCESS_SURFACE_FLINGER for uid=10199 => denied (3 us)
+09-11 14:58:01.686   754   847 V WindowManagerShell: Transition animation finished (aborted=false), notifying core (#6)android.os.BinderProxy@3797bb9@0
+09-11 14:58:01.686  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.686  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.686  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.686  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.687   540   557 I ActivityTaskManager: Displayed ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity for user 0: +451ms
+09-11 14:58:01.697   754   847 V WindowManagerShell: Track 0 became idle
+09-11 14:58:01.697   754   847 V WindowManagerShell: All active transition animations finished
+09-11 14:58:01.699   540   557 V WindowManager: Finish Transition #6: created at 09-11 14:58:01.240 collect-started=0.034ms request-sent=6.669ms started=25.971ms ready=117.415ms sent=118.979ms finished=452.355ms
+09-11 14:58:01.734   540   597 D CompatibilityChangeReporter: Compat change id reported: 214016041; UID 10199; state: ENABLED
+09-11 14:58:01.736   540   597 I ImeTracker: ru.kostroma.novels:c7ca77a9: onRequestHide at ORIGIN_SERVER_HIDE_INPUT reason HIDE_UNSPECIFIED_WINDOW
+09-11 14:58:01.736   540   597 I ImeTracker: ru.kostroma.novels:c7ca77a9: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-11 14:58:01.766  1441  1441 I GoogleInputMethodService: GoogleInputMethodService.onFinishInput():3227
+09-11 14:58:01.786  1441  1441 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 0, unlocked = true
+09-11 14:58:01.787  1441  1441 I GoogleInputMethodService: GoogleInputMethodService.onStartInput():1877 onStartInput(EditorInfo{inputType=0x0(NULL) imeOptions=0x0 privateImeOptions=null actionName=UNSPECIFIED actionLabel=null actionId=0 initialSelStart=-1 initialSelEnd=-1 initialCapsMode=0x0 hintText=null label=null packageName=ru.kostroma.novels fieldId=0 fieldName=null extras=null}, false)
+09-11 14:58:01.787  1441  1441 I GoogleInputMethodService: GoogleInputMethodService.shouldHideHeaderOnInitialState():4008 ShouldHideHeaderOnInitialState = false
+09-11 14:58:01.796  1441  1441 I GoogleInputMethodService: GoogleInputMethodService.updateDeviceLockedStatus():2087 repeatCheckTimes = 2, unlocked = true
+09-11 14:58:01.811  4910  4985 I Unity   : SystemInfo CPU = ARM64 FP ASIMD AES, Cores = 4, Memory = 3922mb
+09-11 14:58:01.811  4910  4985 I Unity   : SystemInfo ARM big.LITTLE configuration: 4 big (mask: 0xf), 0 little (mask: 0x0)
+09-11 14:58:01.811  4910  4985 I Unity   : ApplicationInfo 'ru.kostroma.novels', Version '2026.09.11', Min API Level '25', Target API Level '36'
+09-11 14:58:01.811  4910  4985 I Unity   : Built from '6000.3/staging' branch, Version '6000.3.11f1 (3000ef702840)', Build type 'Release', Scripting Backend 'il2cpp', CPU 'arm64-v8a', Stripping 'Enabled'
+09-11 14:58:01.811  4910  4985 I Unity   : Device Model 'Google sdk_gphone64_arm64', OS 'Android OS 14 (API 34)'
+09-11 14:58:01.813  1164  1738 D OneSearchSuggestProvider: Shut down the binder channel
+09-11 14:58:01.814  1164  1905 I IPCThreadState: oneway function results for code 2 on binder at 0xb400006d8b672040 will be dropped but finished with status UNKNOWN_TRANSACTION
+09-11 14:58:01.814  1164  1199 I ImeTracker: com.google.android.apps.nexuslauncher:e517d617: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+09-11 14:58:01.814  1164  1199 I ImeTracker: com.google.android.apps.nexuslauncher:e517d617: onFailed at PHASE_CLIENT_VIEW_SERVED
+09-11 14:58:01.815   873  1105 D BtGatt.ScanManager: uid 10127 isForeground true scanMode 1
+09-11 14:58:01.816   873  1105 D BtGatt.ScanManager: uid 10127 isForeground true scanMode -1
+09-11 14:58:01.839  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.839  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.839  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.839  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.852  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.852  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.937  4910  4985 I Unity   : Company Name: Pureshechka
+09-11 14:58:01.937  4910  4985 I Unity   : Product Name: Кострома
+09-11 14:58:01.947  4910  4985 E platform: Failed to open rendernode: No such file or directory
+09-11 14:58:01.947  4910  4985 I androidemu: HealthMonitor enabled. Returning monitor.
+09-11 14:58:01.952  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.952  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.953  4910  4985 D vulkan  : searching for layers in '/data/app/~~g7r1OhqvqPfp78ft5jgqwQ==/ru.kostroma.novels-Q41C0DWRRCRerCcqUDVeew==/lib/arm64'
+09-11 14:58:01.954  4910  4985 D vulkan  : searching for layers in '/data/app/~~g7r1OhqvqPfp78ft5jgqwQ==/ru.kostroma.novels-Q41C0DWRRCRerCcqUDVeew==/base.apk!/lib/arm64-v8a'
+09-11 14:58:01.972  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:01.972  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:01.976  4910  4985 D libEGL  : loaded /vendor/lib64/egl/libEGL_emulation.so
+09-11 14:58:01.981  4910  4985 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_emulation.so
+09-11 14:58:01.983  4910  4985 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_emulation.so
+09-11 14:58:01.997  4910  4985 E EGL_emulation: eglCreateContext: EGL_BAD_CONFIG: no ES 3.2 support
+09-11 14:58:01.997  4910  4985 E EGL_emulation: tid 4985: eglCreateContext(1834): error 0x3005 (EGL_BAD_CONFIG)
+09-11 14:58:02.002  4910  4985 E EGL_emulation: [getAttribValue] Bad attribute idx
+09-11 14:58:02.002  4910  4985 E EGL_emulation: tid 4985: eglGetConfigAttrib(1277): error 0x3004 (EGL_BAD_ATTRIBUTE)
+09-11 14:58:02.038  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:02.038  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:02.086   540  2782 W InputManager-JNI: Input channel object '682dc70 Splash Screen ru.kostroma.novels (client)' was disposed without first being removed with the input manager!
+09-11 14:58:02.086   873  1105 D BtGatt.ScanManager: uid 10127 isForeground true scanMode 1
+09-11 14:58:02.086   873  1105 D BtGatt.ScanManager: uid 10127 isForeground true scanMode -1
+09-11 14:58:02.096  1293  2301 I FontLog : Received query Noto Color Emoji Compat, URI content://com.google.android.gms.fonts [CONTEXT service_id=132 ]
+09-11 14:58:02.097  1293  2301 I FontLog : Query [emojicompat-emoji-font] resolved to {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} [CONTEXT service_id=132 ]
+09-11 14:58:02.100  1293  2301 I FontLog : Fetch {Noto Color Emoji Compat, wdth 100.0, wght 400, ital 0.0, bestEffort false} end status Status{statusCode=SUCCESS, resolution=null} [CONTEXT service_id=132 ]
+09-11 14:58:02.113  1293  2301 I FontLog : Pulling font file for id = 11, cache size = 9 [CONTEXT service_id=132 ]
+09-11 14:58:02.132  1293  2301 I FontLog : Pulling font file for id = 11, cache size = 9 [CONTEXT service_id=132 ]
+09-11 14:58:02.173  4910  4985 I AAudio  : AAudioStreamBuilder_openStream() called ----------------------------------------
+09-11 14:58:02.173  4910  4985 I AudioStreamBuilder: rate   =  24000, channels  = 2, channelMask = 0x80000003, format   = 5, sharing = SH, dir = OUTPUT
+09-11 14:58:02.173  4910  4985 I AudioStreamBuilder: device =      0, sessionId = 0, perfMode = 12, callback: ON with frames = 512
+09-11 14:58:02.173  4910  4985 I AudioStreamBuilder: usage  =      0, contentType = 0, inputPreset = 0, allowedCapturePolicy = 0
+09-11 14:58:02.173  4910  4985 I AudioStreamBuilder: privacy sensitive = false, opPackageName = (null), attributionTag = (null)
+09-11 14:58:02.176  4910  4985 D AudioStreamBuilder: build() MMAP not used because sessionId specified.
+09-11 14:58:02.176  4910  4985 D kostroma.novels: PlayerBase::PlayerBase()
+09-11 14:58:02.176  4910  4985 D AudioStreamTrack: open(), request notificationFrames = 0, frameCount = 8192
+09-11 14:58:02.189   388  2231 W AudioFlinger: createTrack_l(): mismatch between requested flags (00000004) and output flags (00000002)
+09-11 14:58:02.191   388  2231 D AudioFlinger: Client defaulted notificationFrames to 480 for frameCount 8192
+09-11 14:58:02.195   388  2231 D AF::TrackHandle: OpPlayAudio: track:56 usage:1 not muted
+09-11 14:58:02.200  4910  4985 D AudioStreamTrack: open() flags changed from 0x00000004 to 0x00000000
+09-11 14:58:02.200  4910  4985 D AudioStreamTrack: open() perfMode changed from 12 to 10
+09-11 14:58:02.200  4910  4985 D AAudioStream: setState(s#1) from 0 to 2
+09-11 14:58:02.206  4910  4985 I AAudio  : AAudioStreamBuilder_openStream() returns 0 = AAUDIO_OK for s#1 ----------------
+09-11 14:58:02.212  4910  4985 D AAudio  : AAudioStream_requestStart(s#1) called --------------
+09-11 14:58:02.212  4910  4985 D AAudioStream: setState(s#1) from 2 to 3
+09-11 14:58:02.215   388  2231 D audioserver: FGS Logger Transaction failed
+09-11 14:58:02.215   388  2231 D audioserver: -129
+09-11 14:58:02.215  4910  4986 D AudioStreamLegacy: onAudioDeviceUpdate(deviceId = 2)
+09-11 14:58:02.216  4910  4985 D AAudio  : AAudioStream_requestStart(s#1) returned 0 ---------
+09-11 14:58:02.242  4910  5027 D AAudioStream: setState(s#1) from 3 to 4
+09-11 14:58:02.281  4910  4985 I Unity   :     HasWindow = 1, HasFocus = 0
+09-11 14:58:02.282  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_RESIZED(3)
+09-11 14:58:02.282  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_REDRAW_NEEDED(4)
+09-11 14:58:02.282  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.282  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.282  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_GAINED_FOCUS(7)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.283  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.295   540  2091 D CompatibilityChangeReporter: Compat change id reported: 161145287; UID 10199; state: ENABLED
+09-11 14:58:02.298  4910  4985 V MediaRouter: Selecting route: RouteInfo{ name=Phone, description=null, status=null, category=RouteCategory{ name=System types=ROUTE_TYPE_LIVE_AUDIO ROUTE_TYPE_LIVE_VIDEO  groupable=false }, supportedTypes=ROUTE_TYPE_LIVE_AUDIO ROUTE_TYPE_LIVE_VIDEO , presentationDisplay=null }
+09-11 14:58:02.299  4910  4985 I MediaRouter: Skip setBluetoothA2dpOn(): types=8388615, isPlaybackActive()=true, BT route=null
+09-11 14:58:02.300   388   498 D AudioFlinger: mixer(0xb40000708a388930) throttle end: throttle time(34)
+09-11 14:58:02.339   742   742 I wpa_supplicant: wlan0: CTRL-EVENT-BEACON-LOSS
+09-11 14:58:02.340  4910  4910 D GameActivity: ************** mainWorkCallback *********
+09-11 14:58:02.342  4910  4910 I ImeTracker: ru.kostroma.novels:c8b16d07: onRequestHide at ORIGIN_CLIENT_HIDE_SOFT_INPUT reason HIDE_SOFT_INPUT
+09-11 14:58:02.342   540   597 I ImeTracker: ru.kostroma.novels:c8b16d07: onCancelled at PHASE_SERVER_SHOULD_HIDE
+09-11 14:58:02.352  4910  4985 W UnityNotifications: No custom_notification_android_activity found, attempting to find app activity class
+09-11 14:58:02.372  4910  5033 D CompatibilityChangeReporter: Compat change id reported: 160794467; UID 10199; state: ENABLED
+09-11 14:58:02.376  4910  4985 I IL2CPP  : Locale en-US
+09-11 14:58:02.377  4910  4985 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":1,"runId":"f2768a2acc0447679afd1237b773e1a0","event":"app.started","appVersion":"2026.09.11","platform":"Android","contentPlatform":"Android"}</color>
+09-11 14:58:02.377  4910  4985 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 14:58:02.377  4910  4985 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 14:58:02.377  4910  4985 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 14:58:02.377  4910  4985 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 14:58:02.377  4910  4985 I Unity   : Novels.<StartRuntime>d__20:MoveNext()
+09-11 14:58:02.377  4910  4985 I Unity   : Novels.EntryPoint:StartRuntime(ApplicationEnvironment, Action`1, ContentDeliveryOptions)
+09-11 14:58:02.377  4910  4985 I Unity   : Novels.EntryPoint:OnEnable()
+09-11 14:58:02.377  4910  4985 I Unity   :
+09-11 14:58:02.378  4910  4985 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":2,"runId":"f2768a2acc0447679afd1237b773e1a0","event":"catalog.loading"}</color>
+09-11 14:58:02.378  4910  4985 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 14:58:02.378  4910  4985 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.<LoadWithRetry>d__10:MoveNext()
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.CatalogFlow:LoadWithRetry(BootstrapController)
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.<Run>d__18:MoveNext()
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.ApplicationRuntime:Run(BootstrapController)
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.<StartRuntime>d__20:MoveNext()
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.EntryPoint:StartRuntime(ApplicationEnvironment, Action`1, ContentDeliveryOptions)
+09-11 14:58:02.378  4910  4985 I Unity   : Novels.EntryPoint:OnEnable()
+09-11 14:58:02.378  4910  4985 I Unity   :
+09-11 14:58:02.395   540   597 W SensorService: sensor 00000000 already enabled in connection 0xb400006eeb68cfd0 (ignoring)
+09-11 14:58:02.406  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:02.406  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:02.406  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:02.406  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:02.411  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.411  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.837  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:02.837  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:02.837  4910  4910 D gti.InputConnection: onApplyWindowInsetsfalse
+09-11 14:58:02.837  4910  4910 V GameActivity: onImeInsetsChanged from Text Listener
+09-11 14:58:02.840   540   557 I ActivityTaskManager: Fully drawn ru.kostroma.novels/com.unity3d.player.UnityPlayerGameActivity: +1s603ms
+09-11 14:58:02.868  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:02.868  4910  4985 I Unity   : Handle cmd APP_CMD_WINDOW_INSETS_CHANGED(17)
+09-11 14:58:03.027  4910  4985 I Unity   : [Novels] <color=#FFFFFF>[NOVELS_SMOKE] {"v":1,"seq":3,"runId":"f2768a2acc0447679afd1237b773e1a0","event":"catalog.load_failed","exceptionType":"ContentSourceException"}</color>
+09-11 14:58:03.027  4910  4985 I Unity   : UnityEngine.DebugLogHandler:Internal_Log(LogType, LogOption, String, Object)
+09-11 14:58:03.027  4910  4985 I Unity   : Logs.Entity:Log(String, ValueTuple`2)
+09-11 14:58:03.027  4910  4985 I Unity   : Novels.EntryPoint:<OnEnable>b__19_0(ValueTuple`2)
+09-11 14:58:03.027  4910  4985 I Unity   : Novels.Diagnostics.SmokeTelemetry:Emit(String, ValueTuple`2[])
+09-11 14:58:03.027  4910  4985 I Unity   : Novels.<LoadWithRetry>d__10:MoveNext()
+09-11 14:58:03.027  4910  4985 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 14:58:03.027  4910  4985 I Unity   : Novels.<Load>d__21:MoveNext()
+09-11 14:58:03.027  4910  4985 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 14:58:03.027  4910  4985 I Unity   : Novels.<LoadEntries>d__22:MoveNext()
+09-11 14:58:03.027  4910  4985 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 14:58:03.027  4910  4985 I Unity   : Cysharp.Threading.Tasks.WhenAllPromise`1:TryInvokeContinuation(WhenAllPromise`1, Awaiter&, Int32)
+09-11 14:58:03.027  4910  4985 I Unity   : Cysharp.Threading.Tasks.<>c:<.ctor>b__3_0(Object)
+09-11 14:58:03.027  4910  4985 I Unity   : Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1:TrySetException(Exception)
+09-11 14:58:03.027  4910  4985 I Unity   : Novels.<LoadEntry>d__23:MoveNext()
+09-11 14:58:03.027  4910  4985 I Unity   : Cysha
+09-11 14:58:03.035  4910  4985 I Unity   : [Novels] <color=#FFEB04>Catalog loading failed: Bundles.ContentSourceException: Request failed [404] jar:file:///data/app/~~g7r1OhqvqPfp78ft5jgqwQ==/ru.kostroma.novels-Q41C0DWRRCRerCcqUDVeew==/base.apk!/assets/NovelContent/stories/volchya-poshlina/card.json: HTTP/1.1 404 Not Found
+09-11 14:58:03.035  4910  4985 I Unity   :   at Bundles.ContentRequestRunner.Send (UnityEngine.Networking.UnityWebRequest request, System.Threading.CancellationToken cancellationToken, System.Action`1[T] onDownloadedBytes) [0x00000] in <00000000000000000000000000000000>:0
+09-11 14:58:03.035  4910  4985 I Unity   :   at Cysharp.Threading.Tasks.UniTaskCompletionSourceCore`1[TResult].TrySetResult (TResult result) [0x00000] in <00000000000000000000000000000000>:0
+09-11 14:58:03.035  4910  4985 I Unity   :   at Cysharp.Threading.Tasks.UniTask+YieldPromise.MoveNext () [0x00000] in <00000000000000000000000000000000>:0
+09-11 14:58:03.035  4910  4985 I Unity   :   at Cysharp.Threading.Tasks.Internal.PlayerLoopRunner.RunCore () [0x00000] in <00000000000000000000000000000000>:0
+09-11 14:58:03.035  4910  4985 I Unity   : --- End of stack trace from previous location where exception was thrown ---
+09-11 14:58:03.035  4910  4985 I Unity   :
+09-11 14:58:03.035  4910  4985 I Unity   :   at Cysharp.Threading.Tasks.CompilerServices.AsyncUn
+09-11 14:58:03.547  4873  4874 I AidlLazyServiceRegistrar: Process has 0 (of 1 available) client(s) in use after notification artd has clients: 0
+09-11 14:58:03.547  4873  4874 I AidlLazyServiceRegistrar: Trying to shut down the service. No clients in use for any service in process.
+09-11 14:58:03.547  4873  4874 I AidlLazyServiceRegistrar: Unregistered all clients and exiting
+09-11 14:58:03.550   160   160 I servicemanager: Notifying artd they don't (previously: do) have clients when we now have no record of a client
+09-11 14:58:03.550   160   160 I servicemanager: Unregistering artd
+09-11 14:58:03.550   160   160 I BpBinder: onLastStrongRef automatically unlinking death recipients:
+09-11 14:58:03.552     1     1 I init    : Service 'artd' (pid 4873) exited with status 0 oneshot service took 3.132000 seconds in background
+09-11 14:58:03.552     1     1 I init    : Sending signal 9 to service 'artd' (pid 4873) process group...
+09-11 14:58:03.552     1     1 I libprocessgroup: Successfully killed process cgroup uid 1082 pid 4873 in 0ms
+09-11 14:58:03.565   153   153 I logd    : logdr: UID=2000 GID=2000 PID=5046 n tail=0 logMask=99 pid=4910 start=0ns deadline=0ns
+09-11 14:58:03.684  5051  5051 W BpBinder: Linking to death on android.gui.ISurfaceComposer but there are no threads (yet?) listening to incoming transactions. See ProcessState::startThreadPool and ProcessState::setThreadPoolMaxThreadCount. Generally you should setup the binder threadpool before other initialization steps.
+09-11 14:58:03.684  5051  5051 W ProcessState: Extra binder thread started, but 0 threads requested. Do not use *startThreadPool when zero threads are requested.
+09-11 14:58:03.692   391   629 W ServiceManagerCppClient: Permission failure: android.permission.CAPTURE_BLACKOUT_CONTENT from uid=2000 pid=5051
+09-11 14:58:03.692   391   629 D PermissionCache: checking android.permission.CAPTURE_BLACKOUT_CONTENT for uid=2000 => denied (1236 us)
+09-11 14:58:03.716   161   161 I hwservicemanager: getTransport: Cannot find entry android.hardware.graphics.mapper@4.0::IMapper/default in either framework or device VINTF manifest.
+09-11 14:58:03.716  5051  5052 I Gralloc4: mapper 4.x is not supported
+09-11 14:58:03.718   160   160 I servicemanager: Could not find android.hardware.graphics.allocator.IAllocator/default in the VINTF manifest.
+09-11 14:58:03.825  4910  5024 D EGL_emulation: app_time_stats: avg=26.87ms min=2.96ms max=40.36ms count=32
+09-11 14:58:03.845   153   153 I logd    : logdr: UID=2000 GID=2000 PID=5053 n tail=0 logMask=99 pid=0 start=0ns deadline=0ns
