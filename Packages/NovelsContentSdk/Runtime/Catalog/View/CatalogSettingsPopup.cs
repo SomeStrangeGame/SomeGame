@@ -28,6 +28,7 @@ namespace Novels.Catalog.View
         private GameObject _previousSelection;
         private bool _contentInteractable;
         private bool _contentRaycasts;
+        private Action _onSupportOpened;
         public bool IsOpen => _popup != null && _popup.activeSelf;
 
         private void Awake()
@@ -39,16 +40,17 @@ namespace Novels.Catalog.View
             _closeButton.onClick.AddListener(Close);
             _doneButton.onClick.AddListener(Close);
             _volume.onValueChanged.AddListener(ChangeVolume);
-            BindLink(_privacy, _privacyUrl);
-            BindLink(_terms, _termsUrl);
-            BindLink(_support, _supportUrl);
+            BindLink(_privacy, _privacyUrl, null);
+            BindLink(_terms, _termsUrl, null);
+            BindLink(_support, _supportUrl, () => _onSupportOpened?.Invoke());
             _version.text = "Версия " + Application.version;
         }
 
-        public void Configure(ICatalogSettings settings)
+        public void Configure(ICatalogSettings settings, Action onSupportOpened = null)
         {
             Close();
             _settings = settings;
+            _onSupportOpened = onSupportOpened;
             _openButton.interactable = settings != null;
         }
 
@@ -99,13 +101,17 @@ namespace Novels.Catalog.View
         private static bool IsWebUrl(string value) =>
             Uri.TryCreate(value, UriKind.Absolute, out var uri) && uri.Scheme == Uri.UriSchemeHttps;
 
-        private static void BindLink(Button button, string url)
+        private static void BindLink(Button button, string url, Action onOpened)
         {
             button.interactable = IsWebUrl(url);
             var label = button.GetComponentInChildren<Text>();
             if (!button.interactable && label != null)
                 label.color = new Color(.5f, .55f, .6f, 1f);
-            if (button.interactable) button.onClick.AddListener(() => Application.OpenURL(url));
+            if (button.interactable) button.onClick.AddListener(() =>
+            {
+                onOpened?.Invoke();
+                Application.OpenURL(url);
+            });
         }
 
         public void OnCancel(BaseEventData eventData) => Close();

@@ -173,9 +173,40 @@ namespace Novels.StoryCommands
 
                     return StoryParseResult.Success(StoryCommand.CreateWait(source, waitDuration));
 
+                case StoryCommandType.AnalyticsEnding:
+                    if (!IsAnalyticsId(value))
+                    {
+                        return StoryParseResult.Failure(
+                            StoryCommandSyntax.InvalidEndingId,
+                            "Expected a lowercase ending id containing only a-z, 0-9, '_' or '-'.",
+                            source);
+                    }
+
+                    return StoryParseResult.Success(
+                        StoryCommand.CreateAnalyticsEnding(source, value));
+
                 default:
                     throw new ArgumentOutOfRangeException(nameof(commandType), commandType, null);
             }
+        }
+
+        private static bool IsAnalyticsId(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value) || value.Length > 80)
+                return false;
+            for (var index = 0; index < value.Length; index++)
+            {
+                var symbol = value[index];
+                if ((symbol >= 'a' && symbol <= 'z')
+                    || (symbol >= '0' && symbol <= '9')
+                    || symbol == '_'
+                    || symbol == '-')
+                {
+                    continue;
+                }
+                return false;
+            }
+            return true;
         }
     }
 }

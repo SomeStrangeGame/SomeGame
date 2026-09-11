@@ -8,6 +8,7 @@ namespace Novels.StoryCommands
     {
         internal const string Keyboard = "keyboard";
         internal const string InvalidWaitDuration = "INVALID_WAIT_DURATION";
+        internal const string InvalidEndingId = "INVALID_ENDING_ID";
         internal const string InvalidArguments = "INVALID_ARGUMENTS";
         internal const string UnsupportedCameraAction = "UNSUPPORTED_CAMERA_ACTION";
 
@@ -54,6 +55,8 @@ namespace Novels.StoryCommands
                 ["Камера"] = StoryCommandType.Camera,
                 ["await"] = StoryCommandType.Wait,
                 ["Ожидание"] = StoryCommandType.Wait,
+                ["analytics-ending"] = StoryCommandType.AnalyticsEnding,
+                ["Аналитика-концовка"] = StoryCommandType.AnalyticsEnding,
             };
 
         internal static readonly IReadOnlyDictionary<
