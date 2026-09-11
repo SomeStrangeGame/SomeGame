@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "storyId": "volchya-poshlina",
+  "manifestVersion": 2,
+  "recordedAtUtc": "2026-09-11T08:59:56Z",
+  "status": "ready-for-final-validation",
+  "previousManifest": "archive/2026-09-11_manifest_v001.json",
+  "unchangedArtifactsFromPrevious": true,
+  "artifacts": [
+    {
+      "id": "character-originality-reviews-current",
+      "path": "Art/CHARACTER_ORIGINALITY_REVIEWS.md",
+      "sha256": "3872a38075e84e4e6d976c3962551e592d6145481c522fb4caf9828072b2738d",
+      "snapshotAtUtc": "2026-09-11T08:59:56Z",
+      "source": "fresh separate originality review of each current character package",
+      "toolMetadata": "project visual inspection and descriptive/image web search",
+      "status": "selected",
+      "mapsTo": "all Assets/Characters packages"
+    },
+    {
+      "id": "originality-evidence-current",
+      "path": "Art/ORIGINALITY_EVIDENCE.md",
+      "sha256": "d12a4c25ce9c10d7576bdaa508e2d7728c85b6a794df651060a9ab0345ea75e9",
+      "snapshotAtUtc": "2026-09-11T08:59:56Z",
+      "source": "historical evidence plus current narrative, episode-cover and per-character reviews",
+      "toolMetadata": "open web search and direct public comparison pages",
+      "status": "selected",
+      "mapsTo": "current Ink, episode cover and character packages"
+    },
+    {
+      "id": "character-originality-handoff-v001",
+      "path": "archive/reviews/2026-09-11_character-originality_v001.md",
+      "sha256": "3557ba055fb6fbf08a1291ec4aae389a0a616af5fa76a19731a05b688d71232c",
+      "snapshotAtUtc": "2026-09-11T08:59:56Z",
+      "source": "character production/originality handoff",
+      "toolMetadata": "OpenAI built-in image edit plus local deterministic flood-fill alpha extraction",
+      "status": "selected",
+      "mapsTo": "Art/CHARACTER_ORIGINALITY_REVIEWS.md"
+    },
+    {
+      "id": "veya-warning-repair",
+      "path": "Assets/Characters/вея/view/whole/winter/warning.png",
+      "sha256": "20f410f15df57725f19e781fd0951251229118e3548dbce42f00466129f350f4",
+      "snapshotAtUtc": "2026-09-11T08:59:56Z",
+      "source": "identity-preserving edit of the approved Veya master",
+      "toolMetadata": "OpenAI built-in image edit; local deterministic flood-fill alpha extraction",
+      "status": "selected",
+      "mapsTo": "Ink selector вея/view/whole/winter/warning.png"
+    },
+    {
+      "id": "luka-alarmed-repair",
+      "path": "Assets/Characters/лука/view/whole/bell/alarmed.png",
+      "sha256": "cc87d16649eaa71afa7b050f02644dad7e120f51cdae7c1c15a5cfcf2dbe9eac",
+      "snapshotAtUtc": "2026-09-11T08:59:56Z",
+      "source": "identity-preserving edit of the approved Luka master",
+      "toolMetadata": "OpenAI built-in image edit; local deterministic flood-fill alpha extraction",
+      "status": "selected",
+      "mapsTo": "Ink selector лука/view/whole/bell/alarmed.png"
+    }
+  ],
+  "gaps": [
+    "Pre-adoption prompts, rejected visual candidates and historical approvals remain unavailable as recorded in manifest v001.",
+    "Unity import, runtime composition, Android emulator and final manual visual evidence remain pending the authorized final slot."
+  ]
+}
