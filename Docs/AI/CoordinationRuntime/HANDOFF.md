@@ -129,5 +129,13 @@ Suggested next step: repair the story-local Bubble/choice layout, rebuild, and r
 Task: Integrated First Snow, registered it in Catalog, passed story/catalog builds and Novels compile; emulator/ADB waived and manual Player visual remains
 Changed: Projects/novels-first-snow, Projects/novels-catalog/Config/catalog.json
 Validation: finish-task passed (3 gates).
-Pending / risks: none
-Suggested next step: none
+Pending / risks: emulator/ADB was explicitly waived for this chat; manual visual acceptance through the real Catalog-to-story Player flow remains.
+Suggested next step: perform the manual Player visual gate if full visual acceptance is later required.
+
+## 2026-09-11T12:35:45Z — codex-first-snow-publish — completed
+
+Task: Publish the user-confirmed First Snow integration to `origin/main`.
+Changed: remote `main` advanced by fast-forward to `ed4482d754783781b484c88c1925bc30e84bc0e8`.
+Validation: canonical `git-publish` verified identical local and remote SHA; initial 180-second attempt made no remote change, bounded retry completed successfully.
+Pending / risks: content/server release was not published; emulator/ADB waiver and manual Player visual limitation remain as recorded in story acceptance evidence.
+Suggested next step: publish a content/server release only after separate explicit authorization.
