@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "player": {
+    "loaderUrl": "/player/builds/20260912-webgl-01/Build/91d61af1547fbb4845074f30bcf34dbc.loader.js",
+    "dataUrl": "/player/builds/20260912-webgl-01/Build/16b362421cdb008ee5460d9d6f9e48fe.data.unityweb",
+    "frameworkUrl": "/player/builds/20260912-webgl-01/Build/6bdc568a3a3da65aed70e0ea003e9d62.framework.js.unityweb",
+    "codeUrl": "/player/builds/20260912-webgl-01/Build/46461463c84334c451f47975ec1ccb84.wasm.unityweb",
+    "streamingAssetsUrl": "/player/builds/20260912-webgl-01/StreamingAssets"
+  },
+  "stories": {
+    "chernaya-melnitsa": {
+      "version": "web-test-20260912-01",
+      "title": "Чёрная мельница",
+      "manifestUrl": "/content/stories/chernaya-melnitsa/web-test-20260912-01/webgl/release.json"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="description" content="Кострома — атмосферные визуальные новеллы.">
+  <meta name="robots" content="noindex,nofollow,noarchive,nosnippet">
+  <title>Кострома</title>
+  <link rel="stylesheet" href="/site/releases/20260911-20/styles.css">
+</head>
+<body>
+  <main class="site-shell" id="site">
+    <div class="access-gate" id="access-gate" role="dialog" aria-modal="true" aria-labelledby="access-title">
+      <form class="access-form" id="access-form">
+        <h1 id="access-title">Закрытый просмотр</h1>
+        <p>Введите пароль, чтобы продолжить.</p>
+        <label for="access-password">Пароль</label>
+        <input id="access-password" type="password" autocomplete="current-password" autofocus aria-invalid="false">
+        <p class="access-error" id="access-error" role="alert" hidden>Неверный пароль</p>
+        <button type="submit">Открыть</button>
+      </form>
+    </div>
+    <div class="story-stage" id="stories" aria-live="polite"><div class="catalog-state">Загружаем истории…</div></div>
+    <div class="download-dock" aria-label="Загрузка Костромы">
+      <span class="download download-unavailable" aria-disabled="true">Стабильная — позже</span>
+      <a class="download download-beta" href="/DevBuilds/Kostroma-dev.apk"><span>Попробовать новую <small>Бета</small></span><b aria-hidden="true">↓</b></a>
+    </div>
+    <nav class="story-nav" id="navigation" aria-label="Переключение историй" hidden>
+      <button class="arrow previous" aria-label="Предыдущая история">←</button><div class="dots"></div><span class="counter"></span><button class="arrow next" aria-label="Следующая история">→</button>
+    </nav>
+  </main>
+  <script src="/site/releases/20260911-20/app.js" defer></script>
+</body>
+</html>
