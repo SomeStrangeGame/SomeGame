@@ -1,8 +1,72 @@
 # Current cross-chat handoff
 
-Nevesta main refresh completed: branch and registry base now equal fetched origin/main `3e449934`; all 114 story files unchanged, 6 tests passed, updated skills present. Local refresh protocol/routing/memory docs validated, uncommitted; no Unity or publication. Old SDK blocker superseded; literary/archive/preview/audio/alpha and final validation remain. Receipt: agents/nevesta-main-refresh.md.
+## 2026-09-12 — codex-publish-all-main — prepared for remote publication
+User requested all main-tree changes committed/pushed; explicitly excluded Chastota na Dvoih and Goroda Venery branches. Commits 9f5a2bb6 (shared runtime/WebGL player) and 94a78527 (beta stages), followed by accumulated receipts/docs. JSON/JS/zsh checks and 22 moved meta GUID checks passed; secret-pattern/generated-path audit clean. Standard whitespace check flags Unity-generated blank fields; check excluding blank-at-eol passes. docs-check retains five known archive-snapshot relative-link failures. Prior native/web compile, build and browser evidence above is retained; no fresh Unity/full-route/mobile acceptance claimed. Hosting/APK/content not republished in this Git-only task. Next: canonical git-publish and verify remote SHA; runtime receipt records actual result.
 
-Previous snapshot preserved in [`CoordinationHandoffHistory-2026-09-05-pre-publish.md`](../archive/reports/CoordinationHandoffHistory-2026-09-05-pre-publish.md).
+## 2026-09-12 — codex-web-host-test — test release published
+User-approved isolated release: https://pureshechka.com/player/tests/20260912-webgl-01/index.html?story=chernaya-melnitsa&version=web-test-20260912-01 . BuildRelease added (Release gzip/fallback -> Build/WebGLRelease); Unity6000.3.11f1 PID70332 exit0 success, old Development build preserved. Existing story release6558a2f3 reused unchanged under separate web-test version. 16 staged files/34.18MB, remote hashes matched;14 asset/page URLs HTTP200. WASM7.67MB application/wasm+gzip+immutable, JS correct MIME+gzip; test HTML no-cache/noindex/nosniff. In-app HTTPS launch → two dialogue advances → ReturnToSite → reopen restored same Mitya/parental-home paragraph; error/warn logs empty. Root HTML SHA44774d4e and channel SHA38e6c474 unchanged. SSH uses existing /Users/iantonishin/.ssh/sweb_novels (path only; no secret contents). No Git commit/APK/catalog publication or save deletion. Rollback: disable only this test entry, preserve assets. Remaining: whole-route release-build/mobile/performance/storage gates; gzip validated, Brotli and global HTTP redirect/security still pending. Build/host-test-evidence.json holds exact payload hashes; Website/public/player/README.md has URL. Current production player config remains disabled; root catalog not linked to test.
+
+Full preceding snapshot preserved verbatim in [WebGL storage handoff history](../archive/reports/CoordinationHandoffHistory-2026-09-11-webgl-storage.md).
+
+## 2026-09-12 — codex-web-chunk-validation — completed with remaining release gates
+
+Task/changed: validated WebEpisodePlayer.Sprite chunk acquire fix; rebuilt only web-story-player with Unity 6000.3.11f1, Development WebGL. PID64613 exited0, Build Finished Result Success; log /private/tmp/somegame-web-chunk-validation-build.log. New WASM caf510e9576b37d7bf132558dfeb58d1, loader 8fe2448e2639b1705809f6841b1d4514. Story content release remains 6558a2f3e5e4c011a82b235107a242cc4eb0518235e2a6fe4c80c664bc554a31.
+Validation: in-app browser, same 127.0.0.1:8767 / smoke-boundary-20260912 save restored s01e02=136; chunk_1 HTTP200 and later chunk_2 HTTP200. Completed s01e02 → NextEpisode → s01e03 (choices0/0) → NextEpisode → s01e04 (choice0, reveal letters) → story_completed. Final panel has no Next; ReturnToSite reaches /; fresh reader tab retains story_completed without reading_started. Browser error/warn logs empty. No save reset, content rebuild, commit or publication.
+Pending: other routes, real mobile/performance/storage quota/offline/tab-close, public hosting headers/compression and compatibility of native saves past the former end marker remain unaccepted. Production player config stays disabled. Next: bounded hosting/release-readiness checks; publication requires separate authority. Prior catalog E2E and save-error UX evidence preserved in [route history](../archive/reports/CoordinationHandoffHistory-2026-09-12-webgl-route.md).
+
+## 2026-09-12 — codex-web-boundary — ready-with-limitations
+
+Approved correction completed: exact story definition _endMarker changed to `...: КОНЕЦ СЕРИИ`; Ink/contentVersion/source media unchanged. Local `novels-content build chernaya-melnitsa webgl` exit 0; log Projects/novels-chernaya-melnitsa/Build/novels.contentsdk.editor.atomiccontentbuild.buildlocal-webgl.log; releaseId 6558a2f3e5e4c011a82b235107a242cc4eb0518235e2a6fe4c80c664bc554a31. Existing Player build reused unchanged. Smoke server uses isolated smoke-boundary-20260912; legacy smoke IndexedDB data preserved.
+In-app browser: fresh save 0, selected search-Mitya choice 1, real first episode reached episode_completed s01e01 → next_episode_available; NextEpisode drained old session and launched s01e02. State-specific paragraph “Вместо прежних догадок у неё впервые есть маршрут, отмеченный рукой Мити.” matched choice. Reload restored s01e02/resume_loaded 2 and same paragraph; error-level browser logs empty. Scoped asset diff is exactly one marker line; diff check passed. Earlier boundary blocker is resolved.
+Next: production website controls/events and save-error UX; final story completion/all episode boundaries, all chunks/character layouts/mobile remain unvalidated. Before any publication assess compatibility/migration of old native saves recorded past the former boundary; contentVersion not bumped. No publication, commit or save deletion. Local server and own Unity processes stopped; resources/FIFO released on completion.
+
+## 2026-09-11 — codex-web-episodes — historical blocker resolved above
+
+Changed: NovelProgress moved with original GUID/NPR1 codec/native Cache constructors into separate Novels.Progress; strict callback backend added. WebNovelProgress atomically persists progress blob + completion markers after decision flush. Latest unlocked episode uses Ink InitialState and replay validation. NextEpisode is gated on durable completion; ReturnToSite drains save/stop then emits same-origin route (website owns navigation). Source story/content version unchanged.
+Validation: web compile editor-gate-20260911T171308Z and native compile editor-gate-20260911T171355Z passed; final WebGL /private/tmp/somegame-web-episodes-build.log exit 0. Browser resumed 63 prior decisions, rejected premature NextEpisode, read further backgrounds; ReturnToSite emitted stopping → cancelled → return_to_site. Scoped diff review/check and preserved NovelProgress GUID/codec passed. No publication/commits.
+BLOCKER: actual story definition Projects/novels-chernaya-melnitsa/Assets/chernaya-melnitsa.asset:18 has `_endMarker: "...: КОНЕЦ ИСТОРИИ"`; all four Assets/Ink/s01e0*.ink use `...: КОНЕЦ СЕРИИ`. Live reading crossed into episode-2 recap under s01e01 without completion. Actual episode boundary/continuation/reload acceptance NOT passed. No source correction or save deletion performed.
+Next after approval: correct marker in exact story definition, rebuild local WebGL content, use new smoke release namespace (old smoke save now includes decisions beyond episode-1 boundary; preserve it), rerun end1 → NextEpisode → state-dependent ep2 branch → reload. Evaluate compatibility of previously shipped native saves before any future publication/version migration. Shared runtime/host code is prepared; full ending, real storage faults, all chunks/mobile and production website wiring remain pending.
+
+## 2026-09-11 — codex-web-stop — ready-with-limitations
+
+Implemented web-only async session stop: owned input disabled, cancellation, full prepare/read completion barrier, latest save retry/flush before scope disposal. EntryPoint serializes replacement; concurrent launch rejected as session_stopping. Failed flush retains cancelled session/snapshot; later Launch retries before new session. OnDestroy is explicitly best-effort, not durable async shutdown.
+Validation: web Editor compile editor-gate-20260911T170207Z passed; WebGL build /private/tmp/somegame-web-stop-build.log exit 0. In-app localhost smoke held real commit acknowledgement 1.5 s: stopping + concurrent rejection, no new launch until ack, then cancelled/accepted; retry restored decision 62. Injected readwrite failure prevented replacement twice; unblocked writes + retry persisted retained snapshot, reload restored 63. Native/shared code unchanged this turn. Local fixture only; not a real quota/uncommitted-transaction test.
+Next: episode progression/continuation and site-owned navigation; production save-error UX, actual storage quota/offline/tab-close, full story/chunks remain pending. No commit/publication/media removal. Last turn's unsafe normal-stop risk superseded; historical validation limitations below remain.
+
+## 2026-09-11 — codex-web-reading — ready-with-limitations
+
+Task: first real browser reading slice with shared queue and committed decision saves.
+Changed: StoryQueue, remaining Bubble/choice operations and ReplayValidator moved into Novels.StoryPresentation with preserved GUIDs. Native audio mapping remains in its host; optional FlushCheckpoint waits on web storage. WebEpisodePlayer loads definition/Ink/authored Bubble/Character, existing SDK Location/Notification defaults and shared Choose; opens first episode save, validates replay, runs shared NovelProcess. Build generates ignored media-free fallback copies from existing SDK/native art/font; source assets unchanged. link.xml preserves SDK views. JS callback now has explicit found flag (Unity JsonUtility turned absent JSON null into empty string and first live run exposed false corruption).
+Validation: web compile editor-gate-20260911T164152Z and native compile editor-gate-20260911T164232Z passed. Final WebGL build /private/tmp/somegame-web-reading-build-2.log exit 0. In-app browser on 127.0.0.1:8767 loaded real chernaya-melnitsa first dialogue; advance commit + reload resumed decision 1. First choice showed all three buttons; selected search-Mitya choice 1, commit preceded choice_selected; reload restored 61 decisions and same photo paragraph. Missing release then valid retry without reload restored same paragraph. GUID checks and scoped diff review/check passed; meta final-newline normalization only.
+Pending / risks: first episode only; episode progression/continuation and site navigation/ending UX not implemented. Full story/all chunks/mobile memory, character scenes and arbitrary authored video-bearing prefabs not accepted. Cancellation/relaunch during active save transaction, quota/offline/retry UX and version changes need testing/hardening. Development error console after deliberate 404 is expected. No publication/commits; localhost test save for smoke version retained.
+Suggested next step: harden asynchronous session stop/save barrier, then episode progression and site events; validate character/background/chunk changes and first episode completion. Existing autoapproval continues for ordinary implementation/local checks; browser only in-app or Yandex.
+Documentation check: global docs-check flags five relative links inside the prior verbatim fenced archive snapshot; not a compiler/runtime failure. Archive/checker cleanup deferred outside this scope.
+
+## 2026-09-11 — codex-web-presentation-profile — ready-with-limitations
+
+Task: unblock reuse of authored SDK presentation in the web player.
+Changed: web manifest imports Content SDK. Opt-in NOVELS_MEDIA_FREE excludes Audio assembly and VideoPlayback execution; Location skips video URL resolution and uses existing static/fallback flow. NOVELS_STORY_PLAYER_ONLY excludes Catalog and content-authoring Editor assembly. Web Standalone/WebGL symbols set; native/story profiles and source media untouched. LocationScreen keeps its unused serialized video reference as UnityEngine.Object in media-free builds only.
+Validation: fresh web Editor compile passed (editor-gate-20260911T163124Z); native compile passed (editor-gate-20260911T163219Z). First web compile exposed remaining targetTexture access, corrected before passing run. No new Player build or browser claim for this change. Scoped diff review/check passed.
+Pending / risks: profile is only a compilation boundary. Existing authored WebGL bundle prefab compatibility (native video components / serialized reference type), IL2CPP preservation of dynamically loaded SDK types, actual UI/queue composition and save checkpoints remain unverified. EntryPoint still stops at content_ready, not reading. No publication or commits.
+Suggested next step: reuse/extract StoryQueue and remaining StoryExecution operations into separate shared presentation assembly; replace concrete Audio dependency with host callback, keep native behavior, reject unsupported wardrobe content for web. Compose definition/Ink/authored screens/save in web session, then build and validate first dialogue/choice/reload only in in-app or Yandex browser. Do not implement an alternative text-only renderer.
+
+## 2026-09-11 — codex-web-shared-save — ready-with-limitations
+
+Task: Point 5a shared decision saves and browser persistence boundary.
+Changed: Novels.Save moved from Game into Packages/NovelsStoryRuntime/Save with original metas/assembly GUID. Codec and native writer unchanged byte-for-byte; diagnostics mapped through neutral StoryRuntimeError. SaveSystem adds optional asynchronous storage barrier; native host retains its file callbacks. WebDecisionSaveSession adapts the shared binary envelope to IndexedDB, serializes/coalesces writes, exposes commit failures/retry and rejects damaged/incompatible records without deletion.
+Validation: Novels fresh Editor compile passed (editor-gate-20260911T162045Z); WebPlayer compile passed after explicit StoryContracts reference (editor-gate-20260911T162218Z). Final development WebGL build exited 0 (/private/tmp/somegame-web-shared-save-build.log). Scoped diff and exact codec/meta preservation checks passed.
+Pending / risks: adapter is not yet invoked by story composition; IL2CPP may strip unused Save code. Build success is not a Unity↔IndexedDB or gameplay-save roundtrip. Actual dialogue/choice/checkpoint/reload and full NovelRuntime/StoryQueue extraction remain pending. No content release or public site changed; no commits.
+Suggested next step: continue point 5b, extract existing presentation/queue composition with media-free host adapters, then use WebDecisionSaveSession.Open after definition/episode selection and await Decisions.FlushAsync at checkpoints and before disposal. User autoapproval for ordinary implementation/validation remains in effect.
+
+## 2026-09-11 — codex-webgl-storage — ready-with-limitations
+
+Task: Point 4 browser content/cache/save adapters; user authorized automatic continuation, without publication or commits.
+Changed: WebGL download buffer fallback and thread-pool guards in Bundles/SaveWriter; same-origin WebStoryContentSource; first-chunk loading; separate IndexedDB save store; local smoke fixtures; robust session cleanup.
+Validation: Development WebGL build succeeded (log /private/tmp/somegame-web-delivery-build.log). Codex in-app browser reached content_ready with real chernaya-melnitsa chunk 0, rejected duplicate/external URL, surfaced missing-version content_failed and recovered via valid Launch without reload. JS adapter IndexedDB write/reload/read/delete smoke passed. Fresh Novels and web-project Editor compiles passed (editor-gate-20260911T160905Z and editor-gate-20260911T161234Z). Scoped diff check passed.
+Pending / risks: save adapter is not connected to story checkpoints; Unity↔JS save roundtrip remains untested. Shared package contains lifecycle/executor only, not full NovelRuntime/StoryQueue/presentation. Content-ready is not story-ready. No browser reading, choice, full-story/chunk streaming, hash-corruption/offline, mobile-browser memory or cloud-save acceptance. Final cleanup change compiled after browser-tested build; it has not been rebuilt into browser evidence.
+Suggested next step: continue point 5 by moving existing story composition and decision-save integration into a shared layer with media-free adapters, preserving mobile behavior and authored presentation. Do not build a separate simplified web renderer. No fresh routine approval is needed under user's continuing autoapproval; publication and commits remain out of scope.
+Correction: WebGL Build Support was already installed and real story build passed; older missing-module and no-content-loading reports in archive are superseded.
+Cleanup: task-owned local servers and Editor/helper processes stopped; resources released separately before checkout lock release.
 
 ## Ready for integration or validation
 - `catalog-resume-reset`: fixed saved-episode primary action and labelled restart; catalog build, fresh compile and live zdm/tzm checks passed (one Continue action).
@@ -27,7 +91,7 @@ Previous snapshot preserved in [`CoordinationHandoffHistory-2026-09-05-pre-publi
 - `tzm-episode1-android-smoke`: episode completed, with Sally fallback markers and final-screen overlap retained as limitations.
 - `gpl-episode3-full-smoke`: paused at episode 3 line 257 after episodes 1-2 completed.
 - `android-memory-full-smoke`: paused because the APK content was stale and must be rebuilt before resumption.
-- The WebGL prototype remains only on `prototype/webgl-local-platform`; compilation and browser smoke were not run.
+- Historical prototype remains on `prototype/webgl-local-platform`; current main wrapper now has real reading/save browser smoke as recorded above, not full-story acceptance.
 
 Older catalog, publication and validation details were rotated without loss to
 [`2026-09-10 pre-all-main history`](../archive/reports/CoordinationHandoffHistory-2026-09-10-pre-all-main.md).
@@ -35,107 +99,20 @@ Open risks retained there include Nochelessie/fallback Player validation,
 saved-progress device checks, the TK Tim rendering defect, and the Nevesta and
 Nightwood route/visual gates.
 
-## 2026-09-10T10:03:00Z — les-zabyvshiy-tropy-route-matrix — blocked
+## Additional outstanding risks retained from preceding snapshot
 
-Task: Began the mandatory Android episode/choice/ending matrix on the immutable fresh candidate APK through the real catalog flow.
-Changed: acceptance blocker screenshot/log, `Art/ACCEPTANCE_EVIDENCE.md`, and dated archive adoption review/manifest under `Projects/novels-les-zabyvshiy-tropy/`.
-Validation: exact APK reinstall passed; clean run `7652336f15334178a56e6700e5e8026a` reached `s01e01` sequence 46 with `choiceCount=3`; source audit, manifest JSON parse and scoped diff check passed.
-Pending / risks: all three choice cards have no readable labels after settling. Route selection, all 12 alternatives, three endings and save/resume remain invalid/pending. Earlier creative-process archive history is unavailable and explicitly recorded as a gap.
-Suggested next step: the production owner confirmed all 12 choice PNGs were imported as Texture rather than Sprite and corrected their importer metadata plus static regression coverage. After the pending foreign catalog publication clears its dirty scope, run Unity import/content build, build a fresh Embedded APK, and restart the complete three-route matrix.
+- Nevesta main refresh: base origin/main 3e449934 and 114 files preserved; literary/archive/preview/audio/alpha and final validation remain. Receipt: agents/nevesta-main-refresh.md.
+- Les-zabyvshiy-tropy: earlier blank/image-only choice cards are superseded by a text-first source candidate, but new Unity/content/APK and complete three-route, twelve-alternative, three-ending, save/resume and portrait layout acceptance remain; creative-process archive gap is recorded.
+- Chernaya-melnitsa four-episode candidate: real WebGL content now built in this task, but full reading/route/presentation acceptance is not thereby established; consult story candidate evidence before broader release.
+- Kolokol worktree cleanup: three foreign codex-kolodets-integration coordination records block canonical worktree removal; do not delete them without authority.
+- `codex-retire-first-snow-kolodets` (2026-09-12, completed): First Snow was already contained in `main`; Kolodets choice-layout commit `6c3e42aa` was integrated as `6a805805` and ancestry closed by `12431e3e`. Both clean worktrees, local branches, registries and stale candidates were removed. No fresh Unity/manual gate was run because the user confirmed publication and requested Git cleanup.
+- Product analytics client: compile and 5 StoryCommands tests passed; Catalog content gate was blocked. Network delivery is disabled until the PHP/MySQL receiver is deployed and configuration enabled.
+- Direct APK updater: implementation complete; historical receipt retains pending compile/filtered-suite gates; no new updater acceptance performed here.
+- Website beta badges: published using immutable stories/card-only edits; Catalog build/Unity validation and portrait/short-landscape visual limitations remain. Rollbacks are index.html.before-beta-badges-20260911 and content/kostroma-dev.json.before-beta-badges-20260911.
+- After the Last Light: story v1 and Git commit 6e3dae6f were published successfully; earlier upload/Hub/clone/push blockers are superseded. Emulator/ADB and real Player routes/save/Bubble state matrix/catalog-to-story acceptance remain waived or absent, not passed.
 
-Completed story-archive guidance receipt: [preserved history](../archive/reports/CoordinationHandoffHistory-2026-09-10-first-snow-sync.md).
-
-## 2026-09-10T14:09:00Z — chernaya-melnitsa-four-episodes — ready-for-final-validation
-
-Task: Converted the approved latest four-episode literary revision into a local
-playable Ink candidate and updated the story package to content version 2.
-Changed: story Ink root and s01e01–s01e04, definition/card, episode covers,
-approved-art/provenance/originality notes, and dated immutable archive.
-Validation: literary traversal passed 72 routes, five decisions and three endings;
-six archive hashes, four episode files, 12 choice alternatives, card JSON,
-residual-Markdown scan and scoped diff check passed.
-Pending / risks: no real Ink compilation or Unity/content build has run for this
-revision. New `.meta` files and runtime presentation evidence require a fresh
-explicitly authorized final validation slot.
-Suggested next step: after human approval, enqueue a new exact-scope request and
-run `story-check`/content validation for `chernaya-melnitsa` before committing.
-
-## 2026-09-10T13:14:20Z — les-zabyvshiy-tropy-choice-build-retry — ready-for-final-validation
-
-Task: Replaced the author-rejected image-only choice cards with adult text-first controls patterned after Black Mill.
-Changed: story Bubble prefab, source audit, acceptance status, and append-only review/manifest v004.
-Validation: 72-route bounded audit, layout regression assertions, manifest JSON parse and exact changed-file diff checks pass.
-Pending / risks: no Unity/runtime proof exists for this source revision; all earlier choice screenshots and APK `36536684…` are superseded for layout acceptance.
-Suggested next step: obtain fresh explicit final-slot authorization, acquire FIFO/shared Unity resources, rebuild, and verify labeled buttons plus thumbnails in portrait Android runtime.
-
-## 2026-09-10T15:40:23Z — kolokol-worktree-cleanup — paused
-
-Task: Remove whitespace-only Trinadtsatyy Kolokol noise and safely retire the integrated story-batch worktree and branch.
-Changed: Restored exactly 37 whitespace-only files under `Projects/novels-trinadtsatyy-kolokol` to `HEAD`; no story content or committed history changed.
-Validation: scoped status is clean; `git diff --ignore-all-space` had proven the removed diff semantic-free; commit `56129279` remains an ancestor of `main`; `codex/story-batch` HEAD `c5a431e3` is also an ancestor of `main`.
-Pending / risks: story-batch removal is blocked by three untracked coordination records owned by `codex-kolodets-integration`; protocol forbids deleting another owner's records.
-Suggested next step: owner retires those stale records, then remove the clean worktree through `Tools/somegame story-worktree remove --confirm --integrated-ref main` and delete the merged branch if still present.
-
-Completed commit-all-main receipt is preserved in the same [history](../archive/reports/CoordinationHandoffHistory-2026-09-10-first-snow-sync.md).
-
-## 2026-09-10T17:03:09Z — first-snow-sync-main — completed
-
-Task: Merged origin/main 3e449934 into first-snow as a309df99 without conflicts; all 73 story hashes and dirty status preserved; standalone Ink 704 routes and episode-cover checks passed. Registered base refreshed; old candidate marked needs-candidate-refresh. Story revision and Unity acceptance remain separate; no push.
-Changed: Docs/AI/CoordinationRuntime/agents/first-snow-sync-main.md, Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-10-first-snow-sync.md
-Validation: finish-task passed (1 gates).
-Pending / risks: emulator/ADB was explicitly waived for this chat; manual visual acceptance through the real Catalog-to-story Player flow remains.
-Suggested next step: perform the manual Player visual gate if full visual acceptance is later required.
-
-## 2026-09-11T12:20:40Z — codex-first-snow-handoff — completed
-
-Task: Persist the completed First Snow integration handoff.
-Changed: coordination handoff and agent records only.
-Validation: scoped coordination diff reviewed; product commits and acceptance evidence already complete.
-Pending / risks: same explicit device waiver and manual Player visual limitation recorded above.
-Suggested next step: none unless full manual visual acceptance is requested.
-
-## 2026-09-11T10:45:34Z — product-analytics-client — ready-with-limitations
-
-Task: Prepared anonymous product analytics event capture, durable local queue,
-HTTPS batch delivery, application/story lifecycle hooks, and authored ending IDs.
-Changed: Novels analytics runtime and integration points; NovelInk ending command
-and tests; catalog feedback/open hooks; analytics configuration; Ink syntax guide.
-Validation: Novels Unity compile passed with no compiler errors; 5/5
-`Novels.StoryCommands.Tests` passed; scoped `git diff --check` passed.
-Pending / risks: catalog content build was blocked by another open Unity Catalog
-Editor. Network delivery stays disabled until the PHP endpoint is deployed and
-analytics is enabled in runtime configuration.
-Suggested next step: after the Catalog Editor is free, rerun the changed-path
-content gate; then implement and deploy the PHP/MySQL receiver.
-
-## 2026-09-11T10:33:45Z — direct-apk-updater — completed
-
-Task: Implemented secure direct APK self-update from the own HTTPS server with version, size, SHA-256, package and signing-certificate verification, unknown-source permission flow, installer handoff, progress/retry UI, validation tooling and a future update-provider seam.
-Changed: Novels/Assets/Novels/ApplicationUpdatePolicy.cs, Novels/Assets/Novels/DirectApkUpdater.cs, Novels/Assets/Novels/DirectApkUpdater.cs.meta, Novels/Assets/Plugins/Android/AndroidManifest.xml, Novels/Assets/Plugins/Android/DirectApkUpdater.androidlib, Novels/Assets/Plugins/Android/DirectApkUpdater.androidlib.meta, Packages/NovelsContentSdk/Runtime/Catalog/CatalogUpdatePrompt.cs, Packages/NovelsContentSdk/Runtime/Catalog/View/CatalogUpdatePopup.cs, Novels/Assets/Editor/ApplicationUpdateValidation.cs, Novels/Assets/Editor/ApplicationUpdateValidation.cs.meta, Docs/AI/guides/ContentPipeline.md, Docs/AI/CoordinationRuntime/HANDOFF.md, Docs/AI/archive/reports/CoordinationHandoffHistory-2026-09-11-direct-apk-update.md
-Validation: finish-task passed (6 gates).
-Pending / risks: editor-gate --compile, editor-gate --test-filter <affected-suite>
-Suggested next step: none
-
-## 2026-09-11T12:06:21Z — codex-kolodets-publish — blocked
-
-Task: Complete Kolodets Android acceptance and Kostroma dev publication.
-Changed: fresh compiled Ink, catalog registration, acceptance evidence and coordination receipt.
-Validation: Android story/catalog builds and final APK catalog-to-story smoke passed through first choice.
-Pending / risks: third option clips below the 1080x2400 portrait safe area; remaining route/endings/save-resume matrix stopped; no server write occurred.
-Suggested next step: repair the story-local Bubble/choice layout, rebuild, and rerun full Android acceptance before staging or upload.
-
-## 2026-09-11T12:19:35Z — codex-first-snow-integration — completed
-
-Task: Integrated First Snow, registered it in Catalog, passed story/catalog builds and Novels compile; emulator/ADB waived and manual Player visual remains
-Changed: Projects/novels-first-snow, Projects/novels-catalog/Config/catalog.json
-Validation: finish-task passed (3 gates).
-Pending / risks: emulator/ADB was explicitly waived for this chat; manual visual acceptance through the real Catalog-to-story Player flow remains.
-Suggested next step: perform the manual Player visual gate if full visual acceptance is later required.
-
-## 2026-09-11T12:35:45Z — codex-first-snow-publish — completed
-
-Task: Publish the user-confirmed First Snow integration to `origin/main`.
-Changed: remote `main` advanced by fast-forward to `ed4482d754783781b484c88c1925bc30e84bc0e8`.
-Validation: canonical `git-publish` verified identical local and remote SHA; initial 180-second attempt made no remote change, bounded retry completed successfully.
-Pending / risks: content/server release was not published; emulator/ADB waiver and manual Player visual limitation remain as recorded in story acceptance evidence.
-Suggested next step: publish a content/server release only after separate explicit authorization.
+## 2026-09-12T10:53Z — codex-website-main — published; browser gate pending
+Changed: Website imported into SomeGame/main, 92 files; commit ede61caf52895257161f4104beea9bf836f183c9 verified at origin/main. Nested history preserved at .git/website-repository-backup-20260912. Dirty Unity scope untouched; canonical git-publish used isolated exact-HEAD clean transfer checkout /private/tmp/somegame-website-publish-NtlvQC/SomeGame.
+Publication: site/releases/20260912-21 and player/releases/20260912-01; root switched last, only Mill enabled in /player/config.json using existing web-test-20260912-01 content/build. Supersedes disabled-config claims above. Seven remote payload hashes matched; public root/config/player entry hashes matched. Root rollback: /home/p/pureshecom/rebrand-backups/20260912-web-player/index.html.before. APK/dev channel unchanged.
+Validation: npm run build, tsc --noEmit --incremental false, static JS syntax, build-hosting staging and scoped diff check passed. Reader/content were not rebuilt. Pending: in-app catalog-to-reader check stopped by security rejection of existing client-code password entry; do not bypass, require explicit user authorization/manual unlock. Previous mobile/storage/all-route risks remain; Ink character tags untouched (narrator-only text).
+Next: authorize existing preview login, verify Mill card/preview launch and return/save through stable entry. Completed cleanup receipt rotated losslessly to ../archive/reports/CoordinationHandoffHistory-2026-09-12-website-main.md.

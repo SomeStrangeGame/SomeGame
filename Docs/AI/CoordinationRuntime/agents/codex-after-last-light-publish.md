@@ -1,6 +1,6 @@
 # Agent: `codex-after-last-light-publish`
 
-- Status: published-awaiting-git-push
+- Status: published-git-push-blocked
 - Task: Commit and publish editor-validated after-the-last-light with emulator waiver
 - Scope: Projects/novels-after-the-last-light/**; Projects/novels-catalog/Config/catalog.json; Docs/AI/CoordinationRuntime/agents/codex-after-last-light-publish.md; Docs/AI/CoordinationRuntime/HANDOFF.md
 - Base commit: `f318aaadb5b3cfc5bba1013fc9bd0a793c5e47e1`.
@@ -45,3 +45,11 @@
   unchanged at SHA-256
   `368d1efaf4f0579afcd832f6ea41906cefc698d435dc97f60aa551f37929251f`.
   Evidence is stored in the story project. Pending only scoped commit/push.
+- Git progress UTC 2026-09-11T15:28:30Z: created scoped commit
+  `6e3dae6f84f2d541d4fdef81fe6c256cdd192005` (90 files). Canonical
+  `git-publish` correctly refused the dirty shared checkout, so a clean detached
+  worktree was created at `/private/tmp/after-last-light-push-6e3dae6f`.
+  Canonical publication there is blocked because checkout-local coordination
+  owner/request files are absent. Mirroring the real current coordination
+  records into that temporary worktree requires explicit approval. `origin/main`
+  remains unchanged.

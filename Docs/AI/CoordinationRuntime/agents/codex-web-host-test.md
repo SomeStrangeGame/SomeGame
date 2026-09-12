@@ -1,0 +1,9 @@
+# Agent: `codex-web-host-test`
+
+- Status: completed
+- Task: Prepare and publish isolated HTTPS WebGL test release using existing hosting; preserve live catalog
+- Scope: Projects/web-story-player/Assets/WebPlayer/Editor/WebPlayerBuild.cs; Projects/web-story-player/Build; Website/public/player/README.md; Docs/AI/CoordinationRuntime/HANDOFF.md; remote:/home/p/pureshecom/public_html/player/tests/20260912-webgl-01; remote:/home/p/pureshecom/public_html/player/builds/20260912-webgl-01; remote:/home/p/pureshecom/public_html/content/stories/chernaya-melnitsa/web-test-20260912-01
+- Base commit: `12431e3e3495e67cf0703cb035e786319bb6fab0`.
+- Requested UTC: `2026-09-12T10:21:51Z`.
+- Result: BuildRelease success exit0; 16 files published to exact scoped paths, entry HTML last; all payload hashes match and14 public URLs HTTP200. Native gzip/wasm MIME/immutable and HTML no-cache/noindex verified. In-app launch/two advances/return/reopen restore passed, error/warn empty. Root HTML/channel hashes unchanged. SSH identity /Users/iantonishin/.ssh/sweb_novels. Payload evidence Build/host-test-evidence.json; build log /private/tmp/somegame-web-host-test-build.log. No content rebuild/commit/APK modification; test browser tab intentionally retained for user. Remaining release/mobile/performance coverage in handoff.
+- Validation: Unity 6000.3.11f1, WebPlayer.unity, Release WebGL gzip/fallback; BuildRelease -> Projects/web-story-player/Build/WebGLRelease. Previous Development artifacts preserved. PID70332, log /private/tmp/somegame-web-host-test-build.log. Scoped unity-project/build-output resources acquired; no foreign Editor found. User approved isolated test publication; root HTML/channel/APK excluded. SSH existing sweb_novels identity works; planned destination paths absent, 81GB free. Root HTML SHA before 44774d4ea799b7c713bda7e1494594779e9a93ecb7c48cc6d1be625b2d70254c. Rollback is disabling only the new test entry, preserving assets and existing releases.
