@@ -20,6 +20,7 @@ namespace Novels.Catalog.Contracts
         public string storyId;
         public string title;
         public string genre;
+        public string releaseStage;
         public string description;
         public string cover = "cover.webp";
         public string author;
@@ -89,6 +90,14 @@ namespace Novels.Catalog.Contracts
             if (string.IsNullOrWhiteSpace(value.genre))
                 throw new InvalidOperationException($"Story '{expected}' has no genre.");
             value.genre = value.genre.Trim();
+            value.releaseStage = string.IsNullOrWhiteSpace(value.releaseStage)
+                ? "stable"
+                : value.releaseStage.Trim().ToLowerInvariant();
+            if (value.releaseStage != "stable" && value.releaseStage != "beta")
+            {
+                throw new InvalidOperationException(
+                    $"Story '{expected}' has unsupported release stage '{value.releaseStage}'.");
+            }
             value.author = value.author?.Trim();
             if (string.IsNullOrWhiteSpace(value.cover))
                 throw new InvalidOperationException($"Story '{expected}' has no cover path.");
