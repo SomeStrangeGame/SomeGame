@@ -172,6 +172,12 @@
         "com.unity.ugui": "2.0.0"
       }
     },
+    "somegame.novels-story-runtime": {
+      "version": "file:../../Packages/NovelsStoryRuntime",
+      "depth": 0,
+      "source": "local",
+      "dependencies": {}
+    },
     "somegame.setting": {
       "version": "file:../../Packages/Setting",
       "depth": 0,

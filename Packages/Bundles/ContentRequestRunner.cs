@@ -56,13 +56,19 @@ namespace Bundles
                 if (File.Exists(destinationPath))
                     File.Delete(destinationPath);
                 using var request = UnityWebRequest.Get(url);
+#if !UNITY_WEBGL || UNITY_EDITOR
                 request.downloadHandler = new DownloadHandlerFile(destinationPath, false);
+#endif
                 try
                 {
                     await Send(
                         request,
                         linkedCancellation.Token,
                         onDownloadedBytes);
+#if UNITY_WEBGL && !UNITY_EDITOR
+                    linkedCancellation.Token.ThrowIfCancellationRequested();
+                    File.WriteAllBytes(destinationPath, request.downloadHandler.data);
+#endif
                     return;
                 }
                 catch (ContentSourceException exception)

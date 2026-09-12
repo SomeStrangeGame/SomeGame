@@ -50,7 +50,7 @@ namespace Novels
                 WriteBytes = cache.WriteBytes,
                 Delete = cache.Delete,
                 OnLog = _ctx.OnLog,
-                OnError = ReportError,
+                OnError = error => ReportError(error.ToNovelError()),
             }).AddTo(this);
             saveSystem.Init();
             _saveSystem = saveSystem;

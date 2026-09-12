@@ -29,6 +29,13 @@ namespace Novels.ContentSdk.Editor
             ContentPipeline.Build("windows");
         }
 
+        [MenuItem("Novels/Content/Build/WebGL")]
+        public static void BuildWebGL()
+        {
+            CompileAuthoringStory();
+            ContentPipeline.Build("webgl");
+        }
+
         public static void BuildLocal()
         {
             CompileAuthoringStory();

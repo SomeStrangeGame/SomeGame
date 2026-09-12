@@ -66,7 +66,9 @@ namespace Bundles
             var localPath = new Uri(url).LocalPath;
             string text = null;
             Exception failure = null;
+#if !UNITY_WEBGL || UNITY_EDITOR
             await UniTask.SwitchToThreadPool();
+#endif
             try
             {
                 text = File.ReadAllText(localPath);

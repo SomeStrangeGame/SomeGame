@@ -1,0 +1,7 @@
+{
+  "name": "somegame.novels-story-runtime",
+  "version": "0.1.0",
+  "displayName": "Novels Story Runtime",
+  "description": "Shared media-free story execution core for SomeGame players.",
+  "unity": "6000.3"
+}

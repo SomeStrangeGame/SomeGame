@@ -10,7 +10,9 @@ namespace Novels.Location
         internal struct Dependencies
         {
             internal View.LocationScreen Screen;
+#if !NOVELS_MEDIA_FREE
             internal VideoPlayback VideoPlayback;
+#endif
             internal Camera TargetCamera;
             internal Func<string, UniTask<Sprite>> GetSprite;
             internal Func<string, UniTask<Sprite>> GetFullQualitySprite;
@@ -28,16 +30,20 @@ namespace Novels.Location
             _ctx = ctx;
             if (ctx.Screen == null)
                 throw new ArgumentNullException(nameof(ctx.Screen));
+#if !NOVELS_MEDIA_FREE
             if (ctx.VideoPlayback == null)
                 throw new ArgumentNullException(nameof(ctx.VideoPlayback));
+#endif
             if (ctx.TargetCamera == null)
                 throw new ArgumentNullException(nameof(ctx.TargetCamera));
             if (ctx.GetSprite == null)
                 throw new ArgumentNullException(nameof(ctx.GetSprite));
             if (ctx.GetFullQualitySprite == null)
                 throw new ArgumentNullException(nameof(ctx.GetFullQualitySprite));
+#if !NOVELS_MEDIA_FREE
             if (ctx.ResolveVideoUrl == null)
                 throw new ArgumentNullException(nameof(ctx.ResolveVideoUrl));
+#endif
             if (ctx.MissingBackground == null)
                 throw new ArgumentNullException(nameof(ctx.MissingBackground));
             if (ctx.CutSceneFallbackDelayMilliseconds <= 0)
@@ -86,8 +92,13 @@ namespace Novels.Location
                 return;
             }
 
+#if NOVELS_MEDIA_FREE
+            // No media resolution, download, decoder or cutscene wait in this profile.
+            const string url = null;
+#else
             var url = await _ctx.ResolveVideoUrl(assetName)
                 .AttachExternalCancellation(_ctx.CancellationToken);
+#endif
             var plan = BackgroundPresentationPlan.Create(
                 assetName,
                 presentation,
@@ -115,6 +126,7 @@ namespace Novels.Location
             _ctx.Screen.ResetCamera();
             _ctx.Screen.ResetEffect();
             await ShowSolidColor(mode);
+#if !NOVELS_MEDIA_FREE
             var playbackStatus = await _ctx.VideoPlayback.Play(
                 new VideoPlaybackRequest(
                     url,
@@ -138,6 +150,7 @@ namespace Novels.Location
                 await WaitForCutSceneFallback(mode);
             if (!plan.KeepsFinalVideoFrame)
                 await ReturnToSolidColor(mode);
+#endif
         }
 
         private UniTask UpgradeCurrentBackground()
@@ -180,7 +193,9 @@ namespace Novels.Location
             Sprite sprite,
             StoryContracts.PresentationMode mode)
         {
+#if !NOVELS_MEDIA_FREE
             _ctx.VideoPlayback.Stop();
+#endif
             _ctx.Screen.SetImage(sprite);
             _ctx.Screen.SetEnabledImage(true);
             _ctx.Screen.SetEnabledVideo(false);
@@ -189,7 +204,9 @@ namespace Novels.Location
 
         private async UniTask ShowSolidColor(StoryContracts.PresentationMode mode)
         {
+#if !NOVELS_MEDIA_FREE
             _ctx.VideoPlayback.Stop();
+#endif
             _ctx.Screen.ClearImage();
             _ctx.Screen.SetEnabledImage(false);
             _ctx.Screen.SetEnabledVideo(false);

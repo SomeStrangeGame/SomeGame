@@ -2,6 +2,7 @@
     "name": "Novels",
     "rootNamespace": "",
     "references": [
+        "Novels.Progress",
         "GUID:f51ebe6a0ceec4240a699833d6309b23",
         "GUID:08af714e793fe4559bd573a498e63041",
         "GUID:07943f4cfbec34e578de307bd44b329b",
@@ -29,6 +30,8 @@
         "GUID:64ebfae35cb14b57ba4770741d9b1aa3",
         "Unity.Notifications.Android",
         "Unity.Notifications.iOS"
+        ,"Novels.StoryRuntime",
+        "Novels.StoryPresentation"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

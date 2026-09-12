@@ -93,8 +93,23 @@ Tools/novels-tools/novels-content build tzm android
 Tools/novels-tools/novels-content build all ios
 ```
 
-Допустимые платформы: `editor`, `android`, `ios`. После успешной сборки CLI
+Допустимые платформы: `editor`, `windows`, `android`, `ios`, `webgl`. После успешной сборки CLI
 сам обновляет `Novels/Build/LocalContent`; отдельной команды compose больше нет.
+
+Для `build <story-id> webgl` нужен установленный WebGL Build Support той же
+версии Unity. CLI запускает Unity с `-buildTarget WebGL` и отдельным Library
+cache; SDK пишет `Remote/WebGL/release.json` и LZ4 AssetBundles, сохраняя
+чанки и schema 5. Существующие платформы сохраняют прежнее сжатие.
+Первый веб-вариант исключает файловые payloads `novelsaudio/` и
+`novelsvideos/`, а также видео из catalog preview. Исходники и прежние
+платформенные релизы сохраняются. Это не удаляет media-компоненты из authored
+prefabs и не отключает Ink-команды: совместимость presentation/runtime
+проверяется отдельно перед первым браузерным запуском.
+
+Путь `Remote/WebGL/` — существующий layout release. Размещение по принятому
+веб-контракту `/content/stories/<id>/<version>/webgl/` требует отдельного
+адаптера доставки с проверкой относительных bundle/payload URL; сам build
+не публикует файлы на сайт.
 
 Сборка пересоздаёт только `Remote/<выбранная-платформа>` и сохраняет ранее
 собранные платформы. Поэтому последовательные `build all android` и

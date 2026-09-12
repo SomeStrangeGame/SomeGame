@@ -5,16 +5,16 @@
 ```bash
 Tools/novels-tools/novels-content doctor
 Tools/novels-tools/novels-content plan [base-ref]
-Tools/novels-tools/novels-content verify [editor|android|ios] [base-ref]
+Tools/novels-tools/novels-content verify [editor|android|ios|webgl] [base-ref]
 Tools/novels-tools/novels-content validate <catalog|story-id|all>
-Tools/novels-tools/novels-content build <catalog|story-id|all> <editor|android|ios>
+Tools/novels-tools/novels-content build <catalog|story-id|all> <editor|windows|android|ios|webgl>
 Tools/novels-tools/novels-content publish <destination-directory>
 ```
 
 `build` автоматически компонует результат для Game. Проекты обрабатываются
 последовательно, поэтому команда безопасна для больших наборов контента.
 
-Для `editor`, `android` и `ios` сохраняются независимые Unity `Library`.
+Для `editor`, `windows`, `android`, `ios` и `webgl` сохраняются независимые Unity `Library`.
 Активный кэш находится в обычном `<project>/Library`, неактивные — в
 `<project>/Build/UnityLibraryCache/<platform>`. Первая сборка платформы остаётся
 холодной, следующие не переимпортируют все текстуры после сборки другой

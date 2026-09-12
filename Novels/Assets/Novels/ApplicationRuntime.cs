@@ -224,7 +224,16 @@ namespace Novels
                 if (result.Status == EpisodeRunStatus.Cancelled)
                     return _pendingNotificationRoute != null;
                 if (result.Status == EpisodeRunStatus.Failed)
-                    _onError?.Invoke(result.Error.Value);
+                {
+                    _onError?.Invoke(result.Error.Value.ToNovelError(
+                        new Diagnostics.NovelErrorContext(
+                            storyReleaseLoaded ? storyBundles.ReleaseId : string.Empty,
+                            content.ContentId,
+                            episodeId,
+                            storyReleaseLoaded
+                                ? storyBundles.DeliveryMode.ToString()
+                                : Bundles.ContentDeliveryMode.Remote.ToString())));
+                }
                 if (result.Status == EpisodeRunStatus.Completed)
                 {
                     _notifications?.ClearReadingTarget(

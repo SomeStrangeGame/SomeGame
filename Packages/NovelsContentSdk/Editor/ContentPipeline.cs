@@ -21,6 +21,8 @@ namespace Novels.ContentSdk.Editor
         {
             var plan = ContentValidator.Validate();
             var target = ContentPlatform.Resolve(platform);
+            if (!BuildPipeline.IsBuildTargetSupported(BuildPipeline.GetBuildTargetGroup(target), target))
+                throw new InvalidOperationException($"Unity build support is not installed for {target}.");
             var streaming = plan.Kind == ContentProjectKind.Story;
             Directory.CreateDirectory(_outputPath);
             RecreateDirectory(_stagingPath);
@@ -30,7 +32,7 @@ namespace Novels.ContentSdk.Editor
                 ContentPlatform.Name(target)));
             try
             {
-                var files = BuildFilePayloads(plan, streaming);
+                var files = BuildFilePayloads(plan, streaming, target == BuildTarget.WebGL);
                 BuildTargetRelease(plan, files, target, streaming);
                 Debug.Log(
                     $"Atomic content '{plan.DeliveryGroup}' built for "
@@ -46,13 +48,17 @@ namespace Novels.ContentSdk.Editor
 
         private static ContentFileEntry[] BuildFilePayloads(
             ContentBuildPlan plan,
-            bool streaming)
+            bool streaming,
+            bool mediaFree)
         {
             var result = new List<ContentFileEntry>();
             foreach (var file in ContentAssets.FindContentFiles(plan))
             {
                 var source = file.SourcePath;
                 var relative = file.ContentPath;
+                if (mediaFree && (relative.StartsWith("novelsaudio/", StringComparison.OrdinalIgnoreCase)
+                    || relative.StartsWith("novelsvideos/", StringComparison.OrdinalIgnoreCase)))
+                    continue;
                 if (!ShouldPublishStreamingAsset(relative))
                     continue;
                 var hash = ContentHash.ComputeSha256(source);
@@ -138,7 +144,7 @@ namespace Novels.ContentSdk.Editor
             var manifest = BuildPipeline.BuildAssetBundles(
                     staging,
                     new[] {build},
-                    BuildAssetBundleOptions.None,
+                    target == BuildTarget.WebGL ? BuildAssetBundleOptions.ChunkBasedCompression : BuildAssetBundleOptions.None,
                     target)
                 ?? throw new InvalidOperationException(
                     $"AssetBundle build failed for {target}.");
@@ -179,7 +185,7 @@ namespace Novels.ContentSdk.Editor
                 releasePath,
                 ContentReleaseCodec.Serialize(release),
                 new UTF8Encoding(false));
-            WriteCatalogPreview(plan, release, Path.GetDirectoryName(releasePath));
+            WriteCatalogPreview(plan, release, Path.GetDirectoryName(releasePath), target == BuildTarget.WebGL);
         }
 
         private static void BuildStreamingTargetRelease(
@@ -214,7 +220,7 @@ namespace Novels.ContentSdk.Editor
             var manifest = BuildPipeline.BuildAssetBundles(
                     staging,
                     chunkBuilds,
-                    BuildAssetBundleOptions.None,
+                    target == BuildTarget.WebGL ? BuildAssetBundleOptions.ChunkBasedCompression : BuildAssetBundleOptions.None,
                     target)
                 ?? throw new InvalidOperationException(
                     $"Streaming AssetBundle build failed for {target}.");
@@ -258,10 +264,10 @@ namespace Novels.ContentSdk.Editor
                 releasePath,
                 ContentReleaseCodec.Serialize(release),
                 new UTF8Encoding(false));
-            WriteCatalogPreview(plan, release, Path.GetDirectoryName(releasePath));
+            WriteCatalogPreview(plan, release, Path.GetDirectoryName(releasePath), target == BuildTarget.WebGL);
         }
 
-        private static void WriteCatalogPreview(ContentBuildPlan plan, ContentReleaseDto release, string directory)
+        private static void WriteCatalogPreview(ContentBuildPlan plan, ContentReleaseDto release, string directory, bool mediaFree)
         {
             if (plan.Kind != ContentProjectKind.Story) return;
             // DefinitionAsset is a published bundle address, not necessarily its
@@ -272,25 +278,31 @@ namespace Novels.ContentSdk.Editor
                 definitionPath);
             var definition = asset != null ? asset.ToDefinition()
                 : throw new InvalidOperationException("Cannot export catalog preview without story definition.");
-            WriteStoryCatalogPreview(definition, release, directory,
-                Path.Combine(Application.dataPath, "../Config/EpisodeCovers"));
+            WriteStoryCatalogPreviewForPlatform(definition, release, directory,
+                Path.Combine(Application.dataPath, "../Config/EpisodeCovers"), mediaFree);
         }
 
         private static void WriteStoryCatalogPreview(Content.NovelDefinition definition,
             ContentReleaseDto release, string directory, string coversDirectory)
+        {
+            WriteStoryCatalogPreviewForPlatform(definition, release, directory, coversDirectory, false);
+        }
+
+        private static void WriteStoryCatalogPreviewForPlatform(Content.NovelDefinition definition,
+            ContentReleaseDto release, string directory, string coversDirectory, bool mediaFree)
         {
             var preview = new Catalog.Contracts.StoryCatalogPreview
             {
                 storyId = definition.Id,
                 releaseId = release.releaseId,
                 contentVersion = definition.ContentVersion,
-                video = string.IsNullOrWhiteSpace(definition.CatalogVideo) ? null : definition.CatalogVideo,
+                video = mediaFree || string.IsNullOrWhiteSpace(definition.CatalogVideo) ? null : definition.CatalogVideo,
                 episodes = definition.Episodes.Select(episode => new Catalog.Contracts.StoryCatalogEpisodePreview
                 {
                     id = episode.Id, title = episode.Title, description = episode.Description,
                     cover = string.IsNullOrWhiteSpace(episode.CatalogCover) ? null : episode.CatalogCover,
                     author = episode.Author,
-                    video = string.IsNullOrWhiteSpace(episode.CatalogVideo) ? null : episode.CatalogVideo,
+                    video = mediaFree || string.IsNullOrWhiteSpace(episode.CatalogVideo) ? null : episode.CatalogVideo,
                 }).ToArray(),
             };
             var json = JsonUtility.ToJson(preview, true);
@@ -414,9 +426,10 @@ namespace Novels.ContentSdk.Editor
                 "windows" => BuildTarget.StandaloneWindows64,
                 "android" => BuildTarget.Android,
                 "ios" => BuildTarget.iOS,
+                "webgl" => BuildTarget.WebGL,
                 _ => throw new ArgumentException(
                     $"Unknown content platform '{value}'. "
-                    + "Use editor, windows, android or ios."),
+                    + "Use editor, windows, android, ios or webgl."),
             };
 
         internal static string Name(BuildTarget target) => target switch
@@ -425,6 +438,7 @@ namespace Novels.ContentSdk.Editor
             BuildTarget.StandaloneWindows64 => "Win",
             BuildTarget.Android => "Android",
             BuildTarget.iOS => "iOS",
+            BuildTarget.WebGL => "WebGL",
             _ => throw new NotSupportedException(
                 $"Unsupported content target: {target}"),
         };

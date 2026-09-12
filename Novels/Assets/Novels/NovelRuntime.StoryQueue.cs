@@ -56,7 +56,13 @@ namespace Novels
                     MainCharacter = _definition.MainCharacter,
                     Notification = presentation.Notification,
                     Location = presentation.Location,
-                    Audio = presentation.Audio,
+                    PlayAudio = (assetName, type) => presentation.Audio.PlayAudio(
+                        assetName,
+                        type == StoryCommands.StoryCommandType.Music
+                            ? Audio.AudioController.Audio.Music
+                            : type == StoryCommands.StoryCommandType.Sound
+                                ? Audio.AudioController.Audio.Sound
+                                : Audio.AudioController.Audio.Ambient),
                     Bubble = presentation.Bubble,
                     Wardrobe = presentation.Wardrobe,
                     Choose = presentation.Choose,

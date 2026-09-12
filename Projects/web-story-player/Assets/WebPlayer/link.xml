@@ -1,0 +1,10 @@
+<linker>
+  <!-- Authored AssetBundle views are not discoverable from static call sites. -->
+  <assembly fullname="Novels.Content" preserve="all" />
+  <assembly fullname="Novels.Bubble" preserve="all" />
+  <assembly fullname="Novels.Character" preserve="all" />
+  <assembly fullname="Novels.Location" preserve="all" />
+  <assembly fullname="Novels.Notification" preserve="all" />
+  <assembly fullname="Novels.Choose" preserve="all" />
+  <assembly fullname="Novels.OptionSelection" preserve="all" />
+</linker>

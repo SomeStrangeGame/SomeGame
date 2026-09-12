@@ -79,7 +79,9 @@ namespace Bundles
                 .Select(group => group.First())
                 .ToArray();
             Exception failure = null;
+#if !UNITY_WEBGL || UNITY_EDITOR
             await UniTask.SwitchToThreadPool();
+#endif
             try
             {
                 lock (_gate)
@@ -139,7 +141,9 @@ namespace Bundles
         private async UniTask PruneAsync(string protectedPath)
         {
             Exception failure = null;
+#if !UNITY_WEBGL || UNITY_EDITOR
             await UniTask.SwitchToThreadPool();
+#endif
             try
             {
                 lock (_gate)

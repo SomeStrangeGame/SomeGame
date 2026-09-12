@@ -39,6 +39,7 @@ namespace Novels.Location
             _screen.HideImageImmediate();
             _screen.ResetCamera();
             _screen.ResetEffect();
+#if !NOVELS_MEDIA_FREE
             var videoPlayback = new VideoPlayback(new VideoPlayback.Dependencies
             {
                 VideoPlayer = _screen.VideoPlayer,
@@ -46,11 +47,14 @@ namespace Novels.Location
                 CancellationToken = _ctx.CancellationToken,
                 OnError = _ctx.OnError,
             }).AddTo(this);
+#endif
             _backgrounds = new BackgroundPresentationController(
                 new BackgroundPresentationController.Dependencies
                 {
                     Screen = _screen,
+#if !NOVELS_MEDIA_FREE
                     VideoPlayback = videoPlayback,
+#endif
                     TargetCamera = _ctx.TargetCamera,
                     GetSprite = _ctx.GetSprite,
                     GetFullQualitySprite = _ctx.GetFullQualitySprite,

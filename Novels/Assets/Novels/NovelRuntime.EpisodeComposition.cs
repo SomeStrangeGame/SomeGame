@@ -72,7 +72,7 @@ namespace Novels
                         ("episodeId", _episode.Id));
                 },
                 CancellationToken = cancellationToken,
-                OnError = ReportError,
+                OnError = error => ReportError(error.ToNovelError()),
                 OnStorySourceChanged = _ctx.OnStorySourceChanged,
             }).AddTo(state.EpisodeScope);
             state.EpisodeRuntime.Configure(

@@ -1,3 +1,4 @@
+#if !NOVELS_MEDIA_FREE
 using System;
 using System.Threading;
 using Cysharp.Threading.Tasks;
@@ -243,3 +244,4 @@ namespace Novels.Location
         }
     }
 }
+#endif

@@ -15,7 +15,7 @@ MonoBehaviour:
   _id: chernaya-melnitsa
   _mainCharacter: "Лада"
   _contentVersion: 3
-  _endMarker: "...: КОНЕЦ ИСТОРИИ"
+  _endMarker: "...: КОНЕЦ СЕРИИ"
   _silentAudioIds: []
   _catalogVideo: chernaya-melnitsa-loop.mp4
   _episodes:

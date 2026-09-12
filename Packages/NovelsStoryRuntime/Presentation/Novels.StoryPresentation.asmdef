@@ -1,0 +1,9 @@
+{
+  "name": "Novels.StoryPresentation",
+  "references": [
+    "UniTask", "Disposable", "Novels.StoryRuntime", "Novels.Save",
+    "Novels.StoryCommands", "Novels.StoryContracts", "Novels.StoryProcessor",
+    "Novels.Bubble", "Novels.Character", "Novels.Choose", "Novels.Wardrobe",
+    "Novels.Location", "Novels.Notification"
+  ]
+}

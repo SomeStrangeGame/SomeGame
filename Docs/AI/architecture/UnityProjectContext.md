@@ -36,6 +36,25 @@
 
 ## Текущие имена
 
+- `Packages/NovelsStoryRuntime` — общий media-free слой мобильного и WebGL-плееров:
+  `Novels.Progress` содержит общий NovelProgress (NPR1 + completion markers);
+  native Cache backend сохранён, web callback backend пишет атомарный envelope
+  в IndexedDB после decision flush и до открытия следующего эпизода.
+  lifetime эпизода, цикл чтения Ink/очереди и выполнение `IStoryOperation`.
+  Вложенная assembly `Novels.Save` содержит общий формат решений и replay-save
+  logic (GUID сохранены при переносе из Game). Каталог, доставка, storage backend
+  и конкретная презентация остаются адаптерами хоста. WebDecisionSaveSession
+  хранит тот же бинарный envelope в IndexedDB; его FlushAsync ждёт commit.
+  Отдельная `Novels.StoryPresentation` переиспользует StoryQueue, Bubble operations,
+  choice handling и ReplayValidator из Game. Эта сборка зависит от UI Content SDK,
+  в отличие от core. Audio задаётся callback хоста; optional FlushCheckpoint
+  позволяет вебу дождаться IndexedDB перед переходом к следующей реплике.
+- Content SDK поддерживает opt-in `NOVELS_MEDIA_FREE` (без audio assembly,
+  VideoPlayback и media URL resolution; Location использует static/fallback)
+  и `NOVELS_STORY_PLAYER_ONLY` (без Catalog и content-authoring Editor assembly).
+  Веб-обёртка включает оба символа для WebGL/Standalone; приложение и story
+  authoring не включают их. Исходные prefab GUID/поля native и медиа сохраняются.
+  Это граница сборок, не готовая композиция чтения и не prefab/Player acceptance.
 - `ApplicationRuntime` управляет каталогом и активной историей.
 - `NovelRuntime` управляет выбранной историей и композицией эпизода.
 - Фичи используют предметные имена (`CharacterController`, `LocationController`, `SaveSystem`) и небольшие структуры `Dependencies` только на инфраструктурных границах.

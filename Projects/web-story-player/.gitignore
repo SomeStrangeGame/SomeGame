@@ -1,0 +1,10 @@
+/Library/
+/Logs/
+/Temp/
+/UserSettings/
+/Build/
+/Assets/WebPlayer/Generated/
+/Assets/WebPlayer/Generated.meta
+obj/
+*.csproj
+*.sln

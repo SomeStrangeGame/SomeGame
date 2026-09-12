@@ -3,7 +3,9 @@ using System.Threading;
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
+#if !NOVELS_MEDIA_FREE
 using UnityEngine.Video;
+#endif
 
 namespace Novels.Location.View
 {
@@ -42,7 +44,13 @@ namespace Novels.Location.View
         [SerializeField] private Image _image;
 
         [Space]
+#if NOVELS_MEDIA_FREE
+        // Preserve the serialized reference slot when reading authored bundles.
+        // The media-free player never accesses or starts the referenced component.
+        [SerializeField] private UnityEngine.Object _video;
+#else
         [SerializeField] private VideoPlayer _video;
+#endif
         [SerializeField] private RawImage _videoImage;
 
         [Space]
@@ -57,7 +65,9 @@ namespace Novels.Location.View
         [SerializeField] private AnimationCurve _moveCurve;
         private LocationLayout _layout;
 
+#if !NOVELS_MEDIA_FREE
         public VideoPlayer VideoPlayer => _video;
+#endif
         private LocationLayout Layout => _layout ??= new LocationLayout(_image);
 
         public void SetImage(Sprite sprite)
@@ -154,7 +164,9 @@ namespace Novels.Location.View
         public void SetVideoTexture(RenderTexture renderTexture)
         {
             _videoImage.texture = renderTexture;
+#if !NOVELS_MEDIA_FREE
             _video.targetTexture = renderTexture;
+#endif
             Layout.SetVideoTexture(renderTexture);
             ApplyVideoAspect();
         }

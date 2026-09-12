@@ -34,7 +34,9 @@ namespace Bundles
             }
 
             Exception failure = null;
+#if !UNITY_WEBGL || UNITY_EDITOR
             await UniTask.SwitchToThreadPool();
+#endif
             try
             {
                 _cancellationToken.ThrowIfCancellationRequested();

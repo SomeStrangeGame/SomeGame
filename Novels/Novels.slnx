@@ -1,4 +1,5 @@
 ﻿<Solution>
+  <Project Path="Novels.StoryRuntime.csproj" />
   <Project Path="Disposable.csproj" />
   <Project Path="Ink-Libraries.csproj" />
   <Project Path="Novels.Location.csproj" />
@@ -7,8 +8,8 @@
   <Project Path="InkEditor.csproj" />
   <Project Path="Loading.View.csproj" />
   <Project Path="Bundles.csproj" />
+  <Project Path="Novels.StoryPresentation.csproj" />
   <Project Path="Novels.StoryCommands.csproj" />
-  <Project Path="Novels.Save.csproj" />
   <Project Path="Novels.ContentSdk.Editor.csproj" />
   <Project Path="Novels.Notification.csproj" />
   <Project Path="Novels.OptionSelection.csproj" />
@@ -18,6 +19,7 @@
   <Project Path="Novels.Character.csproj" />
   <Project Path="Novels.StoryContracts.csproj" />
   <Project Path="Novels.StoryCommands.Tests.csproj" />
+  <Project Path="Novels.Save.csproj" />
   <Project Path="Novels.Editor.csproj" />
   <Project Path="Bundles.Editor.csproj" />
   <Project Path="LoadingPriority.csproj" />
@@ -30,6 +32,7 @@
   <Project Path="Logs.csproj" />
   <Project Path="Novels.Choose.csproj" />
   <Project Path="UITransitions.csproj" />
+  <Project Path="Novels.Progress.csproj" />
   <Project Path="Novels.Diagnostics.csproj" />
   <Project Path="Setting.View.csproj" />
   <Project Path="CodeStrippingFix.csproj" />

@@ -1,0 +1,26 @@
+{
+  "name": "Novels.WebPlayer",
+  "rootNamespace": "Novels.WebPlayer",
+  "references": [
+    "Disposable",
+    "Bundles",
+    "UniTask",
+    "Novels.StoryRuntime",
+    "Novels.Save",
+    "Novels.Progress",
+    "Novels.StoryContracts",
+    "Novels.StoryCommands", "Novels.StoryProcessor", "Novels.StoryPresentation",
+    "Novels.Content", "Novels.ContentAddressing", "Novels.Diagnostics",
+    "Novels.Bubble", "Novels.Character", "Novels.Choose",
+    "Novels.Location", "Novels.Notification", "Unity.ugui"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

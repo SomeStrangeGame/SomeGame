@@ -20,7 +20,7 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": ["!NOVELS_STORY_PLAYER_ONLY"],
     "versionDefines": [],
     "noEngineReferences": false
 }

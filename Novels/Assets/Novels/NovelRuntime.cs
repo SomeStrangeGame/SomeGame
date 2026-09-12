@@ -144,9 +144,7 @@ namespace Novels
                     ("contentId", _definition.Id),
                     ("episodeId", _episode.Id));
             }
-            return result.Status == EpisodeRunStatus.Failed && result.Error.HasValue
-                ? EpisodeRunResult.Failed(WithContext(result.Error.Value))
-                : result;
+            return result;
         }
 
         private void OnChunkReady(int index)

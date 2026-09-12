@@ -1,0 +1,20 @@
+{
+  "name": "Novels.StoryRuntime",
+  "rootNamespace": "",
+  "references": [
+    "Disposable",
+    "Novels.StoryCommands",
+    "Novels.StoryContracts",
+    "Novels.StoryProcessor",
+    "UniTask"
+  ],
+  "includePlatforms": [],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false
+}
